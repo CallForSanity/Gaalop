@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>de.gaalop</groupId>
+    <artifactId>gaalop</artifactId>
+    <version>1.0.0</version>
+    <packaging>pom</packaging>
+    <name>Gaalop</name>
+
+    <!--
+         The submodules of this application.
+     -->
+    <modules>
+        <module>api</module>
+        <module>maple</module>
+        <module>clucalc</module>
+        <module>cli</module>
+        <module>gui</module>
+        <module>codegen-cpp</module>
+        <module>codegen-latex</module>
+        <module>starter</module>
+        <module>codegen-dot</module>
+    </modules>
+
+    <!--
+             All submodules should be built for the Java 6 platform.
+     -->
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <configuration>
+                        <source>1.6</source>
+                        <target>1.6</target>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-assembly-plugin</artifactId>
+                    <configuration>
+                        <descriptors>
+                            <descriptor>src/assemble/dist.xml</descriptor>
+                        </descriptors>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
+    <dependencies>
+        <!--
+          The unit testing dependency for all sub projects.
+      -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.5</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!--
+          The logging subsystem used by all subprojects.
+      -->
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <version>1.1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.15</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.sun.jdmk</groupId>
+                    <artifactId>jmxtools</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.sun.jmx</groupId>
+                    <artifactId>jmxri</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>javax.jms</groupId>
+                    <artifactId>jms</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>javax.mail</groupId>
+                    <artifactId>mail</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+    </dependencies>
+
+
+    <repositories>
+        <repository>
+            <id>ccnexus</id>
+            <name>Code-Camp 3rd Party Repository</name>
+            <url>http://nexus.code-camp.org/content/repositories/thirdparty/</url>
+        </repository>
+    </repositories>
+</project>

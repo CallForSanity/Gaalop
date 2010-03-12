@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="de.gaalop.gui.ErrorDialog">
+  <grid id="cbd77" binding="contentPane" layout-manager="BorderLayout" hgap="0" vgap="0">
+    <constraints>
+      <xy x="48" y="54" width="436" height="297"/>
+    </constraints>
+    <properties>
+      <preferredSize width="480" height="155"/>
+    </properties>
+    <border type="none"/>
+    <children>
+      <grid id="71100" layout-manager="FlowLayout" hgap="10" vgap="10" flow-align="0">
+        <constraints border-constraint="South"/>
+        <properties/>
+        <border type="none"/>
+        <children>
+          <component id="92380" class="javax.swing.JButton" binding="buttonOk">
+            <constraints/>
+            <properties>
+              <text value="Ok"/>
+            </properties>
+          </component>
+        </children>
+      </grid>
+      <grid id="a67b0" layout-manager="FlowLayout" hgap="15" vgap="5" flow-align="0">
+        <constraints border-constraint="North"/>
+        <properties/>
+        <border type="none"/>
+        <children>
+          <component id="58230" class="javax.swing.JLabel">
+            <constraints/>
+            <properties>
+              <font size="28" style="1"/>
+              <icon value="de/gaalop/gui/dialog-error.png"/>
+              <text value="Error"/>
+            </properties>
+          </component>
+        </children>
+      </grid>
+      <grid id="2c450" layout-manager="BorderLayout" hgap="0" vgap="0">
+        <constraints border-constraint="Center"/>
+        <properties/>
+        <border type="empty">
+          <size top="5" left="5" bottom="5" right="5"/>
+        </border>
+        <children>
+          <grid id="8dab5" layout-manager="BorderLayout" hgap="0" vgap="0">
+            <constraints border-constraint="North"/>
+            <properties/>
+            <border type="empty">
+              <size top="0" left="0" bottom="10" right="0"/>
+            </border>
+            <children>
+              <component id="72133" class="javax.swing.JTextPane" binding="textPanel">
+                <constraints border-constraint="Center"/>
+                <properties>
+                  <background swing-color="Panel.background"/>
+                  <editable value="false"/>
+                </properties>
+              </component>
+            </children>
+          </grid>
+          <scrollpane id="6bcd0" binding="scrollPane">
+            <constraints border-constraint="Center"/>
+            <properties/>
+            <border type="bevel-lowered"/>
+            <children>
+              <component id="e9eae" class="javax.swing.JEditorPane" binding="editorPane1" default-binding="true">
+                <constraints/>
+                <properties>
+                  <background swing-color="Panel.background"/>
+                  <editable value="false"/>
+                </properties>
+              </component>
+            </children>
+          </scrollpane>
+        </children>
+      </grid>
+    </children>
+  </grid>
+</form>
