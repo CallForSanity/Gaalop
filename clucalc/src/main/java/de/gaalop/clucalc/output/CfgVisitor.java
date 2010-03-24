@@ -109,24 +109,29 @@ public class CfgVisitor implements ControlFlowVisitor {
 
     code.append(outputVariable.getName());
     code.append(" = ");
-    for (int i = 0; i < node.getGraph().getBladeList().length; ++i) {
-      if (!assignedComponents.get(outputVariable.getName()).contains(i)) {
-        continue;
-      }
+    Set<Integer> var = assignedComponents.get(outputVariable.getName());
+    if (var == null) {
+      // no assignment for this variable at all -> 0
+      code.append(0);
+    } else {
+      for (int i = 0; i < node.getGraph().getBladeList().length; ++i) {
+        if (!var.contains(i)) {
+          continue;
+        }
 
-      Expression blade = node.getGraph().getBladeList()[i];
+        Expression blade = node.getGraph().getBladeList()[i];
 
-      code.append(outputVariable.getName());
-      code.append("(");
-      code.append(i + 1);
-      code.append(")");
-      code.append(" * ");
-      addCode(blade);
-      code.append(" + ");
+        code.append(outputVariable.getName());
+        code.append("(");
+        code.append(i + 1);
+        code.append(")");
+        code.append(" * ");
+        addCode(blade);
+        code.append(" + ");
+      }    
+      // Remove the last " + "
+      code.setLength(code.length() - 3);
     }
-
-    // Remove the last " + "
-    code.setLength(code.length() - 3);
 
     code.append(";\n");
 

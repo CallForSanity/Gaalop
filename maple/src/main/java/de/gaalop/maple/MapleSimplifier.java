@@ -54,6 +54,7 @@ public class MapleSimplifier {
 
         // Load our Maple modules
         loadModule("gaalop.m");
+        loadModule("gaalopfunctions.m");
 
         // Misc initialization
         engine.evaluate("B:=linalg[diag](1,1,1,1,-1);");

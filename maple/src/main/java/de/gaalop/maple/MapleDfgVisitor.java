@@ -59,8 +59,8 @@ public class MapleDfgVisitor implements ExpressionVisitor {
         }
 
         // FIXME: might be necessary to introduce function keeping track of zero: LC(x,y) = 0 -> return -LC(y,x) !!!
-        codeBuffer.append("LC(");
-//        codeBuffer.append("innerproduct(");
+//        codeBuffer.append("LC(");
+        codeBuffer.append("innerproduct(");
         innerProduct.getLeft().accept(this);
         codeBuffer.append(',');
         innerProduct.getRight().accept(this);

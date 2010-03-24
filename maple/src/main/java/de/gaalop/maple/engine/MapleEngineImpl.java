@@ -190,7 +190,7 @@ class MapleEngineImpl implements MapleEngine {
     @Override
     public void loadModule(InputStream input) throws MapleEngineException {
         try {
-            File tempFile = File.createTempFile("gaalop", ".m");
+            File tempFile = File.createTempFile("module", ".m");
 
             try {
                 FileOutputStream output = new FileOutputStream(tempFile);
