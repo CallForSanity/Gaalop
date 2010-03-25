@@ -28,6 +28,7 @@ class MapleEngineImpl implements MapleEngine {
      * @author Sebastian
      */
     private final class EngineCallback implements InvocationHandler {
+        @SuppressWarnings("boxing")
         @Override
         public Object invoke(Object proxy, Method method, Object[] args)
                 throws Throwable {
@@ -153,7 +154,7 @@ class MapleEngineImpl implements MapleEngine {
 
     @Override
     public String evaluate(String command) throws MapleEngineException {
-        log.debug("Executing '" + command + "'");
+        log.debug("Executing " + command);
 
         errorMessages.clear();
         outputBuffer.setLength(0);
@@ -174,7 +175,7 @@ class MapleEngineImpl implements MapleEngine {
                 throw new MapleEngineException(errorMessage, command);
             }
 
-            log.debug("Result: '" + result + "'");
+            log.debug("Result: " + result);
 
             return result;
         } catch (Exception e) {

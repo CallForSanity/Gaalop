@@ -54,6 +54,7 @@ public class CompileAction extends AbstractAction {
             displayOutput(output);
         } catch (CompilationException ex) {
             ErrorDialog.show(ex);
+            log.error("Compilation exception", ex);
         }
     }
 

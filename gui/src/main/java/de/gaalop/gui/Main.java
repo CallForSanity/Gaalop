@@ -39,7 +39,7 @@ public class Main {
 
     private static void startLog() throws IOException {
         PatternLayout layout = new PatternLayout(LOG_PATTERN);
-        FileAppender appender = new FileAppender(layout, DEBUG_LOG);
+        FileAppender appender = new FileAppender(layout, DEBUG_LOG, false);
         BasicConfigurator.configure(appender);
         Logger rootLogger = Logger.getRootLogger();
         rootLogger.setLevel(Level.ALL);
