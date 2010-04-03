@@ -12,6 +12,8 @@ tokens {
   PROCEDURE;
   NEGATION;
   DUAL;
+  BLOCK;
+  ELSEIF;
 }
 
 @header {
@@ -35,7 +37,19 @@ tokens {
   Root Rule 
 */
 script  :
-  statement* EOF!
+  statement* EOF! 
+  ;
+
+float_literal:
+  MINUS? FLOATING_POINT_LITERAL
+  ;
+
+/*
+  Pragma
+*/
+pragma
+  : PRAGMA RANGE_LITERAL float_literal LESS_OR_EQUAL IDENTIFIER LESS_OR_EQUAL float_literal
+  | PRAGMA OUTPUT_LITERAL IDENTIFIER
   ;
 
 /*
@@ -132,7 +146,13 @@ statement
   : expression_statement
   | procedure_call
   | draw_mode
+  | block
   | if_statement
+  | pragma 
+  ;
+
+block
+  : CLBRACKET statement* CRBRACKET -> ^(BLOCK statement*)
   ;
   
 draw_mode
@@ -150,10 +170,13 @@ expression_statement
   ;
   
 if_statement 
-  : IF LBRACKET condition=logical_or_expression RBRACKET                // condition
-    CLBRACKET then_list=statement_list CRBRACKET                            // then-part
-    (   ELSE CLBRACKET else_list=statement_list CRBRACKET                   // else-part (optional)
-      | ELSE elseif=if_statement                                             // TODO: support elseif statements
-    )?
-    -> ^(IF $condition $then_list ELSE? $else_list? $elseif?)                      
+  : IF LBRACKET condition=logical_or_expression RBRACKET     // condition
+    then_part=statement                                      // then-part
+    (else_part)?                                             // optional else-part
+    -> ^(IF $condition $then_part else_part?)                      
+  ;
+  
+else_part
+  : ELSE block -> ^(ELSE block)
+  | ELSE stmt=if_statement -> ^(ELSEIF $stmt)
   ;

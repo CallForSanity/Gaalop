@@ -7,6 +7,7 @@ import org.apache.commons.logging.LogFactory;
 
 import javax.imageio.ImageIO;
 import java.net.URL;
+import java.util.Observable;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -14,7 +15,7 @@ import java.io.IOException;
 /**
  * Plugin class for the CluCalc code parser.
  */
-public class Plugin implements CodeParserPlugin {
+public class Plugin extends Observable implements CodeParserPlugin {
 
     private Log log = LogFactory.getLog(Plugin.class);
 
@@ -50,6 +51,17 @@ public class Plugin implements CodeParserPlugin {
 
     @Override
     public CodeParser createCodeParser() {
+    	CluCalcCodeParser.INSTANCE.setPluginReference(this);
         return CluCalcCodeParser.INSTANCE;
     }
+        
+    /**
+     * Notifies this class' observers about new maximum number of assignments.
+     * 
+     * @param n
+     */
+	void setNumberOfAssignments(int n) {
+		setChanged();
+		notifyObservers(Integer.valueOf(n));
+	}
 }

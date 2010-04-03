@@ -9,9 +9,9 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.net.URL;
 import java.util.Set;
 import java.util.prefs.Preferences;
@@ -21,16 +21,21 @@ import java.util.prefs.Preferences;
  */
 public class CompileAction extends AbstractAction {
 
-    private Log log = LogFactory.getLog(CompileAction.class);
+	private static final long serialVersionUID = 2110643735874314468L;
+
+	private Log log = LogFactory.getLog(CompileAction.class);
 
     private final CodeGeneratorPlugin codeGeneratorPlugin;
 
     private final SourceFilePanel sourcePanel;
 
-    public CompileAction(SourceFilePanel sourcePanel, CodeGeneratorPlugin codeGeneratorPlugin) {
+	private final StatusBar statusBar;
+
+    public CompileAction(SourceFilePanel sourcePanel, StatusBar statusBar, CodeGeneratorPlugin codeGeneratorPlugin) {
         super("To " + codeGeneratorPlugin.getName(), PluginIconUtil.getSmallIcon(codeGeneratorPlugin));
         this.codeGeneratorPlugin = codeGeneratorPlugin;
         this.sourcePanel = sourcePanel;
+        this.statusBar = statusBar;
     }
 
     @Override
@@ -45,17 +50,29 @@ public class CompileAction extends AbstractAction {
 
         CodeParserPlugin parserPlugin = sourcePanel.getParserPlugin();
 
-        CompilerFacade facade = new CompilerFacade(parserPlugin.createCodeParser(),
+        final CompilerFacade facade = new CompilerFacade(parserPlugin.createCodeParser(),
                 optimizationPlugin.createOptimizationStrategy(),
                 codeGeneratorPlugin.createCodeGenerator());
+        facade.addObserver(statusBar);
 
-        try {
-            Set<OutputFile> output = facade.compile(sourcePanel.getInputFile());
-            displayOutput(output);
-        } catch (CompilationException ex) {
-            ErrorDialog.show(ex);
-            log.error("Compilation exception", ex);
-        }
+        // start new thread in order to see status changes in main thread (GUI)
+		Thread compiler = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					Set<OutputFile> output;
+					output = facade.compile(sourcePanel.getInputFile());
+					displayOutput(output);
+				} catch (CompilationException ex) {
+					log.error("Compilation exception", ex);
+					statusBar.displayError();
+					ex.printStackTrace();
+					ErrorDialog.show(ex);
+				}
+
+			}
+		});
+		compiler.start();
     }
 
     private OptimizationStrategyPlugin getOptimizationStrategy() {
@@ -78,6 +95,12 @@ public class CompileAction extends AbstractAction {
 
         JFrame outputFrame = new JFrame("Compilation Result");
         outputFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        outputFrame.addWindowListener(new WindowAdapter() {
+        	@Override
+        	public void windowClosed(WindowEvent e) {
+        		statusBar.reset();
+        	}
+		});
         outputFrame.setContentPane(resultForm.getContentPane());
         outputFrame.setPreferredSize(new Dimension(640, 480));
         outputFrame.setIconImage(getIcon());

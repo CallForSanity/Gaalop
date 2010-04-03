@@ -9,6 +9,8 @@ import org.apache.commons.logging.LogFactory;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.Properties;
 import java.util.Set;
 import java.util.HashSet;
@@ -30,7 +32,7 @@ public class PluginConfigurator {
      *                      A copy of this object will be stored.
      */
     public PluginConfigurator(Properties configuration) {
-        this.configuration = (Properties) configuration;
+        this.configuration = configuration;
     }
 
     /**
@@ -76,17 +78,19 @@ public class PluginConfigurator {
     /**
      * Configures all registered Plugins using the currently set configuration options.
      */
-    public void configureAll() {
+    public void configureAll(Observer o) {
         Set<? extends Plugin> plugins;
 
         plugins = Plugins.getOptimizationStrategyPlugins();
         for (Plugin plugin : plugins) {
             configure(plugin);
+            register(plugin, o);
         }
 
         plugins = Plugins.getCodeParserPlugins();
         for (Plugin plugin : plugins) {
             configure(plugin);
+            register(plugin, o);
         }
 
         plugins = Plugins.getCodeGeneratorPlugins();
@@ -95,7 +99,14 @@ public class PluginConfigurator {
         }
     }
 
-    /**
+    private void register(Plugin plugin, Observer o) {
+		if (plugin.getClass().getSuperclass() == Observable.class) {
+			log.debug("Registering " + o + " as observer of " + plugin.getName() + " plugin");
+			((Observable) plugin).addObserver(o);
+		}
+	}
+
+	/**
      * Iterates over all plugins and reads their current configuration state into the property map.
      * The property map can be retrieved using <code>getConfiguration</code>.
      */

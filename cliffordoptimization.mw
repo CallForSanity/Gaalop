@@ -135,6 +135,17 @@ gaalopinitialize := proc()
 	blade[32] := e1 &amp;w e2 &amp;w e3 &amp;w einf &amp;w e0:
 end:
 
+
+innerproduct := proc(x,y)
+	local result;
+	result := LC(x,y);
+	if result = 0 then
+		return -LC(y,x)
+	else
+		return result
+	end if:
+end:
+
 simple:=proc(val)
   local temp;
   temp := val,[e4,e5];
@@ -230,7 +241,7 @@ cliffordperformant:=proc(y::evaln)
 end:
 
 
-save simple,gaalopinitialize,gaalop,cliffordperformant, &quot;gaalop.m&quot;;</Text-field>
+save simple,gaalopinitialize,innerproduct,gaalop,cliffordperformant, &quot;gaalop.m&quot;;</Text-field>
 </Input>
 <Output>
 <Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output">N2BwSSMmbUc2IkkrQnNpZ25hdHVyZUdGJEktQ0xJRkZPUkRfRU5WR0YkSSdLZmllbGRHRiRJI0xDR0YkSSRMQ1FHRiRJI1JDR0YkSSRSQ1FHRiRJKVJIbnVtYmVyR0YkSSphZGZtYXRyaXhHRiRJKWFsbF9zaWdzR0YkSStiZXRhX21pbnVzR0YkSSpiZXRhX3BsdXNHRiRJJ2J1aWxkbUdGJEkoYnlncmFkZUdGJEkpY19jb25qdWdHRiRJJ2NiYXNpc0dGJEkqY2RmbWF0cml4R0YkSSVjZXhwR0YkSSZjZXhwUUdGJEklY2ludkdGJEksY2xpYmlsaW5lYXJHRiRJK2NsaWNvbGxlY3RHRiRJKGNsaWRhdGFHRiRJKmNsaWxpbmVhckdGJEkrY2xpbWlucG9seUdGJEkpY2xpcGFyc2VHRiRJKmNsaXJlbW92ZUdGJEkpY2xpc29sdmVHRiRJKGNsaXNvcnRHRiRJKWNsaXRlcm1zR0YkSSVjbXVsR0YkSShjbXVsTlVNR0YkSSZjbXVsUUdGJEknY211bFJTR0YkSShjbXVsZ2VuR0YkSShjb2N5Y2xlR0YkSTJjb21tdXRpbmdlbGVtZW50c0dGJEksY29uanVnYXRpb25HRiRJKmRkZm1hdHJpeEdGJEksZGlhZ29uYWxpemVHRiRJKmRpc3BsYXlpZEdGJEkoZXh0cmFjdEdGJEkxZmFjdG9yaWRlbXBvdGVudEdGJEkpZmluZDFzdHJHRiRJKmZpbmRiYXNpc0dGJEkpZ3JhZGVpbnZHRiRJJWluaXRHRiRJL2lzVmFobGVubWF0cml4R0YkSSppc3Byb2R1Y3RHRiRJLG1ha2VhbGlhc2VzR0YkSS5tYWtlY2xpYmFzbW9uR0YkSSltYXRLcmVwckdGJEkpbWF4Z3JhZGVHRiRJKW1heGluZGV4R0YkSSptZGZtYXRyaXhHRiRJLW1pbmltYWxpZGVhbEdGJEkkb3JkR0YkSSlwZXJtc2lnbkdGJEkqcHNldWRvZGV0R0YkSSlxX2Nvbmp1Z0dGJEkpcWRpc3BsYXlHRiRJJXFpbnZHRiRJJXFtdWxHRiRJJnFub3JtR0YkSS1yZF9jbGliYXNtb25HRiRJKnJkX2NsaW1vbkdGJEkucmRfY2xpcG9seW5vbUdGJEkocmVvcmRlckdGJEkqcmV2ZXJzaW9uR0YkSSZybXVsbUdGJEkmcm90M2RHRiRJK3NjYWxhcnBhcnRHRiRJJXNleHBHRiRJMnNwZWNpZnlfY29uc3RhbnRzR0YkSS1zcGlub3JLYmFzaXNHRiRJLHNwaW5vcktyZXByR0YkSStzcXVhcmVtb2RmR0YkSTBzdWJzX2NsaXBvbHlub21HRiRJK3VzZXByb2R1Y3RHRiRJK3ZlY3RvcnBhcnRHRiRJKHZlcnNpb25HRiRJJndlZGdlR0YkSSV3ZXhwR0Yk</Equation></Text-field>
@@ -250,9 +261,6 @@ save simple,gaalopinitialize,gaalop,cliffordperformant, &quot;gaalop.m&quot;;</T
 <Output>
 <Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYpLUkjbWlHRiQ2JVEnR2FhbG9wRicvJSdpdGFsaWNHUSV0cnVlRicvJSxtYXRodmFyaWFudEdRJ2l0YWxpY0YnLUkjbW9HRiQ2LVEjOj1GJy9GM1Enbm9ybWFsRicvJSZmZW5jZUdRJmZhbHNlRicvJSpzZXBhcmF0b3JHRj0vJSlzdHJldGNoeUdGPS8lKnN5bW1ldHJpY0dGPS8lKGxhcmdlb3BHRj0vJS5tb3ZhYmxlbGltaXRzR0Y9LyUnYWNjZW50R0Y9LyUnbHNwYWNlR1EsMC4yNzc3Nzc4ZW1GJy8lJ3JzcGFjZUdGTC1GIzYpLUYsNiVRInhGJ0YvRjItRjY2LVEoJiM4NTk0O0YnRjlGO0Y+RkBGQkZERkZGSC9GS1EmMC4wZW1GJy9GTkZYLUYjNiktRiw2JVEnZ2FhbG9wRidGL0YyLUY2Ni1RMCZBcHBseUZ1bmN0aW9uO0YnRjlGO0Y+RkBGQkZERkZGSEZXRlktSShtZmVuY2VkR0YkNiQtRiM2J0ZRLyUrZm9yZWdyb3VuZEdRKFswLDAsMF1GJy8lK2JhY2tncm91bmRHUS5bMjU1LDI1NSwyNTVdRicvJSlyZWFkb25seUdGPUY5RjlGYW9GZG9GZ29GOUZhb0Zkb0Znb0Y5RmFvRmRvRmdvRjk=">Zio2I0kieEc2IkYlNiRJKW9wZXJhdG9yR0YlSSZhcnJvd0dGJUYlLUknZ2FhbG9wR0YlNiM5JEYlRiVGJQ==</Equation></Text-field>
 </Output>
-<Output>
-<Text-field style="HyperlinkWarning" layout="HyperlinkWarning"><Hyperlink linktarget="http://www.maplesoft.com/support/help/errors/view.aspx?path=Warning,%20unassigned%20variable%20%60innerproduct%60%20in%20save%20statement" hyperlink="true"><Font style="HyperlinkWarning">Warning, unassigned variable `innerproduct` in save statement</Font></Hyperlink></Text-field>
-</Output>
 </Group>
 <Group labelreference="L4">
 <Input>
@@ -261,12 +269,12 @@ save simple,gaalopinitialize,gaalop,cliffordperformant, &quot;gaalop.m&quot;;</T
 </Group>
 <Group labelreference="L5" drawlabel="true">
 <Input>
-<Text-field prompt="&gt; " style="Maple Input" layout="Normal"><Equation executable="true" style="2D Input" input-equation="" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYlLUkjbWlHRiQ2I1EhRicvJStleGVjdXRhYmxlR1EmZmFsc2VGJy8lLG1hdGh2YXJpYW50R1Enbm9ybWFsRic=">JSFH</Equation></Text-field>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal"><Equation executable="true" style="2D Input" input-equation="" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYlLUkjbWlHRiQ2I1EhRicvJStleGVjdXRhYmxlR1EmZmFsc2VGJy8lLG1hdGh2YXJpYW50R1Enbm9ybWFsRic=">LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYjLUkjbWlHRiQ2I1EhRic=</Equation></Text-field>
 </Input>
 </Group>
 <Group labelreference="L6" drawlabel="true">
 <Input>
-<Text-field prompt="&gt; " style="Maple Input" layout="Normal"><Equation executable="true" style="2D Input" input-equation="" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYlLUkjbWlHRiQ2I1EhRicvJStleGVjdXRhYmxlR1EmZmFsc2VGJy8lLG1hdGh2YXJpYW50R1Enbm9ybWFsRic=">JSFH</Equation></Text-field>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal"><Equation executable="true" style="2D Input" input-equation="" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYlLUkjbWlHRiQ2I1EhRicvJStleGVjdXRhYmxlR1EmZmFsc2VGJy8lLG1hdGh2YXJpYW50R1Enbm9ybWFsRic=">LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYjLUkjbWlHRiQ2I1EhRic=</Equation></Text-field>
 </Input>
 </Group>
 <Text-field superscript="false" placeholder="false" executable="false" selection-placeholder="false" italic="false" size="12" bold="false" subscript="false" family="Times New Roman" opaque="false" underline="false" background="[255,255,255]" readonly="false" foreground="[0,0,0]" alignment="left" firstindent="0" spacebelow="0" leftmargin="0" linespacing="0.0" initial="0" linebreak="space" rightmargin="0" bulletsuffix="" spaceabove="0" bullet="none" pagebreak-before="false"></Text-field>

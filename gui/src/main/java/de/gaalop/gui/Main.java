@@ -27,6 +27,7 @@ public class Main {
     private static final String CONFIG_FILENAME = "gaalop.xml";
     private static final String DEBUG_LOG = "debug.log";
     private static final String LOG_PATTERN = "%d{ISO8601} %-5p [%t] %c: %m%n";
+	private MainForm mainForm;
 
     public static void main(String[] args) throws IOException {
         if (args.length > 0 && args[0].equals("-debug")) {
@@ -54,26 +55,27 @@ public class Main {
             e.printStackTrace();
         }
 
-        loadConfig();
+        mainForm = new MainForm();
 
-        final MainForm form = new MainForm();
 
         JFrame mainWindow = new JFrame("Gaalop");
         mainWindow.setIconImage(getIcon());
         mainWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        mainWindow.setContentPane(form.getContentPane());
+        mainWindow.setContentPane(mainForm.getContentPane());
         mainWindow.pack();
         mainWindow.setLocationRelativeTo(null);
         mainWindow.setVisible(true);
+        
+        loadConfig();
 
-        form.loadOpenedFiles();
+        mainForm.loadOpenedFiles();
 
         // Save the config whenever the main window is closed
         mainWindow.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosed(WindowEvent e) {
                 saveConfig();
-                form.saveOpenedFiles();
+                mainForm.saveOpenedFiles();
             }
         });
     }
@@ -95,7 +97,7 @@ public class Main {
         log.debug("Configuration loaded: " + config);
 
         PluginConfigurator configurator = new PluginConfigurator(config);
-        configurator.configureAll();
+        configurator.configureAll(mainForm.getStatusBar());
     }
 
     private void saveConfig() {

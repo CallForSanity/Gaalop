@@ -21,6 +21,14 @@ public enum CluCalcCodeParser implements CodeParser {
 
     // static in order not to get an "illegal reference to static field from initializer" error
     private static final Log log = LogFactory.getLog(CluCalcCodeParser.class);
+    
+    private Plugin plugin;
+    
+    public void setPluginReference(Plugin plugin) {
+    	if (this.plugin == null) {
+    		this.plugin = plugin;
+    	}
+    }
 
     @Override
     public ControlFlowGraph parseFile(InputFile input) throws CodeParserException {
@@ -62,6 +70,9 @@ public enum CluCalcCodeParser implements CodeParser {
         CommonTreeNodeStream treeNodeStream = new CommonTreeNodeStream(parserResult.getTree());
         CluCalcTransformer transformer = new CluCalcTransformer(treeNodeStream);
         ControlFlowGraph graph = transformer.script();
+        if (plugin != null) {
+        	plugin.setNumberOfAssignments(transformer.getNumberOfAssignments());
+        }
 
         if (!parser.getErrors().isEmpty()) {
             StringBuilder message = new StringBuilder();

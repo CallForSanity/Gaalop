@@ -23,11 +23,15 @@ options {
 	public void displayRecognitionError(String[] tokenNames,
                                         RecognitionException e) {
 		String hdr = getErrorHeader(e);
-		String msg = getErrorMessage(e, tokenNames);
+    String msg = getErrorMessage(e, tokenNames);
 		errors.add(hdr + " " + msg);
 	}
 	public List<String> getErrors() {
 		return errors;
+	}
+	
+	protected int getNumberOfAssignments() {
+	  return graphBuilder.getNumberOfAssignments();
 	}
 }
 
@@ -60,13 +64,24 @@ statement returns [ArrayList<SequentialNode> nodes]
 	// Stand-alone assignment
 	| assignment { $nodes.add(graphBuilder.handleAssignment($assignment.variable, $assignment.value)); }
 	
+	| block { $nodes = $block.nodes; }
+	
 	| if_statement { $nodes.add($if_statement.node);}
 	
 	// Some other expression (We can ignore this since we don't implement side-effects)
 	| expression
 
+  | pragma
 	;
-	
+
+pragma
+  :  PRAGMA RANGE_LITERAL min=float_literal LESS_OR_EQUAL varname=IDENTIFIER LESS_OR_EQUAL max=float_literal
+     {  graphBuilder.addPragmaMinMaxValues($varname.text, min, max);}
+   | PRAGMA OUTPUT_LITERAL varname=IDENTIFIER
+     {  graphBuilder.addPragmaOutputVariable($varname.text);  }
+
+  ;
+
 assignment returns [Variable variable, Expression value]
 	: ^(EQUALS l=variable r=expression) {
 			$variable = $l.result;
@@ -85,8 +100,24 @@ variable returns [Variable result]
 	;
 	
 if_statement returns [IfThenElseNode node]
-  : ^(IF condition=expression then_part=statement_list ELSE? else_part=statement_list?) {
-      $node = graphBuilder.handleIfStatement($condition.result, $then_part.args, $else_part.args);
+  : ^(IF condition=expression then_part=statement else_part=else_statement?) {
+    $node = graphBuilder.handleIfStatement($condition.result, $then_part.nodes, $else_part.nodes);
+  }
+  ;
+  
+else_statement returns [ArrayList<SequentialNode> nodes]
+  @init { $nodes = new ArrayList<SequentialNode>(); }
+  : ^(ELSE block) { $nodes = $block.nodes; }
+  | ^(ELSEIF if_statement) { 
+    $if_statement.node.setElseIf(true);
+    $nodes.add($if_statement.node); 
+  }
+  ;
+  
+block returns [ArrayList<SequentialNode> nodes]
+  @init { $nodes = new ArrayList<SequentialNode>(); }
+  : ^(BLOCK stmts=statement_list) {
+     $nodes.addAll($stmts.args);
   }
   ;
   
@@ -133,9 +164,9 @@ expression returns [Expression result]
 	// Function Call
 	| ^(FUNCTION name=IDENTIFIER arguments) { $result = graphBuilder.processFunction($name.text, $arguments.args); }
 	// Integral Value (Constant)
-	| value=DECIMAL_LITERAL { $result = new FloatConstant(Float.parseFloat($value.text)); }
+	| value=DECIMAL_LITERAL { $result = new FloatConstant($value.text); }
 	// Floating Point Value (Constant)
-	| value=FLOATING_POINT_LITERAL { $result = new FloatConstant(Float.parseFloat($value.text)); }
+	| value=FLOATING_POINT_LITERAL { $result = new FloatConstant($value.text); }
 	// Variable or constant
 	| variableOrConstant { $result = $variableOrConstant.result; }
 	;
@@ -149,4 +180,6 @@ arguments returns [ArrayList<Expression> args]
 	: (arg=expression { $args.add($arg.result); })*
 	;
 
-	
+float_literal returns [String result]
+  : sign=MINUS? val=FLOATING_POINT_LITERAL  {$result = new String((sign!=null?$sign.text:"") + $val.text);}
+;

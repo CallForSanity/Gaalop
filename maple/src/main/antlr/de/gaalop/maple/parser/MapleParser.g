@@ -63,6 +63,7 @@ additive_expression
 
 multiplicative_expression
 	: outer_product_expression ( (STAR^ | SLASH^) outer_product_expression )*
+  | negation
 	;
 
 outer_product_expression
@@ -73,9 +74,13 @@ modulo_expression
 	: unary_expression ( MODULO^ unary_expression )*
 	;
 
+negation
+	: (unary_operator value=multiplicative_expression) -> ^(NEGATION $value)
+;
+
+//negation must have lower priority than wedge
 unary_expression
 	: postfix_expression
-	| (unary_operator value=unary_expression) -> ^(NEGATION $value)
 	;
 	
 postfix_expression
