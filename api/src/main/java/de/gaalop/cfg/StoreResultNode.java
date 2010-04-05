@@ -52,4 +52,20 @@ public final class StoreResultNode extends SequentialNode {
     public String toString() {
     	return "?" + value;
     }
+    
+    @Override
+    public boolean equals(Object obj) {
+    	if (this == obj) {
+    		return true;
+    	} else if (obj instanceof StoreResultNode) {
+    		return value.equals(((StoreResultNode) obj).value);
+    	} else {
+    		return super.equals(obj);
+    	}
+    }
+
+	@Override
+	public int hashCode() {
+		return value.hashCode();
+	}
 }

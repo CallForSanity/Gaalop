@@ -1,6 +1,9 @@
 package de.gaalop.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -9,6 +12,7 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 
 import de.gaalop.CodeParserPlugin;
+import de.gaalop.CompilationException;
 import de.gaalop.CompilerFacade;
 import de.gaalop.OptimizationStrategyPlugin;
 
@@ -27,11 +31,20 @@ public class StatusBar extends JPanel implements Observer {
 	private final String spacer = "   ";
 	private final JProgressBar progressBar;
 	private final JLabel statusLabel;
+	private CompilationException ex;
 	
 	public StatusBar() {
 		setLayout(new BorderLayout(10, 0));
 		progressBar = new JProgressBar();
 		statusLabel = new JLabel();
+		statusLabel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (ex != null) {
+					ErrorDialog.show(ex);
+				}
+			}
+		});
 		setStatus("Ready");
 		add(statusLabel, BorderLayout.WEST);
 		add(progressBar, BorderLayout.CENTER);
@@ -65,12 +78,16 @@ public class StatusBar extends JPanel implements Observer {
 	}
 	
 	public void reset() {
+		ex = null;
+		statusLabel.setForeground(Color.BLACK);
 		setStatus("Ready");
 		progressBar.setValue(0);
 	}
 
-	public void displayError() {
-		setStatus("Error");
+	public void displayError(CompilationException ex) {
+		this.ex = ex;
+		statusLabel.setForeground(Color.RED);
+		setStatus("Error (click here to see error dialog)");
 	}
 
 }

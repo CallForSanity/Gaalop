@@ -5,19 +5,26 @@ import de.gaalop.dfg.*;
 
 import java.util.*;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
  * This visitor traverses the control and data flow graphs and generates C/C++ code.
  */
 public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
+
+	private Log log = LogFactory.getLog(CppVisitor.class);
 
 	private StringBuilder code = new StringBuilder();
 
 	private ControlFlowGraph graph;
 
 	// Maps the nodes that output variables to their result parameter names
-	private Map<StoreResultNode, String> outputNamesMap = new IdentityHashMap<StoreResultNode, String>();
+	private Map<StoreResultNode, String> outputNamesMap = new HashMap<StoreResultNode, String>();
 
 	private int indentation = 0;
+
+	private boolean standalone = true;
 
 	public String getCode() {
 		return code.toString();
@@ -33,33 +40,36 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 	public void visit(StartNode node) {
 		graph = node.getGraph();
 
-		code.append("void calculate(");
-
-		// Input Parameters
-		List<Variable> inputParameters = sortVariables(graph.getInputVariables());
-		for (Variable var : inputParameters) {
-			code.append("float "); // The assumption here is that they all are normal scalars
-			code.append(var.getName());
-			code.append(", ");
-		}
-
-		// Collect all output variables
 		FindStoreOutputNodes findOutput = new FindStoreOutputNodes();
 		graph.accept(findOutput);
 		for (StoreResultNode var : findOutput.getNodes()) {
-			code.append("float **");
 			String outputName = var.getValue().getName() + "_out";
-			code.append(outputName);
-			code.append(", ");
 			outputNamesMap.put(var, outputName);
 		}
+		if (standalone) {
+			code.append("void calculate(");
 
-		if (!graph.getInputVariables().isEmpty() || !findOutput.getNodes().isEmpty()) {
-			code.setLength(code.length() - 2);
+			// Input Parameters
+			List<Variable> inputParameters = sortVariables(graph.getInputVariables());
+			for (Variable var : inputParameters) {
+				code.append("float "); // The assumption here is that they all are normal scalars
+				code.append(var.getName());
+				code.append(", ");
+			}
+
+			for (StoreResultNode var : findOutput.getNodes()) {
+				code.append("float **");
+				code.append(outputNamesMap.get(var));
+				code.append(", ");
+			}
+
+			if (!graph.getInputVariables().isEmpty() || !findOutput.getNodes().isEmpty()) {
+				code.setLength(code.length() - 2);
+			}
+
+			code.append(") {\n");
+			indentation++;
 		}
-
-		code.append(") {\n");
-		indentation++;
 
 		// Declare local variables
 		for (Variable var : graph.getLocalVariables()) {
@@ -96,8 +106,23 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 		return variables;
 	}
 
+	Set<String> assigned = new HashSet<String>();
+
 	@Override
 	public void visit(AssignmentNode node) {
+		if (assigned.contains(node.getVariable().getName())) {
+			log.warn("Reuse of variable " + node.getVariable().getName()
+				+ ". Make sure to reset this variable or use another name.");
+			code.append("\n");
+			appendIndentation();
+			code.append("// Warning: reuse of variable ");
+			code.append(node.getVariable().getName());
+			code.append(".\n");
+			appendIndentation();
+			code.append("// Make sure to reset this variable or use another name.\n");
+			assigned.remove(node.getVariable().getName());
+		}
+
 		appendIndentation();
 		node.getVariable().accept(this);
 		code.append(" = ");
@@ -109,6 +134,8 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 
 	@Override
 	public void visit(StoreResultNode node) {
+		assigned.add(node.getValue().getName());
+
 		appendIndentation();
 		code.append("memcpy(");
 		code.append(outputNamesMap.get(node));
@@ -149,7 +176,7 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 				code.append("{\n");
 				indentation++;
 			}
-			
+
 			node.getNegative().accept(this);
 
 			if (!isElseIf) {
@@ -169,8 +196,10 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 
 	@Override
 	public void visit(EndNode node) {
-		indentation--;
-		code.append("}\n");
+		if (standalone) {
+			indentation--;
+			code.append("}\n");
+		}
 	}
 
 	private void addBinaryInfix(BinaryOperation op, String operator) {

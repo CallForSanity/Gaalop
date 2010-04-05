@@ -40,6 +40,7 @@ public class CompileAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+    	statusBar.reset();
         OptimizationStrategyPlugin optimizationPlugin = getOptimizationStrategy();
 
         if (optimizationPlugin == null) {
@@ -65,7 +66,7 @@ public class CompileAction extends AbstractAction {
 					displayOutput(output);
 				} catch (CompilationException ex) {
 					log.error("Compilation exception", ex);
-					statusBar.displayError();
+					statusBar.displayError(ex);
 					ex.printStackTrace();
 					ErrorDialog.show(ex);
 				}
