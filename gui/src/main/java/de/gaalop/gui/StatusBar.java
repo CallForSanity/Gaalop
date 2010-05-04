@@ -12,6 +12,7 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 
 import de.gaalop.CodeParserPlugin;
+import de.gaalop.CompilationException;
 import de.gaalop.CompilerFacade;
 import de.gaalop.OptimizationStrategyPlugin;
 
@@ -30,7 +31,7 @@ public class StatusBar extends JPanel implements Observer {
 	private final String spacer = "   ";
 	private final JProgressBar progressBar;
 	private final JLabel statusLabel;
-	private Exception ex;
+	private CompilationException ex;
 	
 	public StatusBar() {
 		setLayout(new BorderLayout(10, 0));
@@ -64,10 +65,6 @@ public class StatusBar extends JPanel implements Observer {
 		if (o instanceof OptimizationStrategyPlugin) {
 			if (arg instanceof Integer) {
 				progressBar.setValue(((Integer) arg).intValue());
-			} else if (arg instanceof String) {
-				Exception ex = new IllegalArgumentException((String) arg);
-				displayError(ex);
-				ErrorDialog.show(ex);
 			} else {
 				progressBar.setValue(progressBar.getValue() + 1);
 			}
@@ -87,7 +84,7 @@ public class StatusBar extends JPanel implements Observer {
 		progressBar.setValue(0);
 	}
 
-	public void displayError(Exception ex) {
+	public void displayError(CompilationException ex) {
 		this.ex = ex;
 		statusLabel.setForeground(Color.RED);
 		setStatus("Error (click here to see error dialog)");

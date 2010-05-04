@@ -43,20 +43,10 @@ IF		:	'if'
 	
 ELSE	:	'else'
 	;
-	
-LOOP  : 'loop'
-  ;
-  
-BREAK : 'break'
-  ;
 
 IDENTIFIER
 	:	LETTER (LETTER|DIGIT)*
 	;
-	
-ARGUMENT_PREFIX
-  : '_P('
-  ;
 
 fragment
 LETTER

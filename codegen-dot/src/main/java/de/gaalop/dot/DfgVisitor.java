@@ -139,38 +139,31 @@ public class DfgVisitor implements ExpressionVisitor {
 
     @Override
     public void visit(LogicalOr node) {
-    	addBinaryOp(node, "||");
+      // TODO Auto-generated method stub
+      
     }
 
     @Override
     public void visit(LogicalAnd node) {
-    	addBinaryOp(node, "&&");
+      // TODO Auto-generated method stub
+      
     }
 
     @Override
     public void visit(Equality node) {
-    	addBinaryOp(node, "==");
+      // TODO Auto-generated method stub
+      
     }
 
     @Override
     public void visit(Inequality node) {
-    	addBinaryOp(node, "!=");
+      // TODO Auto-generated method stub
+      
     }
 
     @Override
     public void visit(Relation relation) {
-    	addBinaryOp(relation, relation.getTypeString());
+      // TODO Auto-generated method stub
+      
     }
-
-	@Override
-	public void visit(FunctionArgument node) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void visit(MacroCall node) {
-		// TODO Auto-generated method stub
-		
-	}
 }

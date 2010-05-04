@@ -14,8 +14,6 @@ tokens {
   DUAL;
   BLOCK;
   ELSEIF;
-  MACRO;
-  ARGUMENT;
 }
 
 @header {
@@ -126,7 +124,6 @@ function_call
 
 primary_expression
   : IDENTIFIER
-  | function_argument 
   | constant
   | LBRACKET! expression RBRACKET!
   ;
@@ -134,10 +131,6 @@ constant
     :   DECIMAL_LITERAL
     |   FLOATING_POINT_LITERAL
     ;
-    
-function_argument
-  : ARGUMENT_PREFIX index=DECIMAL_LITERAL RBRACKET -> ^(ARGUMENT $index)
-  ;
 
 /*
   Statements
@@ -152,19 +145,12 @@ statement_list
 statement 
   : expression_statement
   | procedure_call
-  | macro_definition
   | draw_mode
   | block
   | if_statement
-  | loop
-  | BREAK
   | pragma 
   ;
-  
-macro_definition
-  : id=IDENTIFIER EQUALS CLBRACKET lst=statement* e=additive_expression? CRBRACKET -> ^(MACRO $id $lst $e?)
-  ;
-  
+
 block
   : CLBRACKET statement* CRBRACKET -> ^(BLOCK statement*)
   ;
@@ -193,8 +179,4 @@ if_statement
 else_part
   : ELSE block -> ^(ELSE block)
   | ELSE stmt=if_statement -> ^(ELSEIF $stmt)
-  ;
-  
-loop
-  : LOOP stmt=statement -> ^(LOOP $stmt)
   ;

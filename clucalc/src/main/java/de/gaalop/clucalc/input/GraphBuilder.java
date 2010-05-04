@@ -3,16 +3,11 @@ package de.gaalop.clucalc.input;
 import de.gaalop.cfg.*;
 import de.gaalop.clucalc.algebra.*;
 import de.gaalop.dfg.Expression;
-import de.gaalop.dfg.MacroCall;
 import de.gaalop.dfg.Variable;
 import de.gaalop.dfg.MathFunction;
 import de.gaalop.dfg.MathFunctionCall;
-
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 /**
  * This is a utility class used by the CluCalcTransformer to build a control flow graph while parsing the CluCalc AST.
@@ -37,8 +32,6 @@ public final class GraphBuilder {
 	private final FunctionFactory functionFactory;
 
 	private int assignments;
-	
-	private Set<String> macros = new HashSet<String>();
 
 	public GraphBuilder() {
 		graph = new ControlFlowGraph();
@@ -152,15 +145,6 @@ public final class GraphBuilder {
 		}
 	}
 
-	/**
-	 * Handles an if statement. The statement consists of a condition expression, a mandatory then part (block) and an optional
-	 * else part.
-	 * 
-	 * @param condition condition expression
-	 * @param then_part list of statements belonging to then part
-	 * @param else_part optional list of statements belonging to else part (empty list in case of no else part)
-	 * @return new {@link IfThenElseNode} representing this statement.
-	 */
 	public IfThenElseNode handleIfStatement(Expression condition, List<SequentialNode> then_part, List<SequentialNode> else_part) {
 		IfThenElseNode ifthenelse = new IfThenElseNode(graph, condition);
 		addNode(ifthenelse);
@@ -175,44 +159,6 @@ public final class GraphBuilder {
 	}
 
 	/**
-	 * Handles a loop statement. A CluCalc loop consists of a body of statements, typically containing the break keyword.
-	 * 
-	 * @param body list of statements belonging to body
-	 * @return new {@link LoopNode} representing this statement.
-	 */
-	public LoopNode handleLoop(List<SequentialNode> body) {
-		LoopNode loop = new LoopNode(graph);
-		addNode(loop);
-		rewireNodes(body, loop);
-		loop.setBody((body != null && body.size() > 0) ? body.get(0) : new BlockEndNode(graph));
-		return loop;
-	}
-
-	/**
-	 * Handles the break keyword in a loop statement.
-	 * 
-	 * @see #handleLoop(List)
-	 * @return new {@link BreakNode} representing this statement.
-	 */
-	public BreakNode handleBreak() {
-		BreakNode brk = new BreakNode(graph);
-		addNode(brk);
-		return brk;
-	}
-	
-	public Macro handleMacroDefinition(String id, List<SequentialNode> body, Expression ret) {
-		macros.add(id);
-		Macro function = new Macro(graph, id, body, ret);
-		addNode(function);
-		
-		for (SequentialNode node : body) {
-			graph.removeNode(node);
-		}
-		
-		return function;
-	}
-
-	/**
 	 * Removes the nodes given by <code>list</code> from the control flow graph and rewires them to be a sequence of separate
 	 * nodes, e.g. in the body of an if-statement. The first node has <code>base</code> as predecessor. For the last node in the
 	 * list, base's successor will be set as successor, e.g. the first statement after an if-then-else statement.
@@ -220,7 +166,7 @@ public final class GraphBuilder {
 	 * @param list list of nodes from a block
 	 * @param base basis of block, e.g. an if-statement
 	 */
-	private void rewireNodes(List<SequentialNode> list, Node base) {
+	private void rewireNodes(List<SequentialNode> list, IfThenElseNode base) {
 		if (list == null || list.size() == 0) {
 			return;
 		}
@@ -311,10 +257,6 @@ public final class GraphBuilder {
 						+ " argument: " + args);
 				}
 			}
-		}
-		
-		if (macros.contains(name)) {
-			return new MacroCall(name, args);
 		}
 
 		throw new IllegalArgumentException("Call to undefined function " + name + "(" + args + ").\n"

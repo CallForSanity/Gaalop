@@ -58,6 +58,12 @@ public class CfgVisitor implements ControlFlowVisitor {
         addPredecessorEdges(node);
     }
 
+    @Override
+    public void visit(EndNode endNode) {
+        addNode(endNode, "End");
+        result.append("}\n");
+    }
+
     private void addPredecessorEdges(Node node) {
         // Add edges back to predecessors
         for (Node predecessor : node.getPredecessors()) {
@@ -93,50 +99,28 @@ public class CfgVisitor implements ControlFlowVisitor {
     }
 
     @Override
-	public void visit(StoreResultNode node) {
-	    addNode(node, "Output:\\n" + node.getValue());
-	    addForwardEdge(node, node.getSuccessor());
-	    node.getSuccessor().accept(this);
-	}
+    public void visit(StoreResultNode node) {
+        addNode(node, "Output:\\n" + node.getValue());
+        addForwardEdge(node, node.getSuccessor());
+        node.getSuccessor().accept(this);
+    }
 
-	@Override
-	public void visit(IfThenElseNode node) {
-	  // TODO Auto-generated method stub
-	
-	}
-
-	@Override
-	public void visit(LoopNode loopNode) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void visit(BreakNode breakNode) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void visit(BlockEndNode node) {
-	}
-
-	@Override
-	public void visit(EndNode endNode) {
-	    addNode(endNode, "End");
-	    result.append("}\n");
-	}
-
-	private String getCode(Expression expression, String prefix) {
+    private String getCode(Expression expression, String prefix) {
         DfgVisitor visitor = new DfgVisitor();
         visitor.setIdPrefix(prefix);
         expression.accept(visitor);
         return visitor.toString();
     }
 
-	@Override
-	public void visit(Macro node) {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void visit(IfThenElseNode node) {
+      // TODO Auto-generated method stub
+      
+    }
+
+    @Override
+    public void visit(BlockEndNode node) {
+      // TODO Auto-generated method stub
+      
+    }
 }
