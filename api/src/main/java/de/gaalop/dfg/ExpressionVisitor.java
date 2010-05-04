@@ -138,18 +138,4 @@ public interface ExpressionVisitor {
      * @param node The object that called this method.
      */
     void visit(Relation relation);
-
-    /**
-     * This method is called by {@link de.gaalop.dfg.FunctionArgument#accept(ExpressionVisitor)}.
-     *
-     * @param node The object that called this method.
-     */
-	void visit(FunctionArgument node);
-	
-	/**
-	 * This method is called by {@link de.gaalop.dfg.MacroCall#accept(ExpressionVisitor)}.
-	 *
-	 * @param node The object that called this method.
-	 */
-	void visit(MacroCall node);
 }

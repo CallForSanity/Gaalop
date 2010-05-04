@@ -189,25 +189,6 @@ public class CfgVisitor implements ControlFlowVisitor {
 
 		node.getSuccessor().accept(this);
 	}
-	
-	@Override
-	public void visit(LoopNode node) {
-		appendIndent();
-		code.append("loop {\n");
-		indent++;
-		node.getBody().accept(this);
-		indent--;
-		appendIndent();
-		code.append("}\n");
-		
-		node.getSuccessor().accept(this);
-	}
-	
-	@Override
-	public void visit(BreakNode breakNode) {
-		appendIndent();
-		code.append("break;\n");
-	}
 
 	@Override
 	public void visit(BlockEndNode node) {
@@ -224,10 +205,5 @@ public class CfgVisitor implements ControlFlowVisitor {
 		for (int i = 0; i < indent; i++) {
 			code.append("\t");
 		}
-	}
-
-	@Override
-	public void visit(Macro node) {
-		throw new IllegalStateException("Macros should have been inlined.");
 	}
 }

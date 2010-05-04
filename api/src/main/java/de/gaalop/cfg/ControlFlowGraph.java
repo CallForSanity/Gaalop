@@ -273,13 +273,6 @@ public final class ControlFlowGraph {
 				} else {
 					ifthenelse.replaceSuccessor(node, successor);
 				}
-			} else if (predecessor instanceof LoopNode) {
-				LoopNode loop = (LoopNode) predecessor;
-				if (node == loop.getBody()) {
-					loop.setBody(successor);
-				} else {
-					loop.replaceSuccessor(node, successor);
-				}
 			} else {
 				predecessor.replaceSuccessor(node, successor);
 			}
@@ -290,10 +283,10 @@ public final class ControlFlowGraph {
 	public String toString() {
 		SequentialNode curr = startNode;
 		StringBuilder sb = new StringBuilder();
-		sb.append("CFG:\n");
+		sb.append("CFG [");
 		sb.append(startNode);
 		do {
-			sb.append("\n--> ");
+			sb.append(" -> ");
 			if (curr.getSuccessor() instanceof SequentialNode) {
 				curr = (SequentialNode) curr.getSuccessor();
 				sb.append(curr);
@@ -303,6 +296,7 @@ public final class ControlFlowGraph {
 				break;
 			}
 		} while (true);
+		sb.append(']');
 		return sb.toString();
 	}
 }

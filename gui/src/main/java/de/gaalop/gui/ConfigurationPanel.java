@@ -19,7 +19,7 @@ public class ConfigurationPanel extends JPanel {
 	private static final long serialVersionUID = 7710406876645754914L;
 
 	public ConfigurationPanel(JTabbedPane tabbedPanel) {
-		add(new JLabel("One common panel for global settings plus one tab per plugin..."), BorderLayout.CENTER);
+		add(new JLabel("Nothing to be configured yet..."), BorderLayout.CENTER);
 		this.tabbedPanel = tabbedPanel;
 		tabbedPanel.addTab("Configuration", this);
 		int indexOfPanel = tabbedPanel.indexOfComponent(this);
