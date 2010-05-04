@@ -1,0 +1,187 @@
+2010-05-04 19:14:55,937 DEBUG [main] de.gaalop.gui.Main: Configuration loaded: {de.gaalop.maple.Plugin.mapleBinaryPath=/Library/Frameworks/Maple.framework/Versions/13/bin.APPLE_UNIVERSAL_OSX/, de.gaalop.maple.Plugin.mapleJavaPath=/Library/Frameworks/Maple.framework/Versions/13/java/}
+2010-05-04 19:14:55,941 DEBUG [main] de.gaalop.Plugins: Loading services of type interface de.gaalop.CodeParserPlugin
+2010-05-04 19:14:55,954 DEBUG [main] de.gaalop.Plugins: Loaded service: class de.gaalop.clucalc.input.Plugin
+2010-05-04 19:14:55,955 DEBUG [main] de.gaalop.Plugins: Loading services of type interface de.gaalop.CodeGeneratorPlugin
+2010-05-04 19:14:55,961 DEBUG [main] de.gaalop.Plugins: Loaded service: class de.gaalop.clucalc.output.Plugin
+2010-05-04 19:14:55,966 DEBUG [main] de.gaalop.Plugins: Loaded service: class de.gaalop.cpp.Plugin
+2010-05-04 19:14:55,978 DEBUG [main] de.gaalop.Plugins: Loaded service: class de.gaalop.dot.Plugin
+2010-05-04 19:14:55,982 DEBUG [main] de.gaalop.Plugins: Loaded service: class de.gaalop.latex.Plugin
+2010-05-04 19:14:55,983 DEBUG [main] de.gaalop.Plugins: Loading services of type interface de.gaalop.OptimizationStrategyPlugin
+2010-05-04 19:14:55,985 DEBUG [main] de.gaalop.Plugins: Loaded service: class de.gaalop.maple.Plugin
+2010-05-04 19:14:55,986 DEBUG [main] de.gaalop.gui.util.PluginConfigurator: Configuring class de.gaalop.maple.Plugin
+2010-05-04 19:14:56,003 DEBUG [main] de.gaalop.gui.util.PluginConfigurator: Configuration for de.gaalop.maple.Plugin.mapleBinaryPath = /Library/Frameworks/Maple.framework/Versions/13/bin.APPLE_UNIVERSAL_OSX/
+2010-05-04 19:14:56,024 DEBUG [main] org.apache.commons.beanutils.converters.BooleanConverter: Setting default value: false
+2010-05-04 19:14:56,024 DEBUG [main] org.apache.commons.beanutils.converters.BooleanConverter: Converting 'Boolean' value 'false' to type 'Boolean'
+2010-05-04 19:14:56,024 DEBUG [main] org.apache.commons.beanutils.converters.BooleanConverter:     No conversion required, value is already a Boolean
+2010-05-04 19:14:56,028 DEBUG [main] org.apache.commons.beanutils.converters.ByteConverter: Setting default value: 0
+2010-05-04 19:14:56,028 DEBUG [main] org.apache.commons.beanutils.converters.ByteConverter: Converting 'Integer' value '0' to type 'Byte'
+2010-05-04 19:14:56,028 DEBUG [main] org.apache.commons.beanutils.converters.ByteConverter:     Converted to Byte value '0'
+2010-05-04 19:14:56,030 DEBUG [main] org.apache.commons.beanutils.converters.CharacterConverter: Setting default value:  
+2010-05-04 19:14:56,030 DEBUG [main] org.apache.commons.beanutils.converters.CharacterConverter: Converting 'Character' value ' ' to type 'Character'
+2010-05-04 19:14:56,030 DEBUG [main] org.apache.commons.beanutils.converters.CharacterConverter:     No conversion required, value is already a Character
+2010-05-04 19:14:56,031 DEBUG [main] org.apache.commons.beanutils.converters.DoubleConverter: Setting default value: 0
+2010-05-04 19:14:56,031 DEBUG [main] org.apache.commons.beanutils.converters.DoubleConverter: Converting 'Integer' value '0' to type 'Double'
+2010-05-04 19:14:56,031 DEBUG [main] org.apache.commons.beanutils.converters.DoubleConverter:     Converted to Double value '0.0'
+2010-05-04 19:14:56,032 DEBUG [main] org.apache.commons.beanutils.converters.FloatConverter: Setting default value: 0
+2010-05-04 19:14:56,033 DEBUG [main] org.apache.commons.beanutils.converters.FloatConverter: Converting 'Integer' value '0' to type 'Float'
+2010-05-04 19:14:56,033 DEBUG [main] org.apache.commons.beanutils.converters.FloatConverter:     Converted to Float value '0.0'
+2010-05-04 19:14:56,034 DEBUG [main] org.apache.commons.beanutils.converters.IntegerConverter: Setting default value: 0
+2010-05-04 19:14:56,034 DEBUG [main] org.apache.commons.beanutils.converters.IntegerConverter: Converting 'Integer' value '0' to type 'Integer'
+2010-05-04 19:14:56,034 DEBUG [main] org.apache.commons.beanutils.converters.IntegerConverter:     No conversion required, value is already a Integer
+2010-05-04 19:14:56,035 DEBUG [main] org.apache.commons.beanutils.converters.LongConverter: Setting default value: 0
+2010-05-04 19:14:56,035 DEBUG [main] org.apache.commons.beanutils.converters.LongConverter: Converting 'Integer' value '0' to type 'Long'
+2010-05-04 19:14:56,035 DEBUG [main] org.apache.commons.beanutils.converters.LongConverter:     Converted to Long value '0'
+2010-05-04 19:14:56,036 DEBUG [main] org.apache.commons.beanutils.converters.ShortConverter: Setting default value: 0
+2010-05-04 19:14:56,036 DEBUG [main] org.apache.commons.beanutils.converters.ShortConverter: Converting 'Integer' value '0' to type 'Short'
+2010-05-04 19:14:56,036 DEBUG [main] org.apache.commons.beanutils.converters.ShortConverter:     Converted to Short value '0'
+2010-05-04 19:14:56,037 DEBUG [main] org.apache.commons.beanutils.converters.BigDecimalConverter: Setting default value: 0.0
+2010-05-04 19:14:56,038 DEBUG [main] org.apache.commons.beanutils.converters.BigDecimalConverter: Converting 'BigDecimal' value '0.0' to type 'BigDecimal'
+2010-05-04 19:14:56,038 DEBUG [main] org.apache.commons.beanutils.converters.BigDecimalConverter:     No conversion required, value is already a BigDecimal
+2010-05-04 19:14:56,039 DEBUG [main] org.apache.commons.beanutils.converters.BigIntegerConverter: Setting default value: 0
+2010-05-04 19:14:56,039 DEBUG [main] org.apache.commons.beanutils.converters.BigIntegerConverter: Converting 'BigInteger' value '0' to type 'BigInteger'
+2010-05-04 19:14:56,039 DEBUG [main] org.apache.commons.beanutils.converters.BigIntegerConverter:     No conversion required, value is already a BigInteger
+2010-05-04 19:14:56,039 DEBUG [main] org.apache.commons.beanutils.converters.BooleanConverter: Setting default value: false
+2010-05-04 19:14:56,039 DEBUG [main] org.apache.commons.beanutils.converters.BooleanConverter: Converting 'Boolean' value 'false' to type 'Boolean'
+2010-05-04 19:14:56,039 DEBUG [main] org.apache.commons.beanutils.converters.BooleanConverter:     No conversion required, value is already a Boolean
+2010-05-04 19:14:56,039 DEBUG [main] org.apache.commons.beanutils.converters.ByteConverter: Setting default value: 0
+2010-05-04 19:14:56,039 DEBUG [main] org.apache.commons.beanutils.converters.ByteConverter: Converting 'Integer' value '0' to type 'Byte'
+2010-05-04 19:14:56,039 DEBUG [main] org.apache.commons.beanutils.converters.ByteConverter:     Converted to Byte value '0'
+2010-05-04 19:14:56,039 DEBUG [main] org.apache.commons.beanutils.converters.CharacterConverter: Setting default value:  
+2010-05-04 19:14:56,039 DEBUG [main] org.apache.commons.beanutils.converters.CharacterConverter: Converting 'Character' value ' ' to type 'Character'
+2010-05-04 19:14:56,040 DEBUG [main] org.apache.commons.beanutils.converters.CharacterConverter:     No conversion required, value is already a Character
+2010-05-04 19:14:56,040 DEBUG [main] org.apache.commons.beanutils.converters.DoubleConverter: Setting default value: 0
+2010-05-04 19:14:56,040 DEBUG [main] org.apache.commons.beanutils.converters.DoubleConverter: Converting 'Integer' value '0' to type 'Double'
+2010-05-04 19:14:56,040 DEBUG [main] org.apache.commons.beanutils.converters.DoubleConverter:     Converted to Double value '0.0'
+2010-05-04 19:14:56,040 DEBUG [main] org.apache.commons.beanutils.converters.FloatConverter: Setting default value: 0
+2010-05-04 19:14:56,040 DEBUG [main] org.apache.commons.beanutils.converters.FloatConverter: Converting 'Integer' value '0' to type 'Float'
+2010-05-04 19:14:56,040 DEBUG [main] org.apache.commons.beanutils.converters.FloatConverter:     Converted to Float value '0.0'
+2010-05-04 19:14:56,040 DEBUG [main] org.apache.commons.beanutils.converters.IntegerConverter: Setting default value: 0
+2010-05-04 19:14:56,040 DEBUG [main] org.apache.commons.beanutils.converters.IntegerConverter: Converting 'Integer' value '0' to type 'Integer'
+2010-05-04 19:14:56,040 DEBUG [main] org.apache.commons.beanutils.converters.IntegerConverter:     No conversion required, value is already a Integer
+2010-05-04 19:14:56,040 DEBUG [main] org.apache.commons.beanutils.converters.LongConverter: Setting default value: 0
+2010-05-04 19:14:56,040 DEBUG [main] org.apache.commons.beanutils.converters.LongConverter: Converting 'Integer' value '0' to type 'Long'
+2010-05-04 19:14:56,041 DEBUG [main] org.apache.commons.beanutils.converters.LongConverter:     Converted to Long value '0'
+2010-05-04 19:14:56,041 DEBUG [main] org.apache.commons.beanutils.converters.ShortConverter: Setting default value: 0
+2010-05-04 19:14:56,041 DEBUG [main] org.apache.commons.beanutils.converters.ShortConverter: Converting 'Integer' value '0' to type 'Short'
+2010-05-04 19:14:56,041 DEBUG [main] org.apache.commons.beanutils.converters.ShortConverter:     Converted to Short value '0'
+2010-05-04 19:14:56,042 DEBUG [main] org.apache.commons.beanutils.converters.StringConverter: Setting default value: 
+2010-05-04 19:14:56,042 DEBUG [main] org.apache.commons.beanutils.converters.StringConverter: Converting 'String' value '' to type 'String'
+2010-05-04 19:14:56,053 DEBUG [main] org.apache.commons.beanutils.converters.ArrayConverter: Setting default value: [Z@15e0a283
+2010-05-04 19:14:56,053 DEBUG [main] org.apache.commons.beanutils.converters.ArrayConverter: Converting 'boolean[]' value '[Z@15e0a283' to type 'boolean[]'
+2010-05-04 19:14:56,053 DEBUG [main] org.apache.commons.beanutils.converters.ArrayConverter:     No conversion required, value is already a boolean[]
+2010-05-04 19:14:56,053 DEBUG [main] org.apache.commons.beanutils.converters.ArrayConverter: Setting default value: [B@4ecd51ad
+2010-05-04 19:14:56,053 DEBUG [main] org.apache.commons.beanutils.converters.ArrayConverter: Converting 'byte[]' value '[B@4ecd51ad' to type 'byte[]'
+2010-05-04 19:14:56,053 DEBUG [main] org.apache.commons.beanutils.converters.ArrayConverter:     No conversion required, value is already a byte[]
+2010-05-04 19:14:56,053 DEBUG [main] org.apache.commons.beanutils.converters.ArrayConverter: Setting default value: [C@9ad5d46
+2010-05-04 19:14:56,053 DEBUG [main] org.apache.commons.beanutils.converters.ArrayConverter: Converting 'char[]' value '[C@9ad5d46' to type 'char[]'
+2010-05-04 19:14:56,053 DEBUG [main] org.apache.commons.beanutils.converters.ArrayConverter:     No conversion required, value is already a char[]
+2010-05-04 19:14:56,054 DEBUG [main] org.apache.commons.beanutils.converters.ArrayConverter: Setting default value: [D@54c6a3a0
+2010-05-04 19:14:56,054 DEBUG [main] org.apache.commons.beanutils.converters.ArrayConverter: Converting 'double[]' value '[D@54c6a3a0' to type 'double[]'
+2010-05-04 19:14:56,054 DEBUG [main] org.apache.commons.beanutils.converters.ArrayConverter:     No conversion required, value is already a double[]
+2010-05-04 19:14:56,054 DEBUG [main] org.apache.commons.beanutils.converters.ArrayConverter: Setting default value: [F@9bed3d1
+2010-05-04 19:14:56,054 DEBUG [main] org.apache.commons.beanutils.converters.ArrayConverter: Converting 'float[]' value '[F@9bed3d1' to type 'float[]'
+2010-05-04 19:14:56,054 DEBUG [main] org.apache.commons.beanutils.converters.ArrayConverter:     No conversion required, value is already a float[]
+2010-05-04 19:14:56,054 DEBUG [main] org.apache.commons.beanutils.converters.ArrayConverter: Setting default value: [I@4f444356
+2010-05-04 19:14:56,054 DEBUG [main] org.apache.commons.beanutils.converters.ArrayConverter: Converting 'int[]' value '[I@4f444356' to type 'int[]'
+2010-05-04 19:14:56,054 DEBUG [main] org.apache.commons.beanutils.converters.ArrayConverter:     No conversion required, value is already a int[]
+2010-05-04 19:14:56,054 DEBUG [main] org.apache.commons.beanutils.converters.ArrayConverter: Setting default value: [J@aa0ebc2
+2010-05-04 19:14:56,054 DEBUG [main] org.apache.commons.beanutils.converters.ArrayConverter: Converting 'long[]' value '[J@aa0ebc2' to type 'long[]'
+2010-05-04 19:14:56,054 DEBUG [main] org.apache.commons.beanutils.converters.ArrayConverter:     No conversion required, value is already a long[]
+2010-05-04 19:14:56,055 DEBUG [main] org.apache.commons.beanutils.converters.ArrayConverter: Setting default value: [S@4ad61301
+2010-05-04 19:14:56,055 DEBUG [main] org.apache.commons.beanutils.converters.ArrayConverter: Converting 'short[]' value '[S@4ad61301' to type 'short[]'
+2010-05-04 19:14:56,055 DEBUG [main] org.apache.commons.beanutils.converters.ArrayConverter:     No conversion required, value is already a short[]
+2010-05-04 19:14:56,055 DEBUG [main] org.apache.commons.beanutils.converters.ArrayConverter: Setting default value: [Ljava.math.BigDecimal;@2c79cd09
+2010-05-04 19:14:56,055 DEBUG [main] org.apache.commons.beanutils.converters.ArrayConverter: Converting 'BigDecimal[]' value '[Ljava.math.BigDecimal;@2c79cd09' to type 'BigDecimal[]'
+2010-05-04 19:14:56,055 DEBUG [main] org.apache.commons.beanutils.converters.ArrayConverter:     No conversion required, value is already a BigDecimal[]
+2010-05-04 19:14:56,055 DEBUG [main] org.apache.commons.beanutils.converters.ArrayConverter: Setting default value: [Ljava.math.BigInteger;@727db937
+2010-05-04 19:14:56,055 DEBUG [main] org.apache.commons.beanutils.converters.ArrayConverter: Converting 'BigInteger[]' value '[Ljava.math.BigInteger;@727db937' to type 'BigInteger[]'
+2010-05-04 19:14:56,055 DEBUG [main] org.apache.commons.beanutils.converters.ArrayConverter:     No conversion required, value is already a BigInteger[]
+2010-05-04 19:14:56,055 DEBUG [main] org.apache.commons.beanutils.converters.ArrayConverter: Setting default value: [Ljava.lang.Boolean;@175b28d8
+2010-05-04 19:14:56,055 DEBUG [main] org.apache.commons.beanutils.converters.ArrayConverter: Converting 'Boolean[]' value '[Ljava.lang.Boolean;@175b28d8' to type 'Boolean[]'
+2010-05-04 19:14:56,056 DEBUG [main] org.apache.commons.beanutils.converters.ArrayConverter:     No conversion required, value is already a Boolean[]
+2010-05-04 19:14:56,056 DEBUG [main] org.apache.commons.beanutils.converters.ArrayConverter: Setting default value: [Ljava.lang.Byte;@4bb4df9c
+2010-05-04 19:14:56,056 DEBUG [main] org.apache.commons.beanutils.converters.ArrayConverter: Converting 'Byte[]' value '[Ljava.lang.Byte;@4bb4df9c' to type 'Byte[]'
+2010-05-04 19:14:56,056 DEBUG [main] org.apache.commons.beanutils.converters.ArrayConverter:     No conversion required, value is already a Byte[]
+2010-05-04 19:14:56,056 DEBUG [main] org.apache.commons.beanutils.converters.ArrayConverter: Setting default value: [Ljava.lang.Character;@764d2b11
+2010-05-04 19:14:56,056 DEBUG [main] org.apache.commons.beanutils.converters.ArrayConverter: Converting 'Character[]' value '[Ljava.lang.Character;@764d2b11' to type 'Character[]'
+2010-05-04 19:14:56,056 DEBUG [main] org.apache.commons.beanutils.converters.ArrayConverter:     No conversion required, value is already a Character[]
+2010-05-04 19:14:56,056 DEBUG [main] org.apache.commons.beanutils.converters.ArrayConverter: Setting default value: [Ljava.lang.Double;@7a2d09e0
+2010-05-04 19:14:56,056 DEBUG [main] org.apache.commons.beanutils.converters.ArrayConverter: Converting 'Double[]' value '[Ljava.lang.Double;@7a2d09e0' to type 'Double[]'
+2010-05-04 19:14:56,056 DEBUG [main] org.apache.commons.beanutils.converters.ArrayConverter:     No conversion required, value is already a Double[]
+2010-05-04 19:14:56,057 DEBUG [main] org.apache.commons.beanutils.converters.ArrayConverter: Setting default value: [Ljava.lang.Float;@9f528ab
+2010-05-04 19:14:56,057 DEBUG [main] org.apache.commons.beanutils.converters.ArrayConverter: Converting 'Float[]' value '[Ljava.lang.Float;@9f528ab' to type 'Float[]'
+2010-05-04 19:14:56,057 DEBUG [main] org.apache.commons.beanutils.converters.ArrayConverter:     No conversion required, value is already a Float[]
+2010-05-04 19:14:56,057 DEBUG [main] org.apache.commons.beanutils.converters.ArrayConverter: Setting default value: [Ljava.lang.Integer;@1b435686
+2010-05-04 19:14:56,057 DEBUG [main] org.apache.commons.beanutils.converters.ArrayConverter: Converting 'Integer[]' value '[Ljava.lang.Integer;@1b435686' to type 'Integer[]'
+2010-05-04 19:14:56,057 DEBUG [main] org.apache.commons.beanutils.converters.ArrayConverter:     No conversion required, value is already a Integer[]
+2010-05-04 19:14:56,057 DEBUG [main] org.apache.commons.beanutils.converters.ArrayConverter: Setting default value: [Ljava.lang.Long;@2398dc19
+2010-05-04 19:14:56,057 DEBUG [main] org.apache.commons.beanutils.converters.ArrayConverter: Converting 'Long[]' value '[Ljava.lang.Long;@2398dc19' to type 'Long[]'
+2010-05-04 19:14:56,057 DEBUG [main] org.apache.commons.beanutils.converters.ArrayConverter:     No conversion required, value is already a Long[]
+2010-05-04 19:14:56,057 DEBUG [main] org.apache.commons.beanutils.converters.ArrayConverter: Setting default value: [Ljava.lang.Short;@36598d00
+2010-05-04 19:14:56,057 DEBUG [main] org.apache.commons.beanutils.converters.ArrayConverter: Converting 'Short[]' value '[Ljava.lang.Short;@36598d00' to type 'Short[]'
+2010-05-04 19:14:56,058 DEBUG [main] org.apache.commons.beanutils.converters.ArrayConverter:     No conversion required, value is already a Short[]
+2010-05-04 19:14:56,058 DEBUG [main] org.apache.commons.beanutils.converters.ArrayConverter: Setting default value: [Ljava.lang.String;@5965e55e
+2010-05-04 19:14:56,058 DEBUG [main] org.apache.commons.beanutils.converters.ArrayConverter: Converting 'String[]' value '[Ljava.lang.String;@5965e55e' to type 'String[]'
+2010-05-04 19:14:56,058 DEBUG [main] org.apache.commons.beanutils.converters.ArrayConverter:     No conversion required, value is already a String[]
+2010-05-04 19:14:56,058 DEBUG [main] org.apache.commons.beanutils.converters.ArrayConverter: Setting default value: [Ljava.lang.Class;@30b5ac2c
+2010-05-04 19:14:56,058 DEBUG [main] org.apache.commons.beanutils.converters.ArrayConverter: Converting 'Class[]' value '[Ljava.lang.Class;@30b5ac2c' to type 'Class[]'
+2010-05-04 19:14:56,058 DEBUG [main] org.apache.commons.beanutils.converters.ArrayConverter:     No conversion required, value is already a Class[]
+2010-05-04 19:14:56,058 DEBUG [main] org.apache.commons.beanutils.converters.ArrayConverter: Setting default value: [Ljava.util.Date;@673a95af
+2010-05-04 19:14:56,058 DEBUG [main] org.apache.commons.beanutils.converters.ArrayConverter: Converting 'Date[]' value '[Ljava.util.Date;@673a95af' to type 'Date[]'
+2010-05-04 19:14:56,058 DEBUG [main] org.apache.commons.beanutils.converters.ArrayConverter:     No conversion required, value is already a Date[]
+2010-05-04 19:14:56,059 DEBUG [main] org.apache.commons.beanutils.converters.ArrayConverter: Setting default value: [Ljava.util.Calendar;@11eea7f0
+2010-05-04 19:14:56,059 DEBUG [main] org.apache.commons.beanutils.converters.ArrayConverter: Converting 'Calendar[]' value '[Ljava.util.Calendar;@11eea7f0' to type 'Calendar[]'
+2010-05-04 19:14:56,059 DEBUG [main] org.apache.commons.beanutils.converters.ArrayConverter:     No conversion required, value is already a Calendar[]
+2010-05-04 19:14:56,059 DEBUG [main] org.apache.commons.beanutils.converters.ArrayConverter: Setting default value: [Ljava.io.File;@58b45130
+2010-05-04 19:14:56,059 DEBUG [main] org.apache.commons.beanutils.converters.ArrayConverter: Converting 'java.io.File[]' value '[Ljava.io.File;@58b45130' to type 'java.io.File[]'
+2010-05-04 19:14:56,059 DEBUG [main] org.apache.commons.beanutils.converters.ArrayConverter:     No conversion required, value is already a java.io.File[]
+2010-05-04 19:14:56,059 DEBUG [main] org.apache.commons.beanutils.converters.ArrayConverter: Setting default value: [Ljava.sql.Date;@263e53cf
+2010-05-04 19:14:56,059 DEBUG [main] org.apache.commons.beanutils.converters.ArrayConverter: Converting 'java.sql.Date[]' value '[Ljava.sql.Date;@263e53cf' to type 'java.sql.Date[]'
+2010-05-04 19:14:56,059 DEBUG [main] org.apache.commons.beanutils.converters.ArrayConverter:     No conversion required, value is already a java.sql.Date[]
+2010-05-04 19:14:56,060 DEBUG [main] org.apache.commons.beanutils.converters.ArrayConverter: Setting default value: [Ljava.sql.Time;@23bb9829
+2010-05-04 19:14:56,060 DEBUG [main] org.apache.commons.beanutils.converters.ArrayConverter: Converting 'java.sql.Time[]' value '[Ljava.sql.Time;@23bb9829' to type 'java.sql.Time[]'
+2010-05-04 19:14:56,060 DEBUG [main] org.apache.commons.beanutils.converters.ArrayConverter:     No conversion required, value is already a java.sql.Time[]
+2010-05-04 19:14:56,060 DEBUG [main] org.apache.commons.beanutils.converters.ArrayConverter: Setting default value: [Ljava.sql.Timestamp;@6b0cc9b4
+2010-05-04 19:14:56,060 DEBUG [main] org.apache.commons.beanutils.converters.ArrayConverter: Converting 'java.sql.Timestamp[]' value '[Ljava.sql.Timestamp;@6b0cc9b4' to type 'java.sql.Timestamp[]'
+2010-05-04 19:14:56,060 DEBUG [main] org.apache.commons.beanutils.converters.ArrayConverter:     No conversion required, value is already a java.sql.Timestamp[]
+2010-05-04 19:14:56,060 DEBUG [main] org.apache.commons.beanutils.converters.ArrayConverter: Setting default value: [Ljava.net.URL;@17496e57
+2010-05-04 19:14:56,060 DEBUG [main] org.apache.commons.beanutils.converters.ArrayConverter: Converting 'java.net.URL[]' value '[Ljava.net.URL;@17496e57' to type 'java.net.URL[]'
+2010-05-04 19:14:56,060 DEBUG [main] org.apache.commons.beanutils.converters.ArrayConverter:     No conversion required, value is already a java.net.URL[]
+2010-05-04 19:14:56,072 TRACE [main] org.apache.commons.beanutils.BeanUtils:   setProperty(de.gaalop.maple.Plugin@40944dbd, mapleBinaryPath, /Library/Frameworks/Maple.framework/Versions/13/bin.APPLE_UNIVERSAL_OSX/)
+2010-05-04 19:14:56,072 TRACE [main] org.apache.commons.beanutils.BeanUtils:     Target bean = de.gaalop.maple.Plugin@40944dbd
+2010-05-04 19:14:56,072 TRACE [main] org.apache.commons.beanutils.BeanUtils:     Target name = mapleBinaryPath
+2010-05-04 19:14:56,102 DEBUG [main] org.apache.commons.beanutils.ConvertUtils: Convert string '/Library/Frameworks/Maple.framework/Versions/13/bin.APPLE_UNIVERSAL_OSX/' to class 'java.lang.String'
+2010-05-04 19:14:56,102 TRACE [main] org.apache.commons.beanutils.ConvertUtils:   Using converter ConverterFacade[StringConverter[UseDefault=true]]
+2010-05-04 19:14:56,102 DEBUG [main] org.apache.commons.beanutils.converters.StringConverter: Converting 'String' value '/Library/Frameworks/Maple.framework/Versions/13/bin.APPLE_UNIVERSAL_OSX/' to type 'String'
+2010-05-04 19:14:56,105 TRACE [main] org.apache.commons.beanutils.PropertyUtils: setSimpleProperty: Invoking method public void de.gaalop.maple.Plugin.setMapleBinaryPath(java.lang.String) with value /Library/Frameworks/Maple.framework/Versions/13/bin.APPLE_UNIVERSAL_OSX/ (class java.lang.String)
+2010-05-04 19:14:56,105 DEBUG [main] de.gaalop.gui.util.PluginConfigurator: Configuration for de.gaalop.maple.Plugin.mapleJavaPath = /Library/Frameworks/Maple.framework/Versions/13/java/
+2010-05-04 19:14:56,105 TRACE [main] org.apache.commons.beanutils.BeanUtils:   setProperty(de.gaalop.maple.Plugin@40944dbd, mapleJavaPath, /Library/Frameworks/Maple.framework/Versions/13/java/)
+2010-05-04 19:14:56,105 TRACE [main] org.apache.commons.beanutils.BeanUtils:     Target bean = de.gaalop.maple.Plugin@40944dbd
+2010-05-04 19:14:56,105 TRACE [main] org.apache.commons.beanutils.BeanUtils:     Target name = mapleJavaPath
+2010-05-04 19:14:56,105 DEBUG [main] org.apache.commons.beanutils.ConvertUtils: Convert string '/Library/Frameworks/Maple.framework/Versions/13/java/' to class 'java.lang.String'
+2010-05-04 19:14:56,105 TRACE [main] org.apache.commons.beanutils.ConvertUtils:   Using converter ConverterFacade[StringConverter[UseDefault=true]]
+2010-05-04 19:14:56,105 DEBUG [main] org.apache.commons.beanutils.converters.StringConverter: Converting 'String' value '/Library/Frameworks/Maple.framework/Versions/13/java/' to type 'String'
+2010-05-04 19:14:56,106 TRACE [main] org.apache.commons.beanutils.PropertyUtils: setSimpleProperty: Invoking method public void de.gaalop.maple.Plugin.setMapleJavaPath(java.lang.String) with value /Library/Frameworks/Maple.framework/Versions/13/java/ (class java.lang.String)
+2010-05-04 19:14:56,106 DEBUG [main] de.gaalop.gui.util.PluginConfigurator: Registering de.gaalop.gui.StatusBar[,0,460,640x20,layout=java.awt.BorderLayout,alignmentX=0.0,alignmentY=0.0,border=,flags=9,maximumSize=,minimumSize=,preferredSize=] as observer of Maple plugin
+2010-05-04 19:14:56,106 DEBUG [main] de.gaalop.gui.util.PluginConfigurator: Configuring class de.gaalop.clucalc.input.Plugin
+2010-05-04 19:14:56,106 DEBUG [main] de.gaalop.gui.util.PluginConfigurator: Registering de.gaalop.gui.StatusBar[,0,460,640x20,layout=java.awt.BorderLayout,alignmentX=0.0,alignmentY=0.0,border=,flags=9,maximumSize=,minimumSize=,preferredSize=] as observer of CluCalc plugin
+2010-05-04 19:14:56,106 DEBUG [main] de.gaalop.gui.util.PluginConfigurator: Configuring class de.gaalop.latex.Plugin
+2010-05-04 19:14:56,106 DEBUG [main] de.gaalop.gui.util.PluginConfigurator: Configuring class de.gaalop.clucalc.output.Plugin
+2010-05-04 19:14:56,106 DEBUG [main] de.gaalop.gui.util.PluginConfigurator: Configuring class de.gaalop.dot.Plugin
+2010-05-04 19:14:56,106 DEBUG [main] de.gaalop.gui.util.PluginConfigurator: Configuring class de.gaalop.cpp.Plugin
+2010-05-04 19:14:58,124 DEBUG [AWT-EventQueue-0] de.gaalop.gui.CompileAction: Preferred optimization plugin is 
+2010-05-04 19:14:58,141 DEBUG [AWT-EventQueue-0] de.gaalop.maple.engine.MapleClassLoader: Jar URLs for Maple: [file:/Library/Frameworks/Maple.framework/Versions/13/java/jopenmaple.jar, file:/Library/Frameworks/Maple.framework/Versions/13/java/externalcall.jar]
+2010-05-04 19:14:58,158 DEBUG [AWT-EventQueue-0] de.gaalop.maple.engine.MapleClassLoader: Mapping jopenmaple to /Library/Frameworks/Maple.framework/Versions/13/bin.APPLE_UNIVERSAL_OSX/libjopenmaple.jnilib
+2010-05-04 19:14:58,328 DEBUG [Thread-5] de.gaalop.clucalc.input.CluCalcCodeParser: Processing macros.clu, Content: DefVarsN3();
+:IPNS;
+
+test = {
+   test2 = _P(1) * e2^einf;
+sin(x)
+}
+
+?result = test(1);
+
+
+2010-05-04 19:14:58,424 DEBUG [Thread-5] de.gaalop.cfg.ControlFlowGraph: Changing blade list to [1.0, e1, e2, e3, einf, e0, e1 ^ e2, e1 ^ e3, e1 ^ einf, e1 ^ e0, e2 ^ e3, e2 ^ einf, e2 ^ e0, e3 ^ einf, e3 ^ e0, einf ^ e0, e1 ^ (e2 ^ e3), e1 ^ (e2 ^ einf), e1 ^ (e2 ^ e0), e1 ^ (e3 ^ einf), e1 ^ (e3 ^ e0), e1 ^ (einf ^ e0), e2 ^ (e3 ^ einf), e2 ^ (e3 ^ e0), e2 ^ (einf ^ e0), e3 ^ (einf ^ e0), e1 ^ (e2 ^ (e3 ^ einf)), e1 ^ (e2 ^ (e3 ^ e0)), e1 ^ (e2 ^ (einf ^ e0)), e1 ^ (e3 ^ (einf ^ e0)), e2 ^ (e3 ^ (einf ^ e0)), e1 ^ (e2 ^ (e3 ^ (einf ^ e0)))]
+2010-05-04 19:14:58,425 DEBUG [Thread-5] de.gaalop.cfg.ControlFlowGraph: Changing blade list to [1.0, e1, e2, e3, einf, e0, e1 ^ e2, e1 ^ e3, e1 ^ einf, e1 ^ e0, e2 ^ e3, e2 ^ einf, e2 ^ e0, e3 ^ einf, e3 ^ e0, einf ^ e0, e1 ^ (e2 ^ e3), e1 ^ (e2 ^ einf), e1 ^ (e2 ^ e0), e1 ^ (e3 ^ einf), e1 ^ (e3 ^ e0), e1 ^ (einf ^ e0), e2 ^ (e3 ^ einf), e2 ^ (e3 ^ e0), e2 ^ (einf ^ e0), e3 ^ (einf ^ e0), e1 ^ (e2 ^ (e3 ^ einf)), e1 ^ (e2 ^ (e3 ^ e0)), e1 ^ (e2 ^ (einf ^ e0)), e1 ^ (e3 ^ (einf ^ e0)), e2 ^ (e3 ^ (einf ^ e0)), e1 ^ (e2 ^ (e3 ^ (einf ^ e0)))]

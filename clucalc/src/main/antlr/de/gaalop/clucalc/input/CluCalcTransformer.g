@@ -68,6 +68,14 @@ statement returns [ArrayList<SequentialNode> nodes]
 	
 	| if_statement { $nodes.add($if_statement.node);}
 	
+	| loop { $nodes.add($loop.node); }
+	
+	| BREAK { $nodes.add(graphBuilder.handleBreak()); }
+
+  | ^(MACRO id=IDENTIFIER lst=statement e=expression?) {
+    graphBuilder.handleMacroDefinition($id.text, $lst.nodes, $e.result);
+  }
+ 
 	// Some other expression (We can ignore this since we don't implement side-effects)
 	| expression
 
@@ -112,6 +120,10 @@ else_statement returns [ArrayList<SequentialNode> nodes]
     $if_statement.node.setElseIf(true);
     $nodes.add($if_statement.node); 
   }
+  ;
+  
+loop returns [LoopNode node]
+  : ^(LOOP stmt=statement) { $node = graphBuilder.handleLoop($stmt.nodes); }
   ;
   
 block returns [ArrayList<SequentialNode> nodes]
@@ -167,6 +179,8 @@ expression returns [Expression result]
 	| value=DECIMAL_LITERAL { $result = new FloatConstant($value.text); }
 	// Floating Point Value (Constant)
 	| value=FLOATING_POINT_LITERAL { $result = new FloatConstant($value.text); }
+	// Function argument in macro
+	| ^(ARGUMENT index=DECIMAL_LITERAL) { $result = new FunctionArgument(Integer.parseInt($index.text)); }
 	// Variable or constant
 	| variableOrConstant { $result = $variableOrConstant.result; }
 	;

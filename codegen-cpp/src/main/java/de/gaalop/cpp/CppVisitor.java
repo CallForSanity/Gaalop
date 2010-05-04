@@ -190,6 +190,18 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 	}
 
 	@Override
+	public void visit(LoopNode loopNode) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visit(BreakNode breakNode) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
 	public void visit(BlockEndNode node) {
 		// nothing to do
 	}
@@ -345,5 +357,23 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 	@Override
 	public void visit(Relation relation) {
 		addBinaryInfix(relation, relation.getTypeString());
+	}
+
+	@Override
+	public void visit(Macro node) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visit(FunctionArgument node) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visit(MacroCall node) {
+		// TODO Auto-generated method stub
+		
 	}
 }

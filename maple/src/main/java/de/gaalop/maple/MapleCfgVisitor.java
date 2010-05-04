@@ -109,7 +109,20 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 	public void visit(IfThenElseNode node) {
 		node.getPositive().accept(this);
 		node.getNegative().accept(this);
+		
 		node.getSuccessor().accept(this);
+	}
+
+	@Override
+	public void visit(LoopNode node) {
+		node.getBody().accept(this);
+		
+		node.getSuccessor().accept(this);
+	}
+	
+	@Override
+	public void visit(BreakNode node) {
+		// nothing to do
 	}
 
 	@Override
@@ -166,5 +179,10 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 		} catch (MapleEngineException e) {
 			throw new RuntimeException("Unable to simplify using Maple.", e);
 		}
+	}
+
+	@Override
+	public void visit(Macro node) {
+		throw new IllegalStateException("Macros should have been inlined.");
 	}
 }

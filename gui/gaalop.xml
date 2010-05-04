@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<comment>Gaalop Configuration File</comment>
+<entry key="de.gaalop.maple.Plugin.mapleBinaryPath">/Library/Frameworks/Maple.framework/Versions/13/bin.APPLE_UNIVERSAL_OSX/</entry>
+<entry key="de.gaalop.maple.Plugin.mapleJavaPath">/Library/Frameworks/Maple.framework/Versions/13/java/</entry>
+</properties>

@@ -64,7 +64,12 @@ public class Plugin extends Observable implements OptimizationStrategyPlugin {
 
 	private synchronized MapleSimplifier getSimplifier() {
 		if (!Maple.isInitialized()) {
-			Maple.initialize(new File(mapleJavaPath), new File(mapleBinaryPath));
+			try {
+				Maple.initialize(new File(mapleJavaPath), new File(mapleBinaryPath));
+			} catch (NullPointerException e) {
+				setChanged();
+				notifyObservers("Unable to find Maple installation directory.");
+			}
 		}
 
 		if (simplifier == null) {
@@ -72,6 +77,42 @@ public class Plugin extends Observable implements OptimizationStrategyPlugin {
 		}
 
 		return simplifier;
+	}
+
+	/**
+	 * Needed for BeanUtils to write configuration file.
+	 * 
+	 * @return the mapleBinaryPath
+	 */
+	public String getMapleBinaryPath() {
+		return mapleBinaryPath;
+	}
+
+	/**
+	 * Needed for BeanUtils to read configuration file.
+	 * 
+	 * @param mapleBinaryPath the mapleBinaryPath to set
+	 */
+	public void setMapleBinaryPath(String mapleBinaryPath) {
+		this.mapleBinaryPath = mapleBinaryPath;
+	}
+
+	/**
+	 * Needed for BeanUtils to write configuration file.
+	 * 
+	 * @return the mapleJavaPath
+	 */
+	public String getMapleJavaPath() {
+		return mapleJavaPath;
+	}
+
+	/**
+	 * Needed for BeanUtils to read configuration file.
+	 * 
+	 * @param mapleJavaPath the mapleJavaPath to set
+	 */
+	public void setMapleJavaPath(String mapleJavaPath) {
+		this.mapleJavaPath = mapleJavaPath;
 	}
 
 	@Override
