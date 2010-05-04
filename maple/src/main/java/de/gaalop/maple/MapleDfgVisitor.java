@@ -182,4 +182,15 @@ public class MapleDfgVisitor implements ExpressionVisitor {
 		// TODO Auto-generated method stub
 
 	}
+
+	@Override
+	public void visit(FunctionArgument node) {
+		throw new IllegalStateException("Macros should have been inlined, so function arguments are not allowed here.");
+	}
+
+	@Override
+	public void visit(MacroCall node) {
+		// TODO Auto-generated method stub
+		
+	}
 }

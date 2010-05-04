@@ -346,7 +346,7 @@ public class MainForm {
         configureButton.setText("Configure");
         configureButton.setMnemonic('C');
         configureButton.setDisplayedMnemonicIndex(3);
-        toolBar1.add(configureButton);
+//        toolBar1.add(configureButton);
         tabbedPane = new JTabbedPane();
         contentPane.add(tabbedPane, BorderLayout.CENTER);
         final JPanel panel2 = new JPanel();
