@@ -23,9 +23,12 @@ public class MapleSimplifier {
     private Log log = LogFactory.getLog(MapleSimplifier.class);
 
     private MapleEngine engine;
+    
+    private Plugin plugin;
 
-    public MapleSimplifier() {
+    public MapleSimplifier(Plugin plugin) {
         engine = Maple.getEngine();
+        this.plugin = plugin;
     }
 
     private void loadModule(String resourceName) throws MapleEngineException {
@@ -54,6 +57,7 @@ public class MapleSimplifier {
 
         // Load our Maple modules
         loadModule("gaalop.m");
+        loadModule("gaalopfunctions.m");
 
         // Misc initialization
         engine.evaluate("B:=linalg[diag](1,1,1,1,-1);");
@@ -75,7 +79,7 @@ public class MapleSimplifier {
             throw new RuntimeException("Unable to simplify graph using Maple.", e);
         }
 
-        MapleCfgVisitor visitor = new MapleCfgVisitor(engine);
+        MapleCfgVisitor visitor = new MapleCfgVisitor(engine, plugin);
         graph.accept(visitor);
     }
 

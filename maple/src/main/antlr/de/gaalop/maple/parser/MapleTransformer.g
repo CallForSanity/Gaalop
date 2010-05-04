@@ -12,12 +12,21 @@ options {
 	import java.util.ArrayList;
 	import de.gaalop.cfg.*;
 	import de.gaalop.dfg.*;
+  import java.util.HashMap;
+
 }
 
 @members {	
 	// Creates an expression from an identifier and takes constants into account
-	private Expression processIdentifier(String name) {
-		return new Variable(name);
+	private Expression processIdentifier(String name, HashMap<String, String> minVal, HashMap<String, String> maxVal) {
+    Variable v = new Variable(name);
+    if (minVal.containsKey(name)) {
+      v.setMinValue(minVal.get(name));
+    }
+		if (maxVal.containsKey(name)) {
+      v.setMaxValue(maxVal.get(name));
+    }
+		return v;
 	}
 	
 	private Expression processFunction(String name, ArrayList<Expression> args) {
@@ -26,56 +35,59 @@ options {
 			System.out.println("ARG: " + args);
 			System.out.println("ARG-Class: " + args.getClass());
 		}
-		return null;			
-	}
+    if (name.equals("abs")) {
+      return new MathFunctionCall(args.get(0), MathFunction.ABS);
+    } else {}
+      return null;
+	  }
 }
 
-script[ControlFlowGraph graph]	returns [List<SequentialNode> nodes] 
+script[ControlFlowGraph graph, HashMap<String, String> minVal, HashMap<String, String> maxVal]	returns [List<SequentialNode> nodes]
 	@init { $nodes = new ArrayList<SequentialNode>(); }
- 	: statement[graph, nodes]*;
+ 	: statement[graph, minVal, maxVal, nodes]*;
 
-statement[ControlFlowGraph graph, List<SequentialNode> nodes]
+statement[ControlFlowGraph graph, HashMap<String, String> minVal, HashMap<String, String> maxVal, List<SequentialNode> nodes]
 	: declareArray[graph]
-	| coefficient[graph] { $nodes.add($coefficient.result); }
+	| coefficient[graph, minVal, maxVal] { $nodes.add($coefficient.result); }
 	;
 	
 declareArray[ControlFlowGraph graph]
 	: ^(DECLAREARRAY name=IDENTIFIER) { /* What to do with declarations? Is it really needed? */ }
 	;
 	
-coefficient[ControlFlowGraph graph] returns [SequentialNode result]
-	: ^(COEFFICIENT mvName=IDENTIFIER index=DECIMAL_LITERAL value=expression) { 
+coefficient[ControlFlowGraph graph, HashMap<String, String> minVal, HashMap<String, String> maxVal] returns [SequentialNode result]
+	: ^(COEFFICIENT mvName=IDENTIFIER index=DECIMAL_LITERAL value=expression[minVal, maxVal]) {
 		MultivectorComponent component = new MultivectorComponent($mvName.text.replaceAll("_opt",""), Integer.valueOf($index.text) - 1);
 		$result = new AssignmentNode(graph, component, $value.result);
 	 }
 	;
 
-expression returns [Expression result]
+expression[HashMap<String, String> minVal, HashMap<String, String> maxVal] returns [Expression result]
 	// Addition
-	: ^(PLUS l=expression r=expression) { $result = new Addition($l.result, $r.result); }	
+	: ^(PLUS l=expression[minVal, maxVal] r=expression[minVal, maxVal]) { $result = new Addition($l.result, $r.result); }
 	// Subtraction
-	| ^(MINUS l=expression r=expression) { $result = new Subtraction($l.result, $r.result); }
+	| ^(MINUS l=expression[minVal, maxVal] r=expression[minVal, maxVal]) { $result = new Subtraction($l.result, $r.result); }
 	// Multiplication
-	| ^(STAR l=expression r=expression) { $result = new Multiplication($l.result, $r.result); }
+	| ^(STAR l=expression[minVal, maxVal] r=expression[minVal, maxVal]) { $result = new Multiplication($l.result, $r.result); }
 	// Division
-	| ^(SLASH l=expression r=expression) { $result = new Division($l.result, $r.result); }
+	| ^(SLASH l=expression[minVal, maxVal] r=expression[minVal, maxVal]) { $result = new Division($l.result, $r.result); }
 	// Exponentiation
-	| ^(WEDGE l=expression r=expression) { $result = new Exponentiation($l.result, $r.result); }
+	| ^(WEDGE l=expression[minVal, maxVal] r=expression[minVal, maxVal]) { $result = new Exponentiation($l.result, $r.result); }
 	// Negation
-	| ^(NEGATION v=expression) { $result = new Negation($v.result); }	
+	| ^(NEGATION v=expression[minVal, maxVal]) { $result = new Negation($v.result); }
 	// Function Call
-	| ^(FUNCTION name=IDENTIFIER arguments) { $result = processFunction($name.text, $arguments.args); }
+	| ^(FUNCTION name=IDENTIFIER arguments[minVal, maxVal]) { $result = processFunction($name.text, $arguments.args); }
 	// Variable Reference
-	| ^(VARIABLE name=IDENTIFIER) { $result = processIdentifier($name.text); }
+	| ^(VARIABLE name=IDENTIFIER) { $result = processIdentifier($name.text, minVal, maxVal); }
 	// Integral Value (Constant)
-	| value=DECIMAL_LITERAL { $result = new FloatConstant(Float.parseFloat($value.text)); }
+	| value=DECIMAL_LITERAL { $result = new FloatConstant($value.text); }
 	// Floating Point Value (Constant)
-	| value=FLOATING_POINT_LITERAL { $result = new FloatConstant(Float.parseFloat($value.text)); }
+	| value=FLOATING_POINT_LITERAL { $result = new FloatConstant(java.lang.Float.parseFloat($value.text));}
 	// Reference to another multivector component (MV_SUBSCRIPT)
 	| ^(MV_SUBSCRIPT name=IDENTIFIER index=DECIMAL_LITERAL) { $result = new MultivectorComponent($name.text.replaceAll("_opt",""), Integer.valueOf($index.text) - 1); }
 	;
 
-arguments returns [ArrayList<Expression> args] 
+arguments[HashMap<String, String> minVal, HashMap<String, String> maxVal] returns [ArrayList<Expression> args]
 	@init { $args = new ArrayList<Expression>(); }
-	: (arg=expression { $args.add($arg.result); })*
+	: (arg=expression[minVal, maxVal] { $args.add($arg.result); })*
 	;

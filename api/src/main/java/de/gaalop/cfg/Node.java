@@ -7,122 +7,126 @@ import java.util.Set;
 /**
  * This abstract class serves as the base class for all control flow nodes in a control flow graph.
  * <p/>
- * Please note that all implementing classes should provide a meaningful
- * implementation of {@link Object#toString()}, {@link Object#hashCode()} and
- * {@link Object#equals(Object)}.
- *
+ * Please note that all implementing classes should provide a meaningful implementation of {@link Object#toString()},
+ * {@link Object#hashCode()} and {@link Object#equals(Object)}.
+ * 
  * @author Sebastian Hartte
  * @version 1.0
  * @see ControlFlowGraph
  * @since 1.0
  */
 public abstract class Node {
-    /** All predecessors of this node. */
-    private Set<Node> predecessors = new HashSet<Node>();
+	/** All predecessors of this node. */
+	private Set<Node> predecessors = new HashSet<Node>();
 
-    /** A reference to the graph that contains this node. */
-    private final ControlFlowGraph graph;
+	/** A reference to the graph that contains this node. */
+	private final ControlFlowGraph graph;
 
-    /**
-     * Constructs a new control flow node.
-     *
-     * @param graph The graph that will contain this node.
-     */
-    public Node(ControlFlowGraph graph) {
-        this.graph = graph;
-    }
+	/**
+	 * Constructs a new control flow node.
+	 * 
+	 * @param graph The graph that will contain this node.
+	 */
+	public Node(ControlFlowGraph graph) {
+		this.graph = graph;
+	}
 
-    /**
-     * Gets the control flow graph this node belongs to.
-     *
-     * @return The control flow graph linked to this node.
-     */
-    public ControlFlowGraph getGraph() {
-        return graph;
-    }
+	/**
+	 * Gets the control flow graph this node belongs to.
+	 * 
+	 * @return The control flow graph linked to this node.
+	 */
+	public ControlFlowGraph getGraph() {
+		return graph;
+	}
 
-    /**
-     * This method must be implemented by every concrete subclass. It should call a visit method in ControlFlowVisitor
-     * whose only parameter has the concrete type of the object calling the method.
-     * <p/>
-     * Please see the Visitor Pattern for more detail.
-     *
-     * @param visitor The visitor object that the visit method will be called on.
-     */
-    public abstract void accept(ControlFlowVisitor visitor);
+	/**
+	 * This method must be implemented by every concrete subclass. It should call a visit method in ControlFlowVisitor whose only
+	 * parameter has the concrete type of the object calling the method.
+	 * <p/>
+	 * Please see the Visitor Pattern for more detail.
+	 * 
+	 * @param visitor The visitor object that the visit method will be called on.
+	 */
+	public abstract void accept(ControlFlowVisitor visitor);
 
-    /**
-     * Returns all  nodes that have this node as their successor.
-     *
-     * @return An unmodifiable set of nodes that contains all predecessors of this node.
-     */
-    public Set<Node> getPredecessors() {
-        return Collections.unmodifiableSet(predecessors);
-    }
+	/**
+	 * Returns all nodes that have this node as their successor.
+	 * 
+	 * @return An unmodifiable set of nodes that contains all predecessors of this node.
+	 */
+	public Set<Node> getPredecessors() {
+		return Collections.unmodifiableSet(predecessors);
+	}
 
-    /**
-     * Adds a predecessor to this node.
-     * <p/>
-     * This method may throw an UnsupportedOperationException if the subclass does not allow predecessors.
-     * This is only the case if this node is the start node.
-     *
-     * @param node The new predecessor for this node.
-     * @see UnsupportedOperationException
-     */
-    public void addPredecessor(Node node) {
-        predecessors.add(node);
-    }
+	/**
+	 * Adds a predecessor to this node.
+	 * <p/>
+	 * This method may throw an UnsupportedOperationException if the subclass does not allow predecessors. This is only the case
+	 * if this node is the start node.
+	 * 
+	 * @param node The new predecessor for this node.
+	 * @see UnsupportedOperationException
+	 */
+	public void addPredecessor(Node node) {
+		predecessors.add(node);
+	}
 
-    /**
-     * This method removes predecessors from this node.
-     * <p/>
-     * This method may throw an UnsupportedOperationException if the implementing
-     * node must not have any predecessors. This is only the case if this node
-     * is the start node.
-     *
-     * @param node The node that should be removed from the predecessors of this node.
-     */
-    public void removePredecessor(Node node) {
-        predecessors.remove(node);
-    }
+	/**
+	 * This method removes predecessors from this node.
+	 * <p/>
+	 * This method may throw an UnsupportedOperationException if the implementing node must not have any predecessors. This is
+	 * only the case if this node is the start node.
+	 * 
+	 * @param node The node that should be removed from the predecessors of this node.
+	 */
+	public void removePredecessor(Node node) {
+		predecessors.remove(node);
+	}
 
-    /**
-     * Replaces the connection from this node to oldSuccessor with a connection from this node to newSuccessor if
-     * it exists.
-     * <p/>
-     * This method can be used to insert or remove nodes in a control flow graph.
-     *
-     * @param oldSuccessor A node that is currently a successor of this node.
-     * @param newSuccessor A node that should become a successor of this node instead of <code>oldSuccessor</code>.
-     */
-    public abstract void replaceSuccessor(Node oldSuccessor, Node newSuccessor);
+	/**
+	 * Replaces the connection from this node to oldSuccessor with a connection from this node to newSuccessor if it exists.
+	 * <p/>
+	 * This method can be used to insert or remove nodes in a control flow graph.
+	 * 
+	 * @param oldSuccessor A node that is currently a successor of this node.
+	 * @param newSuccessor A node that should become a successor of this node instead of <code>oldSuccessor</code>.
+	 */
+	public abstract void replaceSuccessor(Node oldSuccessor, Node newSuccessor);
 
-    /**
-     * Inserts another node right before this node.
-     * <p/>
-     * The new node is added as a successor of all predecessors of this node and this node is set as the successor
-     * of the new node.
-     *
-     * @param newNode The node that should be inserted.
-     */
-    public void insertBefore(SequentialNode newNode) {
-        newNode.setSuccessor(this);
-        Set<Node> predecessors = new HashSet<Node>(getPredecessors());
-        for (Node predecessor : predecessors) {
-          if (predecessor instanceof IfThenElseNode) {
-            IfThenElseNode ifthenelse = (IfThenElseNode) predecessor;
-            if (this == ifthenelse.getPositive()) {
-              ifthenelse.setPositive(newNode);
-            } else if (this == ifthenelse.getNegative()) {
-              ifthenelse.setNegative(newNode);
-            } else {
-              ifthenelse.replaceSuccessor(this, newNode);
-            }
-          } else {
-            predecessor.replaceSuccessor(this, newNode);
-          }
-        }
-        addPredecessor(newNode);
-    }
-    
+	/**
+	 * Inserts another node right before this node.
+	 * <p/>
+	 * The new node is added as a successor of all predecessors of this node and this node is set as the successor of the new
+	 * node.
+	 * 
+	 * @param newNode The node that should be inserted.
+	 */
+	public void insertBefore(SequentialNode newNode) {
+		newNode.setSuccessor(this);
+		Set<Node> predecessors = new HashSet<Node>(getPredecessors());
+		for (Node predecessor : predecessors) {
+			if (predecessor instanceof IfThenElseNode) {
+				IfThenElseNode ifthenelse = (IfThenElseNode) predecessor;
+				if (this == ifthenelse.getPositive()) {
+					ifthenelse.setPositive(newNode);
+				} else if (this == ifthenelse.getNegative()) {
+					ifthenelse.setNegative(newNode);
+				} else {
+					ifthenelse.replaceSuccessor(this, newNode);
+				}
+			} else if (predecessor instanceof LoopNode) {
+				LoopNode loop = (LoopNode) predecessor;
+				if (this == loop.getBody()) {
+					loop.setBody(newNode);
+				} else {
+					loop.replaceSuccessor(this, newNode);
+				}
+			} else {
+				predecessor.replaceSuccessor(this, newNode);
+			}
+		}
+		addPredecessor(newNode);
+	}
+
 }

@@ -19,6 +19,8 @@ public class IfThenElseNode extends SequentialNode {
   private Node positive;
   /** First statement to be evaluated when condition is false. */
   private Node negative;
+  /** Whether this node represents the special case of an else-if part. */
+  private boolean elseif;
 
   public IfThenElseNode(ControlFlowGraph graph, Expression condition) {
     super(graph);
@@ -37,6 +39,24 @@ public class IfThenElseNode extends SequentialNode {
    */
   public Node getPositive() {
     return positive;
+  }
+
+  /**
+   * Sets the property to be an else-if part for this node.
+   * 
+   * @param elseif whether this node is an else-if part.
+   */
+  public void setElseIf(boolean elseif) {
+    this.elseif = elseif;
+  }
+
+  /**
+   * Returns the else-if property of this node.
+   * 
+   * @return whether this node is an else-if part.
+   */
+  public boolean isElseIf() {
+    return elseif;
   }
 
   /**

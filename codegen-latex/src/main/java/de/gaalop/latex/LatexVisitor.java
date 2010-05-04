@@ -56,6 +56,28 @@ public class LatexVisitor implements ControlFlowVisitor, ExpressionVisitor {
     }
 
     @Override
+	public void visit(IfThenElseNode node) {
+	  // TODO Auto-generated method stub
+	
+	}
+
+	@Override
+	public void visit(LoopNode loopNode) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visit(BreakNode breakNode) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visit(BlockEndNode node) {
+	}
+
+	@Override
     public void visit(EndNode node) {
         code.append("\\end{align*}\n");
     }
@@ -186,12 +208,6 @@ public class LatexVisitor implements ControlFlowVisitor, ExpressionVisitor {
     }
 
     @Override
-    public void visit(IfThenElseNode node) {
-      // TODO Auto-generated method stub
-      
-    }
-
-    @Override
     public void visit(LogicalOr node) {
       // TODO Auto-generated method stub
       
@@ -221,9 +237,21 @@ public class LatexVisitor implements ControlFlowVisitor, ExpressionVisitor {
       
     }
 
-    @Override
-    public void visit(BlockEndNode node) {
-      // TODO Auto-generated method stub
-      
-    }
+	@Override
+	public void visit(Macro node) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visit(FunctionArgument node) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visit(MacroCall node) {
+		// TODO Auto-generated method stub
+		
+	}
 }

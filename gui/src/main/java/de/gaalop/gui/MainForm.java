@@ -30,6 +30,7 @@ import java.util.prefs.Preferences;
 public class MainForm {
     private JPanel contentPane;
     private JButton optimizeButton;
+    private JButton configureButton;
     private JLabel logoIcon;
     private JTabbedPane tabbedPane;
     private JEditorPane welcomeToGaalopWelcomeEditorPane;
@@ -37,6 +38,7 @@ public class MainForm {
     private JButton openFileButton;
     private JButton saveFileButton;
     private JButton closeButton;
+    private StatusBar statusBar;
 
     private Log log = LogFactory.getLog(MainForm.class);
 
@@ -57,11 +59,19 @@ public class MainForm {
                     plugins.addAll(Plugins.getCodeGeneratorPlugins());
                     Collections.sort(plugins, new PluginSorter());
                     for (CodeGeneratorPlugin plugin : plugins) {
-                        menu.add(new CompileAction(sourcePanel, plugin));
+                        menu.add(new CompileAction(sourcePanel, statusBar, plugin));
                     }
                     menu.show(optimizeButton, 0, optimizeButton.getBounds().height);
                 }
             }
+        });
+        
+        configureButton.addActionListener(new ActionListener() {
+          
+          @Override
+          public void actionPerformed(ActionEvent e) {
+            new ConfigurationPanel(tabbedPane);
+          }
         });
 
         // New file shows a menu with available code parsers
@@ -186,6 +196,10 @@ public class MainForm {
     public Container getContentPane() {
         return contentPane;
     }
+    
+    public StatusBar getStatusBar() {
+		return statusBar;
+	}
 
     public void loadOpenedFiles() {
         Preferences prefs = Preferences.userNodeForPackage(MainForm.class);
@@ -324,6 +338,15 @@ public class MainForm {
         optimizeButton.setMnemonic('I');
         optimizeButton.setDisplayedMnemonicIndex(3);
         toolBar1.add(optimizeButton);
+        final JToolBar.Separator toolBar$Separator2 = new JToolBar.Separator();
+        toolBar1.add(toolBar$Separator2);
+        configureButton = new JButton();
+        configureButton.setEnabled(false);
+        configureButton.setIcon(new ImageIcon(getClass().getResource("/de/gaalop/gui/applications-system.png")));
+        configureButton.setText("Configure");
+        configureButton.setMnemonic('C');
+        configureButton.setDisplayedMnemonicIndex(3);
+//        toolBar1.add(configureButton);
         tabbedPane = new JTabbedPane();
         contentPane.add(tabbedPane, BorderLayout.CENTER);
         final JPanel panel2 = new JPanel();
@@ -334,6 +357,8 @@ public class MainForm {
         welcomeToGaalopWelcomeEditorPane.setEditable(false);
         welcomeToGaalopWelcomeEditorPane.setText("<html>\r\n  <head>\r\n    \r\n  </head>\r\n  <body>\r\n  </body>\r\n</html>\r\n");
         panel2.add(welcomeToGaalopWelcomeEditorPane, BorderLayout.CENTER);
+        statusBar = new StatusBar();
+        contentPane.add(statusBar, BorderLayout.SOUTH);
     }
 
     /**

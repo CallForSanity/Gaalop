@@ -18,6 +18,10 @@ FLOATING_POINT_LITERAL
     |   ('0'..'9')+  FLOATTYPESUFFIX
 	;
 
+RANGE_LITERAL : 'range';
+
+OUTPUT_LITERAL: 'output';
+
 fragment
 EXPONENT 
 	: 'e' MINUS? ('0'..'9')+
@@ -39,10 +43,20 @@ IF		:	'if'
 	
 ELSE	:	'else'
 	;
+	
+LOOP  : 'loop'
+  ;
+  
+BREAK : 'break'
+  ;
 
 IDENTIFIER
 	:	LETTER (LETTER|DIGIT)*
 	;
+	
+ARGUMENT_PREFIX
+  : '_P('
+  ;
 
 fragment
 LETTER
@@ -62,8 +76,14 @@ COMMENT
     :   '/*' ( options {greedy=false;} : . )* '*/' {$channel=HIDDEN;}
     ;
 
+// rely on the fact that they are recognized in the order in this file
+// (LINE_COMMENT also matches PRAGMA)
+PRAGMA
+    :   '//#pragma'
+    ;
+
 LINE_COMMENT
-    : '//' ~('\n'|'\r')* '\r'? '\n' {$channel=HIDDEN;}
+    : '//'~'#'  ~('\n'|'\r')* '\r'? '\n' {$channel=HIDDEN;}
     ;
 
 

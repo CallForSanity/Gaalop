@@ -12,6 +12,10 @@ tokens {
   PROCEDURE;
   NEGATION;
   DUAL;
+  BLOCK;
+  ELSEIF;
+  MACRO;
+  ARGUMENT;
 }
 
 @header {
@@ -35,7 +39,19 @@ tokens {
   Root Rule 
 */
 script  :
-  statement* EOF!
+  statement* EOF! 
+  ;
+
+float_literal:
+  MINUS? FLOATING_POINT_LITERAL
+  ;
+
+/*
+  Pragma
+*/
+pragma
+  : PRAGMA RANGE_LITERAL float_literal LESS_OR_EQUAL IDENTIFIER LESS_OR_EQUAL float_literal
+  | PRAGMA OUTPUT_LITERAL IDENTIFIER
   ;
 
 /*
@@ -110,6 +126,7 @@ function_call
 
 primary_expression
   : IDENTIFIER
+  | function_argument 
   | constant
   | LBRACKET! expression RBRACKET!
   ;
@@ -117,6 +134,10 @@ constant
     :   DECIMAL_LITERAL
     |   FLOATING_POINT_LITERAL
     ;
+    
+function_argument
+  : ARGUMENT_PREFIX index=DECIMAL_LITERAL RBRACKET -> ^(ARGUMENT $index)
+  ;
 
 /*
   Statements
@@ -131,8 +152,21 @@ statement_list
 statement 
   : expression_statement
   | procedure_call
+  | macro_definition
   | draw_mode
+  | block
   | if_statement
+  | loop
+  | BREAK
+  | pragma 
+  ;
+  
+macro_definition
+  : id=IDENTIFIER EQUALS CLBRACKET lst=statement* e=additive_expression? CRBRACKET -> ^(MACRO $id $lst $e?)
+  ;
+  
+block
+  : CLBRACKET statement* CRBRACKET -> ^(BLOCK statement*)
   ;
   
 draw_mode
@@ -150,10 +184,17 @@ expression_statement
   ;
   
 if_statement 
-  : IF LBRACKET condition=logical_or_expression RBRACKET                // condition
-    CLBRACKET then_list=statement_list CRBRACKET                            // then-part
-    (   ELSE CLBRACKET else_list=statement_list CRBRACKET                   // else-part (optional)
-      | ELSE elseif=if_statement                                             // TODO: support elseif statements
-    )?
-    -> ^(IF $condition $then_list ELSE? $else_list? $elseif?)                      
+  : IF LBRACKET condition=logical_or_expression RBRACKET     // condition
+    then_part=statement                                      // then-part
+    (else_part)?                                             // optional else-part
+    -> ^(IF $condition $then_part else_part?)                      
+  ;
+  
+else_part
+  : ELSE block -> ^(ELSE block)
+  | ELSE stmt=if_statement -> ^(ELSEIF $stmt)
+  ;
+  
+loop
+  : LOOP stmt=statement -> ^(LOOP $stmt)
   ;

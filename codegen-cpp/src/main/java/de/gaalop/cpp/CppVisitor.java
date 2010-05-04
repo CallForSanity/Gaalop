@@ -5,293 +5,375 @@ import de.gaalop.dfg.*;
 
 import java.util.*;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
  * This visitor traverses the control and data flow graphs and generates C/C++ code.
  */
 public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 
-  private StringBuilder code = new StringBuilder();
+	private Log log = LogFactory.getLog(CppVisitor.class);
 
-  private ControlFlowGraph graph;
+	private StringBuilder code = new StringBuilder();
 
-  // Maps the nodes that output variables to their result parameter names
-  private Map<StoreResultNode, String> outputNamesMap = new IdentityHashMap<StoreResultNode, String>();
+	private ControlFlowGraph graph;
 
-  private int indentation = 0;
+	// Maps the nodes that output variables to their result parameter names
+	private Map<StoreResultNode, String> outputNamesMap = new HashMap<StoreResultNode, String>();
 
-  public String getCode() {
-    return code.toString();
-  }
+	private int indentation = 0;
 
-  private void appendIndentation() {
-    for (int i = 0; i < indentation; ++i) {
-      code.append('\t');
-    }
-  }
+	private boolean standalone = true;
 
-  @Override
-  public void visit(StartNode node) {
-    graph = node.getGraph();
+	public String getCode() {
+		return code.toString();
+	}
 
-    code.append("void calculate(");
+	private void appendIndentation() {
+		for (int i = 0; i < indentation; ++i) {
+			code.append('\t');
+		}
+	}
 
-    // Input Parameters
-    List<Variable> inputParameters = sortVariables(graph.getInputVariables());
-    for (Variable var : inputParameters) {
-      code.append("float "); // The assumption here is that they all are normal scalars
-      code.append(var.getName());
-      code.append(", ");
-    }
+	@Override
+	public void visit(StartNode node) {
+		graph = node.getGraph();
 
-    // Collect all output variables
-    FindStoreOutputNodes findOutput = new FindStoreOutputNodes();
-    graph.accept(findOutput);
-    for (StoreResultNode var : findOutput.getNodes()) {
-      code.append("float **");
-      String outputName = var.getValue().getName() + "_out";
-      code.append(outputName);
-      code.append(", ");
-      outputNamesMap.put(var, outputName);
-    }
+		FindStoreOutputNodes findOutput = new FindStoreOutputNodes();
+		graph.accept(findOutput);
+		for (StoreResultNode var : findOutput.getNodes()) {
+			String outputName = var.getValue().getName() + "_out";
+			outputNamesMap.put(var, outputName);
+		}
+		if (standalone) {
+			code.append("void calculate(");
 
-    if (!graph.getInputVariables().isEmpty() || !findOutput.getNodes().isEmpty()) {
-      code.setLength(code.length() - 2);
-    }
+			// Input Parameters
+			List<Variable> inputParameters = sortVariables(graph.getInputVariables());
+			for (Variable var : inputParameters) {
+				code.append("float "); // The assumption here is that they all are normal scalars
+				code.append(var.getName());
+				code.append(", ");
+			}
 
-    code.append(") {\n");
-    indentation++;
+			for (StoreResultNode var : findOutput.getNodes()) {
+				code.append("float **");
+				code.append(outputNamesMap.get(var));
+				code.append(", ");
+			}
 
-    // Declare local variables
-    for (Variable var : graph.getLocalVariables()) {
-      appendIndentation();
-      code.append("float ");
-      code.append(var.getName());
-      code.append("[32];\n");
-    }
+			if (!graph.getInputVariables().isEmpty() || !findOutput.getNodes().isEmpty()) {
+				code.setLength(code.length() - 2);
+			}
 
-    if (!graph.getLocalVariables().isEmpty()) {
-      code.append("\n");
-    }
+			code.append(") {\n");
+			indentation++;
+		}
 
-    node.getSuccessor().accept(this);
-  }
+		// Declare local variables
+		for (Variable var : graph.getLocalVariables()) {
+			appendIndentation();
+			code.append("float ");
+			code.append(var.getName());
+			code.append("[32];\n");
+		}
 
-  /**
-   * Sorts a set of variables by name to make the order deterministic.
-   * 
-   * @param inputVariables
-   * @return
-   */
-  private List<Variable> sortVariables(Set<Variable> inputVariables) {
-    List<Variable> variables = new ArrayList<Variable>(inputVariables);
-    Comparator<Variable> comparator = new Comparator<Variable>() {
+		if (!graph.getLocalVariables().isEmpty()) {
+			code.append("\n");
+		}
 
-      @Override
-      public int compare(Variable o1, Variable o2) {
-        return o1.getName().compareToIgnoreCase(o2.getName());
-      }
-    };
+		node.getSuccessor().accept(this);
+	}
 
-    Collections.sort(variables, comparator);
-    return variables;
-  }
+	/**
+	 * Sorts a set of variables by name to make the order deterministic.
+	 * 
+	 * @param inputVariables
+	 * @return
+	 */
+	private List<Variable> sortVariables(Set<Variable> inputVariables) {
+		List<Variable> variables = new ArrayList<Variable>(inputVariables);
+		Comparator<Variable> comparator = new Comparator<Variable>() {
 
-  @Override
-  public void visit(AssignmentNode node) {
-    appendIndentation();
-    node.getVariable().accept(this);
-    code.append(" = ");
-    node.getValue().accept(this);
-    code.append(";\n");
+			@Override
+			public int compare(Variable o1, Variable o2) {
+				return o1.getName().compareToIgnoreCase(o2.getName());
+			}
+		};
 
-    node.getSuccessor().accept(this);
-  }
+		Collections.sort(variables, comparator);
+		return variables;
+	}
 
-  @Override
-  public void visit(StoreResultNode node) {
-    appendIndentation();
-    code.append("memcpy(");
-    code.append(outputNamesMap.get(node));
-    code.append(", ");
-    code.append(node.getValue().getName());
-    code.append(", sizeof(");
-    code.append(node.getValue().getName());
-    code.append("));\n");
+	Set<String> assigned = new HashSet<String>();
 
-    node.getSuccessor().accept(this);
-  }
+	@Override
+	public void visit(AssignmentNode node) {
+		if (assigned.contains(node.getVariable().getName())) {
+			log.warn("Reuse of variable " + node.getVariable().getName()
+				+ ". Make sure to reset this variable or use another name.");
+			code.append("\n");
+			appendIndentation();
+			code.append("// Warning: reuse of variable ");
+			code.append(node.getVariable().getName());
+			code.append(".\n");
+			appendIndentation();
+			code.append("// Make sure to reset this variable or use another name.\n");
+			assigned.remove(node.getVariable().getName());
+		}
 
-  @Override
-  public void visit(IfThenElseNode node) {
-    appendIndentation();
-    code.append("if (");
-    node.getCondition().accept(this);
-    code.append(") {\n");
+		appendIndentation();
+		node.getVariable().accept(this);
+		code.append(" = ");
+		node.getValue().accept(this);
+		code.append(";\n");
 
-    indentation++;
-    node.getPositive().accept(this);
-    indentation--;
+		node.getSuccessor().accept(this);
+	}
 
-    appendIndentation();
-    code.append("}");
+	@Override
+	public void visit(StoreResultNode node) {
+		assigned.add(node.getValue().getName());
 
-    if (node.getNegative() instanceof BlockEndNode) {
-      code.append("\n");
-    } else {
-      code.append(" else {\n");
-      
-      indentation++;
-      node.getNegative().accept(this);
-      indentation--;
-      
-      appendIndentation();
-      code.append("}\n");
-    }
-    
-    node.getSuccessor().accept(this);
-  }
-  
-  @Override
-  public void visit(BlockEndNode node) {
-    // nothing to do 
-  }
+		appendIndentation();
+		code.append("memcpy(");
+		code.append(outputNamesMap.get(node));
+		code.append(", ");
+		code.append(node.getValue().getName());
+		code.append(", sizeof(");
+		code.append(node.getValue().getName());
+		code.append("));\n");
 
-  @Override
-  public void visit(EndNode node) {
-    indentation--;
-    code.append("}\n");
-  }
+		node.getSuccessor().accept(this);
+	}
 
-  private void addBinaryInfix(BinaryOperation op, String operator) {
-    addChild(op, op.getLeft());
-    code.append(operator);
-    addChild(op, op.getRight());
-  }
+	@Override
+	public void visit(IfThenElseNode node) {
+		appendIndentation();
+		code.append("if (");
+		node.getCondition().accept(this);
+		code.append(") {\n");
 
-  private void addChild(Expression parent, Expression child) {
-    if (OperatorPriority.hasLowerPriority(parent, child)) {
-      code.append('(');
-      child.accept(this);
-      code.append(')');
-    } else {
-      child.accept(this);
-    }
-  }
+		indentation++;
+		node.getPositive().accept(this);
+		indentation--;
 
-  @Override
-  public void visit(Subtraction subtraction) {
-    addBinaryInfix(subtraction, " - ");
-  }
+		appendIndentation();
+		code.append("}");
 
-  @Override
-  public void visit(Addition addition) {
-    addBinaryInfix(addition, " + ");
-  }
+		if (node.getNegative() instanceof BlockEndNode) {
+			code.append("\n");
+		} else {
+			code.append(" else ");
 
-  @Override
-  public void visit(Division division) {
-    addBinaryInfix(division, " / ");
-  }
+			boolean isElseIf = false;
+			if (node.getNegative() instanceof IfThenElseNode) {
+				IfThenElseNode ifthenelse = (IfThenElseNode) node.getNegative();
+				isElseIf = ifthenelse.isElseIf();
+			}
+			if (!isElseIf) {
+				code.append("{\n");
+				indentation++;
+			}
 
-  @Override
-  public void visit(InnerProduct innerProduct) {
-    throw new UnsupportedOperationException("The C/C++ backend does not support the inner product.");
-  }
+			node.getNegative().accept(this);
 
-  @Override
-  public void visit(Multiplication multiplication) {
-    addBinaryInfix(multiplication, " * ");
-  }
+			if (!isElseIf) {
+				indentation--;
+				appendIndentation();
+				code.append("}\n");
+			}
+		}
 
-  @Override
-  public void visit(MathFunctionCall mathFunctionCall) {
-    code.append(mathFunctionCall.getFunction().toString());
-    code.append('(');
-    mathFunctionCall.getOperand().accept(this);
-    code.append(')');
-  }
+		node.getSuccessor().accept(this);
+	}
 
-  @Override
-  public void visit(Variable variable) {
-    code.append(variable.getName());
-  }
+	@Override
+	public void visit(LoopNode loopNode) {
+		// TODO Auto-generated method stub
+		
+	}
 
-  @Override
-  public void visit(MultivectorComponent component) {
-    code.append(component.getName());
-    code.append('[');
-    code.append(component.getBladeIndex());
-    code.append(']');
-  }
+	@Override
+	public void visit(BreakNode breakNode) {
+		// TODO Auto-generated method stub
+		
+	}
 
-  @Override
-  public void visit(Exponentiation exponentiation) {
-    if (isSquare(exponentiation)) {
-      Multiplication m = new Multiplication(exponentiation.getLeft(), exponentiation.getLeft());
-      m.accept(this);
-    } else {
-      code.append("pow(");
-      exponentiation.getLeft().accept(this);
-      code.append(',');
-      exponentiation.getRight().accept(this);
-      code.append(')');
-    }
-  }
+	@Override
+	public void visit(BlockEndNode node) {
+		// nothing to do
+	}
 
-  private boolean isSquare(Exponentiation exponentiation) {
-    final FloatConstant two = new FloatConstant(2.0f);
-    return two.equals(exponentiation.getRight());
-  }
+	@Override
+	public void visit(EndNode node) {
+		if (standalone) {
+			indentation--;
+			code.append("}\n");
+		}
+	}
 
-  @Override
-  public void visit(FloatConstant floatConstant) {
-    code.append(Float.toString(floatConstant.getValue()));
-    code.append('f');
-  }
+	private void addBinaryInfix(BinaryOperation op, String operator) {
+		addChild(op, op.getLeft());
+		code.append(operator);
+		addChild(op, op.getRight());
+	}
 
-  @Override
-  public void visit(OuterProduct outerProduct) {
-    throw new UnsupportedOperationException("The C/C++ backend does not support the outer product.");
-  }
+	private void addChild(Expression parent, Expression child) {
+		if (OperatorPriority.hasLowerPriority(parent, child)) {
+			code.append('(');
+			child.accept(this);
+			code.append(')');
+		} else {
+			child.accept(this);
+		}
+	}
 
-  @Override
-  public void visit(BaseVector baseVector) {
-     throw new UnsupportedOperationException("The C/C++ backend does not support base vectors.");
-  }
+	@Override
+	public void visit(Subtraction subtraction) {
+		addBinaryInfix(subtraction, " - ");
+	}
 
-  @Override
-  public void visit(Negation negation) {
-    code.append('-');
-    addChild(negation, negation.getOperand());
-  }
+	@Override
+	public void visit(Addition addition) {
+		addBinaryInfix(addition, " + ");
+	}
 
-  @Override
-  public void visit(Reverse node) {
-    throw new UnsupportedOperationException("The C/C++ backend does not support the reverse operation.");
-  }
+	@Override
+	public void visit(Division division) {
+		addBinaryInfix(division, " / ");
+	}
 
-  @Override
-  public void visit(LogicalOr node) {
-    addBinaryInfix(node, " || ");
-  }
+	@Override
+	public void visit(InnerProduct innerProduct) {
+		throw new UnsupportedOperationException("The C/C++ backend does not support the inner product.");
+	}
 
-  @Override
-  public void visit(LogicalAnd node) {
-    addBinaryInfix(node, " && ");
-  }
+	@Override
+	public void visit(Multiplication multiplication) {
+		addBinaryInfix(multiplication, " * ");
+	}
 
-  @Override
-  public void visit(Equality node) {
-    addBinaryInfix(node, " == ");
-  }
+	@Override
+	public void visit(MathFunctionCall mathFunctionCall) {
+		String funcName;
+		switch (mathFunctionCall.getFunction()) {
+		case ABS:
+			funcName = "fabs";
+			break;
+		case SQRT:
+			funcName = "sqrtf";
+			break;
+		default:
+			funcName = mathFunctionCall.getFunction().toString().toLowerCase();
+		}
+		code.append(funcName);
+		code.append('(');
+		mathFunctionCall.getOperand().accept(this);
+		code.append(')');
+	}
 
-  @Override
-  public void visit(Inequality node) {
-    addBinaryInfix(node, " != ");
-  }
+	@Override
+	public void visit(Variable variable) {
+		// usually there are no
+		code.append(variable.getName());
+	}
 
-  @Override
-  public void visit(Relation relation) {
-    addBinaryInfix(relation, relation.getTypeString());
-  }
+	@Override
+	public void visit(MultivectorComponent component) {
+		code.append(component.getName());
+		code.append('[');
+		code.append(component.getBladeIndex());
+		code.append(']');
+	}
+
+	@Override
+	public void visit(Exponentiation exponentiation) {
+		if (isSquare(exponentiation)) {
+			Multiplication m = new Multiplication(exponentiation.getLeft(), exponentiation.getLeft());
+			m.accept(this);
+		} else {
+			code.append("pow(");
+			exponentiation.getLeft().accept(this);
+			code.append(',');
+			exponentiation.getRight().accept(this);
+			code.append(')');
+		}
+	}
+
+	private boolean isSquare(Exponentiation exponentiation) {
+		final FloatConstant two = new FloatConstant(2.0f);
+		return two.equals(exponentiation.getRight());
+	}
+
+	@Override
+	public void visit(FloatConstant floatConstant) {
+		code.append(Float.toString(floatConstant.getValue()));
+		code.append('f');
+	}
+
+	@Override
+	public void visit(OuterProduct outerProduct) {
+		throw new UnsupportedOperationException("The C/C++ backend does not support the outer product.");
+	}
+
+	@Override
+	public void visit(BaseVector baseVector) {
+		throw new UnsupportedOperationException("The C/C++ backend does not support base vectors.");
+	}
+
+	@Override
+	public void visit(Negation negation) {
+		code.append('-');
+		addChild(negation, negation.getOperand());
+	}
+
+	@Override
+	public void visit(Reverse node) {
+		throw new UnsupportedOperationException("The C/C++ backend does not support the reverse operation.");
+	}
+
+	@Override
+	public void visit(LogicalOr node) {
+		addBinaryInfix(node, " || ");
+	}
+
+	@Override
+	public void visit(LogicalAnd node) {
+		addBinaryInfix(node, " && ");
+	}
+
+	@Override
+	public void visit(Equality node) {
+		addBinaryInfix(node, " == ");
+	}
+
+	@Override
+	public void visit(Inequality node) {
+		addBinaryInfix(node, " != ");
+	}
+
+	@Override
+	public void visit(Relation relation) {
+		addBinaryInfix(relation, relation.getTypeString());
+	}
+
+	@Override
+	public void visit(Macro node) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visit(FunctionArgument node) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visit(MacroCall node) {
+		// TODO Auto-generated method stub
+		
+	}
 }

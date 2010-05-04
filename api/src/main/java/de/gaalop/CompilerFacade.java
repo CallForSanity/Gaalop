@@ -2,12 +2,13 @@ package de.gaalop;
 
 import de.gaalop.cfg.ControlFlowGraph;
 
+import java.util.Observable;
 import java.util.Set;
 
 /**
  * Represents the high level compilation process.
  */
-public final class CompilerFacade {
+public final class CompilerFacade extends Observable {
 
     private final CodeParser codeParser;
 
@@ -36,8 +37,17 @@ public final class CompilerFacade {
      * @throws CompilationException If any error occurs during compilation.
      */
     public Set<OutputFile> compile(InputFile input) throws CompilationException {
+    	setChanged();
+    	notifyObservers("Parsing...");
         ControlFlowGraph graph = codeParser.parseFile(input);
+        setChanged();
+        notifyObservers("Optimizing...");
         optimizationStrategy.transform(graph);
-        return codeGenerator.generate(graph);
+        setChanged();
+        notifyObservers("Generating Code...");
+        Set<OutputFile> output = codeGenerator.generate(graph);
+        setChanged();
+        notifyObservers("Finished");        
+        return output;
     }
 }
