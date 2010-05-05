@@ -23,6 +23,13 @@ public class MapleStrategy implements OptimizationStrategy {
 
     @Override
     public void transform(ControlFlowGraph graph) throws OptimizationException {
+    	try {
+    		log.debug("Inlining macros");
+    		InlineMacrosVisitor visitor = new InlineMacrosVisitor();
+    		graph.accept(visitor);
+    	} catch (Exception e) {
+    		throw new OptimizationException("Unable to inline macros.", e, graph);
+    	}
         try {
             log.debug("Simplifying graph using maple.");
             simplifier.simplify(graph);

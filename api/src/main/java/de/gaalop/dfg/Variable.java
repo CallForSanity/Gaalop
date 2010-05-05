@@ -3,7 +3,7 @@ package de.gaalop.dfg;
 /**
  * This class represents a dataflow graph node that models a variable.
  */
-public class Variable implements Expression {
+public class Variable extends Expression {
 
 	private String name;
 

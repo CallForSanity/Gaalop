@@ -8,7 +8,6 @@ import de.gaalop.dfg.Variable;
 import de.gaalop.dfg.MathFunction;
 import de.gaalop.dfg.MathFunctionCall;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -202,14 +201,15 @@ public final class GraphBuilder {
 	
 	public Macro handleMacroDefinition(String id, List<SequentialNode> body, Expression ret) {
 		macros.add(id);
-		Macro function = new Macro(graph, id, body, ret);
-		addNode(function);
+		Macro macro = new Macro(graph, id, body, ret);
+		addNode(macro);
+		graph.addMacro(macro);
 		
 		for (SequentialNode node : body) {
 			graph.removeNode(node);
 		}
 		
-		return function;
+		return macro;
 	}
 
 	/**
@@ -297,6 +297,9 @@ public final class GraphBuilder {
 	}
 
 	public Expression processFunction(String name, List<Expression> args) {
+		for (Expression arg : args) {
+			findUndeclaredVariables(arg);
+		}
 		if (functionFactory.isDefined(name)) {
 			Expression[] argsArray = args.toArray(new Expression[args.size()]);
 			return functionFactory.createExpression(name, argsArray);

@@ -3,7 +3,7 @@ package de.gaalop.dfg;
 /**
  * This is the abstract base class for all operations that take two operands.
  */
-public abstract class BinaryOperation implements Expression {
+public abstract class BinaryOperation extends Expression {
 
     private Expression left;
     private Expression right;
@@ -36,6 +36,23 @@ public abstract class BinaryOperation implements Expression {
      */
     public Expression getRight() {
         return right;
+    }
+    
+    @Override
+    public void replaceExpression(Expression old, Expression newExpression) {
+    	if (old == left && old == right) {
+    		left = newExpression;
+    		right = newExpression;
+    	} else if (old == left) {
+    		left = newExpression;
+    		right.replaceExpression(old, newExpression);
+    	} else if (old == right) {
+    		left.replaceExpression(old, newExpression);
+    		right = newExpression;
+    	} else {
+    		left.replaceExpression(old, newExpression);
+    		right.replaceExpression(old, newExpression);
+    	}
     }
 
     /**

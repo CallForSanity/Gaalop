@@ -1,25 +1,27 @@
 package de.gaalop.cfg;
 
-import de.gaalop.InputFile;
-import de.gaalop.dfg.Expression;
-import de.gaalop.dfg.Variable;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import de.gaalop.InputFile;
+import de.gaalop.dfg.Expression;
+import de.gaalop.dfg.Variable;
 
 /**
  * This class models a control dataflow graph.
  * <p/>
- * It is usually created by a <code>CodeParser</code> and then processed by an <code>OptimizationStrategy</code> before it is
- * again converted to source code by a <code>CodeGenerator</code>.
+ * It is usually created by a <code>CodeParser</code> and then processed by an <code>OptimizationStrategy</code> before
+ * it is again converted to source code by a <code>CodeGenerator</code>.
  * <p/>
- * A ControlFlowGraph instance only holds references to the first and last node of the graph, which are modeled by the classes
- * StartNode and EndNode.
+ * A ControlFlowGraph instance only holds references to the first and last node of the graph, which are modeled by the
+ * classes StartNode and EndNode.
  * 
  * @author Sebastian Hartte
  * @see de.gaalop.CodeGenerator
@@ -44,6 +46,8 @@ public final class ControlFlowGraph {
 
 	private InputFile source;
 
+	private Map<String, Macro> macros = new HashMap<String, Macro>();
+
 	/* store information about the pragmas */
 	private Set<String> pragmaOutputVariables = new HashSet<String>();
 
@@ -51,9 +55,9 @@ public final class ControlFlowGraph {
 	private HashMap<String, String> pragmaMaxValue = new HashMap<String, String>();
 
 	/**
-	 * This field contains a list of blades that correspond to the indices of a multi vector that is represented by an array. This
-	 * list can be modified, but whenever the underlying signature is changed, the blade list is automatically regenerated to a
-	 * sane value.
+	 * This field contains a list of blades that correspond to the indices of a multi vector that is represented by an
+	 * array. This list can be modified, but whenever the underlying signature is changed, the blade list is
+	 * automatically regenerated to a sane value.
 	 */
 	private Expression[] bladeList;
 
@@ -74,12 +78,40 @@ public final class ControlFlowGraph {
 	}
 
 	/**
-	 * Adds a pragma hint for a variable, which defines value range for it. The pragma must be set before the variable is added to
-	 * the input variables, i.e. the pragma must appear for the use of the variable
+	 * Adds a pragma hint for a variable, which defines value range for it. The pragma must be set before the variable
+	 * is added to the input variables, i.e. the pragma must appear for the use of the variable
 	 */
 	public void addPragmaMinMaxValues(String variable, String min, String max) {
 		pragmaMaxValue.put(variable, max);
 		pragmaMinValue.put(variable, min);
+	}
+
+	/**
+	 * Adds a new macro definition.
+	 * 
+	 * @param macro new macro definition
+	 */
+	public void addMacro(Macro macro) {
+		macros.put(macro.getName(), macro);
+	}
+
+	/**
+	 * Returns the macro definition of a macro with given name, if available.
+	 * 
+	 * @param name name of macro to be returned
+	 * @return macro definition according to name or null, if not found
+	 */
+	public Macro getMacro(String name) {
+		return macros.get(name);
+	}
+
+	/**
+	 * Returns a list of macro definitions that are contained in this graph.
+	 * 
+	 * @return list of macro definitions
+	 */
+	public Set<Macro> getMacros() {
+		return new HashSet<Macro>(macros.values());
 	}
 
 	/**
@@ -97,9 +129,9 @@ public final class ControlFlowGraph {
 	/**
 	 * Gets the list of blades this control flow graph is using.
 	 * <p/>
-	 * Once the representation of multivectors has been lowered, this array can be used to identify the blades the elements of a
-	 * multivector array correspond to. This information can then be used to create a linear combination of the array elements
-	 * with the content of this array to reverse the lowering.
+	 * Once the representation of multivectors has been lowered, this array can be used to identify the blades the
+	 * elements of a multivector array correspond to. This information can then be used to create a linear combination
+	 * of the array elements with the content of this array to reverse the lowering.
 	 * <p/>
 	 * In a new graph this is equal to the default blade list of the underlying algebra signature.
 	 * 
@@ -199,7 +231,7 @@ public final class ControlFlowGraph {
 		// Check that the given variable is not part of the inputVariables set
 		if (inputVariables.contains(variable)) {
 			throw new IllegalArgumentException("The Variable " + variable.getName()
-				+ " cannot be a local variable and an input variable at the same time.");
+					+ " cannot be a local variable and an input variable at the same time.");
 		}
 
 		localVariables.add(variable);
@@ -226,7 +258,7 @@ public final class ControlFlowGraph {
 		// Check that the given variable is not part of the localVariables set
 		if (localVariables.contains(variable)) {
 			throw new IllegalArgumentException("The Variable " + variable.getName()
-				+ " cannot be a local variable and an input variable at the same time.");
+					+ " cannot be a local variable and an input variable at the same time.");
 		}
 
 		inputVariables.add(variable);
@@ -254,8 +286,9 @@ public final class ControlFlowGraph {
 	}
 
 	/**
-	 * Removes the given node from the control flow graph. The graph will be traversed in order to find the node to be removed.
-	 * Once the desired node is found, its predecessors are rewired to have the old node's successor as direct successors.
+	 * Removes the given node from the control flow graph. The graph will be traversed in order to find the node to be
+	 * removed. Once the desired node is found, its predecessors are rewired to have the old node's successor as direct
+	 * successors.
 	 * 
 	 * @param node node to be removed
 	 */

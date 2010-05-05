@@ -6,7 +6,7 @@ package de.gaalop.dfg;
  * It is often found as a leaf node in data flow graphs.
  * 
  */
-public final class FloatConstant implements Expression {
+public final class FloatConstant extends Expression {
 
 	private final float value;
 

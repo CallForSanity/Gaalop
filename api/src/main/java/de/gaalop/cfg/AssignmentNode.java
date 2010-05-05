@@ -74,6 +74,16 @@ public final class AssignmentNode extends SequentialNode {
     public void accept(ControlFlowVisitor visitor) {
         visitor.visit(this);
     }
+    
+    @Override
+    public void replaceExpression(Expression old, Expression newExpression) {
+    	if (value == old) {
+    		value = newExpression;
+    	} else {
+    		// recursively try to replace expression
+    		value.replaceExpression(old, newExpression);
+    	}
+    }
 
     /**
      * Converts this assignment into a human readable string by calling the <code>toString</code> methods on both

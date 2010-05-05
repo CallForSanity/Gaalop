@@ -19,6 +19,18 @@ public class Macro extends SequentialNode {
 		this.body = body;
 		this.returnValue = returnValue;
 	}
+	
+	public String getName() {
+		return name;
+	}
+	
+	public List<SequentialNode> getBody() {
+		return body;
+	}
+	
+	public Expression getReturnValue() {
+		return returnValue;
+	}
 
 	@Override
 	public void accept(ControlFlowVisitor visitor) {

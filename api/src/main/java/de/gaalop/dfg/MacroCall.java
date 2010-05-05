@@ -3,7 +3,7 @@ package de.gaalop.dfg;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MacroCall implements Expression {
+public class MacroCall extends Expression {
 	
 	private String name;
 	private List<Expression> args;
