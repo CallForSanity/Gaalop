@@ -39,8 +39,8 @@ public class Plugin extends Observable implements OptimizationStrategyPlugin {
 			try {
 				Win32MapleFinder finder = new Win32MapleFinder();
 				String maplePath = finder.getMaplePathFromRegistry();
-				mapleBinaryPath = maplePath + "/bin.win/";
-				mapleJavaPath = maplePath + "/java/";
+				mapleBinaryPath = maplePath + "\\bin.win\\";
+				mapleJavaPath = maplePath + "\\java\\";
 				log.info("Maple Path from Windows Registry: " + "binary=\"" + mapleBinaryPath + "\", java=\"" + mapleJavaPath
 					+ "\"");
 			} catch (FileNotFoundException e) {

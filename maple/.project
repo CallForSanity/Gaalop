@@ -26,4 +26,11 @@
 		<nature>org.maven.ide.eclipse.maven2Nature</nature>
 		<nature>org.deved.antlride.core.nature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>Maple natives</name>
+			<type>2</type>
+			<location>C:/Program Files (x86)/Maple 13/bin.win</location>
+		</link>
+	</linkedResources>
 </projectDescription>
