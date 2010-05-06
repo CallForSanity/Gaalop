@@ -1,5 +1,6 @@
 package de.gaalop.cfg;
 
+import de.gaalop.dfg.Expression;
 import de.gaalop.dfg.Variable;
 
 /**
@@ -36,6 +37,13 @@ public final class StoreResultNode extends SequentialNode {
      */
     public void setValue(Variable value) {
         this.value = value;
+    }
+    
+    @Override
+    public void replaceExpression(Expression old, Expression newExpression) {
+    	if (value == old && newExpression instanceof Variable) {
+    		value = (Variable) newExpression;
+    	}
     }
 
     /**

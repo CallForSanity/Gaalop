@@ -1,7 +1,9 @@
 package de.gaalop.maple;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
@@ -17,6 +19,7 @@ import de.gaalop.cfg.Node;
 import de.gaalop.cfg.SequentialNode;
 import de.gaalop.cfg.StartNode;
 import de.gaalop.cfg.StoreResultNode;
+import de.gaalop.clucalc.input.UsedVariablesVisitor;
 import de.gaalop.dfg.Addition;
 import de.gaalop.dfg.BaseVector;
 import de.gaalop.dfg.Division;
@@ -51,20 +54,18 @@ public class InlineMacrosVisitor implements ControlFlowVisitor, ExpressionVisito
 
 	private SequentialNode currentStatement;
 	private List<Expression> currentArguments;
-	private Set<String> variables = new HashSet<String>();
+	private Set<String> usedVariables = new HashSet<String>();
 	private Set<Node> visitedNodes = new HashSet<Node>();
 
 	private String generateUniqueName(String original) {
-		if (variables.contains(original)) {
+		if (usedVariables.contains(original)) {
 			Random r = new Random(System.currentTimeMillis());
 			String unique;
 			do {
 				unique = original + "__" + r.nextInt(100);
-			} while (variables.contains(unique));
-			variables.add(unique);
+			} while (usedVariables.contains(unique));
 			return unique;
 		} else {
-			variables.add(original);
 			return original;
 		}
 	}
@@ -84,10 +85,10 @@ public class InlineMacrosVisitor implements ControlFlowVisitor, ExpressionVisito
 	@Override
 	public void visit(StartNode node) {
 		for (Variable input : node.getGraph().getInputVariables()) {
-			variables.add(input.getName());
+			usedVariables.add(input.getName());
 		}
 		for (Variable local : node.getGraph().getLocalVariables()) {
-			variables.add(local.getName());
+			usedVariables.add(local.getName());
 		}
 		continueVisitFrom(node);
 	}
@@ -250,10 +251,51 @@ public class InlineMacrosVisitor implements ControlFlowVisitor, ExpressionVisito
 		currentArguments = node.getArguments();
 		for (SequentialNode statement : macro.getBody()) {
 			caller.insertBefore(statement);
-			// TODO: adjust variable names in statements from macro body!
 			statement.accept(this);
+			replaceUsedVariables(statement);
 		}
-		caller.replaceExpression(node, macro.getReturnValue());
+		Expression returnValue = macro.getReturnValue();
+		replaceUsedVariablesInExpression(returnValue);
+		caller.replaceExpression(node, returnValue);
+
+		
+		// reset cache and add new variables to prevent reuse
+		usedVariables.addAll(usedNewNames);
+		newNamesCache = null;
+		usedNewNames.clear();
+	}
+	
+	private Map<String, String> newNamesCache;
+	private Set<String> usedNewNames = new HashSet<String>();
+
+	private void replaceUsedVariables(SequentialNode statement) { 
+		if (statement instanceof AssignmentNode) {
+			AssignmentNode assignment = (AssignmentNode) statement;
+			replaceUsedVariablesInExpression(assignment.getVariable());
+			replaceUsedVariablesInExpression(assignment.getValue());
+		}
+		if (statement instanceof StoreResultNode) {
+			replaceUsedVariablesInExpression(((StoreResultNode) statement).getValue());
+		}
+	}
+	
+	private void replaceUsedVariablesInExpression(Expression e) {
+		UsedVariablesVisitor visitor = new UsedVariablesVisitor();
+		e.accept(visitor);
+		Set<Variable> variables = visitor.getVariables();
+		if (newNamesCache == null) {
+			newNamesCache = new HashMap<String, String>();
+			for (String name : usedVariables) {
+				newNamesCache.put(name, generateUniqueName(name));
+			}
+		}
+		for (Variable v : variables) {
+			if (usedVariables.contains(v.getName())) {
+				String unique = newNamesCache.get(v.getName());
+				usedNewNames.add(unique);
+				e.replaceExpression(v, new Variable(unique));
+			}
+		}
 	}
 
 }

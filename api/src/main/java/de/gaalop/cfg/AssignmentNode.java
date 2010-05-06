@@ -77,6 +77,9 @@ public final class AssignmentNode extends SequentialNode {
     
     @Override
     public void replaceExpression(Expression old, Expression newExpression) {
+    	if (variable == old && newExpression instanceof Variable) {
+    		variable = (Variable) newExpression;
+    	}
     	if (value == old) {
     		value = newExpression;
     	} else {

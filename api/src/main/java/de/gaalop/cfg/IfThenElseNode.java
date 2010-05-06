@@ -91,6 +91,19 @@ public class IfThenElseNode extends SequentialNode {
 	public void accept(ControlFlowVisitor visitor) {
 		visitor.visit(this);
 	}
+	
+	@Override
+	public void replaceExpression(Expression old, Expression newExpression) {
+		if (condition == old) {
+			condition = newExpression;
+		} else {
+			condition.replaceExpression(old, newExpression);
+		}
+		positive.replaceExpression(old, newExpression); // TODO: what about successors?
+		if (negative != null) {
+			negative.replaceExpression(old, newExpression); // TODO: what about successors?
+		}
+	}
 
 	@Override
 	public String toString() {

@@ -72,12 +72,12 @@ statement returns [ArrayList<SequentialNode> nodes]
 	
 	| BREAK { $nodes.add(graphBuilder.handleBreak()); }
 
-  | ^(MACRO id=IDENTIFIER lst=statement e=expression?) {
-    graphBuilder.handleMacroDefinition($id.text, $lst.nodes, $e.result);
+  | ^(MACRO id=IDENTIFIER lst=statement_list e=expression?) {
+    graphBuilder.handleMacroDefinition($id.text, $lst.args, $e.result);
   }
  
 	// Some other expression (We can ignore this since we don't implement side-effects)
-	| expression
+	//| expression // disabled in order to recognize macro return values (as single expression without semicolon)
 
   | pragma
 	;

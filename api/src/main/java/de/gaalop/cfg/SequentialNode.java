@@ -1,7 +1,5 @@
 package de.gaalop.cfg;
 
-import de.gaalop.dfg.Expression;
-
 /**
  * This class models a control flow node that has one and only one successor.
  * 
@@ -70,17 +68,5 @@ public abstract class SequentialNode extends Node {
 			newSuccessor.addPredecessor(this);
 			successor = newSuccessor;
 		}
-	}
-
-	/**
-	 * Classes that store an {@link Expression} attribute should implement this method to allow recursive replacement of
-	 * expressions. This implementation throws an {@link UnsupportedOperationException} by default.
-	 * 
-	 * @param old expression to be replaced.
-	 * @param newExpression
-	 */
-	public void replaceExpression(Expression old, Expression newExpression) {
-		throw new UnsupportedOperationException("Cannot replace an expression. This node type (" + toString()
-				+ ") does not have an expression attribute.");
 	}
 }

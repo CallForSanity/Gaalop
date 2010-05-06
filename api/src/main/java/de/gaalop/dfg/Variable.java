@@ -85,6 +85,19 @@ public class Variable extends Expression {
 	public void accept(ExpressionVisitor visitor) {
 		visitor.visit(this);
 	}
+	
+	@Override
+	public void replaceExpression(Expression old, Expression newExpression) {
+		if (old instanceof Variable && newExpression instanceof Variable) {
+			Variable oldVar = (Variable) old;
+			Variable newVar = (Variable) newExpression;
+			if (oldVar.getName() == name && oldVar.getMinValue() == minValue && oldVar.getMaxValue() == maxValue) {
+				name = newVar.getName();
+				minValue = newVar.getMinValue();
+				maxValue = newVar.getMaxValue();
+			}
+		}
+	}
 
 	/**
 	 * Compares two variables for equality.

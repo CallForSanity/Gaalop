@@ -4,6 +4,8 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import de.gaalop.dfg.Expression;
+
 /**
  * This abstract class serves as the base class for all control flow nodes in a control flow graph.
  * <p/>
@@ -93,6 +95,18 @@ public abstract class Node {
 	 * @param newSuccessor A node that should become a successor of this node instead of <code>oldSuccessor</code>.
 	 */
 	public abstract void replaceSuccessor(Node oldSuccessor, Node newSuccessor);
+
+	/**
+	 * Classes that store an {@link Expression} attribute should implement this method to allow recursive replacement of
+	 * expressions. This implementation throws an {@link UnsupportedOperationException} by default.
+	 * 
+	 * @param old expression to be replaced.
+	 * @param newExpression
+	 */
+	public void replaceExpression(Expression old, Expression newExpression) {
+		throw new UnsupportedOperationException("Cannot replace an expression. This node type (" + toString()
+				+ ") does not have an expression attribute.");
+	}
 
 	/**
 	 * Inserts another node right before this node.

@@ -44,18 +44,5 @@ public class MapleStrategy implements OptimizationStrategy {
         } catch (Exception e) {
             throw new OptimizationException("Unable to remove unused variables from graph.", e, graph);
         }
-
-        // FIXME: removed to support e0, einf support
-//        try {
-//            GaTransformer transformer = new GaTransformer();
-//            if (transformer.isSupportedAlgebra(graph.getSignature())) {
-//                log.debug("Transforming base vectors of graph to conformal geometric algebra.");
-//                transformer.transformBlades(simplifier, graph);
-//            } else {
-//                log.debug("Skipping base vector transformation because the graphs algebra is incompatible.");
-//            }
-//        } catch (Exception e) {
-//            throw new OptimizationException("Unable to apply geometric algebra transformations.", e, graph);
-//        }
     }
 }

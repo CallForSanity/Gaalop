@@ -162,7 +162,7 @@ statement
   ;
   
 macro_definition
-  : id=IDENTIFIER EQUALS CLBRACKET lst=statement* e=additive_expression? CRBRACKET -> ^(MACRO $id $lst $e?)
+  : id=IDENTIFIER EQUALS CLBRACKET statement* e=additive_expression? CRBRACKET -> ^(MACRO $id statement* $e?)
   ;
   
 block
