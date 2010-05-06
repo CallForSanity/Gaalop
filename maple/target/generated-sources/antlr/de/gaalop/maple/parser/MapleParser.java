@@ -1,4 +1,4 @@
-// $ANTLR 3.1.1 de/gaalop/maple/parser/MapleParser.g 2010-05-04 18:11:55
+// $ANTLR 3.1.1 de/gaalop/maple/parser/MapleParser.g 2010-05-06 12:42:50
 
 	package de.gaalop.maple.parser;
 	
@@ -428,7 +428,7 @@ public class MapleParser extends Parser {
 
 
             // AST REWRITE
-            // elements: value, mvName, bladeIndex
+            // elements: bladeIndex, value, mvName
             // token labels: bladeIndex, mvName
             // rule labels: retval, value
             // token list labels: 
@@ -1532,7 +1532,7 @@ public class MapleParser extends Parser {
 
 
             // AST REWRITE
-            // elements: args, name
+            // elements: name, args
             // token labels: name
             // rule labels: retval, args
             // token list labels: 

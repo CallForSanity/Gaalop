@@ -30,7 +30,7 @@
 		<link>
 			<name>Maple natives</name>
 			<type>2</type>
-			<location>C:/Program Files (x86)/Maple 13/bin.win</location>
+			<location>/Applications/eclipse-galileo (Java)/Eclipse.app/Contents/MacOS/C::/Program Files (x86)/Maple 13/bin.win</location>
 		</link>
 	</linkedResources>
 </projectDescription>
