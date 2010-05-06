@@ -1,4 +1,4 @@
-// $ANTLR 3.2 Sep 23, 2009 12:02:23 /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g 2010-05-06 12:44:42
+// $ANTLR 3.2 Sep 23, 2009 12:02:23 C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g 2010-05-06 11:38:43
 
 	package de.gaalop.clucalc.input;
 
@@ -71,17 +71,17 @@ public class CluCalcLexer extends Lexer {
         super(input,state);
 
     }
-    public String getGrammarFileName() { return "/Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g"; }
+    public String getGrammarFileName() { return "C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g"; }
 
     // $ANTLR start "DECIMAL_LITERAL"
     public final void mDECIMAL_LITERAL() throws RecognitionException {
         try {
             int _type = DECIMAL_LITERAL;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:12:17: ( ( '0' .. '9' )+ )
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:12:19: ( '0' .. '9' )+
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:12:17: ( ( '0' .. '9' )+ )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:12:19: ( '0' .. '9' )+
             {
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:12:19: ( '0' .. '9' )+
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:12:19: ( '0' .. '9' )+
             int cnt1=0;
             loop1:
             do {
@@ -95,7 +95,7 @@ public class CluCalcLexer extends Lexer {
 
                 switch (alt1) {
             	case 1 :
-            	    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:12:20: '0' .. '9'
+            	    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:12:20: '0' .. '9'
             	    {
             	    matchRange('0','9'); 
 
@@ -127,14 +127,14 @@ public class CluCalcLexer extends Lexer {
         try {
             int _type = FLOATING_POINT_LITERAL;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:15:5: ( ( '0' .. '9' )+ '.' ( '0' .. '9' )* ( EXPONENT )? ( FLOATTYPESUFFIX )? | '.' ( '0' .. '9' )+ ( EXPONENT )? ( FLOATTYPESUFFIX )? | ( '0' .. '9' )+ EXPONENT ( FLOATTYPESUFFIX )? | ( '0' .. '9' )+ FLOATTYPESUFFIX )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:15:5: ( ( '0' .. '9' )+ '.' ( '0' .. '9' )* ( EXPONENT )? ( FLOATTYPESUFFIX )? | '.' ( '0' .. '9' )+ ( EXPONENT )? ( FLOATTYPESUFFIX )? | ( '0' .. '9' )+ EXPONENT ( FLOATTYPESUFFIX )? | ( '0' .. '9' )+ FLOATTYPESUFFIX )
             int alt12=4;
             alt12 = dfa12.predict(input);
             switch (alt12) {
                 case 1 :
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:15:9: ( '0' .. '9' )+ '.' ( '0' .. '9' )* ( EXPONENT )? ( FLOATTYPESUFFIX )?
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:15:9: ( '0' .. '9' )+ '.' ( '0' .. '9' )* ( EXPONENT )? ( FLOATTYPESUFFIX )?
                     {
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:15:9: ( '0' .. '9' )+
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:15:9: ( '0' .. '9' )+
                     int cnt2=0;
                     loop2:
                     do {
@@ -148,7 +148,7 @@ public class CluCalcLexer extends Lexer {
 
                         switch (alt2) {
                     	case 1 :
-                    	    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:15:10: '0' .. '9'
+                    	    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:15:10: '0' .. '9'
                     	    {
                     	    matchRange('0','9'); 
 
@@ -165,7 +165,7 @@ public class CluCalcLexer extends Lexer {
                     } while (true);
 
                     match('.'); 
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:15:25: ( '0' .. '9' )*
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:15:25: ( '0' .. '9' )*
                     loop3:
                     do {
                         int alt3=2;
@@ -178,7 +178,7 @@ public class CluCalcLexer extends Lexer {
 
                         switch (alt3) {
                     	case 1 :
-                    	    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:15:26: '0' .. '9'
+                    	    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:15:26: '0' .. '9'
                     	    {
                     	    matchRange('0','9'); 
 
@@ -190,7 +190,7 @@ public class CluCalcLexer extends Lexer {
                         }
                     } while (true);
 
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:15:37: ( EXPONENT )?
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:15:37: ( EXPONENT )?
                     int alt4=2;
                     int LA4_0 = input.LA(1);
 
@@ -199,7 +199,7 @@ public class CluCalcLexer extends Lexer {
                     }
                     switch (alt4) {
                         case 1 :
-                            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:15:37: EXPONENT
+                            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:15:37: EXPONENT
                             {
                             mEXPONENT(); 
 
@@ -208,7 +208,7 @@ public class CluCalcLexer extends Lexer {
 
                     }
 
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:15:47: ( FLOATTYPESUFFIX )?
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:15:47: ( FLOATTYPESUFFIX )?
                     int alt5=2;
                     int LA5_0 = input.LA(1);
 
@@ -217,7 +217,7 @@ public class CluCalcLexer extends Lexer {
                     }
                     switch (alt5) {
                         case 1 :
-                            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:15:47: FLOATTYPESUFFIX
+                            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:15:47: FLOATTYPESUFFIX
                             {
                             mFLOATTYPESUFFIX(); 
 
@@ -230,10 +230,10 @@ public class CluCalcLexer extends Lexer {
                     }
                     break;
                 case 2 :
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:16:9: '.' ( '0' .. '9' )+ ( EXPONENT )? ( FLOATTYPESUFFIX )?
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:16:9: '.' ( '0' .. '9' )+ ( EXPONENT )? ( FLOATTYPESUFFIX )?
                     {
                     match('.'); 
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:16:13: ( '0' .. '9' )+
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:16:13: ( '0' .. '9' )+
                     int cnt6=0;
                     loop6:
                     do {
@@ -247,7 +247,7 @@ public class CluCalcLexer extends Lexer {
 
                         switch (alt6) {
                     	case 1 :
-                    	    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:16:14: '0' .. '9'
+                    	    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:16:14: '0' .. '9'
                     	    {
                     	    matchRange('0','9'); 
 
@@ -263,7 +263,7 @@ public class CluCalcLexer extends Lexer {
                         cnt6++;
                     } while (true);
 
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:16:25: ( EXPONENT )?
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:16:25: ( EXPONENT )?
                     int alt7=2;
                     int LA7_0 = input.LA(1);
 
@@ -272,7 +272,7 @@ public class CluCalcLexer extends Lexer {
                     }
                     switch (alt7) {
                         case 1 :
-                            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:16:25: EXPONENT
+                            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:16:25: EXPONENT
                             {
                             mEXPONENT(); 
 
@@ -281,7 +281,7 @@ public class CluCalcLexer extends Lexer {
 
                     }
 
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:16:35: ( FLOATTYPESUFFIX )?
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:16:35: ( FLOATTYPESUFFIX )?
                     int alt8=2;
                     int LA8_0 = input.LA(1);
 
@@ -290,7 +290,7 @@ public class CluCalcLexer extends Lexer {
                     }
                     switch (alt8) {
                         case 1 :
-                            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:16:35: FLOATTYPESUFFIX
+                            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:16:35: FLOATTYPESUFFIX
                             {
                             mFLOATTYPESUFFIX(); 
 
@@ -303,9 +303,9 @@ public class CluCalcLexer extends Lexer {
                     }
                     break;
                 case 3 :
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:17:9: ( '0' .. '9' )+ EXPONENT ( FLOATTYPESUFFIX )?
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:17:9: ( '0' .. '9' )+ EXPONENT ( FLOATTYPESUFFIX )?
                     {
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:17:9: ( '0' .. '9' )+
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:17:9: ( '0' .. '9' )+
                     int cnt9=0;
                     loop9:
                     do {
@@ -319,7 +319,7 @@ public class CluCalcLexer extends Lexer {
 
                         switch (alt9) {
                     	case 1 :
-                    	    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:17:10: '0' .. '9'
+                    	    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:17:10: '0' .. '9'
                     	    {
                     	    matchRange('0','9'); 
 
@@ -336,7 +336,7 @@ public class CluCalcLexer extends Lexer {
                     } while (true);
 
                     mEXPONENT(); 
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:17:30: ( FLOATTYPESUFFIX )?
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:17:30: ( FLOATTYPESUFFIX )?
                     int alt10=2;
                     int LA10_0 = input.LA(1);
 
@@ -345,7 +345,7 @@ public class CluCalcLexer extends Lexer {
                     }
                     switch (alt10) {
                         case 1 :
-                            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:17:30: FLOATTYPESUFFIX
+                            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:17:30: FLOATTYPESUFFIX
                             {
                             mFLOATTYPESUFFIX(); 
 
@@ -358,9 +358,9 @@ public class CluCalcLexer extends Lexer {
                     }
                     break;
                 case 4 :
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:18:9: ( '0' .. '9' )+ FLOATTYPESUFFIX
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:18:9: ( '0' .. '9' )+ FLOATTYPESUFFIX
                     {
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:18:9: ( '0' .. '9' )+
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:18:9: ( '0' .. '9' )+
                     int cnt11=0;
                     loop11:
                     do {
@@ -374,7 +374,7 @@ public class CluCalcLexer extends Lexer {
 
                         switch (alt11) {
                     	case 1 :
-                    	    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:18:10: '0' .. '9'
+                    	    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:18:10: '0' .. '9'
                     	    {
                     	    matchRange('0','9'); 
 
@@ -409,8 +409,8 @@ public class CluCalcLexer extends Lexer {
         try {
             int _type = RANGE_LITERAL;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:21:15: ( 'range' )
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:21:17: 'range'
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:21:15: ( 'range' )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:21:17: 'range'
             {
             match("range"); 
 
@@ -430,8 +430,8 @@ public class CluCalcLexer extends Lexer {
         try {
             int _type = OUTPUT_LITERAL;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:23:15: ( 'output' )
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:23:17: 'output'
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:23:15: ( 'output' )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:23:17: 'output'
             {
             match("output"); 
 
@@ -449,11 +449,11 @@ public class CluCalcLexer extends Lexer {
     // $ANTLR start "EXPONENT"
     public final void mEXPONENT() throws RecognitionException {
         try {
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:27:2: ( 'e' ( MINUS )? ( '0' .. '9' )+ )
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:27:4: 'e' ( MINUS )? ( '0' .. '9' )+
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:27:2: ( 'e' ( MINUS )? ( '0' .. '9' )+ )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:27:4: 'e' ( MINUS )? ( '0' .. '9' )+
             {
             match('e'); 
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:27:8: ( MINUS )?
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:27:8: ( MINUS )?
             int alt13=2;
             int LA13_0 = input.LA(1);
 
@@ -462,7 +462,7 @@ public class CluCalcLexer extends Lexer {
             }
             switch (alt13) {
                 case 1 :
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:27:8: MINUS
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:27:8: MINUS
                     {
                     mMINUS(); 
 
@@ -471,7 +471,7 @@ public class CluCalcLexer extends Lexer {
 
             }
 
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:27:15: ( '0' .. '9' )+
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:27:15: ( '0' .. '9' )+
             int cnt14=0;
             loop14:
             do {
@@ -485,7 +485,7 @@ public class CluCalcLexer extends Lexer {
 
                 switch (alt14) {
             	case 1 :
-            	    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:27:16: '0' .. '9'
+            	    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:27:16: '0' .. '9'
             	    {
             	    matchRange('0','9'); 
 
@@ -513,8 +513,8 @@ public class CluCalcLexer extends Lexer {
     // $ANTLR start "FLOATTYPESUFFIX"
     public final void mFLOATTYPESUFFIX() throws RecognitionException {
         try {
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:32:2: ( ( 'f' | 'd' ) )
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:32:4: ( 'f' | 'd' )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:32:2: ( ( 'f' | 'd' ) )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:32:4: ( 'f' | 'd' )
             {
             if ( input.LA(1)=='d'||input.LA(1)=='f' ) {
                 input.consume();
@@ -539,8 +539,8 @@ public class CluCalcLexer extends Lexer {
         try {
             int _type = OPNS;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:35:6: ( 'OPNS' )
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:35:8: 'OPNS'
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:35:6: ( 'OPNS' )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:35:8: 'OPNS'
             {
             match("OPNS"); 
 
@@ -560,8 +560,8 @@ public class CluCalcLexer extends Lexer {
         try {
             int _type = IPNS;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:38:6: ( 'IPNS' )
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:38:8: 'IPNS'
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:38:6: ( 'IPNS' )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:38:8: 'IPNS'
             {
             match("IPNS"); 
 
@@ -581,8 +581,8 @@ public class CluCalcLexer extends Lexer {
         try {
             int _type = IF;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:41:5: ( 'if' )
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:41:7: 'if'
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:41:5: ( 'if' )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:41:7: 'if'
             {
             match("if"); 
 
@@ -602,8 +602,8 @@ public class CluCalcLexer extends Lexer {
         try {
             int _type = ELSE;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:44:6: ( 'else' )
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:44:8: 'else'
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:44:6: ( 'else' )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:44:8: 'else'
             {
             match("else"); 
 
@@ -623,8 +623,8 @@ public class CluCalcLexer extends Lexer {
         try {
             int _type = LOOP;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:47:7: ( 'loop' )
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:47:9: 'loop'
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:47:7: ( 'loop' )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:47:9: 'loop'
             {
             match("loop"); 
 
@@ -644,8 +644,8 @@ public class CluCalcLexer extends Lexer {
         try {
             int _type = BREAK;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:50:7: ( 'break' )
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:50:9: 'break'
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:50:7: ( 'break' )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:50:9: 'break'
             {
             match("break"); 
 
@@ -665,11 +665,11 @@ public class CluCalcLexer extends Lexer {
         try {
             int _type = IDENTIFIER;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:54:2: ( LETTER ( LETTER | DIGIT )* )
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:54:4: LETTER ( LETTER | DIGIT )*
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:54:2: ( LETTER ( LETTER | DIGIT )* )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:54:4: LETTER ( LETTER | DIGIT )*
             {
             mLETTER(); 
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:54:11: ( LETTER | DIGIT )*
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:54:11: ( LETTER | DIGIT )*
             loop15:
             do {
                 int alt15=2;
@@ -682,7 +682,7 @@ public class CluCalcLexer extends Lexer {
 
                 switch (alt15) {
             	case 1 :
-            	    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:
+            	    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:
             	    {
             	    if ( (input.LA(1)>='0' && input.LA(1)<='9')||(input.LA(1)>='A' && input.LA(1)<='Z')||input.LA(1)=='_'||(input.LA(1)>='a' && input.LA(1)<='z') ) {
             	        input.consume();
@@ -718,8 +718,8 @@ public class CluCalcLexer extends Lexer {
         try {
             int _type = ARGUMENT_PREFIX;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:58:3: ( '_P(' )
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:58:5: '_P('
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:58:3: ( '_P(' )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:58:5: '_P('
             {
             match("_P("); 
 
@@ -737,8 +737,8 @@ public class CluCalcLexer extends Lexer {
     // $ANTLR start "LETTER"
     public final void mLETTER() throws RecognitionException {
         try {
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:63:2: ( 'A' .. 'Z' | 'a' .. 'z' | '_' )
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:63:2: ( 'A' .. 'Z' | 'a' .. 'z' | '_' )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:
             {
             if ( (input.LA(1)>='A' && input.LA(1)<='Z')||input.LA(1)=='_'||(input.LA(1)>='a' && input.LA(1)<='z') ) {
                 input.consume();
@@ -761,8 +761,8 @@ public class CluCalcLexer extends Lexer {
     // $ANTLR start "DIGIT"
     public final void mDIGIT() throws RecognitionException {
         try {
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:69:7: ( '0' .. '9' )
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:69:9: '0' .. '9'
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:69:7: ( '0' .. '9' )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:69:9: '0' .. '9'
             {
             matchRange('0','9'); 
 
@@ -779,8 +779,8 @@ public class CluCalcLexer extends Lexer {
         try {
             int _type = WS;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:72:5: ( ( ' ' | '\\r' | '\\t' | '\\u000C' | '\\n' ) )
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:72:8: ( ' ' | '\\r' | '\\t' | '\\u000C' | '\\n' )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:72:5: ( ( ' ' | '\\r' | '\\t' | '\\u000C' | '\\n' ) )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:72:8: ( ' ' | '\\r' | '\\t' | '\\u000C' | '\\n' )
             {
             if ( (input.LA(1)>='\t' && input.LA(1)<='\n')||(input.LA(1)>='\f' && input.LA(1)<='\r')||input.LA(1)==' ' ) {
                 input.consume();
@@ -808,12 +808,12 @@ public class CluCalcLexer extends Lexer {
         try {
             int _type = COMMENT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:76:5: ( '/*' ( options {greedy=false; } : . )* '*/' )
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:76:9: '/*' ( options {greedy=false; } : . )* '*/'
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:76:5: ( '/*' ( options {greedy=false; } : . )* '*/' )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:76:9: '/*' ( options {greedy=false; } : . )* '*/'
             {
             match("/*"); 
 
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:76:14: ( options {greedy=false; } : . )*
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:76:14: ( options {greedy=false; } : . )*
             loop16:
             do {
                 int alt16=2;
@@ -838,7 +838,7 @@ public class CluCalcLexer extends Lexer {
 
                 switch (alt16) {
             	case 1 :
-            	    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:76:42: .
+            	    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:76:42: .
             	    {
             	    matchAny(); 
 
@@ -869,8 +869,8 @@ public class CluCalcLexer extends Lexer {
         try {
             int _type = PRAGMA;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:82:5: ( '//#pragma' )
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:82:9: '//#pragma'
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:82:5: ( '//#pragma' )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:82:9: '//#pragma'
             {
             match("//#pragma"); 
 
@@ -890,8 +890,8 @@ public class CluCalcLexer extends Lexer {
         try {
             int _type = LINE_COMMENT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:86:5: ( '//' ~ '#' (~ ( '\\n' | '\\r' ) )* ( '\\r' )? '\\n' )
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:86:7: '//' ~ '#' (~ ( '\\n' | '\\r' ) )* ( '\\r' )? '\\n'
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:86:5: ( '//' ~ '#' (~ ( '\\n' | '\\r' ) )* ( '\\r' )? '\\n' )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:86:7: '//' ~ '#' (~ ( '\\n' | '\\r' ) )* ( '\\r' )? '\\n'
             {
             match("//"); 
 
@@ -904,7 +904,7 @@ public class CluCalcLexer extends Lexer {
                 recover(mse);
                 throw mse;}
 
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:86:17: (~ ( '\\n' | '\\r' ) )*
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:86:17: (~ ( '\\n' | '\\r' ) )*
             loop17:
             do {
                 int alt17=2;
@@ -917,7 +917,7 @@ public class CluCalcLexer extends Lexer {
 
                 switch (alt17) {
             	case 1 :
-            	    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:86:17: ~ ( '\\n' | '\\r' )
+            	    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:86:17: ~ ( '\\n' | '\\r' )
             	    {
             	    if ( (input.LA(1)>='\u0000' && input.LA(1)<='\t')||(input.LA(1)>='\u000B' && input.LA(1)<='\f')||(input.LA(1)>='\u000E' && input.LA(1)<='\uFFFF') ) {
             	        input.consume();
@@ -937,7 +937,7 @@ public class CluCalcLexer extends Lexer {
                 }
             } while (true);
 
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:86:31: ( '\\r' )?
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:86:31: ( '\\r' )?
             int alt18=2;
             int LA18_0 = input.LA(1);
 
@@ -946,7 +946,7 @@ public class CluCalcLexer extends Lexer {
             }
             switch (alt18) {
                 case 1 :
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:86:31: '\\r'
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:86:31: '\\r'
                     {
                     match('\r'); 
 
@@ -973,8 +973,8 @@ public class CluCalcLexer extends Lexer {
         try {
             int _type = EQUALS;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:91:2: ( '=' )
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:91:4: '='
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:91:2: ( '=' )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:91:4: '='
             {
             match('='); 
 
@@ -993,8 +993,8 @@ public class CluCalcLexer extends Lexer {
         try {
             int _type = COMMA;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:96:2: ( ',' )
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:96:4: ','
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:96:2: ( ',' )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:96:4: ','
             {
             match(','); 
 
@@ -1013,8 +1013,8 @@ public class CluCalcLexer extends Lexer {
         try {
             int _type = PLUS;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:100:2: ( '+' )
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:100:4: '+'
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:100:2: ( '+' )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:100:4: '+'
             {
             match('+'); 
 
@@ -1033,8 +1033,8 @@ public class CluCalcLexer extends Lexer {
         try {
             int _type = MINUS;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:104:2: ( '-' )
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:104:4: '-'
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:104:2: ( '-' )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:104:4: '-'
             {
             match('-'); 
 
@@ -1053,8 +1053,8 @@ public class CluCalcLexer extends Lexer {
         try {
             int _type = STAR;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:109:2: ( '*' )
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:109:4: '*'
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:109:2: ( '*' )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:109:4: '*'
             {
             match('*'); 
 
@@ -1073,8 +1073,8 @@ public class CluCalcLexer extends Lexer {
         try {
             int _type = SLASH;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:113:2: ( '/' )
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:113:4: '/'
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:113:2: ( '/' )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:113:4: '/'
             {
             match('/'); 
 
@@ -1093,8 +1093,8 @@ public class CluCalcLexer extends Lexer {
         try {
             int _type = MODULO;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:117:2: ( '%' )
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:117:4: '%'
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:117:2: ( '%' )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:117:4: '%'
             {
             match('%'); 
 
@@ -1113,8 +1113,8 @@ public class CluCalcLexer extends Lexer {
         try {
             int _type = LSBRACKET;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:121:2: ( '[' )
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:121:4: '['
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:121:2: ( '[' )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:121:4: '['
             {
             match('['); 
 
@@ -1133,8 +1133,8 @@ public class CluCalcLexer extends Lexer {
         try {
             int _type = RSBRACKET;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:125:2: ( ']' )
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:125:4: ']'
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:125:2: ( ']' )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:125:4: ']'
             {
             match(']'); 
 
@@ -1153,8 +1153,8 @@ public class CluCalcLexer extends Lexer {
         try {
             int _type = LBRACKET;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:129:2: ( '(' )
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:129:4: '('
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:129:2: ( '(' )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:129:4: '('
             {
             match('('); 
 
@@ -1173,8 +1173,8 @@ public class CluCalcLexer extends Lexer {
         try {
             int _type = RBRACKET;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:133:2: ( ')' )
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:133:4: ')'
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:133:2: ( ')' )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:133:4: ')'
             {
             match(')'); 
 
@@ -1193,8 +1193,8 @@ public class CluCalcLexer extends Lexer {
         try {
             int _type = CLBRACKET;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:137:2: ( '{' )
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:137:4: '{'
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:137:2: ( '{' )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:137:4: '{'
             {
             match('{'); 
 
@@ -1213,8 +1213,8 @@ public class CluCalcLexer extends Lexer {
         try {
             int _type = CRBRACKET;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:141:2: ( '}' )
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:141:4: '}'
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:141:2: ( '}' )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:141:4: '}'
             {
             match('}'); 
 
@@ -1233,8 +1233,8 @@ public class CluCalcLexer extends Lexer {
         try {
             int _type = REVERSE;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:145:2: ( '~' )
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:145:4: '~'
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:145:2: ( '~' )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:145:4: '~'
             {
             match('~'); 
 
@@ -1253,8 +1253,8 @@ public class CluCalcLexer extends Lexer {
         try {
             int _type = NOT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:149:2: ( '!' )
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:149:4: '!'
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:149:2: ( '!' )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:149:4: '!'
             {
             match('!'); 
 
@@ -1273,8 +1273,8 @@ public class CluCalcLexer extends Lexer {
         try {
             int _type = DOUBLE_NOT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:153:2: ( '!!' )
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:153:4: '!!'
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:153:2: ( '!!' )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:153:4: '!!'
             {
             match("!!"); 
 
@@ -1294,8 +1294,8 @@ public class CluCalcLexer extends Lexer {
         try {
             int _type = SEMICOLON;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:157:2: ( ';' )
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:157:4: ';'
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:157:2: ( ';' )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:157:4: ';'
             {
             match(';'); 
 
@@ -1314,8 +1314,8 @@ public class CluCalcLexer extends Lexer {
         try {
             int _type = WEDGE;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:160:7: ( '^' )
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:160:9: '^'
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:160:7: ( '^' )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:160:9: '^'
             {
             match('^'); 
 
@@ -1334,8 +1334,8 @@ public class CluCalcLexer extends Lexer {
         try {
             int _type = DOT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:163:5: ( '.' )
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:163:7: '.'
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:163:5: ( '.' )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:163:7: '.'
             {
             match('.'); 
 
@@ -1354,8 +1354,8 @@ public class CluCalcLexer extends Lexer {
         try {
             int _type = QUESTIONMARK;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:168:2: ( '?' )
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:168:4: '?'
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:168:2: ( '?' )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:168:4: '?'
             {
             match('?'); 
 
@@ -1374,8 +1374,8 @@ public class CluCalcLexer extends Lexer {
         try {
             int _type = COLON;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:172:2: ( ':' )
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:172:4: ':'
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:172:2: ( ':' )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:172:4: ':'
             {
             match(':'); 
 
@@ -1394,8 +1394,8 @@ public class CluCalcLexer extends Lexer {
         try {
             int _type = DOUBLE_BAR;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:176:2: ( '||' )
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:176:5: '||'
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:176:2: ( '||' )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:176:5: '||'
             {
             match("||"); 
 
@@ -1415,8 +1415,8 @@ public class CluCalcLexer extends Lexer {
         try {
             int _type = DOUBLE_AND;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:180:2: ( '&&' )
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:180:4: '&&'
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:180:2: ( '&&' )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:180:4: '&&'
             {
             match("&&"); 
 
@@ -1436,8 +1436,8 @@ public class CluCalcLexer extends Lexer {
         try {
             int _type = DOUBLE_EQUALS;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:184:2: ( '==' )
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:184:4: '=='
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:184:2: ( '==' )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:184:4: '=='
             {
             match("=="); 
 
@@ -1457,8 +1457,8 @@ public class CluCalcLexer extends Lexer {
         try {
             int _type = UNEQUAL;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:188:2: ( '!=' )
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:188:4: '!='
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:188:2: ( '!=' )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:188:4: '!='
             {
             match("!="); 
 
@@ -1478,8 +1478,8 @@ public class CluCalcLexer extends Lexer {
         try {
             int _type = LESS;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:192:2: ( '<' )
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:192:4: '<'
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:192:2: ( '<' )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:192:4: '<'
             {
             match('<'); 
 
@@ -1498,8 +1498,8 @@ public class CluCalcLexer extends Lexer {
         try {
             int _type = GREATER;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:196:2: ( '>' )
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:196:5: '>'
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:196:2: ( '>' )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:196:5: '>'
             {
             match('>'); 
 
@@ -1518,8 +1518,8 @@ public class CluCalcLexer extends Lexer {
         try {
             int _type = LESS_OR_EQUAL;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:200:2: ( '<=' )
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:200:4: '<='
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:200:2: ( '<=' )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:200:4: '<='
             {
             match("<="); 
 
@@ -1539,8 +1539,8 @@ public class CluCalcLexer extends Lexer {
         try {
             int _type = GREATER_OR_EQUAL;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:204:2: ( '>=' )
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:204:4: '>='
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:204:2: ( '>=' )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:204:4: '>='
             {
             match(">="); 
 
@@ -1556,320 +1556,320 @@ public class CluCalcLexer extends Lexer {
     // $ANTLR end "GREATER_OR_EQUAL"
 
     public void mTokens() throws RecognitionException {
-        // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:1:8: ( DECIMAL_LITERAL | FLOATING_POINT_LITERAL | RANGE_LITERAL | OUTPUT_LITERAL | OPNS | IPNS | IF | ELSE | LOOP | BREAK | IDENTIFIER | ARGUMENT_PREFIX | WS | COMMENT | PRAGMA | LINE_COMMENT | EQUALS | COMMA | PLUS | MINUS | STAR | SLASH | MODULO | LSBRACKET | RSBRACKET | LBRACKET | RBRACKET | CLBRACKET | CRBRACKET | REVERSE | NOT | DOUBLE_NOT | SEMICOLON | WEDGE | DOT | QUESTIONMARK | COLON | DOUBLE_BAR | DOUBLE_AND | DOUBLE_EQUALS | UNEQUAL | LESS | GREATER | LESS_OR_EQUAL | GREATER_OR_EQUAL )
+        // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:1:8: ( DECIMAL_LITERAL | FLOATING_POINT_LITERAL | RANGE_LITERAL | OUTPUT_LITERAL | OPNS | IPNS | IF | ELSE | LOOP | BREAK | IDENTIFIER | ARGUMENT_PREFIX | WS | COMMENT | PRAGMA | LINE_COMMENT | EQUALS | COMMA | PLUS | MINUS | STAR | SLASH | MODULO | LSBRACKET | RSBRACKET | LBRACKET | RBRACKET | CLBRACKET | CRBRACKET | REVERSE | NOT | DOUBLE_NOT | SEMICOLON | WEDGE | DOT | QUESTIONMARK | COLON | DOUBLE_BAR | DOUBLE_AND | DOUBLE_EQUALS | UNEQUAL | LESS | GREATER | LESS_OR_EQUAL | GREATER_OR_EQUAL )
         int alt19=45;
         alt19 = dfa19.predict(input);
         switch (alt19) {
             case 1 :
-                // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:1:10: DECIMAL_LITERAL
+                // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:1:10: DECIMAL_LITERAL
                 {
                 mDECIMAL_LITERAL(); 
 
                 }
                 break;
             case 2 :
-                // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:1:26: FLOATING_POINT_LITERAL
+                // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:1:26: FLOATING_POINT_LITERAL
                 {
                 mFLOATING_POINT_LITERAL(); 
 
                 }
                 break;
             case 3 :
-                // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:1:49: RANGE_LITERAL
+                // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:1:49: RANGE_LITERAL
                 {
                 mRANGE_LITERAL(); 
 
                 }
                 break;
             case 4 :
-                // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:1:63: OUTPUT_LITERAL
+                // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:1:63: OUTPUT_LITERAL
                 {
                 mOUTPUT_LITERAL(); 
 
                 }
                 break;
             case 5 :
-                // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:1:78: OPNS
+                // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:1:78: OPNS
                 {
                 mOPNS(); 
 
                 }
                 break;
             case 6 :
-                // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:1:83: IPNS
+                // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:1:83: IPNS
                 {
                 mIPNS(); 
 
                 }
                 break;
             case 7 :
-                // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:1:88: IF
+                // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:1:88: IF
                 {
                 mIF(); 
 
                 }
                 break;
             case 8 :
-                // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:1:91: ELSE
+                // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:1:91: ELSE
                 {
                 mELSE(); 
 
                 }
                 break;
             case 9 :
-                // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:1:96: LOOP
+                // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:1:96: LOOP
                 {
                 mLOOP(); 
 
                 }
                 break;
             case 10 :
-                // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:1:101: BREAK
+                // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:1:101: BREAK
                 {
                 mBREAK(); 
 
                 }
                 break;
             case 11 :
-                // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:1:107: IDENTIFIER
+                // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:1:107: IDENTIFIER
                 {
                 mIDENTIFIER(); 
 
                 }
                 break;
             case 12 :
-                // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:1:118: ARGUMENT_PREFIX
+                // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:1:118: ARGUMENT_PREFIX
                 {
                 mARGUMENT_PREFIX(); 
 
                 }
                 break;
             case 13 :
-                // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:1:134: WS
+                // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:1:134: WS
                 {
                 mWS(); 
 
                 }
                 break;
             case 14 :
-                // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:1:137: COMMENT
+                // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:1:137: COMMENT
                 {
                 mCOMMENT(); 
 
                 }
                 break;
             case 15 :
-                // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:1:145: PRAGMA
+                // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:1:145: PRAGMA
                 {
                 mPRAGMA(); 
 
                 }
                 break;
             case 16 :
-                // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:1:152: LINE_COMMENT
+                // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:1:152: LINE_COMMENT
                 {
                 mLINE_COMMENT(); 
 
                 }
                 break;
             case 17 :
-                // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:1:165: EQUALS
+                // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:1:165: EQUALS
                 {
                 mEQUALS(); 
 
                 }
                 break;
             case 18 :
-                // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:1:172: COMMA
+                // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:1:172: COMMA
                 {
                 mCOMMA(); 
 
                 }
                 break;
             case 19 :
-                // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:1:178: PLUS
+                // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:1:178: PLUS
                 {
                 mPLUS(); 
 
                 }
                 break;
             case 20 :
-                // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:1:183: MINUS
+                // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:1:183: MINUS
                 {
                 mMINUS(); 
 
                 }
                 break;
             case 21 :
-                // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:1:189: STAR
+                // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:1:189: STAR
                 {
                 mSTAR(); 
 
                 }
                 break;
             case 22 :
-                // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:1:194: SLASH
+                // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:1:194: SLASH
                 {
                 mSLASH(); 
 
                 }
                 break;
             case 23 :
-                // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:1:200: MODULO
+                // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:1:200: MODULO
                 {
                 mMODULO(); 
 
                 }
                 break;
             case 24 :
-                // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:1:207: LSBRACKET
+                // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:1:207: LSBRACKET
                 {
                 mLSBRACKET(); 
 
                 }
                 break;
             case 25 :
-                // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:1:217: RSBRACKET
+                // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:1:217: RSBRACKET
                 {
                 mRSBRACKET(); 
 
                 }
                 break;
             case 26 :
-                // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:1:227: LBRACKET
+                // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:1:227: LBRACKET
                 {
                 mLBRACKET(); 
 
                 }
                 break;
             case 27 :
-                // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:1:236: RBRACKET
+                // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:1:236: RBRACKET
                 {
                 mRBRACKET(); 
 
                 }
                 break;
             case 28 :
-                // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:1:245: CLBRACKET
+                // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:1:245: CLBRACKET
                 {
                 mCLBRACKET(); 
 
                 }
                 break;
             case 29 :
-                // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:1:255: CRBRACKET
+                // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:1:255: CRBRACKET
                 {
                 mCRBRACKET(); 
 
                 }
                 break;
             case 30 :
-                // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:1:265: REVERSE
+                // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:1:265: REVERSE
                 {
                 mREVERSE(); 
 
                 }
                 break;
             case 31 :
-                // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:1:273: NOT
+                // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:1:273: NOT
                 {
                 mNOT(); 
 
                 }
                 break;
             case 32 :
-                // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:1:277: DOUBLE_NOT
+                // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:1:277: DOUBLE_NOT
                 {
                 mDOUBLE_NOT(); 
 
                 }
                 break;
             case 33 :
-                // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:1:288: SEMICOLON
+                // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:1:288: SEMICOLON
                 {
                 mSEMICOLON(); 
 
                 }
                 break;
             case 34 :
-                // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:1:298: WEDGE
+                // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:1:298: WEDGE
                 {
                 mWEDGE(); 
 
                 }
                 break;
             case 35 :
-                // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:1:304: DOT
+                // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:1:304: DOT
                 {
                 mDOT(); 
 
                 }
                 break;
             case 36 :
-                // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:1:308: QUESTIONMARK
+                // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:1:308: QUESTIONMARK
                 {
                 mQUESTIONMARK(); 
 
                 }
                 break;
             case 37 :
-                // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:1:321: COLON
+                // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:1:321: COLON
                 {
                 mCOLON(); 
 
                 }
                 break;
             case 38 :
-                // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:1:327: DOUBLE_BAR
+                // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:1:327: DOUBLE_BAR
                 {
                 mDOUBLE_BAR(); 
 
                 }
                 break;
             case 39 :
-                // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:1:338: DOUBLE_AND
+                // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:1:338: DOUBLE_AND
                 {
                 mDOUBLE_AND(); 
 
                 }
                 break;
             case 40 :
-                // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:1:349: DOUBLE_EQUALS
+                // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:1:349: DOUBLE_EQUALS
                 {
                 mDOUBLE_EQUALS(); 
 
                 }
                 break;
             case 41 :
-                // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:1:363: UNEQUAL
+                // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:1:363: UNEQUAL
                 {
                 mUNEQUAL(); 
 
                 }
                 break;
             case 42 :
-                // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:1:371: LESS
+                // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:1:371: LESS
                 {
                 mLESS(); 
 
                 }
                 break;
             case 43 :
-                // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:1:376: GREATER
+                // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:1:376: GREATER
                 {
                 mGREATER(); 
 
                 }
                 break;
             case 44 :
-                // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:1:384: LESS_OR_EQUAL
+                // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:1:384: LESS_OR_EQUAL
                 {
                 mLESS_OR_EQUAL(); 
 
                 }
                 break;
             case 45 :
-                // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcLexer.g:1:398: GREATER_OR_EQUAL
+                // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcLexer.g:1:398: GREATER_OR_EQUAL
                 {
                 mGREATER_OR_EQUAL(); 
 
@@ -1957,10 +1957,10 @@ public class CluCalcLexer extends Lexer {
         "\1\160\2\123\1\uffff\1\145\1\160\1\141\3\uffff\1\145\1\165\4\172"+
         "\1\153\1\172\1\164\4\uffff\1\172\1\uffff\1\172\2\uffff";
     static final String DFA19_acceptS =
-        "\14\uffff\1\13\1\15\2\uffff\1\22\1\23\1\24\1\25\1\27\1\30\1\31\1"+
-        "\32\1\33\1\34\1\35\1\36\1\uffff\1\41\1\42\1\44\1\45\1\46\1\47\2"+
-        "\uffff\1\2\1\1\1\43\11\uffff\1\16\1\uffff\1\26\1\50\1\21\1\40\1"+
-        "\51\1\37\1\54\1\52\1\55\1\53\4\uffff\1\7\3\uffff\1\14\1\17\1\20"+
+        "\14\uffff\1\13\1\15\2\uffff\1\22\1\23\1\24\1\25\1\27\1\30\1\31"+
+        "\1\32\1\33\1\34\1\35\1\36\1\uffff\1\41\1\42\1\44\1\45\1\46\1\47"+
+        "\2\uffff\1\2\1\1\1\43\11\uffff\1\16\1\uffff\1\26\1\50\1\21\1\40"+
+        "\1\51\1\37\1\54\1\52\1\55\1\53\4\uffff\1\7\3\uffff\1\14\1\17\1\20"+
         "\11\uffff\1\5\1\6\1\10\1\11\1\uffff\1\3\1\uffff\1\12\1\4";
     static final String DFA19_specialS =
         "\62\uffff\1\0\47\uffff}>";

@@ -1,4 +1,4 @@
-// $ANTLR 3.1.1 de/gaalop/maple/parser/MapleTransformer.g 2010-05-06 12:42:50
+// $ANTLR 3.1.1 de\\gaalop\\maple\\parser\\MapleTransformer.g 2010-05-05 19:19:49
 
 	package de.gaalop.maple.parser;
 	
@@ -64,7 +64,7 @@ public class MapleTransformer extends TreeParser {
         
 
     public String[] getTokenNames() { return MapleTransformer.tokenNames; }
-    public String getGrammarFileName() { return "de/gaalop/maple/parser/MapleTransformer.g"; }
+    public String getGrammarFileName() { return "de\\gaalop\\maple\\parser\\MapleTransformer.g"; }
 
     	
     	// Creates an expression from an identifier and takes constants into account
@@ -94,16 +94,16 @@ public class MapleTransformer extends TreeParser {
 
 
     // $ANTLR start "script"
-    // de/gaalop/maple/parser/MapleTransformer.g:45:1: script[ControlFlowGraph graph, HashMap<String, String> minVal, HashMap<String, String> maxVal] returns [List<SequentialNode> nodes] : ( statement[graph, minVal, maxVal, nodes] )* ;
+    // de\\gaalop\\maple\\parser\\MapleTransformer.g:45:1: script[ControlFlowGraph graph, HashMap<String, String> minVal, HashMap<String, String> maxVal] returns [List<SequentialNode> nodes] : ( statement[graph, minVal, maxVal, nodes] )* ;
     public final List<SequentialNode> script(ControlFlowGraph graph, HashMap<String, String> minVal, HashMap<String, String> maxVal) throws RecognitionException {
         List<SequentialNode> nodes = null;
 
          nodes = new ArrayList<SequentialNode>(); 
         try {
-            // de/gaalop/maple/parser/MapleTransformer.g:47:3: ( ( statement[graph, minVal, maxVal, nodes] )* )
-            // de/gaalop/maple/parser/MapleTransformer.g:47:5: ( statement[graph, minVal, maxVal, nodes] )*
+            // de\\gaalop\\maple\\parser\\MapleTransformer.g:47:3: ( ( statement[graph, minVal, maxVal, nodes] )* )
+            // de\\gaalop\\maple\\parser\\MapleTransformer.g:47:5: ( statement[graph, minVal, maxVal, nodes] )*
             {
-            // de/gaalop/maple/parser/MapleTransformer.g:47:5: ( statement[graph, minVal, maxVal, nodes] )*
+            // de\\gaalop\\maple\\parser\\MapleTransformer.g:47:5: ( statement[graph, minVal, maxVal, nodes] )*
             loop1:
             do {
                 int alt1=2;
@@ -116,7 +116,7 @@ public class MapleTransformer extends TreeParser {
 
                 switch (alt1) {
             	case 1 :
-            	    // de/gaalop/maple/parser/MapleTransformer.g:47:5: statement[graph, minVal, maxVal, nodes]
+            	    // de\\gaalop\\maple\\parser\\MapleTransformer.g:47:5: statement[graph, minVal, maxVal, nodes]
             	    {
             	    pushFollow(FOLLOW_statement_in_script58);
             	    statement(graph, minVal, maxVal, nodes);
@@ -148,13 +148,13 @@ public class MapleTransformer extends TreeParser {
 
 
     // $ANTLR start "statement"
-    // de/gaalop/maple/parser/MapleTransformer.g:49:1: statement[ControlFlowGraph graph, HashMap<String, String> minVal, HashMap<String, String> maxVal, List<SequentialNode> nodes] : ( declareArray[graph] | coefficient[graph, minVal, maxVal] );
+    // de\\gaalop\\maple\\parser\\MapleTransformer.g:49:1: statement[ControlFlowGraph graph, HashMap<String, String> minVal, HashMap<String, String> maxVal, List<SequentialNode> nodes] : ( declareArray[graph] | coefficient[graph, minVal, maxVal] );
     public final void statement(ControlFlowGraph graph, HashMap<String, String> minVal, HashMap<String, String> maxVal, List<SequentialNode> nodes) throws RecognitionException {
         SequentialNode coefficient1 = null;
 
 
         try {
-            // de/gaalop/maple/parser/MapleTransformer.g:50:2: ( declareArray[graph] | coefficient[graph, minVal, maxVal] )
+            // de\\gaalop\\maple\\parser\\MapleTransformer.g:50:2: ( declareArray[graph] | coefficient[graph, minVal, maxVal] )
             int alt2=2;
             int LA2_0 = input.LA(1);
 
@@ -172,7 +172,7 @@ public class MapleTransformer extends TreeParser {
             }
             switch (alt2) {
                 case 1 :
-                    // de/gaalop/maple/parser/MapleTransformer.g:50:4: declareArray[graph]
+                    // de\\gaalop\\maple\\parser\\MapleTransformer.g:50:4: declareArray[graph]
                     {
                     pushFollow(FOLLOW_declareArray_in_statement70);
                     declareArray(graph);
@@ -183,7 +183,7 @@ public class MapleTransformer extends TreeParser {
                     }
                     break;
                 case 2 :
-                    // de/gaalop/maple/parser/MapleTransformer.g:51:4: coefficient[graph, minVal, maxVal]
+                    // de\\gaalop\\maple\\parser\\MapleTransformer.g:51:4: coefficient[graph, minVal, maxVal]
                     {
                     pushFollow(FOLLOW_coefficient_in_statement76);
                     coefficient1=coefficient(graph, minVal, maxVal);
@@ -209,13 +209,13 @@ public class MapleTransformer extends TreeParser {
 
 
     // $ANTLR start "declareArray"
-    // de/gaalop/maple/parser/MapleTransformer.g:54:1: declareArray[ControlFlowGraph graph] : ^( DECLAREARRAY name= IDENTIFIER ) ;
+    // de\\gaalop\\maple\\parser\\MapleTransformer.g:54:1: declareArray[ControlFlowGraph graph] : ^( DECLAREARRAY name= IDENTIFIER ) ;
     public final void declareArray(ControlFlowGraph graph) throws RecognitionException {
         CommonTree name=null;
 
         try {
-            // de/gaalop/maple/parser/MapleTransformer.g:55:2: ( ^( DECLAREARRAY name= IDENTIFIER ) )
-            // de/gaalop/maple/parser/MapleTransformer.g:55:4: ^( DECLAREARRAY name= IDENTIFIER )
+            // de\\gaalop\\maple\\parser\\MapleTransformer.g:55:2: ( ^( DECLAREARRAY name= IDENTIFIER ) )
+            // de\\gaalop\\maple\\parser\\MapleTransformer.g:55:4: ^( DECLAREARRAY name= IDENTIFIER )
             {
             match(input,DECLAREARRAY,FOLLOW_DECLAREARRAY_in_declareArray93); 
 
@@ -240,7 +240,7 @@ public class MapleTransformer extends TreeParser {
 
 
     // $ANTLR start "coefficient"
-    // de/gaalop/maple/parser/MapleTransformer.g:58:1: coefficient[ControlFlowGraph graph, HashMap<String, String> minVal, HashMap<String, String> maxVal] returns [SequentialNode result] : ^( COEFFICIENT mvName= IDENTIFIER index= DECIMAL_LITERAL value= expression[minVal, maxVal] ) ;
+    // de\\gaalop\\maple\\parser\\MapleTransformer.g:58:1: coefficient[ControlFlowGraph graph, HashMap<String, String> minVal, HashMap<String, String> maxVal] returns [SequentialNode result] : ^( COEFFICIENT mvName= IDENTIFIER index= DECIMAL_LITERAL value= expression[minVal, maxVal] ) ;
     public final SequentialNode coefficient(ControlFlowGraph graph, HashMap<String, String> minVal, HashMap<String, String> maxVal) throws RecognitionException {
         SequentialNode result = null;
 
@@ -250,8 +250,8 @@ public class MapleTransformer extends TreeParser {
 
 
         try {
-            // de/gaalop/maple/parser/MapleTransformer.g:59:2: ( ^( COEFFICIENT mvName= IDENTIFIER index= DECIMAL_LITERAL value= expression[minVal, maxVal] ) )
-            // de/gaalop/maple/parser/MapleTransformer.g:59:4: ^( COEFFICIENT mvName= IDENTIFIER index= DECIMAL_LITERAL value= expression[minVal, maxVal] )
+            // de\\gaalop\\maple\\parser\\MapleTransformer.g:59:2: ( ^( COEFFICIENT mvName= IDENTIFIER index= DECIMAL_LITERAL value= expression[minVal, maxVal] ) )
+            // de\\gaalop\\maple\\parser\\MapleTransformer.g:59:4: ^( COEFFICIENT mvName= IDENTIFIER index= DECIMAL_LITERAL value= expression[minVal, maxVal] )
             {
             match(input,COEFFICIENT,FOLLOW_COEFFICIENT_in_coefficient118); 
 
@@ -285,7 +285,7 @@ public class MapleTransformer extends TreeParser {
 
 
     // $ANTLR start "expression"
-    // de/gaalop/maple/parser/MapleTransformer.g:65:1: expression[HashMap<String, String> minVal, HashMap<String, String> maxVal] returns [Expression result] : ( ^( PLUS l= expression[minVal, maxVal] r= expression[minVal, maxVal] ) | ^( MINUS l= expression[minVal, maxVal] r= expression[minVal, maxVal] ) | ^( STAR l= expression[minVal, maxVal] r= expression[minVal, maxVal] ) | ^( SLASH l= expression[minVal, maxVal] r= expression[minVal, maxVal] ) | ^( WEDGE l= expression[minVal, maxVal] r= expression[minVal, maxVal] ) | ^( NEGATION v= expression[minVal, maxVal] ) | ^( FUNCTION name= IDENTIFIER arguments[minVal, maxVal] ) | ^( VARIABLE name= IDENTIFIER ) | value= DECIMAL_LITERAL | value= FLOATING_POINT_LITERAL | ^( MV_SUBSCRIPT name= IDENTIFIER index= DECIMAL_LITERAL ) );
+    // de\\gaalop\\maple\\parser\\MapleTransformer.g:65:1: expression[HashMap<String, String> minVal, HashMap<String, String> maxVal] returns [Expression result] : ( ^( PLUS l= expression[minVal, maxVal] r= expression[minVal, maxVal] ) | ^( MINUS l= expression[minVal, maxVal] r= expression[minVal, maxVal] ) | ^( STAR l= expression[minVal, maxVal] r= expression[minVal, maxVal] ) | ^( SLASH l= expression[minVal, maxVal] r= expression[minVal, maxVal] ) | ^( WEDGE l= expression[minVal, maxVal] r= expression[minVal, maxVal] ) | ^( NEGATION v= expression[minVal, maxVal] ) | ^( FUNCTION name= IDENTIFIER arguments[minVal, maxVal] ) | ^( VARIABLE name= IDENTIFIER ) | value= DECIMAL_LITERAL | value= FLOATING_POINT_LITERAL | ^( MV_SUBSCRIPT name= IDENTIFIER index= DECIMAL_LITERAL ) );
     public final Expression expression(HashMap<String, String> minVal, HashMap<String, String> maxVal) throws RecognitionException {
         Expression result = null;
 
@@ -302,7 +302,7 @@ public class MapleTransformer extends TreeParser {
 
 
         try {
-            // de/gaalop/maple/parser/MapleTransformer.g:67:2: ( ^( PLUS l= expression[minVal, maxVal] r= expression[minVal, maxVal] ) | ^( MINUS l= expression[minVal, maxVal] r= expression[minVal, maxVal] ) | ^( STAR l= expression[minVal, maxVal] r= expression[minVal, maxVal] ) | ^( SLASH l= expression[minVal, maxVal] r= expression[minVal, maxVal] ) | ^( WEDGE l= expression[minVal, maxVal] r= expression[minVal, maxVal] ) | ^( NEGATION v= expression[minVal, maxVal] ) | ^( FUNCTION name= IDENTIFIER arguments[minVal, maxVal] ) | ^( VARIABLE name= IDENTIFIER ) | value= DECIMAL_LITERAL | value= FLOATING_POINT_LITERAL | ^( MV_SUBSCRIPT name= IDENTIFIER index= DECIMAL_LITERAL ) )
+            // de\\gaalop\\maple\\parser\\MapleTransformer.g:67:2: ( ^( PLUS l= expression[minVal, maxVal] r= expression[minVal, maxVal] ) | ^( MINUS l= expression[minVal, maxVal] r= expression[minVal, maxVal] ) | ^( STAR l= expression[minVal, maxVal] r= expression[minVal, maxVal] ) | ^( SLASH l= expression[minVal, maxVal] r= expression[minVal, maxVal] ) | ^( WEDGE l= expression[minVal, maxVal] r= expression[minVal, maxVal] ) | ^( NEGATION v= expression[minVal, maxVal] ) | ^( FUNCTION name= IDENTIFIER arguments[minVal, maxVal] ) | ^( VARIABLE name= IDENTIFIER ) | value= DECIMAL_LITERAL | value= FLOATING_POINT_LITERAL | ^( MV_SUBSCRIPT name= IDENTIFIER index= DECIMAL_LITERAL ) )
             int alt3=11;
             switch ( input.LA(1) ) {
             case PLUS:
@@ -369,7 +369,7 @@ public class MapleTransformer extends TreeParser {
 
             switch (alt3) {
                 case 1 :
-                    // de/gaalop/maple/parser/MapleTransformer.g:67:4: ^( PLUS l= expression[minVal, maxVal] r= expression[minVal, maxVal] )
+                    // de\\gaalop\\maple\\parser\\MapleTransformer.g:67:4: ^( PLUS l= expression[minVal, maxVal] r= expression[minVal, maxVal] )
                     {
                     match(input,PLUS,FOLLOW_PLUS_in_expression153); 
 
@@ -391,7 +391,7 @@ public class MapleTransformer extends TreeParser {
                     }
                     break;
                 case 2 :
-                    // de/gaalop/maple/parser/MapleTransformer.g:69:4: ^( MINUS l= expression[minVal, maxVal] r= expression[minVal, maxVal] )
+                    // de\\gaalop\\maple\\parser\\MapleTransformer.g:69:4: ^( MINUS l= expression[minVal, maxVal] r= expression[minVal, maxVal] )
                     {
                     match(input,MINUS,FOLLOW_MINUS_in_expression174); 
 
@@ -413,7 +413,7 @@ public class MapleTransformer extends TreeParser {
                     }
                     break;
                 case 3 :
-                    // de/gaalop/maple/parser/MapleTransformer.g:71:4: ^( STAR l= expression[minVal, maxVal] r= expression[minVal, maxVal] )
+                    // de\\gaalop\\maple\\parser\\MapleTransformer.g:71:4: ^( STAR l= expression[minVal, maxVal] r= expression[minVal, maxVal] )
                     {
                     match(input,STAR,FOLLOW_STAR_in_expression195); 
 
@@ -435,7 +435,7 @@ public class MapleTransformer extends TreeParser {
                     }
                     break;
                 case 4 :
-                    // de/gaalop/maple/parser/MapleTransformer.g:73:4: ^( SLASH l= expression[minVal, maxVal] r= expression[minVal, maxVal] )
+                    // de\\gaalop\\maple\\parser\\MapleTransformer.g:73:4: ^( SLASH l= expression[minVal, maxVal] r= expression[minVal, maxVal] )
                     {
                     match(input,SLASH,FOLLOW_SLASH_in_expression216); 
 
@@ -457,7 +457,7 @@ public class MapleTransformer extends TreeParser {
                     }
                     break;
                 case 5 :
-                    // de/gaalop/maple/parser/MapleTransformer.g:75:4: ^( WEDGE l= expression[minVal, maxVal] r= expression[minVal, maxVal] )
+                    // de\\gaalop\\maple\\parser\\MapleTransformer.g:75:4: ^( WEDGE l= expression[minVal, maxVal] r= expression[minVal, maxVal] )
                     {
                     match(input,WEDGE,FOLLOW_WEDGE_in_expression237); 
 
@@ -479,7 +479,7 @@ public class MapleTransformer extends TreeParser {
                     }
                     break;
                 case 6 :
-                    // de/gaalop/maple/parser/MapleTransformer.g:77:4: ^( NEGATION v= expression[minVal, maxVal] )
+                    // de\\gaalop\\maple\\parser\\MapleTransformer.g:77:4: ^( NEGATION v= expression[minVal, maxVal] )
                     {
                     match(input,NEGATION,FOLLOW_NEGATION_in_expression258); 
 
@@ -496,7 +496,7 @@ public class MapleTransformer extends TreeParser {
                     }
                     break;
                 case 7 :
-                    // de/gaalop/maple/parser/MapleTransformer.g:79:4: ^( FUNCTION name= IDENTIFIER arguments[minVal, maxVal] )
+                    // de\\gaalop\\maple\\parser\\MapleTransformer.g:79:4: ^( FUNCTION name= IDENTIFIER arguments[minVal, maxVal] )
                     {
                     match(input,FUNCTION,FOLLOW_FUNCTION_in_expression274); 
 
@@ -514,7 +514,7 @@ public class MapleTransformer extends TreeParser {
                     }
                     break;
                 case 8 :
-                    // de/gaalop/maple/parser/MapleTransformer.g:81:4: ^( VARIABLE name= IDENTIFIER )
+                    // de\\gaalop\\maple\\parser\\MapleTransformer.g:81:4: ^( VARIABLE name= IDENTIFIER )
                     {
                     match(input,VARIABLE,FOLLOW_VARIABLE_in_expression292); 
 
@@ -527,7 +527,7 @@ public class MapleTransformer extends TreeParser {
                     }
                     break;
                 case 9 :
-                    // de/gaalop/maple/parser/MapleTransformer.g:83:4: value= DECIMAL_LITERAL
+                    // de\\gaalop\\maple\\parser\\MapleTransformer.g:83:4: value= DECIMAL_LITERAL
                     {
                     value=(CommonTree)match(input,DECIMAL_LITERAL,FOLLOW_DECIMAL_LITERAL_in_expression308); 
                      result = new FloatConstant((value!=null?value.getText():null)); 
@@ -535,7 +535,7 @@ public class MapleTransformer extends TreeParser {
                     }
                     break;
                 case 10 :
-                    // de/gaalop/maple/parser/MapleTransformer.g:85:4: value= FLOATING_POINT_LITERAL
+                    // de\\gaalop\\maple\\parser\\MapleTransformer.g:85:4: value= FLOATING_POINT_LITERAL
                     {
                     value=(CommonTree)match(input,FLOATING_POINT_LITERAL,FOLLOW_FLOATING_POINT_LITERAL_in_expression319); 
                      result = new FloatConstant(java.lang.Float.parseFloat((value!=null?value.getText():null)));
@@ -543,7 +543,7 @@ public class MapleTransformer extends TreeParser {
                     }
                     break;
                 case 11 :
-                    // de/gaalop/maple/parser/MapleTransformer.g:87:4: ^( MV_SUBSCRIPT name= IDENTIFIER index= DECIMAL_LITERAL )
+                    // de\\gaalop\\maple\\parser\\MapleTransformer.g:87:4: ^( MV_SUBSCRIPT name= IDENTIFIER index= DECIMAL_LITERAL )
                     {
                     match(input,MV_SUBSCRIPT,FOLLOW_MV_SUBSCRIPT_in_expression329); 
 
@@ -571,7 +571,7 @@ public class MapleTransformer extends TreeParser {
 
 
     // $ANTLR start "arguments"
-    // de/gaalop/maple/parser/MapleTransformer.g:90:1: arguments[HashMap<String, String> minVal, HashMap<String, String> maxVal] returns [ArrayList<Expression> args] : (arg= expression[minVal, maxVal] )* ;
+    // de\\gaalop\\maple\\parser\\MapleTransformer.g:90:1: arguments[HashMap<String, String> minVal, HashMap<String, String> maxVal] returns [ArrayList<Expression> args] : (arg= expression[minVal, maxVal] )* ;
     public final ArrayList<Expression> arguments(HashMap<String, String> minVal, HashMap<String, String> maxVal) throws RecognitionException {
         ArrayList<Expression> args = null;
 
@@ -580,10 +580,10 @@ public class MapleTransformer extends TreeParser {
 
          args = new ArrayList<Expression>(); 
         try {
-            // de/gaalop/maple/parser/MapleTransformer.g:92:2: ( (arg= expression[minVal, maxVal] )* )
-            // de/gaalop/maple/parser/MapleTransformer.g:92:4: (arg= expression[minVal, maxVal] )*
+            // de\\gaalop\\maple\\parser\\MapleTransformer.g:92:2: ( (arg= expression[minVal, maxVal] )* )
+            // de\\gaalop\\maple\\parser\\MapleTransformer.g:92:4: (arg= expression[minVal, maxVal] )*
             {
-            // de/gaalop/maple/parser/MapleTransformer.g:92:4: (arg= expression[minVal, maxVal] )*
+            // de\\gaalop\\maple\\parser\\MapleTransformer.g:92:4: (arg= expression[minVal, maxVal] )*
             loop4:
             do {
                 int alt4=2;
@@ -596,7 +596,7 @@ public class MapleTransformer extends TreeParser {
 
                 switch (alt4) {
             	case 1 :
-            	    // de/gaalop/maple/parser/MapleTransformer.g:92:5: arg= expression[minVal, maxVal]
+            	    // de\\gaalop\\maple\\parser\\MapleTransformer.g:92:5: arg= expression[minVal, maxVal]
             	    {
             	    pushFollow(FOLLOW_expression_in_arguments365);
             	    arg=expression(minVal, maxVal);

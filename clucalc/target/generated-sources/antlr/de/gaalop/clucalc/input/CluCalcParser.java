@@ -1,4 +1,4 @@
-// $ANTLR 3.2 Sep 23, 2009 12:02:23 /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g 2010-05-06 12:44:44
+// $ANTLR 3.2 Sep 23, 2009 12:02:23 C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g 2010-05-06 11:38:43
 
   package de.gaalop.clucalc.input;
 
@@ -99,7 +99,7 @@ public class CluCalcParser extends Parser {
     }
 
     public String[] getTokenNames() { return CluCalcParser.tokenNames; }
-    public String getGrammarFileName() { return "/Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g"; }
+    public String getGrammarFileName() { return "C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g"; }
 
 
         private List<String> errors = new ArrayList<String>();
@@ -120,7 +120,7 @@ public class CluCalcParser extends Parser {
     };
 
     // $ANTLR start "script"
-    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:41:1: script : ( statement )* EOF ;
+    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:41:1: script : ( statement )* EOF ;
     public final CluCalcParser.script_return script() throws RecognitionException {
         CluCalcParser.script_return retval = new CluCalcParser.script_return();
         retval.start = input.LT(1);
@@ -135,12 +135,12 @@ public class CluCalcParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 1) ) { return retval; }
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:41:9: ( ( statement )* EOF )
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:42:3: ( statement )* EOF
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:41:9: ( ( statement )* EOF )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:42:3: ( statement )* EOF
             {
             root_0 = (Object)adaptor.nil();
 
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:42:3: ( statement )*
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:42:3: ( statement )*
             loop1:
             do {
                 int alt1=2;
@@ -153,7 +153,7 @@ public class CluCalcParser extends Parser {
 
                 switch (alt1) {
             	case 1 :
-            	    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:0:0: statement
+            	    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:0:0: statement
             	    {
             	    pushFollow(FOLLOW_statement_in_script107);
             	    statement1=statement();
@@ -201,7 +201,7 @@ public class CluCalcParser extends Parser {
     };
 
     // $ANTLR start "float_literal"
-    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:45:1: float_literal : ( MINUS )? FLOATING_POINT_LITERAL ;
+    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:45:1: float_literal : ( MINUS )? FLOATING_POINT_LITERAL ;
     public final CluCalcParser.float_literal_return float_literal() throws RecognitionException {
         CluCalcParser.float_literal_return retval = new CluCalcParser.float_literal_return();
         retval.start = input.LT(1);
@@ -216,12 +216,12 @@ public class CluCalcParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 2) ) { return retval; }
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:45:14: ( ( MINUS )? FLOATING_POINT_LITERAL )
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:46:3: ( MINUS )? FLOATING_POINT_LITERAL
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:45:14: ( ( MINUS )? FLOATING_POINT_LITERAL )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:46:3: ( MINUS )? FLOATING_POINT_LITERAL
             {
             root_0 = (Object)adaptor.nil();
 
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:46:3: ( MINUS )?
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:46:3: ( MINUS )?
             int alt2=2;
             int LA2_0 = input.LA(1);
 
@@ -230,7 +230,7 @@ public class CluCalcParser extends Parser {
             }
             switch (alt2) {
                 case 1 :
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:0:0: MINUS
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:0:0: MINUS
                     {
                     MINUS3=(Token)match(input,MINUS,FOLLOW_MINUS_in_float_literal124); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
@@ -278,7 +278,7 @@ public class CluCalcParser extends Parser {
     };
 
     // $ANTLR start "pragma"
-    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:52:1: pragma : ( PRAGMA RANGE_LITERAL float_literal LESS_OR_EQUAL IDENTIFIER LESS_OR_EQUAL float_literal | PRAGMA OUTPUT_LITERAL IDENTIFIER );
+    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:52:1: pragma : ( PRAGMA RANGE_LITERAL float_literal LESS_OR_EQUAL IDENTIFIER LESS_OR_EQUAL float_literal | PRAGMA OUTPUT_LITERAL IDENTIFIER );
     public final CluCalcParser.pragma_return pragma() throws RecognitionException {
         CluCalcParser.pragma_return retval = new CluCalcParser.pragma_return();
         retval.start = input.LT(1);
@@ -309,7 +309,7 @@ public class CluCalcParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 3) ) { return retval; }
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:53:3: ( PRAGMA RANGE_LITERAL float_literal LESS_OR_EQUAL IDENTIFIER LESS_OR_EQUAL float_literal | PRAGMA OUTPUT_LITERAL IDENTIFIER )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:53:3: ( PRAGMA RANGE_LITERAL float_literal LESS_OR_EQUAL IDENTIFIER LESS_OR_EQUAL float_literal | PRAGMA OUTPUT_LITERAL IDENTIFIER )
             int alt3=2;
             int LA3_0 = input.LA(1);
 
@@ -339,7 +339,7 @@ public class CluCalcParser extends Parser {
             }
             switch (alt3) {
                 case 1 :
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:53:5: PRAGMA RANGE_LITERAL float_literal LESS_OR_EQUAL IDENTIFIER LESS_OR_EQUAL float_literal
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:53:5: PRAGMA RANGE_LITERAL float_literal LESS_OR_EQUAL IDENTIFIER LESS_OR_EQUAL float_literal
                     {
                     root_0 = (Object)adaptor.nil();
 
@@ -384,7 +384,7 @@ public class CluCalcParser extends Parser {
                     }
                     break;
                 case 2 :
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:54:5: PRAGMA OUTPUT_LITERAL IDENTIFIER
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:54:5: PRAGMA OUTPUT_LITERAL IDENTIFIER
                     {
                     root_0 = (Object)adaptor.nil();
 
@@ -435,7 +435,7 @@ public class CluCalcParser extends Parser {
     };
 
     // $ANTLR start "expression"
-    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:60:1: expression : ( lvalue EQUALS expression -> ^( EQUALS lvalue expression ) | additive_expression | logical_or_expression );
+    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:60:1: expression : ( lvalue EQUALS expression -> ^( EQUALS lvalue expression ) | additive_expression | logical_or_expression );
     public final CluCalcParser.expression_return expression() throws RecognitionException {
         CluCalcParser.expression_return retval = new CluCalcParser.expression_return();
         retval.start = input.LT(1);
@@ -458,12 +458,12 @@ public class CluCalcParser extends Parser {
         RewriteRuleSubtreeStream stream_lvalue=new RewriteRuleSubtreeStream(adaptor,"rule lvalue");
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 4) ) { return retval; }
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:61:3: ( lvalue EQUALS expression -> ^( EQUALS lvalue expression ) | additive_expression | logical_or_expression )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:61:3: ( lvalue EQUALS expression -> ^( EQUALS lvalue expression ) | additive_expression | logical_or_expression )
             int alt4=3;
             alt4 = dfa4.predict(input);
             switch (alt4) {
                 case 1 :
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:61:5: lvalue EQUALS expression
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:61:5: lvalue EQUALS expression
                     {
                     pushFollow(FOLLOW_lvalue_in_expression179);
                     lvalue15=lvalue();
@@ -483,7 +483,7 @@ public class CluCalcParser extends Parser {
 
 
                     // AST REWRITE
-                    // elements: EQUALS, expression, lvalue
+                    // elements: expression, EQUALS, lvalue
                     // token labels: 
                     // rule labels: retval
                     // token list labels: 
@@ -496,7 +496,7 @@ public class CluCalcParser extends Parser {
                     root_0 = (Object)adaptor.nil();
                     // 61:30: -> ^( EQUALS lvalue expression )
                     {
-                        // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:61:33: ^( EQUALS lvalue expression )
+                        // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:61:33: ^( EQUALS lvalue expression )
                         {
                         Object root_1 = (Object)adaptor.nil();
                         root_1 = (Object)adaptor.becomeRoot(stream_EQUALS.nextNode(), root_1);
@@ -513,7 +513,7 @@ public class CluCalcParser extends Parser {
                     }
                     break;
                 case 2 :
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:62:5: additive_expression
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:62:5: additive_expression
                     {
                     root_0 = (Object)adaptor.nil();
 
@@ -527,7 +527,7 @@ public class CluCalcParser extends Parser {
                     }
                     break;
                 case 3 :
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:63:5: logical_or_expression
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:63:5: logical_or_expression
                     {
                     root_0 = (Object)adaptor.nil();
 
@@ -569,7 +569,7 @@ public class CluCalcParser extends Parser {
     };
 
     // $ANTLR start "argument_expression_list"
-    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:66:1: argument_expression_list : expression ( COMMA expression )* ;
+    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:66:1: argument_expression_list : expression ( COMMA expression )* ;
     public final CluCalcParser.argument_expression_list_return argument_expression_list() throws RecognitionException {
         CluCalcParser.argument_expression_list_return retval = new CluCalcParser.argument_expression_list_return();
         retval.start = input.LT(1);
@@ -586,8 +586,8 @@ public class CluCalcParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 5) ) { return retval; }
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:67:3: ( expression ( COMMA expression )* )
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:67:7: expression ( COMMA expression )*
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:67:3: ( expression ( COMMA expression )* )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:67:7: expression ( COMMA expression )*
             {
             root_0 = (Object)adaptor.nil();
 
@@ -597,7 +597,7 @@ public class CluCalcParser extends Parser {
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) adaptor.addChild(root_0, expression20.getTree());
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:67:18: ( COMMA expression )*
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:67:18: ( COMMA expression )*
             loop5:
             do {
                 int alt5=2;
@@ -610,7 +610,7 @@ public class CluCalcParser extends Parser {
 
                 switch (alt5) {
             	case 1 :
-            	    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:67:20: COMMA expression
+            	    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:67:20: COMMA expression
             	    {
             	    COMMA21=(Token)match(input,COMMA,FOLLOW_COMMA_in_argument_expression_list224); if (state.failed) return retval;
             	    pushFollow(FOLLOW_expression_in_argument_expression_list227);
@@ -658,7 +658,7 @@ public class CluCalcParser extends Parser {
     };
 
     // $ANTLR start "lvalue"
-    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:70:1: lvalue : unary_expression ;
+    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:70:1: lvalue : unary_expression ;
     public final CluCalcParser.lvalue_return lvalue() throws RecognitionException {
         CluCalcParser.lvalue_return retval = new CluCalcParser.lvalue_return();
         retval.start = input.LT(1);
@@ -671,8 +671,8 @@ public class CluCalcParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 6) ) { return retval; }
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:71:3: ( unary_expression )
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:71:5: unary_expression
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:71:3: ( unary_expression )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:71:5: unary_expression
             {
             root_0 = (Object)adaptor.nil();
 
@@ -712,7 +712,7 @@ public class CluCalcParser extends Parser {
     };
 
     // $ANTLR start "logical_or_expression"
-    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:74:1: logical_or_expression : logical_and_expression ( DOUBLE_BAR logical_and_expression )* ;
+    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:74:1: logical_or_expression : logical_and_expression ( DOUBLE_BAR logical_and_expression )* ;
     public final CluCalcParser.logical_or_expression_return logical_or_expression() throws RecognitionException {
         CluCalcParser.logical_or_expression_return retval = new CluCalcParser.logical_or_expression_return();
         retval.start = input.LT(1);
@@ -729,8 +729,8 @@ public class CluCalcParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 7) ) { return retval; }
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:75:3: ( logical_and_expression ( DOUBLE_BAR logical_and_expression )* )
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:75:5: logical_and_expression ( DOUBLE_BAR logical_and_expression )*
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:75:3: ( logical_and_expression ( DOUBLE_BAR logical_and_expression )* )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:75:5: logical_and_expression ( DOUBLE_BAR logical_and_expression )*
             {
             root_0 = (Object)adaptor.nil();
 
@@ -740,7 +740,7 @@ public class CluCalcParser extends Parser {
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) adaptor.addChild(root_0, logical_and_expression24.getTree());
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:75:28: ( DOUBLE_BAR logical_and_expression )*
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:75:28: ( DOUBLE_BAR logical_and_expression )*
             loop6:
             do {
                 int alt6=2;
@@ -753,7 +753,7 @@ public class CluCalcParser extends Parser {
 
                 switch (alt6) {
             	case 1 :
-            	    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:75:29: DOUBLE_BAR logical_and_expression
+            	    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:75:29: DOUBLE_BAR logical_and_expression
             	    {
             	    DOUBLE_BAR25=(Token)match(input,DOUBLE_BAR,FOLLOW_DOUBLE_BAR_in_logical_or_expression261); if (state.failed) return retval;
             	    if ( state.backtracking==0 ) {
@@ -805,7 +805,7 @@ public class CluCalcParser extends Parser {
     };
 
     // $ANTLR start "logical_and_expression"
-    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:78:1: logical_and_expression : equality_expression ( DOUBLE_AND equality_expression )* ;
+    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:78:1: logical_and_expression : equality_expression ( DOUBLE_AND equality_expression )* ;
     public final CluCalcParser.logical_and_expression_return logical_and_expression() throws RecognitionException {
         CluCalcParser.logical_and_expression_return retval = new CluCalcParser.logical_and_expression_return();
         retval.start = input.LT(1);
@@ -822,8 +822,8 @@ public class CluCalcParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 8) ) { return retval; }
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:79:3: ( equality_expression ( DOUBLE_AND equality_expression )* )
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:79:5: equality_expression ( DOUBLE_AND equality_expression )*
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:79:3: ( equality_expression ( DOUBLE_AND equality_expression )* )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:79:5: equality_expression ( DOUBLE_AND equality_expression )*
             {
             root_0 = (Object)adaptor.nil();
 
@@ -833,7 +833,7 @@ public class CluCalcParser extends Parser {
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) adaptor.addChild(root_0, equality_expression27.getTree());
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:79:25: ( DOUBLE_AND equality_expression )*
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:79:25: ( DOUBLE_AND equality_expression )*
             loop7:
             do {
                 int alt7=2;
@@ -846,7 +846,7 @@ public class CluCalcParser extends Parser {
 
                 switch (alt7) {
             	case 1 :
-            	    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:79:26: DOUBLE_AND equality_expression
+            	    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:79:26: DOUBLE_AND equality_expression
             	    {
             	    DOUBLE_AND28=(Token)match(input,DOUBLE_AND,FOLLOW_DOUBLE_AND_in_logical_and_expression282); if (state.failed) return retval;
             	    if ( state.backtracking==0 ) {
@@ -898,7 +898,7 @@ public class CluCalcParser extends Parser {
     };
 
     // $ANTLR start "equality_expression"
-    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:82:1: equality_expression : relational_expression ( ( DOUBLE_EQUALS | UNEQUAL ) relational_expression )* ;
+    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:82:1: equality_expression : relational_expression ( ( DOUBLE_EQUALS | UNEQUAL ) relational_expression )* ;
     public final CluCalcParser.equality_expression_return equality_expression() throws RecognitionException {
         CluCalcParser.equality_expression_return retval = new CluCalcParser.equality_expression_return();
         retval.start = input.LT(1);
@@ -917,8 +917,8 @@ public class CluCalcParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 9) ) { return retval; }
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:83:3: ( relational_expression ( ( DOUBLE_EQUALS | UNEQUAL ) relational_expression )* )
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:83:5: relational_expression ( ( DOUBLE_EQUALS | UNEQUAL ) relational_expression )*
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:83:3: ( relational_expression ( ( DOUBLE_EQUALS | UNEQUAL ) relational_expression )* )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:83:5: relational_expression ( ( DOUBLE_EQUALS | UNEQUAL ) relational_expression )*
             {
             root_0 = (Object)adaptor.nil();
 
@@ -928,7 +928,7 @@ public class CluCalcParser extends Parser {
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) adaptor.addChild(root_0, relational_expression30.getTree());
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:83:27: ( ( DOUBLE_EQUALS | UNEQUAL ) relational_expression )*
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:83:27: ( ( DOUBLE_EQUALS | UNEQUAL ) relational_expression )*
             loop9:
             do {
                 int alt9=2;
@@ -941,9 +941,9 @@ public class CluCalcParser extends Parser {
 
                 switch (alt9) {
             	case 1 :
-            	    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:83:28: ( DOUBLE_EQUALS | UNEQUAL ) relational_expression
+            	    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:83:28: ( DOUBLE_EQUALS | UNEQUAL ) relational_expression
             	    {
-            	    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:83:28: ( DOUBLE_EQUALS | UNEQUAL )
+            	    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:83:28: ( DOUBLE_EQUALS | UNEQUAL )
             	    int alt8=2;
             	    int LA8_0 = input.LA(1);
 
@@ -962,7 +962,7 @@ public class CluCalcParser extends Parser {
             	    }
             	    switch (alt8) {
             	        case 1 :
-            	            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:83:29: DOUBLE_EQUALS
+            	            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:83:29: DOUBLE_EQUALS
             	            {
             	            DOUBLE_EQUALS31=(Token)match(input,DOUBLE_EQUALS,FOLLOW_DOUBLE_EQUALS_in_equality_expression304); if (state.failed) return retval;
             	            if ( state.backtracking==0 ) {
@@ -973,7 +973,7 @@ public class CluCalcParser extends Parser {
             	            }
             	            break;
             	        case 2 :
-            	            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:83:46: UNEQUAL
+            	            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:83:46: UNEQUAL
             	            {
             	            UNEQUAL32=(Token)match(input,UNEQUAL,FOLLOW_UNEQUAL_in_equality_expression309); if (state.failed) return retval;
             	            if ( state.backtracking==0 ) {
@@ -1031,7 +1031,7 @@ public class CluCalcParser extends Parser {
     };
 
     // $ANTLR start "relational_expression"
-    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:86:1: relational_expression : additive_expression ( ( LESS | GREATER | LESS_OR_EQUAL | GREATER_OR_EQUAL ) additive_expression )* ;
+    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:86:1: relational_expression : additive_expression ( ( LESS | GREATER | LESS_OR_EQUAL | GREATER_OR_EQUAL ) additive_expression )* ;
     public final CluCalcParser.relational_expression_return relational_expression() throws RecognitionException {
         CluCalcParser.relational_expression_return retval = new CluCalcParser.relational_expression_return();
         retval.start = input.LT(1);
@@ -1054,8 +1054,8 @@ public class CluCalcParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 10) ) { return retval; }
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:87:3: ( additive_expression ( ( LESS | GREATER | LESS_OR_EQUAL | GREATER_OR_EQUAL ) additive_expression )* )
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:87:5: additive_expression ( ( LESS | GREATER | LESS_OR_EQUAL | GREATER_OR_EQUAL ) additive_expression )*
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:87:3: ( additive_expression ( ( LESS | GREATER | LESS_OR_EQUAL | GREATER_OR_EQUAL ) additive_expression )* )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:87:5: additive_expression ( ( LESS | GREATER | LESS_OR_EQUAL | GREATER_OR_EQUAL ) additive_expression )*
             {
             root_0 = (Object)adaptor.nil();
 
@@ -1065,7 +1065,7 @@ public class CluCalcParser extends Parser {
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) adaptor.addChild(root_0, additive_expression34.getTree());
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:87:25: ( ( LESS | GREATER | LESS_OR_EQUAL | GREATER_OR_EQUAL ) additive_expression )*
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:87:25: ( ( LESS | GREATER | LESS_OR_EQUAL | GREATER_OR_EQUAL ) additive_expression )*
             loop11:
             do {
                 int alt11=2;
@@ -1078,9 +1078,9 @@ public class CluCalcParser extends Parser {
 
                 switch (alt11) {
             	case 1 :
-            	    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:87:26: ( LESS | GREATER | LESS_OR_EQUAL | GREATER_OR_EQUAL ) additive_expression
+            	    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:87:26: ( LESS | GREATER | LESS_OR_EQUAL | GREATER_OR_EQUAL ) additive_expression
             	    {
-            	    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:87:26: ( LESS | GREATER | LESS_OR_EQUAL | GREATER_OR_EQUAL )
+            	    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:87:26: ( LESS | GREATER | LESS_OR_EQUAL | GREATER_OR_EQUAL )
             	    int alt10=4;
             	    switch ( input.LA(1) ) {
             	    case LESS:
@@ -1113,7 +1113,7 @@ public class CluCalcParser extends Parser {
 
             	    switch (alt10) {
             	        case 1 :
-            	            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:87:27: LESS
+            	            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:87:27: LESS
             	            {
             	            LESS35=(Token)match(input,LESS,FOLLOW_LESS_in_relational_expression332); if (state.failed) return retval;
             	            if ( state.backtracking==0 ) {
@@ -1124,7 +1124,7 @@ public class CluCalcParser extends Parser {
             	            }
             	            break;
             	        case 2 :
-            	            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:87:35: GREATER
+            	            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:87:35: GREATER
             	            {
             	            GREATER36=(Token)match(input,GREATER,FOLLOW_GREATER_in_relational_expression337); if (state.failed) return retval;
             	            if ( state.backtracking==0 ) {
@@ -1135,7 +1135,7 @@ public class CluCalcParser extends Parser {
             	            }
             	            break;
             	        case 3 :
-            	            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:87:46: LESS_OR_EQUAL
+            	            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:87:46: LESS_OR_EQUAL
             	            {
             	            LESS_OR_EQUAL37=(Token)match(input,LESS_OR_EQUAL,FOLLOW_LESS_OR_EQUAL_in_relational_expression342); if (state.failed) return retval;
             	            if ( state.backtracking==0 ) {
@@ -1146,7 +1146,7 @@ public class CluCalcParser extends Parser {
             	            }
             	            break;
             	        case 4 :
-            	            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:87:63: GREATER_OR_EQUAL
+            	            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:87:63: GREATER_OR_EQUAL
             	            {
             	            GREATER_OR_EQUAL38=(Token)match(input,GREATER_OR_EQUAL,FOLLOW_GREATER_OR_EQUAL_in_relational_expression347); if (state.failed) return retval;
             	            if ( state.backtracking==0 ) {
@@ -1204,7 +1204,7 @@ public class CluCalcParser extends Parser {
     };
 
     // $ANTLR start "additive_expression"
-    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:90:1: additive_expression : multiplicative_expression ( ( PLUS | MINUS ) multiplicative_expression )* ;
+    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:90:1: additive_expression : multiplicative_expression ( ( PLUS | MINUS ) multiplicative_expression )* ;
     public final CluCalcParser.additive_expression_return additive_expression() throws RecognitionException {
         CluCalcParser.additive_expression_return retval = new CluCalcParser.additive_expression_return();
         retval.start = input.LT(1);
@@ -1223,8 +1223,8 @@ public class CluCalcParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 11) ) { return retval; }
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:91:3: ( multiplicative_expression ( ( PLUS | MINUS ) multiplicative_expression )* )
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:91:5: multiplicative_expression ( ( PLUS | MINUS ) multiplicative_expression )*
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:91:3: ( multiplicative_expression ( ( PLUS | MINUS ) multiplicative_expression )* )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:91:5: multiplicative_expression ( ( PLUS | MINUS ) multiplicative_expression )*
             {
             root_0 = (Object)adaptor.nil();
 
@@ -1234,7 +1234,7 @@ public class CluCalcParser extends Parser {
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) adaptor.addChild(root_0, multiplicative_expression40.getTree());
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:91:31: ( ( PLUS | MINUS ) multiplicative_expression )*
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:91:31: ( ( PLUS | MINUS ) multiplicative_expression )*
             loop13:
             do {
                 int alt13=2;
@@ -1247,9 +1247,9 @@ public class CluCalcParser extends Parser {
 
                 switch (alt13) {
             	case 1 :
-            	    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:91:33: ( PLUS | MINUS ) multiplicative_expression
+            	    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:91:33: ( PLUS | MINUS ) multiplicative_expression
             	    {
-            	    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:91:33: ( PLUS | MINUS )
+            	    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:91:33: ( PLUS | MINUS )
             	    int alt12=2;
             	    int LA12_0 = input.LA(1);
 
@@ -1268,7 +1268,7 @@ public class CluCalcParser extends Parser {
             	    }
             	    switch (alt12) {
             	        case 1 :
-            	            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:91:34: PLUS
+            	            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:91:34: PLUS
             	            {
             	            PLUS41=(Token)match(input,PLUS,FOLLOW_PLUS_in_additive_expression371); if (state.failed) return retval;
             	            if ( state.backtracking==0 ) {
@@ -1279,7 +1279,7 @@ public class CluCalcParser extends Parser {
             	            }
             	            break;
             	        case 2 :
-            	            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:91:42: MINUS
+            	            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:91:42: MINUS
             	            {
             	            MINUS42=(Token)match(input,MINUS,FOLLOW_MINUS_in_additive_expression376); if (state.failed) return retval;
             	            if ( state.backtracking==0 ) {
@@ -1337,7 +1337,7 @@ public class CluCalcParser extends Parser {
     };
 
     // $ANTLR start "multiplicative_expression"
-    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:94:1: multiplicative_expression : outer_product_expression ( ( STAR | SLASH ) outer_product_expression )* ;
+    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:94:1: multiplicative_expression : outer_product_expression ( ( STAR | SLASH ) outer_product_expression )* ;
     public final CluCalcParser.multiplicative_expression_return multiplicative_expression() throws RecognitionException {
         CluCalcParser.multiplicative_expression_return retval = new CluCalcParser.multiplicative_expression_return();
         retval.start = input.LT(1);
@@ -1356,8 +1356,8 @@ public class CluCalcParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 12) ) { return retval; }
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:95:3: ( outer_product_expression ( ( STAR | SLASH ) outer_product_expression )* )
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:95:5: outer_product_expression ( ( STAR | SLASH ) outer_product_expression )*
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:95:3: ( outer_product_expression ( ( STAR | SLASH ) outer_product_expression )* )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:95:5: outer_product_expression ( ( STAR | SLASH ) outer_product_expression )*
             {
             root_0 = (Object)adaptor.nil();
 
@@ -1367,7 +1367,7 @@ public class CluCalcParser extends Parser {
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) adaptor.addChild(root_0, outer_product_expression44.getTree());
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:95:30: ( ( STAR | SLASH ) outer_product_expression )*
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:95:30: ( ( STAR | SLASH ) outer_product_expression )*
             loop15:
             do {
                 int alt15=2;
@@ -1380,9 +1380,9 @@ public class CluCalcParser extends Parser {
 
                 switch (alt15) {
             	case 1 :
-            	    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:95:32: ( STAR | SLASH ) outer_product_expression
+            	    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:95:32: ( STAR | SLASH ) outer_product_expression
             	    {
-            	    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:95:32: ( STAR | SLASH )
+            	    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:95:32: ( STAR | SLASH )
             	    int alt14=2;
             	    int LA14_0 = input.LA(1);
 
@@ -1401,7 +1401,7 @@ public class CluCalcParser extends Parser {
             	    }
             	    switch (alt14) {
             	        case 1 :
-            	            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:95:33: STAR
+            	            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:95:33: STAR
             	            {
             	            STAR45=(Token)match(input,STAR,FOLLOW_STAR_in_multiplicative_expression401); if (state.failed) return retval;
             	            if ( state.backtracking==0 ) {
@@ -1412,7 +1412,7 @@ public class CluCalcParser extends Parser {
             	            }
             	            break;
             	        case 2 :
-            	            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:95:41: SLASH
+            	            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:95:41: SLASH
             	            {
             	            SLASH46=(Token)match(input,SLASH,FOLLOW_SLASH_in_multiplicative_expression406); if (state.failed) return retval;
             	            if ( state.backtracking==0 ) {
@@ -1470,7 +1470,7 @@ public class CluCalcParser extends Parser {
     };
 
     // $ANTLR start "outer_product_expression"
-    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:98:1: outer_product_expression : inner_product_expression ( WEDGE inner_product_expression )* ;
+    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:98:1: outer_product_expression : inner_product_expression ( WEDGE inner_product_expression )* ;
     public final CluCalcParser.outer_product_expression_return outer_product_expression() throws RecognitionException {
         CluCalcParser.outer_product_expression_return retval = new CluCalcParser.outer_product_expression_return();
         retval.start = input.LT(1);
@@ -1487,8 +1487,8 @@ public class CluCalcParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 13) ) { return retval; }
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:99:3: ( inner_product_expression ( WEDGE inner_product_expression )* )
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:99:5: inner_product_expression ( WEDGE inner_product_expression )*
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:99:3: ( inner_product_expression ( WEDGE inner_product_expression )* )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:99:5: inner_product_expression ( WEDGE inner_product_expression )*
             {
             root_0 = (Object)adaptor.nil();
 
@@ -1498,7 +1498,7 @@ public class CluCalcParser extends Parser {
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) adaptor.addChild(root_0, inner_product_expression48.getTree());
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:99:30: ( WEDGE inner_product_expression )*
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:99:30: ( WEDGE inner_product_expression )*
             loop16:
             do {
                 int alt16=2;
@@ -1511,7 +1511,7 @@ public class CluCalcParser extends Parser {
 
                 switch (alt16) {
             	case 1 :
-            	    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:99:32: WEDGE inner_product_expression
+            	    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:99:32: WEDGE inner_product_expression
             	    {
             	    WEDGE49=(Token)match(input,WEDGE,FOLLOW_WEDGE_in_outer_product_expression430); if (state.failed) return retval;
             	    if ( state.backtracking==0 ) {
@@ -1563,7 +1563,7 @@ public class CluCalcParser extends Parser {
     };
 
     // $ANTLR start "inner_product_expression"
-    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:102:1: inner_product_expression : modulo_expression ( DOT modulo_expression )* ;
+    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:102:1: inner_product_expression : modulo_expression ( DOT modulo_expression )* ;
     public final CluCalcParser.inner_product_expression_return inner_product_expression() throws RecognitionException {
         CluCalcParser.inner_product_expression_return retval = new CluCalcParser.inner_product_expression_return();
         retval.start = input.LT(1);
@@ -1580,8 +1580,8 @@ public class CluCalcParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 14) ) { return retval; }
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:103:3: ( modulo_expression ( DOT modulo_expression )* )
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:103:5: modulo_expression ( DOT modulo_expression )*
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:103:3: ( modulo_expression ( DOT modulo_expression )* )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:103:5: modulo_expression ( DOT modulo_expression )*
             {
             root_0 = (Object)adaptor.nil();
 
@@ -1591,7 +1591,7 @@ public class CluCalcParser extends Parser {
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) adaptor.addChild(root_0, modulo_expression51.getTree());
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:103:23: ( DOT modulo_expression )*
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:103:23: ( DOT modulo_expression )*
             loop17:
             do {
                 int alt17=2;
@@ -1604,7 +1604,7 @@ public class CluCalcParser extends Parser {
 
                 switch (alt17) {
             	case 1 :
-            	    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:103:25: DOT modulo_expression
+            	    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:103:25: DOT modulo_expression
             	    {
             	    DOT52=(Token)match(input,DOT,FOLLOW_DOT_in_inner_product_expression453); if (state.failed) return retval;
             	    if ( state.backtracking==0 ) {
@@ -1656,7 +1656,7 @@ public class CluCalcParser extends Parser {
     };
 
     // $ANTLR start "modulo_expression"
-    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:106:1: modulo_expression : unary_expression ( MODULO unary_expression )* ;
+    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:106:1: modulo_expression : unary_expression ( MODULO unary_expression )* ;
     public final CluCalcParser.modulo_expression_return modulo_expression() throws RecognitionException {
         CluCalcParser.modulo_expression_return retval = new CluCalcParser.modulo_expression_return();
         retval.start = input.LT(1);
@@ -1673,8 +1673,8 @@ public class CluCalcParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 15) ) { return retval; }
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:107:3: ( unary_expression ( MODULO unary_expression )* )
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:107:5: unary_expression ( MODULO unary_expression )*
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:107:3: ( unary_expression ( MODULO unary_expression )* )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:107:5: unary_expression ( MODULO unary_expression )*
             {
             root_0 = (Object)adaptor.nil();
 
@@ -1684,7 +1684,7 @@ public class CluCalcParser extends Parser {
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) adaptor.addChild(root_0, unary_expression54.getTree());
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:107:22: ( MODULO unary_expression )*
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:107:22: ( MODULO unary_expression )*
             loop18:
             do {
                 int alt18=2;
@@ -1697,7 +1697,7 @@ public class CluCalcParser extends Parser {
 
                 switch (alt18) {
             	case 1 :
-            	    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:107:24: MODULO unary_expression
+            	    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:107:24: MODULO unary_expression
             	    {
             	    MODULO55=(Token)match(input,MODULO,FOLLOW_MODULO_in_modulo_expression476); if (state.failed) return retval;
             	    if ( state.backtracking==0 ) {
@@ -1749,7 +1749,7 @@ public class CluCalcParser extends Parser {
     };
 
     // $ANTLR start "unary_expression"
-    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:110:1: unary_expression : ( postfix_expression | STAR operand= unary_expression -> ^( DUAL $operand) | MINUS operand= unary_expression -> ^( NEGATION $operand) | REVERSE operand= unary_expression -> ^( REVERSE $operand) );
+    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:110:1: unary_expression : ( postfix_expression | STAR operand= unary_expression -> ^( DUAL $operand) | MINUS operand= unary_expression -> ^( NEGATION $operand) | REVERSE operand= unary_expression -> ^( REVERSE $operand) );
     public final CluCalcParser.unary_expression_return unary_expression() throws RecognitionException {
         CluCalcParser.unary_expression_return retval = new CluCalcParser.unary_expression_return();
         retval.start = input.LT(1);
@@ -1773,7 +1773,7 @@ public class CluCalcParser extends Parser {
         RewriteRuleSubtreeStream stream_unary_expression=new RewriteRuleSubtreeStream(adaptor,"rule unary_expression");
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 16) ) { return retval; }
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:111:3: ( postfix_expression | STAR operand= unary_expression -> ^( DUAL $operand) | MINUS operand= unary_expression -> ^( NEGATION $operand) | REVERSE operand= unary_expression -> ^( REVERSE $operand) )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:111:3: ( postfix_expression | STAR operand= unary_expression -> ^( DUAL $operand) | MINUS operand= unary_expression -> ^( NEGATION $operand) | REVERSE operand= unary_expression -> ^( REVERSE $operand) )
             int alt19=4;
             switch ( input.LA(1) ) {
             case DECIMAL_LITERAL:
@@ -1810,7 +1810,7 @@ public class CluCalcParser extends Parser {
 
             switch (alt19) {
                 case 1 :
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:111:5: postfix_expression
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:111:5: postfix_expression
                     {
                     root_0 = (Object)adaptor.nil();
 
@@ -1824,7 +1824,7 @@ public class CluCalcParser extends Parser {
                     }
                     break;
                 case 2 :
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:112:5: STAR operand= unary_expression
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:112:5: STAR operand= unary_expression
                     {
                     STAR58=(Token)match(input,STAR,FOLLOW_STAR_in_unary_expression501); if (state.failed) return retval; 
                     if ( state.backtracking==0 ) stream_STAR.add(STAR58);
@@ -1852,7 +1852,7 @@ public class CluCalcParser extends Parser {
                     root_0 = (Object)adaptor.nil();
                     // 112:35: -> ^( DUAL $operand)
                     {
-                        // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:112:38: ^( DUAL $operand)
+                        // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:112:38: ^( DUAL $operand)
                         {
                         Object root_1 = (Object)adaptor.nil();
                         root_1 = (Object)adaptor.becomeRoot((Object)adaptor.create(DUAL, "DUAL"), root_1);
@@ -1868,7 +1868,7 @@ public class CluCalcParser extends Parser {
                     }
                     break;
                 case 3 :
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:113:5: MINUS operand= unary_expression
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:113:5: MINUS operand= unary_expression
                     {
                     MINUS59=(Token)match(input,MINUS,FOLLOW_MINUS_in_unary_expression520); if (state.failed) return retval; 
                     if ( state.backtracking==0 ) stream_MINUS.add(MINUS59);
@@ -1896,7 +1896,7 @@ public class CluCalcParser extends Parser {
                     root_0 = (Object)adaptor.nil();
                     // 113:36: -> ^( NEGATION $operand)
                     {
-                        // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:113:39: ^( NEGATION $operand)
+                        // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:113:39: ^( NEGATION $operand)
                         {
                         Object root_1 = (Object)adaptor.nil();
                         root_1 = (Object)adaptor.becomeRoot((Object)adaptor.create(NEGATION, "NEGATION"), root_1);
@@ -1912,7 +1912,7 @@ public class CluCalcParser extends Parser {
                     }
                     break;
                 case 4 :
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:114:5: REVERSE operand= unary_expression
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:114:5: REVERSE operand= unary_expression
                     {
                     REVERSE60=(Token)match(input,REVERSE,FOLLOW_REVERSE_in_unary_expression539); if (state.failed) return retval; 
                     if ( state.backtracking==0 ) stream_REVERSE.add(REVERSE60);
@@ -1926,7 +1926,7 @@ public class CluCalcParser extends Parser {
 
 
                     // AST REWRITE
-                    // elements: REVERSE, operand
+                    // elements: operand, REVERSE
                     // token labels: 
                     // rule labels: retval, operand
                     // token list labels: 
@@ -1940,7 +1940,7 @@ public class CluCalcParser extends Parser {
                     root_0 = (Object)adaptor.nil();
                     // 114:38: -> ^( REVERSE $operand)
                     {
-                        // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:114:41: ^( REVERSE $operand)
+                        // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:114:41: ^( REVERSE $operand)
                         {
                         Object root_1 = (Object)adaptor.nil();
                         root_1 = (Object)adaptor.becomeRoot(stream_REVERSE.nextNode(), root_1);
@@ -1984,7 +1984,7 @@ public class CluCalcParser extends Parser {
     };
 
     // $ANTLR start "postfix_expression"
-    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:117:1: postfix_expression : ( primary_expression | function_call );
+    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:117:1: postfix_expression : ( primary_expression | function_call );
     public final CluCalcParser.postfix_expression_return postfix_expression() throws RecognitionException {
         CluCalcParser.postfix_expression_return retval = new CluCalcParser.postfix_expression_return();
         retval.start = input.LT(1);
@@ -1999,7 +1999,7 @@ public class CluCalcParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 17) ) { return retval; }
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:118:3: ( primary_expression | function_call )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:118:3: ( primary_expression | function_call )
             int alt20=2;
             int LA20_0 = input.LA(1);
 
@@ -2032,7 +2032,7 @@ public class CluCalcParser extends Parser {
             }
             switch (alt20) {
                 case 1 :
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:118:5: primary_expression
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:118:5: primary_expression
                     {
                     root_0 = (Object)adaptor.nil();
 
@@ -2046,7 +2046,7 @@ public class CluCalcParser extends Parser {
                     }
                     break;
                 case 2 :
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:119:5: function_call
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:119:5: function_call
                     {
                     root_0 = (Object)adaptor.nil();
 
@@ -2088,7 +2088,7 @@ public class CluCalcParser extends Parser {
     };
 
     // $ANTLR start "function_call"
-    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:122:1: function_call : (name= IDENTIFIER LBRACKET args= argument_expression_list RBRACKET ) -> ^( FUNCTION $name $args) ;
+    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:122:1: function_call : (name= IDENTIFIER LBRACKET args= argument_expression_list RBRACKET ) -> ^( FUNCTION $name $args) ;
     public final CluCalcParser.function_call_return function_call() throws RecognitionException {
         CluCalcParser.function_call_return retval = new CluCalcParser.function_call_return();
         retval.start = input.LT(1);
@@ -2110,11 +2110,11 @@ public class CluCalcParser extends Parser {
         RewriteRuleSubtreeStream stream_argument_expression_list=new RewriteRuleSubtreeStream(adaptor,"rule argument_expression_list");
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 18) ) { return retval; }
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:123:3: ( (name= IDENTIFIER LBRACKET args= argument_expression_list RBRACKET ) -> ^( FUNCTION $name $args) )
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:123:5: (name= IDENTIFIER LBRACKET args= argument_expression_list RBRACKET )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:123:3: ( (name= IDENTIFIER LBRACKET args= argument_expression_list RBRACKET ) -> ^( FUNCTION $name $args) )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:123:5: (name= IDENTIFIER LBRACKET args= argument_expression_list RBRACKET )
             {
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:123:5: (name= IDENTIFIER LBRACKET args= argument_expression_list RBRACKET )
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:123:6: name= IDENTIFIER LBRACKET args= argument_expression_list RBRACKET
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:123:5: (name= IDENTIFIER LBRACKET args= argument_expression_list RBRACKET )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:123:6: name= IDENTIFIER LBRACKET args= argument_expression_list RBRACKET
             {
             name=(Token)match(input,IDENTIFIER,FOLLOW_IDENTIFIER_in_function_call589); if (state.failed) return retval; 
             if ( state.backtracking==0 ) stream_IDENTIFIER.add(name);
@@ -2137,7 +2137,7 @@ public class CluCalcParser extends Parser {
 
 
             // AST REWRITE
-            // elements: args, name
+            // elements: name, args
             // token labels: name
             // rule labels: retval, args
             // token list labels: 
@@ -2152,7 +2152,7 @@ public class CluCalcParser extends Parser {
             root_0 = (Object)adaptor.nil();
             // 124:3: -> ^( FUNCTION $name $args)
             {
-                // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:124:6: ^( FUNCTION $name $args)
+                // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:124:6: ^( FUNCTION $name $args)
                 {
                 Object root_1 = (Object)adaptor.nil();
                 root_1 = (Object)adaptor.becomeRoot((Object)adaptor.create(FUNCTION, "FUNCTION"), root_1);
@@ -2195,7 +2195,7 @@ public class CluCalcParser extends Parser {
     };
 
     // $ANTLR start "primary_expression"
-    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:127:1: primary_expression : ( IDENTIFIER | function_argument | constant | LBRACKET expression RBRACKET );
+    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:127:1: primary_expression : ( IDENTIFIER | function_argument | constant | LBRACKET expression RBRACKET );
     public final CluCalcParser.primary_expression_return primary_expression() throws RecognitionException {
         CluCalcParser.primary_expression_return retval = new CluCalcParser.primary_expression_return();
         retval.start = input.LT(1);
@@ -2218,7 +2218,7 @@ public class CluCalcParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 19) ) { return retval; }
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:128:3: ( IDENTIFIER | function_argument | constant | LBRACKET expression RBRACKET )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:128:3: ( IDENTIFIER | function_argument | constant | LBRACKET expression RBRACKET )
             int alt21=4;
             switch ( input.LA(1) ) {
             case IDENTIFIER:
@@ -2252,7 +2252,7 @@ public class CluCalcParser extends Parser {
 
             switch (alt21) {
                 case 1 :
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:128:5: IDENTIFIER
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:128:5: IDENTIFIER
                     {
                     root_0 = (Object)adaptor.nil();
 
@@ -2265,7 +2265,7 @@ public class CluCalcParser extends Parser {
                     }
                     break;
                 case 2 :
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:129:5: function_argument
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:129:5: function_argument
                     {
                     root_0 = (Object)adaptor.nil();
 
@@ -2279,7 +2279,7 @@ public class CluCalcParser extends Parser {
                     }
                     break;
                 case 3 :
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:130:5: constant
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:130:5: constant
                     {
                     root_0 = (Object)adaptor.nil();
 
@@ -2293,7 +2293,7 @@ public class CluCalcParser extends Parser {
                     }
                     break;
                 case 4 :
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:131:5: LBRACKET expression RBRACKET
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:131:5: LBRACKET expression RBRACKET
                     {
                     root_0 = (Object)adaptor.nil();
 
@@ -2337,7 +2337,7 @@ public class CluCalcParser extends Parser {
     };
 
     // $ANTLR start "constant"
-    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:133:1: constant : ( DECIMAL_LITERAL | FLOATING_POINT_LITERAL );
+    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:133:1: constant : ( DECIMAL_LITERAL | FLOATING_POINT_LITERAL );
     public final CluCalcParser.constant_return constant() throws RecognitionException {
         CluCalcParser.constant_return retval = new CluCalcParser.constant_return();
         retval.start = input.LT(1);
@@ -2350,8 +2350,8 @@ public class CluCalcParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 20) ) { return retval; }
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:134:5: ( DECIMAL_LITERAL | FLOATING_POINT_LITERAL )
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:134:5: ( DECIMAL_LITERAL | FLOATING_POINT_LITERAL )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:
             {
             root_0 = (Object)adaptor.nil();
 
@@ -2397,7 +2397,7 @@ public class CluCalcParser extends Parser {
     };
 
     // $ANTLR start "function_argument"
-    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:138:1: function_argument : ARGUMENT_PREFIX index= DECIMAL_LITERAL RBRACKET -> ^( ARGUMENT $index) ;
+    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:138:1: function_argument : ARGUMENT_PREFIX index= DECIMAL_LITERAL RBRACKET -> ^( ARGUMENT $index) ;
     public final CluCalcParser.function_argument_return function_argument() throws RecognitionException {
         CluCalcParser.function_argument_return retval = new CluCalcParser.function_argument_return();
         retval.start = input.LT(1);
@@ -2417,8 +2417,8 @@ public class CluCalcParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 21) ) { return retval; }
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:139:3: ( ARGUMENT_PREFIX index= DECIMAL_LITERAL RBRACKET -> ^( ARGUMENT $index) )
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:139:5: ARGUMENT_PREFIX index= DECIMAL_LITERAL RBRACKET
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:139:3: ( ARGUMENT_PREFIX index= DECIMAL_LITERAL RBRACKET -> ^( ARGUMENT $index) )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:139:5: ARGUMENT_PREFIX index= DECIMAL_LITERAL RBRACKET
             {
             ARGUMENT_PREFIX72=(Token)match(input,ARGUMENT_PREFIX,FOLLOW_ARGUMENT_PREFIX_in_function_argument695); if (state.failed) return retval; 
             if ( state.backtracking==0 ) stream_ARGUMENT_PREFIX.add(ARGUMENT_PREFIX72);
@@ -2446,7 +2446,7 @@ public class CluCalcParser extends Parser {
             root_0 = (Object)adaptor.nil();
             // 139:52: -> ^( ARGUMENT $index)
             {
-                // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:139:55: ^( ARGUMENT $index)
+                // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:139:55: ^( ARGUMENT $index)
                 {
                 Object root_1 = (Object)adaptor.nil();
                 root_1 = (Object)adaptor.becomeRoot((Object)adaptor.create(ARGUMENT, "ARGUMENT"), root_1);
@@ -2488,7 +2488,7 @@ public class CluCalcParser extends Parser {
     };
 
     // $ANTLR start "statement_list"
-    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:145:1: statement_list : ( statement )+ ;
+    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:145:1: statement_list : ( statement )+ ;
     public final CluCalcParser.statement_list_return statement_list() throws RecognitionException {
         CluCalcParser.statement_list_return retval = new CluCalcParser.statement_list_return();
         retval.start = input.LT(1);
@@ -2501,12 +2501,12 @@ public class CluCalcParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 22) ) { return retval; }
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:146:3: ( ( statement )+ )
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:146:5: ( statement )+
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:146:3: ( ( statement )+ )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:146:5: ( statement )+
             {
             root_0 = (Object)adaptor.nil();
 
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:146:5: ( statement )+
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:146:5: ( statement )+
             int cnt22=0;
             loop22:
             do {
@@ -2520,7 +2520,7 @@ public class CluCalcParser extends Parser {
 
                 switch (alt22) {
             	case 1 :
-            	    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:0:0: statement
+            	    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:0:0: statement
             	    {
             	    pushFollow(FOLLOW_statement_in_statement_list725);
             	    statement74=statement();
@@ -2572,7 +2572,7 @@ public class CluCalcParser extends Parser {
     };
 
     // $ANTLR start "statement"
-    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:152:1: statement : ( expression_statement | procedure_call | macro_definition | draw_mode | block | if_statement | loop | BREAK | pragma );
+    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:152:1: statement : ( expression_statement | procedure_call | macro_definition | draw_mode | block | if_statement | loop | BREAK | pragma );
     public final CluCalcParser.statement_return statement() throws RecognitionException {
         CluCalcParser.statement_return retval = new CluCalcParser.statement_return();
         retval.start = input.LT(1);
@@ -2601,12 +2601,12 @@ public class CluCalcParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 23) ) { return retval; }
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:153:3: ( expression_statement | procedure_call | macro_definition | draw_mode | block | if_statement | loop | BREAK | pragma )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:153:3: ( expression_statement | procedure_call | macro_definition | draw_mode | block | if_statement | loop | BREAK | pragma )
             int alt23=9;
             alt23 = dfa23.predict(input);
             switch (alt23) {
                 case 1 :
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:153:5: expression_statement
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:153:5: expression_statement
                     {
                     root_0 = (Object)adaptor.nil();
 
@@ -2620,7 +2620,7 @@ public class CluCalcParser extends Parser {
                     }
                     break;
                 case 2 :
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:154:5: procedure_call
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:154:5: procedure_call
                     {
                     root_0 = (Object)adaptor.nil();
 
@@ -2634,7 +2634,7 @@ public class CluCalcParser extends Parser {
                     }
                     break;
                 case 3 :
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:155:5: macro_definition
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:155:5: macro_definition
                     {
                     root_0 = (Object)adaptor.nil();
 
@@ -2648,7 +2648,7 @@ public class CluCalcParser extends Parser {
                     }
                     break;
                 case 4 :
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:156:5: draw_mode
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:156:5: draw_mode
                     {
                     root_0 = (Object)adaptor.nil();
 
@@ -2662,7 +2662,7 @@ public class CluCalcParser extends Parser {
                     }
                     break;
                 case 5 :
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:157:5: block
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:157:5: block
                     {
                     root_0 = (Object)adaptor.nil();
 
@@ -2676,7 +2676,7 @@ public class CluCalcParser extends Parser {
                     }
                     break;
                 case 6 :
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:158:5: if_statement
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:158:5: if_statement
                     {
                     root_0 = (Object)adaptor.nil();
 
@@ -2690,7 +2690,7 @@ public class CluCalcParser extends Parser {
                     }
                     break;
                 case 7 :
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:159:5: loop
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:159:5: loop
                     {
                     root_0 = (Object)adaptor.nil();
 
@@ -2704,7 +2704,7 @@ public class CluCalcParser extends Parser {
                     }
                     break;
                 case 8 :
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:160:5: BREAK
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:160:5: BREAK
                     {
                     root_0 = (Object)adaptor.nil();
 
@@ -2717,7 +2717,7 @@ public class CluCalcParser extends Parser {
                     }
                     break;
                 case 9 :
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:161:5: pragma
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:161:5: pragma
                     {
                     root_0 = (Object)adaptor.nil();
 
@@ -2759,7 +2759,7 @@ public class CluCalcParser extends Parser {
     };
 
     // $ANTLR start "macro_definition"
-    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:164:1: macro_definition : id= IDENTIFIER EQUALS CLBRACKET ( statement )* (e= additive_expression )? CRBRACKET -> ^( MACRO $id ( statement )* ( $e)? ) ;
+    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:164:1: macro_definition : id= IDENTIFIER EQUALS CLBRACKET ( statement )* (e= additive_expression )? CRBRACKET -> ^( MACRO $id ( statement )* ( $e)? ) ;
     public final CluCalcParser.macro_definition_return macro_definition() throws RecognitionException {
         CluCalcParser.macro_definition_return retval = new CluCalcParser.macro_definition_return();
         retval.start = input.LT(1);
@@ -2787,8 +2787,8 @@ public class CluCalcParser extends Parser {
         RewriteRuleSubtreeStream stream_additive_expression=new RewriteRuleSubtreeStream(adaptor,"rule additive_expression");
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 24) ) { return retval; }
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:165:3: (id= IDENTIFIER EQUALS CLBRACKET ( statement )* (e= additive_expression )? CRBRACKET -> ^( MACRO $id ( statement )* ( $e)? ) )
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:165:5: id= IDENTIFIER EQUALS CLBRACKET ( statement )* (e= additive_expression )? CRBRACKET
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:165:3: (id= IDENTIFIER EQUALS CLBRACKET ( statement )* (e= additive_expression )? CRBRACKET -> ^( MACRO $id ( statement )* ( $e)? ) )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:165:5: id= IDENTIFIER EQUALS CLBRACKET ( statement )* (e= additive_expression )? CRBRACKET
             {
             id=(Token)match(input,IDENTIFIER,FOLLOW_IDENTIFIER_in_macro_definition809); if (state.failed) return retval; 
             if ( state.backtracking==0 ) stream_IDENTIFIER.add(id);
@@ -2799,14 +2799,14 @@ public class CluCalcParser extends Parser {
             CLBRACKET85=(Token)match(input,CLBRACKET,FOLLOW_CLBRACKET_in_macro_definition813); if (state.failed) return retval; 
             if ( state.backtracking==0 ) stream_CLBRACKET.add(CLBRACKET85);
 
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:165:36: ( statement )*
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:165:36: ( statement )*
             loop24:
             do {
                 int alt24=2;
                 alt24 = dfa24.predict(input);
                 switch (alt24) {
             	case 1 :
-            	    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:0:0: statement
+            	    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:0:0: statement
             	    {
             	    pushFollow(FOLLOW_statement_in_macro_definition815);
             	    statement86=statement();
@@ -2823,7 +2823,7 @@ public class CluCalcParser extends Parser {
                 }
             } while (true);
 
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:165:48: (e= additive_expression )?
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:165:48: (e= additive_expression )?
             int alt25=2;
             int LA25_0 = input.LA(1);
 
@@ -2832,7 +2832,7 @@ public class CluCalcParser extends Parser {
             }
             switch (alt25) {
                 case 1 :
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:0:0: e= additive_expression
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:0:0: e= additive_expression
                     {
                     pushFollow(FOLLOW_additive_expression_in_macro_definition820);
                     e=additive_expression();
@@ -2852,7 +2852,7 @@ public class CluCalcParser extends Parser {
 
 
             // AST REWRITE
-            // elements: statement, id, e
+            // elements: id, statement, e
             // token labels: id
             // rule labels: retval, e
             // token list labels: 
@@ -2867,19 +2867,19 @@ public class CluCalcParser extends Parser {
             root_0 = (Object)adaptor.nil();
             // 165:80: -> ^( MACRO $id ( statement )* ( $e)? )
             {
-                // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:165:83: ^( MACRO $id ( statement )* ( $e)? )
+                // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:165:83: ^( MACRO $id ( statement )* ( $e)? )
                 {
                 Object root_1 = (Object)adaptor.nil();
                 root_1 = (Object)adaptor.becomeRoot((Object)adaptor.create(MACRO, "MACRO"), root_1);
 
                 adaptor.addChild(root_1, stream_id.nextNode());
-                // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:165:95: ( statement )*
+                // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:165:95: ( statement )*
                 while ( stream_statement.hasNext() ) {
                     adaptor.addChild(root_1, stream_statement.nextTree());
 
                 }
                 stream_statement.reset();
-                // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:165:106: ( $e)?
+                // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:165:106: ( $e)?
                 if ( stream_e.hasNext() ) {
                     adaptor.addChild(root_1, stream_e.nextTree());
 
@@ -2921,7 +2921,7 @@ public class CluCalcParser extends Parser {
     };
 
     // $ANTLR start "block"
-    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:168:1: block : CLBRACKET ( statement )* CRBRACKET -> ^( BLOCK ( statement )* ) ;
+    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:168:1: block : CLBRACKET ( statement )* CRBRACKET -> ^( BLOCK ( statement )* ) ;
     public final CluCalcParser.block_return block() throws RecognitionException {
         CluCalcParser.block_return retval = new CluCalcParser.block_return();
         retval.start = input.LT(1);
@@ -2940,13 +2940,13 @@ public class CluCalcParser extends Parser {
         RewriteRuleSubtreeStream stream_statement=new RewriteRuleSubtreeStream(adaptor,"rule statement");
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 25) ) { return retval; }
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:169:3: ( CLBRACKET ( statement )* CRBRACKET -> ^( BLOCK ( statement )* ) )
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:169:5: CLBRACKET ( statement )* CRBRACKET
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:169:3: ( CLBRACKET ( statement )* CRBRACKET -> ^( BLOCK ( statement )* ) )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:169:5: CLBRACKET ( statement )* CRBRACKET
             {
             CLBRACKET88=(Token)match(input,CLBRACKET,FOLLOW_CLBRACKET_in_block854); if (state.failed) return retval; 
             if ( state.backtracking==0 ) stream_CLBRACKET.add(CLBRACKET88);
 
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:169:15: ( statement )*
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:169:15: ( statement )*
             loop26:
             do {
                 int alt26=2;
@@ -2959,7 +2959,7 @@ public class CluCalcParser extends Parser {
 
                 switch (alt26) {
             	case 1 :
-            	    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:0:0: statement
+            	    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:0:0: statement
             	    {
             	    pushFollow(FOLLOW_statement_in_block856);
             	    statement89=statement();
@@ -2995,12 +2995,12 @@ public class CluCalcParser extends Parser {
             root_0 = (Object)adaptor.nil();
             // 169:36: -> ^( BLOCK ( statement )* )
             {
-                // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:169:39: ^( BLOCK ( statement )* )
+                // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:169:39: ^( BLOCK ( statement )* )
                 {
                 Object root_1 = (Object)adaptor.nil();
                 root_1 = (Object)adaptor.becomeRoot((Object)adaptor.create(BLOCK, "BLOCK"), root_1);
 
-                // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:169:47: ( statement )*
+                // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:169:47: ( statement )*
                 while ( stream_statement.hasNext() ) {
                     adaptor.addChild(root_1, stream_statement.nextTree());
 
@@ -3042,7 +3042,7 @@ public class CluCalcParser extends Parser {
     };
 
     // $ANTLR start "draw_mode"
-    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:172:1: draw_mode : ( ( COLON IPNS ) -> ^( IPNS ) | ( COLON OPNS ) -> ^( OPNS ) );
+    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:172:1: draw_mode : ( ( COLON IPNS ) -> ^( IPNS ) | ( COLON OPNS ) -> ^( OPNS ) );
     public final CluCalcParser.draw_mode_return draw_mode() throws RecognitionException {
         CluCalcParser.draw_mode_return retval = new CluCalcParser.draw_mode_return();
         retval.start = input.LT(1);
@@ -3064,7 +3064,7 @@ public class CluCalcParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 26) ) { return retval; }
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:173:3: ( ( COLON IPNS ) -> ^( IPNS ) | ( COLON OPNS ) -> ^( OPNS ) )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:173:3: ( ( COLON IPNS ) -> ^( IPNS ) | ( COLON OPNS ) -> ^( OPNS ) )
             int alt27=2;
             int LA27_0 = input.LA(1);
 
@@ -3094,10 +3094,10 @@ public class CluCalcParser extends Parser {
             }
             switch (alt27) {
                 case 1 :
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:173:5: ( COLON IPNS )
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:173:5: ( COLON IPNS )
                     {
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:173:5: ( COLON IPNS )
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:173:6: COLON IPNS
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:173:5: ( COLON IPNS )
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:173:6: COLON IPNS
                     {
                     COLON91=(Token)match(input,COLON,FOLLOW_COLON_in_draw_mode884); if (state.failed) return retval; 
                     if ( state.backtracking==0 ) stream_COLON.add(COLON91);
@@ -3124,7 +3124,7 @@ public class CluCalcParser extends Parser {
                     root_0 = (Object)adaptor.nil();
                     // 173:18: -> ^( IPNS )
                     {
-                        // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:173:21: ^( IPNS )
+                        // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:173:21: ^( IPNS )
                         {
                         Object root_1 = (Object)adaptor.nil();
                         root_1 = (Object)adaptor.becomeRoot(stream_IPNS.nextNode(), root_1);
@@ -3138,10 +3138,10 @@ public class CluCalcParser extends Parser {
                     }
                     break;
                 case 2 :
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:174:5: ( COLON OPNS )
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:174:5: ( COLON OPNS )
                     {
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:174:5: ( COLON OPNS )
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:174:6: COLON OPNS
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:174:5: ( COLON OPNS )
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:174:6: COLON OPNS
                     {
                     COLON93=(Token)match(input,COLON,FOLLOW_COLON_in_draw_mode900); if (state.failed) return retval; 
                     if ( state.backtracking==0 ) stream_COLON.add(COLON93);
@@ -3168,7 +3168,7 @@ public class CluCalcParser extends Parser {
                     root_0 = (Object)adaptor.nil();
                     // 174:18: -> ^( OPNS )
                     {
-                        // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:174:21: ^( OPNS )
+                        // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:174:21: ^( OPNS )
                         {
                         Object root_1 = (Object)adaptor.nil();
                         root_1 = (Object)adaptor.becomeRoot(stream_OPNS.nextNode(), root_1);
@@ -3210,7 +3210,7 @@ public class CluCalcParser extends Parser {
     };
 
     // $ANTLR start "procedure_call"
-    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:177:1: procedure_call : (name= IDENTIFIER LBRACKET RBRACKET ) -> ^( PROCEDURE $name) ;
+    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:177:1: procedure_call : (name= IDENTIFIER LBRACKET RBRACKET ) -> ^( PROCEDURE $name) ;
     public final CluCalcParser.procedure_call_return procedure_call() throws RecognitionException {
         CluCalcParser.procedure_call_return retval = new CluCalcParser.procedure_call_return();
         retval.start = input.LT(1);
@@ -3230,11 +3230,11 @@ public class CluCalcParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 27) ) { return retval; }
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:178:3: ( (name= IDENTIFIER LBRACKET RBRACKET ) -> ^( PROCEDURE $name) )
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:178:5: (name= IDENTIFIER LBRACKET RBRACKET )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:178:3: ( (name= IDENTIFIER LBRACKET RBRACKET ) -> ^( PROCEDURE $name) )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:178:5: (name= IDENTIFIER LBRACKET RBRACKET )
             {
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:178:5: (name= IDENTIFIER LBRACKET RBRACKET )
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:178:6: name= IDENTIFIER LBRACKET RBRACKET
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:178:5: (name= IDENTIFIER LBRACKET RBRACKET )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:178:6: name= IDENTIFIER LBRACKET RBRACKET
             {
             name=(Token)match(input,IDENTIFIER,FOLLOW_IDENTIFIER_in_procedure_call927); if (state.failed) return retval; 
             if ( state.backtracking==0 ) stream_IDENTIFIER.add(name);
@@ -3265,7 +3265,7 @@ public class CluCalcParser extends Parser {
             root_0 = (Object)adaptor.nil();
             // 178:41: -> ^( PROCEDURE $name)
             {
-                // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:178:44: ^( PROCEDURE $name)
+                // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:178:44: ^( PROCEDURE $name)
                 {
                 Object root_1 = (Object)adaptor.nil();
                 root_1 = (Object)adaptor.becomeRoot((Object)adaptor.create(PROCEDURE, "PROCEDURE"), root_1);
@@ -3307,7 +3307,7 @@ public class CluCalcParser extends Parser {
     };
 
     // $ANTLR start "expression_statement"
-    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:181:1: expression_statement : ( SEMICOLON | ( QUESTIONMARK | COLON )? expression SEMICOLON );
+    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:181:1: expression_statement : ( SEMICOLON | ( QUESTIONMARK | COLON )? expression SEMICOLON );
     public final CluCalcParser.expression_statement_return expression_statement() throws RecognitionException {
         CluCalcParser.expression_statement_return retval = new CluCalcParser.expression_statement_return();
         retval.start = input.LT(1);
@@ -3328,7 +3328,7 @@ public class CluCalcParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 28) ) { return retval; }
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:182:3: ( SEMICOLON | ( QUESTIONMARK | COLON )? expression SEMICOLON )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:182:3: ( SEMICOLON | ( QUESTIONMARK | COLON )? expression SEMICOLON )
             int alt29=2;
             int LA29_0 = input.LA(1);
 
@@ -3347,7 +3347,7 @@ public class CluCalcParser extends Parser {
             }
             switch (alt29) {
                 case 1 :
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:182:5: SEMICOLON
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:182:5: SEMICOLON
                     {
                     root_0 = (Object)adaptor.nil();
 
@@ -3356,11 +3356,11 @@ public class CluCalcParser extends Parser {
                     }
                     break;
                 case 2 :
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:183:5: ( QUESTIONMARK | COLON )? expression SEMICOLON
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:183:5: ( QUESTIONMARK | COLON )? expression SEMICOLON
                     {
                     root_0 = (Object)adaptor.nil();
 
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:183:5: ( QUESTIONMARK | COLON )?
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:183:5: ( QUESTIONMARK | COLON )?
                     int alt28=3;
                     int LA28_0 = input.LA(1);
 
@@ -3372,7 +3372,7 @@ public class CluCalcParser extends Parser {
                     }
                     switch (alt28) {
                         case 1 :
-                            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:183:6: QUESTIONMARK
+                            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:183:6: QUESTIONMARK
                             {
                             QUESTIONMARK98=(Token)match(input,QUESTIONMARK,FOLLOW_QUESTIONMARK_in_expression_statement964); if (state.failed) return retval;
                             if ( state.backtracking==0 ) {
@@ -3383,7 +3383,7 @@ public class CluCalcParser extends Parser {
                             }
                             break;
                         case 2 :
-                            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:183:22: COLON
+                            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:183:22: COLON
                             {
                             COLON99=(Token)match(input,COLON,FOLLOW_COLON_in_expression_statement969); if (state.failed) return retval;
                             if ( state.backtracking==0 ) {
@@ -3435,7 +3435,7 @@ public class CluCalcParser extends Parser {
     };
 
     // $ANTLR start "if_statement"
-    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:186:1: if_statement : IF LBRACKET condition= logical_or_expression RBRACKET then_part= statement ( else_part )? -> ^( IF $condition $then_part ( else_part )? ) ;
+    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:186:1: if_statement : IF LBRACKET condition= logical_or_expression RBRACKET then_part= statement ( else_part )? -> ^( IF $condition $then_part ( else_part )? ) ;
     public final CluCalcParser.if_statement_return if_statement() throws RecognitionException {
         CluCalcParser.if_statement_return retval = new CluCalcParser.if_statement_return();
         retval.start = input.LT(1);
@@ -3463,8 +3463,8 @@ public class CluCalcParser extends Parser {
         RewriteRuleSubtreeStream stream_else_part=new RewriteRuleSubtreeStream(adaptor,"rule else_part");
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 29) ) { return retval; }
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:187:3: ( IF LBRACKET condition= logical_or_expression RBRACKET then_part= statement ( else_part )? -> ^( IF $condition $then_part ( else_part )? ) )
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:187:5: IF LBRACKET condition= logical_or_expression RBRACKET then_part= statement ( else_part )?
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:187:3: ( IF LBRACKET condition= logical_or_expression RBRACKET then_part= statement ( else_part )? -> ^( IF $condition $then_part ( else_part )? ) )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:187:5: IF LBRACKET condition= logical_or_expression RBRACKET then_part= statement ( else_part )?
             {
             IF102=(Token)match(input,IF,FOLLOW_IF_in_if_statement993); if (state.failed) return retval; 
             if ( state.backtracking==0 ) stream_IF.add(IF102);
@@ -3487,7 +3487,7 @@ public class CluCalcParser extends Parser {
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) stream_statement.add(then_part.getTree());
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:189:5: ( else_part )?
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:189:5: ( else_part )?
             int alt30=2;
             int LA30_0 = input.LA(1);
 
@@ -3500,7 +3500,7 @@ public class CluCalcParser extends Parser {
             }
             switch (alt30) {
                 case 1 :
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:189:6: else_part
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:189:6: else_part
                     {
                     pushFollow(FOLLOW_else_part_in_if_statement1059);
                     else_part105=else_part();
@@ -3517,29 +3517,29 @@ public class CluCalcParser extends Parser {
 
 
             // AST REWRITE
-            // elements: else_part, then_part, IF, condition
+            // elements: IF, condition, else_part, then_part
             // token labels: 
-            // rule labels: retval, condition, then_part
+            // rule labels: retval, then_part, condition
             // token list labels: 
             // rule list labels: 
             // wildcard labels: 
             if ( state.backtracking==0 ) {
             retval.tree = root_0;
             RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
-            RewriteRuleSubtreeStream stream_condition=new RewriteRuleSubtreeStream(adaptor,"rule condition",condition!=null?condition.tree:null);
             RewriteRuleSubtreeStream stream_then_part=new RewriteRuleSubtreeStream(adaptor,"rule then_part",then_part!=null?then_part.tree:null);
+            RewriteRuleSubtreeStream stream_condition=new RewriteRuleSubtreeStream(adaptor,"rule condition",condition!=null?condition.tree:null);
 
             root_0 = (Object)adaptor.nil();
             // 190:5: -> ^( IF $condition $then_part ( else_part )? )
             {
-                // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:190:8: ^( IF $condition $then_part ( else_part )? )
+                // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:190:8: ^( IF $condition $then_part ( else_part )? )
                 {
                 Object root_1 = (Object)adaptor.nil();
                 root_1 = (Object)adaptor.becomeRoot(stream_IF.nextNode(), root_1);
 
                 adaptor.addChild(root_1, stream_condition.nextTree());
                 adaptor.addChild(root_1, stream_then_part.nextTree());
-                // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:190:35: ( else_part )?
+                // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:190:35: ( else_part )?
                 if ( stream_else_part.hasNext() ) {
                     adaptor.addChild(root_1, stream_else_part.nextTree());
 
@@ -3581,7 +3581,7 @@ public class CluCalcParser extends Parser {
     };
 
     // $ANTLR start "else_part"
-    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:193:1: else_part : ( ELSE block -> ^( ELSE block ) | ELSE stmt= if_statement -> ^( ELSEIF $stmt) );
+    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:193:1: else_part : ( ELSE block -> ^( ELSE block ) | ELSE stmt= if_statement -> ^( ELSEIF $stmt) );
     public final CluCalcParser.else_part_return else_part() throws RecognitionException {
         CluCalcParser.else_part_return retval = new CluCalcParser.else_part_return();
         retval.start = input.LT(1);
@@ -3602,7 +3602,7 @@ public class CluCalcParser extends Parser {
         RewriteRuleSubtreeStream stream_block=new RewriteRuleSubtreeStream(adaptor,"rule block");
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 30) ) { return retval; }
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:194:3: ( ELSE block -> ^( ELSE block ) | ELSE stmt= if_statement -> ^( ELSEIF $stmt) )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:194:3: ( ELSE block -> ^( ELSE block ) | ELSE stmt= if_statement -> ^( ELSEIF $stmt) )
             int alt31=2;
             int LA31_0 = input.LA(1);
 
@@ -3632,7 +3632,7 @@ public class CluCalcParser extends Parser {
             }
             switch (alt31) {
                 case 1 :
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:194:5: ELSE block
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:194:5: ELSE block
                     {
                     ELSE106=(Token)match(input,ELSE,FOLLOW_ELSE_in_else_part1162); if (state.failed) return retval; 
                     if ( state.backtracking==0 ) stream_ELSE.add(ELSE106);
@@ -3659,7 +3659,7 @@ public class CluCalcParser extends Parser {
                     root_0 = (Object)adaptor.nil();
                     // 194:16: -> ^( ELSE block )
                     {
-                        // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:194:19: ^( ELSE block )
+                        // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:194:19: ^( ELSE block )
                         {
                         Object root_1 = (Object)adaptor.nil();
                         root_1 = (Object)adaptor.becomeRoot(stream_ELSE.nextNode(), root_1);
@@ -3675,7 +3675,7 @@ public class CluCalcParser extends Parser {
                     }
                     break;
                 case 2 :
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:195:5: ELSE stmt= if_statement
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:195:5: ELSE stmt= if_statement
                     {
                     ELSE108=(Token)match(input,ELSE,FOLLOW_ELSE_in_else_part1178); if (state.failed) return retval; 
                     if ( state.backtracking==0 ) stream_ELSE.add(ELSE108);
@@ -3703,7 +3703,7 @@ public class CluCalcParser extends Parser {
                     root_0 = (Object)adaptor.nil();
                     // 195:28: -> ^( ELSEIF $stmt)
                     {
-                        // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:195:31: ^( ELSEIF $stmt)
+                        // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:195:31: ^( ELSEIF $stmt)
                         {
                         Object root_1 = (Object)adaptor.nil();
                         root_1 = (Object)adaptor.becomeRoot((Object)adaptor.create(ELSEIF, "ELSEIF"), root_1);
@@ -3747,7 +3747,7 @@ public class CluCalcParser extends Parser {
     };
 
     // $ANTLR start "loop"
-    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:198:1: loop : LOOP stmt= statement -> ^( LOOP $stmt) ;
+    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:198:1: loop : LOOP stmt= statement -> ^( LOOP $stmt) ;
     public final CluCalcParser.loop_return loop() throws RecognitionException {
         CluCalcParser.loop_return retval = new CluCalcParser.loop_return();
         retval.start = input.LT(1);
@@ -3763,8 +3763,8 @@ public class CluCalcParser extends Parser {
         RewriteRuleSubtreeStream stream_statement=new RewriteRuleSubtreeStream(adaptor,"rule statement");
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 31) ) { return retval; }
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:199:3: ( LOOP stmt= statement -> ^( LOOP $stmt) )
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:199:5: LOOP stmt= statement
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:199:3: ( LOOP stmt= statement -> ^( LOOP $stmt) )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:199:5: LOOP stmt= statement
             {
             LOOP109=(Token)match(input,LOOP,FOLLOW_LOOP_in_loop1206); if (state.failed) return retval; 
             if ( state.backtracking==0 ) stream_LOOP.add(LOOP109);
@@ -3792,7 +3792,7 @@ public class CluCalcParser extends Parser {
             root_0 = (Object)adaptor.nil();
             // 199:25: -> ^( LOOP $stmt)
             {
-                // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:199:28: ^( LOOP $stmt)
+                // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:199:28: ^( LOOP $stmt)
                 {
                 Object root_1 = (Object)adaptor.nil();
                 root_1 = (Object)adaptor.becomeRoot(stream_LOOP.nextNode(), root_1);
@@ -3830,8 +3830,8 @@ public class CluCalcParser extends Parser {
 
     // $ANTLR start synpred4_CluCalcParser
     public final void synpred4_CluCalcParser_fragment() throws RecognitionException {   
-        // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:61:5: ( lvalue EQUALS expression )
-        // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:61:5: lvalue EQUALS expression
+        // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:61:5: ( lvalue EQUALS expression )
+        // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:61:5: lvalue EQUALS expression
         {
         pushFollow(FOLLOW_lvalue_in_synpred4_CluCalcParser179);
         lvalue();
@@ -3851,8 +3851,8 @@ public class CluCalcParser extends Parser {
 
     // $ANTLR start synpred5_CluCalcParser
     public final void synpred5_CluCalcParser_fragment() throws RecognitionException {   
-        // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:62:5: ( additive_expression )
-        // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:62:5: additive_expression
+        // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:62:5: ( additive_expression )
+        // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:62:5: additive_expression
         {
         pushFollow(FOLLOW_additive_expression_in_synpred5_CluCalcParser199);
         additive_expression();
@@ -3866,8 +3866,8 @@ public class CluCalcParser extends Parser {
 
     // $ANTLR start synpred39_CluCalcParser
     public final void synpred39_CluCalcParser_fragment() throws RecognitionException {   
-        // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:165:36: ( statement )
-        // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:165:36: statement
+        // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:165:36: ( statement )
+        // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:165:36: statement
         {
         pushFollow(FOLLOW_statement_in_synpred39_CluCalcParser815);
         statement();
@@ -3881,8 +3881,8 @@ public class CluCalcParser extends Parser {
 
     // $ANTLR start synpred46_CluCalcParser
     public final void synpred46_CluCalcParser_fragment() throws RecognitionException {   
-        // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:189:6: ( else_part )
-        // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcParser.g:189:6: else_part
+        // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:189:6: ( else_part )
+        // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcParser.g:189:6: else_part
         {
         pushFollow(FOLLOW_else_part_in_synpred46_CluCalcParser1059);
         else_part();
@@ -4160,14 +4160,14 @@ public class CluCalcParser extends Parser {
     static final String DFA23_specialS =
         "\16\uffff}>";
     static final String[] DFA23_transitionS = {
-            "\1\1\2\uffff\1\1\2\uffff\1\1\2\uffff\1\5\1\uffff\1\6\1\7\2\uffff"+
-            "\1\3\1\1\2\uffff\1\10\4\uffff\1\1\4\uffff\1\1\1\uffff\1\4\1"+
-            "\uffff\1\1\2\uffff\1\1\2\uffff\1\1\1\2",
+            "\1\1\2\uffff\1\1\2\uffff\1\1\2\uffff\1\5\1\uffff\1\6\1\7\2"+
+            "\uffff\1\3\1\1\2\uffff\1\10\4\uffff\1\1\4\uffff\1\1\1\uffff"+
+            "\1\4\1\uffff\1\1\2\uffff\1\1\2\uffff\1\1\1\2",
             "",
-            "\1\1\2\uffff\1\1\2\uffff\1\1\2\11\6\uffff\2\1\7\uffff\1\1\4"+
-            "\uffff\1\1\3\uffff\1\1",
-            "\1\1\16\uffff\1\13\1\uffff\4\1\2\uffff\1\12\6\uffff\3\1\2\uffff"+
-            "\10\1",
+            "\1\1\2\uffff\1\1\2\uffff\1\1\2\11\6\uffff\2\1\7\uffff\1\1"+
+            "\4\uffff\1\1\3\uffff\1\1",
+            "\1\1\16\uffff\1\13\1\uffff\4\1\2\uffff\1\12\6\uffff\3\1\2"+
+            "\uffff\10\1",
             "",
             "",
             "",

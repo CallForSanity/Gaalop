@@ -1,4 +1,4 @@
-// $ANTLR 3.2 Sep 23, 2009 12:02:23 /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g 2010-05-06 12:44:45
+// $ANTLR 3.2 Sep 23, 2009 12:02:23 C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g 2010-05-06 11:38:44
 
 	package de.gaalop.clucalc.input;
 
@@ -92,7 +92,7 @@ public class CluCalcTransformer extends TreeParser {
         
 
     public String[] getTokenNames() { return CluCalcTransformer.tokenNames; }
-    public String getGrammarFileName() { return "/Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g"; }
+    public String getGrammarFileName() { return "C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g"; }
 
 
     	private GraphBuilder graphBuilder;
@@ -115,7 +115,7 @@ public class CluCalcTransformer extends TreeParser {
 
 
     // $ANTLR start "script"
-    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g:38:1: script returns [ControlFlowGraph result] : ( statement )* ;
+    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g:38:1: script returns [ControlFlowGraph result] : ( statement )* ;
     public final ControlFlowGraph script() throws RecognitionException {
         ControlFlowGraph result = null;
 
@@ -124,10 +124,10 @@ public class CluCalcTransformer extends TreeParser {
         		result = graphBuilder.getGraph();
         	
         try {
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g:43:3: ( ( statement )* )
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g:43:5: ( statement )*
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g:43:3: ( ( statement )* )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g:43:5: ( statement )*
             {
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g:43:5: ( statement )*
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g:43:5: ( statement )*
             loop1:
             do {
                 int alt1=2;
@@ -140,7 +140,7 @@ public class CluCalcTransformer extends TreeParser {
 
                 switch (alt1) {
             	case 1 :
-            	    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g:0:0: statement
+            	    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g:0:0: statement
             	    {
             	    pushFollow(FOLLOW_statement_in_script80);
             	    statement();
@@ -172,7 +172,7 @@ public class CluCalcTransformer extends TreeParser {
 
 
     // $ANTLR start "statement"
-    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g:45:1: statement returns [ArrayList<SequentialNode> nodes] : ( ^( QUESTIONMARK assignment ) | ^( QUESTIONMARK value= expression ) | ^( PROCEDURE name= IDENTIFIER ) | IPNS | OPNS | ^( COLON assignment ) | assignment | block | if_statement | loop | BREAK | ^( MACRO id= IDENTIFIER lst= statement_list (e= expression )? ) | pragma );
+    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g:45:1: statement returns [ArrayList<SequentialNode> nodes] : ( ^( QUESTIONMARK assignment ) | ^( QUESTIONMARK value= expression ) | ^( PROCEDURE name= IDENTIFIER ) | IPNS | OPNS | ^( COLON assignment ) | assignment | block | if_statement | loop | BREAK | ^( MACRO id= IDENTIFIER lst= statement_list (e= expression )? ) | pragma );
     public final ArrayList<SequentialNode> statement() throws RecognitionException {
         ArrayList<SequentialNode> nodes = null;
 
@@ -199,12 +199,12 @@ public class CluCalcTransformer extends TreeParser {
 
          nodes = new ArrayList<SequentialNode>(); 
         try {
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g:48:2: ( ^( QUESTIONMARK assignment ) | ^( QUESTIONMARK value= expression ) | ^( PROCEDURE name= IDENTIFIER ) | IPNS | OPNS | ^( COLON assignment ) | assignment | block | if_statement | loop | BREAK | ^( MACRO id= IDENTIFIER lst= statement_list (e= expression )? ) | pragma )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g:48:2: ( ^( QUESTIONMARK assignment ) | ^( QUESTIONMARK value= expression ) | ^( PROCEDURE name= IDENTIFIER ) | IPNS | OPNS | ^( COLON assignment ) | assignment | block | if_statement | loop | BREAK | ^( MACRO id= IDENTIFIER lst= statement_list (e= expression )? ) | pragma )
             int alt3=13;
             alt3 = dfa3.predict(input);
             switch (alt3) {
                 case 1 :
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g:48:4: ^( QUESTIONMARK assignment )
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g:48:4: ^( QUESTIONMARK assignment )
                     {
                     match(input,QUESTIONMARK,FOLLOW_QUESTIONMARK_in_statement103); if (state.failed) return nodes;
 
@@ -226,7 +226,7 @@ public class CluCalcTransformer extends TreeParser {
                     }
                     break;
                 case 2 :
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g:53:4: ^( QUESTIONMARK value= expression )
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g:53:4: ^( QUESTIONMARK value= expression )
                     {
                     match(input,QUESTIONMARK,FOLLOW_QUESTIONMARK_in_statement117); if (state.failed) return nodes;
 
@@ -245,7 +245,7 @@ public class CluCalcTransformer extends TreeParser {
                     }
                     break;
                 case 3 :
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g:55:4: ^( PROCEDURE name= IDENTIFIER )
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g:55:4: ^( PROCEDURE name= IDENTIFIER )
                     {
                     match(input,PROCEDURE,FOLLOW_PROCEDURE_in_statement132); if (state.failed) return nodes;
 
@@ -260,7 +260,7 @@ public class CluCalcTransformer extends TreeParser {
                     }
                     break;
                 case 4 :
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g:57:4: IPNS
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g:57:4: IPNS
                     {
                     match(input,IPNS,FOLLOW_IPNS_in_statement147); if (state.failed) return nodes;
                     if ( state.backtracking==0 ) {
@@ -270,7 +270,7 @@ public class CluCalcTransformer extends TreeParser {
                     }
                     break;
                 case 5 :
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g:59:4: OPNS
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g:59:4: OPNS
                     {
                     match(input,OPNS,FOLLOW_OPNS_in_statement156); if (state.failed) return nodes;
                     if ( state.backtracking==0 ) {
@@ -280,7 +280,7 @@ public class CluCalcTransformer extends TreeParser {
                     }
                     break;
                 case 6 :
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g:62:4: ^( COLON assignment )
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g:62:4: ^( COLON assignment )
                     {
                     match(input,COLON,FOLLOW_COLON_in_statement168); if (state.failed) return nodes;
 
@@ -299,7 +299,7 @@ public class CluCalcTransformer extends TreeParser {
                     }
                     break;
                 case 7 :
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g:65:4: assignment
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g:65:4: assignment
                     {
                     pushFollow(FOLLOW_assignment_in_statement182);
                     assignment3=assignment();
@@ -313,7 +313,7 @@ public class CluCalcTransformer extends TreeParser {
                     }
                     break;
                 case 8 :
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g:67:4: block
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g:67:4: block
                     {
                     pushFollow(FOLLOW_block_in_statement191);
                     block4=block();
@@ -327,7 +327,7 @@ public class CluCalcTransformer extends TreeParser {
                     }
                     break;
                 case 9 :
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g:69:4: if_statement
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g:69:4: if_statement
                     {
                     pushFollow(FOLLOW_if_statement_in_statement200);
                     if_statement5=if_statement();
@@ -341,7 +341,7 @@ public class CluCalcTransformer extends TreeParser {
                     }
                     break;
                 case 10 :
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g:71:4: loop
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g:71:4: loop
                     {
                     pushFollow(FOLLOW_loop_in_statement209);
                     loop6=loop();
@@ -355,7 +355,7 @@ public class CluCalcTransformer extends TreeParser {
                     }
                     break;
                 case 11 :
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g:73:4: BREAK
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g:73:4: BREAK
                     {
                     match(input,BREAK,FOLLOW_BREAK_in_statement218); if (state.failed) return nodes;
                     if ( state.backtracking==0 ) {
@@ -365,7 +365,7 @@ public class CluCalcTransformer extends TreeParser {
                     }
                     break;
                 case 12 :
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g:75:5: ^( MACRO id= IDENTIFIER lst= statement_list (e= expression )? )
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g:75:5: ^( MACRO id= IDENTIFIER lst= statement_list (e= expression )? )
                     {
                     match(input,MACRO,FOLLOW_MACRO_in_statement228); if (state.failed) return nodes;
 
@@ -376,7 +376,7 @@ public class CluCalcTransformer extends TreeParser {
 
                     state._fsp--;
                     if (state.failed) return nodes;
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g:75:47: (e= expression )?
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g:75:47: (e= expression )?
                     int alt2=2;
                     int LA2_0 = input.LA(1);
 
@@ -385,7 +385,7 @@ public class CluCalcTransformer extends TreeParser {
                     }
                     switch (alt2) {
                         case 1 :
-                            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g:0:0: e= expression
+                            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g:0:0: e= expression
                             {
                             pushFollow(FOLLOW_expression_in_statement240);
                             e=expression();
@@ -409,7 +409,7 @@ public class CluCalcTransformer extends TreeParser {
                     }
                     break;
                 case 13 :
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g:82:5: pragma
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g:82:5: pragma
                     {
                     pushFollow(FOLLOW_pragma_in_statement257);
                     pragma();
@@ -434,7 +434,7 @@ public class CluCalcTransformer extends TreeParser {
 
 
     // $ANTLR start "pragma"
-    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g:85:1: pragma : ( PRAGMA RANGE_LITERAL min= float_literal LESS_OR_EQUAL varname= IDENTIFIER LESS_OR_EQUAL max= float_literal | PRAGMA OUTPUT_LITERAL varname= IDENTIFIER );
+    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g:85:1: pragma : ( PRAGMA RANGE_LITERAL min= float_literal LESS_OR_EQUAL varname= IDENTIFIER LESS_OR_EQUAL max= float_literal | PRAGMA OUTPUT_LITERAL varname= IDENTIFIER );
     public final void pragma() throws RecognitionException {
         CommonTree varname=null;
         String min = null;
@@ -443,7 +443,7 @@ public class CluCalcTransformer extends TreeParser {
 
 
         try {
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g:86:3: ( PRAGMA RANGE_LITERAL min= float_literal LESS_OR_EQUAL varname= IDENTIFIER LESS_OR_EQUAL max= float_literal | PRAGMA OUTPUT_LITERAL varname= IDENTIFIER )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g:86:3: ( PRAGMA RANGE_LITERAL min= float_literal LESS_OR_EQUAL varname= IDENTIFIER LESS_OR_EQUAL max= float_literal | PRAGMA OUTPUT_LITERAL varname= IDENTIFIER )
             int alt4=2;
             int LA4_0 = input.LA(1);
 
@@ -473,7 +473,7 @@ public class CluCalcTransformer extends TreeParser {
             }
             switch (alt4) {
                 case 1 :
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g:86:6: PRAGMA RANGE_LITERAL min= float_literal LESS_OR_EQUAL varname= IDENTIFIER LESS_OR_EQUAL max= float_literal
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g:86:6: PRAGMA RANGE_LITERAL min= float_literal LESS_OR_EQUAL varname= IDENTIFIER LESS_OR_EQUAL max= float_literal
                     {
                     match(input,PRAGMA,FOLLOW_PRAGMA_in_pragma270); if (state.failed) return ;
                     match(input,RANGE_LITERAL,FOLLOW_RANGE_LITERAL_in_pragma272); if (state.failed) return ;
@@ -497,7 +497,7 @@ public class CluCalcTransformer extends TreeParser {
                     }
                     break;
                 case 2 :
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g:88:6: PRAGMA OUTPUT_LITERAL varname= IDENTIFIER
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g:88:6: PRAGMA OUTPUT_LITERAL varname= IDENTIFIER
                     {
                     match(input,PRAGMA,FOLLOW_PRAGMA_in_pragma302); if (state.failed) return ;
                     match(input,OUTPUT_LITERAL,FOLLOW_OUTPUT_LITERAL_in_pragma304); if (state.failed) return ;
@@ -527,7 +527,7 @@ public class CluCalcTransformer extends TreeParser {
     };
 
     // $ANTLR start "assignment"
-    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g:93:1: assignment returns [Variable variable, Expression value] : ^( EQUALS l= variable r= expression ) ;
+    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g:93:1: assignment returns [Variable variable, Expression value] : ^( EQUALS l= variable r= expression ) ;
     public final CluCalcTransformer.assignment_return assignment() throws RecognitionException {
         CluCalcTransformer.assignment_return retval = new CluCalcTransformer.assignment_return();
         retval.start = input.LT(1);
@@ -538,8 +538,8 @@ public class CluCalcTransformer extends TreeParser {
 
 
         try {
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g:94:2: ( ^( EQUALS l= variable r= expression ) )
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g:94:4: ^( EQUALS l= variable r= expression )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g:94:2: ( ^( EQUALS l= variable r= expression ) )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g:94:4: ^( EQUALS l= variable r= expression )
             {
             match(input,EQUALS,FOLLOW_EQUALS_in_assignment333); if (state.failed) return retval;
 
@@ -578,7 +578,7 @@ public class CluCalcTransformer extends TreeParser {
 
 
     // $ANTLR start "variable"
-    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g:101:1: variable returns [Variable result] : variableOrConstant ;
+    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g:101:1: variable returns [Variable result] : variableOrConstant ;
     public final Variable variable() throws RecognitionException {
         Variable result = null;
 
@@ -586,8 +586,8 @@ public class CluCalcTransformer extends TreeParser {
 
 
         try {
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g:102:2: ( variableOrConstant )
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g:102:4: variableOrConstant
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g:102:2: ( variableOrConstant )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g:102:4: variableOrConstant
             {
             pushFollow(FOLLOW_variableOrConstant_in_variable360);
             variableOrConstant7=variableOrConstant();
@@ -618,7 +618,7 @@ public class CluCalcTransformer extends TreeParser {
 
 
     // $ANTLR start "if_statement"
-    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g:110:1: if_statement returns [IfThenElseNode node] : ^( IF condition= expression then_part= statement (else_part= else_statement )? ) ;
+    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g:110:1: if_statement returns [IfThenElseNode node] : ^( IF condition= expression then_part= statement (else_part= else_statement )? ) ;
     public final IfThenElseNode if_statement() throws RecognitionException {
         IfThenElseNode node = null;
 
@@ -630,8 +630,8 @@ public class CluCalcTransformer extends TreeParser {
 
 
         try {
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g:111:3: ( ^( IF condition= expression then_part= statement (else_part= else_statement )? ) )
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g:111:5: ^( IF condition= expression then_part= statement (else_part= else_statement )? )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g:111:3: ( ^( IF condition= expression then_part= statement (else_part= else_statement )? ) )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g:111:5: ^( IF condition= expression then_part= statement (else_part= else_statement )? )
             {
             match(input,IF,FOLLOW_IF_in_if_statement380); if (state.failed) return node;
 
@@ -646,7 +646,7 @@ public class CluCalcTransformer extends TreeParser {
 
             state._fsp--;
             if (state.failed) return node;
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g:111:60: (else_part= else_statement )?
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g:111:60: (else_part= else_statement )?
             int alt5=2;
             int LA5_0 = input.LA(1);
 
@@ -655,7 +655,7 @@ public class CluCalcTransformer extends TreeParser {
             }
             switch (alt5) {
                 case 1 :
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g:0:0: else_part= else_statement
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g:0:0: else_part= else_statement
                     {
                     pushFollow(FOLLOW_else_statement_in_if_statement392);
                     else_part=else_statement();
@@ -691,7 +691,7 @@ public class CluCalcTransformer extends TreeParser {
 
 
     // $ANTLR start "else_statement"
-    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g:116:1: else_statement returns [ArrayList<SequentialNode> nodes] : ( ^( ELSE block ) | ^( ELSEIF if_statement ) );
+    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g:116:1: else_statement returns [ArrayList<SequentialNode> nodes] : ( ^( ELSE block ) | ^( ELSEIF if_statement ) );
     public final ArrayList<SequentialNode> else_statement() throws RecognitionException {
         ArrayList<SequentialNode> nodes = null;
 
@@ -702,7 +702,7 @@ public class CluCalcTransformer extends TreeParser {
 
          nodes = new ArrayList<SequentialNode>(); 
         try {
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g:118:3: ( ^( ELSE block ) | ^( ELSEIF if_statement ) )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g:118:3: ( ^( ELSE block ) | ^( ELSEIF if_statement ) )
             int alt6=2;
             int LA6_0 = input.LA(1);
 
@@ -721,7 +721,7 @@ public class CluCalcTransformer extends TreeParser {
             }
             switch (alt6) {
                 case 1 :
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g:118:5: ^( ELSE block )
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g:118:5: ^( ELSE block )
                     {
                     match(input,ELSE,FOLLOW_ELSE_in_else_statement423); if (state.failed) return nodes;
 
@@ -740,7 +740,7 @@ public class CluCalcTransformer extends TreeParser {
                     }
                     break;
                 case 2 :
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g:119:5: ^( ELSEIF if_statement )
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g:119:5: ^( ELSEIF if_statement )
                     {
                     match(input,ELSEIF,FOLLOW_ELSEIF_in_else_statement435); if (state.failed) return nodes;
 
@@ -776,7 +776,7 @@ public class CluCalcTransformer extends TreeParser {
 
 
     // $ANTLR start "loop"
-    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g:125:1: loop returns [LoopNode node] : ^( LOOP stmt= statement ) ;
+    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g:125:1: loop returns [LoopNode node] : ^( LOOP stmt= statement ) ;
     public final LoopNode loop() throws RecognitionException {
         LoopNode node = null;
 
@@ -784,8 +784,8 @@ public class CluCalcTransformer extends TreeParser {
 
 
         try {
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g:126:3: ( ^( LOOP stmt= statement ) )
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g:126:5: ^( LOOP stmt= statement )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g:126:3: ( ^( LOOP stmt= statement ) )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g:126:5: ^( LOOP stmt= statement )
             {
             match(input,LOOP,FOLLOW_LOOP_in_loop460); if (state.failed) return node;
 
@@ -816,7 +816,7 @@ public class CluCalcTransformer extends TreeParser {
 
 
     // $ANTLR start "block"
-    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g:129:1: block returns [ArrayList<SequentialNode> nodes] : ^( BLOCK stmts= statement_list ) ;
+    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g:129:1: block returns [ArrayList<SequentialNode> nodes] : ^( BLOCK stmts= statement_list ) ;
     public final ArrayList<SequentialNode> block() throws RecognitionException {
         ArrayList<SequentialNode> nodes = null;
 
@@ -825,8 +825,8 @@ public class CluCalcTransformer extends TreeParser {
 
          nodes = new ArrayList<SequentialNode>(); 
         try {
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g:131:3: ( ^( BLOCK stmts= statement_list ) )
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g:131:5: ^( BLOCK stmts= statement_list )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g:131:3: ( ^( BLOCK stmts= statement_list ) )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g:131:5: ^( BLOCK stmts= statement_list )
             {
             match(input,BLOCK,FOLLOW_BLOCK_in_block494); if (state.failed) return nodes;
 
@@ -861,7 +861,7 @@ public class CluCalcTransformer extends TreeParser {
 
 
     // $ANTLR start "statement_list"
-    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g:136:1: statement_list returns [ArrayList<SequentialNode> args] : (arg= statement )* ;
+    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g:136:1: statement_list returns [ArrayList<SequentialNode> args] : (arg= statement )* ;
     public final ArrayList<SequentialNode> statement_list() throws RecognitionException {
         ArrayList<SequentialNode> args = null;
 
@@ -870,10 +870,10 @@ public class CluCalcTransformer extends TreeParser {
 
          args = new ArrayList<SequentialNode>(); 
         try {
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g:138:3: ( (arg= statement )* )
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g:138:5: (arg= statement )*
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g:138:3: ( (arg= statement )* )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g:138:5: (arg= statement )*
             {
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g:138:5: (arg= statement )*
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g:138:5: (arg= statement )*
             loop7:
             do {
                 int alt7=2;
@@ -886,7 +886,7 @@ public class CluCalcTransformer extends TreeParser {
 
                 switch (alt7) {
             	case 1 :
-            	    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g:138:6: arg= statement
+            	    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g:138:6: arg= statement
             	    {
             	    pushFollow(FOLLOW_statement_in_statement_list531);
             	    arg=statement();
@@ -921,7 +921,7 @@ public class CluCalcTransformer extends TreeParser {
 
 
     // $ANTLR start "expression"
-    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g:141:1: expression returns [Expression result] : ( ^( PLUS l= expression r= expression ) | ^( MINUS l= expression r= expression ) | ^( STAR l= expression r= expression ) | ^( SLASH l= expression r= expression ) | ^( DOUBLE_BAR l= expression r= expression ) | ^( DOUBLE_AND l= expression r= expression ) | ^( DOUBLE_EQUALS l= expression r= expression ) | ^( UNEQUAL l= expression r= expression ) | ^( LESS l= expression r= expression ) | ^( GREATER l= expression r= expression ) | ^( LESS_OR_EQUAL l= expression r= expression ) | ^( GREATER_OR_EQUAL l= expression r= expression ) | ^( WEDGE l= expression r= expression ) | ^( DOT l= expression r= expression ) | ^( NEGATION op= expression ) | ^( DUAL op= expression ) | ^( REVERSE op= expression ) | ^( FUNCTION name= IDENTIFIER arguments ) | value= DECIMAL_LITERAL | value= FLOATING_POINT_LITERAL | ^( ARGUMENT index= DECIMAL_LITERAL ) | variableOrConstant );
+    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g:141:1: expression returns [Expression result] : ( ^( PLUS l= expression r= expression ) | ^( MINUS l= expression r= expression ) | ^( STAR l= expression r= expression ) | ^( SLASH l= expression r= expression ) | ^( DOUBLE_BAR l= expression r= expression ) | ^( DOUBLE_AND l= expression r= expression ) | ^( DOUBLE_EQUALS l= expression r= expression ) | ^( UNEQUAL l= expression r= expression ) | ^( LESS l= expression r= expression ) | ^( GREATER l= expression r= expression ) | ^( LESS_OR_EQUAL l= expression r= expression ) | ^( GREATER_OR_EQUAL l= expression r= expression ) | ^( WEDGE l= expression r= expression ) | ^( DOT l= expression r= expression ) | ^( NEGATION op= expression ) | ^( DUAL op= expression ) | ^( REVERSE op= expression ) | ^( FUNCTION name= IDENTIFIER arguments ) | value= DECIMAL_LITERAL | value= FLOATING_POINT_LITERAL | ^( ARGUMENT index= DECIMAL_LITERAL ) | variableOrConstant );
     public final Expression expression() throws RecognitionException {
         Expression result = null;
 
@@ -940,7 +940,7 @@ public class CluCalcTransformer extends TreeParser {
 
 
         try {
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g:143:2: ( ^( PLUS l= expression r= expression ) | ^( MINUS l= expression r= expression ) | ^( STAR l= expression r= expression ) | ^( SLASH l= expression r= expression ) | ^( DOUBLE_BAR l= expression r= expression ) | ^( DOUBLE_AND l= expression r= expression ) | ^( DOUBLE_EQUALS l= expression r= expression ) | ^( UNEQUAL l= expression r= expression ) | ^( LESS l= expression r= expression ) | ^( GREATER l= expression r= expression ) | ^( LESS_OR_EQUAL l= expression r= expression ) | ^( GREATER_OR_EQUAL l= expression r= expression ) | ^( WEDGE l= expression r= expression ) | ^( DOT l= expression r= expression ) | ^( NEGATION op= expression ) | ^( DUAL op= expression ) | ^( REVERSE op= expression ) | ^( FUNCTION name= IDENTIFIER arguments ) | value= DECIMAL_LITERAL | value= FLOATING_POINT_LITERAL | ^( ARGUMENT index= DECIMAL_LITERAL ) | variableOrConstant )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g:143:2: ( ^( PLUS l= expression r= expression ) | ^( MINUS l= expression r= expression ) | ^( STAR l= expression r= expression ) | ^( SLASH l= expression r= expression ) | ^( DOUBLE_BAR l= expression r= expression ) | ^( DOUBLE_AND l= expression r= expression ) | ^( DOUBLE_EQUALS l= expression r= expression ) | ^( UNEQUAL l= expression r= expression ) | ^( LESS l= expression r= expression ) | ^( GREATER l= expression r= expression ) | ^( LESS_OR_EQUAL l= expression r= expression ) | ^( GREATER_OR_EQUAL l= expression r= expression ) | ^( WEDGE l= expression r= expression ) | ^( DOT l= expression r= expression ) | ^( NEGATION op= expression ) | ^( DUAL op= expression ) | ^( REVERSE op= expression ) | ^( FUNCTION name= IDENTIFIER arguments ) | value= DECIMAL_LITERAL | value= FLOATING_POINT_LITERAL | ^( ARGUMENT index= DECIMAL_LITERAL ) | variableOrConstant )
             int alt8=22;
             switch ( input.LA(1) ) {
             case PLUS:
@@ -1063,7 +1063,7 @@ public class CluCalcTransformer extends TreeParser {
 
             switch (alt8) {
                 case 1 :
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g:143:4: ^( PLUS l= expression r= expression )
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g:143:4: ^( PLUS l= expression r= expression )
                     {
                     match(input,PLUS,FOLLOW_PLUS_in_expression556); if (state.failed) return result;
 
@@ -1087,7 +1087,7 @@ public class CluCalcTransformer extends TreeParser {
                     }
                     break;
                 case 2 :
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g:145:4: ^( MINUS l= expression r= expression )
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g:145:4: ^( MINUS l= expression r= expression )
                     {
                     match(input,MINUS,FOLLOW_MINUS_in_expression575); if (state.failed) return result;
 
@@ -1111,7 +1111,7 @@ public class CluCalcTransformer extends TreeParser {
                     }
                     break;
                 case 3 :
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g:147:4: ^( STAR l= expression r= expression )
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g:147:4: ^( STAR l= expression r= expression )
                     {
                     match(input,STAR,FOLLOW_STAR_in_expression594); if (state.failed) return result;
 
@@ -1135,7 +1135,7 @@ public class CluCalcTransformer extends TreeParser {
                     }
                     break;
                 case 4 :
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g:149:4: ^( SLASH l= expression r= expression )
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g:149:4: ^( SLASH l= expression r= expression )
                     {
                     match(input,SLASH,FOLLOW_SLASH_in_expression613); if (state.failed) return result;
 
@@ -1159,7 +1159,7 @@ public class CluCalcTransformer extends TreeParser {
                     }
                     break;
                 case 5 :
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g:151:5: ^( DOUBLE_BAR l= expression r= expression )
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g:151:5: ^( DOUBLE_BAR l= expression r= expression )
                     {
                     match(input,DOUBLE_BAR,FOLLOW_DOUBLE_BAR_in_expression633); if (state.failed) return result;
 
@@ -1183,7 +1183,7 @@ public class CluCalcTransformer extends TreeParser {
                     }
                     break;
                 case 6 :
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g:153:5: ^( DOUBLE_AND l= expression r= expression )
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g:153:5: ^( DOUBLE_AND l= expression r= expression )
                     {
                     match(input,DOUBLE_AND,FOLLOW_DOUBLE_AND_in_expression654); if (state.failed) return result;
 
@@ -1207,7 +1207,7 @@ public class CluCalcTransformer extends TreeParser {
                     }
                     break;
                 case 7 :
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g:155:5: ^( DOUBLE_EQUALS l= expression r= expression )
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g:155:5: ^( DOUBLE_EQUALS l= expression r= expression )
                     {
                     match(input,DOUBLE_EQUALS,FOLLOW_DOUBLE_EQUALS_in_expression674); if (state.failed) return result;
 
@@ -1231,7 +1231,7 @@ public class CluCalcTransformer extends TreeParser {
                     }
                     break;
                 case 8 :
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g:157:5: ^( UNEQUAL l= expression r= expression )
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g:157:5: ^( UNEQUAL l= expression r= expression )
                     {
                     match(input,UNEQUAL,FOLLOW_UNEQUAL_in_expression694); if (state.failed) return result;
 
@@ -1255,7 +1255,7 @@ public class CluCalcTransformer extends TreeParser {
                     }
                     break;
                 case 9 :
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g:159:5: ^( LESS l= expression r= expression )
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g:159:5: ^( LESS l= expression r= expression )
                     {
                     match(input,LESS,FOLLOW_LESS_in_expression714); if (state.failed) return result;
 
@@ -1279,7 +1279,7 @@ public class CluCalcTransformer extends TreeParser {
                     }
                     break;
                 case 10 :
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g:161:5: ^( GREATER l= expression r= expression )
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g:161:5: ^( GREATER l= expression r= expression )
                     {
                     match(input,GREATER,FOLLOW_GREATER_in_expression734); if (state.failed) return result;
 
@@ -1303,7 +1303,7 @@ public class CluCalcTransformer extends TreeParser {
                     }
                     break;
                 case 11 :
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g:163:5: ^( LESS_OR_EQUAL l= expression r= expression )
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g:163:5: ^( LESS_OR_EQUAL l= expression r= expression )
                     {
                     match(input,LESS_OR_EQUAL,FOLLOW_LESS_OR_EQUAL_in_expression755); if (state.failed) return result;
 
@@ -1327,7 +1327,7 @@ public class CluCalcTransformer extends TreeParser {
                     }
                     break;
                 case 12 :
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g:165:5: ^( GREATER_OR_EQUAL l= expression r= expression )
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g:165:5: ^( GREATER_OR_EQUAL l= expression r= expression )
                     {
                     match(input,GREATER_OR_EQUAL,FOLLOW_GREATER_OR_EQUAL_in_expression775); if (state.failed) return result;
 
@@ -1351,7 +1351,7 @@ public class CluCalcTransformer extends TreeParser {
                     }
                     break;
                 case 13 :
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g:167:4: ^( WEDGE l= expression r= expression )
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g:167:4: ^( WEDGE l= expression r= expression )
                     {
                     match(input,WEDGE,FOLLOW_WEDGE_in_expression794); if (state.failed) return result;
 
@@ -1375,7 +1375,7 @@ public class CluCalcTransformer extends TreeParser {
                     }
                     break;
                 case 14 :
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g:169:4: ^( DOT l= expression r= expression )
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g:169:4: ^( DOT l= expression r= expression )
                     {
                     match(input,DOT,FOLLOW_DOT_in_expression813); if (state.failed) return result;
 
@@ -1399,7 +1399,7 @@ public class CluCalcTransformer extends TreeParser {
                     }
                     break;
                 case 15 :
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g:171:4: ^( NEGATION op= expression )
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g:171:4: ^( NEGATION op= expression )
                     {
                     match(input,NEGATION,FOLLOW_NEGATION_in_expression832); if (state.failed) return result;
 
@@ -1418,7 +1418,7 @@ public class CluCalcTransformer extends TreeParser {
                     }
                     break;
                 case 16 :
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g:173:4: ^( DUAL op= expression )
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g:173:4: ^( DUAL op= expression )
                     {
                     match(input,DUAL,FOLLOW_DUAL_in_expression847); if (state.failed) return result;
 
@@ -1437,7 +1437,7 @@ public class CluCalcTransformer extends TreeParser {
                     }
                     break;
                 case 17 :
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g:175:4: ^( REVERSE op= expression )
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g:175:4: ^( REVERSE op= expression )
                     {
                     match(input,REVERSE,FOLLOW_REVERSE_in_expression863); if (state.failed) return result;
 
@@ -1456,7 +1456,7 @@ public class CluCalcTransformer extends TreeParser {
                     }
                     break;
                 case 18 :
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g:177:4: ^( FUNCTION name= IDENTIFIER arguments )
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g:177:4: ^( FUNCTION name= IDENTIFIER arguments )
                     {
                     match(input,FUNCTION,FOLLOW_FUNCTION_in_expression878); if (state.failed) return result;
 
@@ -1476,7 +1476,7 @@ public class CluCalcTransformer extends TreeParser {
                     }
                     break;
                 case 19 :
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g:179:4: value= DECIMAL_LITERAL
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g:179:4: value= DECIMAL_LITERAL
                     {
                     value=(CommonTree)match(input,DECIMAL_LITERAL,FOLLOW_DECIMAL_LITERAL_in_expression896); if (state.failed) return result;
                     if ( state.backtracking==0 ) {
@@ -1486,7 +1486,7 @@ public class CluCalcTransformer extends TreeParser {
                     }
                     break;
                 case 20 :
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g:181:4: value= FLOATING_POINT_LITERAL
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g:181:4: value= FLOATING_POINT_LITERAL
                     {
                     value=(CommonTree)match(input,FLOATING_POINT_LITERAL,FOLLOW_FLOATING_POINT_LITERAL_in_expression907); if (state.failed) return result;
                     if ( state.backtracking==0 ) {
@@ -1496,7 +1496,7 @@ public class CluCalcTransformer extends TreeParser {
                     }
                     break;
                 case 21 :
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g:183:4: ^( ARGUMENT index= DECIMAL_LITERAL )
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g:183:4: ^( ARGUMENT index= DECIMAL_LITERAL )
                     {
                     match(input,ARGUMENT,FOLLOW_ARGUMENT_in_expression917); if (state.failed) return result;
 
@@ -1511,7 +1511,7 @@ public class CluCalcTransformer extends TreeParser {
                     }
                     break;
                 case 22 :
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g:185:4: variableOrConstant
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g:185:4: variableOrConstant
                     {
                     pushFollow(FOLLOW_variableOrConstant_in_expression931);
                     variableOrConstant11=variableOrConstant();
@@ -1539,15 +1539,15 @@ public class CluCalcTransformer extends TreeParser {
 
 
     // $ANTLR start "variableOrConstant"
-    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g:188:1: variableOrConstant returns [Expression result] : name= IDENTIFIER ;
+    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g:188:1: variableOrConstant returns [Expression result] : name= IDENTIFIER ;
     public final Expression variableOrConstant() throws RecognitionException {
         Expression result = null;
 
         CommonTree name=null;
 
         try {
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g:189:2: (name= IDENTIFIER )
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g:189:4: name= IDENTIFIER
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g:189:2: (name= IDENTIFIER )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g:189:4: name= IDENTIFIER
             {
             name=(CommonTree)match(input,IDENTIFIER,FOLLOW_IDENTIFIER_in_variableOrConstant950); if (state.failed) return result;
             if ( state.backtracking==0 ) {
@@ -1569,7 +1569,7 @@ public class CluCalcTransformer extends TreeParser {
 
 
     // $ANTLR start "arguments"
-    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g:192:1: arguments returns [ArrayList<Expression> args] : (arg= expression )* ;
+    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g:192:1: arguments returns [ArrayList<Expression> args] : (arg= expression )* ;
     public final ArrayList<Expression> arguments() throws RecognitionException {
         ArrayList<Expression> args = null;
 
@@ -1578,10 +1578,10 @@ public class CluCalcTransformer extends TreeParser {
 
          args = new ArrayList<Expression>(); 
         try {
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g:194:2: ( (arg= expression )* )
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g:194:4: (arg= expression )*
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g:194:2: ( (arg= expression )* )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g:194:4: (arg= expression )*
             {
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g:194:4: (arg= expression )*
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g:194:4: (arg= expression )*
             loop9:
             do {
                 int alt9=2;
@@ -1594,7 +1594,7 @@ public class CluCalcTransformer extends TreeParser {
 
                 switch (alt9) {
             	case 1 :
-            	    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g:194:5: arg= expression
+            	    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g:194:5: arg= expression
             	    {
             	    pushFollow(FOLLOW_expression_in_arguments977);
             	    arg=expression();
@@ -1629,7 +1629,7 @@ public class CluCalcTransformer extends TreeParser {
 
 
     // $ANTLR start "float_literal"
-    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g:197:1: float_literal returns [String result] : (sign= MINUS )? val= FLOATING_POINT_LITERAL ;
+    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g:197:1: float_literal returns [String result] : (sign= MINUS )? val= FLOATING_POINT_LITERAL ;
     public final String float_literal() throws RecognitionException {
         String result = null;
 
@@ -1637,10 +1637,10 @@ public class CluCalcTransformer extends TreeParser {
         CommonTree val=null;
 
         try {
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g:198:3: ( (sign= MINUS )? val= FLOATING_POINT_LITERAL )
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g:198:5: (sign= MINUS )? val= FLOATING_POINT_LITERAL
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g:198:3: ( (sign= MINUS )? val= FLOATING_POINT_LITERAL )
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g:198:5: (sign= MINUS )? val= FLOATING_POINT_LITERAL
             {
-            // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g:198:9: (sign= MINUS )?
+            // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g:198:9: (sign= MINUS )?
             int alt10=2;
             int LA10_0 = input.LA(1);
 
@@ -1649,7 +1649,7 @@ public class CluCalcTransformer extends TreeParser {
             }
             switch (alt10) {
                 case 1 :
-                    // /Users/christian/Studium/Masterarbeit/GaalopCompiler/gaalop-2.0/branches/control-flow/clucalc/src/main/antlr/de/gaalop/clucalc/input/CluCalcTransformer.g:0:0: sign= MINUS
+                    // C:\\Users\\Christian\\workspace\\gaalop-2.0\\branches\\control-flow\\clucalc\\src\\main\\antlr\\de\\gaalop\\clucalc\\input\\CluCalcTransformer.g:0:0: sign= MINUS
                     {
                     sign=(CommonTree)match(input,MINUS,FOLLOW_MINUS_in_float_literal999); if (state.failed) return result;
 

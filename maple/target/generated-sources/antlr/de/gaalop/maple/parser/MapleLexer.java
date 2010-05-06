@@ -1,4 +1,4 @@
-// $ANTLR 3.1.1 de/gaalop/maple/parser/MapleLexer.g 2010-05-06 12:42:50
+// $ANTLR 3.1.1 de\\gaalop\\maple\\parser\\MapleLexer.g 2010-05-05 19:19:48
 
 	package de.gaalop.maple.parser;
 
@@ -44,15 +44,15 @@ public class MapleLexer extends Lexer {
         super(input,state);
 
     }
-    public String getGrammarFileName() { return "de/gaalop/maple/parser/MapleLexer.g"; }
+    public String getGrammarFileName() { return "de\\gaalop\\maple\\parser\\MapleLexer.g"; }
 
     // $ANTLR start "GAALOPARRAY"
     public final void mGAALOPARRAY() throws RecognitionException {
         try {
             int _type = GAALOPARRAY;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // de/gaalop/maple/parser/MapleLexer.g:10:2: ( 'gaaloparray' )
-            // de/gaalop/maple/parser/MapleLexer.g:10:4: 'gaaloparray'
+            // de\\gaalop\\maple\\parser\\MapleLexer.g:10:2: ( 'gaaloparray' )
+            // de\\gaalop\\maple\\parser\\MapleLexer.g:10:4: 'gaaloparray'
             {
             match("gaaloparray"); 
 
@@ -72,11 +72,11 @@ public class MapleLexer extends Lexer {
         try {
             int _type = IDENTIFIER;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // de/gaalop/maple/parser/MapleLexer.g:14:2: ( LETTER ( LETTER | DIGIT )* )
-            // de/gaalop/maple/parser/MapleLexer.g:14:4: LETTER ( LETTER | DIGIT )*
+            // de\\gaalop\\maple\\parser\\MapleLexer.g:14:2: ( LETTER ( LETTER | DIGIT )* )
+            // de\\gaalop\\maple\\parser\\MapleLexer.g:14:4: LETTER ( LETTER | DIGIT )*
             {
             mLETTER(); 
-            // de/gaalop/maple/parser/MapleLexer.g:14:11: ( LETTER | DIGIT )*
+            // de\\gaalop\\maple\\parser\\MapleLexer.g:14:11: ( LETTER | DIGIT )*
             loop1:
             do {
                 int alt1=2;
@@ -89,7 +89,7 @@ public class MapleLexer extends Lexer {
 
                 switch (alt1) {
             	case 1 :
-            	    // de/gaalop/maple/parser/MapleLexer.g:
+            	    // de\\gaalop\\maple\\parser\\MapleLexer.g:
             	    {
             	    if ( (input.LA(1)>='0' && input.LA(1)<='9')||(input.LA(1)>='A' && input.LA(1)<='Z')||input.LA(1)=='_'||(input.LA(1)>='a' && input.LA(1)<='z') ) {
             	        input.consume();
@@ -123,8 +123,8 @@ public class MapleLexer extends Lexer {
     // $ANTLR start "LETTER"
     public final void mLETTER() throws RecognitionException {
         try {
-            // de/gaalop/maple/parser/MapleLexer.g:19:2: ( 'A' .. 'Z' | 'a' .. 'z' | '_' )
-            // de/gaalop/maple/parser/MapleLexer.g:
+            // de\\gaalop\\maple\\parser\\MapleLexer.g:19:2: ( 'A' .. 'Z' | 'a' .. 'z' | '_' )
+            // de\\gaalop\\maple\\parser\\MapleLexer.g:
             {
             if ( (input.LA(1)>='A' && input.LA(1)<='Z')||input.LA(1)=='_'||(input.LA(1)>='a' && input.LA(1)<='z') ) {
                 input.consume();
@@ -147,8 +147,8 @@ public class MapleLexer extends Lexer {
     // $ANTLR start "DIGIT"
     public final void mDIGIT() throws RecognitionException {
         try {
-            // de/gaalop/maple/parser/MapleLexer.g:25:7: ( '0' .. '9' )
-            // de/gaalop/maple/parser/MapleLexer.g:25:9: '0' .. '9'
+            // de\\gaalop\\maple\\parser\\MapleLexer.g:25:7: ( '0' .. '9' )
+            // de\\gaalop\\maple\\parser\\MapleLexer.g:25:9: '0' .. '9'
             {
             matchRange('0','9'); 
 
@@ -165,10 +165,10 @@ public class MapleLexer extends Lexer {
         try {
             int _type = DECIMAL_LITERAL;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // de/gaalop/maple/parser/MapleLexer.g:29:2: ( ( '0' .. '9' )+ )
-            // de/gaalop/maple/parser/MapleLexer.g:29:4: ( '0' .. '9' )+
+            // de\\gaalop\\maple\\parser\\MapleLexer.g:29:2: ( ( '0' .. '9' )+ )
+            // de\\gaalop\\maple\\parser\\MapleLexer.g:29:4: ( '0' .. '9' )+
             {
-            // de/gaalop/maple/parser/MapleLexer.g:29:4: ( '0' .. '9' )+
+            // de\\gaalop\\maple\\parser\\MapleLexer.g:29:4: ( '0' .. '9' )+
             int cnt2=0;
             loop2:
             do {
@@ -182,7 +182,7 @@ public class MapleLexer extends Lexer {
 
                 switch (alt2) {
             	case 1 :
-            	    // de/gaalop/maple/parser/MapleLexer.g:29:5: '0' .. '9'
+            	    // de\\gaalop\\maple\\parser\\MapleLexer.g:29:5: '0' .. '9'
             	    {
             	    matchRange('0','9'); 
 
@@ -214,14 +214,14 @@ public class MapleLexer extends Lexer {
         try {
             int _type = FLOATING_POINT_LITERAL;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // de/gaalop/maple/parser/MapleLexer.g:33:5: ( ( '0' .. '9' )+ '.' ( '0' .. '9' )* ( EXPONENT )? | '.' ( '0' .. '9' )+ ( EXPONENT )? | ( '0' .. '9' )+ EXPONENT )
+            // de\\gaalop\\maple\\parser\\MapleLexer.g:33:5: ( ( '0' .. '9' )+ '.' ( '0' .. '9' )* ( EXPONENT )? | '.' ( '0' .. '9' )+ ( EXPONENT )? | ( '0' .. '9' )+ EXPONENT )
             int alt9=3;
             alt9 = dfa9.predict(input);
             switch (alt9) {
                 case 1 :
-                    // de/gaalop/maple/parser/MapleLexer.g:33:9: ( '0' .. '9' )+ '.' ( '0' .. '9' )* ( EXPONENT )?
+                    // de\\gaalop\\maple\\parser\\MapleLexer.g:33:9: ( '0' .. '9' )+ '.' ( '0' .. '9' )* ( EXPONENT )?
                     {
-                    // de/gaalop/maple/parser/MapleLexer.g:33:9: ( '0' .. '9' )+
+                    // de\\gaalop\\maple\\parser\\MapleLexer.g:33:9: ( '0' .. '9' )+
                     int cnt3=0;
                     loop3:
                     do {
@@ -235,7 +235,7 @@ public class MapleLexer extends Lexer {
 
                         switch (alt3) {
                     	case 1 :
-                    	    // de/gaalop/maple/parser/MapleLexer.g:33:10: '0' .. '9'
+                    	    // de\\gaalop\\maple\\parser\\MapleLexer.g:33:10: '0' .. '9'
                     	    {
                     	    matchRange('0','9'); 
 
@@ -252,7 +252,7 @@ public class MapleLexer extends Lexer {
                     } while (true);
 
                     match('.'); 
-                    // de/gaalop/maple/parser/MapleLexer.g:33:25: ( '0' .. '9' )*
+                    // de\\gaalop\\maple\\parser\\MapleLexer.g:33:25: ( '0' .. '9' )*
                     loop4:
                     do {
                         int alt4=2;
@@ -265,7 +265,7 @@ public class MapleLexer extends Lexer {
 
                         switch (alt4) {
                     	case 1 :
-                    	    // de/gaalop/maple/parser/MapleLexer.g:33:26: '0' .. '9'
+                    	    // de\\gaalop\\maple\\parser\\MapleLexer.g:33:26: '0' .. '9'
                     	    {
                     	    matchRange('0','9'); 
 
@@ -277,7 +277,7 @@ public class MapleLexer extends Lexer {
                         }
                     } while (true);
 
-                    // de/gaalop/maple/parser/MapleLexer.g:33:37: ( EXPONENT )?
+                    // de\\gaalop\\maple\\parser\\MapleLexer.g:33:37: ( EXPONENT )?
                     int alt5=2;
                     int LA5_0 = input.LA(1);
 
@@ -286,7 +286,7 @@ public class MapleLexer extends Lexer {
                     }
                     switch (alt5) {
                         case 1 :
-                            // de/gaalop/maple/parser/MapleLexer.g:33:37: EXPONENT
+                            // de\\gaalop\\maple\\parser\\MapleLexer.g:33:37: EXPONENT
                             {
                             mEXPONENT(); 
 
@@ -299,10 +299,10 @@ public class MapleLexer extends Lexer {
                     }
                     break;
                 case 2 :
-                    // de/gaalop/maple/parser/MapleLexer.g:34:9: '.' ( '0' .. '9' )+ ( EXPONENT )?
+                    // de\\gaalop\\maple\\parser\\MapleLexer.g:34:9: '.' ( '0' .. '9' )+ ( EXPONENT )?
                     {
                     match('.'); 
-                    // de/gaalop/maple/parser/MapleLexer.g:34:13: ( '0' .. '9' )+
+                    // de\\gaalop\\maple\\parser\\MapleLexer.g:34:13: ( '0' .. '9' )+
                     int cnt6=0;
                     loop6:
                     do {
@@ -316,7 +316,7 @@ public class MapleLexer extends Lexer {
 
                         switch (alt6) {
                     	case 1 :
-                    	    // de/gaalop/maple/parser/MapleLexer.g:34:14: '0' .. '9'
+                    	    // de\\gaalop\\maple\\parser\\MapleLexer.g:34:14: '0' .. '9'
                     	    {
                     	    matchRange('0','9'); 
 
@@ -332,7 +332,7 @@ public class MapleLexer extends Lexer {
                         cnt6++;
                     } while (true);
 
-                    // de/gaalop/maple/parser/MapleLexer.g:34:25: ( EXPONENT )?
+                    // de\\gaalop\\maple\\parser\\MapleLexer.g:34:25: ( EXPONENT )?
                     int alt7=2;
                     int LA7_0 = input.LA(1);
 
@@ -341,7 +341,7 @@ public class MapleLexer extends Lexer {
                     }
                     switch (alt7) {
                         case 1 :
-                            // de/gaalop/maple/parser/MapleLexer.g:34:25: EXPONENT
+                            // de\\gaalop\\maple\\parser\\MapleLexer.g:34:25: EXPONENT
                             {
                             mEXPONENT(); 
 
@@ -354,9 +354,9 @@ public class MapleLexer extends Lexer {
                     }
                     break;
                 case 3 :
-                    // de/gaalop/maple/parser/MapleLexer.g:35:9: ( '0' .. '9' )+ EXPONENT
+                    // de\\gaalop\\maple\\parser\\MapleLexer.g:35:9: ( '0' .. '9' )+ EXPONENT
                     {
-                    // de/gaalop/maple/parser/MapleLexer.g:35:9: ( '0' .. '9' )+
+                    // de\\gaalop\\maple\\parser\\MapleLexer.g:35:9: ( '0' .. '9' )+
                     int cnt8=0;
                     loop8:
                     do {
@@ -370,7 +370,7 @@ public class MapleLexer extends Lexer {
 
                         switch (alt8) {
                     	case 1 :
-                    	    // de/gaalop/maple/parser/MapleLexer.g:35:10: '0' .. '9'
+                    	    // de\\gaalop\\maple\\parser\\MapleLexer.g:35:10: '0' .. '9'
                     	    {
                     	    matchRange('0','9'); 
 
@@ -403,11 +403,11 @@ public class MapleLexer extends Lexer {
     // $ANTLR start "EXPONENT"
     public final void mEXPONENT() throws RecognitionException {
         try {
-            // de/gaalop/maple/parser/MapleLexer.g:40:2: ( 'e' ( MINUS )? ( '0' .. '9' )+ )
-            // de/gaalop/maple/parser/MapleLexer.g:40:4: 'e' ( MINUS )? ( '0' .. '9' )+
+            // de\\gaalop\\maple\\parser\\MapleLexer.g:40:2: ( 'e' ( MINUS )? ( '0' .. '9' )+ )
+            // de\\gaalop\\maple\\parser\\MapleLexer.g:40:4: 'e' ( MINUS )? ( '0' .. '9' )+
             {
             match('e'); 
-            // de/gaalop/maple/parser/MapleLexer.g:40:8: ( MINUS )?
+            // de\\gaalop\\maple\\parser\\MapleLexer.g:40:8: ( MINUS )?
             int alt10=2;
             int LA10_0 = input.LA(1);
 
@@ -416,7 +416,7 @@ public class MapleLexer extends Lexer {
             }
             switch (alt10) {
                 case 1 :
-                    // de/gaalop/maple/parser/MapleLexer.g:40:8: MINUS
+                    // de\\gaalop\\maple\\parser\\MapleLexer.g:40:8: MINUS
                     {
                     mMINUS(); 
 
@@ -425,7 +425,7 @@ public class MapleLexer extends Lexer {
 
             }
 
-            // de/gaalop/maple/parser/MapleLexer.g:40:15: ( '0' .. '9' )+
+            // de\\gaalop\\maple\\parser\\MapleLexer.g:40:15: ( '0' .. '9' )+
             int cnt11=0;
             loop11:
             do {
@@ -439,7 +439,7 @@ public class MapleLexer extends Lexer {
 
                 switch (alt11) {
             	case 1 :
-            	    // de/gaalop/maple/parser/MapleLexer.g:40:16: '0' .. '9'
+            	    // de\\gaalop\\maple\\parser\\MapleLexer.g:40:16: '0' .. '9'
             	    {
             	    matchRange('0','9'); 
 
@@ -469,8 +469,8 @@ public class MapleLexer extends Lexer {
         try {
             int _type = LSBRACKET;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // de/gaalop/maple/parser/MapleLexer.g:44:2: ( '[' )
-            // de/gaalop/maple/parser/MapleLexer.g:44:4: '['
+            // de\\gaalop\\maple\\parser\\MapleLexer.g:44:2: ( '[' )
+            // de\\gaalop\\maple\\parser\\MapleLexer.g:44:4: '['
             {
             match('['); 
 
@@ -489,8 +489,8 @@ public class MapleLexer extends Lexer {
         try {
             int _type = RSBRACKET;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // de/gaalop/maple/parser/MapleLexer.g:48:2: ( ']' )
-            // de/gaalop/maple/parser/MapleLexer.g:48:4: ']'
+            // de\\gaalop\\maple\\parser\\MapleLexer.g:48:2: ( ']' )
+            // de\\gaalop\\maple\\parser\\MapleLexer.g:48:4: ']'
             {
             match(']'); 
 
@@ -509,8 +509,8 @@ public class MapleLexer extends Lexer {
         try {
             int _type = LBRACKET;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // de/gaalop/maple/parser/MapleLexer.g:52:2: ( '(' )
-            // de/gaalop/maple/parser/MapleLexer.g:52:4: '('
+            // de\\gaalop\\maple\\parser\\MapleLexer.g:52:2: ( '(' )
+            // de\\gaalop\\maple\\parser\\MapleLexer.g:52:4: '('
             {
             match('('); 
 
@@ -529,8 +529,8 @@ public class MapleLexer extends Lexer {
         try {
             int _type = RBRACKET;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // de/gaalop/maple/parser/MapleLexer.g:56:2: ( ')' )
-            // de/gaalop/maple/parser/MapleLexer.g:56:4: ')'
+            // de\\gaalop\\maple\\parser\\MapleLexer.g:56:2: ( ')' )
+            // de\\gaalop\\maple\\parser\\MapleLexer.g:56:4: ')'
             {
             match(')'); 
 
@@ -549,8 +549,8 @@ public class MapleLexer extends Lexer {
         try {
             int _type = ASSIGNMENT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // de/gaalop/maple/parser/MapleLexer.g:60:2: ( ':=' )
-            // de/gaalop/maple/parser/MapleLexer.g:60:4: ':='
+            // de\\gaalop\\maple\\parser\\MapleLexer.g:60:2: ( ':=' )
+            // de\\gaalop\\maple\\parser\\MapleLexer.g:60:4: ':='
             {
             match(":="); 
 
@@ -570,8 +570,8 @@ public class MapleLexer extends Lexer {
         try {
             int _type = EQUALS;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // de/gaalop/maple/parser/MapleLexer.g:64:2: ( '=' )
-            // de/gaalop/maple/parser/MapleLexer.g:64:4: '='
+            // de\\gaalop\\maple\\parser\\MapleLexer.g:64:2: ( '=' )
+            // de\\gaalop\\maple\\parser\\MapleLexer.g:64:4: '='
             {
             match('='); 
 
@@ -590,8 +590,8 @@ public class MapleLexer extends Lexer {
         try {
             int _type = COMMA;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // de/gaalop/maple/parser/MapleLexer.g:69:2: ( ',' )
-            // de/gaalop/maple/parser/MapleLexer.g:69:4: ','
+            // de\\gaalop\\maple\\parser\\MapleLexer.g:69:2: ( ',' )
+            // de\\gaalop\\maple\\parser\\MapleLexer.g:69:4: ','
             {
             match(','); 
 
@@ -610,8 +610,8 @@ public class MapleLexer extends Lexer {
         try {
             int _type = PLUS;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // de/gaalop/maple/parser/MapleLexer.g:73:2: ( '+' )
-            // de/gaalop/maple/parser/MapleLexer.g:73:4: '+'
+            // de\\gaalop\\maple\\parser\\MapleLexer.g:73:2: ( '+' )
+            // de\\gaalop\\maple\\parser\\MapleLexer.g:73:4: '+'
             {
             match('+'); 
 
@@ -630,8 +630,8 @@ public class MapleLexer extends Lexer {
         try {
             int _type = MINUS;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // de/gaalop/maple/parser/MapleLexer.g:77:2: ( '-' )
-            // de/gaalop/maple/parser/MapleLexer.g:77:4: '-'
+            // de\\gaalop\\maple\\parser\\MapleLexer.g:77:2: ( '-' )
+            // de\\gaalop\\maple\\parser\\MapleLexer.g:77:4: '-'
             {
             match('-'); 
 
@@ -650,8 +650,8 @@ public class MapleLexer extends Lexer {
         try {
             int _type = STAR;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // de/gaalop/maple/parser/MapleLexer.g:82:2: ( '*' )
-            // de/gaalop/maple/parser/MapleLexer.g:82:4: '*'
+            // de\\gaalop\\maple\\parser\\MapleLexer.g:82:2: ( '*' )
+            // de\\gaalop\\maple\\parser\\MapleLexer.g:82:4: '*'
             {
             match('*'); 
 
@@ -670,8 +670,8 @@ public class MapleLexer extends Lexer {
         try {
             int _type = SLASH;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // de/gaalop/maple/parser/MapleLexer.g:86:2: ( '/' )
-            // de/gaalop/maple/parser/MapleLexer.g:86:4: '/'
+            // de\\gaalop\\maple\\parser\\MapleLexer.g:86:2: ( '/' )
+            // de\\gaalop\\maple\\parser\\MapleLexer.g:86:4: '/'
             {
             match('/'); 
 
@@ -690,8 +690,8 @@ public class MapleLexer extends Lexer {
         try {
             int _type = MODULO;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // de/gaalop/maple/parser/MapleLexer.g:90:2: ( '%' )
-            // de/gaalop/maple/parser/MapleLexer.g:90:4: '%'
+            // de\\gaalop\\maple\\parser\\MapleLexer.g:90:2: ( '%' )
+            // de\\gaalop\\maple\\parser\\MapleLexer.g:90:4: '%'
             {
             match('%'); 
 
@@ -710,8 +710,8 @@ public class MapleLexer extends Lexer {
         try {
             int _type = SEMICOLON;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // de/gaalop/maple/parser/MapleLexer.g:95:2: ( ';' )
-            // de/gaalop/maple/parser/MapleLexer.g:95:4: ';'
+            // de\\gaalop\\maple\\parser\\MapleLexer.g:95:2: ( ';' )
+            // de\\gaalop\\maple\\parser\\MapleLexer.g:95:4: ';'
             {
             match(';'); 
 
@@ -730,8 +730,8 @@ public class MapleLexer extends Lexer {
         try {
             int _type = WEDGE;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // de/gaalop/maple/parser/MapleLexer.g:98:7: ( '^' )
-            // de/gaalop/maple/parser/MapleLexer.g:98:9: '^'
+            // de\\gaalop\\maple\\parser\\MapleLexer.g:98:7: ( '^' )
+            // de\\gaalop\\maple\\parser\\MapleLexer.g:98:9: '^'
             {
             match('^'); 
 
@@ -750,8 +750,8 @@ public class MapleLexer extends Lexer {
         try {
             int _type = WS;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // de/gaalop/maple/parser/MapleLexer.g:101:5: ( ( ' ' | '\\r' | '\\t' | '\\u000C' | '\\n' ) )
-            // de/gaalop/maple/parser/MapleLexer.g:101:8: ( ' ' | '\\r' | '\\t' | '\\u000C' | '\\n' )
+            // de\\gaalop\\maple\\parser\\MapleLexer.g:101:5: ( ( ' ' | '\\r' | '\\t' | '\\u000C' | '\\n' ) )
+            // de\\gaalop\\maple\\parser\\MapleLexer.g:101:8: ( ' ' | '\\r' | '\\t' | '\\u000C' | '\\n' )
             {
             if ( (input.LA(1)>='\t' && input.LA(1)<='\n')||(input.LA(1)>='\f' && input.LA(1)<='\r')||input.LA(1)==' ' ) {
                 input.consume();
@@ -775,138 +775,138 @@ public class MapleLexer extends Lexer {
     // $ANTLR end "WS"
 
     public void mTokens() throws RecognitionException {
-        // de/gaalop/maple/parser/MapleLexer.g:1:8: ( GAALOPARRAY | IDENTIFIER | DECIMAL_LITERAL | FLOATING_POINT_LITERAL | LSBRACKET | RSBRACKET | LBRACKET | RBRACKET | ASSIGNMENT | EQUALS | COMMA | PLUS | MINUS | STAR | SLASH | MODULO | SEMICOLON | WEDGE | WS )
+        // de\\gaalop\\maple\\parser\\MapleLexer.g:1:8: ( GAALOPARRAY | IDENTIFIER | DECIMAL_LITERAL | FLOATING_POINT_LITERAL | LSBRACKET | RSBRACKET | LBRACKET | RBRACKET | ASSIGNMENT | EQUALS | COMMA | PLUS | MINUS | STAR | SLASH | MODULO | SEMICOLON | WEDGE | WS )
         int alt12=19;
         alt12 = dfa12.predict(input);
         switch (alt12) {
             case 1 :
-                // de/gaalop/maple/parser/MapleLexer.g:1:10: GAALOPARRAY
+                // de\\gaalop\\maple\\parser\\MapleLexer.g:1:10: GAALOPARRAY
                 {
                 mGAALOPARRAY(); 
 
                 }
                 break;
             case 2 :
-                // de/gaalop/maple/parser/MapleLexer.g:1:22: IDENTIFIER
+                // de\\gaalop\\maple\\parser\\MapleLexer.g:1:22: IDENTIFIER
                 {
                 mIDENTIFIER(); 
 
                 }
                 break;
             case 3 :
-                // de/gaalop/maple/parser/MapleLexer.g:1:33: DECIMAL_LITERAL
+                // de\\gaalop\\maple\\parser\\MapleLexer.g:1:33: DECIMAL_LITERAL
                 {
                 mDECIMAL_LITERAL(); 
 
                 }
                 break;
             case 4 :
-                // de/gaalop/maple/parser/MapleLexer.g:1:49: FLOATING_POINT_LITERAL
+                // de\\gaalop\\maple\\parser\\MapleLexer.g:1:49: FLOATING_POINT_LITERAL
                 {
                 mFLOATING_POINT_LITERAL(); 
 
                 }
                 break;
             case 5 :
-                // de/gaalop/maple/parser/MapleLexer.g:1:72: LSBRACKET
+                // de\\gaalop\\maple\\parser\\MapleLexer.g:1:72: LSBRACKET
                 {
                 mLSBRACKET(); 
 
                 }
                 break;
             case 6 :
-                // de/gaalop/maple/parser/MapleLexer.g:1:82: RSBRACKET
+                // de\\gaalop\\maple\\parser\\MapleLexer.g:1:82: RSBRACKET
                 {
                 mRSBRACKET(); 
 
                 }
                 break;
             case 7 :
-                // de/gaalop/maple/parser/MapleLexer.g:1:92: LBRACKET
+                // de\\gaalop\\maple\\parser\\MapleLexer.g:1:92: LBRACKET
                 {
                 mLBRACKET(); 
 
                 }
                 break;
             case 8 :
-                // de/gaalop/maple/parser/MapleLexer.g:1:101: RBRACKET
+                // de\\gaalop\\maple\\parser\\MapleLexer.g:1:101: RBRACKET
                 {
                 mRBRACKET(); 
 
                 }
                 break;
             case 9 :
-                // de/gaalop/maple/parser/MapleLexer.g:1:110: ASSIGNMENT
+                // de\\gaalop\\maple\\parser\\MapleLexer.g:1:110: ASSIGNMENT
                 {
                 mASSIGNMENT(); 
 
                 }
                 break;
             case 10 :
-                // de/gaalop/maple/parser/MapleLexer.g:1:121: EQUALS
+                // de\\gaalop\\maple\\parser\\MapleLexer.g:1:121: EQUALS
                 {
                 mEQUALS(); 
 
                 }
                 break;
             case 11 :
-                // de/gaalop/maple/parser/MapleLexer.g:1:128: COMMA
+                // de\\gaalop\\maple\\parser\\MapleLexer.g:1:128: COMMA
                 {
                 mCOMMA(); 
 
                 }
                 break;
             case 12 :
-                // de/gaalop/maple/parser/MapleLexer.g:1:134: PLUS
+                // de\\gaalop\\maple\\parser\\MapleLexer.g:1:134: PLUS
                 {
                 mPLUS(); 
 
                 }
                 break;
             case 13 :
-                // de/gaalop/maple/parser/MapleLexer.g:1:139: MINUS
+                // de\\gaalop\\maple\\parser\\MapleLexer.g:1:139: MINUS
                 {
                 mMINUS(); 
 
                 }
                 break;
             case 14 :
-                // de/gaalop/maple/parser/MapleLexer.g:1:145: STAR
+                // de\\gaalop\\maple\\parser\\MapleLexer.g:1:145: STAR
                 {
                 mSTAR(); 
 
                 }
                 break;
             case 15 :
-                // de/gaalop/maple/parser/MapleLexer.g:1:150: SLASH
+                // de\\gaalop\\maple\\parser\\MapleLexer.g:1:150: SLASH
                 {
                 mSLASH(); 
 
                 }
                 break;
             case 16 :
-                // de/gaalop/maple/parser/MapleLexer.g:1:156: MODULO
+                // de\\gaalop\\maple\\parser\\MapleLexer.g:1:156: MODULO
                 {
                 mMODULO(); 
 
                 }
                 break;
             case 17 :
-                // de/gaalop/maple/parser/MapleLexer.g:1:163: SEMICOLON
+                // de\\gaalop\\maple\\parser\\MapleLexer.g:1:163: SEMICOLON
                 {
                 mSEMICOLON(); 
 
                 }
                 break;
             case 18 :
-                // de/gaalop/maple/parser/MapleLexer.g:1:173: WEDGE
+                // de\\gaalop\\maple\\parser\\MapleLexer.g:1:173: WEDGE
                 {
                 mWEDGE(); 
 
                 }
                 break;
             case 19 :
-                // de/gaalop/maple/parser/MapleLexer.g:1:179: WS
+                // de\\gaalop\\maple\\parser\\MapleLexer.g:1:179: WS
                 {
                 mWS(); 
 
