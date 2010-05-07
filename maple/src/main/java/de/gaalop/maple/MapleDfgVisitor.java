@@ -155,32 +155,27 @@ public class MapleDfgVisitor implements ExpressionVisitor {
 
 	@Override
 	public void visit(LogicalOr node) {
-		// TODO Auto-generated method stub
-
+		handleInfix(node, "or");
 	}
 
 	@Override
 	public void visit(LogicalAnd node) {
-		// TODO Auto-generated method stub
-
+		handleInfix(node, "and");
 	}
 
 	@Override
 	public void visit(Equality node) {
-		// TODO Auto-generated method stub
-
+		handleInfix(node, "=");
 	}
 
 	@Override
 	public void visit(Inequality node) {
-		// TODO Auto-generated method stub
-
+		handleInfix(node, "<>");
 	}
 
 	@Override
 	public void visit(Relation relation) {
-		// TODO Auto-generated method stub
-
+		handleInfix(relation, relation.getTypeString());
 	}
 
 	@Override
@@ -189,8 +184,7 @@ public class MapleDfgVisitor implements ExpressionVisitor {
 	}
 
 	@Override
-	public void visit(MacroCall node) {
-		// TODO Auto-generated method stub
-		
+	public void visit(MacroCall node) {		
+		throw new IllegalStateException("Macros should have been inlined, so macro calls are not allowed here.");
 	}
 }

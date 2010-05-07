@@ -99,9 +99,18 @@ public class IfThenElseNode extends SequentialNode {
 		} else {
 			condition.replaceExpression(old, newExpression);
 		}
-		positive.replaceExpression(old, newExpression); // TODO: what about successors?
+		replaceSubtree(positive, old, newExpression);
 		if (negative != null) {
-			negative.replaceExpression(old, newExpression); // TODO: what about successors?
+			replaceSubtree(negative, old, newExpression);
+		}
+	}
+	
+	private void replaceSubtree(Node root, Expression old, Expression newExpression) {
+		if (root instanceof BlockEndNode || root instanceof EndNode) {
+			return;
+		} else if (root instanceof SequentialNode) {
+			root.replaceExpression(old, newExpression);
+			replaceSubtree(((SequentialNode) root).getSuccessor(), old, newExpression);
 		}
 	}
 

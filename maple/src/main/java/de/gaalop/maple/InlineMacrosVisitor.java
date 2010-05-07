@@ -268,7 +268,7 @@ public class InlineMacrosVisitor implements ControlFlowVisitor, ExpressionVisito
 	private Map<String, String> newNamesCache;
 	private Set<String> usedNewNames = new HashSet<String>();
 
-	private void replaceUsedVariables(SequentialNode statement) { 
+	private void replaceUsedVariables(Node statement) { 
 		if (statement instanceof AssignmentNode) {
 			AssignmentNode assignment = (AssignmentNode) statement;
 			replaceUsedVariablesInExpression(assignment.getVariable());
@@ -276,6 +276,23 @@ public class InlineMacrosVisitor implements ControlFlowVisitor, ExpressionVisito
 		}
 		if (statement instanceof StoreResultNode) {
 			replaceUsedVariablesInExpression(((StoreResultNode) statement).getValue());
+		}
+		if (statement instanceof IfThenElseNode) {
+			IfThenElseNode ite = (IfThenElseNode) statement;
+			replaceUsedVariablesInExpression(ite.getCondition());
+			replaceSubtree(ite.getPositive());
+			replaceSubtree(ite.getNegative());
+		}
+	}
+	
+	private void replaceSubtree(Node root) {
+		if (root instanceof BlockEndNode) {
+			return;
+		}
+		if (root instanceof SequentialNode) {
+			SequentialNode node = (SequentialNode) root;
+			replaceUsedVariables(node);
+			replaceSubtree(node.getSuccessor());
 		}
 	}
 	

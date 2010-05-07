@@ -65,6 +65,7 @@ public abstract class SequentialNode extends Node {
 		if (successor == oldSuccessor) {
 			successor = null;
 			oldSuccessor.removePredecessor(this);
+			newSuccessor.removePredecessor(oldSuccessor);
 			newSuccessor.addPredecessor(this);
 			successor = newSuccessor;
 		}
