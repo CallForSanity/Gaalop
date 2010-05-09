@@ -72,15 +72,21 @@ statement returns [ArrayList<SequentialNode> nodes]
 	
 	| BREAK { $nodes.add(graphBuilder.handleBreak()); }
 
-  | ^(MACRO id=IDENTIFIER lst=statement_list e=expression?) {
-    graphBuilder.handleMacroDefinition($id.text, $lst.args, $e.result);
-  }
+  | macro
  
 	// Some other expression (We can ignore this since we don't implement side-effects)
 	//| expression // disabled in order to recognize macro return values (as single expression without semicolon)
 
   | pragma
 	;
+	
+macro
+  @init { graphBuilder.beginNewScope(); }
+  @after { graphBuilder.endNewScope(); }
+  : ^(MACRO id=IDENTIFIER lst=statement_list e=expression?) {
+    graphBuilder.handleMacroDefinition($id.text, $lst.args, $e.result);
+  }
+  ;
 
 pragma
   :  PRAGMA RANGE_LITERAL min=float_literal LESS_OR_EQUAL varname=IDENTIFIER LESS_OR_EQUAL max=float_literal
@@ -114,7 +120,11 @@ if_statement returns [IfThenElseNode node]
   ;
   
 else_statement returns [ArrayList<SequentialNode> nodes]
-  @init { $nodes = new ArrayList<SequentialNode>(); }
+  @init { 
+    graphBuilder.beginNewScope();
+    $nodes = new ArrayList<SequentialNode>(); 
+  }
+  @after { graphBuilder.endNewScope(); }
   : ^(ELSE block) { $nodes = $block.nodes; }
   | ^(ELSEIF if_statement) { 
     $if_statement.node.setElseIf(true);
@@ -127,7 +137,11 @@ loop returns [LoopNode node]
   ;
   
 block returns [ArrayList<SequentialNode> nodes]
-  @init { $nodes = new ArrayList<SequentialNode>(); }
+  @init { 
+    graphBuilder.beginNewScope();
+    $nodes = new ArrayList<SequentialNode>(); 
+  }
+  @after { graphBuilder.endNewScope(); }
   : ^(BLOCK stmts=statement_list) {
      $nodes.addAll($stmts.args);
   }

@@ -4,12 +4,14 @@ package de.gaalop.cfg;
  * This class models a control flow node that has one and only one successor.
  * 
  * @author Sebastian Hartte
+ * @author Christian Schwinn
  * @version 1.0
  * @since 1.0
  */
 public abstract class SequentialNode extends Node {
 
 	private Node successor;
+	private VariableScope scope;
 
 	/**
 	 * Constructs a new sequential node.
@@ -18,6 +20,24 @@ public abstract class SequentialNode extends Node {
 	 */
 	public SequentialNode(ControlFlowGraph graph) {
 		super(graph);
+	}
+	
+	/**
+	 * Sets the scope associated with this CFG node.
+	 * 
+	 * @param scope scope of this CFG node.
+	 */
+	public void setScope(VariableScope scope) {
+		this.scope = scope;
+	}
+	
+	/**
+	 * Returns the scope in which this CFG node is defined.
+	 * 
+	 * @return scope in which this node is defined
+	 */
+	public VariableScope getScope() {
+		return scope;
 	}
 
 	/**

@@ -64,6 +64,7 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 		public void visit(IfThenElseNode node) {
 			// we peek only to next level of nested statements
 			if (node == root) {
+				// FIXME: take care of conflicting variable names 
 				if (node.getPositive() == branch) {
 					replaceSuccessor(node, branch);
 					node.getPositive().accept(this);

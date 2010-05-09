@@ -38,6 +38,16 @@ public final class GraphBuilder {
 	private int assignments;
 	
 	private Set<String> macros = new HashSet<String>();
+	
+	private VariableScope currentScope = VariableScope.GLOBAL;
+	
+	public void beginNewScope() {
+		currentScope = new VariableScope(currentScope);
+	}
+	
+	public void endNewScope() {
+		currentScope = currentScope.getParent();
+	}
 
 	public GraphBuilder() {
 		graph = new ControlFlowGraph();
@@ -70,6 +80,7 @@ public final class GraphBuilder {
 	 * @param node The node that should be added.
 	 */
 	private void addNode(SequentialNode node) {
+		node.setScope(currentScope);
 		lastNode.insertAfter(node);
 		lastNode = node;
 	}
@@ -292,7 +303,9 @@ public final class GraphBuilder {
 		if (mode != null && mode.isConstant(name)) {
 			return mode.getConstant(name);
 		} else {
-			return new Variable(name);
+			Variable v = new Variable(name);
+			currentScope.addVariable(v);
+			return v;
 		}
 	}
 

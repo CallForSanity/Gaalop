@@ -34,7 +34,7 @@ public class Variable extends Expression {
 	}
 
 	/**
-	 * Constructs a new node modelling a named variable.
+	 * Constructs a new node modeling a named variable.
 	 * 
 	 * @param name The name of the variable.
 	 */
@@ -85,7 +85,7 @@ public class Variable extends Expression {
 	public void accept(ExpressionVisitor visitor) {
 		visitor.visit(this);
 	}
-	
+
 	@Override
 	public void replaceExpression(Expression old, Expression newExpression) {
 		if (old instanceof Variable && newExpression instanceof Variable) {
@@ -109,12 +109,15 @@ public class Variable extends Expression {
 	 */
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
 
 		Variable variable = (Variable) o;
 
-		if (!name.equals(variable.name)) return false;
+		if (!name.equals(variable.name))
+			return false;
 
 		return true;
 	}

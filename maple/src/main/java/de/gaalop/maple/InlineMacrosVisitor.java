@@ -19,7 +19,7 @@ import de.gaalop.cfg.Node;
 import de.gaalop.cfg.SequentialNode;
 import de.gaalop.cfg.StartNode;
 import de.gaalop.cfg.StoreResultNode;
-import de.gaalop.clucalc.input.UsedVariablesVisitor;
+import de.gaalop.cfg.VariableScope;
 import de.gaalop.dfg.Addition;
 import de.gaalop.dfg.BaseVector;
 import de.gaalop.dfg.Division;
@@ -54,20 +54,15 @@ public class InlineMacrosVisitor implements ControlFlowVisitor, ExpressionVisito
 
 	private SequentialNode currentStatement;
 	private List<Expression> currentArguments;
-	private Set<String> usedVariables = new HashSet<String>();
 	private Set<Node> visitedNodes = new HashSet<Node>();
 
-	private String generateUniqueName(String original) {
-		if (usedVariables.contains(original)) {
-			Random r = new Random(System.currentTimeMillis());
-			String unique;
-			do {
-				unique = original + "__" + r.nextInt(100);
-			} while (usedVariables.contains(unique));
-			return unique;
-		} else {
-			return original;
+	private String generateUniqueName(String original, VariableScope scope) {
+		String unique = original;
+		Random r = new Random(System.currentTimeMillis());
+		while (scope.getParent().containsDefinition(unique)) {
+			unique = original + "__" + r.nextInt(100);
 		}
+		return unique;
 	}
 
 	/**
@@ -84,12 +79,6 @@ public class InlineMacrosVisitor implements ControlFlowVisitor, ExpressionVisito
 
 	@Override
 	public void visit(StartNode node) {
-		for (Variable input : node.getGraph().getInputVariables()) {
-			usedVariables.add(input.getName());
-		}
-		for (Variable local : node.getGraph().getLocalVariables()) {
-			usedVariables.add(local.getName());
-		}
 		continueVisitFrom(node);
 	}
 
@@ -249,68 +238,61 @@ public class InlineMacrosVisitor implements ControlFlowVisitor, ExpressionVisito
 		SequentialNode caller = currentStatement;
 		Macro macro = caller.getGraph().getMacro(node.getName());
 		currentArguments = node.getArguments();
+		VariableScope scope = macro.getScope();
+		// generate unique names for each variable in current scope (to be used for each statement in this scope)
+		Map<String, String> newNames = new HashMap<String, String>();
+		for (Variable v : scope.getDefinedVariables()) {
+			newNames.put(v.getName(), generateUniqueName(v.getName(), scope));
+		}
+		// inline statements and rename variables
 		for (SequentialNode statement : macro.getBody()) {
 			caller.insertBefore(statement);
 			statement.accept(this);
-			replaceUsedVariables(statement);
+			replaceUsedVariables(statement, newNames);
 		}
 		Expression returnValue = macro.getReturnValue();
-		replaceUsedVariablesInExpression(returnValue);
+		replaceUsedVariablesInExpression(returnValue, scope, newNames);
 		caller.replaceExpression(node, returnValue);
-
-		
-		// reset cache and add new variables to prevent reuse
-		usedVariables.addAll(usedNewNames);
-		newNamesCache = null;
-		usedNewNames.clear();
 	}
-	
-	private Map<String, String> newNamesCache;
-	private Set<String> usedNewNames = new HashSet<String>();
 
-	private void replaceUsedVariables(Node statement) { 
+	private void replaceUsedVariables(Node statement, Map<String, String> newNames) {
 		if (statement instanceof AssignmentNode) {
 			AssignmentNode assignment = (AssignmentNode) statement;
-			replaceUsedVariablesInExpression(assignment.getVariable());
-			replaceUsedVariablesInExpression(assignment.getValue());
+			replaceUsedVariablesInExpression(assignment.getVariable(), assignment.getScope(), newNames);
+			replaceUsedVariablesInExpression(assignment.getValue(), assignment.getScope(), newNames);
 		}
 		if (statement instanceof StoreResultNode) {
-			replaceUsedVariablesInExpression(((StoreResultNode) statement).getValue());
+			StoreResultNode srn = (StoreResultNode) statement;
+			replaceUsedVariablesInExpression(srn.getValue(), srn.getScope(), newNames);
 		}
 		if (statement instanceof IfThenElseNode) {
 			IfThenElseNode ite = (IfThenElseNode) statement;
-			replaceUsedVariablesInExpression(ite.getCondition());
-			replaceSubtree(ite.getPositive());
-			replaceSubtree(ite.getNegative());
+			replaceUsedVariablesInExpression(ite.getCondition(), ite.getScope(), newNames);
+			replaceSubtree(ite.getPositive(), newNames);
+			replaceSubtree(ite.getNegative(), newNames);
 		}
 	}
-	
-	private void replaceSubtree(Node root) {
+
+	private void replaceSubtree(Node root, Map<String, String> newNames) {
 		if (root instanceof BlockEndNode) {
 			return;
 		}
 		if (root instanceof SequentialNode) {
 			SequentialNode node = (SequentialNode) root;
-			replaceUsedVariables(node);
-			replaceSubtree(node.getSuccessor());
+			replaceUsedVariables(node, newNames);
+			replaceSubtree(node.getSuccessor(), newNames);
 		}
 	}
-	
-	private void replaceUsedVariablesInExpression(Expression e) {
+
+	private void replaceUsedVariablesInExpression(Expression e, VariableScope scope, Map<String, String> newNames) {
 		UsedVariablesVisitor visitor = new UsedVariablesVisitor();
 		e.accept(visitor);
 		Set<Variable> variables = visitor.getVariables();
-		if (newNamesCache == null) {
-			newNamesCache = new HashMap<String, String>();
-			for (String name : usedVariables) {
-				newNamesCache.put(name, generateUniqueName(name));
-			}
-		}
 		for (Variable v : variables) {
-			if (usedVariables.contains(v.getName())) {
-				String unique = newNamesCache.get(v.getName());
-				usedNewNames.add(unique);
-				e.replaceExpression(v, new Variable(unique));
+			if (scope.getParent().containsDefinition(v.getName())) {
+				String unique = newNames.get(v.getName());
+				Variable newVariable = new Variable(unique);
+				e.replaceExpression(v, newVariable);
 			}
 		}
 	}
