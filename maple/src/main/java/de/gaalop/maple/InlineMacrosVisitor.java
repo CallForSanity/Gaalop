@@ -10,6 +10,7 @@ import java.util.Set;
 import de.gaalop.cfg.AssignmentNode;
 import de.gaalop.cfg.BlockEndNode;
 import de.gaalop.cfg.BreakNode;
+import de.gaalop.cfg.ControlFlowGraph;
 import de.gaalop.cfg.ControlFlowVisitor;
 import de.gaalop.cfg.EndNode;
 import de.gaalop.cfg.IfThenElseNode;
@@ -288,11 +289,18 @@ public class InlineMacrosVisitor implements ControlFlowVisitor, ExpressionVisito
 		UsedVariablesVisitor visitor = new UsedVariablesVisitor();
 		e.accept(visitor);
 		Set<Variable> variables = visitor.getVariables();
+		ControlFlowGraph graph = currentStatement.getGraph();
 		for (Variable v : variables) {
 			if (scope.getParent().containsDefinition(v.getName())) {
 				String unique = newNames.get(v.getName());
 				Variable newVariable = new Variable(unique);
 				e.replaceExpression(v, newVariable);
+				// add new input or local variable
+				if (graph.getLocalVariables().contains(v)) {
+					graph.addLocalVariable(newVariable);
+				} else if (graph.getInputVariables().contains(v)) {
+					graph.addInputVariable(newVariable);
+				}
 			}
 		}
 	}
