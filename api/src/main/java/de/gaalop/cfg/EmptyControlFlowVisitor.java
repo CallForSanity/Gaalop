@@ -56,11 +56,10 @@ public class EmptyControlFlowVisitor implements ControlFlowVisitor {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * This empty implementation visits the successor node by default.
+	 * This empty implementation does not call a successor's visit method.
 	 */
 	@Override
 	public void visit(BlockEndNode node) {
-		node.getSuccessor().accept(this);
 	}
 
 	/**

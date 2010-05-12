@@ -309,7 +309,8 @@ public final class ControlFlowGraph {
 			} else if (predecessor instanceof LoopNode) {
 				LoopNode loop = (LoopNode) predecessor;
 				if (node == loop.getBody()) {
-					loop.setBody(successor);
+					// typecast is safe, since getBody returns a SequentialNode
+					loop.setBody((SequentialNode) successor);
 				} else {
 					loop.replaceSuccessor(node, successor);
 				}

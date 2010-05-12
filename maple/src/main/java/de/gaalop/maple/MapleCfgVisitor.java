@@ -191,8 +191,7 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 
 	@Override
 	public void visit(LoopNode node) {
-		node.getBody().accept(this);
-
+		// TODO: handle loop body
 		node.getSuccessor().accept(this);
 	}
 
