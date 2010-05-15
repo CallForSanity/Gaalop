@@ -190,15 +190,24 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 	}
 
 	@Override
-	public void visit(LoopNode loopNode) {
-		// TODO Auto-generated method stub
+	public void visit(LoopNode node) {
+		appendIndentation();
+		code.append("while(true) {\n");
 		
+		indentation++;
+		node.getBody().accept(this);
+		indentation--;
+		
+		appendIndentation();
+		code.append("}\n");
+		
+		node.getSuccessor().accept(this);
 	}
 
 	@Override
 	public void visit(BreakNode breakNode) {
-		// TODO Auto-generated method stub
-		
+		appendIndentation();
+		code.append("break;\n");
 	}
 
 	@Override

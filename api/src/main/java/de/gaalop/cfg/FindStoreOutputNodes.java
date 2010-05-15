@@ -44,11 +44,12 @@ public class FindStoreOutputNodes implements ControlFlowVisitor {
 	@Override
 	public void visit(LoopNode node) {
 		node.getBody().accept(this);
+		node.getSuccessor().accept(this);
 	}
 	
 	@Override
 	public void visit(BreakNode breakNode) {
-		// nothing to do
+		breakNode.getSuccessor().accept(this);
 	}
 
 	@Override

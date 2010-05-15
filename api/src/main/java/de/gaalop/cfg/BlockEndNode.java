@@ -6,14 +6,17 @@ package de.gaalop.cfg;
  * @author Christian Schwinn
  */
 public final class BlockEndNode extends SequentialNode {
+	
+	private SequentialNode base;
 
     /**
      * Constructs a block end node.
      *
      * @param graph    The control flow graph the new node should belong to.
      */
-    public BlockEndNode(ControlFlowGraph graph) {
+    public BlockEndNode(ControlFlowGraph graph, SequentialNode base) {
         super(graph);
+        this.base = base;
     }
 
     /**
@@ -24,6 +27,10 @@ public final class BlockEndNode extends SequentialNode {
     public void accept(ControlFlowVisitor visitor) {
         visitor.visit(this);
     }
+    
+    public SequentialNode getBase() {
+		return base;
+	}
     
     @Override
     public Node getSuccessor() {

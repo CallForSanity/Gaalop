@@ -21,9 +21,8 @@ public final class GraphBuilder {
 	/**
 	 * The list of algebra modes supported in CluCalc.
 	 */
-	private static final AlgebraMode[] ALGEBRA_MODES = new AlgebraMode[] {
-		new AlgebraC2(), new AlgebraE3(), new AlgebraN3(), new AlgebraP3(),
-	};
+	private static final AlgebraMode[] ALGEBRA_MODES = new AlgebraMode[] { new AlgebraC2(), new AlgebraE3(),
+			new AlgebraN3(), new AlgebraP3(), };
 
 	private final ControlFlowGraph graph;
 
@@ -36,15 +35,15 @@ public final class GraphBuilder {
 	private final FunctionFactory functionFactory;
 
 	private int assignments;
-	
+
 	private Set<String> macros = new HashSet<String>();
-	
+
 	private VariableScope currentScope = VariableScope.GLOBAL;
-	
+
 	public void beginNewScope() {
 		currentScope = new VariableScope(currentScope);
 	}
-	
+
 	public void endNewScope() {
 		currentScope = currentScope.getParent();
 	}
@@ -67,8 +66,8 @@ public final class GraphBuilder {
 	}
 
 	/**
-	 * Adds a pragma hint for a variable, which defines value range for it. The pragma must be set before the variable is added to
-	 * the input variables, i.e. the pragma must appear for the use of the variable
+	 * Adds a pragma hint for a variable, which defines value range for it. The pragma must be set before the variable
+	 * is added to the input variables, i.e. the pragma must appear for the use of the variable
 	 */
 	public void addPragmaMinMaxValues(String variable, String min, String max) {
 		graph.addPragmaMinMaxValues(variable, min, max);
@@ -163,15 +162,16 @@ public final class GraphBuilder {
 	}
 
 	/**
-	 * Handles an if statement. The statement consists of a condition expression, a mandatory then part (block) and an optional
-	 * else part.
+	 * Handles an if statement. The statement consists of a condition expression, a mandatory then part (block) and an
+	 * optional else part.
 	 * 
 	 * @param condition condition expression
 	 * @param then_part list of statements belonging to then part
 	 * @param else_part optional list of statements belonging to else part (empty list in case of no else part)
 	 * @return new {@link IfThenElseNode} representing this statement.
 	 */
-	public IfThenElseNode handleIfStatement(Expression condition, List<SequentialNode> then_part, List<SequentialNode> else_part) {
+	public IfThenElseNode handleIfStatement(Expression condition, List<SequentialNode> then_part,
+			List<SequentialNode> else_part) {
 		IfThenElseNode ifthenelse = new IfThenElseNode(graph, condition);
 		addNode(ifthenelse);
 
@@ -179,13 +179,15 @@ public final class GraphBuilder {
 		rewireNodes(else_part, ifthenelse);
 
 		ifthenelse.setPositive(then_part.get(0));
-		ifthenelse.setNegative((else_part != null && else_part.size() > 0) ? else_part.get(0) : new BlockEndNode(graph));
+		ifthenelse.setNegative((else_part != null && else_part.size() > 0) ? else_part.get(0) : new BlockEndNode(graph,
+				ifthenelse));
 
 		return ifthenelse;
 	}
 
 	/**
-	 * Handles a loop statement. A CluCalc loop consists of a body of statements, typically containing the break keyword.
+	 * Handles a loop statement. A CluCalc loop consists of a body of statements, typically containing the break
+	 * keyword.
 	 * 
 	 * @param body list of statements belonging to body
 	 * @return new {@link LoopNode} representing this statement.
@@ -194,7 +196,7 @@ public final class GraphBuilder {
 		LoopNode loop = new LoopNode(graph);
 		addNode(loop);
 		rewireNodes(body, loop);
-		loop.setBody((body != null && body.size() > 0) ? body.get(0) : new BlockEndNode(graph));
+		loop.setBody((body != null && body.size() > 0) ? body.get(0) : new BlockEndNode(graph, loop));
 		FindTerminationVisitor visitor = new FindTerminationVisitor(loop);
 		graph.accept(visitor);
 		loop.setTermination(visitor.getTermination());
@@ -212,29 +214,30 @@ public final class GraphBuilder {
 		addNode(brk);
 		return brk;
 	}
-	
+
 	public Macro handleMacroDefinition(String id, List<SequentialNode> body, Expression ret) {
 		macros.add(id);
 		Macro macro = new Macro(graph, id, body, ret);
 		addNode(macro);
 		graph.addMacro(macro);
-		
+
 		for (SequentialNode node : body) {
 			graph.removeNode(node);
 		}
-		
+
 		return macro;
 	}
 
 	/**
-	 * Removes the nodes given by <code>list</code> from the control flow graph and rewires them to be a sequence of separate
-	 * nodes, e.g. in the body of an if-statement. The first node has <code>base</code> as predecessor. For the last node in the
-	 * list, base's successor will be set as successor, e.g. the first statement after an if-then-else statement.
+	 * Removes the nodes given by <code>list</code> from the control flow graph and rewires them to be a sequence of
+	 * separate nodes, e.g. in the body of an if-statement. The first node has <code>base</code> as predecessor. For the
+	 * last node in the list, base's successor will be set as successor, e.g. the first statement after an if-then-else
+	 * statement.
 	 * 
 	 * @param list list of nodes from a block
 	 * @param base basis of block, e.g. an if-statement
 	 */
-	private void rewireNodes(List<SequentialNode> list, Node base) {
+	private void rewireNodes(List<SequentialNode> list, SequentialNode base) {
 		if (list == null || list.size() == 0) {
 			return;
 		}
@@ -249,7 +252,7 @@ public final class GraphBuilder {
 			next.addPredecessor(current);
 			current = next;
 		}
-		current.replaceSuccessor(current.getSuccessor(), new BlockEndNode(graph)); // mark the end of this block
+		current.replaceSuccessor(current.getSuccessor(), new BlockEndNode(graph, base)); // mark the end of this block
 	}
 
 	/**
@@ -278,8 +281,8 @@ public final class GraphBuilder {
 	}
 
 	/**
-	 * Searches the expression for variable references. If an undeclared reference is found, it is added to the input variables of
-	 * the graph.
+	 * Searches the expression for variable references. If an undeclared reference is found, it is added to the input
+	 * variables of the graph.
 	 * 
 	 * @param expression The expression to search in.
 	 */
@@ -327,16 +330,16 @@ public final class GraphBuilder {
 					return new MathFunctionCall(args.get(0), mathFunction);
 				} else {
 					throw new IllegalArgumentException("Calling math function " + mathFunction + " with more than one"
-						+ " argument: " + args);
+							+ " argument: " + args);
 				}
 			}
 		}
-		
+
 		if (macros.contains(name)) {
 			return new MacroCall(name, args);
 		}
 
 		throw new IllegalArgumentException("Call to undefined function " + name + "(" + args + ").\n"
-			+ "Maybe this function is not defined in " + mode);
+				+ "Maybe this function is not defined in " + mode);
 	}
 }

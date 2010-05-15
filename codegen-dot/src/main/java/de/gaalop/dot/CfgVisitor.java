@@ -101,24 +101,38 @@ public class CfgVisitor implements ControlFlowVisitor {
 
 	@Override
 	public void visit(IfThenElseNode node) {
-	  // TODO Auto-generated method stub
-	
+		String label = "if\\n" + node.getCondition().toString();
+		addNode(node, label);
+		addForwardEdge(node, node.getPositive());
+		node.getPositive().accept(this);
+		if (!(node.getNegative() instanceof BlockEndNode)) {
+			addForwardEdge(node, node.getNegative());
+			node.getNegative().accept(this);
+		}
+		node.getSuccessor().accept(this);
 	}
 
 	@Override
-	public void visit(LoopNode loopNode) {
-		// TODO Auto-generated method stub
+	public void visit(LoopNode node) {
+		addNode(node, "loop");
+		addForwardEdge(node, node.getBody());
+		node.getBody().accept(this);
 		
+		node.getSuccessor().accept(this);
 	}
 
 	@Override
 	public void visit(BreakNode breakNode) {
-		// TODO Auto-generated method stub
-		
+		addNode(breakNode, "break");
 	}
 
 	@Override
 	public void visit(BlockEndNode node) {
+		SequentialNode base = node.getBase();
+		if (base instanceof LoopNode) {
+			addBackwardsEdge(node, base);
+		}
+		addForwardEdge(node, base.getSuccessor());
 	}
 
 	@Override
