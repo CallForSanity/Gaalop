@@ -1,5 +1,6 @@
 package de.gaalop.cfg;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -64,6 +65,8 @@ public final class VariableScope {
 
 	@Override
 	public String toString() {
-		return name;
+		String result = name + "=";
+		result += Arrays.toString(variables.toArray());
+		return result;
 	}
 }

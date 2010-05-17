@@ -18,6 +18,7 @@ options {
 
 @members {
 	private GraphBuilder graphBuilder;
+	private boolean inIfBlock = false;
 
 	private List<String> errors = new ArrayList<String>();
 	public void displayRecognitionError(String[] tokenNames,
@@ -70,7 +71,13 @@ statement returns [ArrayList<SequentialNode> nodes]
 	
 	| loop { $nodes.add($loop.node); }
 	
-	| BREAK { $nodes.add(graphBuilder.handleBreak()); }
+	| BREAK {
+	  if (inIfBlock) { 
+	    $nodes.add(graphBuilder.handleBreak());
+	  } else {
+	    throw new IllegalStateException("A break command may only occur whithin a conditional statement.");
+	  } 
+	}
 
   | macro
  
@@ -114,6 +121,8 @@ variable returns [Variable result]
 	;
 	
 if_statement returns [IfThenElseNode node]
+  @init { inIfBlock = true; }
+  @after { inIfBlock = false; }
   : ^(IF condition=expression then_part=statement else_part=else_statement?) {
     $node = graphBuilder.handleIfStatement($condition.result, $then_part.nodes, $else_part.nodes);
   }

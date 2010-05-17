@@ -291,7 +291,7 @@ public class InlineMacrosVisitor implements ControlFlowVisitor, ExpressionVisito
 		Set<Variable> variables = visitor.getVariables();
 		ControlFlowGraph graph = currentStatement.getGraph();
 		for (Variable v : variables) {
-			if (scope.getParent().containsDefinition(v.getName())) {
+			if (scope.getParent().containsDefinition(v.getName()) && !v.globalAccess()) {
 				String unique = newNames.get(v.getName());
 				Variable newVariable = new Variable(unique);
 				e.replaceExpression(v, newVariable);

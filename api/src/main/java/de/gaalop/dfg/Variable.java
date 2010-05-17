@@ -25,6 +25,8 @@ public class Variable extends Expression {
 	 */
 	private String maxValue = null;
 
+	private boolean global;
+
 	public void setMaxValue(String maxValue) {
 		this.maxValue = maxValue;
 	}
@@ -39,7 +41,16 @@ public class Variable extends Expression {
 	 * @param name The name of the variable.
 	 */
 	public Variable(String name) {
-		this.name = name;
+		if (name.startsWith("::") && name.length() > 2) {
+			this.global = true;
+			this.name = name.substring(2);
+		} else {
+			this.name = name;
+		}
+	}
+	
+	public boolean globalAccess() {
+		return global;
 	}
 
 	/**

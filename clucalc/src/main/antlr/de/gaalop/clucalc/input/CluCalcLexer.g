@@ -51,7 +51,7 @@ BREAK : 'break'
   ;
 
 IDENTIFIER
-	:	LETTER (LETTER|DIGIT)*
+	:	('::')? LETTER (LETTER|DIGIT)*
 	;
 	
 ARGUMENT_PREFIX
