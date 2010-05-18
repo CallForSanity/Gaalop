@@ -6,6 +6,7 @@ import de.gaalop.cfg.ControlFlowGraph;
 import de.gaalop.cfg.ControlFlowVisitor;
 import de.gaalop.cfg.SequentialNode;
 import de.gaalop.dfg.Expression;
+import de.gaalop.dfg.FloatConstant;
 
 public class Macro extends SequentialNode {
 	
@@ -17,7 +18,12 @@ public class Macro extends SequentialNode {
 		super(graph);
 		this.name = name;
 		this.body = body;
-		this.returnValue = returnValue;
+		if (returnValue != null) {
+			this.returnValue = returnValue;		
+		} else {
+			this.returnValue = new FloatConstant(0.0f);
+			System.out.println("Missing return value of macro " + name + " has been set to 0.");
+		}
 	}
 	
 	public String getName() {

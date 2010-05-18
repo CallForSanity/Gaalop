@@ -39,7 +39,7 @@ public enum CluCalcCodeParser implements CodeParser {
         try {
             graph = parse(input);
         } catch (Throwable e) {
-            throw new CodeParserException(input, "Unable to parse CluCalc file.\n" + e.getMessage(), e);
+            throw new CodeParserException(input, e.getMessage(), e);
         }
 
         graph.setSource(input);

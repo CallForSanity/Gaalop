@@ -19,6 +19,13 @@ options {
 @members {
 	private GraphBuilder graphBuilder;
 	private boolean inIfBlock = false;
+	private boolean inMacro = false;
+	
+	private static final class ParserError extends Error {
+    public ParserError(String message) {
+      super("Parser error: " + message);
+    }
+  }
 
 	private List<String> errors = new ArrayList<String>();
 	public void displayRecognitionError(String[] tokenNames,
@@ -75,7 +82,7 @@ statement returns [ArrayList<SequentialNode> nodes]
 	  if (inIfBlock) { 
 	    $nodes.add(graphBuilder.handleBreak());
 	  } else {
-	    throw new IllegalStateException("A break command may only occur whithin a conditional statement.");
+	    throw new ParserError("A break command may only occur whithin a conditional statement.");
 	  } 
 	}
 
@@ -88,8 +95,17 @@ statement returns [ArrayList<SequentialNode> nodes]
 	;
 	
 macro
-  @init { graphBuilder.beginNewScope(); }
-  @after { graphBuilder.endNewScope(); }
+  @init { 
+    if (inMacro) {
+      throw new ParserError("A macro may only be defined in global scope.");
+    }
+    graphBuilder.beginNewScope(); 
+    inMacro = true;
+  }
+  @after { 
+    graphBuilder.endNewScope();
+    inMacro = false;
+  }
   : ^(MACRO id=IDENTIFIER lst=statement_list e=expression?) {
     graphBuilder.handleMacroDefinition($id.text, $lst.args, $e.result);
   }
