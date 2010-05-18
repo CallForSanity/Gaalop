@@ -106,13 +106,15 @@ public final class GraphBuilder {
 	 * @param variable The variable that is assigned to.
 	 * @param expression The expression that is assigned to the variable.
 	 */
-	public AssignmentNode handleAssignment(Variable variable, Expression expression) {
+	public AssignmentNode handleAssignment(Variable variable, Expression expression, boolean inMacro) {
 		assignments++;
 		findUndeclaredVariables(expression);
 
 		AssignmentNode assignment = new AssignmentNode(graph, variable, expression);
 		addNode(assignment);
-		graph.addLocalVariable(variable);
+		if (!inMacro) {
+			graph.addLocalVariable(variable);
+		}
 		return assignment;
 	}
 

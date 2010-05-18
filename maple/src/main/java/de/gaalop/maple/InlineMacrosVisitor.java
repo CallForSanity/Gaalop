@@ -295,12 +295,6 @@ public class InlineMacrosVisitor implements ControlFlowVisitor, ExpressionVisito
 				String unique = newNames.get(v.getName());
 				Variable newVariable = new Variable(unique);
 				e.replaceExpression(v, newVariable);
-				// add new input or local variable
-				if (graph.getLocalVariables().contains(v)) {
-					graph.addLocalVariable(newVariable);
-				} else if (graph.getInputVariables().contains(v)) {
-					graph.addInputVariable(newVariable);
-				}
 			}
 		}
 	}

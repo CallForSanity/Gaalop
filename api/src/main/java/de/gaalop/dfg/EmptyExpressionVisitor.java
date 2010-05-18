@@ -8,29 +8,40 @@ package de.gaalop.dfg;
  * 
  */
 public class EmptyExpressionVisitor implements ExpressionVisitor {
+	
+	private void handleBinary(Expression left, Expression right) {
+		left.accept(this);
+		right.accept(this);
+	}
 
 	@Override
 	public void visit(Subtraction node) {
+		handleBinary(node.getLeft(), node.getRight());
 	}
 
 	@Override
 	public void visit(Addition node) {
+		handleBinary(node.getLeft(), node.getRight());
 	}
 
 	@Override
 	public void visit(Division node) {
+		handleBinary(node.getLeft(), node.getRight());
 	}
 
 	@Override
 	public void visit(InnerProduct node) {
+		handleBinary(node.getLeft(), node.getRight());
 	}
 
 	@Override
 	public void visit(Multiplication node) {
+		handleBinary(node.getLeft(), node.getRight());
 	}
 
 	@Override
 	public void visit(MathFunctionCall node) {
+		node.getOperand().accept(this);
 	}
 
 	@Override
@@ -43,6 +54,7 @@ public class EmptyExpressionVisitor implements ExpressionVisitor {
 
 	@Override
 	public void visit(Exponentiation node) {
+		handleBinary(node.getLeft(), node.getRight());
 	}
 
 	@Override
@@ -51,6 +63,7 @@ public class EmptyExpressionVisitor implements ExpressionVisitor {
 
 	@Override
 	public void visit(OuterProduct node) {
+		handleBinary(node.getLeft(), node.getRight());
 	}
 
 	@Override
@@ -59,30 +72,37 @@ public class EmptyExpressionVisitor implements ExpressionVisitor {
 
 	@Override
 	public void visit(Negation node) {
+		node.getOperand().accept(this);
 	}
 
 	@Override
 	public void visit(Reverse node) {
+		node.getOperand().accept(this);
 	}
 
 	@Override
 	public void visit(LogicalOr node) {
+		handleBinary(node.getLeft(), node.getRight());
 	}
 
 	@Override
 	public void visit(LogicalAnd node) {
+		handleBinary(node.getLeft(), node.getRight());
 	}
 
 	@Override
 	public void visit(Equality node) {
+		handleBinary(node.getLeft(), node.getRight());
 	}
 
 	@Override
 	public void visit(Inequality node) {
+		handleBinary(node.getLeft(), node.getRight());
 	}
 
 	@Override
-	public void visit(Relation relation) {
+	public void visit(Relation node) {
+		handleBinary(node.getLeft(), node.getRight());
 	}
 
 	@Override

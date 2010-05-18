@@ -1,6 +1,7 @@
 package de.gaalop.maple;
 
 import de.gaalop.cfg.*;
+import de.gaalop.dfg.EmptyExpressionVisitor;
 import de.gaalop.dfg.Expression;
 import de.gaalop.dfg.MathFunction;
 import de.gaalop.dfg.MathFunctionCall;
@@ -64,6 +65,7 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 		public void visit(IfThenElseNode node) {
 			// we peek only to next level of nested statements
 			if (node == root) {
+				// FIXME: if inlining is not possible, then- or else-part gets lost for optimization...
 				if (node.getPositive() == branch) {
 					replaceSuccessor(node, branch);
 					node.getPositive().accept(this);
@@ -81,6 +83,37 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 			// this relies on the fact that nested statements are being ignored in visit(IfThenElseNode),
 			// otherwise successor could be the wrong one
 			replaceSuccessor(node, successor);
+		}
+
+	}
+
+	private class VariableInitializer extends EmptyExpressionVisitor {
+
+		private Expression condition;
+
+		public VariableInitializer(Expression condition) {
+			this.condition = condition;
+		}
+
+		@Override
+		public void visit(Variable v) {
+			String variable = v.getName();
+			StringBuilder codeBuffer = new StringBuilder();
+			codeBuffer.append("eval(");
+			codeBuffer.append(variable);
+			codeBuffer.append(");\n");
+			try {
+				String result = engine.evaluate(codeBuffer.toString());
+				if ((variable + "\n").equals(result)) {
+					// TODO: append warning to a list to be displayed to user
+					log.warn("Initializing unknown variable '" + variable + "' in conditional statement '" + condition
+							+ "' to 0.");
+					engine.evaluate(variable + " := 0;");
+				}
+				log.debug("Maple evaluation of variable " + variable + ": " + result);
+			} catch (MapleEngineException e) {
+				throw new RuntimeException("Unable to evaluate variable " + variable, e);
+			}
 		}
 
 	}
@@ -167,13 +200,15 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 
 	@Override
 	public void visit(IfThenElseNode node) {
+		Expression condition = node.getCondition();
+		condition.accept(new VariableInitializer(condition));
 		StringBuilder codeBuffer = new StringBuilder();
 		codeBuffer.append("evalb(");
-		codeBuffer.append(generateCode(node.getCondition()));
+		codeBuffer.append(generateCode(condition));
 		codeBuffer.append(");\n");
 		try {
 			String result = engine.evaluate(codeBuffer.toString());
-			log.debug("Maple simplification of IF condition " + node.getCondition() + ": " + result);
+			log.debug("Maple simplification of IF condition " + condition + ": " + result);
 			if ("true\n".equals(result)) {
 				node.accept(new InlineBlockVisitor(node, node.getPositive()));
 				node.getPositive().accept(this);
@@ -184,7 +219,7 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 				node.getSuccessor().accept(this);
 			}
 		} catch (MapleEngineException e) {
-			throw new RuntimeException("Unable to check condition " + node.getCondition() + " in if-statement " + node,
+			throw new RuntimeException("Unable to check condition " + condition + " in if-statement " + node,
 					e);
 		}
 	}
