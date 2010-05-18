@@ -21,6 +21,7 @@
         <module>codegen-latex</module>
         <module>starter</module>
         <module>codegen-dot</module>
+        <module>setup</module>
     </modules>
 
     <!--
