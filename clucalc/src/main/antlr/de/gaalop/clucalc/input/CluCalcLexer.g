@@ -204,3 +204,10 @@ GREATER_OR_EQUAL
 	:	'>='
 	;
 
+REFERENCE_OPERATOR
+  @after{ 
+    throw new IllegalArgumentException("The reference operator (->) is not supported. Please use standard assignments instead."); 
+  }
+  : '->'
+  ;
+

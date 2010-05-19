@@ -87,8 +87,8 @@ statement returns [ArrayList<SequentialNode> nodes]
 
   | macro
  
-	// Some other expression (We can ignore this since we don't implement side-effects)
-	//| expression // disabled in order to recognize macro return values (as single expression without semicolon)
+	// Some single-line expression (without assignment), e.g. macro call 
+	| expression { $nodes.add(graphBuilder.processExpressionStatement($expression.result)); }
 
   | pragma
 	;
@@ -105,9 +105,13 @@ macro
     graphBuilder.endNewScope();
     inMacro = false;
   }
-  : ^(MACRO id=IDENTIFIER lst=statement_list e=expression?) {
+  : ^(MACRO id=IDENTIFIER { graphBuilder.addMacroName($id.text); } lst=statement_list e=return_value?) {
     graphBuilder.handleMacroDefinition($id.text, $lst.args, $e.result);
   }
+  ;
+  
+return_value returns [Expression result]
+  : ^(RETURN exp=expression) { $result = $exp.result; }
   ;
 
 pragma

@@ -16,6 +16,7 @@ tokens {
   ELSEIF;
   MACRO;
   ARGUMENT;
+  RETURN;
 }
 
 @header {
@@ -162,7 +163,12 @@ statement
   ;
   
 macro_definition
-  : id=IDENTIFIER EQUALS CLBRACKET statement* e=additive_expression? CRBRACKET -> ^(MACRO $id statement* $e?)
+  : id=IDENTIFIER EQUALS CLBRACKET statement* e=return_value? CRBRACKET -> ^(MACRO $id statement* $e?)
+  ;
+  
+return_value
+  : add=additive_expression -> ^(RETURN $add)
+  | or=logical_or_expression -> ^(RETURN $or)
   ;
   
 block

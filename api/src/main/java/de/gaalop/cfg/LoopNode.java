@@ -25,6 +25,15 @@ public class LoopNode extends SequentialNode {
 	public SequentialNode getBody() {
 		return body;
 	}
+	
+	@Override
+	public void replaceSuccessor(Node oldSuccessor, Node newSuccessor) {
+		if (oldSuccessor == body) {
+			body = (SequentialNode) newSuccessor;
+		} else {
+			super.replaceSuccessor(oldSuccessor, newSuccessor);
+		}
+	}
 
 	@Override
 	public void accept(ControlFlowVisitor visitor) {

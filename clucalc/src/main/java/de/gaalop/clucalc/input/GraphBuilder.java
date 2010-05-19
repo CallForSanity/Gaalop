@@ -37,6 +37,7 @@ public final class GraphBuilder {
 	private int assignments;
 
 	private Set<String> macros = new HashSet<String>();
+	private String currentMacroDefinition;
 
 	private VariableScope currentScope = VariableScope.GLOBAL;
 
@@ -218,7 +219,8 @@ public final class GraphBuilder {
 	}
 
 	public Macro handleMacroDefinition(String id, List<SequentialNode> body, Expression ret) {
-		macros.add(id);
+		// reset current macro name to allow further calls
+		currentMacroDefinition = "";
 		Macro macro = new Macro(graph, id, body, ret);
 		addNode(macro);
 		graph.addMacro(macro);
@@ -228,6 +230,11 @@ public final class GraphBuilder {
 		}
 
 		return macro;
+	}
+	
+	public void addMacroName(String name) {
+		macros.add(name);
+		currentMacroDefinition = name;
 	}
 
 	/**
@@ -338,10 +345,21 @@ public final class GraphBuilder {
 		}
 
 		if (macros.contains(name)) {
-			return new MacroCall(name, args);
+			if (name.equals(currentMacroDefinition)) {
+				throw new IllegalArgumentException("Recursive macro calls are not supported: " + name);
+			} else {
+				return new MacroCall(name, args);
+			}
 		}
 
 		throw new IllegalArgumentException("Call to undefined function " + name + "(" + args + ").\n"
 				+ "Maybe this function is not defined in " + mode);
 	}
+	
+	public ExpressionStatement processExpressionStatement(Expression e) {
+		ExpressionStatement statement = new ExpressionStatement(graph, e);
+		addNode(statement);
+		return statement;
+	}
+	
 }

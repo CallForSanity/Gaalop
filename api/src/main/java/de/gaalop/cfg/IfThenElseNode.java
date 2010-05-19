@@ -17,9 +17,9 @@ public class IfThenElseNode extends SequentialNode {
 	/** Evaluation condition. */
 	private Expression condition;
 	/** First statement to be evaluated when condition is true. */
-	private Node positive;
+	private SequentialNode positive;
 	/** First statement to be evaluated when condition is false. */
-	private Node negative;
+	private SequentialNode negative;
 	/** Whether this node represents the special case of an else-if part. */
 	private boolean elseif;
 
@@ -65,7 +65,7 @@ public class IfThenElseNode extends SequentialNode {
 	 * 
 	 * @param first control flow node to be executed in the positive case
 	 */
-	public void setPositive(Node positive) {
+	public void setPositive(SequentialNode positive) {
 		this.positive = positive;
 	}
 
@@ -83,7 +83,7 @@ public class IfThenElseNode extends SequentialNode {
 	 * @param first control flow nodes to be executed in the negative case. Should be a {@link BlockEndNode} in case of
 	 *            a non-existent else part.
 	 */
-	public void setNegative(Node negative) {
+	public void setNegative(SequentialNode negative) {
 		this.negative = negative;
 	}
 
@@ -91,7 +91,20 @@ public class IfThenElseNode extends SequentialNode {
 	public void accept(ControlFlowVisitor visitor) {
 		visitor.visit(this);
 	}
-	
+
+	@Override
+	public void replaceSuccessor(Node oldSuccessor, Node newSuccessor) {
+		if (oldSuccessor == positive) {
+			// cast is safe since branch of if-then-else cannot be the end node
+			setPositive((SequentialNode) newSuccessor);
+		} else if (oldSuccessor == negative) {
+			// cast is safe since branch of if-then-else cannot be the end node
+			setNegative((SequentialNode) newSuccessor);
+		} else {
+			super.replaceSuccessor(oldSuccessor, newSuccessor);
+		}
+	}
+
 	@Override
 	public void replaceExpression(Expression old, Expression newExpression) {
 		if (condition == old) {
@@ -104,7 +117,7 @@ public class IfThenElseNode extends SequentialNode {
 			replaceSubtree(negative, old, newExpression);
 		}
 	}
-	
+
 	private void replaceSubtree(Node root, Expression old, Expression newExpression) {
 		if (root instanceof BlockEndNode || root instanceof EndNode) {
 			return;
@@ -117,18 +130,25 @@ public class IfThenElseNode extends SequentialNode {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("if(" + condition + ")...");
-		// sb.append("[");
-		//
-		// sb.append("{");
-		// sb.append(positive);
-		// sb.append("...},");
-		//
-		// sb.append("{");
-		// sb.append(negative);
-		// sb.append("...}");
-		//
-		// sb.append("]");
+		sb.append("if(" + condition + ")");
+		sb.append(",then={");
+		SequentialNode current = positive;
+		while (!(current instanceof BlockEndNode)) {
+			sb.append(current);
+			sb.append(';');
+			current = (SequentialNode) current.getSuccessor();
+		}
+		sb.append("}");
+		current = negative;
+		if (!(current instanceof BlockEndNode)) {
+			sb.append(",else={");
+			while (!(current instanceof BlockEndNode)) {
+				sb.append(current);
+				sb.append(';');
+				current = (SequentialNode) current.getSuccessor();
+			}
+			sb.append("}");
+		}
 		return sb.toString();
 	}
 

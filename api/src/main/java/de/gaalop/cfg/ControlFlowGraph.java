@@ -297,26 +297,7 @@ public final class ControlFlowGraph {
 		successor.removePredecessor(node);
 		for (Node predecessor : node.getPredecessors()) {
 			successor.addPredecessor(predecessor);
-			if (predecessor instanceof IfThenElseNode) {
-				IfThenElseNode ifthenelse = (IfThenElseNode) predecessor;
-				if (node == ifthenelse.getPositive()) {
-					ifthenelse.setPositive(successor);
-				} else if (node == ifthenelse.getNegative()) {
-					ifthenelse.setNegative(successor);
-				} else {
-					ifthenelse.replaceSuccessor(node, successor);
-				}
-			} else if (predecessor instanceof LoopNode) {
-				LoopNode loop = (LoopNode) predecessor;
-				if (node == loop.getBody()) {
-					// typecast is safe, since getBody returns a SequentialNode
-					loop.setBody((SequentialNode) successor);
-				} else {
-					loop.replaceSuccessor(node, successor);
-				}
-			} else {
-				predecessor.replaceSuccessor(node, successor);
-			}
+			predecessor.replaceSuccessor(node, successor);
 		}
 	}
 
