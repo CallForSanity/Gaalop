@@ -120,25 +120,7 @@ public abstract class Node {
 		newNode.setSuccessor(this);
 		Set<Node> predecessors = new HashSet<Node>(getPredecessors());
 		for (Node predecessor : predecessors) {
-			if (predecessor instanceof IfThenElseNode) {
-				IfThenElseNode ifthenelse = (IfThenElseNode) predecessor;
-				if (this == ifthenelse.getPositive()) {
-					ifthenelse.setPositive(newNode);
-				} else if (this == ifthenelse.getNegative()) {
-					ifthenelse.setNegative(newNode);
-				} else {
-					ifthenelse.replaceSuccessor(this, newNode);
-				}
-			} else if (predecessor instanceof LoopNode) {
-				LoopNode loop = (LoopNode) predecessor;
-				if (this == loop.getBody()) {
-					loop.setBody(newNode);
-				} else {
-					loop.replaceSuccessor(this, newNode);
-				}
-			} else {
-				predecessor.replaceSuccessor(this, newNode);
-			}
+			predecessor.replaceSuccessor(this, newNode);
 		}
 		addPredecessor(newNode);
 	}
