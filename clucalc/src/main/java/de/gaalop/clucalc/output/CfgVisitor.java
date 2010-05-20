@@ -105,6 +105,14 @@ public class CfgVisitor implements ControlFlowVisitor {
 
 		assignmentNode.getSuccessor().accept(this);
 	}
+	
+	@Override
+	public void visit(ExpressionStatement node) {
+		addCode(node.getExpression());
+		code.append(";\n");
+		
+		node.getSuccessor().accept(this);
+	}
 
 	@Override
 	public void visit(StoreResultNode node) {

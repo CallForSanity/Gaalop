@@ -32,14 +32,19 @@ public final class BlockEndNode extends SequentialNode {
 		return base;
 	}
     
-    @Override
-    public Node getSuccessor() {
-      throw new UnsupportedOperationException("A block end node is not supposed to have a successor");
-    }
+//    @Override
+//    public Node getSuccessor() {
+//      throw new UnsupportedOperationException("A block end node is not supposed to have a successor");
+//    }
+//    
+//    @Override
+//    void setSuccessor(Node successor) {
+//      throw new UnsupportedOperationException("A block end node is not supposed to have a successor");
+//    }
     
     @Override
-    void setSuccessor(Node successor) {
-      throw new UnsupportedOperationException("A block end node is not supposed to have a successor");
+    public BlockEndNode copyElements() {
+    	return new BlockEndNode(getGraph(), base); // XXX: which kind of base to use?
     }
 
     @Override

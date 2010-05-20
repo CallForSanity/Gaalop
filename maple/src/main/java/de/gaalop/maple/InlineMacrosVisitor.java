@@ -13,6 +13,7 @@ import de.gaalop.cfg.BreakNode;
 import de.gaalop.cfg.ControlFlowGraph;
 import de.gaalop.cfg.ControlFlowVisitor;
 import de.gaalop.cfg.EndNode;
+import de.gaalop.cfg.ExpressionStatement;
 import de.gaalop.cfg.IfThenElseNode;
 import de.gaalop.cfg.LoopNode;
 import de.gaalop.cfg.Macro;
@@ -20,29 +21,10 @@ import de.gaalop.cfg.Node;
 import de.gaalop.cfg.SequentialNode;
 import de.gaalop.cfg.StartNode;
 import de.gaalop.cfg.StoreResultNode;
-import de.gaalop.cfg.VariableScope;
-import de.gaalop.dfg.Addition;
-import de.gaalop.dfg.BaseVector;
-import de.gaalop.dfg.Division;
-import de.gaalop.dfg.Equality;
-import de.gaalop.dfg.Exponentiation;
+import de.gaalop.dfg.EmptyExpressionVisitor;
 import de.gaalop.dfg.Expression;
-import de.gaalop.dfg.ExpressionVisitor;
-import de.gaalop.dfg.FloatConstant;
 import de.gaalop.dfg.FunctionArgument;
-import de.gaalop.dfg.Inequality;
-import de.gaalop.dfg.InnerProduct;
-import de.gaalop.dfg.LogicalAnd;
-import de.gaalop.dfg.LogicalOr;
 import de.gaalop.dfg.MacroCall;
-import de.gaalop.dfg.MathFunctionCall;
-import de.gaalop.dfg.Multiplication;
-import de.gaalop.dfg.MultivectorComponent;
-import de.gaalop.dfg.Negation;
-import de.gaalop.dfg.OuterProduct;
-import de.gaalop.dfg.Relation;
-import de.gaalop.dfg.Reverse;
-import de.gaalop.dfg.Subtraction;
 import de.gaalop.dfg.Variable;
 
 /**
@@ -51,16 +33,17 @@ import de.gaalop.dfg.Variable;
  * @author Christian Schwinn
  * 
  */
-public class InlineMacrosVisitor implements ControlFlowVisitor, ExpressionVisitor {
+public class InlineMacrosVisitor extends EmptyExpressionVisitor implements ControlFlowVisitor {
 
 	private SequentialNode currentStatement;
 	private List<Expression> currentArguments;
 	private Set<Node> visitedNodes = new HashSet<Node>();
+	private ControlFlowGraph graph;
 
-	private String generateUniqueName(String original, VariableScope scope) {
+	private String generateUniqueName(String original) {
 		String unique = original;
 		Random r = new Random(System.currentTimeMillis());
-		while (scope.getParent().containsDefinition(unique)) {
+		while (graph.containsLocalVariable(unique)) {
 			unique = original + "__" + r.nextInt(100);
 		}
 		return unique;
@@ -80,6 +63,7 @@ public class InlineMacrosVisitor implements ControlFlowVisitor, ExpressionVisito
 
 	@Override
 	public void visit(StartNode node) {
+		this.graph = node.getGraph();
 		continueVisitFrom(node);
 	}
 
@@ -87,6 +71,13 @@ public class InlineMacrosVisitor implements ControlFlowVisitor, ExpressionVisito
 	public void visit(AssignmentNode node) {
 		currentStatement = node;
 		node.getValue().accept(this);
+		continueVisitFrom(node);
+	}
+
+	@Override
+	public void visit(ExpressionStatement node) {
+		currentStatement = node;
+		node.getExpression().accept(this);
 		continueVisitFrom(node);
 	}
 
@@ -132,106 +123,9 @@ public class InlineMacrosVisitor implements ControlFlowVisitor, ExpressionVisito
 	public void visit(EndNode node) {
 	}
 
-	private void handleBinaryOp(Expression l, Expression r) {
-		l.accept(this);
-		r.accept(this);
-	}
-
-	@Override
-	public void visit(Subtraction node) {
-		handleBinaryOp(node.getLeft(), node.getRight());
-	}
-
-	@Override
-	public void visit(Addition node) {
-		handleBinaryOp(node.getLeft(), node.getRight());
-	}
-
-	@Override
-	public void visit(Division node) {
-		handleBinaryOp(node.getLeft(), node.getRight());
-	}
-
-	@Override
-	public void visit(InnerProduct node) {
-		handleBinaryOp(node.getLeft(), node.getRight());
-	}
-
-	@Override
-	public void visit(Multiplication node) {
-		handleBinaryOp(node.getLeft(), node.getRight());
-	}
-
-	@Override
-	public void visit(MathFunctionCall node) {
-		node.getOperand().accept(this);
-	}
-
-	@Override
-	public void visit(Variable node) {
-	}
-
-	@Override
-	public void visit(MultivectorComponent node) {
-	}
-
-	@Override
-	public void visit(Exponentiation node) {
-		handleBinaryOp(node.getLeft(), node.getRight());
-	}
-
-	@Override
-	public void visit(FloatConstant node) {
-	}
-
-	@Override
-	public void visit(OuterProduct node) {
-		handleBinaryOp(node.getLeft(), node.getRight());
-	}
-
-	@Override
-	public void visit(BaseVector node) {
-	}
-
-	@Override
-	public void visit(Negation node) {
-		node.getOperand().accept(this);
-	}
-
-	@Override
-	public void visit(Reverse node) {
-		node.getOperand().accept(this);
-	}
-
-	@Override
-	public void visit(LogicalOr node) {
-		handleBinaryOp(node.getLeft(), node.getRight());
-	}
-
-	@Override
-	public void visit(LogicalAnd node) {
-		handleBinaryOp(node.getLeft(), node.getRight());
-	}
-
-	@Override
-	public void visit(Equality node) {
-		handleBinaryOp(node.getLeft(), node.getRight());
-	}
-
-	@Override
-	public void visit(Inequality node) {
-		handleBinaryOp(node.getLeft(), node.getRight());
-	}
-
-	@Override
-	public void visit(Relation node) {
-		handleBinaryOp(node.getLeft(), node.getRight());
-	}
-
 	@Override
 	public void visit(FunctionArgument node) {
-		Expression arg = currentArguments.get(node.getIndex() - 1);
-		currentStatement.replaceExpression(node, arg);
+		throw new IllegalStateException("This method should not be reachable...");
 	}
 
 	@Override
@@ -239,36 +133,35 @@ public class InlineMacrosVisitor implements ControlFlowVisitor, ExpressionVisito
 		SequentialNode caller = currentStatement;
 		Macro macro = caller.getGraph().getMacro(node.getName());
 		currentArguments = node.getArguments();
-		VariableScope scope = macro.getScope();
 		// generate unique names for each variable in current scope (to be used for each statement in this scope)
 		Map<String, String> newNames = new HashMap<String, String>();
-		for (Variable v : scope.getDefinedVariables()) {
-			newNames.put(v.getName(), generateUniqueName(v.getName(), scope));
+		for (Variable v : graph.getLocalVariables()) {
+			newNames.put(v.getName(), generateUniqueName(v.getName()));
 		}
-		// inline statements and rename variables
+		macro.getBody().get(0).removePredecessor(macro);
 		for (SequentialNode statement : macro.getBody()) {
-			caller.insertBefore(statement);
-			statement.accept(this);
-			replaceUsedVariables(statement, newNames);
+			SequentialNode newStatement = statement.copy();
+			replaceUsedVariables(newStatement, newNames);
+			caller.insertBefore(newStatement);
 		}
 		Expression returnValue = macro.getReturnValue();
-		replaceUsedVariablesInExpression(returnValue, scope, newNames);
+		replaceUsedVariablesInExpression(returnValue, newNames);
 		caller.replaceExpression(node, returnValue);
 	}
 
 	private void replaceUsedVariables(Node statement, Map<String, String> newNames) {
 		if (statement instanceof AssignmentNode) {
 			AssignmentNode assignment = (AssignmentNode) statement;
-			replaceUsedVariablesInExpression(assignment.getVariable(), assignment.getScope(), newNames);
-			replaceUsedVariablesInExpression(assignment.getValue(), assignment.getScope(), newNames);
+			replaceUsedVariablesInExpression(assignment.getVariable(), newNames);
+			replaceUsedVariablesInExpression(assignment.getValue(), newNames);
 		}
 		if (statement instanceof StoreResultNode) {
 			StoreResultNode srn = (StoreResultNode) statement;
-			replaceUsedVariablesInExpression(srn.getValue(), srn.getScope(), newNames);
+			replaceUsedVariablesInExpression(srn.getValue(), newNames);
 		}
 		if (statement instanceof IfThenElseNode) {
 			IfThenElseNode ite = (IfThenElseNode) statement;
-			replaceUsedVariablesInExpression(ite.getCondition(), ite.getScope(), newNames);
+			replaceUsedVariablesInExpression(ite.getCondition(), newNames);
 			replaceSubtree(ite.getPositive(), newNames);
 			replaceSubtree(ite.getNegative(), newNames);
 		}
@@ -285,16 +178,19 @@ public class InlineMacrosVisitor implements ControlFlowVisitor, ExpressionVisito
 		}
 	}
 
-	private void replaceUsedVariablesInExpression(Expression e, VariableScope scope, Map<String, String> newNames) {
+	private void replaceUsedVariablesInExpression(Expression e, Map<String, String> newNames) {
 		UsedVariablesVisitor visitor = new UsedVariablesVisitor();
 		e.accept(visitor);
 		Set<Variable> variables = visitor.getVariables();
-		ControlFlowGraph graph = currentStatement.getGraph();
 		for (Variable v : variables) {
-			if (scope.getParent().containsDefinition(v.getName()) && !v.globalAccess()) {
+			if (graph.containsLocalVariable(v.getName()) && !v.globalAccess()) {
 				String unique = newNames.get(v.getName());
 				Variable newVariable = new Variable(unique);
 				e.replaceExpression(v, newVariable);
+				graph.addLocalVariable(newVariable);
+			} else if (v instanceof FunctionArgument) {
+				FunctionArgument argument = (FunctionArgument) v;
+				e.replaceExpression(argument, currentArguments.get(argument.getIndex() - 1));
 			}
 		}
 	}

@@ -56,14 +56,14 @@ public interface ControlFlowVisitor {
      *
      * @param node The object that called this method.
      */
-    void visit(LoopNode loopNode);
+    void visit(LoopNode node);
     
     /**
      * This method is called by {@link de.gaalop.cfg.BreakNode#accept(ControlFlowVisitor)}.
      *
      * @param node The object that called this method.
      */
-    void visit(BreakNode breakNode);
+    void visit(BreakNode node);
 
 	/**
 	 * This method is called by {@link de.gaalop.cfg.Macro#accept(ControlFlowVisitor)}.
@@ -72,6 +72,13 @@ public interface ControlFlowVisitor {
 	 */
 	void visit(Macro node);
 
+	/**
+	 * This method is called by {@link de.gaalop.cfg.ExpressionStatement#accept(ControlFlowVisitor)}.
+	 *
+	 * @param node The object that called this method.
+	 */
+	void visit(ExpressionStatement node);
+	
 	/**
      * This method is called by {@link de.gaalop.cfg.EndNode#accept(ControlFlowVisitor)}.
      *

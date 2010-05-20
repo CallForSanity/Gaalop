@@ -87,6 +87,11 @@ public final class AssignmentNode extends SequentialNode {
     		value.replaceExpression(old, newExpression);
     	}
     }
+    
+    @Override
+    public AssignmentNode copyElements() {
+    	return new AssignmentNode(getGraph(), variable.copy(), value.copy());
+    }
 
     /**
      * Converts this assignment into a human readable string by calling the <code>toString</code> methods on both

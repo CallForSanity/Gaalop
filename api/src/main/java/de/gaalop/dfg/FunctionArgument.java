@@ -21,6 +21,11 @@ public class FunctionArgument extends Variable {
 	public void accept(ExpressionVisitor visitor) {
 		visitor.visit(this);
 	}
+	
+	@Override
+	public FunctionArgument copy() {
+		return new FunctionArgument(index);
+	}
 
 	public int getIndex() {
 		return index;

@@ -45,6 +45,12 @@ public class LatexVisitor implements ControlFlowVisitor, ExpressionVisitor {
 
         node.getSuccessor().accept(this);
     }
+	
+	@Override
+	public void visit(ExpressionStatement node) {
+		// TODO: implement this method
+		node.getSuccessor().accept(this);
+	}
 
     @Override
     public void visit(StoreResultNode node) {

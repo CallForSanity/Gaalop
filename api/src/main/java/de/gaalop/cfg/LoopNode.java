@@ -41,6 +41,33 @@ public class LoopNode extends SequentialNode {
 	}
 	
 	@Override
+	public LoopNode copyElements() {
+		LoopNode copy = new LoopNode(getGraph());
+		Set<Expression> newConditions = new HashSet<Expression>();
+		for (Expression e : terminationConditions) {
+			newConditions.add(e.copy());
+		}
+		copy.setTermination(newConditions);
+		
+		SequentialNode newBody = body.copy();
+		copy.setBody(newBody);
+		copySubtree(newBody);
+		
+		return copy;
+	}
+	
+	private void copySubtree(SequentialNode root) {
+		if (root instanceof BlockEndNode) {
+			return;
+		} else if (root.getSuccessor() instanceof SequentialNode) {
+			SequentialNode successor = (SequentialNode) root.getSuccessor();
+			SequentialNode newSuccessor = successor.copy();
+			root.replaceSuccessor(successor, newSuccessor);
+			copySubtree(newSuccessor);
+		}
+	}
+	
+	@Override
 	public String toString() {
 		return "loop { " + body + " ... }";
 	}

@@ -80,7 +80,6 @@ public final class GraphBuilder {
 	 * @param node The node that should be added.
 	 */
 	private void addNode(SequentialNode node) {
-		node.setScope(currentScope);
 		lastNode.insertAfter(node);
 		lastNode = node;
 	}
@@ -160,7 +159,7 @@ public final class GraphBuilder {
 			addNode(storeResult);
 			return storeResult;
 		} else {
-			throw new IllegalArgumentException("Only variables can be printed.");
+			throw new IllegalArgumentException("Only variables can be marked for optimization.");
 		}
 	}
 
@@ -225,9 +224,10 @@ public final class GraphBuilder {
 		addNode(macro);
 		graph.addMacro(macro);
 
-		for (SequentialNode node : body) {
-			graph.removeNode(node);
-		}
+//		for (SequentialNode node : body) {
+//			graph.removeNode(node);
+//		}
+		rewireNodes(body, macro);
 
 		return macro;
 	}

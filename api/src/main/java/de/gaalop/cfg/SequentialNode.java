@@ -11,7 +11,6 @@ package de.gaalop.cfg;
 public abstract class SequentialNode extends Node {
 
 	private Node successor;
-	private VariableScope scope;
 
 	/**
 	 * Constructs a new sequential node.
@@ -20,24 +19,6 @@ public abstract class SequentialNode extends Node {
 	 */
 	public SequentialNode(ControlFlowGraph graph) {
 		super(graph);
-	}
-	
-	/**
-	 * Sets the scope associated with this CFG node.
-	 * 
-	 * @param scope scope of this CFG node.
-	 */
-	public void setScope(VariableScope scope) {
-		this.scope = scope;
-	}
-	
-	/**
-	 * Returns the scope in which this CFG node is defined.
-	 * 
-	 * @return scope in which this node is defined
-	 */
-	public VariableScope getScope() {
-		return scope;
 	}
 
 	/**
@@ -89,5 +70,27 @@ public abstract class SequentialNode extends Node {
 			newSuccessor.addPredecessor(this);
 			successor = newSuccessor;
 		}
+	}
+
+	/**
+	 * Must be implemented to copy properties of subtypes.
+	 * 
+	 * @return a copy of this node
+	 */
+	public abstract SequentialNode copyElements();
+
+	/**
+	 * Makes a deep copy of this node using the same predecessors and successor as the original. Depending on the
+	 * subtype, more properties are copied according to the {@link #copyElements()} method.
+	 * 
+	 * @return a copy of this node with same predecessors and successors
+	 */
+	public SequentialNode copy() {
+		SequentialNode copy = copyElements();
+		copy.setSuccessor(successor);
+		for (Node p : getPredecessors()) {
+			copy.addPredecessor(p);
+		}
+		return copy;
 	}
 }

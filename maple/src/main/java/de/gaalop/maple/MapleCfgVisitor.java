@@ -183,6 +183,13 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 		// notify observables about progress
 		plugin.notifyProgress();
 	}
+	
+	@Override
+	public void visit(ExpressionStatement node) {
+		// ignore this single-line statement without assignment
+		node.getGraph().removeNode(node);
+		node.getSuccessor().accept(this);
+	}
 
 	@Override
 	public void visit(StoreResultNode node) {

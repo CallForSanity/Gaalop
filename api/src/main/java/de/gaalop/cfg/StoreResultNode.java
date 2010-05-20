@@ -57,6 +57,11 @@ public final class StoreResultNode extends SequentialNode {
     }
     
     @Override
+    public StoreResultNode copyElements() {
+    	return new StoreResultNode(getGraph(), value.copy());
+    }
+    
+    @Override
     public String toString() {
     	return "?" + value;
     }

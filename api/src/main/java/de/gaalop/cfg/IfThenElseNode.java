@@ -126,6 +126,37 @@ public class IfThenElseNode extends SequentialNode {
 			replaceSubtree(((SequentialNode) root).getSuccessor(), old, newExpression);
 		}
 	}
+	
+	@Override
+	public IfThenElseNode copyElements() {
+		IfThenElseNode copy = new IfThenElseNode(getGraph(), condition.copy());
+		copy.elseif = elseif;
+		
+		SequentialNode newPositive = positive.copy();
+		newPositive.removePredecessor(this);
+		newPositive.addPredecessor(copy);
+		copy.setPositive(newPositive);
+		copySubtree(newPositive);
+		
+		SequentialNode newNegative = negative.copy();
+		newNegative.removePredecessor(this);
+		newNegative.addPredecessor(copy);
+		copy.setNegative(newNegative);
+		copySubtree(newNegative);
+		
+		return copy;
+	}
+	
+	private void copySubtree(SequentialNode root) {
+		if (root instanceof BlockEndNode) {
+			return;
+		} else if (root.getSuccessor() instanceof SequentialNode) {
+			SequentialNode successor = (SequentialNode) root.getSuccessor();
+			SequentialNode newSuccessor = successor.copy();
+			root.replaceSuccessor(successor, newSuccessor);
+			copySubtree(newSuccessor);
+		}
+	}
 
 	@Override
 	public String toString() {

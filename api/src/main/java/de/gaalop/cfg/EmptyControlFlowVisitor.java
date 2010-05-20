@@ -30,6 +30,11 @@ public class EmptyControlFlowVisitor implements ControlFlowVisitor {
 	public void visit(AssignmentNode node) {
 		node.getSuccessor().accept(this);
 	}
+	
+	@Override
+	public void visit(ExpressionStatement node) {
+		node.getSuccessor().accept(this);
+	}
 
 	/**
 	 * {@inheritDoc}

@@ -122,6 +122,7 @@ public abstract class Node {
 		for (Node predecessor : predecessors) {
 			predecessor.replaceSuccessor(this, newNode);
 		}
+		predecessors.clear(); // previous predecessors are no predecessors anymore
 		addPredecessor(newNode);
 	}
 

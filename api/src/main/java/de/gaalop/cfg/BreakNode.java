@@ -10,5 +10,15 @@ public class BreakNode extends SequentialNode {
 	public void accept(ControlFlowVisitor visitor) {
 		visitor.visit(this);
 	}
+	
+	@Override
+	public BreakNode copyElements() {
+		return new BreakNode(getGraph());
+	}
+	
+	@Override
+	public String toString() {
+		return "break";
+	}
 
 }

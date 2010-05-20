@@ -1,5 +1,6 @@
 package de.gaalop.cfg;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -47,6 +48,16 @@ public class Macro extends SequentialNode {
 	@Override
 	public void accept(ControlFlowVisitor visitor) {
 		visitor.visit(this);
+	}
+	
+	@Override
+	public Macro copyElements() {
+		List<SequentialNode> bodyCopy = new ArrayList<SequentialNode>();
+		for (SequentialNode node : body) {
+			bodyCopy.add(node.copy());
+			// XXX: do successors have to be replaced?
+		}
+		return new Macro(getGraph(), name, bodyCopy, returnValue.copy());
 	}
 	
 	@Override

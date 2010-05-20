@@ -131,6 +131,15 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 
 		node.getSuccessor().accept(this);
 	}
+	
+	@Override
+	public void visit(ExpressionStatement node) {
+		appendIndentation();
+		node.getExpression().accept(this);
+		code.append(";\n");
+		
+		node.getSuccessor().accept(this);
+	}
 
 	@Override
 	public void visit(StoreResultNode node) {

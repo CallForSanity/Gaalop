@@ -240,12 +240,27 @@ public final class ControlFlowGraph {
 	/**
 	 * Removes a local variable from this graph.
 	 * <p/>
-	 * If <code>variable</code> is also an ouptut variable, it is removed from that set as well.
+	 * If <code>variable</code> is also an output variable, it is removed from that set as well.
 	 * 
 	 * @param variable The variable that should be removed.
 	 */
 	public void removeLocalVariable(Variable variable) {
 		localVariables.remove(variable);
+	}
+	
+	/**
+	 * Determines whether there is a local variable with given name defined in this graph.
+	 * 
+	 * @param name name of variable
+	 * @return true, if a local variable with given name exists, false otherwise
+	 */
+	public boolean containsLocalVariable(String name) {
+		for (Variable v : localVariables) {
+			if (v.getName().equals(name)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -295,7 +310,8 @@ public final class ControlFlowGraph {
 	public void removeNode(SequentialNode node) {
 		Node successor = node.getSuccessor();
 		successor.removePredecessor(node);
-		for (Node predecessor : node.getPredecessors()) {
+		Set<Node> predecessors = new HashSet<Node>(node.getPredecessors());
+		for (Node predecessor : predecessors) {
 			successor.addPredecessor(predecessor);
 			predecessor.replaceSuccessor(node, successor);
 		}

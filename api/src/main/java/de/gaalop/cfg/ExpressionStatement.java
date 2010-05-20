@@ -22,7 +22,22 @@ public class ExpressionStatement extends SequentialNode {
 
 	@Override
 	public void accept(ControlFlowVisitor visitor) {
-		// TODO: implement accept method
+		visitor.visit(this);
+	}
+	
+	@Override
+	public void replaceExpression(Expression old, Expression newExpression) {
+		// XXX: check for equality instead?
+		if (expression == old) {
+			expression = newExpression;
+		} else {
+			expression.replaceExpression(old, newExpression);
+		}
+	}
+	
+	@Override
+	public ExpressionStatement copyElements() {
+		return new ExpressionStatement(getGraph(), expression.copy());
 	}
 	
 	@Override
