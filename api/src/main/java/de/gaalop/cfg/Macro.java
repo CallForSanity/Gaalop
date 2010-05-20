@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import de.gaalop.Notifications;
 import de.gaalop.cfg.ControlFlowGraph;
 import de.gaalop.cfg.ControlFlowVisitor;
 import de.gaalop.cfg.SequentialNode;
@@ -13,9 +14,9 @@ import de.gaalop.dfg.Expression;
 import de.gaalop.dfg.FloatConstant;
 
 public class Macro extends SequentialNode {
-	
+
 	private Log log = LogFactory.getLog(Macro.class);
-	
+
 	private String name;
 	private List<SequentialNode> body;
 	private Expression returnValue;
@@ -25,22 +26,24 @@ public class Macro extends SequentialNode {
 		this.name = name;
 		this.body = body;
 		if (returnValue != null) {
-			this.returnValue = returnValue;		
+			this.returnValue = returnValue;
 		} else {
 			this.returnValue = new FloatConstant(0.0f);
-			// TODO: add this to a list of warnings to be displayed after optimization
-			log.warn("Missing return value of macro '" + name + "' has been set to 0.");
+			String message = "Missing return value of macro '" + name + "' has been set to 0.\n"
+					+ "Please make sure you do not unintentionally use this macro in a non-single statment line.";
+			log.warn(message);
+			Notifications.addWarning(new Notifications.Warning(message));
 		}
 	}
-	
+
 	public String getName() {
 		return name;
 	}
-	
+
 	public List<SequentialNode> getBody() {
 		return body;
 	}
-	
+
 	public Expression getReturnValue() {
 		return returnValue;
 	}
@@ -49,7 +52,7 @@ public class Macro extends SequentialNode {
 	public void accept(ControlFlowVisitor visitor) {
 		visitor.visit(this);
 	}
-	
+
 	@Override
 	public Macro copyElements() {
 		List<SequentialNode> bodyCopy = new ArrayList<SequentialNode>();
@@ -59,7 +62,7 @@ public class Macro extends SequentialNode {
 		}
 		return new Macro(getGraph(), name, bodyCopy, returnValue.copy());
 	}
-	
+
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();

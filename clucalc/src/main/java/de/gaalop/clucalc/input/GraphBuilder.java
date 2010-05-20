@@ -223,10 +223,7 @@ public final class GraphBuilder {
 		Macro macro = new Macro(graph, id, body, ret);
 		addNode(macro);
 		graph.addMacro(macro);
-
-//		for (SequentialNode node : body) {
-//			graph.removeNode(node);
-//		}
+		
 		rewireNodes(body, macro);
 
 		return macro;

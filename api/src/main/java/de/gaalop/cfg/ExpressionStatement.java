@@ -27,7 +27,6 @@ public class ExpressionStatement extends SequentialNode {
 	
 	@Override
 	public void replaceExpression(Expression old, Expression newExpression) {
-		// XXX: check for equality instead?
 		if (expression == old) {
 			expression = newExpression;
 		} else {

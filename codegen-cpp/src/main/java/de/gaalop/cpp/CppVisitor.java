@@ -1,5 +1,6 @@
 package de.gaalop.cpp;
 
+import de.gaalop.Notifications;
 import de.gaalop.cfg.*;
 import de.gaalop.dfg.*;
 
@@ -111,8 +112,9 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 	@Override
 	public void visit(AssignmentNode node) {
 		if (assigned.contains(node.getVariable().getName())) {
-			log.warn("Reuse of variable " + node.getVariable().getName()
-				+ ". Make sure to reset this variable or use another name.");
+			String message = "Variable " + node.getVariable().getName() + " has been reset for reuse.";
+			log.warn(message);
+			Notifications.addWarning(message);
 			code.append("\n");
 			appendIndentation();
 			code.append("// Warning: reuse of variable ");
@@ -131,13 +133,13 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 
 		node.getSuccessor().accept(this);
 	}
-	
+
 	@Override
 	public void visit(ExpressionStatement node) {
 		appendIndentation();
 		node.getExpression().accept(this);
 		code.append(";\n");
-		
+
 		node.getSuccessor().accept(this);
 	}
 
@@ -202,14 +204,14 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 	public void visit(LoopNode node) {
 		appendIndentation();
 		code.append("while(true) {\n");
-		
+
 		indentation++;
 		node.getBody().accept(this);
 		indentation--;
-		
+
 		appendIndentation();
 		code.append("}\n");
-		
+
 		node.getSuccessor().accept(this);
 	}
 
@@ -380,18 +382,18 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 	@Override
 	public void visit(Macro node) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void visit(FunctionArgument node) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void visit(MacroCall node) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

@@ -38,16 +38,16 @@ public final class CompilerFacade extends Observable {
      */
     public Set<OutputFile> compile(InputFile input) throws CompilationException {
     	setChanged();
-    	notifyObservers("Parsing...");
+    	notifyObservers(new Notifications.Info("Parsing..."));
         ControlFlowGraph graph = codeParser.parseFile(input);
         setChanged();
-        notifyObservers("Optimizing...");
+        notifyObservers(new Notifications.Info("Optimizing..."));
         optimizationStrategy.transform(graph);
         setChanged();
-        notifyObservers("Generating Code...");
+        notifyObservers(new Notifications.Info("Generating Code..."));
         Set<OutputFile> output = codeGenerator.generate(graph);
         setChanged();
-        notifyObservers("Finished");        
+        notifyObservers(new Notifications.Finished());        
         return output;
     }
 }

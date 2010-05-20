@@ -1,5 +1,6 @@
 package de.gaalop.clucalc.output;
 
+import de.gaalop.Notifications;
 import de.gaalop.cfg.*;
 import de.gaalop.clucalc.input.CluCalcFileHeader;
 import de.gaalop.dfg.Expression;
@@ -11,10 +12,15 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
  * Visits the control structure of the control dataflow graph.
  */
 public class CfgVisitor implements ControlFlowVisitor {
+	
+	private Log log = LogFactory.getLog(CfgVisitor.class);
 
 	private Map<String, Set<Integer>> assignedComponents = new HashMap<String, Set<Integer>>();
 
@@ -73,6 +79,9 @@ public class CfgVisitor implements ControlFlowVisitor {
 		Set<Integer> assigned = assignedComponents.get(assignmentNode.getVariable().getName());
 		if (assigned != null && assigned.isEmpty()) {
 			// in this case the variable is reused and should be reset
+			String message = "Variable " + assignmentNode.getVariable().getName() + " has been reset for reuse.";
+			log.warn(message);
+			Notifications.addWarning(message);
 			appendIndent();
 			code.append(assignmentNode.getVariable().getName());
 			code.append(" = List(32); // reset for reuse\n");

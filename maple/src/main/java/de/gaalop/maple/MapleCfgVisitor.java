@@ -1,5 +1,6 @@
 package de.gaalop.maple;
 
+import de.gaalop.Notifications;
 import de.gaalop.cfg.*;
 import de.gaalop.dfg.EmptyExpressionVisitor;
 import de.gaalop.dfg.Expression;
@@ -65,7 +66,6 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 		public void visit(IfThenElseNode node) {
 			// we peek only to next level of nested statements
 			if (node == root) {
-				// FIXME: if inlining is not possible, then- or else-part gets lost for optimization...
 				if (node.getPositive() == branch) {
 					replaceSuccessor(node, branch);
 					node.getPositive().accept(this);
@@ -105,9 +105,11 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 			try {
 				String result = engine.evaluate(codeBuffer.toString());
 				if ((variable + "\n").equals(result)) {
-					// TODO: append warning to a list to be displayed to user
-					log.warn("Initializing unknown variable '" + variable + "' in conditional statement '" + condition
-							+ "' to 0.");
+					String message = "Unknown variable '" + variable + "' in conditional statement '" + condition
+							+ "' has been initialized to 0. \n"
+							+ "Please initialize variables in order to prevent errors in optimization.";
+					log.warn(message);
+					Notifications.addWarning(new Notifications.Warning(message));
 					engine.evaluate(variable + " := 0;");
 				}
 				log.debug("Maple evaluation of variable " + variable + ": " + result);
@@ -183,7 +185,7 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 		// notify observables about progress
 		plugin.notifyProgress();
 	}
-	
+
 	@Override
 	public void visit(ExpressionStatement node) {
 		// ignore this single-line statement without assignment
@@ -226,8 +228,7 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 				node.getSuccessor().accept(this);
 			}
 		} catch (MapleEngineException e) {
-			throw new RuntimeException("Unable to check condition " + condition + " in if-statement " + node,
-					e);
+			throw new RuntimeException("Unable to check condition " + condition + " in if-statement " + node, e);
 		}
 	}
 

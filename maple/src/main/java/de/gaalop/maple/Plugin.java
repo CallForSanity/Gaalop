@@ -2,6 +2,7 @@ package de.gaalop.maple;
 
 import com.sun.jna.Platform;
 import de.gaalop.ConfigurationProperty;
+import de.gaalop.Notifications;
 import de.gaalop.OptimizationStrategy;
 import de.gaalop.OptimizationStrategyPlugin;
 import de.gaalop.maple.engine.Maple;
@@ -41,8 +42,8 @@ public class Plugin extends Observable implements OptimizationStrategyPlugin {
 				String maplePath = finder.getMaplePathFromRegistry();
 				mapleBinaryPath = maplePath + "\\bin.win\\";
 				mapleJavaPath = maplePath + "\\java\\";
-				log.info("Maple Path from Windows Registry: " + "binary=\"" + mapleBinaryPath + "\", java=\"" + mapleJavaPath
-					+ "\"");
+				log.info("Maple Path from Windows Registry: " + "binary=\"" + mapleBinaryPath + "\", java=\""
+						+ mapleJavaPath + "\"");
 			} catch (FileNotFoundException e) {
 				log.info("Unable to find Maple in the Windows registry.");
 			}
@@ -68,7 +69,8 @@ public class Plugin extends Observable implements OptimizationStrategyPlugin {
 				Maple.initialize(new File(mapleJavaPath), new File(mapleBinaryPath));
 			} catch (NullPointerException e) {
 				setChanged();
-				notifyObservers("Unable to find Maple installation directory.");
+				notifyObservers(new Notifications.Error(new IllegalArgumentException(
+						"Unable to find Maple installation directory.")));
 			}
 		}
 
@@ -137,12 +139,12 @@ public class Plugin extends Observable implements OptimizationStrategyPlugin {
 
 	void notifyProgress() {
 		setChanged();
-		notifyObservers();
+		notifyObservers(new Notifications.Progress());
 	}
 
 	void notifyStart() {
 		setChanged();
-		notifyObservers(Integer.valueOf(0));
+		notifyObservers(new Notifications.Number(0));
 	}
 
 }
