@@ -74,6 +74,7 @@ public class Variable extends Expression {
 	@Override
 	public Variable copy() {
 		Variable v = new Variable(this.name);
+		v.global = global;
 		v.setMaxValue(this.getMaxValue());
 		v.setMinValue(this.getMinValue());
 		return v;
