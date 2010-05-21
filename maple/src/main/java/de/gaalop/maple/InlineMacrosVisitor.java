@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
+import de.gaalop.Notifications;
 import de.gaalop.cfg.AssignmentNode;
 import de.gaalop.cfg.BlockEndNode;
 import de.gaalop.cfg.BreakNode;
@@ -79,6 +80,9 @@ public class InlineMacrosVisitor extends EmptyExpressionVisitor implements Contr
 		currentStatement = node;
 		if (node.getExpression() instanceof MacroCall) {
 			((MacroCall) node.getExpression()).setSingleLine();
+		} else {
+			Notifications.addWarning("Found an expression without assignment: '" + node
+					+ "' (Side effects are not supported.)");
 		}
 		node.getExpression().accept(this);
 		continueVisitFrom(node);

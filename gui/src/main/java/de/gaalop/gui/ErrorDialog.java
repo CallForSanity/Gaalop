@@ -79,7 +79,7 @@ public class ErrorDialog extends JDialog {
     private void $$$setupUI$$$() {
         contentPane = new JPanel();
         contentPane.setLayout(new BorderLayout(0, 0));
-        contentPane.setPreferredSize(new Dimension(480, 300));
+        contentPane.setPreferredSize(new Dimension(480, 270));
         final JPanel panel1 = new JPanel();
         panel1.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 10));
         contentPane.add(panel1, BorderLayout.SOUTH);
