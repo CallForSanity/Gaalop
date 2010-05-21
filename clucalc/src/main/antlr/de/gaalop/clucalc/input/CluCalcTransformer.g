@@ -47,6 +47,9 @@ script	returns [ControlFlowGraph result]
 		graphBuilder = new GraphBuilder();
 		result = graphBuilder.getGraph();
 	}
+	@after {
+	  graphBuilder.finish();
+	}
  	: statement*;
 
 statement returns [ArrayList<SequentialNode> nodes]

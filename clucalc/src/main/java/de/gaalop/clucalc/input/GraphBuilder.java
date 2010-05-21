@@ -1,5 +1,6 @@
 package de.gaalop.clucalc.input;
 
+import de.gaalop.Notifications;
 import de.gaalop.cfg.*;
 import de.gaalop.clucalc.algebra.*;
 import de.gaalop.dfg.Expression;
@@ -36,6 +37,8 @@ public final class GraphBuilder {
 
 	private int assignments;
 
+	private boolean setMode = false;
+
 	private Set<String> macros = new HashSet<String>();
 	private String currentMacroDefinition;
 
@@ -53,8 +56,11 @@ public final class GraphBuilder {
 		graph = new ControlFlowGraph();
 		lastNode = graph.getStartNode();
 		functionFactory = new FunctionFactory();
-		// initially set mode to 5D conformal algebra (in case this statement is missing in input)
-		setMode(new AlgebraN3());
+		{
+			// initially set mode to 5D conformal algebra (in case this statement is missing in input)
+			setMode(new AlgebraN3());
+			setMode = false;
+		}
 	}
 
 	/**
@@ -223,12 +229,12 @@ public final class GraphBuilder {
 		Macro macro = new Macro(graph, id, body, ret);
 		addNode(macro);
 		graph.addMacro(macro);
-		
+
 		rewireNodes(body, macro);
 
 		return macro;
 	}
-	
+
 	public void addMacroName(String name) {
 		macros.add(name);
 		currentMacroDefinition = name;
@@ -284,6 +290,8 @@ public final class GraphBuilder {
 
 		mode = newMode;
 		functionFactory.setMode(newMode);
+
+		setMode = true;
 	}
 
 	/**
@@ -352,11 +360,21 @@ public final class GraphBuilder {
 		throw new IllegalArgumentException("Call to undefined function " + name + "(" + args + ").\n"
 				+ "Maybe this function is not defined in " + mode);
 	}
-	
+
 	public ExpressionStatement processExpressionStatement(Expression e) {
 		ExpressionStatement statement = new ExpressionStatement(graph, e);
 		addNode(statement);
 		return statement;
 	}
-	
+
+	/**
+	 * Should be called to notify the graph builder that the parsing process has finished. If needed, post-processing of
+	 * the graph can be performed here.
+	 */
+	public void finish() {
+		if (!setMode) {
+			Notifications.addWarning("Missing algebra mode has been set to " + mode);
+		}
+	}
+
 }
