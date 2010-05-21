@@ -77,6 +77,9 @@ public class InlineMacrosVisitor extends EmptyExpressionVisitor implements Contr
 	@Override
 	public void visit(ExpressionStatement node) {
 		currentStatement = node;
+		if (node.getExpression() instanceof MacroCall) {
+			((MacroCall) node.getExpression()).setSingleLine();
+		}
 		node.getExpression().accept(this);
 		continueVisitFrom(node);
 	}
@@ -144,9 +147,15 @@ public class InlineMacrosVisitor extends EmptyExpressionVisitor implements Contr
 			replaceUsedVariables(newStatement, newNames);
 			caller.insertBefore(newStatement);
 		}
-		Expression returnValue = macro.getReturnValue();
-		replaceUsedVariablesInExpression(returnValue, newNames);
-		caller.replaceExpression(node, returnValue);
+		if (!node.isSingleLine()) {
+			if (macro.getReturnValue() == null) {
+				throw new IllegalArgumentException(
+						"Cannot inline a macro without return value into the following statement:\n" + caller);
+			}
+			Expression returnValue = macro.getReturnValue();
+			replaceUsedVariablesInExpression(returnValue, newNames);
+			caller.replaceExpression(node, returnValue);
+		}
 	}
 
 	private void replaceUsedVariables(Node statement, Map<String, String> newNames) {

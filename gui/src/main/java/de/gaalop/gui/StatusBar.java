@@ -103,7 +103,7 @@ public class StatusBar extends JPanel implements Observer {
 			setStatus("Finished");
 			if (Notifications.hasWarnings()) {
 				warnings = Notifications.getWarnings();
-				setStatus("Finished. (There were warnings)");
+				setStatus("Finished (click here to see were warnings)");
 			}
 		}
 	}

@@ -7,6 +7,7 @@ public class MacroCall extends Expression {
 	
 	private String name;
 	private List<Expression> args;
+	private boolean singleLine;
 	
 	public MacroCall(String name, List<Expression> args) {
 		this.name = name;
@@ -19,6 +20,14 @@ public class MacroCall extends Expression {
 	
 	public List<Expression> getArguments() {
 		return args;
+	}
+	
+	public void setSingleLine() {
+		this.singleLine = true;
+	}
+	
+	public boolean isSingleLine() {
+		return singleLine;
 	}
 
 	@Override
