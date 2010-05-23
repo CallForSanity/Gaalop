@@ -52,7 +52,8 @@ public class DfgVisitor implements ExpressionVisitor {
 
 	@Override
 	public void visit(InnerProduct innerProduct) {
-		throw new UnsupportedOperationException("Inner product is unsupported for code generation.");
+		handleInfix(innerProduct, ".", true);
+//		throw new UnsupportedOperationException("Inner product is unsupported for code generation.");
 	}
 
 	@Override

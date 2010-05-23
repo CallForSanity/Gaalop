@@ -1,20 +1,8 @@
 package de.gaalop.maple;
 
-import de.gaalop.Notifications;
-import de.gaalop.cfg.*;
-import de.gaalop.dfg.EmptyExpressionVisitor;
-import de.gaalop.dfg.Expression;
-import de.gaalop.dfg.MathFunction;
-import de.gaalop.dfg.MathFunctionCall;
-import de.gaalop.dfg.Variable;
-import de.gaalop.maple.engine.MapleEngine;
-import de.gaalop.maple.engine.MapleEngineException;
-import de.gaalop.maple.parser.MapleLexer;
-import de.gaalop.maple.parser.MapleParser;
-import de.gaalop.maple.parser.MapleTransformer;
-
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.antlr.runtime.ANTLRStringStream;
@@ -24,7 +12,31 @@ import org.antlr.runtime.tree.CommonTreeNodeStream;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import java.util.List;
+import de.gaalop.Notifications;
+import de.gaalop.cfg.AssignmentNode;
+import de.gaalop.cfg.BlockEndNode;
+import de.gaalop.cfg.BreakNode;
+import de.gaalop.cfg.ControlFlowGraph;
+import de.gaalop.cfg.ControlFlowVisitor;
+import de.gaalop.cfg.EmptyControlFlowVisitor;
+import de.gaalop.cfg.EndNode;
+import de.gaalop.cfg.ExpressionStatement;
+import de.gaalop.cfg.IfThenElseNode;
+import de.gaalop.cfg.LoopNode;
+import de.gaalop.cfg.Macro;
+import de.gaalop.cfg.Node;
+import de.gaalop.cfg.SequentialNode;
+import de.gaalop.cfg.StartNode;
+import de.gaalop.cfg.StoreResultNode;
+import de.gaalop.dfg.Expression;
+import de.gaalop.dfg.MathFunction;
+import de.gaalop.dfg.MathFunctionCall;
+import de.gaalop.dfg.Variable;
+import de.gaalop.maple.engine.MapleEngine;
+import de.gaalop.maple.engine.MapleEngineException;
+import de.gaalop.maple.parser.MapleLexer;
+import de.gaalop.maple.parser.MapleParser;
+import de.gaalop.maple.parser.MapleTransformer;
 
 /**
  * This visitor creates code for Maple.
@@ -87,34 +99,63 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 
 	}
 
-	private class VariableInitializer extends EmptyExpressionVisitor {
+	/**
+	 * Simple control flow visitor that restores variable assignments that might be overridden in if-then-else
+	 * statements. For those statements where the condition cannot be evaluated due to unknown input parameters, and
+	 * hence cannot be inlined, this visitor places an additional assignment to affected variables right before the
+	 * {@link IfThenElseNode} that would override the value of a variable. Therefore, the root {@link IfThenElseNode}
+	 * has to be passed to the constructor. Nested if-then-else statements are processed, too, but variable restores are
+	 * placed before the root node.
+	 */
+	private class RestoreValuesVisitor extends EmptyControlFlowVisitor {
 
-		private Expression condition;
+		private IfThenElseNode root;
+		private Set<String> processedVariables = new HashSet<String>();
 
-		public VariableInitializer(Expression condition) {
-			this.condition = condition;
+		/**
+		 * Creates a new visitor which restores overridden variables in this statement and its nested subnodes.
+		 * 
+		 * @param root {@link IfThenElseNode} in front of which restored variables have to be inserted.
+		 */
+		public RestoreValuesVisitor(IfThenElseNode root) {
+			this.root = root;
 		}
 
 		@Override
-		public void visit(Variable v) {
-			String variable = v.getName();
-			StringBuilder codeBuffer = new StringBuilder();
-			codeBuffer.append("eval(");
-			codeBuffer.append(variable);
-			codeBuffer.append(");\n");
-			try {
-				String result = engine.evaluate(codeBuffer.toString());
-				if ((variable + "\n").equals(result)) {
-					String message = "Unknown variable '" + variable + "' in conditional statement '" + condition
-							+ "' has been initialized to 0. \n"
-							+ "Please initialize variables in order to prevent errors in optimization.";
-					log.warn(message);
-					Notifications.addWarning(new Notifications.Warning(message));
-					engine.evaluate(variable + " := 0;");
+		public void visit(AssignmentNode node) {
+			ControlFlowGraph graph = node.getGraph();
+			Variable variable = node.getVariable();
+			String name = variable.getName();
+			if (graph.containsLocalVariable(name) && !processedVariables.contains(name)) {
+				try {
+					processedVariables.add(name);
+					// 1. get current value
+					String result = engine.evaluate("gaalop(" + name + ");");
+					Notifications.addWarning("Restored optimized current value of " + variable
+							+ " before occurence of if-statement.");
+					List<SequentialNode> parsed = parseMapleCode(graph, result);
+					// 2. restore value
+					for (SequentialNode newAssignment : parsed) {
+						root.insertBefore(newAssignment);
+					}
+					// 3. clear maple variable
+					String clearCommand = name + ":= '" + name + "';";
+					engine.evaluate(clearCommand);
+				} catch (MapleEngineException e) {
+					throw new RuntimeException("Unable to restore state of variable " + name + " before if-statement",
+							e);
 				}
-				log.debug("Maple evaluation of variable " + variable + ": " + result);
-			} catch (MapleEngineException e) {
-				throw new RuntimeException("Unable to evaluate variable " + variable, e);
+			}
+			node.getSuccessor().accept(this);
+		}
+
+		@Override
+		public void visit(IfThenElseNode node) {
+			node.getPositive().accept(this);
+			node.getNegative().accept(this);
+			if (node != root) {
+				// only for nested if-then-else nodes
+				node.getSuccessor().accept(this);
 			}
 		}
 
@@ -208,25 +249,44 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 	}
 
 	@Override
-	public void visit(IfThenElseNode node) {
+	public void visit(IfThenElseNode node) {		
 		Expression condition = node.getCondition();
-		condition.accept(new VariableInitializer(condition));
-		StringBuilder codeBuffer = new StringBuilder();
-		codeBuffer.append("evalb(");
-		codeBuffer.append(generateCode(condition));
-		codeBuffer.append(");\n");
-		try {
-			String result = engine.evaluate(codeBuffer.toString());
-			log.debug("Maple simplification of IF condition " + condition + ": " + result);
-			if ("true\n".equals(result)) {
-				node.accept(new InlineBlockVisitor(node, node.getPositive()));
-				node.getPositive().accept(this);
-			} else if ("false\n".equals(result)) {
-				node.accept(new InlineBlockVisitor(node, node.getNegative()));
-				node.getNegative().accept(this);
-			} else {
-				node.getSuccessor().accept(this);
+		try {			
+			boolean unknown = false;
+			UsedVariablesVisitor visitor = new UsedVariablesVisitor();
+			condition.accept(visitor);
+			for (Variable v : visitor.getVariables()) {
+				String name = v.getName();
+				String result = engine.evaluate(name + ";");
+				if (result.equals(name + "\n")) {
+					unknown = true;
+					break;
+				}
 			}
+			
+			if (unknown) {
+				// restore overridden variables to prevent loss of information during Maple optimization
+				node.accept(new RestoreValuesVisitor(node));
+				node.getSuccessor().accept(this);				
+			} else {
+				StringBuilder codeBuffer = new StringBuilder();
+				codeBuffer.append("evalb(");
+				codeBuffer.append(generateCode(condition));
+				codeBuffer.append(");\n");
+				// try to evaluate the condition
+				String result = engine.evaluate(codeBuffer.toString());
+				log.debug("Maple simplification of IF condition " + condition + ": " + result);
+				// if condition can be determined to be true or false, inline relevant part
+				if ("true\n".equals(result)) {
+					node.accept(new InlineBlockVisitor(node, node.getPositive()));
+					node.getPositive().accept(this);
+				} else if ("false\n".equals(result)) {
+					node.accept(new InlineBlockVisitor(node, node.getNegative()));
+					node.getNegative().accept(this);
+				} else {
+					throw new IllegalStateException("Could not evaluate condition " + condition);
+				}
+			}			
 		} catch (MapleEngineException e) {
 			throw new RuntimeException("Unable to check condition " + condition + " in if-statement " + node, e);
 		}

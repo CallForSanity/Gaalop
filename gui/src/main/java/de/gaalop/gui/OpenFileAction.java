@@ -6,6 +6,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileFilter;
+
 import java.awt.event.ActionEvent;
 import java.io.BufferedReader;
 import java.io.File;
@@ -17,7 +19,12 @@ import java.io.IOException;
  */
 public class OpenFileAction extends AbstractAction {
 
-    private Log log = LogFactory.getLog(OpenFileAction.class);
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 8586884650535842171L;
+
+	private Log log = LogFactory.getLog(OpenFileAction.class);
 
     private CodeParserPlugin plugin;
 
@@ -32,6 +39,22 @@ public class OpenFileAction extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setFileFilter(new FileFilter() {
+			
+			@Override
+			public String getDescription() {
+				return "CLUCalc files";
+			}
+			
+			@Override
+			public boolean accept(File f) {
+				if (f.getName().endsWith(".clu")) {
+					return true;
+				}
+				return false;
+			}
+		});
+        
         try {
             if (fileChooser.showOpenDialog(tabbedPane.getParent()) == JFileChooser.APPROVE_OPTION) {
                 String content = readFile(fileChooser.getSelectedFile());
