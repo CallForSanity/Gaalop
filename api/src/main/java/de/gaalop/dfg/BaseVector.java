@@ -86,6 +86,11 @@ public final class BaseVector extends Expression {
 	public void accept(ExpressionVisitor visitor) {
 		visitor.visit(this);
 	}
+	
+	@Override
+	public void replaceExpression(Expression old, Expression newExpression) {
+		// nothing to replace
+	}
 
 	/**
 	 * Converts this base vector to a human readable string.

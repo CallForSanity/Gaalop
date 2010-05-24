@@ -267,6 +267,7 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 			if (unknown) {
 				// restore overridden variables to prevent loss of information during Maple optimization
 				node.accept(new RestoreValuesVisitor(node));
+				// TODO: find macro calls and re-insert macro definition before this node
 				node.getSuccessor().accept(this);				
 			} else {
 				StringBuilder codeBuffer = new StringBuilder();

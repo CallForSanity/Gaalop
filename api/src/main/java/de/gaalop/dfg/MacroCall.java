@@ -44,6 +44,18 @@ public class MacroCall extends Expression {
 		}
 		return new MacroCall(name, newArgs);
 	}
+	
+	@Override
+	public void replaceExpression(Expression old, Expression newExpression) {
+		for (int i = 0; i < args.size(); i++) {
+			Expression arg = args.get(i);
+			if (arg == old) {
+				args.set(i, newExpression);
+			} else {				
+				arg.replaceExpression(old, newExpression);
+			}			
+		}
+	}
 
 	@Override
 	public boolean isComposite() {

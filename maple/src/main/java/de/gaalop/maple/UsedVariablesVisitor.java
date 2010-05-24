@@ -2,8 +2,8 @@ package de.gaalop.maple;
 
 import de.gaalop.dfg.*;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Keeps track of variables that are actually in use. This can be used to detect unused variables in order to remove them from the
@@ -11,9 +11,9 @@ import java.util.Set;
  */
 public class UsedVariablesVisitor implements ExpressionVisitor {
 
-	private Set<Variable> variables = new HashSet<Variable>();
+	private List<Variable> variables = new ArrayList<Variable>();
 
-	public Set<Variable> getVariables() {
+	public List<Variable> getVariables() {
 		return variables;
 	}
 
@@ -122,6 +122,9 @@ public class UsedVariablesVisitor implements ExpressionVisitor {
 
 	@Override
 	public void visit(MacroCall node) {
+		for (Expression arg : node.getArguments()) {
+			arg.accept(this);
+		}
 	}
 	
 }

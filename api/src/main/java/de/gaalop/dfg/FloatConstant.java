@@ -73,6 +73,11 @@ public final class FloatConstant extends Expression {
 	public void accept(ExpressionVisitor visitor) {
 		visitor.visit(this);
 	}
+	
+	@Override
+	public void replaceExpression(Expression old, Expression newExpression) {
+		// nothing to replace
+	}
 
 	/**
 	 * Gets the floating point value represented by this node.

@@ -9,6 +9,7 @@ import de.gaalop.dfg.Variable;
 import de.gaalop.dfg.MathFunction;
 import de.gaalop.dfg.MathFunctionCall;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -125,7 +126,7 @@ public final class GraphBuilder {
 	}
 
 	/**
-	 * Handle a proecedure call.
+	 * Handle a procedure call.
 	 * 
 	 * @param name The name of the procedure that was called.
 	 */
@@ -137,8 +138,8 @@ public final class GraphBuilder {
 				return;
 			}
 		}
-
-		throw new IllegalArgumentException("Unknown procedure: " + name);
+		// try to process function without parameters
+		processFunction(name, new ArrayList<Expression>());
 	}
 
 	/**

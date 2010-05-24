@@ -28,9 +28,7 @@ public abstract class Expression {
 	 * @param old old expression to be replace
 	 * @param newExpression new expression to replace old one
 	 */
-	public void replaceExpression(Expression old, Expression newExpression) {
-		// nothing to do since there is no child node
-	}
+	public abstract void replaceExpression(Expression old, Expression newExpression);
 
 	/**
 	 * This method must be implemented by all <em>concrete</em> classes that implement this interface. It should call a

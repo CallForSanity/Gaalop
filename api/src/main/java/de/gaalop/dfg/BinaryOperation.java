@@ -40,19 +40,36 @@ public abstract class BinaryOperation extends Expression {
     
     @Override
     public void replaceExpression(Expression old, Expression newExpression) {
-    	if (old == left && old == right) {
+    	if (old == left) {
     		left = newExpression;
-    		right = newExpression;
-    	} else if (old == left) {
-    		left = newExpression;
-    		right.replaceExpression(old, newExpression);
-    	} else if (old == right) {
+    	} else if (left.isComposite()) {
     		left.replaceExpression(old, newExpression);
+    	}
+    	
+    	if (old == right) {
     		right = newExpression;
-    	} else {
-    		left.replaceExpression(old, newExpression);
+    	} else if (right.isComposite()) {
     		right.replaceExpression(old, newExpression);
     	}
+    	
+    	
+//    	if (old == left && old == right) {
+//    		left = newExpression;
+//    		right = newExpression;
+//    	} else if (old == left) {
+//    		left = newExpression;
+//    		if (right.isComposite()) {
+//    			right.replaceExpression(old, newExpression);
+//    		} else {
+//    			right = newExpression;
+//    		}
+//    	} else if (old == right) {
+//    		left.replaceExpression(old, newExpression);
+//    		right = newExpression;
+//    	} else {
+//    		left.replaceExpression(old, newExpression);
+//    		right.replaceExpression(old, newExpression);
+//    	}
     }
 
     /**
