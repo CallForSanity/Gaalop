@@ -9,7 +9,6 @@ import de.gaalop.dfg.Variable;
 import de.gaalop.dfg.MathFunction;
 import de.gaalop.dfg.MathFunctionCall;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -123,24 +122,6 @@ public final class GraphBuilder {
 			graph.addLocalVariable(variable);
 		}
 		return assignment;
-	}
-
-	/**
-	 * Handle a procedure call.
-	 * 
-	 * @param name The name of the procedure that was called.
-	 */
-	public Expression handleProcedure(String name) {
-//		// Initialization of an algebra mode?
-//		for (AlgebraMode mode : ALGEBRA_MODES) {
-//			if (mode.getDefinitionMethod().equals(name)) {
-//				setMode(mode);
-//				return;
-//			}
-//		}
-		// try to process function without parameters 
-		// FIXME: return value gets lost
-		return processFunction(name, new ArrayList<Expression>());
 	}
 
 	/**
