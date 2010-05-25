@@ -229,7 +229,12 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 
 	@Override
 	public void visit(ExpressionStatement node) {
-		// ignore this single-line statement without assignment
+		String command = generateCode(node.getExpression());
+		try {
+			engine.evaluate(command);
+		} catch (MapleEngineException e) {
+			throw new RuntimeException("Unable to simplify statement " + node + " in Maple.", e);
+		}
 		node.getGraph().removeNode(node);
 		node.getSuccessor().accept(this);
 	}
