@@ -43,7 +43,6 @@ public class RotorN3 implements Function {
       Expression metric = new MathFunctionCall(sum(square(x), square(y), square(z)),
           MathFunction.SQRT);
       Expression op = sum(negate(product(x, e23)), product(y, e13), negate(product(z, e12)));
-
       return sum(cos, product(sin, divide(op, metric)));
     } else {
       throw new IllegalArgumentException("The RotorN3 function needs four arguments: "

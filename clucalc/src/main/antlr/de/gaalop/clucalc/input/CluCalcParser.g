@@ -9,7 +9,6 @@ options {
 
 tokens {
   FUNCTION;
-  PROCEDURE;
   NEGATION;
   DUAL;
   BLOCK;
@@ -121,8 +120,8 @@ postfix_expression
   ;
 
 function_call
-  : (name=IDENTIFIER LBRACKET args=argument_expression_list RBRACKET)
-  -> ^(FUNCTION $name $args)
+  : (name=IDENTIFIER LBRACKET args=argument_expression_list? RBRACKET)
+  -> ^(FUNCTION $name $args?)
   ;
 
 primary_expression
@@ -152,7 +151,6 @@ statement_list
 
 statement 
   : expression_statement
-  | procedure_call
   | macro_definition
   | draw_mode
   | block
@@ -179,11 +177,7 @@ draw_mode
   : (COLON IPNS) -> ^(IPNS)
   | (COLON OPNS) -> ^(OPNS)
   ;
-  
-procedure_call
-  : (name=IDENTIFIER LBRACKET RBRACKET) -> ^(PROCEDURE $name)
-  ;
-  
+    
 expression_statement
   : SEMICOLON!
   | (QUESTIONMARK^ | COLON^)? expression SEMICOLON!

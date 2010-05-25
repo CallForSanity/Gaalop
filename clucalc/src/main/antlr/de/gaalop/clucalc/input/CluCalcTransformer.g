@@ -62,8 +62,6 @@ statement returns [ArrayList<SequentialNode> nodes]
 		
 	| ^(QUESTIONMARK value=expression) { $nodes.add(graphBuilder.handlePrint($value.result)); }
 	
-	| ^(PROCEDURE name=IDENTIFIER) { graphBuilder.handleProcedure($name.text); } // no CFG node needed for this type
-	
 	| IPNS { graphBuilder.handleNullSpace(NullSpace.IPNS); }
 	
 	| OPNS { graphBuilder.handleNullSpace(NullSpace.OPNS); }
@@ -91,7 +89,12 @@ statement returns [ArrayList<SequentialNode> nodes]
   | macro
  
 	// Some single-line expression (without assignment), e.g. macro call 
-	| expression { $nodes.add(graphBuilder.processExpressionStatement($expression.result)); }
+	| expression {
+	  Expression e = $expression.result;
+	  if (e != null) { // null e.g. for procedure calls like DefVarsN3()
+	    $nodes.add(graphBuilder.processExpressionStatement(e)); 
+	  } 	  
+	}
 
   | pragma
 	;

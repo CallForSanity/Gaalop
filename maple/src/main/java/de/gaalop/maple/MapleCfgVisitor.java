@@ -218,13 +218,13 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 		} catch (MapleEngineException e) {
 			throw new RuntimeException("Unable to simplify assignment " + assignmentNode + " in Maple.", e);
 		}
+		
+		// notify observables about progress (must be called before successor.accept(this))
+		plugin.notifyProgress();
 
 		Node successor = assignmentNode.getSuccessor();
 		assignmentNode.getGraph().removeNode(assignmentNode);
 		successor.accept(this);
-
-		// notify observables about progress
-		plugin.notifyProgress();
 	}
 
 	@Override

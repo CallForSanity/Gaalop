@@ -30,16 +30,27 @@ options {
 	}
 	
 	private Expression processFunction(String name, ArrayList<Expression> args) {
-		System.out.println("FUNCTION: " + name);
-		for (Object obj : args) {
-			System.out.println("ARG: " + args);
-			System.out.println("ARG-Class: " + args.getClass());
-		}
+//		System.out.println("FUNCTION: " + name);
+//		for (Object obj : args) {
+//			System.out.println("ARG: " + args);
+//			System.out.println("ARG-Class: " + args.getClass());
+//		}
     if (name.equals("abs")) {
       return new MathFunctionCall(args.get(0), MathFunction.ABS);
-    } else {}
-      return null;
+    } else {
+      for (MathFunction mathFunction : MathFunction.values()) {
+        if (mathFunction.toString().toLowerCase().equals(name)) {
+          if (args.size() == 1) {
+            return new MathFunctionCall(args.get(0), mathFunction);
+          } else {
+            throw new IllegalArgumentException("Trying to parse math function " + mathFunction + " with more than one"
+                + " argument: " + args);
+          }
+        }
+      }
+      throw new IllegalArgumentException("Function " + name + " is not supported by maple parser");
 	  }
+	}
 }
 
 script[ControlFlowGraph graph, HashMap<String, String> minVal, HashMap<String, String> maxVal]	returns [List<SequentialNode> nodes]

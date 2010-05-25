@@ -130,16 +130,17 @@ public final class GraphBuilder {
 	 * 
 	 * @param name The name of the procedure that was called.
 	 */
-	public void handleProcedure(String name) {
-		// Initialization of an algebra mode?
-		for (AlgebraMode mode : ALGEBRA_MODES) {
-			if (mode.getDefinitionMethod().equals(name)) {
-				setMode(mode);
-				return;
-			}
-		}
-		// try to process function without parameters
-		processFunction(name, new ArrayList<Expression>());
+	public Expression handleProcedure(String name) {
+//		// Initialization of an algebra mode?
+//		for (AlgebraMode mode : ALGEBRA_MODES) {
+//			if (mode.getDefinitionMethod().equals(name)) {
+//				setMode(mode);
+//				return;
+//			}
+//		}
+		// try to process function without parameters 
+		// FIXME: return value gets lost
+		return processFunction(name, new ArrayList<Expression>());
 	}
 
 	/**
@@ -331,6 +332,12 @@ public final class GraphBuilder {
 	}
 
 	public Expression processFunction(String name, List<Expression> args) {
+		for (AlgebraMode mode : ALGEBRA_MODES) {
+			if (mode.getDefinitionMethod().equals(name)) {
+				setMode(mode);
+				return null;
+			}
+		}
 		for (Expression arg : args) {
 			findUndeclaredVariables(arg);
 		}
