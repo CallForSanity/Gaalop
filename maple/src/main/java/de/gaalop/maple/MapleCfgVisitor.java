@@ -200,13 +200,13 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 		 * abs is supported) We dont call Matlab for this, as it cannot handle these correct the mathfunction has to be
 		 * on a single line, with a single var parameter like x = sqrt(y);
 		 */
-		if (assignmentNode.getValue() instanceof MathFunctionCall) {
-			MathFunction func = ((MathFunctionCall) (assignmentNode.getValue())).getFunction();
-			if ((func != MathFunction.ABS)) {
-				assignmentNode.getSuccessor().accept(this);
-				return;
-			}
-		}
+//		if (assignmentNode.getValue() instanceof MathFunctionCall) {
+//			MathFunction func = ((MathFunctionCall) (assignmentNode.getValue())).getFunction();
+//			if ((func != MathFunction.ABS)) {
+//				assignmentNode.getSuccessor().accept(this);
+//				return;
+//			}
+//		}
 
 		codeBuffer.append(variableCode);
 		codeBuffer.append(" := ");

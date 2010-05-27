@@ -173,7 +173,7 @@
 <Text-field prompt="&gt; " style="Maple Input" layout="Normal"></Text-field>
 <Text-field prompt="&gt; " style="Maple Input" layout="Normal"># computes the vector to square (normal)</Text-field>
 <Text-field prompt="&gt; " style="Maple Input" layout="Normal">#quad_norm:=x-&gt;scalarpart(x &amp;c reversion(x));</Text-field>
-<Text-field prompt="&gt; " style="Maple Input" layout="Normal">quad_norm:=x-&gt;subs(Id=1,LC(x,reversion(x)));</Text-field>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">quad_norm:=x-&gt;subs(Id=1,innerproduct(x,reversion(x)));</Text-field>
 <Text-field prompt="&gt; " style="Maple Input" layout="Normal"></Text-field>
 <Text-field prompt="&gt; " style="Maple Input" layout="Normal">#quad_norm:=proc(x)</Text-field>
 <Text-field prompt="&gt; " style="Maple Input" layout="Normal">#  local temp;</Text-field>
@@ -208,7 +208,7 @@
 <Text-field prompt="&gt; " style="Maple Input" layout="Normal">	local result;</Text-field>
 <Text-field prompt="&gt; " style="Maple Input" layout="Normal">	result := LC(x,y);</Text-field>
 <Text-field prompt="&gt; " style="Maple Input" layout="Normal">	if result = 0 then</Text-field>
-<Text-field prompt="&gt; " style="Maple Input" layout="Normal">		return LC(y,x)</Text-field>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">		return -LC(y,x)</Text-field>
 <Text-field prompt="&gt; " style="Maple Input" layout="Normal">	else</Text-field>
 <Text-field prompt="&gt; " style="Maple Input" layout="Normal">		return result</Text-field>
 <Text-field prompt="&gt; " style="Maple Input" layout="Normal">	end if:</Text-field>

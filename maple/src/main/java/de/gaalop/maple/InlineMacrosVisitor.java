@@ -173,7 +173,8 @@ public class InlineMacrosVisitor extends EmptyExpressionVisitor implements Contr
 		if (statement instanceof AssignmentNode) {
 			AssignmentNode assignment = (AssignmentNode) statement;
 			replaceUsedVariablesInExpression(assignment.getVariable(), macroName, newNames);
-			replaceUsedVariablesInExpression(assignment.getValue(), macroName, newNames);
+			Expression newExpression = replaceUsedVariablesInExpression(assignment.getValue(), macroName, newNames);
+			assignment.replaceExpression(assignment.getValue(), newExpression);
 		}
 		if (statement instanceof StoreResultNode) {
 			StoreResultNode srn = (StoreResultNode) statement;
@@ -198,20 +199,29 @@ public class InlineMacrosVisitor extends EmptyExpressionVisitor implements Contr
 		}
 	}
 
-	private void replaceUsedVariablesInExpression(Expression e, String macroName, Map<String, String> newNames) {
+	private Expression replaceUsedVariablesInExpression(Expression e, String macroName, Map<String, String> newNames) {
 		UsedVariablesVisitor visitor = new UsedVariablesVisitor();
 		e.accept(visitor);
+		Expression newExpression = e;
 		for (Variable v : visitor.getVariables()) {
 			if (graph.containsLocalVariable(v.getName()) && !v.globalAccess()) {
 				String unique = newNames.get(v.getName());
 				Variable newVariable = new Variable(unique);
 				e.replaceExpression(v, newVariable);
+				newExpression = e;
 				graph.addLocalVariable(newVariable);
 			} else if (v instanceof FunctionArgument) {
 				FunctionArgument argument = (FunctionArgument) v;
-				e.replaceExpression(argument, currentArguments.get(macroName).get(argument.getIndex() - 1));
+				Expression newArgument = currentArguments.get(macroName).get(argument.getIndex() - 1);
+				e.replaceExpression(argument, newArgument);
+				if (e instanceof FunctionArgument) {
+					newExpression = newArgument;
+				} else {
+					newExpression = e;
+				}
 			}
 		}
+		return newExpression;
 	}
 
 }
