@@ -25,13 +25,13 @@ public class MapleDfgVisitor implements ExpressionVisitor {
 	}
 
 	private void handleInfix(BinaryOperation op, String opcode) {
-//		codeBuffer.append("(");
+		codeBuffer.append("(");
 		op.getLeft().accept(this);
 		codeBuffer.append(' ');
 		codeBuffer.append(opcode);
 		codeBuffer.append(' ');
 		op.getRight().accept(this);
-//		codeBuffer.append(")");
+		codeBuffer.append(")");
 	}
 
 	@Override
