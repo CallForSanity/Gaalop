@@ -138,7 +138,7 @@ public class InlineMacrosVisitor extends EmptyExpressionVisitor implements Contr
 	@Override
 	public void visit(MacroCall node) {
 		SequentialNode caller = currentStatement;
-		Macro macro = caller.getGraph().getMacro(node.getName());
+		Macro macro = graph.getMacro(node.getName());
 		String macroName = macro.getName();
 		currentArguments.put(macroName, node.getArguments());
 		// generate unique names for each variable in current scope (to be used for each statement in this scope)
@@ -164,6 +164,8 @@ public class InlineMacrosVisitor extends EmptyExpressionVisitor implements Contr
 			Expression returnValue = macro.getReturnValue();
 			replaceUsedVariablesInExpression(returnValue, macroName, newNames);
 			caller.replaceExpression(node, returnValue);
+		} else {
+			graph.removeNode(caller);
 		}
 	}
 

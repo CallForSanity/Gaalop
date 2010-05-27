@@ -230,6 +230,7 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 	@Override
 	public void visit(ExpressionStatement node) {
 		String command = generateCode(node.getExpression());
+		command += ";\n";
 		try {
 			engine.evaluate(command);
 		} catch (MapleEngineException e) {
