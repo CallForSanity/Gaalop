@@ -68,7 +68,7 @@ declareArray[ControlFlowGraph graph]
 	
 coefficient[ControlFlowGraph graph, HashMap<String, String> minVal, HashMap<String, String> maxVal] returns [SequentialNode result]
 	: ^(COEFFICIENT mvName=IDENTIFIER index=DECIMAL_LITERAL value=expression[minVal, maxVal]) {
-		MultivectorComponent component = new MultivectorComponent($mvName.text.replaceAll("_opt",""), Integer.valueOf($index.text) - 1);
+		MultivectorComponent component = new MultivectorComponent($mvName.text, Integer.valueOf($index.text) - 1);
 		$result = new AssignmentNode(graph, component, $value.result);
 	 }
 	;
@@ -95,7 +95,7 @@ expression[HashMap<String, String> minVal, HashMap<String, String> maxVal] retur
 	// Floating Point Value (Constant)
 	| value=FLOATING_POINT_LITERAL { $result = new FloatConstant(java.lang.Float.parseFloat($value.text));}
 	// Reference to another multivector component (MV_SUBSCRIPT)
-	| ^(MV_SUBSCRIPT name=IDENTIFIER index=DECIMAL_LITERAL) { $result = new MultivectorComponent($name.text.replaceAll("_opt",""), Integer.valueOf($index.text) - 1); }
+	| ^(MV_SUBSCRIPT name=IDENTIFIER index=DECIMAL_LITERAL) { $result = new MultivectorComponent($name.text, Integer.valueOf($index.text) - 1); }
 	;
 
 arguments[HashMap<String, String> minVal, HashMap<String, String> maxVal] returns [ArrayList<Expression> args]

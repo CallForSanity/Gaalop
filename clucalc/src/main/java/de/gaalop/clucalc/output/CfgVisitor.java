@@ -20,6 +20,8 @@ import org.apache.commons.logging.LogFactory;
  */
 public class CfgVisitor implements ControlFlowVisitor {
 	
+	private static final String SUFFIX = "_opt";
+
 	private Log log = LogFactory.getLog(CfgVisitor.class);
 
 	private Map<String, Set<Integer>> assignedComponents = new HashMap<String, Set<Integer>>();
@@ -59,7 +61,7 @@ public class CfgVisitor implements ControlFlowVisitor {
 
 		// Generate the local variables for all local variables
 		for (Variable localVariable : startNode.getGraph().getLocalVariables()) {
-			code.append(localVariable.getName());
+			code.append(localVariable.getName() + SUFFIX);
 			code.append(" = List(");
 			code.append(startNode.getGraph().getBladeList().length);
 			code.append(");\n");
@@ -132,9 +134,11 @@ public class CfgVisitor implements ControlFlowVisitor {
 		// Reassemble all output variables in the value
 		Variable outputVariable = (Variable) node.getValue();
 
-		code.append(outputVariable.getName());
+		String variableName = outputVariable.getName();
+		String opt = variableName + SUFFIX;
+		code.append(variableName);
 		code.append(" = ");
-		Set<Integer> var = assignedComponents.get(outputVariable.getName());
+		Set<Integer> var = assignedComponents.get(opt);
 		if (var == null) {
 			// no assignment for this variable at all -> 0
 			code.append(0);
@@ -146,7 +150,7 @@ public class CfgVisitor implements ControlFlowVisitor {
 
 				Expression blade = node.getGraph().getBladeList()[i];
 
-				code.append(outputVariable.getName());
+				code.append(opt);
 				code.append("(");
 				code.append(i + 1);
 				code.append(")");
@@ -159,7 +163,7 @@ public class CfgVisitor implements ControlFlowVisitor {
 		}
 
 		// reset the set of assigned components, so variable can be reused
-		assignedComponents.put(outputVariable.getName(), new HashSet<Integer>());
+		assignedComponents.put(opt, new HashSet<Integer>());
 
 		code.append(";\n");
 
