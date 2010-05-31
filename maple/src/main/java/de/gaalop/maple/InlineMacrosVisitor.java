@@ -146,15 +146,14 @@ public class InlineMacrosVisitor extends EmptyExpressionVisitor implements Contr
 		for (Variable v : graph.getLocalVariables()) {
 			newNames.put(v.getName(), generateUniqueName(v.getName()));
 		}
-		if (macro.getBody().size() > 0) {
-			// if macro has at least one line except of return value
-			macro.getBody().get(0).removePredecessor(macro);
-		}
+		Node oldPredecessor = macro;
 		for (SequentialNode statement : macro.getBody()) {
 			SequentialNode newStatement = statement.copy();
+			newStatement.removePredecessor(oldPredecessor);
 			replaceUsedVariables(newStatement, macroName, newNames);
 			caller.insertBefore(newStatement);
 			newStatement.accept(this);
+			oldPredecessor = statement;
 		}
 		if (!node.isSingleLine()) {
 			if (macro.getReturnValue() == null) {
