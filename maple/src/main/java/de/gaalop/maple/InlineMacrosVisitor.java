@@ -1,5 +1,6 @@
 package de.gaalop.maple;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -39,6 +40,7 @@ public class InlineMacrosVisitor extends EmptyExpressionVisitor implements Contr
 	private SequentialNode currentStatement;
 	private Map<String, List<Expression>> currentArguments = new HashMap<String, List<Expression>>();
 	private Set<Node> visitedNodes = new HashSet<Node>();
+	private List<Variable> newVariables = new ArrayList<Variable>();
 	private ControlFlowGraph graph;
 
 	private String generateUniqueName(String original) {
@@ -137,6 +139,7 @@ public class InlineMacrosVisitor extends EmptyExpressionVisitor implements Contr
 
 	@Override
 	public void visit(MacroCall node) {
+		newVariables.clear();
 		SequentialNode caller = currentStatement;
 		Macro macro = graph.getMacro(node.getName());
 		String macroName = macro.getName();
@@ -166,11 +169,17 @@ public class InlineMacrosVisitor extends EmptyExpressionVisitor implements Contr
 		} else {
 			graph.removeNode(caller);
 		}
+		// add new local variables to graph
+		for (Variable v : newVariables) {
+			graph.removeInputVariable(v);
+			graph.addLocalVariable(v);
+		}
 	}
-
+	
 	private void replaceUsedVariables(Node statement, String macroName, Map<String, String> newNames) {
 		if (statement instanceof AssignmentNode) {
 			AssignmentNode assignment = (AssignmentNode) statement;
+			newVariables.add(assignment.getVariable());
 			replaceUsedVariablesInExpression(assignment.getVariable(), macroName, newNames);
 			Expression newExpression = replaceUsedVariablesInExpression(assignment.getValue(), macroName, newNames);
 			assignment.replaceExpression(assignment.getValue(), newExpression);

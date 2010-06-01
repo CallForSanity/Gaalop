@@ -114,13 +114,13 @@ public final class GraphBuilder {
 	 */
 	public AssignmentNode handleAssignment(Variable variable, Expression expression, boolean inMacro) {
 		assignments++;
+		if (!inMacro) {
+			graph.addLocalVariable(variable);
+		}
 		findUndeclaredVariables(expression);
 
 		AssignmentNode assignment = new AssignmentNode(graph, variable, expression);
 		addNode(assignment);
-		if (!inMacro) {
-			graph.addLocalVariable(variable);
-		}
 		return assignment;
 	}
 
