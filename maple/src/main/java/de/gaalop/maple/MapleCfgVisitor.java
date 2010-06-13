@@ -130,9 +130,13 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 				try {
 					processedVariables.add(name);
 					// 1. get current value
-					String result = engine.evaluate("gaalop(" + name + ");");
+					String result = engine.evaluate(name + ";");
 					Notifications.addWarning("Restored optimized current value of " + variable
 							+ " before occurence of if-statement.");
+					if (result.endsWith("\n")) {
+						result = result.substring(0, result.length() - 1);
+					}
+					result = name + ":=" + result + ";";
 					List<SequentialNode> parsed = parseMapleCode(graph, result);
 					// 2. restore value
 					for (SequentialNode newAssignment : parsed) {

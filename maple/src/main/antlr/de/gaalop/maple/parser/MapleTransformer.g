@@ -18,7 +18,7 @@ options {
 
 @members {	
 	// Creates an expression from an identifier and takes constants into account
-	private Expression processIdentifier(String name, HashMap<String, String> minVal, HashMap<String, String> maxVal) {
+	private Variable processIdentifier(String name, HashMap<String, String> minVal, HashMap<String, String> maxVal) {
     Variable v = new Variable(name);
     if (minVal.containsKey(name)) {
       v.setMinValue(minVal.get(name));
@@ -59,8 +59,16 @@ script[ControlFlowGraph graph, HashMap<String, String> minVal, HashMap<String, S
 
 statement[ControlFlowGraph graph, HashMap<String, String> minVal, HashMap<String, String> maxVal, List<SequentialNode> nodes]
 	: declareArray[graph]
+	| assignment[graph, minVal, maxVal] { $nodes.add($assignment.result);}
 	| coefficient[graph, minVal, maxVal] { $nodes.add($coefficient.result); }
 	;
+	
+assignment[ControlFlowGraph graph, HashMap<String, String> minVal, HashMap<String, String> maxVal] returns [SequentialNode result]
+  : ^(ASSIGN var=IDENTIFIER value=expression[minVal, maxVal]) {
+    Variable variable = processIdentifier($var.text, minVal, maxVal);
+    $result = new AssignmentNode(graph, variable, $value.result);
+  }
+  ;
 	
 declareArray[ControlFlowGraph graph]
 	: ^(DECLAREARRAY name=IDENTIFIER) { /* What to do with declarations? Is it really needed? */ }

@@ -143,7 +143,11 @@ public class InlineMacrosVisitor extends EmptyExpressionVisitor implements Contr
 		SequentialNode caller = currentStatement;
 		Macro macro = graph.getMacro(node.getName());
 		String macroName = macro.getName();
-		currentArguments.put(macroName, node.getArguments());
+		List<Expression> arguments = node.getArguments();
+		for (Expression arg : arguments) {
+			arg.accept(this);
+		}
+		currentArguments.put(macroName, arguments);
 		// generate unique names for each variable in current scope (to be used for each statement in this scope)
 		Map<String, String> newNames = new HashMap<String, String>();
 		for (Variable v : graph.getLocalVariables()) {
