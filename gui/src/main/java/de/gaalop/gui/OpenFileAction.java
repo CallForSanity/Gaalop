@@ -48,7 +48,7 @@ public class OpenFileAction extends AbstractAction {
 			
 			@Override
 			public boolean accept(File f) {
-				if (f.getName().endsWith(".clu")) {
+				if (f.isDirectory() || f.getName().endsWith(".clu")) {
 					return true;
 				}
 				return false;

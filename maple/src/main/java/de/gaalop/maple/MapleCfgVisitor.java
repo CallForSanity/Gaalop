@@ -3,6 +3,7 @@ package de.gaalop.maple;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.antlr.runtime.ANTLRStringStream;
@@ -100,12 +101,11 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 	}
 
 	/**
-	 * Simple control flow visitor that restores variable assignments that might be overridden in if-then-else
-	 * statements. For those statements where the condition cannot be evaluated due to unknown input parameters, and
-	 * hence cannot be inlined, this visitor places an additional assignment to affected variables right before the
-	 * {@link IfThenElseNode} that would override the value of a variable. Therefore, the root {@link IfThenElseNode}
-	 * has to be passed to the constructor. Nested if-then-else statements are processed, too, but variable restores are
-	 * placed before the root node.
+	 * Simple control flow visitor that restores variable assignments that might be overridden in if-then-else statements. For
+	 * those statements where the condition cannot be evaluated due to unknown input parameters, and hence cannot be inlined, this
+	 * visitor places an additional assignment to affected variables right before the {@link IfThenElseNode} that would override
+	 * the value of a variable. Therefore, the root {@link IfThenElseNode} has to be passed to the constructor. Nested
+	 * if-then-else statements are processed, too, but variable restores are placed before the root node.
 	 */
 	private class RestoreValuesVisitor extends EmptyControlFlowVisitor {
 
@@ -132,7 +132,7 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 					// 1. get current value
 					String result = engine.evaluate(name + ";");
 					Notifications.addWarning("Restored optimized current value of " + variable
-							+ " before occurence of if-statement.");
+						+ " before occurence of if-statement.");
 					if (result.endsWith("\n")) {
 						result = result.substring(0, result.length() - 1);
 					}
@@ -142,12 +142,8 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 					for (SequentialNode newAssignment : parsed) {
 						root.insertBefore(newAssignment);
 					}
-					// 3. clear maple variable
-					String clearCommand = name + ":= '" + name + "';";
-					engine.evaluate(clearCommand);
 				} catch (MapleEngineException e) {
-					throw new RuntimeException("Unable to restore state of variable " + name + " before if-statement",
-							e);
+					throw new RuntimeException("Unable to restore state of variable " + name + " before if-statement", e);
 				}
 			}
 			node.getSuccessor().accept(this);
@@ -162,7 +158,10 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 				node.getSuccessor().accept(this);
 			}
 		}
-
+		
+		public Set<String> getVariables() {
+			return processedVariables;
+		}
 	}
 
 	private Log log = LogFactory.getLog(MapleCfgVisitor.class);
@@ -173,6 +172,10 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 	private HashMap<String, String> oldMaxVal;
 
 	private Plugin plugin;
+	
+	private boolean branchMode = false;
+	private Map<String, String> rollbackValues = new HashMap<String, String>();
+
 
 	public MapleCfgVisitor(MapleEngine engine, Plugin plugin) {
 		this.engine = engine;
@@ -192,45 +195,66 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 	}
 
 	@Override
-	public void visit(AssignmentNode assignmentNode) {
-		String variableCode = generateCode(assignmentNode.getVariable());
-		// If you want to simplify (and keep) the last assignment to every variable
-		// uncomment the following statement:
-		// simplifyBuffer.add(variableCode);
-
-		StringBuilder codeBuffer = new StringBuilder();
+	public void visit(AssignmentNode node) {
 		/*
-		 * FIXME: special treatment in case it is a single line using a math function, which is not support. (Atm only
-		 * abs is supported) We dont call Matlab for this, as it cannot handle these correct the mathfunction has to be
-		 * on a single line, with a single var parameter like x = sqrt(y);
+		 * FIXME: special treatment in case it is a single line using a math function, which is not support. (Atm only abs is
+		 * supported) We dont call Matlab for this, as it cannot handle these correct the mathfunction has to be on a single line,
+		 * with a single var parameter like x = sqrt(y);
 		 */
-		if (assignmentNode.getValue() instanceof MathFunctionCall) {
-			MathFunction func = ((MathFunctionCall) (assignmentNode.getValue())).getFunction();
+		if (node.getValue() instanceof MathFunctionCall) {
+			MathFunction func = ((MathFunctionCall) (node.getValue())).getFunction();
 			if ((func != MathFunction.ABS)) {
-				assignmentNode.getSuccessor().accept(this);
+				node.getSuccessor().accept(this);
 				return;
-		        // FIXME: previous assignments contributing to this statement might get lost
+				// FIXME: previous assignments contributing to this statement might get lost
 			}
 		}
 		// FIXME: Maple cannot compute things like sqrt(abs(VecN3(1,2,3)));
+		
+		if (branchMode) {
+			// get current value from maple for rollback
+			String variableName = node.getVariable().getName();
+			try {
+				String command = variableName + ";\n";
+				String currentValue = engine.evaluate(command);
+				if (!rollbackValues.containsKey(variableName)) {
+					rollbackValues.put(variableName, currentValue);
+				}				
+			} catch (MapleEngineException e) {
+				throw new RuntimeException("Unable to query current value of " + variableName + " from Maple.", e);
+			}
+		}
 
+		String variableCode = generateCode(node.getVariable());
+		// If you want to simplify (and keep) the last assignment to every variable
+		// uncomment the following statement:
+		// simplifyBuffer.add(variableCode);
+		
+		StringBuilder codeBuffer = new StringBuilder();
+		
 		codeBuffer.append(variableCode);
 		codeBuffer.append(" := ");
-		codeBuffer.append(generateCode(assignmentNode.getValue()));
+		codeBuffer.append(generateCode(node.getValue()));
 		codeBuffer.append(";\n");
-
+		
 		try {
 			engine.evaluate(codeBuffer.toString());
 		} catch (MapleEngineException e) {
-			throw new RuntimeException("Unable to simplify assignment " + assignmentNode + " in Maple.", e);
+			throw new RuntimeException("Unable to simplify assignment " + node + " in Maple.", e);
 		}
 		
 		// notify observables about progress (must be called before successor.accept(this))
 		plugin.notifyProgress();
+		
+		if (branchMode) {
+			// add store result node, if necessary
+			if (!(node.getSuccessor() instanceof StoreResultNode)) {
+				node.insertAfter(new StoreResultNode(node.getGraph(), node.getVariable()));
+			}
+		}
 
-		Node successor = assignmentNode.getSuccessor();
-		assignmentNode.getGraph().removeNode(assignmentNode);
-		successor.accept(this);
+		node.getGraph().removeNode(node);
+		node.getSuccessor().accept(this);
 	}
 
 	@Override
@@ -261,9 +285,9 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 	}
 
 	@Override
-	public void visit(IfThenElseNode node) {		
+	public void visit(IfThenElseNode node) {
 		Expression condition = node.getCondition();
-		try {			
+		try {
 			boolean unknown = false;
 			UsedVariablesVisitor visitor = new UsedVariablesVisitor();
 			condition.accept(visitor);
@@ -275,12 +299,24 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 					break;
 				}
 			}
-			
+
 			if (unknown) {
-				// restore overridden variables to prevent loss of information during Maple optimization
-				node.accept(new RestoreValuesVisitor(node));
-				// TODO: find macro calls and re-insert macro definition before this node
-				node.getSuccessor().accept(this);				
+				/*
+				 * Restore overridden variables to prevent loss of information during Maple optimization Must be performed in any
+				 * case because Maple assignment gets reset and variable could be modified by one branch only.
+				 */
+				RestoreValuesVisitor restoreVisitor = new RestoreValuesVisitor(node);
+				node.accept(restoreVisitor);
+
+				branchMode = true;
+				node.getPositive().accept(this);
+				rollback();
+
+				node.getNegative().accept(this);
+				resetVariables(restoreVisitor.getVariables());
+				branchMode = false;
+
+				node.getSuccessor().accept(this);
 			} else {
 				StringBuilder codeBuffer = new StringBuilder();
 				codeBuffer.append("evalb(");
@@ -299,9 +335,34 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 				} else {
 					throw new IllegalStateException("Could not evaluate condition " + condition);
 				}
-			}			
+			}
 		} catch (MapleEngineException e) {
 			throw new RuntimeException("Unable to check condition " + condition + " in if-statement " + node, e);
+		}
+	}
+	
+	private void rollback() {
+		for (String variable : rollbackValues.keySet()) {
+			String value = rollbackValues.get(variable);
+			String command = variable + ":=" + value + ";\n";
+			try {
+				engine.evaluate(command);
+			} catch (MapleEngineException e) {
+				throw new RuntimeException("Could not rollback assignment of variable " + variable, e);
+			}
+		}
+		
+		rollbackValues.clear();
+	}
+	
+	private void resetVariables(Set<String> variables) {
+		for (String variable : variables) {
+			String clearCommand = variable + ":= '" + variable + "';";
+			try {
+				engine.evaluate(clearCommand);
+			} catch (MapleEngineException e) {
+				throw new RuntimeException("Could not reset variable " + variable, e);
+			}
 		}
 	}
 
@@ -338,10 +399,8 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 
 		/* fill the Maps with the min and maxvalues from the nodes */
 		for (Variable v : graph.getInputVariables()) {
-			if (v.getMinValue() != null)
-				oldMinVal.put(v.getName(), v.getMinValue());
-			if (v.getMaxValue() != null)
-				oldMaxVal.put(v.getName(), v.getMaxValue());
+			if (v.getMinValue() != null) oldMinVal.put(v.getName(), v.getMinValue());
+			if (v.getMaxValue() != null) oldMaxVal.put(v.getName(), v.getMaxValue());
 		}
 
 		MapleLexer lexer = new MapleLexer(new ANTLRStringStream(mapleCode));
@@ -370,8 +429,7 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 		try {
 			return engine.evaluate(codeBuffer.toString());
 		} catch (MapleEngineException e) {
-			throw new RuntimeException("Unable to apply gaalop() function on expression " + expression + " in Maple.",
-					e);
+			throw new RuntimeException("Unable to apply gaalop() function on expression " + expression + " in Maple.", e);
 		}
 	}
 

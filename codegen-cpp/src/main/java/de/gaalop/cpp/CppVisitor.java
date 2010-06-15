@@ -15,7 +15,7 @@ import org.apache.commons.logging.LogFactory;
 public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 
 	private Log log = LogFactory.getLog(CppVisitor.class);
-	
+
 	private final String suffix = "_opt";
 
 	private StringBuilder code = new StringBuilder();
@@ -30,11 +30,13 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 	private boolean standalone = true;
 
 	private Set<String> assigned = new HashSet<String>();
-	
+
 	private Map<MultivectorComponent, Integer> newIndices = new HashMap<MultivectorComponent, Integer>();
 	private int components;
 	private int offset;
-	
+
+	public final boolean MINIMIZE_ARRAY_SIZE = false;
+
 	public String getCode() {
 		return code.toString();
 	}
@@ -80,19 +82,21 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 			indentation++;
 		}
 
-//		// Declare local variables with minimal size of array
-//		for (Variable var : graph.getLocalVariables()) {
-//			appendIndentation();
-//			code.append("float ");
-//			code.append(var.getName());
-//			code.append(suffix);
-//			code.append("[32];\n");
-//		}
+		if (!MINIMIZE_ARRAY_SIZE) {
+			// Declare local variables with minimal size of array
+			for (Variable var : graph.getLocalVariables()) {
+				appendIndentation();
+				code.append("float ");
+				code.append(var.getName());
+				code.append(suffix);
+				code.append("[32];\n");
+			}
+		}
 
 		if (!graph.getLocalVariables().isEmpty()) {
 			code.append("\n");
 		}
-		
+
 		offset = code.length() - 1;
 
 		node.getSuccessor().accept(this);
@@ -121,9 +125,11 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 	@Override
 	public void visit(AssignmentNode node) {
 		String variable = node.getVariable().getName();
-		if (node.getVariable() instanceof MultivectorComponent) {
-			newIndices.put((MultivectorComponent) node.getVariable(), components);
-			components++;
+		if (MINIMIZE_ARRAY_SIZE) {
+			if (node.getVariable() instanceof MultivectorComponent) {
+				newIndices.put((MultivectorComponent) node.getVariable(), new Integer(components));
+				components++;
+			}
 		}
 		if (assigned.contains(variable)) {
 			String message = "Variable " + variable + " has been reset for reuse.";
@@ -144,7 +150,7 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 		code.append(" = ");
 		node.getValue().accept(this);
 		code.append(";");
-		
+
 		if (node.getVariable() instanceof MultivectorComponent) {
 			code.append(" // ");
 
@@ -155,7 +161,7 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 			bladeList[component.getBladeIndex()].accept(bladeVisitor);
 			code.append(bladeVisitor.getCode());
 		}
-		
+
 		code.append('\n');
 
 		node.getSuccessor().accept(this);
@@ -172,15 +178,17 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 
 	@Override
 	public void visit(StoreResultNode node) {
-		StringBuilder init = new StringBuilder();
-		init.append("\tfloat ");
-		init.append(node.getValue().getName());
-		init.append(suffix);
-		init.append("[");
-		init.append(components);
-		init.append("];\n");
-		code.insert(offset, init.toString());
-		
+		if (MINIMIZE_ARRAY_SIZE) {
+			StringBuilder init = new StringBuilder();
+			init.append("\tfloat ");
+			init.append(node.getValue().getName());
+			init.append(suffix);
+			init.append("[");
+			init.append(components);
+			init.append("];\n");
+			code.insert(offset, init.toString());
+		}
+
 		assigned.add(node.getValue().getName());
 
 		appendIndentation();
@@ -344,8 +352,11 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 	public void visit(MultivectorComponent component) {
 		code.append(component.getName());
 		code.append('[');
-//		code.append(component.getBladeIndex());
-		code.append(newIndices.get(component));
+		if (MINIMIZE_ARRAY_SIZE) {
+			code.append(newIndices.get(component));
+		} else {
+			code.append(component.getBladeIndex());
+		}
 		code.append(']');
 	}
 
