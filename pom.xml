@@ -22,6 +22,7 @@
         <module>starter</module>
         <module>codegen-dot</module>
         <module>setup</module>
+        <module>codegen-verilog</module>
     </modules>
 
     <!--
