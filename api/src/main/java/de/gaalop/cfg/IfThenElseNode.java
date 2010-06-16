@@ -95,9 +95,13 @@ public class IfThenElseNode extends SequentialNode {
 	@Override
 	public void replaceSuccessor(Node oldSuccessor, Node newSuccessor) {
 		if (oldSuccessor == positive) {
+			newSuccessor.removePredecessor(oldSuccessor);
+			newSuccessor.addPredecessor(this);
 			// cast is safe since branch of if-then-else cannot be the end node
 			setPositive((SequentialNode) newSuccessor);
 		} else if (oldSuccessor == negative) {
+			newSuccessor.removePredecessor(oldSuccessor);
+			newSuccessor.addPredecessor(this);
 			// cast is safe since branch of if-then-else cannot be the end node
 			setNegative((SequentialNode) newSuccessor);
 		} else {
