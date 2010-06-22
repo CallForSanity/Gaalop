@@ -415,6 +415,12 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 	public void visit(LogicalAnd node) {
 		addBinaryInfix(node, " && ");
 	}
+	
+	@Override
+	public void visit(LogicalNegation node) {
+		code.append('!');
+		addChild(node, node.getOperand());
+	}
 
 	@Override
 	public void visit(Equality node) {

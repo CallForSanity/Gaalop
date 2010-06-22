@@ -24,7 +24,7 @@ public class FindTerminationVisitor extends EmptyControlFlowVisitor {
 	private boolean insideLoop = false;
 	private final LoopNode loop;
 	private Set<Expression> termination = new HashSet<Expression>();
-	private List<IfThenElseNode> conditions = new ArrayList<IfThenElseNode>();
+	private List<Expression> conditions = new ArrayList<Expression>();
 
 	/**
 	 * Creates a new visitor that tries to find the termination conditions for the given loop.
@@ -47,22 +47,25 @@ public class FindTerminationVisitor extends EmptyControlFlowVisitor {
 	@Override
 	public void visit(IfThenElseNode node) {
 		if (insideLoop) {
-			conditions.add(node);
+			Expression positiveCondition = node.getCondition();
+			Expression negativeCondition = ExpressionFactory.logicalNegation(positiveCondition);
+			conditions.add(positiveCondition);
 			node.getPositive().accept(this);
+			conditions.remove(positiveCondition);
+			conditions.add(negativeCondition);
 			node.getNegative().accept(this);
-			conditions.remove(node);
+			conditions.remove(negativeCondition);
 		}
 		node.getSuccessor().accept(this);
 	}
 
 	@Override
 	public void visit(LoopNode node) {
+		// process only given loop (requires to run accept on loop node directly)
 		if (node == loop) {
 			insideLoop = true;
 			node.getBody().accept(this);
 			insideLoop = false;
-		} else {
-			node.getSuccessor().accept(this);
 		}
 	}
 
@@ -71,7 +74,7 @@ public class FindTerminationVisitor extends EmptyControlFlowVisitor {
 		if (insideLoop) {
 			Expression[] expressions = new Expression[conditions.size()];
 			for (int i = 0; i < conditions.size(); i++) {
-				expressions[i] = conditions.get(i).getCondition();
+				expressions[i] = conditions.get(i);
 			}
 			if (expressions.length == 1) {
 				termination.add(expressions[0]);

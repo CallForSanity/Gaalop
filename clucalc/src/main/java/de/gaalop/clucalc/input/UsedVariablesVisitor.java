@@ -99,6 +99,11 @@ public class UsedVariablesVisitor implements ExpressionVisitor {
 	public void visit(LogicalAnd node) {
 		visitBinaryOperation(node);
 	}
+	
+	@Override
+	public void visit(LogicalNegation node) {
+		node.getOperand().accept(this);
+	}
 
 	@Override
 	public void visit(Equality node) {

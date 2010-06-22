@@ -224,6 +224,12 @@ public class LatexVisitor implements ControlFlowVisitor, ExpressionVisitor {
       // TODO Auto-generated method stub
       
     }
+    
+    @Override
+    public void visit(LogicalNegation node) {
+    	// TODO Auto-generated method stub
+    	
+    }
 
     @Override
     public void visit(Equality node) {

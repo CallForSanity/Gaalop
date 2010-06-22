@@ -155,6 +155,11 @@ public class RemoveUnusedVariablesVisitor implements ControlFlowVisitor, Express
 		node.getLeft().accept(this);
 		node.getRight().accept(this);
 	}
+	
+	@Override
+	public void visit(LogicalNegation node) {
+		node.getOperand().accept(this);
+	}
 
 	@Override
 	public void visit(Equality node) {

@@ -147,6 +147,12 @@ public class BladePrinter implements ExpressionVisitor {
 	public void visit(LogicalAnd node) {
 		handleInfix(node, "&&", true);
 	}
+	
+	@Override
+	public void visit(LogicalNegation node) {
+		code.append('!');
+		addChild(node, node.getOperand());
+	}
 
 	@Override
 	public void visit(Equality node) {

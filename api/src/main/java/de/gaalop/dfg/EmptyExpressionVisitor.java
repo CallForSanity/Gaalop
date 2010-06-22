@@ -89,6 +89,11 @@ public class EmptyExpressionVisitor implements ExpressionVisitor {
 	public void visit(LogicalAnd node) {
 		handleBinary(node.getLeft(), node.getRight());
 	}
+	
+	@Override
+	public void visit(LogicalNegation node) {
+		node.getOperand().accept(this);
+	}
 
 	@Override
 	public void visit(Equality node) {

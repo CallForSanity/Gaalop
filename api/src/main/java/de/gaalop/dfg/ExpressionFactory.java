@@ -185,4 +185,14 @@ public final class ExpressionFactory {
 	public static LogicalAnd and(Expression... booleanValues) {
 		return new LogicalAndCreator().createBinary(booleanValues);
 	}
+
+	/**
+	 * Creates a negated version of the given logical expression.
+	 * 
+	 * @param expression logical expression to be negated
+	 * @return negated logical expression
+	 */
+	public static LogicalNegation logicalNegation(Expression expression) {
+		return new LogicalNegation(expression);
+	}
 }

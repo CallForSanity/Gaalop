@@ -163,6 +163,13 @@ public class MapleDfgVisitor implements ExpressionVisitor {
 	public void visit(LogicalAnd node) {
 		handleInfix(node, "and");
 	}
+	
+	@Override
+	public void visit(LogicalNegation node) {
+		codeBuffer.append("(not(");
+		node.getOperand().accept(this);
+		codeBuffer.append("))");
+	}
 
 	@Override
 	public void visit(Equality node) {

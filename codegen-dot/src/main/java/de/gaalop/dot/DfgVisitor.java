@@ -146,6 +146,11 @@ public class DfgVisitor implements ExpressionVisitor {
     public void visit(LogicalAnd node) {
     	addBinaryOp(node, "&&");
     }
+	
+	@Override
+	public void visit(LogicalNegation node) {
+		addUnaryOp(node, "!");
+	}
 
     @Override
     public void visit(Equality node) {

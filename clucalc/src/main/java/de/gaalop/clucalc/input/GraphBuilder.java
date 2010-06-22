@@ -189,7 +189,8 @@ public final class GraphBuilder {
 		rewireNodes(body, loop);
 		loop.setBody((body != null && body.size() > 0) ? body.get(0) : new BlockEndNode(graph, loop));
 		FindTerminationVisitor visitor = new FindTerminationVisitor(loop);
-		graph.accept(visitor);
+//		graph.accept(visitor);
+		loop.accept(visitor);
 		loop.setTermination(visitor.getTermination());
 		return loop;
 	}

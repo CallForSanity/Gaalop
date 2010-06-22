@@ -17,7 +17,7 @@ options {
 
 @members {
 	private GraphBuilder graphBuilder;
-	private boolean inIfBlock = false;
+	private int inIfBlock = 0;
 	private boolean inMacro = false;
 	
 	private static final class ParserError extends Error {
@@ -79,7 +79,7 @@ statement returns [ArrayList<SequentialNode> nodes]
 	| loop { $nodes.add($loop.node); }
 	
 	| BREAK {
-	  if (inIfBlock) { 
+	  if (inIfBlock > 0) { 
 	    $nodes.add(graphBuilder.handleBreak());
 	  } else {
 	    throw new ParserError("A break command may only occur whithin a conditional statement.");
@@ -146,8 +146,8 @@ variable returns [Variable result]
 	;
 	
 if_statement returns [IfThenElseNode node]
-  @init { inIfBlock = true; }
-  @after { inIfBlock = false; }
+  @init { inIfBlock++; }
+  @after { inIfBlock--; }
   : ^(IF condition=expression then_part=statement else_part=else_statement?) {
     $node = graphBuilder.handleIfStatement($condition.result, $then_part.nodes, $else_part.nodes);
   }
@@ -221,6 +221,8 @@ expression returns [Expression result]
 	| ^(DUAL op=expression) { $result = graphBuilder.processFunction("*", Collections.singletonList($op.result)); }	
 	// Reverse
 	| ^(REVERSE op=expression) { $result = new Reverse($op.result); }
+	// Logical negation
+	| ^(NOT op=expression) { $result = new LogicalNegation($op.result); }
 	// Function Call
 	| ^(FUNCTION name=IDENTIFIER arguments) { $result = graphBuilder.processFunction($name.text, $arguments.args); }
 	// Integral Value (Constant)

@@ -59,7 +59,6 @@ pragma
 */
 expression
   : lvalue EQUALS expression -> ^(EQUALS lvalue expression)
-  | additive_expression
   | logical_or_expression
   ;
 
@@ -112,6 +111,7 @@ unary_expression
   | STAR operand=unary_expression -> ^(DUAL $operand)
   | MINUS operand=unary_expression -> ^(NEGATION $operand)
   | REVERSE operand=unary_expression -> ^(REVERSE $operand)
+  | NOT operand=unary_expression -> ^(NOT $operand)
   ;
   
 postfix_expression
