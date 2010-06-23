@@ -167,7 +167,7 @@ public class InlineMacrosVisitor extends EmptyExpressionVisitor implements Contr
 				throw new IllegalArgumentException(
 						"Cannot inline a macro without return value into the following statement:\n" + caller);
 			}
-			Expression returnValue = macro.getReturnValue();
+			Expression returnValue = macro.getReturnValue().copy();
 			replaceUsedVariablesInExpression(returnValue, macroName, newNames);
 			caller.replaceExpression(node, returnValue);
 		} else {
