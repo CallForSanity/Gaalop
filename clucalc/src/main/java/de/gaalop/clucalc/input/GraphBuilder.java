@@ -113,15 +113,23 @@ public final class GraphBuilder {
 	 * @param expression The expression that is assigned to the variable.
 	 */
 	public AssignmentNode handleAssignment(Variable variable, Expression expression, boolean inMacro) {
+		checkIllegalAssignments(variable);
 		assignments++;
 		if (!inMacro) {
 			graph.addLocalVariable(variable);
 		}
-		findUndeclaredVariables(expression);
+		findUndeclaredVariables(expression, inMacro);
 
 		AssignmentNode assignment = new AssignmentNode(graph, variable, expression);
 		addNode(assignment);
 		return assignment;
+	}
+
+	private void checkIllegalAssignments(Variable variable) {
+		if (variable.getName().equals("B")) {
+			// this is the metric matrix in Maple
+			throw new IllegalArgumentException("Variable B is already used by Maple. Please use another variable.");
+		}
 	}
 
 	/**
@@ -142,7 +150,7 @@ public final class GraphBuilder {
 	 */
 	public StoreResultNode handlePrint(Expression variable) {
 		if (variable instanceof Variable) {
-			findUndeclaredVariables(variable);
+			findUndeclaredVariables(variable, false);
 
 			StoreResultNode storeResult = new StoreResultNode(graph, (Variable) variable);
 			addNode(storeResult);
@@ -189,7 +197,7 @@ public final class GraphBuilder {
 		rewireNodes(body, loop);
 		loop.setBody((body != null && body.size() > 0) ? body.get(0) : new BlockEndNode(graph, loop));
 		FindTerminationVisitor visitor = new FindTerminationVisitor(loop);
-//		graph.accept(visitor);
+		// graph.accept(visitor);
 		loop.accept(visitor);
 		loop.setTermination(visitor.getTermination());
 		return loop;
@@ -283,8 +291,9 @@ public final class GraphBuilder {
 	 * variables of the graph.
 	 * 
 	 * @param expression The expression to search in.
+	 * @param inMacro
 	 */
-	private void findUndeclaredVariables(Expression expression) {
+	private void findUndeclaredVariables(Expression expression, boolean inMacro) {
 		UsedVariablesVisitor visitor = new UsedVariablesVisitor();
 		expression.accept(visitor);
 
@@ -297,7 +306,9 @@ public final class GraphBuilder {
 				if (graph.getPragmaMaxValue().containsKey(usedVariable.getName())) {
 					usedVariable.setMaxValue(graph.getPragmaMaxValue().get(usedVariable.getName()));
 				}
-				graph.addInputVariable(usedVariable);
+				if (!inMacro) {
+					graph.addInputVariable(usedVariable);
+				}
 			}
 		}
 	}
@@ -321,7 +332,7 @@ public final class GraphBuilder {
 			}
 		}
 		for (Expression arg : args) {
-			findUndeclaredVariables(arg);
+			findUndeclaredVariables(arg, false);
 		}
 		if (functionFactory.isDefined(name)) {
 			Expression[] argsArray = args.toArray(new Expression[args.size()]);
