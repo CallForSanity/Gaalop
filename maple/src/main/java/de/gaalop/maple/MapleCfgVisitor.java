@@ -299,7 +299,27 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 					break;
 				}
 			}
-
+			if (!unknown) {
+				StringBuilder codeBuffer = new StringBuilder();
+				codeBuffer.append("evalb(");
+				codeBuffer.append(generateCode(condition));
+				codeBuffer.append(");\n");
+				// try to evaluate the condition
+				String result = engine.evaluate(codeBuffer.toString());
+				log.debug("Maple simplification of IF condition " + condition + ": " + result);
+				// if condition can be determined to be true or false, inline relevant part
+				if ("true\n".equals(result)) {
+					node.accept(new InlineBlockVisitor(node, node.getPositive()));
+					node.getPositive().accept(this);
+				} else if ("false\n".equals(result)) {
+					node.accept(new InlineBlockVisitor(node, node.getNegative()));
+					node.getNegative().accept(this);
+				} else {
+					// reset unknown status in order to process branches
+					Notifications.addWarning("Could not evaluate condition " + condition);
+					unknown = true;
+				}
+			}
 			if (unknown) {
 				/*
 				 * Restore overridden variables to prevent loss of information during Maple optimization Must be performed in any
@@ -317,25 +337,7 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 				branchMode = false;
 
 				node.getSuccessor().accept(this);
-			} else {
-				StringBuilder codeBuffer = new StringBuilder();
-				codeBuffer.append("evalb(");
-				codeBuffer.append(generateCode(condition));
-				codeBuffer.append(");\n");
-				// try to evaluate the condition
-				String result = engine.evaluate(codeBuffer.toString());
-				log.debug("Maple simplification of IF condition " + condition + ": " + result);
-				// if condition can be determined to be true or false, inline relevant part
-				if ("true\n".equals(result)) {
-					node.accept(new InlineBlockVisitor(node, node.getPositive()));
-					node.getPositive().accept(this);
-				} else if ("false\n".equals(result)) {
-					node.accept(new InlineBlockVisitor(node, node.getNegative()));
-					node.getNegative().accept(this);
-				} else {
-					throw new IllegalStateException("Could not evaluate condition " + condition);
-				}
-			}
+			} 
 		} catch (MapleEngineException e) {
 			throw new RuntimeException("Unable to check condition " + condition + " in if-statement " + node, e);
 		}
