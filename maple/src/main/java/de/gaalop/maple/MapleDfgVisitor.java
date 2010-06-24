@@ -48,8 +48,8 @@ public class MapleDfgVisitor implements ExpressionVisitor {
 	public void visit(Division division) {
 		// FIXME: division by zero is not detected
 		codeBuffer.append("subs(Id=1,");
-		handleInfix(division, ") &c inverse(");
-		codeBuffer.append(')');
+		handleInfix(division, ") &c inverse(simplify(");
+		codeBuffer.append("))");
 	}
 
 	@Override
@@ -58,10 +58,11 @@ public class MapleDfgVisitor implements ExpressionVisitor {
 			throw new IllegalStateException("This visitor cannot process the inner product in non-clifford mode.");
 		}
 		codeBuffer.append("subs(Id=1,innerproduct(");
+		codeBuffer.append("simplify(");
 		innerProduct.getLeft().accept(this);
-		codeBuffer.append(',');
+		codeBuffer.append("), simplify(");
 		innerProduct.getRight().accept(this);
-		codeBuffer.append("))");
+		codeBuffer.append(")))");
 	}
 
 	@Override
