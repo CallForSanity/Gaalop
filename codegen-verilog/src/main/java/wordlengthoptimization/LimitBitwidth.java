@@ -6,7 +6,7 @@
 package wordlengthoptimization;
 
 import datapath.graph.OperationVisitor;
-import datapath.graph.operations.Absolut;
+import datapath.graph.operations.*;
 import datapath.graph.operations.Add;
 import datapath.graph.operations.ArcCos;
 import datapath.graph.operations.BinaryOperation;
@@ -253,5 +253,10 @@ public class LimitBitwidth implements OperationVisitor {
   public void visit(TypeConversion op) {
     throw new UnsupportedOperationException("Not supported yet.");
   }
+
+   @Override
+    public void visit(ConstantMultiplication op) {
+        visit((Multiplication)op);
+    }
 
 }

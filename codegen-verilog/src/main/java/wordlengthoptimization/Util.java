@@ -8,12 +8,10 @@ package wordlengthoptimization;
 import datapath.graph.Graph;
 import datapath.graph.operations.HWInput;
 import datapath.graph.operations.HWOutput;
-import datapath.graph.operations.Multiplication;
 import datapath.graph.operations.Operation;
 import datapath.graph.operations.TopLevelInput;
+import java.math.BigInteger;
 import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -28,7 +26,7 @@ public class Util {
    *
    */
   public static int bitsRequired(double minValue, double maxValue) {
-    long absmax = (long ) Math.max(Math.abs(minValue), maxValue);
+    long absmax = (long ) Math.max(Math.abs(minValue), maxValue) +1;
 
     int bits = 64 - Long.numberOfLeadingZeros(absmax);
 
@@ -53,6 +51,28 @@ public class Util {
    /* log_2 (10) = 2.30... That means that many bits are enough per decimal digit */
     return (int) Math.ceil((floatnumber.length() - pos -1) * 2.31);
   }
+
+  /**
+   * Generates Integer fixed point represenation of a floating point value.
+   * @param d Floating point value.
+   * @param prec Precision of the integer representation.
+   * @return Fixed point integer with a precision of prec representing d
+   */
+  public static BigInteger fixedPointFromFloat(double d, int prec) {
+    d = d * Math.pow(2.0, (double)prec);
+    return new BigInteger( String.format("%100.0f", d).trim());
+  }
+
+  /**
+   * Generates Integer fixed point represenation of a floating point value.
+   * @param d Floating point value.
+   * @param prec Precision of the integer representation.
+   * @return Fixed point integer with a precision of prec representing d
+   */
+  public static double floatFromfixedPoint(BigInteger integer, int prec) {
+    return Math.scalb(integer.doubleValue(), -prec);
+  }
+
 
       /**
        * Helper function. As the visitor does NOT visit HWInput we walk over all nodes,

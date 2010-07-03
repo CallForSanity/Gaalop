@@ -74,5 +74,4 @@ public abstract class Type implements Cloneable {
         }
         return true;
     }
-    
 }

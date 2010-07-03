@@ -2,6 +2,8 @@ package de.gaalop.cpp;
 
 import de.gaalop.CodeGenerator;
 import de.gaalop.CodeGeneratorPlugin;
+import de.gaalop.Notifications;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -9,11 +11,12 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Observable;
 
 /**
  * This class implements the Plugin interface for Gaalop.
  */
-public class Plugin implements CodeGeneratorPlugin {
+public class Plugin extends Observable implements CodeGeneratorPlugin {
 
     private Log log = LogFactory.getLog(Plugin.class);
 
@@ -34,7 +37,7 @@ public class Plugin implements CodeGeneratorPlugin {
 
     @Override
     public CodeGenerator createCodeGenerator() {
-        return CppCodeGenerator.INSTANCE;
+        return new CppCodeGenerator(this);
     }
 
     @Override
@@ -50,5 +53,10 @@ public class Plugin implements CodeGeneratorPlugin {
     @Override
     public Image getIcon() {
         return icon;
+    }
+    
+    void notifyError(Throwable error) {
+    	setChanged();
+    	notifyObservers(new Notifications.Error(error));
     }
 }

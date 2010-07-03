@@ -13,6 +13,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 
+import de.gaalop.CodeGeneratorPlugin;
 import de.gaalop.CodeParserPlugin;
 import de.gaalop.CompilerFacade;
 import de.gaalop.Notifications;
@@ -76,6 +77,10 @@ public class StatusBar extends JPanel implements Observer {
 		if (o instanceof CompilerFacade) {
 			updateFromCompilerFacade(arg);
 		}
+		// check if observable is a code generator
+		if (o instanceof CodeGeneratorPlugin) {
+			updateFromCodeGenerator(arg);
+		}
 	}
 
 	private void updateFromCodeParser(Object arg) {
@@ -106,6 +111,14 @@ public class StatusBar extends JPanel implements Observer {
 				warnings = Notifications.getWarnings();
 				setStatus("Finished (click here to see were warnings)");
 			}
+		}
+	}
+	
+	private void updateFromCodeGenerator(Object arg) {
+		if (arg instanceof Notifications.Error) {
+			Throwable ex = ((Notifications.Error) arg).getError();
+			displayError(ex);
+			ErrorDialog.show(ex);
 		}
 	}
 

@@ -96,6 +96,7 @@ public class PluginConfigurator {
         plugins = Plugins.getCodeGeneratorPlugins();
         for (Plugin plugin : plugins) {
             configure(plugin);
+            register(plugin, o);
         }
     }
 

@@ -6,30 +6,63 @@
 package wordlengthoptimization;
 
 import datapath.graph.OperationVisitor;
-import datapath.graph.operations.*;
+import datapath.graph.operations.Absolut;
+import datapath.graph.operations.Add;
+import datapath.graph.operations.ArcCos;
+import datapath.graph.operations.BinaryOperation;
+import datapath.graph.operations.BitwidthTransmogrify;
+import datapath.graph.operations.ConstantMultiplication;
+import datapath.graph.operations.ConstantOperation;
+import datapath.graph.operations.ConstantShift;
+import datapath.graph.operations.Cos;
+import datapath.graph.operations.Divide;
+import datapath.graph.operations.FromOuterLoop;
+import datapath.graph.operations.HWInput;
+import datapath.graph.operations.HWOutput;
+import datapath.graph.operations.Less;
+import datapath.graph.operations.Loop;
+import datapath.graph.operations.LoopEnd;
+import datapath.graph.operations.LoopInit;
+import datapath.graph.operations.MemWrite;
+import datapath.graph.operations.Multiplication;
+import datapath.graph.operations.Mux;
+import datapath.graph.operations.Negation;
+import datapath.graph.operations.Nop;
+import datapath.graph.operations.Operation;
+import datapath.graph.operations.ParentInput;
+import datapath.graph.operations.Predicate;
+import datapath.graph.operations.Sin;
+import datapath.graph.operations.SquareRoot;
+import datapath.graph.operations.Subtraction;
+import datapath.graph.operations.ToInnerLoop;
+import datapath.graph.operations.ToOuterLoop;
+import datapath.graph.operations.TopLevelInput;
+import datapath.graph.operations.TypeConversion;
+import datapath.graph.operations.VariableShift;
+import datapath.graph.type.FixedPoint;
 import java.math.BigInteger;
 import java.util.HashMap;
 
 /**
- * Visitor, that computes the complete Dataflowgraph
+ * Visitor, that computes the complete Dataflowgraph with Integers (for FixedPoint)
  * Values at the nodes can be retrieved, inital values have to be set
  * @author fs
  */
-public class ComputeValueVisitor implements OperationVisitor {
+public class ComputeIntegerValueVisitor implements OperationVisitor {
 
-  HashMap<Operation, Double> values;
+  HashMap<Operation, BigInteger> values;
 
-  public HashMap<Operation, Double> getValues() {
+  public HashMap<Operation, BigInteger> getValues() {
     return values;
   }
 
   /**
    * Constructor
    * @param initalValues Mapping which assign the Parentinputs (TopLevelInputs)
-   *        double values.
+   *        BigInteger values.
    */
-  public ComputeValueVisitor(HashMap<ParentInput, Double> initalValues) {
-    values = (HashMap<Operation, Double>) initalValues.clone();
+  public ComputeIntegerValueVisitor(HashMap<ParentInput, BigInteger> initalValues) {
+    values = (HashMap<Operation, BigInteger>) initalValues.clone();
   }
 
   @Override
@@ -49,12 +82,14 @@ public class ComputeValueVisitor implements OperationVisitor {
 
   @Override
   public void visit(ConstantOperation op) {
-    values.put(op, Double.parseDouble(op.getValue().toString()));
+    FixedPoint fp = (FixedPoint) op.getType();
+    double value = (Float) op.getValue().getValue();
+    values.put(op, Util.fixedPointFromFloat(value, fp.getFractionlength()));
   }
 
   @Override
   public void visit(Add op) {
-    values.put(op, values.get(op.getLhs()) + values.get(op.getRhs()));
+    values.put(op, values.get(op.getLhs()).add(values.get(op.getRhs())));
   }
 
   @Override
@@ -105,7 +140,7 @@ public class ComputeValueVisitor implements OperationVisitor {
   @Override
   public void visit(Negation op) {
     Operation prev = op.getData();
-    values.put(op, -values.get(prev));
+    values.put(op, BigInteger.ZERO.subtract(values.get(prev)));
   }
 
   @Override
@@ -130,22 +165,25 @@ public class ComputeValueVisitor implements OperationVisitor {
 
   @Override
   public void visit(Multiplication op) {
-    values.put(op, values.get(op.getLhs()) * values.get(op.getRhs()));
+    values.put(op, values.get(op.getLhs()).multiply(values.get(op.getRhs())));
   }
 
   @Override
   public void visit(Subtraction op) {
-    values.put(op, values.get(op.getLhs()) - values.get(op.getRhs()));
+    values.put(op, values.get(op.getLhs()).subtract(values.get(op.getRhs())));
   }
 
   @Override
   public void visit(Divide op) {
-    values.put(op, values.get(op.getLhs()) / values.get(op.getRhs()));
+    /* divider has 32 fractionial width, adjust here for the fixpoint simulation */
+    BigInteger lhs = values.get(op.getLhs());
+    lhs = lhs.shiftLeft(32);
+    values.put(op, lhs.divide(values.get(op.getRhs())));
   }
 
   @Override
   public void visit(Absolut op) {
-    values.put(op, Math.abs(values.get(op.getData())));
+    values.put(op, values.get(op.getData()).abs());
   }
 
   @Override
@@ -165,33 +203,36 @@ public class ComputeValueVisitor implements OperationVisitor {
 
   @Override
   public void visit(ConstantShift op) {
-    double oldValue = values.get(op.getData());
-    double faktor = 1;
+    BigInteger oldValue = values.get(op.getData());
+    BigInteger newValue = BigInteger.ONE;
     switch (op.getMode()) {
       case Left:
-        faktor =  1l << op.getShiftAmount();
+        newValue = oldValue.shiftLeft(op.getShiftAmount());
         break;
       case Right:
       case SignedRight:
       case UnsignedRight:
-        faktor = 1.0 / (1l << op.getShiftAmount());
+        newValue = oldValue.shiftRight(op.getShiftAmount());
+        break;
+      case ZeroShiftRight:
+      case ZeroShiftLeft:
+        newValue = oldValue;
         break;
       default:
         throw new UnsupportedOperationException("Not supported yet.");
     }
-    values.put(op, oldValue * faktor);
+    values.put(op, newValue);
   }
 
   @Override
   public void visit(SquareRoot op) {
-    values.put(op, Math.sqrt(values.get(op.getData())));
+    values.put(op, Util.fixedPointFromFloat(Math.sqrt(values.get(op.getData()).doubleValue()), 0));
   }
 
   @Override
   public void visit(BitwidthTransmogrify op) {
-    //throw new UnsupportedOperationException("Not supported yet.");
+    //nothing as BigInteger does not care about number of bits
     values.put(op, values.get(op.getData()));
-
   }
 
   @Override
@@ -201,13 +242,19 @@ public class ComputeValueVisitor implements OperationVisitor {
 
   @Override
   public void visit(TypeConversion op) {
-    //throw new UnsupportedOperationException("Not supported yet.");
-    values.put(op, values.get(op.getData()));
+    // can change fraction length
+    BigInteger result;
+    FixedPoint thisType = (FixedPoint) op.getType();
+    FixedPoint prevType = (FixedPoint) op.getData().getType();
+
+    result = values.get(op.getData()).shiftLeft(thisType.getFractionlength() - prevType.getFractionlength());
+    values.put(op, result);
   }
 
     @Override
     public void visit(ConstantMultiplication op) {
         visit((Multiplication)op);
     }
+
 
 }

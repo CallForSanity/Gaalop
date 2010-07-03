@@ -196,5 +196,5 @@ else_part
   ;
   
 loop
-  : LOOP stmt=statement -> ^(LOOP $stmt)
+  : (PRAGMA UNROLL_LITERAL number=DECIMAL_LITERAL)? LOOP stmt=statement -> ^(LOOP $stmt $number?)
   ;
