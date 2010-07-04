@@ -11,9 +11,13 @@ import java.nio.charset.Charset;
 /**
  * This class facilitates C/C++ code generation.
  */
-public enum CppCodeGenerator implements CodeGenerator {
-
-    INSTANCE;
+public class CppCodeGenerator implements CodeGenerator {
+    
+    private final Plugin plugin;
+    
+    CppCodeGenerator(Plugin plugin) {
+    	this.plugin = plugin;
+    }
 
     @Override
     public Set<OutputFile> generate(ControlFlowGraph in) {
@@ -46,7 +50,11 @@ public enum CppCodeGenerator implements CodeGenerator {
      */
     private String generateCode(ControlFlowGraph in) {
         CppVisitor visitor = new CppVisitor();
-        in.accept(visitor);
+        try {
+        	in.accept(visitor);
+        } catch (Throwable error) {
+        	plugin.notifyError(error);
+        }
         return visitor.getCode();
     }
 

@@ -125,7 +125,6 @@ pragma
      {  graphBuilder.addPragmaMinMaxValues($varname.text, min, max);}
    | PRAGMA OUTPUT_LITERAL varname=IDENTIFIER
      {  graphBuilder.addPragmaOutputVariable($varname.text);  }
-
   ;
 
 assignment returns [Variable variable, Expression value]
@@ -167,7 +166,7 @@ else_statement returns [ArrayList<SequentialNode> nodes]
   ;
   
 loop returns [LoopNode node]
-  : ^(LOOP stmt=statement) { $node = graphBuilder.handleLoop($stmt.nodes); }
+  : ^(LOOP stmt=statement number=DECIMAL_LITERAL?) { $node = graphBuilder.handleLoop($stmt.nodes, $number.text); }
   ;
   
 block returns [ArrayList<SequentialNode> nodes]

@@ -78,12 +78,16 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 		@Override
 		public void visit(IfThenElseNode node) {
 			// we peek only to next level of nested statements
-			if (node == root) {
+			if (node == root) {				
 				if (node.getPositive() == branch) {
-					replaceSuccessor(node, branch);
+					if (!(branch instanceof BlockEndNode)) {
+						replaceSuccessor(node, branch);
+					}
 					node.getPositive().accept(this);
 				} else if (node.getNegative() == branch) {
-					replaceSuccessor(node, branch);
+					if (!(branch instanceof BlockEndNode)) {
+						replaceSuccessor(node, branch);
+					}
 					node.getNegative().accept(this);
 				}
 				node.getGraph().removeNode(node);
@@ -201,14 +205,14 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 		 * supported) We dont call Matlab for this, as it cannot handle these correct the mathfunction has to be on a single line,
 		 * with a single var parameter like x = sqrt(y);
 		 */
-//		if (node.getValue() instanceof MathFunctionCall) {
-//			MathFunction func = ((MathFunctionCall) (node.getValue())).getFunction();
-//			if ((func != MathFunction.ABS)) {
-//				node.getSuccessor().accept(this);
-//				return;
-//				// FIXME: previous assignments contributing to this statement might get lost
-//			}
-//		}
+		if (node.getValue() instanceof MathFunctionCall) {
+			MathFunction func = ((MathFunctionCall) (node.getValue())).getFunction();
+			if ((func != MathFunction.ABS)) {
+				node.getSuccessor().accept(this);
+				return;
+				// FIXME: previous assignments contributing to this statement might get lost
+			}
+		}
 		// FIXME: Maple cannot compute things like sqrt(abs(VecN3(1,2,3)));
 		
 		if (branchMode) {

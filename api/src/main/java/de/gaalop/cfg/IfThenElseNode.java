@@ -38,7 +38,7 @@ public class IfThenElseNode extends SequentialNode {
 	/**
 	 * @return the first node to be executed when <i>condition</i> evaluates to true
 	 */
-	public Node getPositive() {
+	public SequentialNode getPositive() {
 		return positive;
 	}
 
@@ -73,7 +73,7 @@ public class IfThenElseNode extends SequentialNode {
 	 * @return the first node to be executed when <i>condition</i> evaluates to false. If there is no negative part,
 	 *         this function returns a {@link BlockEndNode}.
 	 */
-	public Node getNegative() {
+	public SequentialNode getNegative() {
 		return negative;
 	}
 
