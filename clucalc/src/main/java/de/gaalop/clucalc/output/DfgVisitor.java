@@ -150,7 +150,7 @@ public class DfgVisitor implements ExpressionVisitor {
 	
 	@Override
 	public void visit(LogicalNegation node) {
-		code.append('!');
+		code.append("!!");
 		addChild(node, node.getOperand());
 	}
 
