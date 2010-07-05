@@ -111,7 +111,7 @@ unary_expression
   | STAR operand=unary_expression -> ^(DUAL $operand)
   | MINUS operand=unary_expression -> ^(NEGATION $operand)
   | REVERSE operand=unary_expression -> ^(REVERSE $operand)
-  | NOT operand=unary_expression -> ^(NOT $operand)
+  | DOUBLE_NOT operand=unary_expression -> ^(DOUBLE_NOT $operand)
   ;
   
 postfix_expression
