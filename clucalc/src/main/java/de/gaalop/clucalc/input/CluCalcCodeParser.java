@@ -70,9 +70,6 @@ public enum CluCalcCodeParser implements CodeParser {
         CommonTreeNodeStream treeNodeStream = new CommonTreeNodeStream(parserResult.getTree());
         CluCalcTransformer transformer = new CluCalcTransformer(treeNodeStream);
         ControlFlowGraph graph = transformer.script();
-        if (plugin != null) {
-        	plugin.setNumberOfAssignments(transformer.getNumberOfAssignments());
-        }
 
         if (!parser.getErrors().isEmpty()) {
             StringBuilder message = new StringBuilder();

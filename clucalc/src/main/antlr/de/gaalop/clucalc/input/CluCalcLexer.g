@@ -34,7 +34,11 @@ FLOATTYPESUFFIX
 	: ('f'|'d')
 	;
 	
-OPNS	:	'OPNS'
+OPNS
+  @after {
+    throw new IllegalArgumentException("OPNS is currently not supported by the Maple backend. Please use the IPNS.");
+  }
+  :	'OPNS'
 	;
 	
 IPNS	:	'IPNS'

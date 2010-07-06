@@ -35,8 +35,6 @@ public final class GraphBuilder {
 
 	private final FunctionFactory functionFactory;
 
-	private int assignments;
-
 	private boolean setMode = false;
 
 	private Set<String> macros = new HashSet<String>();
@@ -102,10 +100,6 @@ public final class GraphBuilder {
 		return functionFactory;
 	}
 
-	protected int getNumberOfAssignments() {
-		return assignments;
-	}
-
 	/**
 	 * Add an assignment node to the end of this graph.
 	 * 
@@ -114,7 +108,6 @@ public final class GraphBuilder {
 	 */
 	public AssignmentNode handleAssignment(Variable variable, Expression expression, boolean inMacro) {
 		checkIllegalAssignments(variable);
-		assignments++;
 		if (!inMacro) {
 			graph.addLocalVariable(variable);
 		}

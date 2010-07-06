@@ -36,10 +36,6 @@ options {
 	public List<String> getErrors() {
 		return errors;
 	}
-	
-	protected int getNumberOfAssignments() {
-	  return graphBuilder.getNumberOfAssignments();
-	}
 }
 
 script	returns [ControlFlowGraph result] 
