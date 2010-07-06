@@ -82,38 +82,9 @@ public class MapleSimplifier {
         MapleCfgVisitor visitor = new MapleCfgVisitor(engine, plugin);
         graph.accept(visitor);
     }
-
-//    public Expression simplify(Expression expression) {
-//        log.debug("Simplifying expression " + expression);
-//
-//        try {
-//            initEngine();
-//        } catch (MapleEngineException e) {
-//            log.error("Unable to simplify using Maple.", e);
-//            throw new RuntimeException("Unable to simplify expression using Maple.", e);
-//        }
-//
-//        MapleDfgVisitor visitor = new MapleDfgVisitor();
-//        visitor.setCliffordMode(false);
-//        expression.accept(visitor);
-//        try {
-//            log.debug("Generated Maple code for Expression: " + visitor.getCode());
-//            engine.evaluate("EXPR := " + visitor.getCode() + ";");
-//            String mapleCode = engine.evaluate("simplify(EXPR);");
-//            log.debug("Simplified by Maple to: " + mapleCode);
-//            MapleLexer lexer = new MapleLexer(new ANTLRStringStream(mapleCode));
-//            MapleParser parser = new MapleParser(new CommonTokenStream(lexer));
-//            try {
-//                MapleParser.additive_expression_return result = parser.additive_expression();
-//                MapleTransformer transformer = new MapleTransformer(new CommonTreeNodeStream(result.getTree()));
-//                return transformer.expression();
-//            } catch (RecognitionException e) {
-//                throw new RuntimeException(e);
-//            }
-//        } catch (MapleEngineException e) {
-//            log.error("Unable to simplify expression " + expression + ".", e);
-//            throw new RuntimeException("Unable to simplify expression " + expression + ".", e);
-//        }
-//    }
+    
+    void notifyMaximum(int max) {
+    	plugin.notifyMaximum(max);
+    }
 
 }

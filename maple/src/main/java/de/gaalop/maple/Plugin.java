@@ -136,6 +136,11 @@ public class Plugin extends Observable implements OptimizationStrategyPlugin {
 	public Image getIcon() {
 		return null; // To change body of implemented methods use File | Settings | File Templates.
 	}
+	
+	void notifyMaximum(int max) {
+		setChanged();
+		notifyObservers(new Notifications.Number(max));
+	}
 
 	void notifyProgress() {
 		setChanged();
@@ -144,7 +149,7 @@ public class Plugin extends Observable implements OptimizationStrategyPlugin {
 
 	void notifyStart() {
 		setChanged();
-		notifyObservers(new Notifications.Number(0));
+		notifyObservers(new Notifications.Start());
 	}
 
 }

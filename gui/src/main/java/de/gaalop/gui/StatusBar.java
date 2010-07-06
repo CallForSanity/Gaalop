@@ -84,14 +84,14 @@ public class StatusBar extends JPanel implements Observer {
 	}
 
 	private void updateFromCodeParser(Object arg) {
-		if (arg instanceof Notifications.Number) {
-			progressBar.setMaximum(((Notifications.Number) arg).getValue());
-		}
+		// currently no update
 	}
 
 	private void updateFromOptimizer(Object arg) {
-		if (arg instanceof Notifications.Number) {
-			progressBar.setValue(((Notifications.Number) arg).getValue());
+		if (arg instanceof Notifications.Start) {
+			progressBar.setValue(0);
+		} else if (arg instanceof Notifications.Number) {
+			progressBar.setMaximum(((Notifications.Number) arg).getValue());
 		} else if (arg instanceof Notifications.Error) {
 			Throwable ex = ((Notifications.Error) arg).getError();
 			displayError(ex);

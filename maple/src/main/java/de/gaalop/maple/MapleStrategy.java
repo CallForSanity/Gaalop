@@ -2,7 +2,10 @@ package de.gaalop.maple;
 
 import de.gaalop.OptimizationException;
 import de.gaalop.OptimizationStrategy;
+import de.gaalop.cfg.AssignmentNode;
 import de.gaalop.cfg.ControlFlowGraph;
+import de.gaalop.cfg.EmptyControlFlowVisitor;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -13,6 +16,18 @@ import org.apache.commons.logging.LogFactory;
  * e<sub>inf</sub>}
  */
 public class MapleStrategy implements OptimizationStrategy {
+	
+	private static class AssignmentCounter extends EmptyControlFlowVisitor {
+		
+		protected int assignments;
+		
+		@Override
+		public void visit(AssignmentNode node) {
+			assignments++;
+			node.getSuccessor().accept(this);
+		}
+		
+	}
 
 	private Log log = LogFactory.getLog(MapleStrategy.class);
 
@@ -37,6 +52,13 @@ public class MapleStrategy implements OptimizationStrategy {
 			graph.accept(visitor);
 		} catch (Exception e) {
 			throw new OptimizationException("Unable to unroll loops:\n" + e.getMessage(), graph);
+		}
+		try {
+			AssignmentCounter counter = new AssignmentCounter();
+			graph.accept(counter);
+			simplifier.notifyMaximum(counter.assignments);
+		} catch (Exception e) {
+			throw new OptimizationException("Unable to count assignments in graph:\n" + e.getMessage(), graph);
 		}
 		try {
 			log.debug("Simplifying graph using maple.");
