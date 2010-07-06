@@ -1,7 +1,7 @@
 package de.gaalop.maple;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import de.gaalop.cfg.AssignmentNode;
 import de.gaalop.cfg.BlockEndNode;
@@ -21,11 +21,11 @@ import de.gaalop.cfg.StoreResultNode;
 public class UnrollLoopsVisitor implements ControlFlowVisitor {
 
 	private boolean copyMode = false;
-	private boolean branchMode = false;
 	private SequentialNode currentNode;
 	private int loopDepth = 0;
+	private int branchDepth = 0;
 	
-	private Set<LoopNode> removeNodes = new HashSet<LoopNode>(); 
+	private List<SequentialNode> removeNodes = new ArrayList<SequentialNode>(); 
 	
 	/**
 	 * Inserts a new node before the current node.
@@ -33,6 +33,8 @@ public class UnrollLoopsVisitor implements ControlFlowVisitor {
 	 * @param newNode node to be inserted before the current node
 	 */
 	private void insertNewNode(SequentialNode newNode) {
+		System.out.println("Current:  " + currentNode);
+		System.out.println("new node: " + newNode);
 		currentNode.insertBefore(newNode);
 	}
 	
@@ -61,12 +63,13 @@ public class UnrollLoopsVisitor implements ControlFlowVisitor {
 	public void visit(LoopNode node) {
 		SequentialNode previousNode = currentNode;
 		Node successor = node.getSuccessor();
+		
 		loopDepth++;
-		if (loopDepth < 2 || branchMode) {
-			currentNode = node;
-			removeNodes.add(node);
-		}
 		copyMode = loopDepth > 0;
+		if (loopDepth < 2 || branchDepth > 0) {
+			currentNode = node;
+		}
+			removeNodes.add(node);
 		int iterations = node.getIterations();
 		for (int i = 0; i < iterations; i++) {
 			node.getBody().accept(this);
@@ -76,20 +79,23 @@ public class UnrollLoopsVisitor implements ControlFlowVisitor {
 		
 		loopDepth--;
 		copyMode = loopDepth > 0;
+		
 		successor.accept(this);
 	}
 	
 	@Override
 	public void visit(IfThenElseNode node) {
-		// FIXME: check correctness in case of loops in branches 
 		if (copyMode) {
 			IfThenElseNode newNode = (IfThenElseNode) node.copy();
 			insertNewNode(newNode);
 			
-			branchMode = true;
+			branchDepth++;
+			copyMode = false;
 			newNode.getPositive().accept(this);
+			copyMode = false;
 			newNode.getNegative().accept(this);
-			branchMode = false;
+			copyMode = true;
+			branchDepth--;
 			
 			if (newNode.getPositive() instanceof BlockEndNode && newNode.getNegative() instanceof BlockEndNode) {
 				node.getGraph().removeNode(newNode);
@@ -126,7 +132,7 @@ public class UnrollLoopsVisitor implements ControlFlowVisitor {
 	
 	@Override
 	public void visit(EndNode node) {
-		for (LoopNode loop : removeNodes) {
+		for (SequentialNode loop : removeNodes) {
 			node.getGraph().removeNode(loop);
 		}
 	}

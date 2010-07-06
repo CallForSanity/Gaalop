@@ -39,6 +39,7 @@ public class MapleStrategy implements OptimizationStrategy {
 			throw new OptimizationException("Unable to unroll loops:\n" + e.getMessage(), graph);
 		}
 		try {
+			System.out.println(graph);
 			log.debug("Simplifying graph using maple.");
 			simplifier.simplify(graph);
 		} catch (Exception e) {
