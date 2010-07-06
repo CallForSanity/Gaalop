@@ -140,11 +140,15 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 					if (result.endsWith("\n")) {
 						result = result.substring(0, result.length() - 1);
 					}
-					result = name + ":=" + result + ";";
-					List<SequentialNode> parsed = parseMapleCode(graph, result);
-					// 2. restore value
-					for (SequentialNode newAssignment : parsed) {
-						root.insertBefore(newAssignment);
+					if (result.equals(name)) {
+						// unknown variable
+					} else {
+						result = name + ":=" + result + ";";
+						List<SequentialNode> parsed = parseMapleCode(graph, result);
+						// 2. restore value
+						for (SequentialNode newAssignment : parsed) {
+							root.insertBefore(newAssignment);
+						}
 					}
 				} catch (MapleEngineException e) {
 					throw new RuntimeException("Unable to restore state of variable " + name + " before if-statement", e);

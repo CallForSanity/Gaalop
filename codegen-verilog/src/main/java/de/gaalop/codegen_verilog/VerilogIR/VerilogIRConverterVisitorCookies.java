@@ -25,7 +25,6 @@ import de.gaalop.dfg.Multiplication;
 import de.gaalop.dfg.Negation;
 import java.util.Map.Entry;
 import wordlengthoptimization.*;
-import wordlengthoptimization.WordlengthOptimization;
 import datapath.graph.operations.constValue.*;
 
 public class VerilogIRConverterVisitorCookies implements ExpressionVisitor,
@@ -601,6 +600,48 @@ public class VerilogIRConverterVisitorCookies implements ExpressionVisitor,
 		System.out.println("Adding Node to CookieGraph: "
 				+ n.getClass().getSimpleName());
 		g.addOperation(n);
+	}
+
+	@Override
+	public void visit(LoopNode node) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visit(BreakNode node) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visit(Macro node) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visit(ExpressionStatement node) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visit(LogicalNegation node) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visit(FunctionArgument node) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visit(MacroCall node) {
+		// TODO Auto-generated method stub
+		
 	}
 
 

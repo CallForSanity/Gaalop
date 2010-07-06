@@ -173,6 +173,8 @@ public final class GraphBuilder {
 		ifthenelse.setPositive(then_part.get(0));
 		ifthenelse.setNegative((else_part != null && else_part.size() > 0) ? else_part.get(0) : new BlockEndNode(graph,
 				ifthenelse));
+		
+		findUndeclaredVariables(condition, false);
 
 		return ifthenelse;
 	}

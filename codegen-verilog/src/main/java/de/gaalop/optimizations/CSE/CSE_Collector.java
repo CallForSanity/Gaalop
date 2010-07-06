@@ -6,10 +6,14 @@ package de.gaalop.optimizations.CSE;
 
 import de.gaalop.cfg.AssignmentNode;
 import de.gaalop.cfg.BlockEndNode;
+import de.gaalop.cfg.BreakNode;
 import de.gaalop.cfg.ControlFlowGraph;
 import de.gaalop.cfg.ControlFlowVisitor;
 import de.gaalop.cfg.EndNode;
+import de.gaalop.cfg.ExpressionStatement;
 import de.gaalop.cfg.IfThenElseNode;
+import de.gaalop.cfg.LoopNode;
+import de.gaalop.cfg.Macro;
 import de.gaalop.cfg.StartNode;
 import de.gaalop.cfg.StoreResultNode;
 import de.gaalop.dfg.Addition;
@@ -21,10 +25,13 @@ import de.gaalop.dfg.Exponentiation;
 import de.gaalop.dfg.Expression;
 import de.gaalop.dfg.ExpressionVisitor;
 import de.gaalop.dfg.FloatConstant;
+import de.gaalop.dfg.FunctionArgument;
 import de.gaalop.dfg.Inequality;
 import de.gaalop.dfg.InnerProduct;
 import de.gaalop.dfg.LogicalAnd;
+import de.gaalop.dfg.LogicalNegation;
 import de.gaalop.dfg.LogicalOr;
+import de.gaalop.dfg.MacroCall;
 import de.gaalop.dfg.MathFunctionCall;
 import de.gaalop.dfg.Multiplication;
 import de.gaalop.dfg.MultivectorComponent;
@@ -221,4 +228,46 @@ public class CSE_Collector implements ExpressionVisitor, ControlFlowVisitor {
 
 
     }
+
+	@Override
+	public void visit(LoopNode node) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visit(BreakNode node) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visit(Macro node) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visit(ExpressionStatement node) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visit(LogicalNegation node) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visit(FunctionArgument node) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visit(MacroCall node) {
+		// TODO Auto-generated method stub
+		
+	}
 }
