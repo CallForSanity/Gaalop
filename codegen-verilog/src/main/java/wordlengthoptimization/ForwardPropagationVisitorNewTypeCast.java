@@ -1,7 +1,7 @@
 package wordlengthoptimization;
 
 import datapath.graph.OperationVisitor;
-import datapath.graph.operations.*;
+import datapath.graph.operations.Absolut;
 import datapath.graph.operations.Add;
 import datapath.graph.operations.ArcCos;
 import datapath.graph.operations.BinaryOperation;
@@ -127,16 +127,9 @@ public class ForwardPropagationVisitorNewTypeCast implements OperationVisitor {
 
     FixedPoint fpl = (FixedPoint) op.getLhs().getType();
     FixedPoint fpr = (FixedPoint) op.getRhs().getType();
-    boolean signed = fpl.isSigned() || fpr.isSigned();
     int prec = Math.max(fpl.getFractionlength(), fpr.getFractionlength());
-    int intfpl = fpl.getIntBits();
-    int intfpr = fpr.getIntBits();
-    if (signed) {
-      intfpl++;
-      intfpr++;
-    }
-    int intbitsize = Math.max(intfpl, Math.max(intfpr, Util.bitsRequired(min, max)));
-    op.setType(new FixedPoint(intbitsize + prec + 1, prec, signed));
+
+    op.setType(new FixedPoint(Util.bitsRequired(min, max) + prec + 1, prec, min < 0));
   }
 
   @Override
@@ -184,11 +177,8 @@ public class ForwardPropagationVisitorNewTypeCast implements OperationVisitor {
     FixedPoint fpr = (FixedPoint) op.getRhs().getType();
     int prec = fpl.getFractionlength() +fpr.getFractionlength();
     boolean signed = (min < 0.0) || fpl.isSigned() || fpr.isSigned();
-    int bitsize = Util.bitsRequired(min, max);
-    if (min >= 0 && signed)
-      bitsize++;
     //int prec = Math.max(fpl.getFractionlength(), fpr.getFractionlength()) + 2;
-    op.setType( new FixedPoint(bitsize + prec, prec, signed));
+    op.setType(new FixedPoint(Util.bitsRequired(min, max) + prec, prec, signed));
   }
 
    
@@ -197,16 +187,10 @@ public class ForwardPropagationVisitorNewTypeCast implements OperationVisitor {
     double min, max;
     min = minValues.get(op);
     max = maxValues.get(op);
-
     FixedPoint fpl = (FixedPoint) op.getLhs().getType();
     FixedPoint fpr = (FixedPoint) op.getRhs().getType();
     int prec = Math.max(fpl.getFractionlength(), fpr.getFractionlength());
-
-    int intfpl = fpl.getIntBits() + 1;
-    int intfpr = fpr.getIntBits() + 1;
-    int intbitsize = Math.max(intfpl, Math.max(intfpr, Util.bitsRequired(min, max)));
-
-    op.setType(new FixedPoint(intbitsize + prec +1, prec, true));
+    op.setType(new FixedPoint(Util.bitsRequired(min, max) + prec +1, prec, true));
   }
 
 
@@ -227,20 +211,19 @@ public class ForwardPropagationVisitorNewTypeCast implements OperationVisitor {
     }
     FixedPoint fpl = (FixedPoint) op.getLhs().getType();
     FixedPoint fpr = (FixedPoint) op.getRhs().getType();
-    // hardcoded 32
-    int prec = 62; //Math.max(fpl.getFractionlength(), fpr.getFractionlength());
-   // if (op.isNormalization()) {
-   //   prec = fpl.getFractionlength();
-    //
-   // }
-    int bitsize = Util.bitsRequired(min, max) + 1 + prec;
-    boolean signed = true; //min < 0.0 || fpl.isSigned() || fpr.isSigned();
+    // hardcoded 16
+    int prec = 14; //Math.max(fpl.getFractionlength(), fpr.getFractionlength());
+    if (op.isNormalization()) {
+      prec = fpl.getFractionlength();
+    }
+    int bitsize = Util.bitsRequired(min, max) + prec;
+    boolean signed = min < 0.0 || fpl.isSigned() || fpr.isSigned();
     /* in case the result is always > 0, but the divider is signed,
      the additional sign bit has to taken into account */
     if (signed || ! (min < 0.0)) {
            bitsize++;
     }
-    op.setType(new FixedPoint(bitsize , prec, signed));
+    op.setType(new FixedPoint(32, 14, signed));
   }
 
   @Override
@@ -278,40 +261,7 @@ public class ForwardPropagationVisitorNewTypeCast implements OperationVisitor {
 
   @Override
   public void visit(ConstantShift op) {
-    FixedPoint inputType = (FixedPoint) op.getData().getType();
-    FixedPoint resultType = null;
-    int totalBitsize = inputType.getBitsize();
-    int prec = inputType.getFractionlength();
-
-    switch  (op.getMode()) {
-      case Left:
-      case LeftRotate:
-        prec = prec - op.getShiftAmount();
-        if (prec < 0) {
-          totalBitsize += -prec;
-          prec = 0;
-        }
-        op.setMode(ShiftMode.ZeroShiftLeft);
-        break;
-      case Right:
-      case SignedRight:
-      case RightRotate:
-        prec = prec + op.getShiftAmount();
-        if (prec > totalBitsize || (inputType.isSigned() && prec >= totalBitsize)) {
-          totalBitsize = prec;
-          if (inputType.isSigned()) {
-            totalBitsize++;
-          }
-        }
-        op.setMode(ShiftMode.ZeroShiftRight);
-        break;
-      default:
-        assert (false);
-    }
-
-    
-    resultType = new FixedPoint(totalBitsize, prec, inputType.isSigned());
-    op.setType(resultType);
+    copyInformation(op);
   }
 
   @Override
@@ -412,11 +362,6 @@ public class ForwardPropagationVisitorNewTypeCast implements OperationVisitor {
 
     throw new UnsupportedOperationException("Not supported yet.");
   }
-
-   @Override
-    public void visit(ConstantMultiplication op) {
-        visit((Multiplication)op);
-    }
 
 
 }

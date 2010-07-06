@@ -150,8 +150,8 @@ public class TestbenchCreator {
     private static String fixpoint(String name, int frac, int bits, boolean signed) {
         bits = bits -1;
         if(signed)
-            return String.format("$display(\"%s: %%s %%f\", (%s[%d:%d] == 1 )? \"-\": \" \", $itor((%s[%d:%d] == 1)? -%s:%s) / $itor(2)**%d);",name,name,bits,bits,name,bits,bits,name,name,frac);
+            return String.format("$display(\"%s: %%s %%f\", (%s[%d:%d] == 1 )? \"-\": \" \", $itor((%s[%d:%d] == 1)? -%s:%s) / $itor((%d'b1 << %d)));",name,name,bits,bits,name,bits,bits,name,name,bits+2,frac);
         else
-            return String.format("$display(\"%s: %%f\", %s / $itor(2)**%d);",name,name,frac);
+            return String.format("$display(\"%s: %%f\", %s / $itor((%d'b1 << %d)));",name,name,bits+2,frac);
     }
 }

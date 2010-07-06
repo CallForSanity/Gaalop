@@ -10,15 +10,6 @@ public class FixedPoint extends Type {
 
 	private int fractionlength;
 
-  public int getIntBits() {
-    int result = getBitsize() - fractionlength;
-    if (isSigned()) {
-      result --;
-    }
-    assert(result >= 0);
-    return result;
-  }
-
 	public void setFractionlength(int fractionlength) {
 		this.fractionlength = fractionlength;
 	}
@@ -105,13 +96,13 @@ public class FixedPoint extends Type {
 
   /**
    * Cuts off lowest value bits, so precision gets reduced
-   * @param maxBitwidth new maximum Bidwdith.
+   * @param maxBidwidth new maximum Bidwdith.
    **/
-  public void restrictBitwidth(int maxBitwidth) {
-    if (this.getBitsize() > maxBitwidth) {
-      int diff = this.getBitsize() - maxBitwidth;
+  public void restrictBitwidth(int maxBidwidth) {
+    if (this.getBitsize() > maxBidwidth) {
+      int diff = this.getBitsize() - maxBidwidth;
       this.setFractionlength(Math.max(0, this.getFractionlength() - diff));
-      this.setBitsize(maxBitwidth);
+      this.setBitsize(maxBidwidth);
     }
   }
 

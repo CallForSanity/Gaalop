@@ -1,4 +1,4 @@
- /*
+/*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
@@ -6,14 +6,10 @@ package de.gaalop.optimizations.CSE;
 
 import de.gaalop.cfg.AssignmentNode;
 import de.gaalop.cfg.BlockEndNode;
-import de.gaalop.cfg.BreakNode;
 import de.gaalop.cfg.ControlFlowGraph;
 import de.gaalop.cfg.ControlFlowVisitor;
 import de.gaalop.cfg.EndNode;
-import de.gaalop.cfg.ExpressionStatement;
 import de.gaalop.cfg.IfThenElseNode;
-import de.gaalop.cfg.LoopNode;
-import de.gaalop.cfg.Macro;
 import de.gaalop.cfg.StartNode;
 import de.gaalop.cfg.StoreResultNode;
 import de.gaalop.dfg.Addition;
@@ -25,13 +21,10 @@ import de.gaalop.dfg.Exponentiation;
 import de.gaalop.dfg.Expression;
 import de.gaalop.dfg.ExpressionVisitor;
 import de.gaalop.dfg.FloatConstant;
-import de.gaalop.dfg.FunctionArgument;
 import de.gaalop.dfg.Inequality;
 import de.gaalop.dfg.InnerProduct;
 import de.gaalop.dfg.LogicalAnd;
-import de.gaalop.dfg.LogicalNegation;
 import de.gaalop.dfg.LogicalOr;
-import de.gaalop.dfg.MacroCall;
 import de.gaalop.dfg.MathFunctionCall;
 import de.gaalop.dfg.Multiplication;
 import de.gaalop.dfg.MultivectorComponent;
@@ -54,10 +47,6 @@ public class CSE_Collector implements ExpressionVisitor, ControlFlowVisitor {
     ControlFlowGraph cfg;
     AssignmentNode currentAssignment;
     OperationStore opstor;
-
-    public OperationStore getOpstor() {
-        return opstor;
-    }
    
 
     //dfg
@@ -109,13 +98,6 @@ public class CSE_Collector implements ExpressionVisitor, ControlFlowVisitor {
 
     @Override  //dfg
     public void visit(MathFunctionCall node) {
-
-         if (opstor.add(node, currentAssignment)) {
-            System.out.println("Collector: Node not in Set( " + node.toString() + " ) ---> Adding");
-        } else {
-            System.out.println("Collector: Node already in Set( " + node.toString() + " ) ");
-
-        }
         node.getOperand().accept(this);
     }
 
@@ -131,12 +113,7 @@ public class CSE_Collector implements ExpressionVisitor, ControlFlowVisitor {
 
     @Override  //dfg
     public void visit(Exponentiation node) {
-        if(isSquare(node)){
-         handlebinary(new Multiplication(node.getLeft(), node.getLeft()));
-
-        }else{
         handlebinary(node);
-        }
     }
 
     @Override  //dfg
@@ -156,9 +133,6 @@ public class CSE_Collector implements ExpressionVisitor, ControlFlowVisitor {
 
     @Override  //dfg
     public void visit(Negation node) {
-
-
-
 
         node.getOperand().accept(this);
 
@@ -188,11 +162,6 @@ public class CSE_Collector implements ExpressionVisitor, ControlFlowVisitor {
     @Override  //dfg
     public void visit(LogicalAnd node) {
         throw new UnsupportedOperationException("Not supported yet.");
-    }
-    
-    @Override  //dfg
-    public void visit(LogicalNegation node) {
-    	throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override  //dfg
@@ -252,52 +221,4 @@ public class CSE_Collector implements ExpressionVisitor, ControlFlowVisitor {
 
 
     }
-  private boolean isSquare(Exponentiation exponentiation) {
-    final FloatConstant two = new FloatConstant(2.0f);
-    return two.equals(exponentiation.getRight());
-  }
-
-
-@Override
-public void visit(FunctionArgument node) {
-	// TODO Auto-generated method stub
-	
-}
-
-
-@Override
-public void visit(MacroCall node) {
-	// TODO Auto-generated method stub
-	
-}
-
-
-@Override
-public void visit(LoopNode node) {
-	// TODO Auto-generated method stub
-	
-}
-
-
-@Override
-public void visit(BreakNode node) {
-	// TODO Auto-generated method stub
-	
-}
-
-
-@Override
-public void visit(Macro node) {
-	// TODO Auto-generated method stub
-	
-}
-
-
-@Override
-public void visit(ExpressionStatement node) {
-	// TODO Auto-generated method stub
-	
-}
-
-
 }

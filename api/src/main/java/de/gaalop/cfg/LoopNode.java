@@ -68,6 +68,7 @@ public class LoopNode extends SequentialNode {
 			newConditions.add(e.copy());
 		}
 		copy.setTermination(newConditions);
+		copy.setIterations(iterations);
 
 		SequentialNode newBody = body.copy();
 		copy.setBody(newBody);

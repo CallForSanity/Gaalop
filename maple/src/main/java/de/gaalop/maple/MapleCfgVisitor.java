@@ -78,12 +78,16 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 		@Override
 		public void visit(IfThenElseNode node) {
 			// we peek only to next level of nested statements
-			if (node == root) {
+			if (node == root) {				
 				if (node.getPositive() == branch) {
-					replaceSuccessor(node, branch);
+					if (!(branch instanceof BlockEndNode)) {
+						replaceSuccessor(node, branch);
+					}
 					node.getPositive().accept(this);
 				} else if (node.getNegative() == branch) {
-					replaceSuccessor(node, branch);
+					if (!(branch instanceof BlockEndNode)) {
+						replaceSuccessor(node, branch);
+					}
 					node.getNegative().accept(this);
 				}
 				node.getGraph().removeNode(node);
@@ -174,6 +178,7 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 	private Plugin plugin;
 	
 	private boolean branchMode = false;
+	private boolean loopMode = false;
 	private Map<String, String> rollbackValues = new HashMap<String, String>();
 
 
@@ -196,6 +201,13 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 
 	@Override
 	public void visit(AssignmentNode node) {
+		if (loopMode) {
+			if (!(node.getSuccessor() instanceof StoreResultNode)) {
+				StoreResultNode srn = new StoreResultNode(node.getGraph(), node.getVariable());
+				node.insertAfter(srn);
+			}
+		}
+		
 		/*
 		 * FIXME: special treatment in case it is a single line using a math function, which is not support. (Atm only abs is
 		 * supported) We dont call Matlab for this, as it cannot handle these correct the mathfunction has to be on a single line,
@@ -370,7 +382,10 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 
 	@Override
 	public void visit(LoopNode node) {
-		// TODO: eliminate GA operations from loop body in any case
+		loopMode = true;
+		node.getBody().accept(this);
+		loopMode = true;
+		
 		node.getSuccessor().accept(this);
 	}
 

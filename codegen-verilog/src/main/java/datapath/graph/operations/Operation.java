@@ -103,7 +103,7 @@ public abstract class Operation {
     public String getDisplayName() {
         return "OP" + number + ":" +
                 (executionOrdinalSet ? executionOrdinal : "-1") + ":" +
-                getOutputBitsize() + "bit" + ":" + schedule;
+                getOutputBitsize() + "bit" + ":" + schedule + " del:"+getDelay()+":"+getStageDelay();
     }
 
     public int getNumber() {

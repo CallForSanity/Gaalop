@@ -74,6 +74,7 @@ public class EmptyControlFlowVisitor implements ControlFlowVisitor {
 	 */
 	@Override
 	public void visit(LoopNode node) {
+		node.getBody().accept(this);
 		node.getSuccessor().accept(this);
 	}
 

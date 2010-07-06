@@ -11,10 +11,6 @@ public class ConstantShift extends UnaryOperation {
     private int shiftAmount;
     private ShiftMode mode;
 
-   public void setMode(ShiftMode mode) {
-    this.mode = mode;
-  }
-
     public ConstantShift(int shiftAmount, ShiftMode mode) {
         assert shiftAmount >= 0;
         this.shiftAmount = shiftAmount;
@@ -60,10 +56,6 @@ public class ConstantShift extends UnaryOperation {
                         " not supported");
         }
     }
-
-  public void setShiftAmount(int shiftAmount) {
-    this.shiftAmount = shiftAmount;
-  }
 
     @Override
     public void visit(OperationVisitor visitor) {

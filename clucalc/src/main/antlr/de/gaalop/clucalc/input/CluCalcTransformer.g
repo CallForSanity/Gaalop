@@ -36,10 +36,6 @@ options {
 	public List<String> getErrors() {
 		return errors;
 	}
-	
-	protected int getNumberOfAssignments() {
-	  return graphBuilder.getNumberOfAssignments();
-	}
 }
 
 script	returns [ControlFlowGraph result] 
@@ -221,7 +217,7 @@ expression returns [Expression result]
 	// Reverse
 	| ^(REVERSE op=expression) { $result = new Reverse($op.result); }
 	// Logical negation
-	| ^(NOT op=expression) { $result = new LogicalNegation($op.result); }
+	| ^(DOUBLE_NOT op=expression) { $result = new LogicalNegation($op.result); }
 	// Function Call
 	| ^(FUNCTION name=IDENTIFIER arguments) { $result = graphBuilder.processFunction($name.text, $arguments.args); }
 	// Integral Value (Constant)

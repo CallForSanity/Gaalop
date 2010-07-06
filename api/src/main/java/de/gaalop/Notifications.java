@@ -44,6 +44,12 @@ public abstract class Notifications {
 	 */
 	public static final class Progress extends Notifications {
 	}
+	
+	/**
+	 * This class can be used to notify observers that the compilation process has started, for example.
+	 */
+	public static final class Start extends Notifications {
+	}
 
 	/**
 	 * This class can be used to notify observers that the compilation process has been finished, for example.

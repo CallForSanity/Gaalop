@@ -41,18 +41,5 @@ public enum ShiftMode
   * The is to the right and if the shift is signed or unsigned is defined by the
   * type of the operation
   */
- Right(),
-
- /**
-  * Rightshift which is implemented by move of the fixedpoint fraction -
-  * no hardware or other operation actually required
-  */
- ZeroShiftRight(),
-
-  /**
-  * Rightshift which is implemented by move of the fixedpoint fraction -
-  * no hardware or other operation actually required
-  */
-
- ZeroShiftLeft();
+ Right();
 }

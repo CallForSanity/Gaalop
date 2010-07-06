@@ -50,10 +50,7 @@
                                                   <Component id="maxWordlengthField" alignment="0" pref="37" max="32767" attributes="1"/>
                                               </Group>
                                               <EmptySpace pref="62" max="32767" attributes="0"/>
-                                              <Group type="103" groupAlignment="0" attributes="0">
-                                                  <Component id="coregenedMults" min="-2" max="-2" attributes="0"/>
-                                                  <Component id="pipelindedMulitplier" alignment="0" min="-2" max="-2" attributes="0"/>
-                                              </Group>
+                                              <Component id="pipelindedMulitplier" min="-2" max="-2" attributes="0"/>
                                           </Group>
                                       </Group>
                                   </Group>
@@ -90,14 +87,13 @@
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="minFraclengthField" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="coregenedMults" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jLabel4" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="monteCarloIters" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace pref="39" max="32767" attributes="0"/>
+              <EmptySpace pref="43" max="32767" attributes="0"/>
               <Component id="jButton1" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="41" max="-2" attributes="0"/>
           </Group>
@@ -164,11 +160,6 @@
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="monteCarloItersActionPerformed"/>
       </Events>
-    </Component>
-    <Component class="javax.swing.JCheckBox" name="coregenedMults">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Generate Multiplier"/>
-      </Properties>
     </Component>
   </SubComponents>
 </Form>

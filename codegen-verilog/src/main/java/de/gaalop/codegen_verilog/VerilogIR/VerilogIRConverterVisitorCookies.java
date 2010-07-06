@@ -25,6 +25,7 @@ import de.gaalop.dfg.Multiplication;
 import de.gaalop.dfg.Negation;
 import java.util.Map.Entry;
 import wordlengthoptimization.*;
+import wordlengthoptimization.WordlengthOptimization;
 import datapath.graph.operations.constValue.*;
 
 public class VerilogIRConverterVisitorCookies implements ExpressionVisitor,
@@ -46,7 +47,6 @@ public class VerilogIRConverterVisitorCookies implements ExpressionVisitor,
 	private static final int ADDITION = 1;
 	private static final int SUBTRACTION = 2;
 	private static final int MULTIPLICATION = 3;
-        private static final int MULTIPLICATION_const = 7;
 	private static final int DIVISION = 4;
 	private static final int EXPONENTIATION = 5;
 	private static final int EXPONENTIATIONSquare = 6;
@@ -86,10 +86,6 @@ public class VerilogIRConverterVisitorCookies implements ExpressionVisitor,
         public void visit(LogicalAnd logand) {
 	    System.err.println("LogicalAnd in VerilogIRConverterVisitorCookies not yet supported!");
 	}
-        
-        public void visit(LogicalNegation logand) {
-        	System.err.println("LogicalNegation in VerilogIRConverterVisitorCookies not yet supported!");
-        }
 
         public void visit(LogicalOr logand) {
 	    System.err.println("LogicalOr in VerilogIRConverterVisitorCookies not yet supported!");
@@ -121,9 +117,6 @@ public class VerilogIRConverterVisitorCookies implements ExpressionVisitor,
 		case MULTIPLICATION:
 			toappend = new datapath.graph.operations.Multiplication();
 			break;
-                case MULTIPLICATION_const:
-                        toappend = new datapath.graph.operations.ConstantMultiplication();
-                        break;
 		case DIVISION:
 			toappend = new Divide();
       /* detect normalisation, is a hack atm, better would be search for abs() function */
@@ -221,11 +214,8 @@ public class VerilogIRConverterVisitorCookies implements ExpressionVisitor,
             addToGraph(cs);
 
         } else {
-//           if(node.getRight() instanceof FloatConstant || node.getLeft() instanceof FloatConstant) {
-//               visitbinary(node, MULTIPLICATION_const);
-//           } else {
-                visitbinary(node, MULTIPLICATION);
-//           }
+           
+            visitbinary(node, MULTIPLICATION);
         }
 
     }
@@ -304,8 +294,7 @@ public class VerilogIRConverterVisitorCookies implements ExpressionVisitor,
                 lastcomponent = exnode.getName();
 
                 if(mathfunctionHack) {
-                    if(!lastcomponent.contains("CSE"))
-                        lastcomponent = lastcomponent+"0";
+                    lastcomponent = lastcomponent+"0";
                 }
 	
         if (variableToHWInput.containsKey(exnode)) {
@@ -386,7 +375,7 @@ public class VerilogIRConverterVisitorCookies implements ExpressionVisitor,
                     FloatConstant c = (FloatConstant)exnode.getRight();
                     assert (c.getValue() - (float)(new Float(c.getValue())).intValue() == 0f);
                     int exponent = (int)c.getValue();
-                    assert exponent >= 2 : "assert exponent >= 2 error: exponent="+exponent;
+                    assert exponent >= 2;
 
                     exnode.getLeft().accept(this);
                     assert toappend != null;
@@ -612,42 +601,6 @@ public class VerilogIRConverterVisitorCookies implements ExpressionVisitor,
 		System.out.println("Adding Node to CookieGraph: "
 				+ n.getClass().getSimpleName());
 		g.addOperation(n);
-	}
-
-	@Override
-	public void visit(FunctionArgument node) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void visit(MacroCall node) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void visit(LoopNode node) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void visit(BreakNode node) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void visit(Macro node) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void visit(ExpressionStatement node) {
-		// TODO Auto-generated method stub
-		
 	}
 
 

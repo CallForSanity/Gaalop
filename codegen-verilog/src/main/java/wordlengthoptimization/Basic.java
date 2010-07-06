@@ -13,7 +13,7 @@ import datapath.graph.type.FixedPoint;
  *
  * @author fs
  */
-public class Basic extends UniqueWordlength  {
+public class Basic extends UniqueWordlength {
 
   /**
    * Constructor. Takes as parameters the default values which should

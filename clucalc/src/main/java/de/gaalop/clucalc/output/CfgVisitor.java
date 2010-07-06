@@ -137,12 +137,11 @@ public class CfgVisitor implements ControlFlowVisitor {
 		String variableName = outputVariable.getName();
 		String opt = variableName + SUFFIX;
 		code.append(variableName);
-		code.append(" = ");
 		Set<Integer> var = assignedComponents.get(opt);
 		if (var == null) {
-			// no assignment for this variable at all -> 0
-			code.append(0);
+			// no assignment for this variable at all -> keep ? operator
 		} else {
+			code.append(" = ");
 			for (int i = 0; i < node.getGraph().getBladeList().length; ++i) {
 				if (!var.contains(i)) {
 					continue;

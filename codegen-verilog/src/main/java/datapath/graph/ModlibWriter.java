@@ -29,7 +29,6 @@ public class ModlibWriter implements OperationVisitor {
 
 
     public static boolean mul_pipe = true;
-    public static boolean mul_pipe_create = true;
 
     private Graph graph;
     private BufferedWriter writer;
@@ -139,7 +138,6 @@ public class ModlibWriter implements OperationVisitor {
     private void write(Graph graph) throws IOException {
         combinedDepth = 0;
         highestDepth = 0;
-        mulpipes = new HashSet<MulPipeCreator.Options>();
         // generate all modules and wires
         for (Operation op : graph.getOperations()) {
             if (!op.isHardwareOperation()) {
@@ -188,11 +186,6 @@ public class ModlibWriter implements OperationVisitor {
             write("\n");
         }
         write("endmodule\n");
-        if(mul_pipe_create && mul_pipe) {
-            System.out.println("number of different mul_pipe:" + mulpipes.size());
-            System.out.println(mulpipes);
-            MulPipeCreator.c(mulpipes);
-        }
     }
 
     /**
@@ -443,17 +436,6 @@ public class ModlibWriter implements OperationVisitor {
     public void visit(ConstantShift op) {
         Module m;
         ShiftMode mode = op.getMode();
-        if (mode == ShiftMode.ZeroShiftLeft) {
-          op.setShiftAmount(0);
-          op.setMode(ShiftMode.Left);
-        }
-        if (mode == ShiftMode.ZeroShiftRight) {
-          op.setShiftAmount(0);
-          op.setMode(ShiftMode.Right);
-        }
-
-        mode = op.getMode();
-        
         switch (mode) {
             case Right:
                 if(op.isSigned()){
@@ -607,18 +589,8 @@ public class ModlibWriter implements OperationVisitor {
         modules.add(m);
     }
 
-    HashSet<MulPipeCreator.Options> mulpipes;
-
     @Override
     public void visit(Multiplication op) {
-        if(op.getLhs().getOutputBitsize() < op.getRhs().getOutputBitsize()) {
-            Operation lhs = op.getLhs();
-            Operation rhs = op.getRhs();
-            op.removeLHS();
-            op.removeRHS();
-            op.setLHS(rhs);
-            op.setRHS(lhs);
-        }
         int lhs = op.getLhs().getOutputBitsize();
         int rhs = op.getRhs().getOutputBitsize();
         int bit = op.getOutputBitsize();
@@ -626,16 +598,8 @@ public class ModlibWriter implements OperationVisitor {
         if (type instanceof datapath.graph.type.Integer) {
             binaryOp("mul", op);
         } else if (type instanceof datapath.graph.type.FixedPoint) {
+
             if(mul_pipe && lhs <= 64 && rhs <= 64 && bit <= 128) {
-                if(mul_pipe_create) {
-                MulPipeCreator.Options ops = new MulPipeCreator.Options();
-                ops.WA = lhs;
-                ops.WB = rhs;
-                ops.WR = bit;
-                ops.signed = op.isSigned();
-                ops.stages = op.getDelay();
-                mulpipes.add(ops);
-                }
                 binaryOp("mul_pipe", op);
             } else {
                 binaryOp("mul", op);
@@ -667,11 +631,7 @@ public class ModlibWriter implements OperationVisitor {
         if (type instanceof datapath.graph.type.Integer) {
             binaryOp("divint", op);
         } else if (type instanceof datapath.graph.type.FixedPoint) {
-            if(op.getOutputBitsize() == 64) {
-                binaryOp("bigdiv", op);
-            } else {
-                binaryOp("divint", op);
-            }
+            binaryOp("divint", op);
         } else if (type instanceof datapath.graph.type.Float) {
             binaryOp("divfloat", op);
         } else {
@@ -756,9 +716,4 @@ public class ModlibWriter implements OperationVisitor {
     throw new UnsupportedOperationException("Not supported.");
   }
 
-    @Override
-    public void visit(ConstantMultiplication op) {
-        binaryOp("mul", op);
-    }
-    
 }
