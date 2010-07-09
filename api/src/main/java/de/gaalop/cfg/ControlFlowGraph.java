@@ -35,7 +35,7 @@ public final class ControlFlowGraph {
 	private Log log = LogFactory.getLog(ControlFlowGraph.class);
 
 	private Set<Variable> localVariables = new HashSet<Variable>();
-
+	private Set<Variable> tempVariables = new HashSet<Variable>();
 	private Set<Variable> inputVariables = new HashSet<Variable>();
 
 	private AlgebraSignature signature;
@@ -75,6 +75,14 @@ public final class ControlFlowGraph {
 
 	public void addPragmaOutputVariable(String name) {
 		pragmaOutputVariables.add(name);
+	}
+	
+	public void addTempVariable(Variable tempVariable) {
+		tempVariables.add(tempVariable);
+	}
+	
+	public Set<Variable> getTempVariables() {
+		return tempVariables;
 	}
 
 	/**

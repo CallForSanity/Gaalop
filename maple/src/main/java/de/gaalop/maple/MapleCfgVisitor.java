@@ -30,9 +30,11 @@ import de.gaalop.cfg.SequentialNode;
 import de.gaalop.cfg.StartNode;
 import de.gaalop.cfg.StoreResultNode;
 import de.gaalop.dfg.Expression;
+import de.gaalop.dfg.ExpressionFactory;
 import de.gaalop.dfg.FloatConstant;
 import de.gaalop.dfg.MathFunction;
 import de.gaalop.dfg.MathFunctionCall;
+import de.gaalop.dfg.Multiplication;
 import de.gaalop.dfg.MultivectorComponent;
 import de.gaalop.dfg.Variable;
 import de.gaalop.maple.engine.MapleEngine;
@@ -80,7 +82,7 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 		@Override
 		public void visit(IfThenElseNode node) {
 			// we peek only to next level of nested statements
-			if (node == root) {
+			if (node == root) {				
 				if (node.getPositive() == branch) {
 					if (!(branch instanceof BlockEndNode)) {
 						replaceSuccessor(node, branch);
@@ -106,84 +108,6 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 
 	}
 
-	/**
-	 * Simple control flow visitor that restores variable assignments that might be overridden in if-then-else
-	 * statements. For those statements where the condition cannot be evaluated due to unknown input parameters, and
-	 * hence cannot be inlined, this visitor places an additional assignment to affected variables right before the
-	 * {@link IfThenElseNode} that would override the value of a variable. Therefore, the root {@link IfThenElseNode}
-	 * has to be passed to the constructor. Nested if-then-else statements are processed, too, but variable restores are
-	 * placed before the root node.
-	 */
-	private class RestoreValuesVisitor extends EmptyControlFlowVisitor {
-
-		private IfThenElseNode root;
-		private Set<String> processedVariables = new HashSet<String>();
-
-		/**
-		 * Creates a new visitor which restores overridden variables in this statement and its nested subnodes.
-		 * 
-		 * @param root {@link IfThenElseNode} in front of which restored variables have to be inserted.
-		 */
-		public RestoreValuesVisitor(IfThenElseNode root) {
-			this.root = root;
-		}
-
-		@Override
-		public void visit(AssignmentNode node) {
-			ControlFlowGraph graph = node.getGraph();
-			Variable variable = node.getVariable();
-			String name = variable.getName();
-			if (graph.containsLocalVariable(name) && !processedVariables.contains(name)) {
-				try {
-					processedVariables.add(name);
-					// 1. get current value
-					String result = engine.evaluate(name + ";");
-					Notifications.addWarning("Restored optimized current value of " + variable
-							+ " before occurence of if-statement.");
-					if (result.endsWith("\n")) {
-						result = result.substring(0, result.length() - 1);
-					}
-					if (result.equals(name)) {
-						AssignmentNode newAssignment = new AssignmentNode(graph, variable, new FloatConstant(0));
-						root.insertBefore(newAssignment);
-					} else {
-						result = name + ":=" + result + ";";
-						List<SequentialNode> parsed = parseMapleCode(graph, result);
-						// 2. restore value
-						for (SequentialNode newAssignment : parsed) {
-							if (newAssignment instanceof AssignmentNode) {
-								AssignmentNode assignment = (AssignmentNode) newAssignment;
-								Expression value = assignment.getValue();
-								if (!(value instanceof FloatConstant)) {
-									throw new IllegalArgumentException("Variable " + name + " is not a scalar.");
-								}
-								root.insertBefore(newAssignment);
-							}
-						}
-					}
-				} catch (MapleEngineException e) {
-					throw new RuntimeException("Unable to restore state of variable " + name + " before if-statement",
-							e);
-				}
-			}
-			node.getSuccessor().accept(this);
-		}
-
-		@Override
-		public void visit(IfThenElseNode node) {
-			node.getPositive().accept(this);
-			node.getNegative().accept(this);
-			if (node != root) {
-				// only for nested if-then-else nodes
-				node.getSuccessor().accept(this);
-			}
-		}
-
-		public Set<String> getVariables() {
-			return processedVariables;
-		}
-	}
-
 	private Log log = LogFactory.getLog(MapleCfgVisitor.class);
 
 	private MapleEngine engine;
@@ -192,10 +116,13 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 	private HashMap<String, String> oldMaxVal;
 
 	private Plugin plugin;
-
-	private boolean branchMode = false;
+	
+	private int branchDepth = 0;
 	private boolean loopMode = false;
 	private Map<String, String> rollbackValues = new HashMap<String, String>();
+	private IfThenElseNode currentIf;
+	private Map<Variable, Set<MultivectorComponent>> resetComponents;
+	private Set<Variable> initialiedVariables = new HashSet<Variable>();
 
 	public MapleCfgVisitor(MapleEngine engine, Plugin plugin) {
 		this.engine = engine;
@@ -216,18 +143,17 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 
 	@Override
 	public void visit(AssignmentNode node) {
-		Variable variable = node.getVariable();
-		if (loopMode) {
+		if (loopMode || branchDepth > 0) {
 			if (!(node.getSuccessor() instanceof StoreResultNode)) {
-				StoreResultNode srn = new StoreResultNode(node.getGraph(), variable);
+				StoreResultNode srn = new StoreResultNode(node.getGraph(), node.getVariable());
 				node.insertAfter(srn);
 			}
 		}
-
+		
 		/*
-		 * FIXME: special treatment in case it is a single line using a math function, which is not support. (Atm only
-		 * abs is supported) We dont call Matlab for this, as it cannot handle these correct the mathfunction has to be
-		 * on a single line, with a single var parameter like x = sqrt(y);
+		 * FIXME: special treatment in case it is a single line using a math function, which is not support. (Atm only abs is
+		 * supported) We dont call Matlab for this, as it cannot handle these correct the mathfunction has to be on a single line,
+		 * with a single var parameter like x = sqrt(y);
 		 */
 		if (node.getValue() instanceof MathFunctionCall) {
 			MathFunction func = ((MathFunctionCall) (node.getValue())).getFunction();
@@ -238,50 +164,41 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 			}
 		}
 		// FIXME: Maple cannot compute things like sqrt(abs(VecN3(1,2,3)));
-
-		String name = variable.getName();
-		if (branchMode) {
+		
+		if (branchDepth > 0) {
 			// get current value from maple for rollback
-			String variableName = name;
+			String variableName = node.getVariable().getName();
 			try {
 				String command = variableName + ";\n";
 				String currentValue = engine.evaluate(command);
 				if (!rollbackValues.containsKey(variableName)) {
 					rollbackValues.put(variableName, currentValue);
-				}
+				}				
 			} catch (MapleEngineException e) {
 				throw new RuntimeException("Unable to query current value of " + variableName + " from Maple.", e);
 			}
 		}
 
-		String variableCode = generateCode(variable);
+		String variableCode = generateCode(node.getVariable());
 		// If you want to simplify (and keep) the last assignment to every variable
 		// uncomment the following statement:
 		// simplifyBuffer.add(variableCode);
-
+		
 		StringBuilder codeBuffer = new StringBuilder();
-
+		
 		codeBuffer.append(variableCode);
 		codeBuffer.append(" := ");
 		codeBuffer.append(generateCode(node.getValue()));
 		codeBuffer.append(";\n");
-
+		
 		try {
 			engine.evaluate(codeBuffer.toString());
 		} catch (MapleEngineException e) {
 			throw new RuntimeException("Unable to simplify assignment " + node + " in Maple.", e);
 		}
-
+		
 		// notify observables about progress (must be called before successor.accept(this))
 		plugin.notifyProgress();
-
-		if (branchMode) {
-			// add store result node, if necessary
-			if (!(node.getSuccessor() instanceof StoreResultNode)) {
-				 node.insertAfter(new StoreResultNode(node.getGraph(), node.getVariable()));
-				 // FIXME: check if value is float constant, otherwise throw error
-			}
-		}
 
 		node.getGraph().removeNode(node);
 		node.getSuccessor().accept(this);
@@ -299,16 +216,53 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 		node.getGraph().removeNode(node);
 		node.getSuccessor().accept(this);
 	}
-
+	
+	private String getTempVarName(MultivectorComponent component) {
+		// TODO: generate unused names!
+		return component.getName() + "__" + component.getBladeIndex();
+	}
+	
 	@Override
 	public void visit(StoreResultNode node) {
-		String evalResult = simplify(node.getValue());
-		log.debug("Maple simplification of " + node.getValue() + ": " + evalResult);
+		Variable variable = node.getValue();
+		String evalResult = simplify(variable);
+		log.debug("Maple simplification of " + variable + ": " + evalResult);
 
-		List<SequentialNode> newNodes = parseMapleCode(node.getGraph(), evalResult);
-
-		for (SequentialNode newNode : newNodes) {
-			node.insertBefore(newNode);
+		ControlFlowGraph graph = node.getGraph();
+		List<SequentialNode> newNodes = parseMapleCode(graph, evalResult);
+		if (branchDepth > 0) {
+			
+			for (SequentialNode newNode : newNodes) {
+				if (newNode instanceof AssignmentNode) {
+					AssignmentNode assignment = (AssignmentNode) newNode;
+					if (assignment.getVariable() instanceof MultivectorComponent) {
+						MultivectorComponent comp = (MultivectorComponent) assignment.getVariable();
+						Variable initVar = new Variable(getTempVarName(comp));
+						if (!initialiedVariables.contains(initVar)) {
+							initialiedVariables.add(initVar);
+							AssignmentNode init = new AssignmentNode(graph, initVar, new FloatConstant(0));
+							currentIf.insertBefore(init);
+							graph.addTempVariable(initVar);
+						}
+						
+						if (resetComponents.get(variable) == null) {
+							resetComponents.put(variable, new HashSet<MultivectorComponent>());
+						}
+						resetComponents.get(variable).add(comp);
+						
+						AssignmentNode assign = new AssignmentNode(graph, initVar, assignment.getValue());
+						node.insertBefore(assign);
+					}
+				} else {
+					throw new IllegalStateException("unexpected node type: " + newNode);
+				}
+			}
+			graph.removeNode(node);
+			
+		} else {
+			for (SequentialNode newNode : newNodes) {
+				node.insertBefore(newNode);
+			}
 		}
 
 		node.getSuccessor().accept(this);
@@ -316,6 +270,11 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 
 	@Override
 	public void visit(IfThenElseNode node) {
+		if (branchDepth == 0) {
+			currentIf = node;
+			initialiedVariables.clear();
+		}
+		// FIXME: how to handle variables in condition which might have been changed in previous branches...?
 		Expression condition = node.getCondition();
 		try {
 			boolean unknown = false;
@@ -351,33 +310,29 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 				}
 			}
 			if (unknown) {
-				/*
-				 * Restore overridden variables to prevent loss of information during Maple optimization Must be
-				 * performed in any case because Maple assignment gets reset and variable could be modified by one
-				 * branch only.
-				 */
-				RestoreValuesVisitor restoreVisitor = new RestoreValuesVisitor(node);
-				try {
-					node.accept(restoreVisitor);
-				} catch (Exception e) {
-					throw new RuntimeException("Could not restore overridden variables: " + e.getMessage(), e);
+				// save current rollback values, in case a nested if-statement is found
+				Map<String, String> previousRollback = new HashMap<String, String>();
+				for (String s : rollbackValues.keySet()) {
+					previousRollback.put(s, rollbackValues.get(s));
 				}
-
-				branchMode = true;
+				
+				branchDepth++;
+				resetComponents = new HashMap<Variable, Set<MultivectorComponent>>();
 				node.getPositive().accept(this);
 				rollback();
 
 				node.getNegative().accept(this);
-				resetVariables(restoreVisitor.getVariables());
-				branchMode = false;
+				resetVariables(node.getGraph());
+				branchDepth--;
 
+				rollbackValues = previousRollback;
 				node.getSuccessor().accept(this);
-			}
+			} 
 		} catch (MapleEngineException e) {
 			throw new RuntimeException("Unable to check condition " + condition + " in if-statement " + node, e);
 		}
 	}
-
+	
 	private void rollback() {
 		for (String variable : rollbackValues.keySet()) {
 			String value = rollbackValues.get(variable);
@@ -388,18 +343,45 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 				throw new RuntimeException("Could not rollback assignment of variable " + variable, e);
 			}
 		}
-
+		
 		rollbackValues.clear();
 	}
-
-	private void resetVariables(Set<String> variables) {
-		for (String variable : variables) {
-			String clearCommand = variable + ":= '" + variable + "';";
-			try {
-				engine.evaluate(clearCommand);
-			} catch (MapleEngineException e) {
-				throw new RuntimeException("Could not reset variable " + variable, e);
+	
+	private void resetVariables(ControlFlowGraph graph) {
+		for (Variable v : resetComponents.keySet()) {
+			Set<MultivectorComponent> components = resetComponents.get(v);
+			if (components == null || components.size() == 0) {
+				throw new IllegalStateException("No components to reset for variable " + v);
 			}
+			Expression[] products = new Expression[components.size()];
+			int i = 0;
+			for (MultivectorComponent mc : components) {
+				Variable coefficient = new Variable(getTempVarName(mc));
+				Expression blade = graph.getBladeList()[mc.getBladeIndex()];
+				Multiplication product = ExpressionFactory.product(coefficient, blade);
+				products[i++] = product;
+			}
+			Expression sum;
+			if (products.length > 1) {
+				sum = ExpressionFactory.sum(products);
+			} else {
+				sum = products[0];
+			}
+			
+			// insert a new (temporary) assignment behind OUTER if-statement in order to "reset" Maple binding to variable 
+			AssignmentNode reset = new AssignmentNode(graph, v, sum);
+			currentIf.insertAfter(reset);
+						
+//			MapleDfgVisitor visitor = new MapleDfgVisitor();
+//			sum.accept(visitor);
+//			String valueCode = visitor.getCode();
+//						
+//			String command = v.getName() + ":=" + valueCode + ";";
+//			try {
+//				engine.evaluate(command);
+//			} catch (MapleEngineException e) {
+//				throw new RuntimeException("Could not reset variable " + v, e);
+//			}
 		}
 	}
 
@@ -408,7 +390,7 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 		loopMode = true;
 		node.getBody().accept(this);
 		loopMode = true;
-
+		
 		node.getSuccessor().accept(this);
 	}
 
@@ -439,10 +421,8 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 
 		/* fill the Maps with the min and maxvalues from the nodes */
 		for (Variable v : graph.getInputVariables()) {
-			if (v.getMinValue() != null)
-				oldMinVal.put(v.getName(), v.getMinValue());
-			if (v.getMaxValue() != null)
-				oldMaxVal.put(v.getName(), v.getMaxValue());
+			if (v.getMinValue() != null) oldMinVal.put(v.getName(), v.getMinValue());
+			if (v.getMaxValue() != null) oldMaxVal.put(v.getName(), v.getMaxValue());
 		}
 
 		MapleLexer lexer = new MapleLexer(new ANTLRStringStream(mapleCode));
@@ -471,8 +451,7 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 		try {
 			return engine.evaluate(codeBuffer.toString());
 		} catch (MapleEngineException e) {
-			throw new RuntimeException("Unable to apply gaalop() function on expression " + expression + " in Maple.",
-					e);
+			throw new RuntimeException("Unable to apply gaalop() function on expression " + expression + " in Maple.", e);
 		}
 	}
 

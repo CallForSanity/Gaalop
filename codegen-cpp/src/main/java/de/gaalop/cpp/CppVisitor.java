@@ -92,6 +92,13 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 				code.append("[32];\n");
 			}
 		}
+		
+		for (Variable tmp : graph.getTempVariables()) {
+			appendIndentation();
+			code.append("float ");
+			code.append(tmp.getName());
+			code.append(";\n");
+		}
 
 		if (!graph.getLocalVariables().isEmpty()) {
 			code.append("\n");
