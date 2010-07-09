@@ -1,6 +1,7 @@
 package de.gaalop.clucalc.input;
 
 import de.gaalop.Notifications;
+import de.gaalop.UsedVariablesVisitor;
 import de.gaalop.cfg.*;
 import de.gaalop.clucalc.algebra.*;
 import de.gaalop.dfg.Expression;

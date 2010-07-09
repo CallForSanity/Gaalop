@@ -1,9 +1,11 @@
 package de.gaalop.cfg;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -35,7 +37,7 @@ public final class ControlFlowGraph {
 	private Log log = LogFactory.getLog(ControlFlowGraph.class);
 
 	private Set<Variable> localVariables = new HashSet<Variable>();
-	private Set<Variable> tempVariables = new HashSet<Variable>();
+	private List<Variable> tempVariables = new ArrayList<Variable>();
 	private Set<Variable> inputVariables = new HashSet<Variable>();
 
 	private AlgebraSignature signature;
@@ -81,7 +83,7 @@ public final class ControlFlowGraph {
 		tempVariables.add(tempVariable);
 	}
 	
-	public Set<Variable> getTempVariables() {
+	public List<Variable> getTempVariables() {
 		return tempVariables;
 	}
 

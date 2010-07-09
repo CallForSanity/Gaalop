@@ -1,4 +1,4 @@
-package de.gaalop.clucalc.input;
+package de.gaalop;
 
 import de.gaalop.dfg.*;
 

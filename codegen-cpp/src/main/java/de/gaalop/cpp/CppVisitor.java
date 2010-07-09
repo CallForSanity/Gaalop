@@ -1,6 +1,7 @@
 package de.gaalop.cpp;
 
 import de.gaalop.Notifications;
+import de.gaalop.UsedVariablesVisitor;
 import de.gaalop.cfg.*;
 import de.gaalop.dfg.*;
 
@@ -92,11 +93,15 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 				code.append("[32];\n");
 			}
 		}
-		
-		for (Variable tmp : graph.getTempVariables()) {
+
+		if (graph.getTempVariables().size() > 0) {
 			appendIndentation();
 			code.append("float ");
-			code.append(tmp.getName());
+			for (Variable tmp : graph.getTempVariables()) {
+				code.append(tmp.getName());
+				code.append(", ");
+			}
+			code.delete(code.length() - 2, code.length());
 			code.append(";\n");
 		}
 
@@ -216,9 +221,34 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 
 	@Override
 	public void visit(IfThenElseNode node) {
+		UsedVariablesVisitor usedVariables = new UsedVariablesVisitor();
+		Expression condition = node.getCondition();
+		condition.accept(usedVariables);
+		List<Variable> tempVariables = node.getGraph().getTempVariables();
+		for (Variable v : usedVariables.getVariables()) {
+			Variable scalar = null;
+			for (Variable tmp : tempVariables) {
+				if (tmp.getName().startsWith(v.getName())) {
+					if (tmp.getName().endsWith("__0")) {
+						scalar = tmp;
+					}
+					if (scalar != null) {
+						Notifications.addWarning("Variable " + v + " depends on a previous if-statement.\n"
+								+ "In order to process it in a condition in C/C++, this value must be a scalar.\n"
+								+ " Using salar part (" + scalar + ") only.");
+						condition.replaceExpression(v, tmp);
+					} else {
+						throw new RuntimeException("Variable " + v
+								+ " has no scalar part and cannot be processed in C/C++");
+					}
+					break;
+				}
+			}
+		}
+
 		appendIndentation();
 		code.append("if (");
-		node.getCondition().accept(this);
+		condition.accept(this);
 		code.append(") {\n");
 
 		indentation++;
@@ -422,7 +452,7 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 	public void visit(LogicalAnd node) {
 		addBinaryInfix(node, " && ");
 	}
-	
+
 	@Override
 	public void visit(LogicalNegation node) {
 		code.append('!');
