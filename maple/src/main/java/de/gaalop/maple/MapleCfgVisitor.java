@@ -120,7 +120,7 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 	private int branchDepth = 0;
 	private boolean loopMode = false;
 	private Map<String, String> rollbackValues = new HashMap<String, String>();
-	private IfThenElseNode currentIf;
+	private SequentialNode currentRoot;
 	private Map<Variable, Set<MultivectorComponent>> resetComponents;
 	private Set<Variable> initialiedVariables = new HashSet<Variable>();
 
@@ -230,7 +230,7 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 
 		ControlFlowGraph graph = node.getGraph();
 		List<SequentialNode> newNodes = parseMapleCode(graph, evalResult);
-		if (branchDepth > 0) {
+		if (loopMode || branchDepth > 0) {
 			
 			for (SequentialNode newNode : newNodes) {
 				if (newNode instanceof AssignmentNode) {
@@ -241,7 +241,7 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 						if (!initialiedVariables.contains(initVar)) {
 							initialiedVariables.add(initVar);
 							AssignmentNode init = new AssignmentNode(graph, initVar, new FloatConstant(0));
-							currentIf.insertBefore(init);
+							currentRoot.insertBefore(init);
 							graph.addTempVariable(initVar);
 						}
 						
@@ -271,7 +271,7 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 	@Override
 	public void visit(IfThenElseNode node) {
 		if (branchDepth == 0) {
-			currentIf = node;
+			currentRoot = node;
 			initialiedVariables.clear();
 		}
 		// FIXME: how to handle variables in condition which might have been changed in previous branches...?
@@ -370,26 +370,29 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 			
 			// insert a new (temporary) assignment behind OUTER if-statement in order to "reset" Maple binding to variable 
 			AssignmentNode reset = new AssignmentNode(graph, v, sum);
-			currentIf.insertAfter(reset);
-						
-//			MapleDfgVisitor visitor = new MapleDfgVisitor();
-//			sum.accept(visitor);
-//			String valueCode = visitor.getCode();
-//						
-//			String command = v.getName() + ":=" + valueCode + ";";
-//			try {
-//				engine.evaluate(command);
-//			} catch (MapleEngineException e) {
-//				throw new RuntimeException("Could not reset variable " + v, e);
-//			}
+			currentRoot.insertAfter(reset);
 		}
 	}
 
 	@Override
 	public void visit(LoopNode node) {
+		if (branchDepth == 0) {
+			currentRoot = node;
+			initialiedVariables.clear();
+		}
+		
+		Map<String, String> previousRollback = new HashMap<String, String>();
+		for (String s : rollbackValues.keySet()) {
+			previousRollback.put(s, rollbackValues.get(s));
+		}
+		
 		loopMode = true;
+		resetComponents = new HashMap<Variable, Set<MultivectorComponent>>();
 		node.getBody().accept(this);
-		loopMode = true;
+		resetVariables(node.getGraph());
+		loopMode = false;
+
+		rollbackValues = previousRollback;
 		
 		node.getSuccessor().accept(this);
 	}

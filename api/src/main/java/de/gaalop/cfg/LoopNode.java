@@ -45,6 +45,20 @@ public class LoopNode extends SequentialNode {
 	public SequentialNode getBody() {
 		return body;
 	}
+	
+	@Override
+	public void replaceExpression(Expression old, Expression newExpression) {
+		replaceSubtree(body, old, newExpression);
+	}
+
+	private void replaceSubtree(Node root, Expression old, Expression newExpression) {
+		if (root instanceof BlockEndNode || root instanceof EndNode) {
+			return;
+		} else if (root instanceof SequentialNode) {
+			root.replaceExpression(old, newExpression);
+			replaceSubtree(((SequentialNode) root).getSuccessor(), old, newExpression);
+		}
+	}
 
 	@Override
 	public void replaceSuccessor(Node oldSuccessor, Node newSuccessor) {

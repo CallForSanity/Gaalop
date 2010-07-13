@@ -110,7 +110,7 @@ public class InlineMacrosVisitor extends EmptyExpressionVisitor implements Contr
 
 	@Override
 	public void visit(LoopNode node) {
-		// TODO Auto-generated method stub
+		node.getBody().accept(this);
 
 		continueVisitFrom(node);
 	}
@@ -197,6 +197,10 @@ public class InlineMacrosVisitor extends EmptyExpressionVisitor implements Contr
 			replaceUsedVariablesInExpression(ite.getCondition(), macroName, newNames);
 			replaceSubtree(ite.getPositive(), macroName, newNames);
 			replaceSubtree(ite.getNegative(), macroName, newNames);
+		}
+		if (statement instanceof LoopNode) {
+			LoopNode loop = (LoopNode) statement;
+			replaceSubtree(loop.getBody(), macroName, newNames);
 		}
 	}
 
