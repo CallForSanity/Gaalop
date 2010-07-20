@@ -23,8 +23,9 @@ public final class GraphBuilder {
 	/**
 	 * The list of algebra modes supported in CluCalc.
 	 */
-	private static final AlgebraMode[] ALGEBRA_MODES = new AlgebraMode[] { new AlgebraC2(), new AlgebraE3(),
-			new AlgebraN3(), new AlgebraP3(), };
+	private static final AlgebraMode[] ALGEBRA_MODES = new AlgebraMode[] {
+		new AlgebraC2(), new AlgebraE3(), new AlgebraN3(), new AlgebraP3(),
+	};
 
 	private final ControlFlowGraph graph;
 
@@ -42,7 +43,7 @@ public final class GraphBuilder {
 	private String currentMacroDefinition;
 
 	private VariableScope currentScope = VariableScope.GLOBAL;
-	
+
 	public void beginNewScope() {
 		currentScope = new VariableScope(currentScope);
 	}
@@ -72,8 +73,8 @@ public final class GraphBuilder {
 	}
 
 	/**
-	 * Adds a pragma hint for a variable, which defines value range for it. The pragma must be set before the variable
-	 * is added to the input variables, i.e. the pragma must appear for the use of the variable
+	 * Adds a pragma hint for a variable, which defines value range for it. The pragma must be set before the variable is added to
+	 * the input variables, i.e. the pragma must appear for the use of the variable
 	 */
 	public void addPragmaMinMaxValues(String variable, String min, String max) {
 		graph.addPragmaMinMaxValues(variable, min, max);
@@ -124,6 +125,13 @@ public final class GraphBuilder {
 			// this is the metric matrix in Maple
 			throw new IllegalArgumentException("Variable B is already used by Maple. Please use another variable.");
 		}
+		if (variable.getName().startsWith("re")) {
+			throw new IllegalArgumentException("Variable '" + variable + "' cannot be used in Maple because of prefix 're'."
+				+ " Please choose another name.");
+		}
+		if (variable.getName().equals("condition_")) {
+			throw new IllegalArgumentException("Variable condition_ is already used internally, please choose another name.");
+		}
 	}
 
 	/**
@@ -155,16 +163,15 @@ public final class GraphBuilder {
 	}
 
 	/**
-	 * Handles an if statement. The statement consists of a condition expression, a mandatory then part (block) and an
-	 * optional else part.
+	 * Handles an if statement. The statement consists of a condition expression, a mandatory then part (block) and an optional
+	 * else part.
 	 * 
 	 * @param condition condition expression
 	 * @param then_part list of statements belonging to then part
 	 * @param else_part optional list of statements belonging to else part (empty list in case of no else part)
 	 * @return new {@link IfThenElseNode} representing this statement.
 	 */
-	public IfThenElseNode handleIfStatement(Expression condition, List<SequentialNode> then_part,
-			List<SequentialNode> else_part) {
+	public IfThenElseNode handleIfStatement(Expression condition, List<SequentialNode> then_part, List<SequentialNode> else_part) {
 		IfThenElseNode ifthenelse = new IfThenElseNode(graph, condition);
 		addNode(ifthenelse);
 
@@ -174,15 +181,14 @@ public final class GraphBuilder {
 		ifthenelse.setPositive(then_part.get(0));
 		ifthenelse.setNegative((else_part != null && else_part.size() > 0) ? else_part.get(0) : new BlockEndNode(graph,
 				ifthenelse));
-		
+
 		findUndeclaredVariables(condition, false);
 
 		return ifthenelse;
 	}
 
 	/**
-	 * Handles a loop statement. A CluCalc loop consists of a body of statements, typically containing the break
-	 * keyword.
+	 * Handles a loop statement. A CluCalc loop consists of a body of statements, typically containing the break keyword.
 	 * 
 	 * @param body list of statements belonging to body
 	 * @return new {@link LoopNode} representing this statement.
@@ -196,12 +202,12 @@ public final class GraphBuilder {
 		// graph.accept(visitor);
 		loop.accept(visitor);
 		loop.setTermination(visitor.getTermination());
-		
+
 		// save number of iterations and reset value for next loops
 		if (iterations != null) {
 			loop.setIterations(Integer.parseInt(iterations));
 		}
-		
+
 		return loop;
 	}
 
@@ -235,10 +241,9 @@ public final class GraphBuilder {
 	}
 
 	/**
-	 * Removes the nodes given by <code>list</code> from the control flow graph and rewires them to be a sequence of
-	 * separate nodes, e.g. in the body of an if-statement. The first node has <code>base</code> as predecessor. For the
-	 * last node in the list, base's successor will be set as successor, e.g. the first statement after an if-then-else
-	 * statement.
+	 * Removes the nodes given by <code>list</code> from the control flow graph and rewires them to be a sequence of separate
+	 * nodes, e.g. in the body of an if-statement. The first node has <code>base</code> as predecessor. For the last node in the
+	 * list, base's successor will be set as successor, e.g. the first statement after an if-then-else statement.
 	 * 
 	 * @param list list of nodes from a block
 	 * @param base basis of block, e.g. an if-statement
@@ -289,8 +294,8 @@ public final class GraphBuilder {
 	}
 
 	/**
-	 * Searches the expression for variable references. If an undeclared reference is found, it is added to the input
-	 * variables of the graph.
+	 * Searches the expression for variable references. If an undeclared reference is found, it is added to the input variables of
+	 * the graph.
 	 * 
 	 * @param expression The expression to search in.
 	 * @param inMacro
@@ -347,7 +352,7 @@ public final class GraphBuilder {
 					return new MathFunctionCall(args.get(0), mathFunction);
 				} else {
 					throw new IllegalArgumentException("Calling math function " + mathFunction + " with more than one"
-							+ " argument: " + args);
+						+ " argument: " + args);
 				}
 			}
 		}
@@ -361,7 +366,7 @@ public final class GraphBuilder {
 		}
 
 		throw new IllegalArgumentException("Call to undefined function " + name + "(" + args + ").\n"
-				+ "Maybe this function is not defined in " + mode);
+			+ "Maybe this function is not defined in " + mode);
 	}
 
 	public ExpressionStatement processExpressionStatement(Expression e) {
@@ -371,8 +376,8 @@ public final class GraphBuilder {
 	}
 
 	/**
-	 * Should be called to notify the graph builder that the parsing process has finished. If needed, post-processing of
-	 * the graph can be performed here.
+	 * Should be called to notify the graph builder that the parsing process has finished. If needed, post-processing of the graph
+	 * can be performed here.
 	 */
 	public void finish() {
 		if (!setMode) {

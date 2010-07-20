@@ -42,6 +42,7 @@ public class SourceFilePanel extends JPanel {
 
         // The text editor for our source code
         textPane = new JTextPane();
+        textPane.setFont(Font.getFont(Font.SANS_SERIF));
         textPane.setText(content);
         textPane.addKeyListener(new SetChangedStateListener());
 

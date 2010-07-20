@@ -140,6 +140,7 @@ public class CfgVisitor implements ControlFlowVisitor {
 		Set<Integer> var = assignedComponents.get(opt);
 		if (var == null) {
 			// no assignment for this variable at all -> keep ? operator
+			code.append(" = 0");
 		} else {
 			code.append(" = ");
 			for (int i = 0; i < node.getGraph().getBladeList().length; ++i) {
@@ -171,6 +172,7 @@ public class CfgVisitor implements ControlFlowVisitor {
 
 	@Override
 	public void visit(IfThenElseNode node) {
+		code.append('\n');
 		appendIndent();
 		code.append("if (");
 		addCode(node.getCondition());
@@ -184,7 +186,7 @@ public class CfgVisitor implements ControlFlowVisitor {
 		code.append("}");
 
 		if (node.getNegative() instanceof BlockEndNode) {
-			code.append("\n");
+			code.append("\n\n");
 		} else {
 			code.append(" else ");
 
@@ -203,7 +205,7 @@ public class CfgVisitor implements ControlFlowVisitor {
 			if (!isElseIf) {
 				indent--;
 				appendIndent();
-				code.append("}\n");
+				code.append("}\n\n");
 			}
 		}
 

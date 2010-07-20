@@ -29,13 +29,19 @@ import de.gaalop.cfg.Node;
 import de.gaalop.cfg.SequentialNode;
 import de.gaalop.cfg.StartNode;
 import de.gaalop.cfg.StoreResultNode;
+import de.gaalop.dfg.BinaryOperation;
+import de.gaalop.dfg.EmptyExpressionVisitor;
+import de.gaalop.dfg.Equality;
 import de.gaalop.dfg.Expression;
 import de.gaalop.dfg.ExpressionFactory;
 import de.gaalop.dfg.FloatConstant;
+import de.gaalop.dfg.Inequality;
 import de.gaalop.dfg.MathFunction;
 import de.gaalop.dfg.MathFunctionCall;
 import de.gaalop.dfg.Multiplication;
 import de.gaalop.dfg.MultivectorComponent;
+import de.gaalop.dfg.Relation;
+import de.gaalop.dfg.Subtraction;
 import de.gaalop.dfg.Variable;
 import de.gaalop.maple.engine.MapleEngine;
 import de.gaalop.maple.engine.MapleEngineException;
@@ -47,6 +53,77 @@ import de.gaalop.maple.parser.MapleTransformer;
  * This visitor creates code for Maple.
  */
 public class MapleCfgVisitor implements ControlFlowVisitor {
+
+	/**
+	 * This visitor re-orders compare operations like >, <= or == to a left-hand side expression that is compared to 0.
+	 * 
+	 * @author Christian Schwinn
+	 * 
+	 */
+	private class ReorderConditionVisitor extends EmptyExpressionVisitor {
+
+		private IfThenElseNode root;
+
+		public ReorderConditionVisitor(IfThenElseNode root) {
+			this.root = root;
+		}
+
+		private void reorderToLeft(BinaryOperation node) {
+			Expression left = node.getLeft();
+			Expression right = node.getRight();
+			Subtraction lhs = ExpressionFactory.subtract(left.copy(), right.copy());
+			Variable v = new Variable("condition_");
+			Expression newLeft = v;
+			Expression newRight = new FloatConstant(0);
+			try {
+				String assignment = generateCode(v) + ":=" + generateCode(lhs) + ";";
+				engine.evaluate(assignment);
+				String opt = simplify(v);
+				List<SequentialNode> newNodes = parseMapleCode(root.getGraph(), opt);
+				boolean hasScalarPart = false;
+				for (SequentialNode newNode : newNodes) {
+					root.insertBefore(newNode);
+					if (!hasScalarPart && newNode instanceof AssignmentNode) {
+						AssignmentNode newAssignment = (AssignmentNode) newNode;
+						if (newAssignment.getVariable() instanceof MultivectorComponent) {
+							MultivectorComponent mc = (MultivectorComponent) newAssignment.getVariable();
+							if (mc.getBladeIndex() == 0) {
+								hasScalarPart = true;
+								newLeft = mc;
+							}
+						}
+					}
+				}
+				if (!hasScalarPart || newNodes.size() > 1) {
+					throw new IllegalArgumentException("Condition in if-statement '" + root.getCondition()
+							+ "' is not scalar and cannot be evaluated.");
+				}
+			} catch (MapleEngineException e) {
+				throw new RuntimeException("Unable to optimize condition " + lhs + " in Maple.", e);
+			}
+
+			node.replaceExpression(left, newLeft);
+			node.replaceExpression(right, newRight);
+
+			node.getLeft().accept(this);
+		}
+
+		@Override
+		public void visit(Equality node) {
+			reorderToLeft(node);
+		}
+
+		@Override
+		public void visit(Inequality node) {
+			reorderToLeft(node);
+		}
+
+		@Override
+		public void visit(Relation node) {
+			reorderToLeft(node);
+		}
+
+	}
 
 	/**
 	 * Simple helper visitor used to inline parts of conditional statements.
@@ -82,7 +159,7 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 		@Override
 		public void visit(IfThenElseNode node) {
 			// we peek only to next level of nested statements
-			if (node == root) {				
+			if (node == root) {
 				if (node.getPositive() == branch) {
 					if (!(branch instanceof BlockEndNode)) {
 						replaceSuccessor(node, branch);
@@ -116,7 +193,7 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 	private HashMap<String, String> oldMaxVal;
 
 	private Plugin plugin;
-	
+
 	private int branchDepth = 0;
 	private boolean loopMode = false;
 	private Map<String, String> rollbackValues = new HashMap<String, String>();
@@ -149,11 +226,11 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 				node.insertAfter(srn);
 			}
 		}
-		
+
 		/*
-		 * FIXME: special treatment in case it is a single line using a math function, which is not support. (Atm only abs is
-		 * supported) We dont call Matlab for this, as it cannot handle these correct the mathfunction has to be on a single line,
-		 * with a single var parameter like x = sqrt(y);
+		 * FIXME: special treatment in case it is a single line using a math function, which is not support. (Atm only
+		 * abs is supported) We dont call Matlab for this, as it cannot handle these correct the mathfunction has to be
+		 * on a single line, with a single var parameter like x = sqrt(y);
 		 */
 		if (node.getValue() instanceof MathFunctionCall) {
 			MathFunction func = ((MathFunctionCall) (node.getValue())).getFunction();
@@ -164,7 +241,7 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 			}
 		}
 		// FIXME: Maple cannot compute things like sqrt(abs(VecN3(1,2,3)));
-		
+
 		if (branchDepth > 0) {
 			// get current value from maple for rollback
 			String variableName = node.getVariable().getName();
@@ -173,7 +250,7 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 				String currentValue = engine.evaluate(command);
 				if (!rollbackValues.containsKey(variableName)) {
 					rollbackValues.put(variableName, currentValue);
-				}				
+				}
 			} catch (MapleEngineException e) {
 				throw new RuntimeException("Unable to query current value of " + variableName + " from Maple.", e);
 			}
@@ -183,20 +260,20 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 		// If you want to simplify (and keep) the last assignment to every variable
 		// uncomment the following statement:
 		// simplifyBuffer.add(variableCode);
-		
+
 		StringBuilder codeBuffer = new StringBuilder();
-		
+
 		codeBuffer.append(variableCode);
 		codeBuffer.append(" := ");
 		codeBuffer.append(generateCode(node.getValue()));
 		codeBuffer.append(";\n");
-		
+
 		try {
 			engine.evaluate(codeBuffer.toString());
 		} catch (MapleEngineException e) {
 			throw new RuntimeException("Unable to simplify assignment " + node + " in Maple.", e);
 		}
-		
+
 		// notify observables about progress (must be called before successor.accept(this))
 		plugin.notifyProgress();
 
@@ -216,12 +293,12 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 		node.getGraph().removeNode(node);
 		node.getSuccessor().accept(this);
 	}
-	
+
 	private String getTempVarName(MultivectorComponent component) {
 		// TODO: generate unused names!
 		return component.getName() + "__" + component.getBladeIndex();
 	}
-	
+
 	@Override
 	public void visit(StoreResultNode node) {
 		Variable variable = node.getValue();
@@ -231,7 +308,7 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 		ControlFlowGraph graph = node.getGraph();
 		List<SequentialNode> newNodes = parseMapleCode(graph, evalResult);
 		if (loopMode || branchDepth > 0) {
-			
+
 			for (SequentialNode newNode : newNodes) {
 				if (newNode instanceof AssignmentNode) {
 					AssignmentNode assignment = (AssignmentNode) newNode;
@@ -244,12 +321,12 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 							currentRoot.insertBefore(init);
 							graph.addTempVariable(initVar);
 						}
-						
+
 						if (resetComponents.get(variable) == null) {
 							resetComponents.put(variable, new HashSet<MultivectorComponent>());
 						}
 						resetComponents.get(variable).add(comp);
-						
+
 						AssignmentNode assign = new AssignmentNode(graph, initVar, assignment.getValue());
 						node.insertBefore(assign);
 					}
@@ -258,7 +335,7 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 				}
 			}
 			graph.removeNode(node);
-			
+
 		} else {
 			for (SequentialNode newNode : newNodes) {
 				node.insertBefore(newNode);
@@ -310,12 +387,15 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 				}
 			}
 			if (unknown) {
+				ReorderConditionVisitor reorder = new ReorderConditionVisitor(node);
+				condition.accept(reorder);
+				
 				// save current rollback values, in case a nested if-statement is found
 				Map<String, String> previousRollback = new HashMap<String, String>();
 				for (String s : rollbackValues.keySet()) {
 					previousRollback.put(s, rollbackValues.get(s));
 				}
-				
+
 				branchDepth++;
 				resetComponents = new HashMap<Variable, Set<MultivectorComponent>>();
 				node.getPositive().accept(this);
@@ -327,12 +407,12 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 
 				rollbackValues = previousRollback;
 				node.getSuccessor().accept(this);
-			} 
+			}
 		} catch (MapleEngineException e) {
 			throw new RuntimeException("Unable to check condition " + condition + " in if-statement " + node, e);
 		}
 	}
-	
+
 	private void rollback() {
 		for (String variable : rollbackValues.keySet()) {
 			String value = rollbackValues.get(variable);
@@ -343,10 +423,10 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 				throw new RuntimeException("Could not rollback assignment of variable " + variable, e);
 			}
 		}
-		
+
 		rollbackValues.clear();
 	}
-	
+
 	private void resetVariables(ControlFlowGraph graph) {
 		for (Variable v : resetComponents.keySet()) {
 			Set<MultivectorComponent> components = resetComponents.get(v);
@@ -367,8 +447,9 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 			} else {
 				sum = products[0];
 			}
-			
-			// insert a new (temporary) assignment behind OUTER if-statement in order to "reset" Maple binding to variable 
+
+			// insert a new (temporary) assignment behind OUTER if-statement in order to "reset" Maple binding to
+			// variable
 			AssignmentNode reset = new AssignmentNode(graph, v, sum);
 			currentRoot.insertAfter(reset);
 		}
@@ -380,12 +461,12 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 			currentRoot = node;
 			initialiedVariables.clear();
 		}
-		
+
 		Map<String, String> previousRollback = new HashMap<String, String>();
 		for (String s : rollbackValues.keySet()) {
 			previousRollback.put(s, rollbackValues.get(s));
 		}
-		
+
 		loopMode = true;
 		resetComponents = new HashMap<Variable, Set<MultivectorComponent>>();
 		node.getBody().accept(this);
@@ -393,7 +474,7 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 		loopMode = false;
 
 		rollbackValues = previousRollback;
-		
+
 		node.getSuccessor().accept(this);
 	}
 
@@ -424,8 +505,10 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 
 		/* fill the Maps with the min and maxvalues from the nodes */
 		for (Variable v : graph.getInputVariables()) {
-			if (v.getMinValue() != null) oldMinVal.put(v.getName(), v.getMinValue());
-			if (v.getMaxValue() != null) oldMaxVal.put(v.getName(), v.getMaxValue());
+			if (v.getMinValue() != null)
+				oldMinVal.put(v.getName(), v.getMinValue());
+			if (v.getMaxValue() != null)
+				oldMaxVal.put(v.getName(), v.getMaxValue());
 		}
 
 		MapleLexer lexer = new MapleLexer(new ANTLRStringStream(mapleCode));
@@ -454,7 +537,8 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 		try {
 			return engine.evaluate(codeBuffer.toString());
 		} catch (MapleEngineException e) {
-			throw new RuntimeException("Unable to apply gaalop() function on expression " + expression + " in Maple.", e);
+			throw new RuntimeException("Unable to apply gaalop() function on expression " + expression + " in Maple.",
+					e);
 		}
 	}
 

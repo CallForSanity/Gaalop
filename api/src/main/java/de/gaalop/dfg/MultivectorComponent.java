@@ -77,6 +77,12 @@ public final class MultivectorComponent extends Variable {
 
         return true;
     }
+    
+    @Override
+    public MultivectorComponent copy() {
+    	MultivectorComponent copy = new MultivectorComponent(getName(), bladeIndex);
+    	return copy;
+    }
 
     @Override
     public int hashCode() {
@@ -85,3 +91,4 @@ public final class MultivectorComponent extends Variable {
         return result;
     }
 }
+
