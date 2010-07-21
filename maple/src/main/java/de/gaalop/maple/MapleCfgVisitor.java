@@ -80,6 +80,7 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 				engine.evaluate(assignment);
 				String opt = simplify(v);
 				List<SequentialNode> newNodes = parseMapleCode(root.getGraph(), opt);
+				root.getGraph().addLocalVariable(v);
 				boolean hasScalarPart = false;
 				for (SequentialNode newNode : newNodes) {
 					root.insertBefore(newNode);
@@ -97,6 +98,8 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 				if (!hasScalarPart || newNodes.size() > 1) {
 					throw new IllegalArgumentException("Condition in if-statement '" + root.getCondition()
 							+ "' is not scalar and cannot be evaluated.");
+				} else {
+					root.insertBefore(new StoreResultNode(root.getGraph(), v));
 				}
 			} catch (MapleEngineException e) {
 				throw new RuntimeException("Unable to optimize condition " + lhs + " in Maple.", e);
@@ -232,14 +235,14 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 		 * abs is supported) We dont call Matlab for this, as it cannot handle these correct the mathfunction has to be
 		 * on a single line, with a single var parameter like x = sqrt(y);
 		 */
-		if (node.getValue() instanceof MathFunctionCall) {
-			MathFunction func = ((MathFunctionCall) (node.getValue())).getFunction();
-			if ((func != MathFunction.ABS)) {
-				node.getSuccessor().accept(this);
-				return;
-				// FIXME: previous assignments contributing to this statement might get lost
-			}
-		}
+//		if (node.getValue() instanceof MathFunctionCall) {
+//			MathFunction func = ((MathFunctionCall) (node.getValue())).getFunction();
+//			if ((func != MathFunction.ABS)) {
+//				node.getSuccessor().accept(this);
+//				return;
+//				// FIXME: previous assignments contributing to this statement might get lost
+//			}
+//		}
 		// FIXME: Maple cannot compute things like sqrt(abs(VecN3(1,2,3)));
 
 		if (branchDepth > 0) {
