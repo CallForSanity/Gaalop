@@ -109,7 +109,7 @@ public class StatusBar extends JPanel implements Observer {
 			progressBar.setValue(progressBar.getMaximum());
 			if (Notifications.hasWarnings()) {
 				warnings = Notifications.getWarnings();
-				setStatus("Finished (click here to see were warnings)");
+				setStatus("Finished (click here to see warnings)");
 			}
 		}
 	}
