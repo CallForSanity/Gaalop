@@ -10,6 +10,7 @@ import de.gaalop.dfg.Variable;
 import de.gaalop.dfg.MathFunction;
 import de.gaalop.dfg.MathFunctionCall;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -19,6 +20,21 @@ import java.util.Set;
  * This is a utility class used by the CluCalcTransformer to build a control flow graph while parsing the CluCalc AST.
  */
 public final class GraphBuilder {
+	
+	private static final List<String> illegalNames;
+
+	static {
+		illegalNames = new ArrayList<String>();
+		String[] names = new String[] { "B", // metric matrix
+				"condition_", // used in if-statement handling
+				"norm", // used in Maple
+				"normal", // used in Maple
+				"length" // used in Maple 
+		};
+		for (String s : names) {
+			illegalNames.add(s);
+		}
+	}
 
 	/**
 	 * The list of algebra modes supported in CluCalc.
@@ -121,22 +137,15 @@ public final class GraphBuilder {
 	}
 
 	private void checkIllegalAssignments(Variable variable) {
-		if (variable.getName().equals("B")) {
-			// this is the metric matrix in Maple
-			throw new IllegalArgumentException("Variable B is already used by Maple. Please use another variable.");
+		String name = variable.getName();
+		if (illegalNames.contains(name)) {
+			throw new IllegalArgumentException(
+					"Variable " + name + " is already used internally. Please use another variable.");
 		}
 		if (variable.getName().startsWith("re")) {
-			throw new IllegalArgumentException("Variable '" + variable + "' cannot be used in Maple because of prefix 're'."
-				+ " Please choose another name.");
-		}
-		if (variable.getName().equals("condition_")) {
-			throw new IllegalArgumentException("Variable condition_ is already used internally, please choose another name.");
-		}
-		if (variable.getName().equals("norm")) {
-			throw new IllegalArgumentException("Variable norm is already used internally, please choose another name.");
-		}
-		if (variable.getName().equals("normal")) {
-			throw new IllegalArgumentException("Variable normal is already used internally, please choose another name.");
+			throw new IllegalArgumentException("Variable '" + variable
+					+ "' cannot be used in Maple because of prefix 're'."
+					+ " Please choose another name.");
 		}
 	}
 
