@@ -132,6 +132,12 @@ public final class GraphBuilder {
 		if (variable.getName().equals("condition_")) {
 			throw new IllegalArgumentException("Variable condition_ is already used internally, please choose another name.");
 		}
+		if (variable.getName().equals("norm")) {
+			throw new IllegalArgumentException("Variable norm is already used internally, please choose another name.");
+		}
+		if (variable.getName().equals("normal")) {
+			throw new IllegalArgumentException("Variable normal is already used internally, please choose another name.");
+		}
 	}
 
 	/**
