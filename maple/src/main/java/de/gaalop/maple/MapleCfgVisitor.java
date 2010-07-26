@@ -29,6 +29,7 @@ import de.gaalop.cfg.Node;
 import de.gaalop.cfg.SequentialNode;
 import de.gaalop.cfg.StartNode;
 import de.gaalop.cfg.StoreResultNode;
+import de.gaalop.dfg.BaseVector;
 import de.gaalop.dfg.BinaryOperation;
 import de.gaalop.dfg.EmptyExpressionVisitor;
 import de.gaalop.dfg.Equality;
@@ -36,10 +37,12 @@ import de.gaalop.dfg.Expression;
 import de.gaalop.dfg.ExpressionFactory;
 import de.gaalop.dfg.FloatConstant;
 import de.gaalop.dfg.Inequality;
+import de.gaalop.dfg.InnerProduct;
 import de.gaalop.dfg.MathFunction;
 import de.gaalop.dfg.MathFunctionCall;
 import de.gaalop.dfg.Multiplication;
 import de.gaalop.dfg.MultivectorComponent;
+import de.gaalop.dfg.OuterProduct;
 import de.gaalop.dfg.Relation;
 import de.gaalop.dfg.Subtraction;
 import de.gaalop.dfg.Variable;
@@ -53,6 +56,38 @@ import de.gaalop.maple.parser.MapleTransformer;
  * This visitor creates code for Maple.
  */
 public class MapleCfgVisitor implements ControlFlowVisitor {
+	
+	private class CheckGAVisitor extends EmptyExpressionVisitor {
+		
+		private boolean isGA = false;
+		
+		@Override
+		public void visit(BaseVector node) {
+			isGA = true;
+		}
+		
+		@Override
+		public void visit(InnerProduct node) {
+			isGA = true;
+		}
+		
+		@Override
+		public void visit(OuterProduct node) {
+			isGA = true;
+		}
+		
+		@Override
+		public void visit(Relation node) {
+			isGA = true;
+		}
+		
+		@Override
+		public void visit(Variable node) {
+			if (gaVariables.contains(node)) {
+				isGA = true;
+			}
+		}
+	}
 
 	/**
 	 * This visitor re-orders compare operations like >, <= or == to a left-hand side expression that is compared to 0.
@@ -203,6 +238,7 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 	private SequentialNode currentRoot;
 	private Map<Variable, Set<MultivectorComponent>> resetComponents;
 	private Set<Variable> initialiedVariables = new HashSet<Variable>();
+	private Set<Variable> gaVariables = new HashSet<Variable>();
 
 	public MapleCfgVisitor(MapleEngine engine, Plugin plugin) {
 		this.engine = engine;
@@ -223,9 +259,19 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 
 	@Override
 	public void visit(AssignmentNode node) {
+		Variable variable = node.getVariable();
+		Expression value = node.getValue();
+		
+		CheckGAVisitor gaVisitor = new CheckGAVisitor();
+		value.accept(gaVisitor);
+		boolean isGA = gaVisitor.isGA;
+		if (isGA) {
+			gaVariables.add(variable);
+		}
+		
 		if (loopMode || branchDepth > 0) {
 			if (!(node.getSuccessor() instanceof StoreResultNode)) {
-				StoreResultNode srn = new StoreResultNode(node.getGraph(), node.getVariable());
+				StoreResultNode srn = new StoreResultNode(node.getGraph(), variable);
 				node.insertAfter(srn);
 			}
 		}
@@ -247,7 +293,7 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 
 		if (branchDepth > 0) {
 			// get current value from maple for rollback
-			String variableName = node.getVariable().getName();
+			String variableName = variable.getName();
 			try {
 				String command = variableName + ";\n";
 				String currentValue = engine.evaluate(command);
@@ -259,7 +305,7 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 			}
 		}
 
-		String variableCode = generateCode(node.getVariable());
+		String variableCode = generateCode(variable);
 		// If you want to simplify (and keep) the last assignment to every variable
 		// uncomment the following statement:
 		// simplifyBuffer.add(variableCode);
@@ -268,7 +314,7 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 
 		codeBuffer.append(variableCode);
 		codeBuffer.append(" := ");
-		codeBuffer.append(generateCode(node.getValue()));
+		codeBuffer.append(generateCode(value));
 		codeBuffer.append(";\n");
 
 		try {

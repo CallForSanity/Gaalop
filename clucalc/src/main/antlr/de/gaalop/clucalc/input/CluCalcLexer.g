@@ -24,6 +24,8 @@ OUTPUT_LITERAL: 'output';
 
 UNROLL_LITERAL: 'unroll';
 
+COUNT_LITERAL: 'count';
+
 fragment
 EXPONENT 
 	: 'e' MINUS? ('0'..'9')+

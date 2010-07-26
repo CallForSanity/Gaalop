@@ -208,7 +208,7 @@ public final class GraphBuilder {
 	 * @param body list of statements belonging to body
 	 * @return new {@link LoopNode} representing this statement.
 	 */
-	public LoopNode handleLoop(List<SequentialNode> body, String iterations) {
+	public LoopNode handleLoop(List<SequentialNode> body, String iterations, Variable counter) {
 		LoopNode loop = new LoopNode(graph);
 		addNode(loop);
 		rewireNodes(body, loop);
@@ -221,6 +221,10 @@ public final class GraphBuilder {
 		// save number of iterations and reset value for next loops
 		if (iterations != null) {
 			loop.setIterations(Integer.parseInt(iterations));
+		}
+		// save counter variable for this loop
+		if (counter != null) {
+			loop.setCounter(counter);
 		}
 
 		return loop;

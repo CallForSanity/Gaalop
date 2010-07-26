@@ -162,7 +162,9 @@ else_statement returns [ArrayList<SequentialNode> nodes]
   ;
   
 loop returns [LoopNode node]
-  : ^(LOOP stmt=statement number=DECIMAL_LITERAL?) { $node = graphBuilder.handleLoop($stmt.nodes, $number.text); }
+  : ^(LOOP stmt=statement number=DECIMAL_LITERAL? varname=variable?) {
+      $node = graphBuilder.handleLoop($stmt.nodes, $number.text, $varname.result); 
+   }
   ;
   
 block returns [ArrayList<SequentialNode> nodes]
