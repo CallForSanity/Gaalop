@@ -83,6 +83,8 @@ public class MapleDfgVisitor implements ExpressionVisitor {
 		// Special case: abs() has to be translated to self-defined mul_abs() (see cliffordfunctions.mws)
 		if (function == MathFunction.ABS) {
 			codeBuffer.append("mul_abs");
+		} else if (function == MathFunction.SQRT) {
+			codeBuffer.append("wurzel");
 		} else {
 			codeBuffer.append(function.toString().toLowerCase());
 		}
