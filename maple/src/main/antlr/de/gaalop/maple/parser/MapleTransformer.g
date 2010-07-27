@@ -53,17 +53,17 @@ options {
 	}
 }
 
-script[ControlFlowGraph graph, HashMap<String, String> minVal, HashMap<String, String> maxVal]	returns [List<SequentialNode> nodes]
-	@init { $nodes = new ArrayList<SequentialNode>(); }
+script[ControlFlowGraph graph, HashMap<String, String> minVal, HashMap<String, String> maxVal]	returns [List<AssignmentNode> nodes]
+	@init { $nodes = new ArrayList<AssignmentNode>(); }
  	: statement[graph, minVal, maxVal, nodes]*;
 
-statement[ControlFlowGraph graph, HashMap<String, String> minVal, HashMap<String, String> maxVal, List<SequentialNode> nodes]
+statement[ControlFlowGraph graph, HashMap<String, String> minVal, HashMap<String, String> maxVal, List<AssignmentNode> nodes]
 	: declareArray[graph]
 	| assignment[graph, minVal, maxVal] { $nodes.add($assignment.result);}
 	| coefficient[graph, minVal, maxVal] { $nodes.add($coefficient.result); }
 	;
 	
-assignment[ControlFlowGraph graph, HashMap<String, String> minVal, HashMap<String, String> maxVal] returns [SequentialNode result]
+assignment[ControlFlowGraph graph, HashMap<String, String> minVal, HashMap<String, String> maxVal] returns [AssignmentNode result]
   : ^(ASSIGN var=IDENTIFIER value=expression[minVal, maxVal]) {
     Variable variable = processIdentifier($var.text, minVal, maxVal);
     $result = new AssignmentNode(graph, variable, $value.result);
@@ -74,7 +74,7 @@ declareArray[ControlFlowGraph graph]
 	: ^(DECLAREARRAY name=IDENTIFIER) { /* What to do with declarations? Is it really needed? */ }
 	;
 	
-coefficient[ControlFlowGraph graph, HashMap<String, String> minVal, HashMap<String, String> maxVal] returns [SequentialNode result]
+coefficient[ControlFlowGraph graph, HashMap<String, String> minVal, HashMap<String, String> maxVal] returns [AssignmentNode result]
 	: ^(COEFFICIENT mvName=IDENTIFIER index=DECIMAL_LITERAL value=expression[minVal, maxVal]) {
 		MultivectorComponent component = new MultivectorComponent($mvName.text, Integer.valueOf($index.text) - 1);
 		$result = new AssignmentNode(graph, component, $value.result);

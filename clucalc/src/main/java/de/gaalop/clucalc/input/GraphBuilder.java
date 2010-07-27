@@ -324,6 +324,7 @@ public final class GraphBuilder {
 		expression.accept(visitor);
 
 		for (Variable usedVariable : visitor.getVariables()) {
+			checkIllegalAssignments(usedVariable);
 			if (!graph.getLocalVariables().contains(usedVariable)) {
 				// in case we have pragmas giving ranges for the variable, add them
 				if (graph.getPragmaMinValue().containsKey(usedVariable.getName())) {
