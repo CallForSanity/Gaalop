@@ -140,25 +140,26 @@ public class IfThenElseNode extends SequentialNode {
 		newPositive.removePredecessor(this);
 		newPositive.addPredecessor(copy);
 		copy.setPositive(newPositive);
-		copySubtree(newPositive);
+		copySubtree(newPositive, copy);
 		
 		SequentialNode newNegative = negative.copy();
 		newNegative.removePredecessor(this);
 		newNegative.addPredecessor(copy);
 		copy.setNegative(newNegative);
-		copySubtree(newNegative);
+		copySubtree(newNegative, copy);
 		
 		return copy;
 	}
 	
-	private void copySubtree(SequentialNode root) {
+	private void copySubtree(SequentialNode root, SequentialNode newBase) {
 		if (root instanceof BlockEndNode) {
+			((BlockEndNode) root).updateBase(newBase);
 			return;
 		} else if (root.getSuccessor() instanceof SequentialNode) {
 			SequentialNode successor = (SequentialNode) root.getSuccessor();
 			SequentialNode newSuccessor = successor.copy();
 			root.replaceSuccessor(successor, newSuccessor);
-			copySubtree(newSuccessor);
+			copySubtree(newSuccessor, newBase);
 		}
 	}
 

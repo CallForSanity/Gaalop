@@ -44,7 +44,16 @@ public final class BlockEndNode extends SequentialNode {
     
     @Override
     public BlockEndNode copyElements() {
-    	return new BlockEndNode(getGraph(), base); // XXX: which kind of base to use?
+    	return new BlockEndNode(getGraph(), null);
+    }
+    
+    /**
+     * Has to be called each time {@link #copyElements()} is called on a block end node to update the new base. 
+     * 
+     * @param newBase new node where this block end belongs to
+     */
+    void updateBase(SequentialNode newBase) {
+    	base = newBase;
     }
 
     @Override

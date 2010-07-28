@@ -82,19 +82,20 @@ public class LoopNode extends SequentialNode {
 		copy.setIterations(iterations);
 		SequentialNode newBody = body.copy();
 		copy.setBody(newBody);
-		copySubtree(newBody);
+		copySubtree(newBody, copy);
 
 		return copy;
 	}
 
-	private void copySubtree(SequentialNode root) {
+	private void copySubtree(SequentialNode root, SequentialNode newBase) {
 		if (root instanceof BlockEndNode) {
+			((BlockEndNode) root).updateBase(newBase);
 			return;
 		} else if (root.getSuccessor() instanceof SequentialNode) {
 			SequentialNode successor = (SequentialNode) root.getSuccessor();
 			SequentialNode newSuccessor = successor.copy();
 			root.replaceSuccessor(successor, newSuccessor);
-			copySubtree(newSuccessor);
+			copySubtree(newSuccessor, newBase);
 		}
 	}
 

@@ -268,7 +268,7 @@ public class MapleCfgVisitor2 implements ControlFlowVisitor {
 			MultivectorComponent originalComp = new MultivectorComponent(optVarName, coefficient.getBladeIndex());
 			Variable tempVar = new Variable(getTempVarName(originalComp));
 			Set<MultivectorComponent> initCoefficients = initializedVariables.get(origialVariable);
-			if (!(initCoefficients != null && initCoefficients.contains(originalComp))) {
+			if (initCoefficients != null && !initCoefficients.contains(originalComp)) {
 				AssignmentNode initialization = new AssignmentNode(graph, tempVar, new FloatConstant(0));
 				currentRoot.insertBefore(initialization);
 				initCoefficients.add(originalComp);
