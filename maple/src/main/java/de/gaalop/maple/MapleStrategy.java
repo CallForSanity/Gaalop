@@ -47,13 +47,6 @@ public class MapleStrategy implements OptimizationStrategy {
 			throw new OptimizationException("Unable to inline macros:\n" + e.getMessage(), e, graph);
 		}
 		try {
-			log.debug("Unrolling loops");
-			UnrollLoopsVisitor visitor = new UnrollLoopsVisitor();
-			graph.accept(visitor);
-		} catch (Exception e) {
-			throw new OptimizationException("Unable to unroll loops:\n" + e.getMessage(), graph);
-		}
-		try {
 			AssignmentCounter counter = new AssignmentCounter();
 			graph.accept(counter);
 			simplifier.notifyMaximum(counter.assignments);

@@ -52,6 +52,86 @@ import de.gaalop.maple.parser.MapleTransformer;
  * This visitor creates code for Maple.
  */
 public class MapleCfgVisitor2 implements ControlFlowVisitor {
+	
+	private static class UnrollLoopsVisitor extends EmptyControlFlowVisitor {
+
+		private LoopNode root;
+		SequentialNode firstNewNode;
+
+		public UnrollLoopsVisitor(LoopNode root) {
+			this.root = root;
+		}
+
+		/**
+		 * Inserts a new node before the current node.
+		 * 
+		 * @param newNode node to be inserted before the current node
+		 */
+		private void insertNewNode(SequentialNode newNode) {
+			if (firstNewNode == null) {
+				firstNewNode = newNode;
+			}
+			root.insertBefore(newNode);
+		}
+
+		@Override
+		public void visit(StartNode node) {
+			throw new IllegalStateException("This visitor should be invoked on a loop node only.");
+		}
+
+		@Override
+		public void visit(AssignmentNode node) {
+			insertNewNode(node.copy());
+			node.getSuccessor().accept(this);
+		}
+
+		@Override
+		public void visit(StoreResultNode node) {
+			insertNewNode(node.copy());
+			node.getSuccessor().accept(this);
+		}
+
+		@Override
+		public void visit(LoopNode node) {
+			if (node == root) {
+				for (int i = 0; i < node.getIterations(); i++) {
+					node.getBody().accept(this);
+				}
+				node.getGraph().removeNode(node);
+			} else {
+				insertNewNode(node.copy());
+				// ignore nested loops (process them later)
+				node.getSuccessor().accept(this);
+			}
+			// do not visit root's successor
+		}
+
+		@Override
+		public void visit(IfThenElseNode node) {
+			IfThenElseNode newNode = (IfThenElseNode) node.copy();
+			insertNewNode(newNode);
+
+//			newNode.getPositive().accept(this);
+//			newNode.getNegative().accept(this);
+//
+//			if (newNode.getPositive() instanceof BlockEndNode && newNode.getNegative() instanceof BlockEndNode) {
+//				node.getGraph().removeNode(newNode);
+//			}
+
+			node.getSuccessor().accept(this);
+		}
+		
+//		@Override
+//		public void visit(BreakNode node) {
+//			node.getGraph().removeNode(node);
+//		}
+
+		@Override
+		public void visit(ExpressionStatement node) {
+			insertNewNode(node.copy());
+			node.getSuccessor().accept(this);
+		}
+	}
 
 	/**
 	 * This visitor re-orders compare operations like >, <= or == to a left-hand side expression that is compared to 0.
@@ -248,12 +328,15 @@ public class MapleCfgVisitor2 implements ControlFlowVisitor {
 			if (coefficient.getVariable() instanceof MultivectorComponent) {
 				MultivectorComponent component = (MultivectorComponent) coefficient.getVariable();
 				Variable tempVar = new Variable(getTempVarName(component));
-				AssignmentNode initialization = new AssignmentNode(graph, tempVar, coefficient.getValue());
-				currentRoot.insertBefore(initialization);
 				if (initializedVariables.get(variable) == null) {
 					initializedVariables.put(variable, new HashSet<MultivectorComponent>());
 				}
-				initializedVariables.get(variable).add(component);
+				Set<MultivectorComponent> initCoefficients = initializedVariables.get(variable);
+				if (!initCoefficients.contains(component)) {
+					AssignmentNode initialization = new AssignmentNode(graph, tempVar, coefficient.getValue());
+					currentRoot.insertBefore(initialization);
+					initCoefficients.add(component);
+				}
 			}
 		}
 	}
@@ -263,12 +346,15 @@ public class MapleCfgVisitor2 implements ControlFlowVisitor {
 		assignVariable(temp, node.getValue());
 		List<MultivectorComponent> coefficients = getComponents(optimizeVariable(graph, temp));
 		for (MultivectorComponent coefficient : coefficients) {
-			Variable origialVariable = node.getVariable();
-			String optVarName = origialVariable.getName() + "_opt";
+			Variable originalVariable = node.getVariable();
+			String optVarName = originalVariable.getName() + "_opt";
 			MultivectorComponent originalComp = new MultivectorComponent(optVarName, coefficient.getBladeIndex());
 			Variable tempVar = new Variable(getTempVarName(originalComp));
-			Set<MultivectorComponent> initCoefficients = initializedVariables.get(origialVariable);
-			if (initCoefficients != null && !initCoefficients.contains(originalComp)) {
+			if (initializedVariables.get(originalVariable) == null) {
+				initializedVariables.put(originalVariable, new HashSet<MultivectorComponent>());
+			}
+			Set<MultivectorComponent> initCoefficients = initializedVariables.get(originalVariable);
+			if (!initCoefficients.contains(originalComp)) {
 				AssignmentNode initialization = new AssignmentNode(graph, tempVar, new FloatConstant(0));
 				currentRoot.insertBefore(initialization);
 				initCoefficients.add(originalComp);
@@ -517,24 +603,30 @@ public class MapleCfgVisitor2 implements ControlFlowVisitor {
 
 	@Override
 	public void visit(LoopNode node) {
-		if (blockDepth == 0) {
-			currentRoot = node;
+		if (node.getIterations() > 0) {
+			UnrollLoopsVisitor ulv = new UnrollLoopsVisitor(node);
+			node.accept(ulv);
+			ulv.firstNewNode.accept(this);
+		} else { 
+			if (blockDepth == 0) {
+				currentRoot = node;
+			}
+			
+			Variable counterVariable = node.getCounterVariable();
+			if (counterVariable != null) {
+				Notifications.addWarning("Assignments to counter variable " + counterVariable
+						+ " are not processed by Maple.");
+			}
+			
+			blockDepth++;
+			node.getBody().accept(this);
+			blockDepth--;
+			
+			if (blockDepth == 0) {
+				initializedVariables.clear();
+			}
+			node.getSuccessor().accept(this);
 		}
-
-		Variable counterVariable = node.getCounterVariable();
-		if (counterVariable != null) {
-			Notifications.addWarning("Assignments to counter variable " + counterVariable
-					+ " are not processed by Maple.");
-		}
-
-		blockDepth++;
-		node.getBody().accept(this);
-		blockDepth--;
-
-		if (blockDepth == 0) {
-			initializedVariables.clear();
-		}
-		node.getSuccessor().accept(this);
 	}
 
 	@Override
