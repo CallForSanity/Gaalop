@@ -80,7 +80,7 @@ public class MapleSimplifier {
         }
 
 //        MapleCfgVisitor visitor = new MapleCfgVisitor(engine, plugin);
-        MapleCfgVisitor2 visitor = new MapleCfgVisitor2(engine, plugin); // FIXME: experimental use only
+        MapleCfgVisitor2 visitor = new MapleCfgVisitor2(engine, plugin);
         graph.accept(visitor);
     }
     

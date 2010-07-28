@@ -37,7 +37,7 @@ public final class ControlFlowGraph {
 	private Log log = LogFactory.getLog(ControlFlowGraph.class);
 
 	private Set<Variable> localVariables = new HashSet<Variable>();
-	private List<Variable> tempVariables = new ArrayList<Variable>();
+	private List<Variable> scalarVariables = new ArrayList<Variable>();
 	private Set<Variable> inputVariables = new HashSet<Variable>();
 	private Set<Variable> counterVariables = new HashSet<Variable>();
 
@@ -80,12 +80,12 @@ public final class ControlFlowGraph {
 		pragmaOutputVariables.add(name);
 	}
 	
-	public void addTempVariable(Variable tempVariable) {
-		tempVariables.add(tempVariable);
+	public void addScalarVariable(Variable tempVariable) {
+		scalarVariables.add(tempVariable);
 	}
 	
-	public List<Variable> getTempVariables() {
-		return tempVariables;
+	public List<Variable> getScalarVariables() {
+		return scalarVariables;
 	}
 	
 	public void addCounterVariable(Variable counter) {

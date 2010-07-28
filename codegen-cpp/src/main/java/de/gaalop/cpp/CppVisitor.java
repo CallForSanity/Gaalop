@@ -1,7 +1,6 @@
 package de.gaalop.cpp;
 
 import de.gaalop.Notifications;
-import de.gaalop.UsedVariablesVisitor;
 import de.gaalop.cfg.*;
 import de.gaalop.dfg.*;
 
@@ -94,20 +93,19 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 			}
 		}
 
-		if (graph.getTempVariables().size() > 0) {
+		if (graph.getScalarVariables().size() > 0) {
 			appendIndentation();
 			code.append("float ");
-			for (Variable tmp : graph.getTempVariables()) {
+			for (Variable tmp : graph.getScalarVariables()) {
 				code.append(tmp.getName());
 				code.append(", ");
 			}
 			code.delete(code.length() - 2, code.length());
 			code.append(";\n");
 		}
-		
+
 		for (Variable counter : graph.getCounterVariables()) {
 			appendIndentation();
-			// TODO: int would be nicer
 			code.append("float ");
 			code.append(counter.getName());
 			code.append(";\n");
@@ -229,30 +227,7 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 
 	@Override
 	public void visit(IfThenElseNode node) {
-		UsedVariablesVisitor usedVariables = new UsedVariablesVisitor();
 		Expression condition = node.getCondition();
-		condition.accept(usedVariables);
-		List<Variable> tempVariables = node.getGraph().getTempVariables();
-		for (Variable v : usedVariables.getVariables()) {
-			Variable scalar = null;
-			for (Variable tmp : tempVariables) {
-				if (tmp.getName().startsWith(v.getName())) {
-					if (tmp.getName().endsWith("__0")) {
-						scalar = tmp;
-					}
-					if (scalar != null) {
-						Notifications.addWarning("Variable " + v + " depends on a previous if-statement.\n"
-								+ "In order to process it in a condition in C/C++, this value must be a scalar.\n"
-								+ " Using salar part (" + scalar + ") only.");
-						condition.replaceExpression(v, tmp);
-					} else {
-						throw new RuntimeException("Variable " + v
-								+ " has no scalar part and cannot be processed in C/C++");
-					}
-					break;
-				}
-			}
-		}
 
 		appendIndentation();
 		code.append("if (");
@@ -484,19 +459,16 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 
 	@Override
 	public void visit(Macro node) {
-		// TODO Auto-generated method stub
-
+		throw new IllegalStateException("Macros should have been inlined and removed from the graph.");
 	}
 
 	@Override
 	public void visit(FunctionArgument node) {
-		// TODO Auto-generated method stub
-
+		throw new IllegalStateException("Macros should have been inlined and no function arguments should be the graph.");
 	}
 
 	@Override
 	public void visit(MacroCall node) {
-		// TODO Auto-generated method stub
-
+		throw new IllegalStateException("Macros should have been inlined and no macro calls should be in the graph.");
 	}
 }

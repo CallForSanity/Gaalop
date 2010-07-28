@@ -364,7 +364,7 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 						initialiedVariables.add(initVar);
 						AssignmentNode init = new AssignmentNode(graph, initVar, new FloatConstant(0));
 						currentRoot.insertBefore(init);
-						graph.addTempVariable(initVar);
+						graph.addScalarVariable(initVar);
 					}
 
 					if (resetComponents.get(variable) == null) {

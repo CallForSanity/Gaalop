@@ -71,40 +71,31 @@ public class MapleCfgVisitor2 implements ControlFlowVisitor {
 			Expression left = node.getLeft();
 			Expression right = node.getRight();
 			Subtraction lhs = ExpressionFactory.subtract(left.copy(), right.copy());
-			Variable v = new Variable("condition_");
-			Expression newLeft = v;
+			Variable condition = new Variable("condition_");
 			Expression newRight = new FloatConstant(0);
 			try {
-				String assignment = generateCode(v) + ":=" + generateCode(lhs) + ";";
+				String assignment = generateCode(condition) + ":=" + generateCode(lhs) + ";";
 				engine.evaluate(assignment);
-				String opt = simplify(v);
+				String opt = simplify(condition);
 				List<AssignmentNode> newNodes = parseMapleCode(graph, opt);
-				graph.addLocalVariable(v);
-				boolean hasScalarPart = false;
+				graph.addScalarVariable(condition);
 				for (AssignmentNode newAssignment : newNodes) {
-					root.insertBefore(newAssignment);
-					if (!hasScalarPart) {
-						if (newAssignment.getVariable() instanceof MultivectorComponent) {
-							MultivectorComponent mc = (MultivectorComponent) newAssignment.getVariable();
-							if (mc.getBladeIndex() == 0) {
-								hasScalarPart = true;
-								newLeft = mc;
-							}
+					if (newAssignment.getVariable() instanceof MultivectorComponent) {
+						MultivectorComponent mc = (MultivectorComponent) newAssignment.getVariable();
+						if (mc.getBladeIndex() == 0) {
+							AssignmentNode scalarPart = new AssignmentNode(graph, condition, newAssignment.getValue());
+							root.insertBefore(scalarPart);
+						} else {
+							throw new IllegalArgumentException("Condition in if-statement '" + root.getCondition()
+									+ "' is not scalar and cannot be evaluated.");
 						}
 					}
-				}
-				if (!hasScalarPart || newNodes.size() > 1) {
-					throw new IllegalArgumentException("Condition in if-statement '" + root.getCondition()
-							+ "' is not scalar and cannot be evaluated.");
-				} else {
-					// FIXME: optimize here directly and do not output additional SRN
-					root.insertBefore(new StoreResultNode(graph, v));
 				}
 			} catch (MapleEngineException e) {
 				throw new RuntimeException("Unable to optimize condition " + lhs + " in Maple.", e);
 			}
 
-			node.replaceExpression(left, newLeft);
+			node.replaceExpression(left, condition);
 			node.replaceExpression(right, newRight);
 
 			node.getLeft().accept(this);
@@ -513,12 +504,12 @@ public class MapleCfgVisitor2 implements ControlFlowVisitor {
 	private void handleUnknownBranches(IfThenElseNode node, Expression condition) {
 		ReorderConditionVisitor reorder = new ReorderConditionVisitor(node);
 		condition.accept(reorder);
-	
+
 		blockDepth++;
 		node.getPositive().accept(this);
 		node.getNegative().accept(this);
 		blockDepth--;
-	
+
 		if (blockDepth == 0) {
 			initializedVariables.clear();
 		}
@@ -529,10 +520,11 @@ public class MapleCfgVisitor2 implements ControlFlowVisitor {
 		if (blockDepth == 0) {
 			currentRoot = node;
 		}
-		
+
 		Variable counterVariable = node.getCounterVariable();
 		if (counterVariable != null) {
-			Notifications.addWarning("Assignments to counter variable " + counterVariable + " are not processed by Maple.");
+			Notifications.addWarning("Assignments to counter variable " + counterVariable
+					+ " are not processed by Maple.");
 		}
 
 		blockDepth++;
