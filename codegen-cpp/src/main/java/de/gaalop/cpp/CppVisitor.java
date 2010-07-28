@@ -104,6 +104,14 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 			code.delete(code.length() - 2, code.length());
 			code.append(";\n");
 		}
+		
+		for (Variable counter : graph.getCounterVariables()) {
+			appendIndentation();
+			// TODO: int would be nicer
+			code.append("float ");
+			code.append(counter.getName());
+			code.append(";\n");
+		}
 
 		if (!graph.getLocalVariables().isEmpty()) {
 			code.append("\n");

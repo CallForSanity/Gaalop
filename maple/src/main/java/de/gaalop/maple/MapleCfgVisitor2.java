@@ -30,7 +30,6 @@ import de.gaalop.cfg.Node;
 import de.gaalop.cfg.SequentialNode;
 import de.gaalop.cfg.StartNode;
 import de.gaalop.cfg.StoreResultNode;
-import de.gaalop.dfg.BaseVector;
 import de.gaalop.dfg.BinaryOperation;
 import de.gaalop.dfg.EmptyExpressionVisitor;
 import de.gaalop.dfg.Equality;
@@ -38,10 +37,8 @@ import de.gaalop.dfg.Expression;
 import de.gaalop.dfg.ExpressionFactory;
 import de.gaalop.dfg.FloatConstant;
 import de.gaalop.dfg.Inequality;
-import de.gaalop.dfg.InnerProduct;
 import de.gaalop.dfg.Multiplication;
 import de.gaalop.dfg.MultivectorComponent;
-import de.gaalop.dfg.OuterProduct;
 import de.gaalop.dfg.Relation;
 import de.gaalop.dfg.Subtraction;
 import de.gaalop.dfg.Variable;
@@ -55,38 +52,6 @@ import de.gaalop.maple.parser.MapleTransformer;
  * This visitor creates code for Maple.
  */
 public class MapleCfgVisitor2 implements ControlFlowVisitor {
-
-	private class CheckGAVisitor extends EmptyExpressionVisitor {
-
-		private boolean isGA = false;
-
-		@Override
-		public void visit(BaseVector node) {
-			isGA = true;
-		}
-
-		@Override
-		public void visit(InnerProduct node) {
-			isGA = true;
-		}
-
-		@Override
-		public void visit(OuterProduct node) {
-			isGA = true;
-		}
-
-		@Override
-		public void visit(Relation node) {
-			isGA = true;
-		}
-
-		@Override
-		public void visit(Variable node) {
-			if (gaVariables.contains(node)) {
-				isGA = true;
-			}
-		}
-	}
 
 	/**
 	 * This visitor re-orders compare operations like >, <= or == to a left-hand side expression that is compared to 0.
@@ -132,6 +97,7 @@ public class MapleCfgVisitor2 implements ControlFlowVisitor {
 					throw new IllegalArgumentException("Condition in if-statement '" + root.getCondition()
 							+ "' is not scalar and cannot be evaluated.");
 				} else {
+					// FIXME: optimize here directly and do not output additional SRN
 					root.insertBefore(new StoreResultNode(graph, v));
 				}
 			} catch (MapleEngineException e) {
@@ -234,11 +200,9 @@ public class MapleCfgVisitor2 implements ControlFlowVisitor {
 
 	/** Used to distinguish normal assignments and such from a loop or if-statement where GA must be eliminated. */
 	private int blockDepth = 0;
-	private Set<Variable> counterVariables = new HashSet<Variable>();
 	private SequentialNode currentRoot;
 
 	private Map<Variable, Set<MultivectorComponent>> initializedVariables = new HashMap<Variable, Set<MultivectorComponent>>();
-	private Set<Variable> gaVariables = new HashSet<Variable>();
 
 	private ControlFlowGraph graph;
 
@@ -260,19 +224,7 @@ public class MapleCfgVisitor2 implements ControlFlowVisitor {
 		Expression value = node.getValue();
 		Node successor = node.getSuccessor();
 
-		// check if GA is contained in value
-		CheckGAVisitor gaVisitor = new CheckGAVisitor();
-		value.accept(gaVisitor);
-		boolean isGA = gaVisitor.isGA;
-		if (isGA) {
-			gaVariables.add(variable);
-		}
-
-		if (counterVariables.contains(variable)) {
-			if (isGA) {
-				throw new IllegalArgumentException("Counter variable " + variable
-						+ " of loop is not allowed to use Geometric Algebra");
-			}
+		if (graph.getCounterVariables().contains(variable)) {
 			// do not process this assignment
 			successor.accept(this);
 			return;
@@ -415,6 +367,10 @@ public class MapleCfgVisitor2 implements ControlFlowVisitor {
 		return visitor.getCode();
 	}
 
+	private String getTempVarName(MultivectorComponent component) {
+		return component.getName() + "__" + component.getBladeIndex();
+	}
+
 	@Override
 	public void visit(ExpressionStatement node) {
 		String command = generateCode(node.getExpression());
@@ -426,10 +382,6 @@ public class MapleCfgVisitor2 implements ControlFlowVisitor {
 		}
 		graph.removeNode(node);
 		node.getSuccessor().accept(this);
-	}
-
-	private String getTempVarName(MultivectorComponent component) {
-		return component.getName() + "__" + component.getBladeIndex();
 	}
 
 	@Override
@@ -519,47 +471,56 @@ public class MapleCfgVisitor2 implements ControlFlowVisitor {
 				}
 			}
 			if (!unknown) {
-				StringBuilder codeBuffer = new StringBuilder();
-				codeBuffer.append("evalb(");
-				codeBuffer.append(generateCode(condition));
-				codeBuffer.append(");\n");
-				// try to evaluate the condition
-				String result = engine.evaluate(codeBuffer.toString());
-				log.debug("Maple simplification of IF condition " + condition + ": " + result);
-				// if condition can be determined to be true or false, inline relevant part
-				if ("true\n".equals(result)) {
-					node.accept(new InlineBlockVisitor(node, node.getPositive()));
-					node.getPositive().accept(this);
-				} else if ("false\n".equals(result)) {
-					node.accept(new InlineBlockVisitor(node, node.getNegative()));
-					if (node.getNegative() instanceof BlockEndNode) {
-						node.getSuccessor().accept(this);
-					} else {
-						node.getNegative().accept(this);
-					}
-				} else {
-					// reset unknown status in order to process branches
-					Notifications.addWarning("Could not evaluate condition " + condition);
-					unknown = true;
-				}
+				unknown = inlineIfBranch(node, condition);
 			}
 			if (unknown) {
-				ReorderConditionVisitor reorder = new ReorderConditionVisitor(node);
-				condition.accept(reorder);
-
-				blockDepth++;
-				node.getPositive().accept(this);
-				node.getNegative().accept(this);
-				blockDepth--;
-
-				if (blockDepth == 0) {
-					initializedVariables.clear();
-					counterVariables.clear();
-				}
+				handleUnknownBranches(node, condition);
 				node.getSuccessor().accept(this);
 			}
 		} catch (MapleEngineException e) {
 			throw new RuntimeException("Unable to check condition " + condition + " in if-statement " + node, e);
+		}
+	}
+
+	private boolean inlineIfBranch(IfThenElseNode node, Expression condition) throws MapleEngineException {
+		boolean unknown = false;
+		StringBuilder codeBuffer = new StringBuilder();
+		codeBuffer.append("evalb(");
+		codeBuffer.append(generateCode(condition));
+		codeBuffer.append(");\n");
+		// try to evaluate the condition
+		String result = engine.evaluate(codeBuffer.toString());
+		log.debug("Maple simplification of IF condition " + condition + ": " + result);
+		// if condition can be determined to be true or false, inline relevant part
+		if ("true\n".equals(result)) {
+			node.accept(new InlineBlockVisitor(node, node.getPositive()));
+			node.getPositive().accept(this);
+		} else if ("false\n".equals(result)) {
+			node.accept(new InlineBlockVisitor(node, node.getNegative()));
+			if (node.getNegative() instanceof BlockEndNode) {
+				node.getSuccessor().accept(this);
+			} else {
+				node.getNegative().accept(this);
+			}
+		} else {
+			// reset unknown status in order to process branches
+			Notifications.addWarning("Could not evaluate condition " + condition);
+			unknown = true;
+		}
+		return unknown;
+	}
+
+	private void handleUnknownBranches(IfThenElseNode node, Expression condition) {
+		ReorderConditionVisitor reorder = new ReorderConditionVisitor(node);
+		condition.accept(reorder);
+	
+		blockDepth++;
+		node.getPositive().accept(this);
+		node.getNegative().accept(this);
+		blockDepth--;
+	
+		if (blockDepth == 0) {
+			initializedVariables.clear();
 		}
 	}
 
@@ -568,25 +529,10 @@ public class MapleCfgVisitor2 implements ControlFlowVisitor {
 		if (blockDepth == 0) {
 			currentRoot = node;
 		}
-
-		Variable counter = node.getCounter();
-		if (counter != null) {
-			try {
-				String query = counter + ";";
-				String result = engine.evaluate(query);
-				// FIXME: does not work for counter variables within another loop
-				FloatConstant value = new FloatConstant(Float.parseFloat(result));
-				AssignmentNode initCounter = new AssignmentNode(graph, counter, value);
-				node.insertBefore(initCounter);
-				graph.removeLocalVariable(counter);
-				counterVariables.add(counter);
-				String command = counter + ":='" + counter + "';";
-				engine.evaluate(command);
-			} catch (MapleEngineException e) {
-				throw new RuntimeException("Could not reset counter variable " + counter);
-			} catch (NumberFormatException e) {
-				throw new RuntimeException("Counter variable " + counter + " is not scalar.", e);
-			}
+		
+		Variable counterVariable = node.getCounterVariable();
+		if (counterVariable != null) {
+			Notifications.addWarning("Assignments to counter variable " + counterVariable + " are not processed by Maple.");
 		}
 
 		blockDepth++;
@@ -595,7 +541,6 @@ public class MapleCfgVisitor2 implements ControlFlowVisitor {
 
 		if (blockDepth == 0) {
 			initializedVariables.clear();
-			counterVariables.clear();
 		}
 		node.getSuccessor().accept(this);
 	}

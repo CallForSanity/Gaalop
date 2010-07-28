@@ -53,6 +53,7 @@ import de.gaalop.maple.parser.MapleTransformer;
 /**
  * This visitor creates code for Maple.
  */
+@Deprecated
 public class MapleCfgVisitor implements ControlFlowVisitor {
 
 	private class CheckGAVisitor extends EmptyExpressionVisitor {

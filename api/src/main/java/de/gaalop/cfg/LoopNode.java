@@ -1,15 +1,11 @@
 package de.gaalop.cfg;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import de.gaalop.dfg.Expression;
 import de.gaalop.dfg.Variable;
 
 public class LoopNode extends SequentialNode {
 
 	private SequentialNode body;
-	private Set<Expression> terminationConditions = new HashSet<Expression>();
 	private int iterations;
 	private Variable counter;
 
@@ -36,28 +32,14 @@ public class LoopNode extends SequentialNode {
 		return iterations;
 	}
 	
-	/**
-	 * Sets the name of the counter variable.
-	 * 
-	 * @param counter counter variable
-	 */
-	public void setCounter(Variable counter) {
+	public void setCounterVariable(Variable counter) {
 		this.counter = counter;
 	}
 	
-	/**
-	 * Returns the counter variable.
-	 * 
-	 * @return counter variable
-	 */
-	public Variable getCounter() {
+	public Variable getCounterVariable() {
 		return counter;
 	}
-
-	public void setTermination(Set<Expression> conditions) {
-		terminationConditions.addAll(conditions);
-	}
-
+	
 	public void setBody(SequentialNode body) {
 		this.body = body;
 	}
@@ -97,13 +79,7 @@ public class LoopNode extends SequentialNode {
 	@Override
 	public LoopNode copyElements() {
 		LoopNode copy = new LoopNode(getGraph());
-		Set<Expression> newConditions = new HashSet<Expression>();
-		for (Expression e : terminationConditions) {
-			newConditions.add(e.copy());
-		}
-		copy.setTermination(newConditions);
 		copy.setIterations(iterations);
-
 		SequentialNode newBody = body.copy();
 		copy.setBody(newBody);
 		copySubtree(newBody);

@@ -39,6 +39,7 @@ public final class ControlFlowGraph {
 	private Set<Variable> localVariables = new HashSet<Variable>();
 	private List<Variable> tempVariables = new ArrayList<Variable>();
 	private Set<Variable> inputVariables = new HashSet<Variable>();
+	private Set<Variable> counterVariables = new HashSet<Variable>();
 
 	private AlgebraSignature signature;
 
@@ -85,6 +86,14 @@ public final class ControlFlowGraph {
 	
 	public List<Variable> getTempVariables() {
 		return tempVariables;
+	}
+	
+	public void addCounterVariable(Variable counter) {
+		counterVariables.add(counter);
+	}
+	
+	public Set<Variable> getCounterVariables() {
+		return counterVariables;
 	}
 
 	/**

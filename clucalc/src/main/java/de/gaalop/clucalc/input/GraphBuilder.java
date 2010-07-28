@@ -1,5 +1,6 @@
 package de.gaalop.clucalc.input;
 
+import de.gaalop.CheckGAVisitor;
 import de.gaalop.Notifications;
 import de.gaalop.UsedVariablesVisitor;
 import de.gaalop.cfg.*;
@@ -20,7 +21,7 @@ import java.util.Set;
  * This is a utility class used by the CluCalcTransformer to build a control flow graph while parsing the CluCalc AST.
  */
 public final class GraphBuilder {
-	
+
 	private static final List<String> illegalNames;
 
 	static {
@@ -29,7 +30,7 @@ public final class GraphBuilder {
 				"condition_", // used in if-statement handling
 				"norm", // used in Maple
 				"normal", // used in Maple
-				"length" // used in Maple 
+				"length" // used in Maple
 		};
 		for (String s : names) {
 			illegalNames.add(s);
@@ -39,9 +40,8 @@ public final class GraphBuilder {
 	/**
 	 * The list of algebra modes supported in CluCalc.
 	 */
-	private static final AlgebraMode[] ALGEBRA_MODES = new AlgebraMode[] {
-		new AlgebraC2(), new AlgebraE3(), new AlgebraN3(), new AlgebraP3(),
-	};
+	private static final AlgebraMode[] ALGEBRA_MODES = new AlgebraMode[] { new AlgebraC2(), new AlgebraE3(),
+			new AlgebraN3(), new AlgebraP3(), };
 
 	private final ControlFlowGraph graph;
 
@@ -89,8 +89,8 @@ public final class GraphBuilder {
 	}
 
 	/**
-	 * Adds a pragma hint for a variable, which defines value range for it. The pragma must be set before the variable is added to
-	 * the input variables, i.e. the pragma must appear for the use of the variable
+	 * Adds a pragma hint for a variable, which defines value range for it. The pragma must be set before the variable
+	 * is added to the input variables, i.e. the pragma must appear for the use of the variable
 	 */
 	public void addPragmaMinMaxValues(String variable, String min, String max) {
 		graph.addPragmaMinMaxValues(variable, min, max);
@@ -131,6 +131,11 @@ public final class GraphBuilder {
 		}
 		findUndeclaredVariables(expression, inMacro);
 
+		CheckGAVisitor gaVisitor = new CheckGAVisitor();
+		expression.accept(gaVisitor);
+		if (gaVisitor.isGA()) {
+			gaVisitor.addGAVariable(variable);
+		}
 		AssignmentNode assignment = new AssignmentNode(graph, variable, expression);
 		addNode(assignment);
 		return assignment;
@@ -139,13 +144,12 @@ public final class GraphBuilder {
 	private void checkIllegalAssignments(Variable variable) {
 		String name = variable.getName();
 		if (illegalNames.contains(name)) {
-			throw new IllegalArgumentException(
-					"Variable " + name + " is already used internally. Please use another variable.");
+			throw new IllegalArgumentException("Variable " + name
+					+ " is already used internally. Please use another variable.");
 		}
 		if (variable.getName().startsWith("re")) {
 			throw new IllegalArgumentException("Variable '" + variable
-					+ "' cannot be used in Maple because of prefix 're'."
-					+ " Please choose another name.");
+					+ "' cannot be used in Maple because of prefix 're'." + " Please choose another name.");
 		}
 	}
 
@@ -178,15 +182,16 @@ public final class GraphBuilder {
 	}
 
 	/**
-	 * Handles an if statement. The statement consists of a condition expression, a mandatory then part (block) and an optional
-	 * else part.
+	 * Handles an if statement. The statement consists of a condition expression, a mandatory then part (block) and an
+	 * optional else part.
 	 * 
 	 * @param condition condition expression
 	 * @param then_part list of statements belonging to then part
 	 * @param else_part optional list of statements belonging to else part (empty list in case of no else part)
 	 * @return new {@link IfThenElseNode} representing this statement.
 	 */
-	public IfThenElseNode handleIfStatement(Expression condition, List<SequentialNode> then_part, List<SequentialNode> else_part) {
+	public IfThenElseNode handleIfStatement(Expression condition, List<SequentialNode> then_part,
+			List<SequentialNode> else_part) {
 		IfThenElseNode ifthenelse = new IfThenElseNode(graph, condition);
 		addNode(ifthenelse);
 
@@ -203,9 +208,12 @@ public final class GraphBuilder {
 	}
 
 	/**
-	 * Handles a loop statement. A CluCalc loop consists of a body of statements, typically containing the break keyword.
+	 * Handles a loop statement. A CluCalc loop consists of a body of statements, typically containing the break
+	 * keyword.
 	 * 
 	 * @param body list of statements belonging to body
+	 * @param iterations (optional) number of iterations for loop unrolling
+	 * @param counter (optional) counter variable
 	 * @return new {@link LoopNode} representing this statement.
 	 */
 	public LoopNode handleLoop(List<SequentialNode> body, String iterations, Variable counter) {
@@ -213,10 +221,6 @@ public final class GraphBuilder {
 		addNode(loop);
 		rewireNodes(body, loop);
 		loop.setBody((body != null && body.size() > 0) ? body.get(0) : new BlockEndNode(graph, loop));
-		FindTerminationVisitor visitor = new FindTerminationVisitor(loop);
-		// graph.accept(visitor);
-		loop.accept(visitor);
-		loop.setTermination(visitor.getTermination());
 
 		// save number of iterations and reset value for next loops
 		if (iterations != null) {
@@ -224,7 +228,13 @@ public final class GraphBuilder {
 		}
 		// save counter variable for this loop
 		if (counter != null) {
-			loop.setCounter(counter);
+			if (CheckGAVisitor.isGAVariable(counter)) {
+				throw new IllegalArgumentException("Counter variable " + counter + " is not scalar. Please use "
+						+ counter + " only as counter variable and do not assign Geometric Algebra expressions to it.");
+			}
+			loop.setCounterVariable(counter);
+			graph.removeLocalVariable(counter);
+			graph.addCounterVariable(counter);
 		}
 
 		return loop;
@@ -260,9 +270,10 @@ public final class GraphBuilder {
 	}
 
 	/**
-	 * Removes the nodes given by <code>list</code> from the control flow graph and rewires them to be a sequence of separate
-	 * nodes, e.g. in the body of an if-statement. The first node has <code>base</code> as predecessor. For the last node in the
-	 * list, base's successor will be set as successor, e.g. the first statement after an if-then-else statement.
+	 * Removes the nodes given by <code>list</code> from the control flow graph and rewires them to be a sequence of
+	 * separate nodes, e.g. in the body of an if-statement. The first node has <code>base</code> as predecessor. For the
+	 * last node in the list, base's successor will be set as successor, e.g. the first statement after an if-then-else
+	 * statement.
 	 * 
 	 * @param list list of nodes from a block
 	 * @param base basis of block, e.g. an if-statement
@@ -313,8 +324,8 @@ public final class GraphBuilder {
 	}
 
 	/**
-	 * Searches the expression for variable references. If an undeclared reference is found, it is added to the input variables of
-	 * the graph.
+	 * Searches the expression for variable references. If an undeclared reference is found, it is added to the input
+	 * variables of the graph.
 	 * 
 	 * @param expression The expression to search in.
 	 * @param inMacro
@@ -372,7 +383,7 @@ public final class GraphBuilder {
 					return new MathFunctionCall(args.get(0), mathFunction);
 				} else {
 					throw new IllegalArgumentException("Calling math function " + mathFunction + " with more than one"
-						+ " argument: " + args);
+							+ " argument: " + args);
 				}
 			}
 		}
@@ -386,7 +397,7 @@ public final class GraphBuilder {
 		}
 
 		throw new IllegalArgumentException("Call to undefined function " + name + "(" + args + ").\n"
-			+ "Maybe this function is not defined in " + mode);
+				+ "Maybe this function is not defined in " + mode);
 	}
 
 	public ExpressionStatement processExpressionStatement(Expression e) {
@@ -396,8 +407,8 @@ public final class GraphBuilder {
 	}
 
 	/**
-	 * Should be called to notify the graph builder that the parsing process has finished. If needed, post-processing of the graph
-	 * can be performed here.
+	 * Should be called to notify the graph builder that the parsing process has finished. If needed, post-processing of
+	 * the graph can be performed here.
 	 */
 	public void finish() {
 		if (!setMode) {
