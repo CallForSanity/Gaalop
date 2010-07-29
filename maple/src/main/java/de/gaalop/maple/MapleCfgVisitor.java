@@ -52,7 +52,7 @@ import de.gaalop.maple.parser.MapleTransformer;
  * This visitor creates code for Maple.
  */
 public class MapleCfgVisitor implements ControlFlowVisitor {
-	
+
 	private static class UnrollLoopsVisitor extends EmptyControlFlowVisitor {
 
 		private LoopNode root;
@@ -362,9 +362,11 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 
 	private void assignCoefficients(AssignmentNode base, Variable variable) {
 		List<AssignmentNode> coefficients = optimizeVariable(graph, variable);
+		List<MultivectorComponent> newValues = new ArrayList<MultivectorComponent>();
 		for (AssignmentNode coefficient : coefficients) {
 			if (coefficient.getVariable() instanceof MultivectorComponent) {
 				MultivectorComponent mc = (MultivectorComponent) coefficient.getVariable();
+				newValues.add(mc);
 				Variable newVariable = new Variable(getTempVarName(mc));
 				Expression newValue = coefficient.getValue();
 				if (!newVariable.equals(newValue)) {
@@ -373,7 +375,23 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 				}
 			}
 		}
+		resetZeroCoefficients(base, variable, newValues);
 		resetVariable(variable);
+	}
+
+	private void resetZeroCoefficients(AssignmentNode base, Variable variable, List<MultivectorComponent> newValues) {
+		List<MultivectorComponent> zeroCoefficients = new ArrayList<MultivectorComponent>();
+		for (MultivectorComponent initCoeff : initializedVariables.get(variable)) {
+			if (!newValues.contains(initCoeff)) {
+				// this component is not part of the multivector anymore
+				zeroCoefficients.add(initCoeff);
+			}
+		}
+		for (MultivectorComponent zeroCoeff : zeroCoefficients) {
+			Variable newVariable = new Variable(getTempVarName(zeroCoeff));
+			AssignmentNode resetToZero = new AssignmentNode(graph, newVariable, new FloatConstant(0));
+			base.insertAfter(resetToZero);
+		}
 	}
 
 	private void resetVariable(Variable variable) {
@@ -598,28 +616,28 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 			initializedVariables.clear();
 		}
 	}
-	
+
 	@Override
 	public void visit(LoopNode node) {
 		if (node.getIterations() > 0) {
 			UnrollLoopsVisitor ulv = new UnrollLoopsVisitor(node);
 			node.accept(ulv);
 			ulv.firstNewNode.accept(this);
-		} else { 
+		} else {
 			if (blockDepth == 0) {
 				currentRoot = node;
 			}
-			
+
 			Variable counterVariable = node.getCounterVariable();
 			if (counterVariable != null) {
 				Notifications.addWarning("Assignments to counter variable " + counterVariable
 						+ " are not processed by Maple.");
 			}
-			
+
 			blockDepth++;
 			node.getBody().accept(this);
 			blockDepth--;
-			
+
 			if (blockDepth == 0) {
 				initializedVariables.clear();
 			}
