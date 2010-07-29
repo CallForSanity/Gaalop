@@ -79,8 +79,7 @@ public class MapleSimplifier {
             throw new RuntimeException("Unable to simplify graph using Maple.", e);
         }
 
-//        MapleCfgVisitor visitor = new MapleCfgVisitor(engine, plugin);
-        MapleCfgVisitor2 visitor = new MapleCfgVisitor2(engine, plugin);
+        MapleCfgVisitor visitor = new MapleCfgVisitor(engine, plugin);
         graph.accept(visitor);
     }
     

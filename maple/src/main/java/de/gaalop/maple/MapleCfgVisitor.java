@@ -1,5 +1,6 @@
 package de.gaalop.maple;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -29,7 +30,6 @@ import de.gaalop.cfg.Node;
 import de.gaalop.cfg.SequentialNode;
 import de.gaalop.cfg.StartNode;
 import de.gaalop.cfg.StoreResultNode;
-import de.gaalop.dfg.BaseVector;
 import de.gaalop.dfg.BinaryOperation;
 import de.gaalop.dfg.EmptyExpressionVisitor;
 import de.gaalop.dfg.Equality;
@@ -37,10 +37,8 @@ import de.gaalop.dfg.Expression;
 import de.gaalop.dfg.ExpressionFactory;
 import de.gaalop.dfg.FloatConstant;
 import de.gaalop.dfg.Inequality;
-import de.gaalop.dfg.InnerProduct;
 import de.gaalop.dfg.Multiplication;
 import de.gaalop.dfg.MultivectorComponent;
-import de.gaalop.dfg.OuterProduct;
 import de.gaalop.dfg.Relation;
 import de.gaalop.dfg.Subtraction;
 import de.gaalop.dfg.Variable;
@@ -53,38 +51,73 @@ import de.gaalop.maple.parser.MapleTransformer;
 /**
  * This visitor creates code for Maple.
  */
-@Deprecated
 public class MapleCfgVisitor implements ControlFlowVisitor {
+	
+	private static class UnrollLoopsVisitor extends EmptyControlFlowVisitor {
 
-	private class CheckGAVisitor extends EmptyExpressionVisitor {
+		private LoopNode root;
+		SequentialNode firstNewNode;
 
-		private boolean isGA = false;
-
-		@Override
-		public void visit(BaseVector node) {
-			isGA = true;
+		public UnrollLoopsVisitor(LoopNode root) {
+			this.root = root;
 		}
 
-		@Override
-		public void visit(InnerProduct node) {
-			isGA = true;
-		}
-
-		@Override
-		public void visit(OuterProduct node) {
-			isGA = true;
-		}
-
-		@Override
-		public void visit(Relation node) {
-			isGA = true;
-		}
-
-		@Override
-		public void visit(Variable node) {
-			if (gaVariables.contains(node)) {
-				isGA = true;
+		/**
+		 * Inserts a new node before the current node.
+		 * 
+		 * @param newNode node to be inserted before the current node
+		 */
+		private void insertNewNode(SequentialNode newNode) {
+			if (firstNewNode == null) {
+				firstNewNode = newNode;
 			}
+			root.insertBefore(newNode);
+		}
+
+		@Override
+		public void visit(StartNode node) {
+			throw new IllegalStateException("This visitor should be invoked on a loop node only.");
+		}
+
+		@Override
+		public void visit(AssignmentNode node) {
+			insertNewNode(node.copy());
+			node.getSuccessor().accept(this);
+		}
+
+		@Override
+		public void visit(StoreResultNode node) {
+			insertNewNode(node.copy());
+			node.getSuccessor().accept(this);
+		}
+
+		@Override
+		public void visit(LoopNode node) {
+			if (node == root) {
+				for (int i = 0; i < node.getIterations(); i++) {
+					node.getBody().accept(this);
+				}
+				node.getGraph().removeNode(node);
+			} else {
+				insertNewNode(node.copy());
+				// ignore nested loops (process them later)
+				node.getSuccessor().accept(this);
+			}
+			// do not visit root's successor
+		}
+
+		@Override
+		public void visit(IfThenElseNode node) {
+			IfThenElseNode newNode = (IfThenElseNode) node.copy();
+			insertNewNode(newNode);
+
+			node.getSuccessor().accept(this);
+		}
+
+		@Override
+		public void visit(ExpressionStatement node) {
+			insertNewNode(node.copy());
+			node.getSuccessor().accept(this);
 		}
 	}
 
@@ -106,39 +139,31 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 			Expression left = node.getLeft();
 			Expression right = node.getRight();
 			Subtraction lhs = ExpressionFactory.subtract(left.copy(), right.copy());
-			Variable v = new Variable("condition_");
-			Expression newLeft = v;
+			Variable condition = new Variable("condition_");
 			Expression newRight = new FloatConstant(0);
 			try {
-				String assignment = generateCode(v) + ":=" + generateCode(lhs) + ";";
+				String assignment = generateCode(condition) + ":=" + generateCode(lhs) + ";";
 				engine.evaluate(assignment);
-				String opt = simplify(v);
-				List<AssignmentNode> newNodes = parseMapleCode(root.getGraph(), opt);
-				root.getGraph().addLocalVariable(v);
-				boolean hasScalarPart = false;
+				String opt = simplify(condition);
+				List<AssignmentNode> newNodes = parseMapleCode(graph, opt);
+				graph.addScalarVariable(condition);
 				for (AssignmentNode newAssignment : newNodes) {
-					root.insertBefore(newAssignment);
-					if (!hasScalarPart) {
-						if (newAssignment.getVariable() instanceof MultivectorComponent) {
-							MultivectorComponent mc = (MultivectorComponent) newAssignment.getVariable();
-							if (mc.getBladeIndex() == 0) {
-								hasScalarPart = true;
-								newLeft = mc;
-							}
+					if (newAssignment.getVariable() instanceof MultivectorComponent) {
+						MultivectorComponent mc = (MultivectorComponent) newAssignment.getVariable();
+						if (mc.getBladeIndex() == 0) {
+							AssignmentNode scalarPart = new AssignmentNode(graph, condition, newAssignment.getValue());
+							root.insertBefore(scalarPart);
+						} else {
+							throw new IllegalArgumentException("Condition in if-statement '" + root.getCondition()
+									+ "' is not scalar and cannot be evaluated.");
 						}
 					}
-				}
-				if (!hasScalarPart || newNodes.size() > 1) {
-					throw new IllegalArgumentException("Condition in if-statement '" + root.getCondition()
-							+ "' is not scalar and cannot be evaluated.");
-				} else {
-					root.insertBefore(new StoreResultNode(root.getGraph(), v));
 				}
 			} catch (MapleEngineException e) {
 				throw new RuntimeException("Unable to optimize condition " + lhs + " in Maple.", e);
 			}
 
-			node.replaceExpression(left, newLeft);
+			node.replaceExpression(left, condition);
 			node.replaceExpression(right, newRight);
 
 			node.getLeft().accept(this);
@@ -167,7 +192,7 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 	 * @author Christian Schwinn
 	 * 
 	 */
-	private static class InlineBlockVisitor extends EmptyControlFlowVisitor {
+	private class InlineBlockVisitor extends EmptyControlFlowVisitor {
 
 		private final IfThenElseNode root;
 		private final Node branch;
@@ -207,7 +232,7 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 					}
 					node.getNegative().accept(this);
 				}
-				node.getGraph().removeNode(node);
+				graph.removeNode(node);
 			}
 			node.getSuccessor().accept(this);
 		}
@@ -216,7 +241,9 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 		public void visit(BlockEndNode node) {
 			// this relies on the fact that nested statements are being ignored in visit(IfThenElseNode),
 			// otherwise successor could be the wrong one
-			replaceSuccessor(node, successor);
+			if (node.getBase() == root) {
+				replaceSuccessor(node, successor);
+			}
 		}
 
 	}
@@ -230,27 +257,22 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 
 	private Plugin plugin;
 
-	private int branchDepth = 0;
-	private boolean loopMode = false;
-	private Map<String, String> rollbackValues = new HashMap<String, String>();
+	/** Used to distinguish normal assignments and such from a loop or if-statement where GA must be eliminated. */
+	private int blockDepth = 0;
 	private SequentialNode currentRoot;
-	private Map<Variable, Set<MultivectorComponent>> resetComponents;
-	private Set<Variable> initialiedVariables = new HashSet<Variable>();
-	private Set<Variable> gaVariables = new HashSet<Variable>();
+
+	private Map<Variable, Set<MultivectorComponent>> initializedVariables = new HashMap<Variable, Set<MultivectorComponent>>();
+
+	private ControlFlowGraph graph;
 
 	public MapleCfgVisitor(MapleEngine engine, Plugin plugin) {
 		this.engine = engine;
 		this.plugin = plugin;
 	}
 
-	private String generateCode(Expression expression) {
-		MapleDfgVisitor visitor = new MapleDfgVisitor();
-		expression.accept(visitor);
-		return visitor.getCode();
-	}
-
 	@Override
 	public void visit(StartNode startNode) {
+		graph = startNode.getGraph();
 		plugin.notifyStart();
 		startNode.getSuccessor().accept(this);
 	}
@@ -259,57 +281,149 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 	public void visit(AssignmentNode node) {
 		Variable variable = node.getVariable();
 		Expression value = node.getValue();
+		Node successor = node.getSuccessor();
 
-		CheckGAVisitor gaVisitor = new CheckGAVisitor();
-		value.accept(gaVisitor);
-		boolean isGA = gaVisitor.isGA;
-		if (isGA) {
-			gaVariables.add(variable);
+		if (graph.getIgnoreVariables().contains(variable)) {
+			// do not process this assignment
+			successor.accept(this);
+			return;
 		}
 
-		if (loopMode || branchDepth > 0) {
-			if (!(node.getSuccessor() instanceof StoreResultNode)) {
-				StoreResultNode srn = new StoreResultNode(node.getGraph(), variable);
-				node.insertAfter(srn);
-			}
+		if (blockDepth > 0) {
+			// optimize current value of variable and add variables for coefficients in front of block
+			initializeCoefficients(node.getVariable());
+			// optimize value in a temporary variable and add missing initializations
+			initializeMissingCoefficients(node);
+			// reset Maple binding with linear combination of variables for coefficients
+			resetVariable(variable);
 		}
 
-		/*
-		 * FIXME: special treatment in case it is a single line using a math function, which is not support. (Atm only
-		 * abs is supported) We dont call Matlab for this, as it cannot handle these correct the mathfunction has to be
-		 * on a single line, with a single var parameter like x = sqrt(y);
-		 */
-		// if (node.getValue() instanceof MathFunctionCall) {
-		// MathFunction func = ((MathFunctionCall) (node.getValue())).getFunction();
-		// if ((func != MathFunction.ABS)) {
-		// node.getSuccessor().accept(this);
-		// return;
-		// // FIXME: previous assignments contributing to this statement might get lost
-		// }
-		// }
-		// FIXME: Maple cannot compute things like sqrt(abs(VecN3(1,2,3)));
+		// perform actual calculation
+		assignVariable(variable, value);
 
-		if (branchDepth > 0) {
-			// get current value from maple for rollback
-			String variableName = variable.getName();
-			try {
-				String command = variableName + ";\n";
-				String currentValue = engine.evaluate(command);
-				if (!rollbackValues.containsKey(variableName)) {
-					rollbackValues.put(variableName, currentValue);
+		if (blockDepth > 0) {
+			// optimize new value and reset Maple binding with linear combination of new value
+			assignCoefficients(node, variable);
+		}
+
+		// notify observers about progress (must be called before successor.accept(this))
+		plugin.notifyProgress();
+		graph.removeNode(node);
+		successor.accept(this);
+	}
+
+	private void initializeCoefficients(Variable variable) {
+		List<AssignmentNode> coefficients = optimizeVariable(graph, variable);
+		for (AssignmentNode coefficient : coefficients) {
+			if (coefficient.getVariable() instanceof MultivectorComponent) {
+				MultivectorComponent component = (MultivectorComponent) coefficient.getVariable();
+				if (component.getBladeIndex() == 0 && coefficients.size() == 1) {
+					// check that Maple result is not of type x := 'x'
+					String optName = coefficient.getVariable().getName();
+					Variable coeffVariable = new Variable(optName.substring(0, optName.lastIndexOf("_opt")));
+					if (coeffVariable.equals(coefficient.getValue())) {
+						coefficient.setValue(new FloatConstant(0));
+					}
 				}
-			} catch (MapleEngineException e) {
-				throw new RuntimeException("Unable to query current value of " + variableName + " from Maple.", e);
+				Variable tempVar = new Variable(getTempVarName(component));
+				if (initializedVariables.get(variable) == null) {
+					initializedVariables.put(variable, new HashSet<MultivectorComponent>());
+				}
+				Set<MultivectorComponent> initCoefficients = initializedVariables.get(variable);
+				if (!initCoefficients.contains(component)) {
+					AssignmentNode initialization = new AssignmentNode(graph, tempVar, coefficient.getValue());
+					currentRoot.insertBefore(initialization);
+					initCoefficients.add(component);
+				}
 			}
 		}
+	}
 
+	private void initializeMissingCoefficients(AssignmentNode node) {
+		Variable temp = new Variable("__temp__");
+		assignVariable(temp, node.getValue());
+		List<MultivectorComponent> coefficients = getComponents(optimizeVariable(graph, temp));
+		for (MultivectorComponent coefficient : coefficients) {
+			Variable originalVariable = node.getVariable();
+			String optVarName = originalVariable.getName() + "_opt";
+			MultivectorComponent originalComp = new MultivectorComponent(optVarName, coefficient.getBladeIndex());
+			Variable tempVar = new Variable(getTempVarName(originalComp));
+			if (initializedVariables.get(originalVariable) == null) {
+				initializedVariables.put(originalVariable, new HashSet<MultivectorComponent>());
+			}
+			Set<MultivectorComponent> initCoefficients = initializedVariables.get(originalVariable);
+			if (!initCoefficients.contains(originalComp)) {
+				AssignmentNode initialization = new AssignmentNode(graph, tempVar, new FloatConstant(0));
+				currentRoot.insertBefore(initialization);
+				initCoefficients.add(originalComp);
+			}
+		}
+	}
+
+	private void assignCoefficients(AssignmentNode base, Variable variable) {
+		List<AssignmentNode> coefficients = optimizeVariable(graph, variable);
+		for (AssignmentNode coefficient : coefficients) {
+			if (coefficient.getVariable() instanceof MultivectorComponent) {
+				MultivectorComponent mc = (MultivectorComponent) coefficient.getVariable();
+				Variable newVariable = new Variable(getTempVarName(mc));
+				Expression newValue = coefficient.getValue();
+				if (!newVariable.equals(newValue)) {
+					AssignmentNode newAssignment = new AssignmentNode(graph, newVariable, newValue);
+					base.insertAfter(newAssignment);
+				}
+			}
+		}
+		resetVariable(variable);
+	}
+
+	private void resetVariable(Variable variable) {
+		Set<MultivectorComponent> components = initializedVariables.get(variable);
+		if (components == null || components.size() == 0) {
+			throw new IllegalStateException("No components to reset for variable " + variable);
+		}
+		Expression[] products = new Expression[components.size()];
+		int i = 0;
+		for (MultivectorComponent mc : components) {
+			Variable coefficient = new Variable(getTempVarName(mc));
+			Expression blade = graph.getBladeList()[mc.getBladeIndex()];
+			Multiplication product = ExpressionFactory.product(coefficient, blade);
+			products[i++] = product;
+		}
+		Expression sum;
+		if (products.length > 1) {
+			sum = ExpressionFactory.sum(products);
+		} else {
+			sum = products[0];
+		}
+
+		assignVariable(variable, sum);
+	}
+
+	/**
+	 * Extracts the {@link MultivectorComponent}s from a list of coefficients.
+	 * 
+	 * @param coefficients nodes from the Maple parser
+	 * @return list of multivector components
+	 */
+	private List<MultivectorComponent> getComponents(List<AssignmentNode> coefficients) {
+		List<MultivectorComponent> components = new ArrayList<MultivectorComponent>();
+		for (AssignmentNode coefficient : coefficients) {
+			if (coefficient.getVariable() instanceof MultivectorComponent) {
+				components.add((MultivectorComponent) coefficient.getVariable());
+			}
+		}
+		return components;
+	}
+
+	/**
+	 * Translates the given variable and value to Maple syntax and executes it.
+	 * 
+	 * @param variable
+	 * @param value
+	 */
+	private void assignVariable(Variable variable, Expression value) {
 		String variableCode = generateCode(variable);
-		// If you want to simplify (and keep) the last assignment to every variable
-		// uncomment the following statement:
-		// simplifyBuffer.add(variableCode);
-
 		StringBuilder codeBuffer = new StringBuilder();
-
 		codeBuffer.append(variableCode);
 		codeBuffer.append(" := ");
 		codeBuffer.append(generateCode(value));
@@ -318,14 +432,18 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 		try {
 			engine.evaluate(codeBuffer.toString());
 		} catch (MapleEngineException e) {
-			throw new RuntimeException("Unable to simplify assignment " + node + " in Maple.", e);
+			throw new RuntimeException("Unable to process assignment " + variable + " := " + value + " in Maple.", e);
 		}
+	}
 
-		// notify observables about progress (must be called before successor.accept(this))
-		plugin.notifyProgress();
+	private String generateCode(Expression expression) {
+		MapleDfgVisitor visitor = new MapleDfgVisitor();
+		expression.accept(visitor);
+		return visitor.getCode();
+	}
 
-		node.getGraph().removeNode(node);
-		node.getSuccessor().accept(this);
+	private String getTempVarName(MultivectorComponent component) {
+		return component.getName() + "__" + component.getBladeIndex();
 	}
 
 	@Override
@@ -337,201 +455,46 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 		} catch (MapleEngineException e) {
 			throw new RuntimeException("Unable to simplify statement " + node + " in Maple.", e);
 		}
-		node.getGraph().removeNode(node);
+		graph.removeNode(node);
 		node.getSuccessor().accept(this);
-	}
-
-	private String getTempVarName(MultivectorComponent component) {
-		// TODO: generate unused names!
-		return component.getName() + "__" + component.getBladeIndex();
 	}
 
 	@Override
 	public void visit(StoreResultNode node) {
-		Variable variable = node.getValue();
-		String evalResult = simplify(variable);
-		log.debug("Maple simplification of " + variable + ": " + evalResult);
-
-		ControlFlowGraph graph = node.getGraph();
-		List<AssignmentNode> newNodes = parseMapleCode(graph, evalResult);
-		if (loopMode || branchDepth > 0) {
-
-			for (AssignmentNode assignment : newNodes) {
-				if (assignment.getVariable() instanceof MultivectorComponent) {
-					MultivectorComponent comp = (MultivectorComponent) assignment.getVariable();
-					Variable initVar = new Variable(getTempVarName(comp));
-					if (!initialiedVariables.contains(initVar)) {
-						initialiedVariables.add(initVar);
-						AssignmentNode init = new AssignmentNode(graph, initVar, new FloatConstant(0));
-						currentRoot.insertBefore(init);
-						graph.addScalarVariable(initVar);
-					}
-
-					if (resetComponents.get(variable) == null) {
-						resetComponents.put(variable, new HashSet<MultivectorComponent>());
-					}
-					resetComponents.get(variable).add(comp);
-
-					AssignmentNode assign = new AssignmentNode(graph, initVar, assignment.getValue());
-					node.insertBefore(assign);
-				}
-			}
-			graph.removeNode(node);
-
-		} else {
-			for (SequentialNode newNode : newNodes) {
-				node.insertBefore(newNode);
-			}
+		List<AssignmentNode> newNodes = optimizeVariable(graph, node.getValue());
+		for (SequentialNode newNode : newNodes) {
+			node.insertBefore(newNode);
 		}
-
 		node.getSuccessor().accept(this);
 	}
 
-	@Override
-	public void visit(IfThenElseNode node) {
-		if (branchDepth == 0) {
-			currentRoot = node;
-			initialiedVariables.clear();
-		}
-		// FIXME: how to handle variables in condition which might have been changed in previous branches...?
-		Expression condition = node.getCondition();
+	/**
+	 * Simplifies the given variable and parses the Maple code to return the new nodes.
+	 */
+	private List<AssignmentNode> optimizeVariable(ControlFlowGraph graph, Variable v) {
+		String simplification = simplify(v);
+		log.debug("Maple simplification of " + v + ": " + simplification);
+		return parseMapleCode(graph, simplification);
+	}
+
+	/**
+	 * Simplifies a single Expression node.
+	 * 
+	 * @param expression The data flow graph that should be simplified
+	 * @return The code Maple returned as the simplification.
+	 */
+	private String simplify(Expression expression) {
+		StringBuilder codeBuffer = new StringBuilder();
+		codeBuffer.append("gaalop(");
+		codeBuffer.append(generateCode(expression));
+		codeBuffer.append(");\n");
+
 		try {
-			boolean unknown = false;
-			UsedVariablesVisitor visitor = new UsedVariablesVisitor();
-			condition.accept(visitor);
-			for (Variable v : visitor.getVariables()) {
-				String name = v.getName();
-				String result = engine.evaluate(name + ";");
-				if (result.equals(name + "\n")) {
-					unknown = true;
-					break;
-				}
-			}
-			if (!unknown) {
-				StringBuilder codeBuffer = new StringBuilder();
-				codeBuffer.append("evalb(");
-				codeBuffer.append(generateCode(condition));
-				codeBuffer.append(");\n");
-				// try to evaluate the condition
-				String result = engine.evaluate(codeBuffer.toString());
-				log.debug("Maple simplification of IF condition " + condition + ": " + result);
-				// if condition can be determined to be true or false, inline relevant part
-				if ("true\n".equals(result)) {
-					node.accept(new InlineBlockVisitor(node, node.getPositive()));
-					node.getPositive().accept(this);
-				} else if ("false\n".equals(result)) {
-					node.accept(new InlineBlockVisitor(node, node.getNegative()));
-					node.getNegative().accept(this);
-				} else {
-					// reset unknown status in order to process branches
-					Notifications.addWarning("Could not evaluate condition " + condition);
-					unknown = true;
-				}
-			}
-			if (unknown) {
-				ReorderConditionVisitor reorder = new ReorderConditionVisitor(node);
-				condition.accept(reorder);
-
-				// save current rollback values, in case a nested if-statement is found
-				Map<String, String> previousRollback = new HashMap<String, String>();
-				for (String s : rollbackValues.keySet()) {
-					previousRollback.put(s, rollbackValues.get(s));
-				}
-
-				branchDepth++;
-				resetComponents = new HashMap<Variable, Set<MultivectorComponent>>();
-				node.getPositive().accept(this);
-				rollback();
-
-				node.getNegative().accept(this);
-				resetVariables(node.getGraph());
-				branchDepth--;
-
-				rollbackValues = previousRollback;
-				node.getSuccessor().accept(this);
-			}
+			return engine.evaluate(codeBuffer.toString());
 		} catch (MapleEngineException e) {
-			throw new RuntimeException("Unable to check condition " + condition + " in if-statement " + node, e);
+			throw new RuntimeException("Unable to apply gaalop() function on expression " + expression + " in Maple.",
+					e);
 		}
-	}
-
-	private void rollback() {
-		for (String variable : rollbackValues.keySet()) {
-			String value = rollbackValues.get(variable);
-			String command = variable + ":=" + value + ";\n";
-			try {
-				engine.evaluate(command);
-			} catch (MapleEngineException e) {
-				throw new RuntimeException("Could not rollback assignment of variable " + variable, e);
-			}
-		}
-
-		rollbackValues.clear();
-	}
-
-	private void resetVariables(ControlFlowGraph graph) {
-		for (Variable v : resetComponents.keySet()) {
-			Set<MultivectorComponent> components = resetComponents.get(v);
-			if (components == null || components.size() == 0) {
-				throw new IllegalStateException("No components to reset for variable " + v);
-			}
-			Expression[] products = new Expression[components.size()];
-			int i = 0;
-			for (MultivectorComponent mc : components) {
-				Variable coefficient = new Variable(getTempVarName(mc));
-				Expression blade = graph.getBladeList()[mc.getBladeIndex()];
-				Multiplication product = ExpressionFactory.product(coefficient, blade);
-				products[i++] = product;
-			}
-			Expression sum;
-			if (products.length > 1) {
-				sum = ExpressionFactory.sum(products);
-			} else {
-				sum = products[0];
-			}
-
-			// insert a new (temporary) assignment behind OUTER if-statement in order to "reset" Maple binding to
-			// variable
-			AssignmentNode reset = new AssignmentNode(graph, v, sum);
-			currentRoot.insertAfter(reset);
-		}
-	}
-
-	@Override
-	public void visit(LoopNode node) {
-		if (branchDepth == 0) {
-			currentRoot = node;
-			initialiedVariables.clear();
-		}
-
-		Map<String, String> previousRollback = new HashMap<String, String>();
-		for (String s : rollbackValues.keySet()) {
-			previousRollback.put(s, rollbackValues.get(s));
-		}
-
-		loopMode = true;
-		resetComponents = new HashMap<Variable, Set<MultivectorComponent>>();
-		node.getBody().accept(this);
-		resetVariables(node.getGraph());
-		loopMode = false;
-
-		rollbackValues = previousRollback;
-
-		node.getSuccessor().accept(this);
-	}
-
-	@Override
-	public void visit(BreakNode node) {
-		// nothing to do
-	}
-
-	@Override
-	public void visit(BlockEndNode node) {
-		// nothing to do
-	}
-
-	@Override
-	public void visit(EndNode endNode) {
 	}
 
 	/**
@@ -564,24 +527,118 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 		}
 	}
 
-	/**
-	 * Simplifies a single Expression node.
-	 * 
-	 * @param expression The data flow graph that should be simplified
-	 * @return The code Maple returned as the simplification.
-	 */
-	private String simplify(Expression expression) {
-		StringBuilder codeBuffer = new StringBuilder();
-		codeBuffer.append("gaalop(");
-		codeBuffer.append(generateCode(expression));
-		codeBuffer.append(");\n");
-
-		try {
-			return engine.evaluate(codeBuffer.toString());
-		} catch (MapleEngineException e) {
-			throw new RuntimeException("Unable to apply gaalop() function on expression " + expression + " in Maple.",
-					e);
+	@Override
+	public void visit(IfThenElseNode node) {
+		if (blockDepth == 0) {
+			currentRoot = node;
 		}
+		Expression condition = node.getCondition();
+		try {
+			boolean unknown = false;
+			UsedVariablesVisitor visitor = new UsedVariablesVisitor();
+			condition.accept(visitor);
+			for (Variable v : visitor.getVariables()) {
+				String name = v.getName();
+				String result = engine.evaluate(name + ";");
+				if (result.equals(name + "\n")) {
+					unknown = true;
+					break;
+				}
+			}
+			if (!unknown) {
+				unknown = inlineIfBranch(node, condition);
+			}
+			if (unknown) {
+				handleUnknownBranches(node, condition);
+				node.getSuccessor().accept(this);
+			}
+		} catch (MapleEngineException e) {
+			throw new RuntimeException("Unable to check condition " + condition + " in if-statement " + node, e);
+		}
+	}
+
+	private boolean inlineIfBranch(IfThenElseNode node, Expression condition) throws MapleEngineException {
+		boolean unknown = false;
+		StringBuilder codeBuffer = new StringBuilder();
+		codeBuffer.append("evalb(");
+		codeBuffer.append(generateCode(condition));
+		codeBuffer.append(");\n");
+		// try to evaluate the condition
+		String result = engine.evaluate(codeBuffer.toString());
+		log.debug("Maple simplification of IF condition " + condition + ": " + result);
+		// if condition can be determined to be true or false, inline relevant part
+		if ("true\n".equals(result)) {
+			node.accept(new InlineBlockVisitor(node, node.getPositive()));
+			node.getPositive().accept(this);
+		} else if ("false\n".equals(result)) {
+			node.accept(new InlineBlockVisitor(node, node.getNegative()));
+			if (node.getNegative() instanceof BlockEndNode) {
+				node.getSuccessor().accept(this);
+			} else {
+				node.getNegative().accept(this);
+			}
+		} else {
+			// reset unknown status in order to process branches
+			Notifications.addWarning("Could not evaluate condition " + condition);
+			unknown = true;
+		}
+		return unknown;
+	}
+
+	private void handleUnknownBranches(IfThenElseNode node, Expression condition) {
+		ReorderConditionVisitor reorder = new ReorderConditionVisitor(node);
+		condition.accept(reorder);
+
+		blockDepth++;
+		node.getPositive().accept(this);
+		node.getNegative().accept(this);
+		blockDepth--;
+
+		if (blockDepth == 0) {
+			initializedVariables.clear();
+		}
+	}
+	
+	@Override
+	public void visit(LoopNode node) {
+		if (node.getIterations() > 0) {
+			UnrollLoopsVisitor ulv = new UnrollLoopsVisitor(node);
+			node.accept(ulv);
+			ulv.firstNewNode.accept(this);
+		} else { 
+			if (blockDepth == 0) {
+				currentRoot = node;
+			}
+			
+			Variable counterVariable = node.getCounterVariable();
+			if (counterVariable != null) {
+				Notifications.addWarning("Assignments to counter variable " + counterVariable
+						+ " are not processed by Maple.");
+			}
+			
+			blockDepth++;
+			node.getBody().accept(this);
+			blockDepth--;
+			
+			if (blockDepth == 0) {
+				initializedVariables.clear();
+			}
+			node.getSuccessor().accept(this);
+		}
+	}
+
+	@Override
+	public void visit(BreakNode node) {
+		// nothing to do
+	}
+
+	@Override
+	public void visit(BlockEndNode node) {
+		// nothing to do
+	}
+
+	@Override
+	public void visit(EndNode endNode) {
 	}
 
 	@Override
