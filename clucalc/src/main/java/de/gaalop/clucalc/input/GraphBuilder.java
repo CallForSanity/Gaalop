@@ -87,6 +87,15 @@ public final class GraphBuilder {
 	public void addPragmaOutputVariable(String variable) {
 		graph.addPragmaOutputVariable(variable);
 	}
+	
+	/**
+	 * Adds a control variable for loops to the control flow graph.
+	 * 
+	 * @param variable
+	 */
+	public void addIgnoreVariable(Variable variable) {
+		graph.addIgnoreVariable(variable);
+	}
 
 	/**
 	 * Adds a pragma hint for a variable, which defines value range for it. The pragma must be set before the variable
@@ -234,7 +243,8 @@ public final class GraphBuilder {
 			}
 			loop.setCounterVariable(counter);
 			graph.removeLocalVariable(counter);
-			graph.addCounterVariable(counter);
+			graph.addScalarVariable(counter);
+			graph.addIgnoreVariable(counter);
 		}
 
 		return loop;

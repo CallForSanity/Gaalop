@@ -121,6 +121,8 @@ pragma
      {  graphBuilder.addPragmaMinMaxValues($varname.text, min, max);}
    | PRAGMA OUTPUT_LITERAL varname=IDENTIFIER
      {  graphBuilder.addPragmaOutputVariable($varname.text);  }
+   | PRAGMA IGNORE_LITERAL var=variable 
+     {  graphBuilder.addIgnoreVariable($var.result);  }
   ;
 
 assignment returns [Variable variable, Expression value]

@@ -1,11 +1,9 @@
 package de.gaalop.cfg;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -26,6 +24,7 @@ import de.gaalop.dfg.Variable;
  * classes StartNode and EndNode.
  * 
  * @author Sebastian Hartte
+ * @author Christian Schwinn
  * @see de.gaalop.CodeGenerator
  * @see de.gaalop.CodeParser
  * @see de.gaalop.OptimizationStrategy
@@ -37,9 +36,9 @@ public final class ControlFlowGraph {
 	private Log log = LogFactory.getLog(ControlFlowGraph.class);
 
 	private Set<Variable> localVariables = new HashSet<Variable>();
-	private List<Variable> scalarVariables = new ArrayList<Variable>();
+	private Set<Variable> scalarVariables = new HashSet<Variable>();
 	private Set<Variable> inputVariables = new HashSet<Variable>();
-	private Set<Variable> counterVariables = new HashSet<Variable>();
+	private Set<Variable> ignoreVariables = new HashSet<Variable>();
 
 	private AlgebraSignature signature;
 
@@ -79,21 +78,21 @@ public final class ControlFlowGraph {
 	public void addPragmaOutputVariable(String name) {
 		pragmaOutputVariables.add(name);
 	}
-	
+
+	public void addIgnoreVariable(Variable variable) {
+		ignoreVariables.add(variable);
+	}
+
+	public Set<Variable> getIgnoreVariables() {
+		return ignoreVariables;
+	}
+
 	public void addScalarVariable(Variable tempVariable) {
 		scalarVariables.add(tempVariable);
 	}
-	
-	public List<Variable> getScalarVariables() {
+
+	public Set<Variable> getScalarVariables() {
 		return scalarVariables;
-	}
-	
-	public void addCounterVariable(Variable counter) {
-		counterVariables.add(counter);
-	}
-	
-	public Set<Variable> getCounterVariables() {
-		return counterVariables;
 	}
 
 	/**
@@ -266,7 +265,7 @@ public final class ControlFlowGraph {
 	public void removeLocalVariable(Variable variable) {
 		localVariables.remove(variable);
 	}
-	
+
 	/**
 	 * Determines whether there is a local variable with given name defined in this graph.
 	 * 

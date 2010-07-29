@@ -111,20 +111,8 @@ public class MapleCfgVisitor2 implements ControlFlowVisitor {
 			IfThenElseNode newNode = (IfThenElseNode) node.copy();
 			insertNewNode(newNode);
 
-//			newNode.getPositive().accept(this);
-//			newNode.getNegative().accept(this);
-//
-//			if (newNode.getPositive() instanceof BlockEndNode && newNode.getNegative() instanceof BlockEndNode) {
-//				node.getGraph().removeNode(newNode);
-//			}
-
 			node.getSuccessor().accept(this);
 		}
-		
-//		@Override
-//		public void visit(BreakNode node) {
-//			node.getGraph().removeNode(node);
-//		}
 
 		@Override
 		public void visit(ExpressionStatement node) {
@@ -295,14 +283,14 @@ public class MapleCfgVisitor2 implements ControlFlowVisitor {
 		Expression value = node.getValue();
 		Node successor = node.getSuccessor();
 
-		if (graph.getCounterVariables().contains(variable)) {
+		if (graph.getIgnoreVariables().contains(variable)) {
 			// do not process this assignment
 			successor.accept(this);
 			return;
 		}
 
 		if (blockDepth > 0) {
-			// optimize variable and add variables for coefficients in front of block
+			// optimize current value of variable and add variables for coefficients in front of block
 			initializeCoefficients(node.getVariable());
 			// optimize value in a temporary variable and add missing initializations
 			initializeMissingCoefficients(node);
@@ -310,9 +298,11 @@ public class MapleCfgVisitor2 implements ControlFlowVisitor {
 			resetVariable(variable);
 		}
 
+		// perform actual calculation
 		assignVariable(variable, value);
 
 		if (blockDepth > 0) {
+			// optimize new value and reset Maple binding with linear combination of new value
 			assignCoefficients(node, variable);
 		}
 
@@ -327,6 +317,14 @@ public class MapleCfgVisitor2 implements ControlFlowVisitor {
 		for (AssignmentNode coefficient : coefficients) {
 			if (coefficient.getVariable() instanceof MultivectorComponent) {
 				MultivectorComponent component = (MultivectorComponent) coefficient.getVariable();
+				if (component.getBladeIndex() == 0 && coefficients.size() == 1) {
+					// check that Maple result is not of type x := 'x'
+					String optName = coefficient.getVariable().getName();
+					Variable coeffVariable = new Variable(optName.substring(0, optName.lastIndexOf("_opt")));
+					if (coeffVariable.equals(coefficient.getValue())) {
+						coefficient.setValue(new FloatConstant(0));
+					}
+				}
 				Variable tempVar = new Variable(getTempVarName(component));
 				if (initializedVariables.get(variable) == null) {
 					initializedVariables.put(variable, new HashSet<MultivectorComponent>());
@@ -600,7 +598,7 @@ public class MapleCfgVisitor2 implements ControlFlowVisitor {
 			initializedVariables.clear();
 		}
 	}
-
+	
 	@Override
 	public void visit(LoopNode node) {
 		if (node.getIterations() > 0) {
