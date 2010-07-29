@@ -65,6 +65,8 @@ public class LoopNode extends SequentialNode {
 	@Override
 	public void replaceSuccessor(Node oldSuccessor, Node newSuccessor) {
 		if (oldSuccessor == body) {
+			newSuccessor.removePredecessor(oldSuccessor);
+			newSuccessor.addPredecessor(this);
 			body = (SequentialNode) newSuccessor;
 		} else {
 			super.replaceSuccessor(oldSuccessor, newSuccessor);
@@ -80,7 +82,10 @@ public class LoopNode extends SequentialNode {
 	public LoopNode copyElements() {
 		LoopNode copy = new LoopNode(getGraph());
 		copy.setIterations(iterations);
+		
 		SequentialNode newBody = body.copy();
+		newBody.removePredecessor(this);
+		newBody.addPredecessor(copy);
 		copy.setBody(newBody);
 		copySubtree(newBody, copy);
 
