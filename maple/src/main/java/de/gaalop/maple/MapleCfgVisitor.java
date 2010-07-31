@@ -331,6 +331,7 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 				}
 				Set<MultivectorComponent> initCoefficients = initializedVariables.get(variable);
 				if (!initCoefficients.contains(component)) {
+					graph.addScalarVariable(tempVar);
 					AssignmentNode initialization = new AssignmentNode(graph, tempVar, coefficient.getValue());
 					currentRoot.insertBefore(initialization);
 					initCoefficients.add(component);
@@ -353,6 +354,7 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 			}
 			Set<MultivectorComponent> initCoefficients = initializedVariables.get(originalVariable);
 			if (!initCoefficients.contains(originalComp)) {
+				graph.addScalarVariable(tempVar);
 				AssignmentNode initialization = new AssignmentNode(graph, tempVar, new FloatConstant(0));
 				currentRoot.insertBefore(initialization);
 				initCoefficients.add(originalComp);
