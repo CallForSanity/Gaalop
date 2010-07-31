@@ -424,6 +424,9 @@ public final class GraphBuilder {
 		if (!setMode) {
 			Notifications.addWarning("Missing algebra mode has been set to " + mode);
 		}
+		for (Variable v : graph.getIgnoreVariables()) {
+			graph.removeLocalVariable(v);
+		}
 	}
 
 }
