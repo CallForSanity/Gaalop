@@ -5,6 +5,7 @@ import de.gaalop.Notifications;
 import de.gaalop.UsedVariablesVisitor;
 import de.gaalop.cfg.*;
 import de.gaalop.clucalc.algebra.*;
+import de.gaalop.dfg.EmptyExpressionVisitor;
 import de.gaalop.dfg.Expression;
 import de.gaalop.dfg.MacroCall;
 import de.gaalop.dfg.Variable;
@@ -21,6 +22,34 @@ import java.util.Set;
  * This is a utility class used by the CluCalcTransformer to build a control flow graph while parsing the CluCalc AST.
  */
 public final class GraphBuilder {
+	
+	private static class SetCallerVisitor extends EmptyControlFlowVisitor {
+		
+		private static class UpdateMacroCallVisitor extends EmptyExpressionVisitor {
+			
+			private final AssignmentNode caller;
+			
+			public UpdateMacroCallVisitor(AssignmentNode caller) {
+				this.caller = caller;
+			}
+			
+			@Override
+			public void visit(MacroCall node) {
+				node.setCaller(caller);
+				for (Expression arg : node.getArguments()) {
+					arg.accept(this);
+				}
+			}
+		}
+		
+		@Override
+		public void visit(AssignmentNode node) {
+			UpdateMacroCallVisitor updater = new UpdateMacroCallVisitor(node);
+			node.getValue().accept(updater);
+			node.getSuccessor().accept(this);
+		}
+		
+	}
 
 	private static final List<String> illegalNames;
 
@@ -427,6 +456,8 @@ public final class GraphBuilder {
 		for (Variable v : graph.getIgnoreVariables()) {
 			graph.removeLocalVariable(v);
 		}
+		SetCallerVisitor visitor = new SetCallerVisitor();
+		graph.accept(visitor);
 	}
 
 }

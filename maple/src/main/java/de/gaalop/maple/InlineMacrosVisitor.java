@@ -37,7 +37,6 @@ import de.gaalop.dfg.Variable;
  */
 public class InlineMacrosVisitor extends EmptyExpressionVisitor implements ControlFlowVisitor {
 
-	private SequentialNode currentStatement;
 	private Map<String, List<Expression>> currentArguments = new HashMap<String, List<Expression>>();
 	private Set<Node> visitedNodes = new HashSet<Node>();
 	private List<Variable> newVariables = new ArrayList<Variable>();
@@ -72,14 +71,12 @@ public class InlineMacrosVisitor extends EmptyExpressionVisitor implements Contr
 
 	@Override
 	public void visit(AssignmentNode node) {
-		currentStatement = node;
 		node.getValue().accept(this);
 		continueVisitFrom(node);
 	}
 
 	@Override
 	public void visit(ExpressionStatement node) {
-		currentStatement = node;
 		if (node.getExpression() instanceof MacroCall) {
 			((MacroCall) node.getExpression()).setSingleLine();
 		} else {
@@ -117,8 +114,6 @@ public class InlineMacrosVisitor extends EmptyExpressionVisitor implements Contr
 
 	@Override
 	public void visit(BreakNode node) {
-		// TODO Auto-generated method stub
-
 		continueVisitFrom(node);
 	}
 
@@ -140,7 +135,7 @@ public class InlineMacrosVisitor extends EmptyExpressionVisitor implements Contr
 	@Override
 	public void visit(MacroCall node) {
 		newVariables.clear();
-		SequentialNode caller = currentStatement;
+		SequentialNode caller = node.getCaller();
 		Macro macro = graph.getMacro(node.getName());
 		String macroName = macro.getName();
 		List<Expression> arguments = node.getArguments();
@@ -169,14 +164,20 @@ public class InlineMacrosVisitor extends EmptyExpressionVisitor implements Contr
 			}
 			Expression returnValue = macro.getReturnValue().copy();
 			replaceUsedVariablesInExpression(returnValue, macroName, newNames);
-			caller.replaceExpression(node, returnValue);
+			Variable retVal = new Variable(generateUniqueName("rslt"));
+			graph.addLocalVariable(retVal);
+			AssignmentNode result = new AssignmentNode(graph, retVal, returnValue);
+			caller.insertBefore(result);
+			caller.replaceExpression(node, retVal);
 		} else {
 			graph.removeNode(caller);
 		}
 		// add new local variables to graph
 		for (Variable v : newVariables) {
 			graph.removeInputVariable(v);
-			graph.addLocalVariable(v);
+			if (!graph.getIgnoreVariables().contains(v)) {
+				graph.addLocalVariable(v);
+			}
 		}
 	}
 	

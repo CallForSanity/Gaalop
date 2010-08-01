@@ -621,7 +621,9 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 
 	@Override
 	public void visit(LoopNode node) {
+		boolean annotated = false;
 		if (node.getIterations() > 0) {
+			annotated = true;
 			UnrollLoopsVisitor ulv = new UnrollLoopsVisitor(node);
 			node.accept(ulv);
 			ulv.firstNewNode.accept(this);
@@ -632,6 +634,7 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 
 			Variable counterVariable = node.getCounterVariable();
 			if (counterVariable != null) {
+				annotated = true;
 				Notifications.addWarning("Assignments to counter variable " + counterVariable
 						+ " are not processed by Maple.");
 			}
@@ -644,6 +647,11 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 				initializedVariables.clear();
 			}
 			node.getSuccessor().accept(this);
+		}
+
+		if (!annotated) {
+			Notifications.addWarning("Loop " + node + " has not been annotated with a #pragma comment.\n"
+					+ "Make sure that termination conditions are still present.");
 		}
 	}
 
