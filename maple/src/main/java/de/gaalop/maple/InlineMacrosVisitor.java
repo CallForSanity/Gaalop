@@ -27,6 +27,7 @@ import de.gaalop.dfg.EmptyExpressionVisitor;
 import de.gaalop.dfg.Expression;
 import de.gaalop.dfg.FunctionArgument;
 import de.gaalop.dfg.MacroCall;
+import de.gaalop.dfg.UpdateMacroCallVisitor;
 import de.gaalop.dfg.Variable;
 
 /**
@@ -151,6 +152,11 @@ public class InlineMacrosVisitor extends EmptyExpressionVisitor implements Contr
 		Node oldPredecessor = macro;
 		for (SequentialNode statement : macro.getBody()) {
 			SequentialNode newStatement = statement.copy();
+			if (newStatement instanceof AssignmentNode) {
+				AssignmentNode assignment = (AssignmentNode) newStatement;
+				UpdateMacroCallVisitor updater = new UpdateMacroCallVisitor(assignment);
+				assignment.getValue().accept(updater);
+			}
 			newStatement.removePredecessor(oldPredecessor);
 			replaceUsedVariables(newStatement, macroName, newNames);
 			caller.insertBefore(newStatement);

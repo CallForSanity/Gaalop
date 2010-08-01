@@ -5,9 +5,9 @@ import de.gaalop.Notifications;
 import de.gaalop.UsedVariablesVisitor;
 import de.gaalop.cfg.*;
 import de.gaalop.clucalc.algebra.*;
-import de.gaalop.dfg.EmptyExpressionVisitor;
 import de.gaalop.dfg.Expression;
 import de.gaalop.dfg.MacroCall;
+import de.gaalop.dfg.UpdateMacroCallVisitor;
 import de.gaalop.dfg.Variable;
 import de.gaalop.dfg.MathFunction;
 import de.gaalop.dfg.MathFunctionCall;
@@ -24,23 +24,6 @@ import java.util.Set;
 public final class GraphBuilder {
 	
 	private static class SetCallerVisitor extends EmptyControlFlowVisitor {
-		
-		private static class UpdateMacroCallVisitor extends EmptyExpressionVisitor {
-			
-			private final AssignmentNode caller;
-			
-			public UpdateMacroCallVisitor(AssignmentNode caller) {
-				this.caller = caller;
-			}
-			
-			@Override
-			public void visit(MacroCall node) {
-				node.setCaller(caller);
-				for (Expression arg : node.getArguments()) {
-					arg.accept(this);
-				}
-			}
-		}
 		
 		@Override
 		public void visit(AssignmentNode node) {
@@ -427,6 +410,9 @@ public final class GraphBuilder {
 			}
 		}
 
+		if (name.startsWith("::")) {
+			name = name.substring(2);
+		}
 		if (macros.contains(name)) {
 			if (name.equals(currentMacroDefinition)) {
 				throw new IllegalArgumentException("Recursive macro calls are not supported: " + name);
