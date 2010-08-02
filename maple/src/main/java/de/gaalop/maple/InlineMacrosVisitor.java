@@ -173,8 +173,11 @@ public class InlineMacrosVisitor extends EmptyExpressionVisitor implements Contr
 			Variable retVal = new Variable(generateUniqueName("rslt"));
 			graph.addLocalVariable(retVal);
 			AssignmentNode result = new AssignmentNode(graph, retVal, returnValue);
+			UpdateMacroCallVisitor updater = new UpdateMacroCallVisitor(result);
+			result.getValue().accept(updater);
 			caller.insertBefore(result);
 			caller.replaceExpression(node, retVal);
+			result.accept(this);
 		} else {
 			graph.removeNode(caller);
 		}
