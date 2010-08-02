@@ -3,25 +3,25 @@ package de.gaalop.dfg;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.gaalop.cfg.AssignmentNode;
+import de.gaalop.cfg.SequentialNode;
 
 public class MacroCall extends Expression {
 	
 	private String name;
 	private List<Expression> args;
 	private boolean singleLine;
-	private AssignmentNode caller;
+	private SequentialNode caller;
 	
 	public MacroCall(String name, List<Expression> args) {
 		this.name = name;
 		this.args = args;
 	}
 	
-	public void setCaller(AssignmentNode caller) {
+	public void setCaller(SequentialNode caller) {
 		this.caller = caller;
 	}
 	
-	public AssignmentNode getCaller() {
+	public SequentialNode getCaller() {
 		return caller;
 	}
 	

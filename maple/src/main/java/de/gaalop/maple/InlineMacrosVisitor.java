@@ -21,6 +21,7 @@ import de.gaalop.cfg.LoopNode;
 import de.gaalop.cfg.Macro;
 import de.gaalop.cfg.Node;
 import de.gaalop.cfg.SequentialNode;
+import de.gaalop.cfg.SetCallerVisitor;
 import de.gaalop.cfg.StartNode;
 import de.gaalop.cfg.StoreResultNode;
 import de.gaalop.dfg.EmptyExpressionVisitor;
@@ -37,11 +38,111 @@ import de.gaalop.dfg.Variable;
  * 
  */
 public class InlineMacrosVisitor extends EmptyExpressionVisitor implements ControlFlowVisitor {
+	
+	private class ReplaceExpressionVisitor implements ControlFlowVisitor {
+		
+		private final String macroName;
+		private final Map<String, String> newNames;
+		
+		public ReplaceExpressionVisitor(String macroName, Map<String, String> newNames) {
+			this.macroName = macroName;
+			this.newNames = newNames;
+		}
 
-	private Map<String, List<Expression>> currentArguments = new HashMap<String, List<Expression>>();
+
+		Expression replaceInExpression(Expression e) {
+			UsedVariablesVisitor visitor = new UsedVariablesVisitor();
+			e.accept(visitor);
+			Expression newExpression = e;
+			for (Variable v : visitor.getVariables()) {
+				if (graph.containsLocalVariable(v.getName()) && !v.globalAccess()) {
+					String unique = newNames.get(v.getName());
+					Variable newVariable = new Variable(unique);
+					e.replaceExpression(v, newVariable);
+					newExpression = e;
+					graph.addLocalVariable(newVariable);
+				} else if (v instanceof FunctionArgument) {
+					FunctionArgument argument = (FunctionArgument) v;
+					Expression newArgument = currentArguments.get(macroName).get(argument.getIndex() - 1);
+					e.replaceExpression(argument, newArgument);
+					if (e instanceof FunctionArgument) {
+						newExpression = newArgument;
+					} else {
+						newExpression = e;
+					}
+				}
+			}
+			return newExpression;
+		}
+
+		private void replaceSubtree(Node root) {
+			if (root instanceof BlockEndNode) {
+				return;
+			}
+			if (root instanceof SequentialNode) {
+				SequentialNode node = (SequentialNode) root;
+				node.accept(this);
+				replaceSubtree(node.getSuccessor());
+			}
+		}
+
+		@Override
+		public void visit(StartNode node) {
+		}
+
+		@Override
+		public void visit(AssignmentNode node) {
+			newVariables.add(node.getVariable());
+			replaceInExpression(node.getVariable());
+			Expression newExpression = replaceInExpression(node.getValue());
+			node.replaceExpression(node.getValue(), newExpression);
+		}
+
+		@Override
+		public void visit(StoreResultNode node) {
+			replaceInExpression(node.getValue());
+		}
+
+		@Override
+		public void visit(IfThenElseNode node) {
+			replaceInExpression(node.getCondition());
+			replaceSubtree(node.getPositive());
+			replaceSubtree(node.getNegative());
+
+		}
+
+		@Override
+		public void visit(BlockEndNode node) {
+		}
+
+		@Override
+		public void visit(LoopNode node) {
+			replaceSubtree(node.getBody());
+		}
+
+		@Override
+		public void visit(BreakNode node) {
+		}
+
+		@Override
+		public void visit(Macro node) {
+		}
+
+		@Override
+		public void visit(ExpressionStatement node) {
+			replaceInExpression(node.getExpression());
+		}
+
+		@Override
+		public void visit(EndNode node) {
+		}
+		
+	}
+
 	private Set<Node> visitedNodes = new HashSet<Node>();
-	private List<Variable> newVariables = new ArrayList<Variable>();
-	private ControlFlowGraph graph;
+	Map<String, List<Expression>> currentArguments = new HashMap<String, List<Expression>>();
+	List<Variable> newVariables = new ArrayList<Variable>();
+	ControlFlowGraph graph;
 
 	private String generateUniqueName(String original) {
 		String unique = original;
@@ -150,15 +251,13 @@ public class InlineMacrosVisitor extends EmptyExpressionVisitor implements Contr
 			newNames.put(v.getName(), generateUniqueName(v.getName()));
 		}
 		Node oldPredecessor = macro;
+		SetCallerVisitor setCaller = new SetCallerVisitor();
+		ReplaceExpressionVisitor replacer = new ReplaceExpressionVisitor(macroName, newNames);
 		for (SequentialNode statement : macro.getBody()) {
 			SequentialNode newStatement = statement.copy();
-			if (newStatement instanceof AssignmentNode) {
-				AssignmentNode assignment = (AssignmentNode) newStatement;
-				UpdateMacroCallVisitor updater = new UpdateMacroCallVisitor(assignment);
-				assignment.getValue().accept(updater);
-			}
 			newStatement.removePredecessor(oldPredecessor);
-			replaceUsedVariables(newStatement, macroName, newNames);
+			newStatement.accept(setCaller);
+			newStatement.accept(replacer);
 			caller.insertBefore(newStatement);
 			newStatement.accept(this);
 			oldPredecessor = statement;
@@ -169,7 +268,7 @@ public class InlineMacrosVisitor extends EmptyExpressionVisitor implements Contr
 						"Cannot inline a macro without return value into the following statement:\n" + caller);
 			}
 			Expression returnValue = macro.getReturnValue().copy();
-			replaceUsedVariablesInExpression(returnValue, macroName, newNames);
+			replacer.replaceInExpression(returnValue);
 			Variable retVal = new Variable(generateUniqueName("rslt"));
 			graph.addLocalVariable(retVal);
 			AssignmentNode result = new AssignmentNode(graph, retVal, returnValue);
@@ -188,66 +287,6 @@ public class InlineMacrosVisitor extends EmptyExpressionVisitor implements Contr
 				graph.addLocalVariable(v);
 			}
 		}
-	}
-	
-	private void replaceUsedVariables(Node statement, String macroName, Map<String, String> newNames) {
-		if (statement instanceof AssignmentNode) {
-			AssignmentNode assignment = (AssignmentNode) statement;
-			newVariables.add(assignment.getVariable());
-			replaceUsedVariablesInExpression(assignment.getVariable(), macroName, newNames);
-			Expression newExpression = replaceUsedVariablesInExpression(assignment.getValue(), macroName, newNames);
-			assignment.replaceExpression(assignment.getValue(), newExpression);
-		}
-		if (statement instanceof StoreResultNode) {
-			StoreResultNode srn = (StoreResultNode) statement;
-			replaceUsedVariablesInExpression(srn.getValue(), macroName, newNames);
-		}
-		if (statement instanceof IfThenElseNode) {
-			IfThenElseNode ite = (IfThenElseNode) statement;
-			replaceUsedVariablesInExpression(ite.getCondition(), macroName, newNames);
-			replaceSubtree(ite.getPositive(), macroName, newNames);
-			replaceSubtree(ite.getNegative(), macroName, newNames);
-		}
-		if (statement instanceof LoopNode) {
-			LoopNode loop = (LoopNode) statement;
-			replaceSubtree(loop.getBody(), macroName, newNames);
-		}
-	}
-
-	private void replaceSubtree(Node root, String macroName, Map<String, String> newNames) {
-		if (root instanceof BlockEndNode) {
-			return;
-		}
-		if (root instanceof SequentialNode) {
-			SequentialNode node = (SequentialNode) root;
-			replaceUsedVariables(node, macroName, newNames);
-			replaceSubtree(node.getSuccessor(), macroName, newNames);
-		}
-	}
-
-	private Expression replaceUsedVariablesInExpression(Expression e, String macroName, Map<String, String> newNames) {
-		UsedVariablesVisitor visitor = new UsedVariablesVisitor();
-		e.accept(visitor);
-		Expression newExpression = e;
-		for (Variable v : visitor.getVariables()) {
-			if (graph.containsLocalVariable(v.getName()) && !v.globalAccess()) {
-				String unique = newNames.get(v.getName());
-				Variable newVariable = new Variable(unique);
-				e.replaceExpression(v, newVariable);
-				newExpression = e;
-				graph.addLocalVariable(newVariable);
-			} else if (v instanceof FunctionArgument) {
-				FunctionArgument argument = (FunctionArgument) v;
-				Expression newArgument = currentArguments.get(macroName).get(argument.getIndex() - 1);
-				e.replaceExpression(argument, newArgument);
-				if (e instanceof FunctionArgument) {
-					newExpression = newArgument;
-				} else {
-					newExpression = e;
-				}
-			}
-		}
-		return newExpression;
 	}
 
 }

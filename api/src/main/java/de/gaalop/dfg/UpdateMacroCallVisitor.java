@@ -1,12 +1,12 @@
 package de.gaalop.dfg;
 
-import de.gaalop.cfg.AssignmentNode;
+import de.gaalop.cfg.SequentialNode;
 
 public class UpdateMacroCallVisitor extends EmptyExpressionVisitor {
 	
-	private final AssignmentNode caller;
+	private final SequentialNode caller;
 	
-	public UpdateMacroCallVisitor(AssignmentNode caller) {
+	public UpdateMacroCallVisitor(SequentialNode caller) {
 		this.caller = caller;
 	}
 	

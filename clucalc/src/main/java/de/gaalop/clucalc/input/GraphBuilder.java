@@ -7,7 +7,6 @@ import de.gaalop.cfg.*;
 import de.gaalop.clucalc.algebra.*;
 import de.gaalop.dfg.Expression;
 import de.gaalop.dfg.MacroCall;
-import de.gaalop.dfg.UpdateMacroCallVisitor;
 import de.gaalop.dfg.Variable;
 import de.gaalop.dfg.MathFunction;
 import de.gaalop.dfg.MathFunctionCall;
@@ -23,17 +22,6 @@ import java.util.Set;
  */
 public final class GraphBuilder {
 	
-	private static class SetCallerVisitor extends EmptyControlFlowVisitor {
-		
-		@Override
-		public void visit(AssignmentNode node) {
-			UpdateMacroCallVisitor updater = new UpdateMacroCallVisitor(node);
-			node.getValue().accept(updater);
-			node.getSuccessor().accept(this);
-		}
-		
-	}
-
 	private static final List<String> illegalNames;
 
 	static {
@@ -422,7 +410,8 @@ public final class GraphBuilder {
 		}
 
 		throw new IllegalArgumentException("Call to undefined function " + name + "(" + args + ").\n"
-				+ "Maybe this function is not defined in " + mode);
+				+ "Maybe this function is not defined in " + mode + "\n" 
+				+ "Also make sure that macros are defined before they are called.");
 	}
 
 	public ExpressionStatement processExpressionStatement(Expression e) {
