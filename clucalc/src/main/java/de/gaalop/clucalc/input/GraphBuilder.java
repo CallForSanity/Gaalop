@@ -22,6 +22,95 @@ import java.util.Set;
  */
 public final class GraphBuilder {
 	
+	private class SetLocalAndInputVariables implements ControlFlowVisitor {
+		
+		SetLocalAndInputVariables() {
+			// empty non-private constructor (prevent synthetic accessors)
+		}
+
+		/**
+		 * Searches the expression for variable references. If an undeclared reference is found, it is added to the input
+		 * variables of the graph.
+		 * 
+		 * @param expression The expression to search in.
+		 * @param inMacro
+		 */
+		private void findUndeclaredVariables(Expression expression) {
+			UsedVariablesVisitor visitor = new UsedVariablesVisitor();
+			expression.accept(visitor);
+			for (Variable usedVariable : visitor.getVariables()) {
+				checkIllegalVariable(usedVariable);
+				if (!graph.getLocalVariables().contains(usedVariable)) {
+					// in case we have pragmas giving ranges for the variable, add them
+					if (graph.getPragmaMinValue().containsKey(usedVariable.getName())) {
+						usedVariable.setMinValue(graph.getPragmaMinValue().get(usedVariable.getName()));
+					}
+					if (graph.getPragmaMaxValue().containsKey(usedVariable.getName())) {
+						usedVariable.setMaxValue(graph.getPragmaMaxValue().get(usedVariable.getName()));
+					}
+					graph.addInputVariable(usedVariable);
+				}
+			}
+		}
+
+		@Override
+		public void visit(StartNode node) {
+			node.getSuccessor().accept(this);
+		}
+
+		@Override
+		public void visit(AssignmentNode node) {
+			graph.addLocalVariable(node.getVariable());
+			findUndeclaredVariables(node.getValue());
+			node.getSuccessor().accept(this);
+		}
+
+		@Override
+		public void visit(StoreResultNode node) {
+			findUndeclaredVariables(node.getValue());
+			node.getSuccessor().accept(this);
+		}
+
+		@Override
+		public void visit(IfThenElseNode node) {
+			findUndeclaredVariables(node.getCondition());
+			node.getPositive().accept(this);
+			node.getNegative().accept(this);
+			node.getSuccessor().accept(this);
+		}
+
+		@Override
+		public void visit(BlockEndNode node) {
+		}
+
+		@Override
+		public void visit(LoopNode node) {
+			node.getBody().accept(this);
+			node.getSuccessor().accept(this);
+		}
+
+		@Override
+		public void visit(BreakNode node) {
+		}
+
+		@Override
+		public void visit(Macro node) {
+			// ignore body of macro
+			node.getSuccessor().accept(this);
+		}
+
+		@Override
+		public void visit(ExpressionStatement node) {
+			findUndeclaredVariables(node.getExpression());
+			node.getSuccessor().accept(this);
+		}
+
+		@Override
+		public void visit(EndNode node) {
+		}
+		
+	}
+	
 	private static final List<String> illegalNames;
 
 	static {
@@ -43,7 +132,7 @@ public final class GraphBuilder {
 	private static final AlgebraMode[] ALGEBRA_MODES = new AlgebraMode[] { new AlgebraC2(), new AlgebraE3(),
 			new AlgebraN3(), new AlgebraP3(), };
 
-	private final ControlFlowGraph graph;
+	final ControlFlowGraph graph;
 
 	private SequentialNode lastNode;
 
@@ -133,12 +222,8 @@ public final class GraphBuilder {
 	 * @param variable The variable that is assigned to.
 	 * @param expression The expression that is assigned to the variable.
 	 */
-	public AssignmentNode handleAssignment(Variable variable, Expression expression, boolean inMacro) {
-		checkIllegalAssignments(variable);
-		if (!inMacro) {
-			graph.addLocalVariable(variable);
-		}
-		findUndeclaredVariables(expression, inMacro);
+	public AssignmentNode handleAssignment(Variable variable, Expression expression) {
+		checkIllegalVariable(variable);
 
 		CheckGAVisitor gaVisitor = new CheckGAVisitor();
 		expression.accept(gaVisitor);
@@ -150,7 +235,7 @@ public final class GraphBuilder {
 		return assignment;
 	}
 
-	private void checkIllegalAssignments(Variable variable) {
+	void checkIllegalVariable(Variable variable) {
 		String name = variable.getName();
 		if (illegalNames.contains(name)) {
 			throw new IllegalArgumentException("Variable " + name
@@ -180,8 +265,6 @@ public final class GraphBuilder {
 	 */
 	public StoreResultNode handlePrint(Expression variable) {
 		if (variable instanceof Variable) {
-			findUndeclaredVariables(variable, false);
-
 			StoreResultNode storeResult = new StoreResultNode(graph, (Variable) variable);
 			addNode(storeResult);
 			return storeResult;
@@ -210,8 +293,6 @@ public final class GraphBuilder {
 		ifthenelse.setPositive(then_part.get(0));
 		ifthenelse.setNegative((else_part != null && else_part.size() > 0) ? else_part.get(0) : new BlockEndNode(graph,
 				ifthenelse));
-
-		findUndeclaredVariables(condition, false);
 
 		return ifthenelse;
 	}
@@ -333,33 +414,6 @@ public final class GraphBuilder {
 		setMode = true;
 	}
 
-	/**
-	 * Searches the expression for variable references. If an undeclared reference is found, it is added to the input
-	 * variables of the graph.
-	 * 
-	 * @param expression The expression to search in.
-	 * @param inMacro
-	 */
-	private void findUndeclaredVariables(Expression expression, boolean inMacro) {
-		UsedVariablesVisitor visitor = new UsedVariablesVisitor();
-		expression.accept(visitor);
-
-		for (Variable usedVariable : visitor.getVariables()) {
-			checkIllegalAssignments(usedVariable);
-			if (!graph.getLocalVariables().contains(usedVariable)) {
-				// in case we have pragmas giving ranges for the variable, add them
-				if (graph.getPragmaMinValue().containsKey(usedVariable.getName())) {
-					usedVariable.setMinValue(graph.getPragmaMinValue().get(usedVariable.getName()));
-				}
-				if (graph.getPragmaMaxValue().containsKey(usedVariable.getName())) {
-					usedVariable.setMaxValue(graph.getPragmaMaxValue().get(usedVariable.getName()));
-				}
-				if (!inMacro) {
-					graph.addInputVariable(usedVariable);
-				}
-			}
-		}
-	}
 
 	// Creates an expression from an identifier and takes constants into account
 	public Expression processIdentifier(String name) {
@@ -378,9 +432,6 @@ public final class GraphBuilder {
 				setMode(mode);
 				return null;
 			}
-		}
-		for (Expression arg : args) {
-			findUndeclaredVariables(arg, false);
 		}
 		if (functionFactory.isDefined(name)) {
 			Expression[] argsArray = args.toArray(new Expression[args.size()]);
@@ -433,6 +484,8 @@ public final class GraphBuilder {
 		}
 		SetCallerVisitor visitor = new SetCallerVisitor();
 		graph.accept(visitor);
+		SetLocalAndInputVariables inputFinder = new SetLocalAndInputVariables();
+		graph.accept(inputFinder);
 	}
 
 }

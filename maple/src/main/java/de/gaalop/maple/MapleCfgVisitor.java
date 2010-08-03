@@ -250,7 +250,7 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 
 	private Log log = LogFactory.getLog(MapleCfgVisitor.class);
 
-	private MapleEngine engine;
+	MapleEngine engine;
 
 	private HashMap<String, String> oldMinVal;
 	private HashMap<String, String> oldMaxVal;
@@ -263,7 +263,7 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 
 	private Map<Variable, Set<MultivectorComponent>> initializedVariables = new HashMap<Variable, Set<MultivectorComponent>>();
 
-	private ControlFlowGraph graph;
+	ControlFlowGraph graph;
 
 	public MapleCfgVisitor(MapleEngine engine, Plugin plugin) {
 		this.engine = engine;
@@ -456,7 +456,7 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 		}
 	}
 
-	private String generateCode(Expression expression) {
+	String generateCode(Expression expression) {
 		MapleDfgVisitor visitor = new MapleDfgVisitor();
 		expression.accept(visitor);
 		return visitor.getCode();
@@ -503,7 +503,7 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 	 * @param expression The data flow graph that should be simplified
 	 * @return The code Maple returned as the simplification.
 	 */
-	private String simplify(Expression expression) {
+	String simplify(Expression expression) {
 		StringBuilder codeBuffer = new StringBuilder();
 		codeBuffer.append("gaalop(");
 		codeBuffer.append(generateCode(expression));
@@ -524,7 +524,7 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 	 * @param mapleCode The code returned by Maple.
 	 * @return A list of control flow nodes modeling the returned code.
 	 */
-	private List<AssignmentNode> parseMapleCode(ControlFlowGraph graph, String mapleCode) {
+	List<AssignmentNode> parseMapleCode(ControlFlowGraph graph, String mapleCode) {
 		oldMinVal = new HashMap<String, String>();
 		oldMaxVal = new HashMap<String, String>();
 

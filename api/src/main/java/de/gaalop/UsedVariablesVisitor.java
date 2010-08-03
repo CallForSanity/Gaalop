@@ -122,14 +122,13 @@ public class UsedVariablesVisitor implements ExpressionVisitor {
 
 	@Override
 	public void visit(FunctionArgument node) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void visit(MacroCall node) {
-		// TODO Auto-generated method stub
-		
+		for (Expression arg : node.getArguments()) {
+			arg.accept(this);
+		}
 	}
 	
 }

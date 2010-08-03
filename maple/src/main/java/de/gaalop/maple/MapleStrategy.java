@@ -21,6 +21,9 @@ public class MapleStrategy implements OptimizationStrategy {
 		
 		protected int assignments;
 		
+		AssignmentCounter() {
+		}
+
 		@Override
 		public void visit(AssignmentNode node) {
 			assignments++;
