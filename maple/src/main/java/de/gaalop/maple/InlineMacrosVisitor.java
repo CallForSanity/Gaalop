@@ -159,26 +159,36 @@ public class InlineMacrosVisitor extends EmptyExpressionVisitor implements Contr
 	 * @param node node from which to continue visiting
 	 */
 	private void continueVisitFrom(SequentialNode node) {
-		if (!visitedNodes.contains(node.getSuccessor())) {
-			visitedNodes.add(node.getSuccessor());
-			node.getSuccessor().accept(this);
+		boolean visitSuccessor = true;
+		Node successor = node.getSuccessor();
+		for (Node visited : visitedNodes) {
+			if (visited == successor) {
+				visitSuccessor = false;
+			}
+		}
+		if (visitSuccessor) {
+			visitedNodes.add(successor);
+			successor.accept(this);
 		}
 	}
 
 	@Override
 	public void visit(StartNode node) {
+		visitedNodes.add(node);
 		this.graph = node.getGraph();
 		continueVisitFrom(node);
 	}
 
 	@Override
 	public void visit(AssignmentNode node) {
+		visitedNodes.add(node);
 		node.getValue().accept(this);
 		continueVisitFrom(node);
 	}
 
 	@Override
 	public void visit(ExpressionStatement node) {
+		visitedNodes.add(node);
 		if (node.getExpression() instanceof MacroCall) {
 			((MacroCall) node.getExpression()).setSingleLine();
 		} else {
@@ -191,12 +201,14 @@ public class InlineMacrosVisitor extends EmptyExpressionVisitor implements Contr
 
 	@Override
 	public void visit(StoreResultNode node) {
+		visitedNodes.add(node);
 		node.getValue().accept(this);
 		continueVisitFrom(node);
 	}
 
 	@Override
 	public void visit(IfThenElseNode node) {
+		visitedNodes.add(node);
 		node.getCondition().accept(this);
 		node.getPositive().accept(this);
 		node.getNegative().accept(this);
@@ -209,6 +221,7 @@ public class InlineMacrosVisitor extends EmptyExpressionVisitor implements Contr
 
 	@Override
 	public void visit(LoopNode node) {
+		visitedNodes.add(node);
 		node.getBody().accept(this);
 
 		continueVisitFrom(node);
@@ -216,11 +229,13 @@ public class InlineMacrosVisitor extends EmptyExpressionVisitor implements Contr
 
 	@Override
 	public void visit(BreakNode node) {
+		visitedNodes.add(node);
 		continueVisitFrom(node);
 	}
 
 	@Override
 	public void visit(Macro node) {
+		visitedNodes.add(node);
 		node.getGraph().removeNode(node);
 		continueVisitFrom(node);
 	}
