@@ -82,6 +82,7 @@ public class LoopNode extends SequentialNode {
 	public LoopNode copyElements() {
 		LoopNode copy = new LoopNode(getGraph());
 		copy.setIterations(iterations);
+		copy.setCounterVariable(counter);
 		
 		SequentialNode newBody = body.copy();
 		newBody.removePredecessor(this);

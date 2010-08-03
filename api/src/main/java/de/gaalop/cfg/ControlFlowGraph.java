@@ -354,4 +354,127 @@ public final class ControlFlowGraph {
 		} while (true);
 		return sb.toString();
 	}
+	
+	public String prettyPrint() {
+		Printer printer = new Printer();
+		accept(printer);
+		return printer.getCode();
+	}
+	
+	private static class Printer implements ControlFlowVisitor {
+		
+		private int indent = 0;
+		private StringBuilder code = new StringBuilder();
+		
+		Printer() {
+			// empty non-private constructor
+		}
+		
+		String getCode() {
+			return code.toString();
+		}
+		
+		private void appendIndent() {
+			for (int i = 0; i < indent; i++) {
+				code.append('\t');
+			}
+		}
+
+		@Override
+		public void visit(StartNode node) {
+			code.append("START\n");
+			node.getSuccessor().accept(this);
+		}
+
+		@Override
+		public void visit(AssignmentNode node) {
+			appendIndent();
+			code.append(node.getVariable());
+			code.append(" = ");
+			code.append(node.getValue());
+			code.append(";\n");
+			node.getSuccessor().accept(this);
+		}
+
+		@Override
+		public void visit(StoreResultNode node) {
+			appendIndent();
+			code.append(node);
+			code.append(";\n");
+			node.getSuccessor().accept(this);
+		}
+
+		@Override
+		public void visit(IfThenElseNode node) {
+			appendIndent();
+			code.append("if (");
+			code.append(node.getCondition());
+			code.append(") {\n");
+			indent++;
+			node.getPositive().accept(this);
+			indent--;			
+			appendIndent();
+			code.append("} else {");
+			indent++;
+			node.getNegative().accept(this);
+			indent--;			
+			appendIndent();
+			code.append("}\n");
+			node.getSuccessor().accept(this);
+		}
+
+		@Override
+		public void visit(BlockEndNode node) {
+		}
+
+		@Override
+		public void visit(LoopNode node) {
+			appendIndent();
+			code.append("loop {\n");
+			indent++;
+			node.getBody().accept(this);
+			indent--;
+			appendIndent();
+			code.append("}\n");
+			node.getSuccessor().accept(this);
+		}
+
+		@Override
+		public void visit(BreakNode node) {
+			appendIndent();
+			code.append("break;\n");			
+		}
+
+		@Override
+		public void visit(Macro node) {
+			appendIndent();
+			code.append(node.getName());
+			code.append(" = {\n");
+			indent++;
+			if (node.getBody().size() > 0) {
+				node.getBody().get(0).accept(this);
+			}
+			if (node.getReturnValue() != null) {
+				appendIndent();
+				code.append(node.getReturnValue());
+			}
+			indent--;
+			appendIndent();
+			code.append("}\n");
+			node.getSuccessor().accept(this);
+		}
+
+		@Override
+		public void visit(ExpressionStatement node) {
+			appendIndent();
+			code.append(node);						
+			node.getSuccessor().accept(this);
+		}
+
+		@Override
+		public void visit(EndNode node) {
+			code.append("END");
+		}
+		
+	}
 }

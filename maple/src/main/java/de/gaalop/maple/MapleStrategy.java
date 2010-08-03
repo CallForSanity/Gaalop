@@ -58,6 +58,7 @@ public class MapleStrategy implements OptimizationStrategy {
 		}
 		try {
 			log.debug("Simplifying graph using maple.");
+			log.debug("Graph:\n" + graph.prettyPrint());
 			simplifier.simplify(graph);
 		} catch (Exception e) {
 			throw new OptimizationException("Unable to simplify using maple:\n" + e.getMessage(), e, graph);

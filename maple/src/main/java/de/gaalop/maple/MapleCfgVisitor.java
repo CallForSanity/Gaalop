@@ -52,6 +52,45 @@ import de.gaalop.maple.parser.MapleTransformer;
  * This visitor creates code for Maple.
  */
 public class MapleCfgVisitor implements ControlFlowVisitor {
+	
+	private class FindAssignedVariablesVisitor extends EmptyControlFlowVisitor {
+
+		private final LoopNode root;
+		
+		FindAssignedVariablesVisitor(LoopNode node) {
+			this.root = node;
+		}
+		
+		@Override
+		public void visit(StartNode node) {
+			throw new IllegalStateException("This visitor is intended to be called on loop nodes only.");
+		}
+		
+		@Override
+		public void visit(AssignmentNode node) {
+			// optimize current value of variable and add variables for coefficients in front of block
+			Variable variable = node.getVariable();
+			if (!graph.getIgnoreVariables().contains(variable)) {
+				// optimize current value of variable and add variables for coefficients in front of block
+				initializeCoefficients(variable);
+				// optimize value in a temporary variable and add missing initializations
+				initializeMissingCoefficients(node);
+				// reset Maple binding with linear combination of variables for coefficients
+				resetVariable(variable);
+			}
+			
+			node.getSuccessor().accept(this);
+		}
+		
+		@Override
+		public void visit(LoopNode node) {
+			node.getBody().accept(this);
+			if (node != root) {
+				node.getSuccessor().accept(this);
+			}
+		}
+		
+	}
 
 	private static class UnrollLoopsVisitor extends EmptyControlFlowVisitor {
 
@@ -312,7 +351,7 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 		successor.accept(this);
 	}
 
-	private void initializeCoefficients(Variable variable) {
+	void initializeCoefficients(Variable variable) {
 		List<AssignmentNode> coefficients = optimizeVariable(graph, variable);
 		for (AssignmentNode coefficient : coefficients) {
 			if (coefficient.getVariable() instanceof MultivectorComponent) {
@@ -325,22 +364,26 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 						coefficient.setValue(new FloatConstant(0));
 					}
 				}
-				Variable tempVar = new Variable(getTempVarName(component));
-				if (initializedVariables.get(variable) == null) {
-					initializedVariables.put(variable, new HashSet<MultivectorComponent>());
-				}
-				Set<MultivectorComponent> initCoefficients = initializedVariables.get(variable);
-				if (!initCoefficients.contains(component)) {
-					graph.addScalarVariable(tempVar);
-					AssignmentNode initialization = new AssignmentNode(graph, tempVar, coefficient.getValue());
-					currentRoot.insertBefore(initialization);
-					initCoefficients.add(component);
-				}
+				initializeCoefficient(variable, coefficient.getValue(), component);
 			}
 		}
 	}
 
-	private void initializeMissingCoefficients(AssignmentNode node) {
+	private void initializeCoefficient(Variable variable, Expression value, MultivectorComponent component) {
+		Variable tempVar = new Variable(getTempVarName(component));
+		if (initializedVariables.get(variable) == null) {
+			initializedVariables.put(variable, new HashSet<MultivectorComponent>());
+		}
+		Set<MultivectorComponent> initCoefficients = initializedVariables.get(variable);
+		if (!initCoefficients.contains(component)) {
+			graph.addScalarVariable(tempVar);
+			AssignmentNode initialization = new AssignmentNode(graph, tempVar, value);
+			currentRoot.insertBefore(initialization);
+			initCoefficients.add(component);
+		}
+	}
+
+	void initializeMissingCoefficients(AssignmentNode node) {
 		Variable temp = new Variable("__temp__");
 		assignVariable(temp, node.getValue());
 		List<MultivectorComponent> coefficients = getComponents(optimizeVariable(graph, temp));
@@ -396,7 +439,7 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 		}
 	}
 
-	private void resetVariable(Variable variable) {
+	void resetVariable(Variable variable) {
 		Set<MultivectorComponent> components = initializedVariables.get(variable);
 		if (components == null || components.size() == 0) {
 			throw new IllegalStateException("No components to reset for variable " + variable);
@@ -634,6 +677,10 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 
 			Variable counterVariable = node.getCounterVariable();
 			if (counterVariable != null) {
+				
+				FindAssignedVariablesVisitor visitor = new FindAssignedVariablesVisitor(node);
+				node.accept(visitor);
+				
 				annotated = true;
 				Notifications.addWarning("Assignments to counter variable " + counterVariable
 						+ " are not processed by Maple.");
