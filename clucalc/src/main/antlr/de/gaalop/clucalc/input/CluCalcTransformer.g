@@ -52,7 +52,7 @@ statement returns [ArrayList<SequentialNode> nodes]
 	@init { $nodes = new ArrayList<SequentialNode>(); }
 	// Print something to the console
 	: ^(QUESTIONMARK assignment) {
-		$nodes.add(graphBuilder.handleAssignment($assignment.variable, $assignment.value, inMacro));
+		$nodes.add(graphBuilder.handleAssignment($assignment.variable, $assignment.value));
 		$nodes.add(graphBuilder.handlePrint($assignment.variable.copy()));
 	}
 		
@@ -63,10 +63,10 @@ statement returns [ArrayList<SequentialNode> nodes]
 	| OPNS { graphBuilder.handleNullSpace(NullSpace.OPNS); }
 	
 	// Displayed assignment (ignore the display part)
-	| ^(COLON assignment) { $nodes.add(graphBuilder.handleAssignment($assignment.variable, $assignment.value, inMacro)); }
+	| ^(COLON assignment) { $nodes.add(graphBuilder.handleAssignment($assignment.variable, $assignment.value)); }
 	
 	// Stand-alone assignment
-	| assignment { $nodes.add(graphBuilder.handleAssignment($assignment.variable, $assignment.value, inMacro)); }
+	| assignment { $nodes.add(graphBuilder.handleAssignment($assignment.variable, $assignment.value)); }
 	
 	| block { $nodes = $block.nodes; }
 	
