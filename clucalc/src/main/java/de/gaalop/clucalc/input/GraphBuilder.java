@@ -11,26 +11,27 @@ import de.gaalop.dfg.Variable;
 import de.gaalop.dfg.MathFunction;
 import de.gaalop.dfg.MathFunctionCall;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
  * This is a utility class used by the CluCalcTransformer to build a control flow graph while parsing the CluCalc AST.
  */
 public final class GraphBuilder {
-	
+
 	private class SetLocalAndInputVariables implements ControlFlowVisitor {
-		
+
 		SetLocalAndInputVariables() {
 			// empty non-private constructor (prevent synthetic accessors)
 		}
 
 		/**
-		 * Searches the expression for variable references. If an undeclared reference is found, it is added to the input
-		 * variables of the graph.
+		 * Searches the expression for variable references. If an undeclared reference is found, it is added to the
+		 * input variables of the graph.
 		 * 
 		 * @param expression The expression to search in.
 		 * @param inMacro
@@ -108,23 +109,19 @@ public final class GraphBuilder {
 		@Override
 		public void visit(EndNode node) {
 		}
-		
+
 	}
-	
-	private static final List<String> illegalNames;
+
+	private static final Map<String, String> illegalNames;
 
 	static {
-		illegalNames = new ArrayList<String>();
-		String[] names = new String[] { "B", // metric matrix
-				"condition_", // used in if-statement handling
-				"norm", // protected in Maple
-				"normal", // protected in Maple
-				"length", // protected in Maple
-				"point", // protected in Maple
-		};
-		for (String s : names) {
-			illegalNames.add(s);
-		}
+		illegalNames = new HashMap<String, String>();
+		illegalNames.put("B", "B is the metric matrix in Maple");
+		illegalNames.put("condition_", "synthetic variable inserted by Gaalop");
+		illegalNames.put("norm", "protected in Maple");
+		illegalNames.put("normal", "protected in Maple");
+		illegalNames.put("length", "protected in Maple");
+		illegalNames.put("point", "protected in Maple");
 	}
 
 	/**
@@ -177,7 +174,7 @@ public final class GraphBuilder {
 	public void addPragmaOutputVariable(String variable) {
 		graph.addPragmaOutputVariable(variable);
 	}
-	
+
 	/**
 	 * Adds a control variable for loops to the control flow graph.
 	 * 
@@ -238,13 +235,15 @@ public final class GraphBuilder {
 
 	void checkIllegalVariable(Variable variable) {
 		String name = variable.getName();
-		if (illegalNames.contains(name)) {
-			throw new IllegalArgumentException("Variable " + name
-					+ " is already used internally. Please use another variable.");
+		String reason = illegalNames.get(name);
+		if (reason != null) {
+			throw new IllegalArgumentException("Illegal variable name '" + name + "' (" + reason + ")."
+					+ " Please use another variable.");
 		}
 		if (variable.getName().startsWith("re")) {
 			throw new IllegalArgumentException("Variable '" + variable
-					+ "' cannot be used in Maple because of prefix 're'." + " Please choose another name.");
+					+ "' cannot be used in Maple because of prefix 're' which is protected."
+					+ " Please choose another name.");
 		}
 	}
 
@@ -415,7 +414,6 @@ public final class GraphBuilder {
 		setMode = true;
 	}
 
-
 	// Creates an expression from an identifier and takes constants into account
 	public Expression processIdentifier(String name) {
 		if (mode != null && mode.isConstant(name)) {
@@ -462,7 +460,7 @@ public final class GraphBuilder {
 		}
 
 		throw new IllegalArgumentException("Call to undefined function " + name + "(" + args + ").\n"
-				+ "Maybe this function is not defined in " + mode + "\n" 
+				+ "Maybe this function is not defined in " + mode + "\n"
 				+ "Also make sure that macros are defined before they are called.");
 	}
 
