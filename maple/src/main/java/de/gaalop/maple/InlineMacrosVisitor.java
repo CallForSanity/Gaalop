@@ -119,12 +119,11 @@ public class InlineMacrosVisitor extends EmptyExpressionVisitor implements Contr
 		@Override
 		public void visit(LoopNode node) {
 			// reset control variable, if necessary
-			String counterName = node.getCounterVariable().getName();
-			if (node.getCounterVariable() != null && graph.containsLocalVariable(counterName)) {
-				String newName = newNames.get(counterName);
+			if (node.getCounterVariable() != null && graph.containsLocalVariable(node.getCounterVariable().getName())) {
+				String newName = newNames.get(node.getCounterVariable().getName());
 				Variable newCounter = new Variable(newName);
 				graph.addIgnoreVariable(newCounter);
-				graph.removeLocalVariable(newCounter);
+				graph.addScalarVariable(newCounter);
 				node.setCounterVariable(newCounter);
 			}
 			replaceSubtree(node.getBody());

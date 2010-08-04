@@ -53,11 +53,11 @@ import de.gaalop.maple.parser.MapleTransformer;
  */
 public class MapleCfgVisitor implements ControlFlowVisitor {
 	
-	private class FindAssignedVariablesVisitor extends EmptyControlFlowVisitor {
+	private class InitializeVariablesVisitor extends EmptyControlFlowVisitor {
 
 		private final LoopNode root;
 		
-		FindAssignedVariablesVisitor(LoopNode node) {
+		InitializeVariablesVisitor(LoopNode node) {
 			this.root = node;
 		}
 		
@@ -678,7 +678,7 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 			Variable counterVariable = node.getCounterVariable();
 			if (counterVariable != null) {
 				
-				FindAssignedVariablesVisitor visitor = new FindAssignedVariablesVisitor(node);
+				InitializeVariablesVisitor visitor = new InitializeVariablesVisitor(node);
 				node.accept(visitor);
 				
 				annotated = true;
@@ -714,6 +714,9 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 
 	@Override
 	public void visit(EndNode endNode) {
+		for (Variable local : graph.getIgnoreVariables()) {
+			graph.removeLocalVariable(local);
+		}
 	}
 
 	@Override
