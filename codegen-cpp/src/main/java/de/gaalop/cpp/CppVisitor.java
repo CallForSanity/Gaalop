@@ -69,9 +69,9 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 			}
 
 			for (StoreResultNode var : findOutput.getNodes()) {
-				code.append("float **");
+				code.append("float ");
 				code.append(outputNamesMap.get(var));
-				code.append(", ");
+				code.append("[32], ");
 			}
 
 			if (!graph.getInputVariables().isEmpty() || !findOutput.getNodes().isEmpty()) {
@@ -89,7 +89,7 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 				code.append("float ");
 				code.append(var.getName());
 				code.append(suffix);
-				code.append("[32];\n");
+				code.append("[32] = { 0.0f };\n");
 			}
 		}
 
