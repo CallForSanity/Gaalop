@@ -117,9 +117,10 @@ public final class GraphBuilder {
 		illegalNames = new ArrayList<String>();
 		String[] names = new String[] { "B", // metric matrix
 				"condition_", // used in if-statement handling
-				"norm", // used in Maple
-				"normal", // used in Maple
-				"length" // used in Maple
+				"norm", // protected in Maple
+				"normal", // protected in Maple
+				"length", // protected in Maple
+				"point", // protected in Maple
 		};
 		for (String s : names) {
 			illegalNames.add(s);

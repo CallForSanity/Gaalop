@@ -80,17 +80,19 @@ public class MapleDfgVisitor implements ExpressionVisitor {
 	public void visit(MathFunctionCall mathFunctionCall) {
 		MathFunction function = mathFunctionCall.getFunction();
 
-		// Special case: abs() has to be translated to self-defined mul_abs() (see cliffordfunctions.mws)
 		if (function == MathFunction.ABS) {
+			// Special case: abs() -> mul_abs() (see cliffordfunctions.mws)
 			codeBuffer.append("mul_abs");
 		} else if (function == MathFunction.SQRT) {
+			// Special case: sqrt() -> wurzel() (see cliffordfunctions.mws)
 			codeBuffer.append("wurzel");
 		} else {
 			codeBuffer.append(function.toString().toLowerCase());
 		}
-		codeBuffer.append('(');
+		// additional simplification to remove 1.00000000 which causes Cliffordlib's LC to fail
+		codeBuffer.append("(simplify(");
 		mathFunctionCall.getOperand().accept(this);
-		codeBuffer.append(')');
+		codeBuffer.append("))");
 	}
 
 	@Override
