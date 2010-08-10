@@ -177,6 +177,11 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 		private void reorderToLeft(BinaryOperation node) {
 			Expression left = node.getLeft();
 			Expression right = node.getRight();
+			
+			if (containsTrueOrFalse(left) || containsTrueOrFalse(right)) {
+				return;
+			}
+			
 			Subtraction lhs = ExpressionFactory.subtract(left.copy(), right.copy());
 			Variable condition = new Variable("condition_");
 			Expression newRight = new FloatConstant(0);
@@ -206,6 +211,17 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 			node.replaceExpression(right, newRight);
 
 			node.getLeft().accept(this);
+		}
+
+		private boolean containsTrueOrFalse(Expression expression) {
+			UsedVariablesVisitor visitor = new UsedVariablesVisitor();
+			expression.accept(visitor);
+			for (Variable v : visitor.getVariables()) {
+				if ("true".equals(v.getName()) || "false".equals(v.getName())) {
+					return true;
+				}
+			}
+			return false;
 		}
 
 		@Override
@@ -506,7 +522,7 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 	}
 
 	private String getTempVarName(MultivectorComponent component) {
-		return component.getName() + "__" + component.getBladeIndex();
+		return component.getName().replace('e', 'E') + "__" + component.getBladeIndex();
 	}
 
 	@Override
@@ -600,6 +616,7 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 			boolean unknown = false;
 			UsedVariablesVisitor visitor = new UsedVariablesVisitor();
 			condition.accept(visitor);
+			// check if there are unknown variables (otherwise Maple always returns false in evalb)
 			for (Variable v : visitor.getVariables()) {
 				String name = v.getName();
 				String result = engine.evaluate(name + ";");

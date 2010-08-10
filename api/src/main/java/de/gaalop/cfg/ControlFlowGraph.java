@@ -288,10 +288,21 @@ public final class ControlFlowGraph {
 	 * @throws IllegalArgumentException If <code>variable</code> is a local variable in this graph.
 	 */
 	public void addInputVariable(Variable variable) {
+		String name = variable.getName();
+		if ("true".equals(name) || "false".equals(name)) {
+			// ignore these keywords
+			return;
+		}
+		
 		// Check that the given variable is not part of the localVariables set
 		if (localVariables.contains(variable)) {
-			throw new IllegalArgumentException("The Variable " + variable.getName()
+			throw new IllegalArgumentException("The Variable " + name
 					+ " cannot be a local variable and an input variable at the same time.");
+		}
+
+		if (name.contains("e")) {
+			throw new IllegalArgumentException("Input variable " + variable
+					+ " contains 'e' which is not supported by Maple.");
 		}
 
 		inputVariables.add(variable);
@@ -354,26 +365,26 @@ public final class ControlFlowGraph {
 		} while (true);
 		return sb.toString();
 	}
-	
+
 	public String prettyPrint() {
 		Printer printer = new Printer();
 		accept(printer);
 		return printer.getCode();
 	}
-	
+
 	private static class Printer implements ControlFlowVisitor {
-		
+
 		private int indent = 0;
 		private StringBuilder code = new StringBuilder();
-		
+
 		Printer() {
 			// empty non-private constructor
 		}
-		
+
 		String getCode() {
 			return code.toString();
 		}
-		
+
 		private void appendIndent() {
 			for (int i = 0; i < indent; i++) {
 				code.append('\t');
@@ -412,12 +423,12 @@ public final class ControlFlowGraph {
 			code.append(") {\n");
 			indent++;
 			node.getPositive().accept(this);
-			indent--;			
+			indent--;
 			appendIndent();
 			code.append("} else {");
 			indent++;
 			node.getNegative().accept(this);
-			indent--;			
+			indent--;
 			appendIndent();
 			code.append("}\n");
 			node.getSuccessor().accept(this);
@@ -442,7 +453,7 @@ public final class ControlFlowGraph {
 		@Override
 		public void visit(BreakNode node) {
 			appendIndent();
-			code.append("break;\n");			
+			code.append("break;\n");
 		}
 
 		@Override
@@ -467,7 +478,7 @@ public final class ControlFlowGraph {
 		@Override
 		public void visit(ExpressionStatement node) {
 			appendIndent();
-			code.append(node);						
+			code.append(node);
 			node.getSuccessor().accept(this);
 		}
 
@@ -475,6 +486,6 @@ public final class ControlFlowGraph {
 		public void visit(EndNode node) {
 			code.append("END");
 		}
-		
+
 	}
 }
