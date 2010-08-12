@@ -22,9 +22,6 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 
 	private ControlFlowGraph graph;
 
-	// Maps the nodes that output variables to their result parameter names
-	private Map<StoreResultNode, String> outputNamesMap = new HashMap<StoreResultNode, String>();
-
 	private int indentation = 0;
 
 	private boolean standalone = true;
@@ -34,8 +31,6 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 	private Map<MultivectorComponent, Integer> newIndices = new HashMap<MultivectorComponent, Integer>();
 	private int components;
 	private int offset;
-
-	public final boolean MINIMIZE_ARRAY_SIZE = false;
 
 	public String getCode() {
 		return code.toString();
@@ -53,44 +48,14 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 
 		FindStoreOutputNodes findOutput = new FindStoreOutputNodes();
 		graph.accept(findOutput);
-		for (StoreResultNode var : findOutput.getNodes()) {
-			String outputName = var.getValue().getName() + "_out";
-			outputNamesMap.put(var, outputName);
-		}
-		if (standalone) {
-			code.append("void calculate(");
 
-			// Input Parameters
-			List<Variable> inputParameters = sortVariables(graph.getInputVariables());
-			for (Variable var : inputParameters) {
-				code.append("float "); // The assumption here is that they all are normal scalars
-				code.append(var.getName());
-				code.append(", ");
-			}
-
-			for (StoreResultNode var : findOutput.getNodes()) {
-				code.append("float ");
-				code.append(outputNamesMap.get(var));
-				code.append("[32], ");
-			}
-
-			if (!graph.getInputVariables().isEmpty() || !findOutput.getNodes().isEmpty()) {
-				code.setLength(code.length() - 2);
-			}
-
-			code.append(") {\n");
-			indentation++;
-		}
-
-		if (!MINIMIZE_ARRAY_SIZE) {
-			// Declare local variables with minimal size of array
-			for (Variable var : graph.getLocalVariables()) {
-				appendIndentation();
-				code.append("float ");
-				code.append(var.getName());
-				code.append(suffix);
-				code.append("[32] = { 0.0f };\n");
-			}
+		// Declare local variables with minimal size of array
+		for (Variable var : graph.getLocalVariables()) {
+			appendIndentation();
+			code.append("float ");
+			code.append(var.getName());
+			code.append(suffix);
+			code.append("[32] = { 0.0f };\n");
 		}
 
 		if (graph.getScalarVariables().size() > 0) {
@@ -113,46 +78,20 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 		node.getSuccessor().accept(this);
 	}
 
-	/**
-	 * Sorts a set of variables by name to make the order deterministic.
-	 * 
-	 * @param inputVariables
-	 * @return
-	 */
-	private List<Variable> sortVariables(Set<Variable> inputVariables) {
-		List<Variable> variables = new ArrayList<Variable>(inputVariables);
-		Comparator<Variable> comparator = new Comparator<Variable>() {
-
-			@Override
-			public int compare(Variable o1, Variable o2) {
-				return o1.getName().compareToIgnoreCase(o2.getName());
-			}
-		};
-
-		Collections.sort(variables, comparator);
-		return variables;
-	}
-
 	@Override
 	public void visit(AssignmentNode node) {
 		String variable = node.getVariable().getName();
-		if (MINIMIZE_ARRAY_SIZE) {
-			if (node.getVariable() instanceof MultivectorComponent) {
-				newIndices.put((MultivectorComponent) node.getVariable(), new Integer(components));
-				components++;
-			}
-		}
 		if (assigned.contains(variable)) {
 			String message = "Variable " + variable + " has been reset for reuse.";
 			log.warn(message);
 			Notifications.addWarning(message);
 			code.append("\n");
 			appendIndentation();
-			code.append("// Warning: reuse of variable ");
+			code.append("memset(");
 			code.append(variable);
-			code.append(".\n");
-			appendIndentation();
-			code.append("// Make sure to reset this variable or use another name.\n");
+			code.append(", 0, sizeof(");
+			code.append(variable);
+			code.append(")); // Reset variable for reuse.\n");
 			assigned.remove(variable);
 		}
 
@@ -189,30 +128,8 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 
 	@Override
 	public void visit(StoreResultNode node) {
-		if (MINIMIZE_ARRAY_SIZE) {
-			StringBuilder init = new StringBuilder();
-			init.append("\tfloat ");
-			init.append(node.getValue().getName());
-			init.append(suffix);
-			init.append("[");
-			init.append(components);
-			init.append("];\n");
-			code.insert(offset, init.toString());
-		}
-
-		assigned.add(node.getValue().getName());
-
-		appendIndentation();
-		code.append("memcpy(");
-		code.append(outputNamesMap.get(node));
-		code.append(", ");
-		code.append(node.getValue().getName());
-		code.append(suffix);
-		code.append(", sizeof(");
-		code.append(node.getValue().getName());
-		code.append(suffix);
-		code.append("));\n");
-
+		assigned.add(node.getValue().getName() + suffix);
+		
 		// reset current list of assignments
 		components = 0;
 		node.getSuccessor().accept(this);
@@ -289,10 +206,6 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 
 	@Override
 	public void visit(EndNode node) {
-		if (standalone) {
-			indentation--;
-			code.append("}\n");
-		}
 	}
 
 	private void addBinaryInfix(BinaryOperation op, String operator) {
@@ -365,11 +278,7 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 	public void visit(MultivectorComponent component) {
 		code.append(component.getName());
 		code.append('[');
-		if (MINIMIZE_ARRAY_SIZE) {
-			code.append(newIndices.get(component));
-		} else {
-			code.append(component.getBladeIndex());
-		}
+		code.append(component.getBladeIndex());
 		code.append(']');
 	}
 
