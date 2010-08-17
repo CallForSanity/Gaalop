@@ -52,20 +52,20 @@ import de.gaalop.maple.parser.MapleTransformer;
  * This visitor creates code for Maple.
  */
 public class MapleCfgVisitor implements ControlFlowVisitor {
-	
+
 	private class InitializeVariablesVisitor extends EmptyControlFlowVisitor {
 
 		private final LoopNode root;
-		
+
 		InitializeVariablesVisitor(LoopNode node) {
 			this.root = node;
 		}
-		
+
 		@Override
 		public void visit(StartNode node) {
 			throw new IllegalStateException("This visitor is intended to be called on loop nodes only.");
 		}
-		
+
 		@Override
 		public void visit(AssignmentNode node) {
 			// optimize current value of variable and add variables for coefficients in front of block
@@ -78,10 +78,10 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 				// reset Maple binding with linear combination of variables for coefficients
 				resetVariable(variable);
 			}
-			
+
 			node.getSuccessor().accept(this);
 		}
-		
+
 		@Override
 		public void visit(LoopNode node) {
 			node.getBody().accept(this);
@@ -89,13 +89,51 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 				node.getSuccessor().accept(this);
 			}
 		}
-		
+
 	}
 
 	private static class UnrollLoopsVisitor extends EmptyControlFlowVisitor {
+		
+		/**
+		 * Removes break statements from the given node.
+		 * 
+		 * @author Christian Schwinn
+		 *
+		 */
+		private static class RemoveBreakVisitor extends EmptyControlFlowVisitor {
+			
+			private final IfThenElseNode root;
+			
+			RemoveBreakVisitor(IfThenElseNode root) {
+				this.root = root;
+			}
+			
+			@Override
+			public void visit(StartNode node) {
+				throw new IllegalStateException("This visitor is allowed to be called only on IfThenElseNodes");
+			}
+			
+			@Override
+			public void visit(IfThenElseNode node) {
+				node.getPositive().accept(this);
+				node.getNegative().accept(this);
+				if (node != root) {
+					node.getSuccessor().accept(this);
+				}
+			}
+			
+			@Override
+			public void visit(BreakNode node) {
+				Node successor = node.getSuccessor();
+				node.getGraph().removeNode(node);
+				successor.accept(this);
+			}
+			
+		}
 
 		private LoopNode root;
 		SequentialNode firstNewNode;
+		boolean showWarning;
 
 		public UnrollLoopsVisitor(LoopNode root) {
 			this.root = root;
@@ -149,7 +187,21 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 		public void visit(IfThenElseNode node) {
 			IfThenElseNode newNode = (IfThenElseNode) node.copy();
 			insertNewNode(newNode);
-
+			boolean endOfLoop = node.getSuccessor() instanceof BlockEndNode;
+			boolean startOfLoop = false;
+			for (Node pred : node.getPredecessors()) {
+				if (pred instanceof LoopNode) {
+					LoopNode loop = (LoopNode) pred;
+					if (loop.getBody() == node) {
+						startOfLoop = true;
+					}
+				}
+			}
+			if (!(endOfLoop || startOfLoop)) {
+				showWarning = true;
+			}
+			RemoveBreakVisitor visitor = new RemoveBreakVisitor(newNode);
+			newNode.accept(visitor);
 			node.getSuccessor().accept(this);
 		}
 
@@ -177,11 +229,11 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 		private void reorderToLeft(BinaryOperation node) {
 			Expression left = node.getLeft();
 			Expression right = node.getRight();
-			
+
 			if (containsTrueOrFalse(left) || containsTrueOrFalse(right)) {
 				return;
 			}
-			
+
 			Subtraction lhs = ExpressionFactory.subtract(left.copy(), right.copy());
 			Variable condition = new Variable("condition_");
 			Expression newRight = new FloatConstant(0);
@@ -686,6 +738,11 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 			annotated = true;
 			UnrollLoopsVisitor ulv = new UnrollLoopsVisitor(node);
 			node.accept(ulv);
+			if (ulv.showWarning) {
+				Notifications.addWarning("Make sure that termination conditions for unroll-loops are " +
+						"always at beginning or end of a loop.\n" +
+						"Otherwise, partial loop bodies cannot be unrolled.");
+			}
 			ulv.firstNewNode.accept(this);
 		} else {
 			if (blockDepth == 0) {
@@ -694,10 +751,10 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 
 			Variable counterVariable = node.getCounterVariable();
 			if (counterVariable != null) {
-				
+
 				InitializeVariablesVisitor visitor = new InitializeVariablesVisitor(node);
 				node.accept(visitor);
-				
+
 				annotated = true;
 				Notifications.addWarning("Assignments to counter variable " + counterVariable
 						+ " are not processed by Maple.");

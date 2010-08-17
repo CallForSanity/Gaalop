@@ -24,13 +24,7 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 
 	private int indentation = 0;
 
-	private boolean standalone = true;
-
 	private Set<String> assigned = new HashSet<String>();
-
-	private Map<MultivectorComponent, Integer> newIndices = new HashMap<MultivectorComponent, Integer>();
-	private int components;
-	private int offset;
 
 	public String getCode() {
 		return code.toString();
@@ -72,8 +66,6 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 		if (!graph.getLocalVariables().isEmpty()) {
 			code.append("\n");
 		}
-
-		offset = code.length() - 1;
 
 		node.getSuccessor().accept(this);
 	}
@@ -129,9 +121,6 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 	@Override
 	public void visit(StoreResultNode node) {
 		assigned.add(node.getValue().getName() + suffix);
-		
-		// reset current list of assignments
-		components = 0;
 		node.getSuccessor().accept(this);
 	}
 
