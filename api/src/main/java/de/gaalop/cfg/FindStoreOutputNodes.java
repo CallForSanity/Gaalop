@@ -64,6 +64,6 @@ public class FindStoreOutputNodes implements ControlFlowVisitor {
 
 	@Override
 	public void visit(Macro node) {
-		throw new IllegalStateException("Macros should have been inlined.");
+		node.getSuccessor().accept(this);
 	}
 }
