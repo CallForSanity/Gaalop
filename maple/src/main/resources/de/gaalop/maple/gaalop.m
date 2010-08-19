@@ -27,7 +27,8 @@ lFd\l>&F+Ffv-Fby6#-Fey6$F[y%,e1we2we4we5G>&F+F\w-Fby6#-Fey6$F[y%,e1we3we4we5G>&
 F+Fbw-Fby6#-Fey6$F[y%,e2we3we4we5G>&F+Fhw-Fby6#-Fey6$F[y%/e1we2we3we4we5G>%0coe
 ff_list_sizeG""!-%'printfG6%%4gaaloparray(%s%s);|+GF-%%_optG?(8&F;F;Fiw%%trueG@
 $4/&F+6#F]ilFfhlC%>Fehl,&FehlF;F;F;-Fhhl6'%1%s%s[%d]~:=~%a;|+GF-F[ilF]ilFbil>&%
-+coeff_listG6#FehlF]il@$2FfhlFehl-%3cliffordperformantGF^y-F2F(F(6$F\jlFehlF(F(,
++coeff_listG6#FehlF]il@%2FfhlFehl-%3cliffordperformantGF^y-Fhhl6%%/%s%s[1]~:=~0
+;|+GF-F[il-F2F(F(6$F\jlFehlF(F(,
 I3cliffordperformantf*6#'%"yGFbx6&%(ausgabeGFex%"kG%/clucalc_bladesGF(F(C'>8'7B
 Q$1.0F(Q#e1F(Q#e2F(Q#e3F(Q%einfF(Q#e0F(Q((e1^e2)F(Q((e1^e3)F(Q*(e1^einf)F(Q((e1
 ^e0)F(Q((e2^e3)F(Q*(e2^einf)F(Q((e2^e0)F(Q*(e3^einf)F(Q((e3^e0)F(Q*(einf^e0)F(Q
@@ -35,5 +36,5 @@ Q$1.0F(Q#e1F(Q#e2F(Q#e3F(Q%einfF(Q#e0F(Q((e1^e2)F(Q((e1^e3)F(Q*(e1^einf)F(Q((e1
 einf^e0)F(Q-(e2^e3^einf)F(Q+(e2^e3^e0)F(Q-(e2^einf^e0)F(Q-(e3^einf^e0)F(Q0(e1^e
 2^e3^einf)F(Q.(e1^e2^e3^e0)F(Q0(e1^e2^einf^e0)F(Q0(e1^e3^einf^e0)F(Q0(e2^e3^ein
 f^e0)F(Q3(e1^e2^e3^einf^e0)F(>F+-%(sprintfG6$Q'%s~:=~F(F-?(F[yF;F;FehlF^ilC$>F+
--Fc]m6(Q7%s%s%s[%d]~*~blade[%d]F(F+F-F[il&F\jlFbzF\^m@%2F[yFehl>F+-Fc]m6$Q&%s~+
-~F(F+>F+-Fc]m6$Q$%s;F(F+-%&parseG6$F+%*statementGFbjlF(FcjlF(F(
+-Ff]m6(Q7%s%s%s[%d]~*~blade[%d]F(F+F-F[il&F\jlFbzF_^m@%2F[yFehl>F+-Ff]m6$Q&%s~+
+~F(F+>F+-Ff]m6$Q$%s;F(F+-%&parseG6$F+%*statementGFejlF(FfjlF(F(
