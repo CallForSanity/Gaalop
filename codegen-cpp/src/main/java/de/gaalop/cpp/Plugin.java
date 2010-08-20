@@ -2,6 +2,7 @@ package de.gaalop.cpp;
 
 import de.gaalop.CodeGenerator;
 import de.gaalop.CodeGeneratorPlugin;
+import de.gaalop.ConfigurationProperty;
 import de.gaalop.Notifications;
 
 import org.apache.commons.logging.Log;
@@ -21,6 +22,9 @@ public class Plugin extends Observable implements CodeGeneratorPlugin {
     private Log log = LogFactory.getLog(Plugin.class);
 
     private Image icon;
+    
+    @ConfigurationProperty
+    public boolean standalone = true;
 
     public Plugin() {
         URL url = getClass().getResource("icon.png");
@@ -34,6 +38,14 @@ public class Plugin extends Observable implements CodeGeneratorPlugin {
             log.warn("Unable to find plugin icon!");
         }
     }
+    
+    public void setStandalone(boolean standalone) {
+		this.standalone = standalone;
+	}
+    
+    public boolean getStandalone() {
+		return standalone;
+	}
 
     @Override
     public CodeGenerator createCodeGenerator() {

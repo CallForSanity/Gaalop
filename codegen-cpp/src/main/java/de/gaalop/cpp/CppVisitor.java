@@ -16,6 +16,8 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 
 	private Log log = LogFactory.getLog(CppVisitor.class);
 
+	private boolean standalone = true;
+
 	private final String suffix = "_opt";
 
 	private StringBuilder code = new StringBuilder();
@@ -25,6 +27,14 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 	private int indentation = 0;
 
 	private Set<String> assigned = new HashSet<String>();
+	
+	public CppVisitor(boolean standalone) {
+		this.standalone = standalone;
+	}
+	
+	public void setStandalone(boolean standalone) {
+		this.standalone = standalone;
+	}
 
 	public String getCode() {
 		return code.toString();
@@ -40,16 +50,38 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 	public void visit(StartNode node) {
 		graph = node.getGraph();
 
-		FindStoreOutputNodes findOutput = new FindStoreOutputNodes();
-		graph.accept(findOutput);
+		if (standalone) {
+			code.append("void calculate(");
 
-		// Declare local variables with minimal size of array
-		for (Variable var : graph.getLocalVariables()) {
-			appendIndentation();
-			code.append("float ");
-			code.append(var.getName());
-			code.append(suffix);
-			code.append("[32] = { 0.0f };\n");
+			// Input Parameters
+			List<Variable> inputParameters = sortVariables(graph.getInputVariables());
+			for (Variable var : inputParameters) {
+				code.append("float "); // The assumption here is that they all are normal scalars
+				code.append(var.getName());
+				code.append(", ");
+			}
+
+			for (Variable var : graph.getLocalVariables()) {
+				code.append("float ");
+				code.append(var.getName());
+				code.append(suffix);
+				code.append("[32], ");
+			}
+
+			if (graph.getLocalVariables().size() > 0) {
+				code.setLength(code.length() - 2);
+			}
+
+			code.append(") {\n");
+			indentation++;
+		} else {
+			for (Variable var : graph.getLocalVariables()) {
+				appendIndentation();
+				code.append("float ");
+				code.append(var.getName());
+				code.append(suffix);
+				code.append("[32] = { 0.0f };\n");
+			}
 		}
 
 		if (graph.getScalarVariables().size() > 0) {
@@ -68,6 +100,26 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 		}
 
 		node.getSuccessor().accept(this);
+	}
+
+	/**
+	 * Sorts a set of variables by name to make the order deterministic.
+	 * 
+	 * @param inputVariables
+	 * @return
+	 */
+	private List<Variable> sortVariables(Set<Variable> inputVariables) {
+		List<Variable> variables = new ArrayList<Variable>(inputVariables);
+		Comparator<Variable> comparator = new Comparator<Variable>() {
+
+			@Override
+			public int compare(Variable o1, Variable o2) {
+				return o1.getName().compareToIgnoreCase(o2.getName());
+			}
+		};
+
+		Collections.sort(variables, comparator);
+		return variables;
 	}
 
 	@Override
@@ -195,6 +247,10 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 
 	@Override
 	public void visit(EndNode node) {
+		if (standalone) {
+			indentation--;
+			code.append("}\n");
+		}
 	}
 
 	private void addBinaryInfix(BinaryOperation op, String operator) {

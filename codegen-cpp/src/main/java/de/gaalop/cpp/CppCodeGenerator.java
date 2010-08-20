@@ -49,7 +49,7 @@ public class CppCodeGenerator implements CodeGenerator {
      * @return
      */
     private String generateCode(ControlFlowGraph in) {
-        CppVisitor visitor = new CppVisitor();
+        CppVisitor visitor = new CppVisitor(plugin.getStandalone());
         try {
         	in.accept(visitor);
         } catch (Throwable error) {
