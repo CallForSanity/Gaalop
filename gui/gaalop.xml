@@ -2,7 +2,7 @@
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
 <comment>Gaalop Configuration File</comment>
-<entry key="de.gaalop.cpp.Plugin.standalone">false</entry>
+<entry key="de.gaalop.cpp.Plugin.standalone">true</entry>
 <entry key="de.gaalop.maple.Plugin.mapleBinaryPath">C:\Program Files (x86)\Maple 13\bin.win\</entry>
 <entry key="de.gaalop.maple.Plugin.mapleJavaPath">C:\Program Files (x86)\Maple 13\java\</entry>
 </properties>
