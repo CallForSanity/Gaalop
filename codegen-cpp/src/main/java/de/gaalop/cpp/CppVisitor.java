@@ -64,7 +64,6 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 			for (Variable var : graph.getLocalVariables()) {
 				code.append("float ");
 				code.append(var.getName());
-				code.append(suffix);
 				code.append("[32], ");
 			}
 
@@ -79,7 +78,6 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 				appendIndentation();
 				code.append("float ");
 				code.append(var.getName());
-				code.append(suffix);
 				code.append("[32] = { 0.0f };\n");
 			}
 		}
@@ -321,7 +319,7 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 
 	@Override
 	public void visit(MultivectorComponent component) {
-		code.append(component.getName());
+		code.append(component.getName().replace(suffix, ""));
 		code.append('[');
 		code.append(component.getBladeIndex());
 		code.append(']');
