@@ -166,7 +166,7 @@ public class LatexVisitor implements ControlFlowVisitor, ExpressionVisitor {
 
     @Override
     public void visit(MultivectorComponent component) {
-        addIdentifier(component.getName());
+        addIdentifier(component.getName().replace("_opt", ""));
         code.append("_{");
         code.append(component.getBladeIndex());
         code.append('}');
