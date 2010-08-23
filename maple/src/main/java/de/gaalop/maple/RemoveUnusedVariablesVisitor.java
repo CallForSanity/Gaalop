@@ -191,7 +191,6 @@ public class RemoveUnusedVariablesVisitor implements ControlFlowVisitor, Express
 
 	@Override
 	public void visit(MacroCall node) {
-		// TODO Auto-generated method stub
-		
+		throw new IllegalArgumentException("Macros should have been inlined.");
 	}
 }

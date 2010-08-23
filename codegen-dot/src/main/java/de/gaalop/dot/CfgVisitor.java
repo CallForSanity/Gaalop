@@ -94,7 +94,7 @@ public class CfgVisitor implements ControlFlowVisitor {
 	
 	@Override
 	public void visit(ExpressionStatement node) {
-		// TODO: implement this method
+		addNode(node, "Expression:\\n" + node.getExpression());
 		node.getSuccessor().accept(this);
 	}
 
@@ -156,7 +156,6 @@ public class CfgVisitor implements ControlFlowVisitor {
 
 	@Override
 	public void visit(Macro node) {
-		// TODO Auto-generated method stub
-		
+		throw new IllegalArgumentException("Macros should have been inlined.");
 	}
 }

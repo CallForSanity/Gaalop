@@ -46,7 +46,9 @@ public class MapleDfgVisitor implements ExpressionVisitor {
 
 	@Override
 	public void visit(Division division) {
-		// FIXME: division by zero is not detected
+		if (division.getRight().equals(new FloatConstant(0.0f))) {
+			throw new IllegalArgumentException("Division by zero: " + division);
+		}
 		codeBuffer.append("subs(Id=1,");
 		handleInfix(division, ") &c inverse(simplify(");
 		codeBuffer.append("))");

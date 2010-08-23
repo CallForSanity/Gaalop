@@ -169,13 +169,11 @@ public class DfgVisitor implements ExpressionVisitor {
 
 	@Override
 	public void visit(FunctionArgument node) {
-		// TODO Auto-generated method stub
-		
+		throw new IllegalArgumentException("Macros should have been inlined.");
 	}
 
 	@Override
 	public void visit(MacroCall node) {
-		// TODO Auto-generated method stub
-		
+		throw new IllegalArgumentException("Macros should have been inlined.");
 	}
 }

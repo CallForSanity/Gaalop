@@ -176,8 +176,7 @@ public class DfgVisitor implements ExpressionVisitor {
 
 	@Override
 	public void visit(MacroCall node) {
-		// TODO Auto-generated method stub
-		
+		throw new IllegalStateException("Macros should have been inlined and are not allowed for output.");		
 	}
 
 }

@@ -48,7 +48,8 @@ public class LatexVisitor implements ControlFlowVisitor, ExpressionVisitor {
 	
 	@Override
 	public void visit(ExpressionStatement node) {
-		// TODO: implement this method
+		node.getExpression().accept(this);
+		code.append("\\\\\n");
 		node.getSuccessor().accept(this);
 	}
 
@@ -63,20 +64,25 @@ public class LatexVisitor implements ControlFlowVisitor, ExpressionVisitor {
 
     @Override
 	public void visit(IfThenElseNode node) {
-	  // TODO Auto-generated method stub
-	
+	  code.append("if (");
+	  node.getCondition().accept(this);
+	  code.append(") {\n");
+	  node.getPositive().accept(this);
+	  code.append("} else {\n");
+	  node.getNegative().accept(this);
+	  code.append("}\\\\\n");
 	}
 
 	@Override
-	public void visit(LoopNode loopNode) {
-		// TODO Auto-generated method stub
-		
+	public void visit(LoopNode node) {
+		code.append("loop {\n");
+		node.getBody().accept(this);
+		code.append("}\\\\\n");
 	}
 
 	@Override
 	public void visit(BreakNode breakNode) {
-		// TODO Auto-generated method stub
-		
+		code.append("break");
 	}
 
 	@Override
@@ -215,55 +221,47 @@ public class LatexVisitor implements ControlFlowVisitor, ExpressionVisitor {
 
     @Override
     public void visit(LogicalOr node) {
-      // TODO Auto-generated method stub
-      
+      addBinaryInfix(node, " \\vee ");
     }
 
     @Override
     public void visit(LogicalAnd node) {
-      // TODO Auto-generated method stub
-      
+      addBinaryInfix(node, " \\wedge ");
     }
     
     @Override
     public void visit(LogicalNegation node) {
-    	// TODO Auto-generated method stub
-    	
+    	code.append("!");
+    	node.getOperand().accept(this);
     }
 
     @Override
     public void visit(Equality node) {
-      // TODO Auto-generated method stub
-      
+      addBinaryInfix(node, " == ");
     }
 
     @Override
     public void visit(Inequality node) {
-      // TODO Auto-generated method stub
-      
+      addBinaryInfix(node, " \neq ");
     }
 
     @Override
     public void visit(Relation relation) {
-      // TODO Auto-generated method stub
-      
+      addBinaryInfix(relation, relation.getTypeString());
     }
 
 	@Override
 	public void visit(Macro node) {
-		// TODO Auto-generated method stub
-		
+		throw new IllegalArgumentException("Macros should have been inlined.");
 	}
 
 	@Override
 	public void visit(FunctionArgument node) {
-		// TODO Auto-generated method stub
-		
+		throw new IllegalArgumentException("Macros should have been inlined.");
 	}
 
 	@Override
 	public void visit(MacroCall node) {
-		// TODO Auto-generated method stub
-		
+		throw new IllegalArgumentException("Macros should have been inlined.");
 	}
 }

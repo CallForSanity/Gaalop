@@ -40,7 +40,6 @@ public class Macro extends SequentialNode {
 		List<SequentialNode> bodyCopy = new ArrayList<SequentialNode>();
 		for (SequentialNode node : body) {
 			bodyCopy.add(node.copy());
-			// XXX: do successors have to be replaced?
 		}
 		return new Macro(getGraph(), name, bodyCopy, returnValue.copy());
 	}
