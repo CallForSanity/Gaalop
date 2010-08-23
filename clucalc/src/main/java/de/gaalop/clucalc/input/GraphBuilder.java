@@ -182,6 +182,7 @@ public final class GraphBuilder {
 	 */
 	public void addIgnoreVariable(Variable variable) {
 		graph.addIgnoreVariable(variable);
+		graph.addScalarVariable(variable);
 	}
 
 	/**
