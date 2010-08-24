@@ -341,12 +341,12 @@ public class MainForm {
         final JToolBar.Separator toolBar$Separator2 = new JToolBar.Separator();
         toolBar1.add(toolBar$Separator2);
         configureButton = new JButton();
-        configureButton.setEnabled(false);
+        configureButton.setEnabled(true);
         configureButton.setIcon(new ImageIcon(getClass().getResource("/de/gaalop/gui/applications-system.png")));
         configureButton.setText("Configure");
         configureButton.setMnemonic('C');
         configureButton.setDisplayedMnemonicIndex(3);
-//        toolBar1.add(configureButton);
+        toolBar1.add(configureButton);
         tabbedPane = new JTabbedPane();
         contentPane.add(tabbedPane, BorderLayout.CENTER);
         final JPanel panel2 = new JPanel();
