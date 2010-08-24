@@ -235,7 +235,7 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 			}
 
 			Subtraction lhs = ExpressionFactory.subtract(left.copy(), right.copy());
-			Variable condition = new Variable("condition_");
+			Variable condition = new Variable("condition_" + conditionSuffix++);
 			Expression newRight = new FloatConstant(0);
 			try {
 				String assignment = generateCode(condition) + ":=" + generateCode(lhs) + ";";
@@ -357,6 +357,9 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 
 	private Log log = LogFactory.getLog(MapleCfgVisitor.class);
 
+	private static final String suffix = "_opt";
+	static int conditionSuffix = 0;
+
 	MapleEngine engine;
 
 	private HashMap<String, String> oldMinVal;
@@ -427,7 +430,7 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 				if (component.getBladeIndex() == 0 && coefficients.size() == 1) {
 					// check that Maple result is not of type x := 'x'
 					String optName = coefficient.getVariable().getName();
-					Variable coeffVariable = new Variable(optName.substring(0, optName.lastIndexOf("_opt")));
+					Variable coeffVariable = new Variable(optName.substring(0, optName.lastIndexOf(suffix)));
 					if (coeffVariable.equals(coefficient.getValue())) {
 						coefficient.setValue(new FloatConstant(0));
 					}
@@ -457,7 +460,7 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 		List<MultivectorComponent> coefficients = getComponents(optimizeVariable(graph, temp));
 		for (MultivectorComponent coefficient : coefficients) {
 			Variable originalVariable = node.getVariable();
-			String optVarName = originalVariable.getName() + "_opt";
+			String optVarName = originalVariable.getName() + suffix;
 			MultivectorComponent originalComp = new MultivectorComponent(optVarName, coefficient.getBladeIndex());
 			Variable tempVar = new Variable(getTempVarName(originalComp));
 			if (initializedVariables.get(originalVariable) == null) {
@@ -574,7 +577,7 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 	}
 
 	private String getTempVarName(MultivectorComponent component) {
-		return component.getName().replace('e', 'E') + "__" + component.getBladeIndex();
+		return component.getName().replace('e', 'E').replace(suffix, "") + "__" + component.getBladeIndex();
 	}
 
 	@Override

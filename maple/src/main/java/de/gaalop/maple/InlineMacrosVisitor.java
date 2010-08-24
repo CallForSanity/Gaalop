@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.Set;
 
 import de.gaalop.Notifications;
@@ -155,9 +154,10 @@ public class InlineMacrosVisitor extends EmptyExpressionVisitor implements Contr
 
 	private String generateUniqueName(String original) {
 		String unique = original;
-		Random r = new Random(System.currentTimeMillis());
+		int i = 1;
 		while (graph.containsLocalVariable(unique)) {
-			unique = original + "__" + r.nextInt(100);
+			unique = original + "__" + i;
+			i++;
 		}
 		return unique;
 	}
