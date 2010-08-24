@@ -3,6 +3,7 @@ package de.gaalop.cpp;
 import de.gaalop.CodeGenerator;
 import de.gaalop.CodeGeneratorPlugin;
 import de.gaalop.ConfigurationProperty;
+import de.gaalop.ConfigurationProperty.Type;
 import de.gaalop.Notifications;
 
 import org.apache.commons.logging.Log;
@@ -23,7 +24,7 @@ public class Plugin extends Observable implements CodeGeneratorPlugin {
 
     private Image icon;
     
-    @ConfigurationProperty
+    @ConfigurationProperty(type = Type.BOOLEAN)
     public boolean standalone = true;
 
     public Plugin() {

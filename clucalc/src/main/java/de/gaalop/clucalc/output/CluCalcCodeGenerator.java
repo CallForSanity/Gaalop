@@ -13,9 +13,13 @@ import java.util.Set;
  *
  * It is implemented as a singleton because it has no state.
  */
-public enum CluCalcCodeGenerator implements CodeGenerator {
+public class CluCalcCodeGenerator implements CodeGenerator {
+	
+	private String suffix;
 
-    INSTANCE;
+	public CluCalcCodeGenerator(String suffix) {
+		this.suffix = suffix;
+	}
 
     @Override
     public Set<OutputFile> generate(ControlFlowGraph in) {
@@ -47,9 +51,13 @@ public enum CluCalcCodeGenerator implements CodeGenerator {
      * @return
      */
     private String generateCode(ControlFlowGraph in) {
-        CfgVisitor visitor = new CfgVisitor();
+        CfgVisitor visitor = new CfgVisitor(suffix);
         in.accept(visitor);
         return visitor.getCode();
     }
+
+	public void setSuffix(String suffix) {
+		this.suffix = suffix;
+	}
 
 }

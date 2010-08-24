@@ -5,6 +5,7 @@ import de.gaalop.ConfigurationProperty;
 import de.gaalop.Notifications;
 import de.gaalop.OptimizationStrategy;
 import de.gaalop.OptimizationStrategyPlugin;
+import de.gaalop.ConfigurationProperty.Type;
 import de.gaalop.maple.engine.Maple;
 import de.gaalop.maple.engine.win32.Win32MapleFinder;
 import org.apache.commons.logging.Log;
@@ -25,11 +26,11 @@ public class Plugin extends Observable implements OptimizationStrategyPlugin {
 	private static MapleSimplifier simplifier = null;
 
 	/** This is a configuration property and should not be modified. */
-	@ConfigurationProperty
+	@ConfigurationProperty(type = Type.TEXT)
 	public String mapleBinaryPath;
 
 	/** This is a configuration property and should not be modified. */
-	@ConfigurationProperty
+	@ConfigurationProperty(type = Type.TEXT)
 	public String mapleJavaPath;
 
 	/**

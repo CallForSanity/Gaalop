@@ -20,8 +20,9 @@ import org.apache.commons.logging.LogFactory;
  */
 public class CfgVisitor implements ControlFlowVisitor {
 	
-	private static final String SUFFIX = "_opt";
-
+	private static final String MAPLE_SUFFIX = "_opt";
+	private String codeSuffix;
+	
 	private Log log = LogFactory.getLog(CfgVisitor.class);
 
 	private Map<String, Set<Integer>> assignedComponents = new HashMap<String, Set<Integer>>();
@@ -29,6 +30,10 @@ public class CfgVisitor implements ControlFlowVisitor {
 	private StringBuilder code = new StringBuilder();
 
 	private int indent;
+	
+	public CfgVisitor(String suffix) {
+		codeSuffix = suffix;
+	}
 
 	public String getCode() {
 		return code.toString();
@@ -61,7 +66,7 @@ public class CfgVisitor implements ControlFlowVisitor {
 
 		// Generate the local variables for all local variables
 		for (Variable localVariable : startNode.getGraph().getLocalVariables()) {
-			code.append(localVariable.getName() + SUFFIX);
+			code.append(localVariable.getName() + codeSuffix);
 			code.append(" = List(");
 			code.append(startNode.getGraph().getBladeList().length);
 			code.append(");\n");
@@ -99,7 +104,7 @@ public class CfgVisitor implements ControlFlowVisitor {
 			MultivectorComponent component = (MultivectorComponent) assignmentNode.getVariable();
 			Expression[] bladeList = assignmentNode.getGraph().getBladeList();
 
-			DfgVisitor bladeVisitor = new DfgVisitor();
+			DfgVisitor bladeVisitor = new DfgVisitor(codeSuffix, MAPLE_SUFFIX);
 			bladeList[component.getBladeIndex()].accept(bladeVisitor);
 			code.append(bladeVisitor.getCode());
 
@@ -135,7 +140,7 @@ public class CfgVisitor implements ControlFlowVisitor {
 		Variable outputVariable = (Variable) node.getValue();
 
 		String variableName = outputVariable.getName();
-		String opt = variableName + SUFFIX;
+		String opt = variableName + MAPLE_SUFFIX;
 		code.append(variableName);
 		Set<Integer> var = assignedComponents.get(opt);
 		if (var == null) {
@@ -150,7 +155,7 @@ public class CfgVisitor implements ControlFlowVisitor {
 
 				Expression blade = node.getGraph().getBladeList()[i];
 
-				code.append(opt);
+				code.append(opt.replace(MAPLE_SUFFIX, codeSuffix));
 				code.append("(");
 				code.append(i + 1);
 				code.append(")");
@@ -237,7 +242,7 @@ public class CfgVisitor implements ControlFlowVisitor {
 	}
 
 	private void addCode(Expression value) {
-		DfgVisitor visitor = new DfgVisitor();
+		DfgVisitor visitor = new DfgVisitor(codeSuffix, MAPLE_SUFFIX);
 		value.accept(visitor);
 		code.append(visitor.getCode());
 	}

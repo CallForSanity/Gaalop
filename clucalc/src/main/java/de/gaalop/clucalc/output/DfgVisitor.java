@@ -8,6 +8,13 @@ import de.gaalop.dfg.*;
 public class DfgVisitor implements ExpressionVisitor {
 
 	private StringBuilder code = new StringBuilder();
+	private final String optSuffix;
+	private final String suffix;
+	
+	public DfgVisitor(String suffix, String optSuffix) {
+		this.suffix = suffix;
+		this.optSuffix = optSuffix;
+	}
 
 	public String getCode() {
 		return code.toString();
@@ -71,12 +78,12 @@ public class DfgVisitor implements ExpressionVisitor {
 
 	@Override
 	public void visit(Variable variable) {
-		code.append(variable.getName());
+		code.append(variable.getName().replace(optSuffix, suffix));
 	}
 
 	@Override
 	public void visit(MultivectorComponent component) {
-		code.append(component.getName());
+		code.append(component.getName().replace(optSuffix, suffix));
 		code.append('(');
 		code.append(component.getBladeIndex() + 1);
 		code.append(')');
