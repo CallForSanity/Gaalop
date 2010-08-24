@@ -29,6 +29,7 @@ public class ModlibWriter implements OperationVisitor {
 
 
     public static boolean mul_pipe = true;
+    public static boolean mul_pipe_create = true;
 
     private Graph graph;
     private BufferedWriter writer;
@@ -138,6 +139,7 @@ public class ModlibWriter implements OperationVisitor {
     private void write(Graph graph) throws IOException {
         combinedDepth = 0;
         highestDepth = 0;
+        mulpipes = new HashSet<MulPipeCreator.Options>();
         // generate all modules and wires
         for (Operation op : graph.getOperations()) {
             if (!op.isHardwareOperation()) {
@@ -150,6 +152,23 @@ public class ModlibWriter implements OperationVisitor {
                 graph.getLatestSchedule()));
         write(String.format("// combined depth: %d\n", combinedDepth));
         write(String.format("// highest depth: %d\n", highestDepth));
+        int numAdd = graph.numOfOperation(true, datapath.graph.operations.Add.class);
+        int numSub = graph.numOfOperation(true, datapath.graph.operations.Subtraction.class);
+        int numMul = graph.numOfOperation(true, datapath.graph.operations.Multiplication.class);
+        int numDiv = graph.numOfOperation(true, datapath.graph.operations.Divide.class);
+        int numCos = graph.numOfOperation(true, datapath.graph.operations.Cos.class);
+        int numSin = graph.numOfOperation(true, datapath.graph.operations.Sin.class);
+        int numSqrt = graph.numOfOperation(true, datapath.graph.operations.SquareRoot.class);
+        int numTotal = numAdd + numSub + numMul + numDiv + numCos + numSin + numSqrt;
+        write("// number of operations\n");
+        write(String.format("// add: %d\n", numAdd));
+        write(String.format("// sub: %d\n", numSub));
+        write(String.format("// div: %d\n", numDiv));
+        write(String.format("// mul: %d\n", numMul));
+        write(String.format("// cos: %d\n", numCos));
+        write(String.format("// sin: %d\n", numSin));
+        write(String.format("// sqrt: %d\n", numSqrt));
+        write(String.format("// total: %d\n", numTotal));
         write("module graph" + graph.getId() + "\n");
         write("(\n");
         // Control Wires
@@ -186,6 +205,11 @@ public class ModlibWriter implements OperationVisitor {
             write("\n");
         }
         write("endmodule\n");
+        if(mul_pipe_create && mul_pipe) {
+            System.out.println("number of different mul_pipe:" + mulpipes.size());
+            System.out.println(mulpipes);
+            MulPipeCreator.c(mulpipes);
+        }
     }
 
     /**
@@ -298,7 +322,10 @@ public class ModlibWriter implements OperationVisitor {
 
     private void addCommonControl() {
         for (Module m : modules) {
-            m.addParameter(new QDEPTH(0));
+            if(m.getType().equals("const_op")) {
+                m.addParameter(new QDEPTH(1));
+            } else
+                m.addParameter(new QDEPTH(0));
             m.addIO(new WireIO(CLK, "CLK"));
             m.addIO(new WireIO(CE, "CE"));
             m.addIO(new WireIO(new Wire("1'b1"), "START"));
@@ -436,6 +463,17 @@ public class ModlibWriter implements OperationVisitor {
     public void visit(ConstantShift op) {
         Module m;
         ShiftMode mode = op.getMode();
+        if (mode == ShiftMode.ZeroShiftLeft) {
+          op.setShiftAmount(0);
+          op.setMode(ShiftMode.Left);
+        }
+        if (mode == ShiftMode.ZeroShiftRight) {
+          op.setShiftAmount(0);
+          op.setMode(ShiftMode.Right);
+        }
+
+        mode = op.getMode();
+        
         switch (mode) {
             case Right:
                 if(op.isSigned()){
@@ -589,8 +627,18 @@ public class ModlibWriter implements OperationVisitor {
         modules.add(m);
     }
 
+    HashSet<MulPipeCreator.Options> mulpipes;
+
     @Override
     public void visit(Multiplication op) {
+        if(op.getLhs().getOutputBitsize() < op.getRhs().getOutputBitsize()) {
+            Operation lhs = op.getLhs();
+            Operation rhs = op.getRhs();
+            op.removeLHS();
+            op.removeRHS();
+            op.setLHS(rhs);
+            op.setRHS(lhs);
+        }
         int lhs = op.getLhs().getOutputBitsize();
         int rhs = op.getRhs().getOutputBitsize();
         int bit = op.getOutputBitsize();
@@ -598,8 +646,16 @@ public class ModlibWriter implements OperationVisitor {
         if (type instanceof datapath.graph.type.Integer) {
             binaryOp("mul", op);
         } else if (type instanceof datapath.graph.type.FixedPoint) {
-
             if(mul_pipe && lhs <= 64 && rhs <= 64 && bit <= 128) {
+                if(mul_pipe_create) {
+                MulPipeCreator.Options ops = new MulPipeCreator.Options();
+                ops.WA = lhs;
+                ops.WB = rhs;
+                ops.WR = bit;
+                ops.signed = op.isSigned();
+                ops.stages = op.getDelay();
+                mulpipes.add(ops);
+                }
                 binaryOp("mul_pipe", op);
             } else {
                 binaryOp("mul", op);
@@ -631,7 +687,11 @@ public class ModlibWriter implements OperationVisitor {
         if (type instanceof datapath.graph.type.Integer) {
             binaryOp("divint", op);
         } else if (type instanceof datapath.graph.type.FixedPoint) {
-            binaryOp("divint", op);
+            if(op.getOutputBitsize() == 64) {
+                binaryOp("bigdiv", op);
+            } else {
+                binaryOp("divint", op);
+            }
         } else if (type instanceof datapath.graph.type.Float) {
             binaryOp("divfloat", op);
         } else {
@@ -716,4 +776,9 @@ public class ModlibWriter implements OperationVisitor {
     throw new UnsupportedOperationException("Not supported.");
   }
 
+    @Override
+    public void visit(ConstantMultiplication op) {
+        binaryOp("mul", op);
+    }
+    
 }

@@ -63,7 +63,20 @@ public class ConstantFolding implements ExpressionVisitor, ControlFlowVisitor {
       FloatConstant leftc = (FloatConstant) left;
       FloatConstant rightc = (FloatConstant) right;
       resultExpr = new FloatConstant(leftc.getValue() - rightc.getValue());
-    } 
+    } else if (right instanceof Negation) {
+      Negation neg = (Negation) right;
+      resultExpr = new Addition(left, neg.getOperand());
+    } else if (left instanceof FloatConstant) {
+      FloatConstant leftc = (FloatConstant) left;
+      if(leftc.getValue() == 0.0) {
+          resultExpr = new Negation(right);
+      }
+    } else if(right instanceof FloatConstant) {
+      FloatConstant rightc = (FloatConstant) right;
+      if(rightc.getValue() == 0.0) {
+          resultExpr = left;
+      }
+    }
   }
 
   @Override
@@ -78,6 +91,16 @@ public class ConstantFolding implements ExpressionVisitor, ControlFlowVisitor {
       FloatConstant leftc = (FloatConstant) left;
       FloatConstant rightc = (FloatConstant) right;
       resultExpr = new FloatConstant(leftc.getValue() + rightc.getValue());
+    } else if(left instanceof FloatConstant) {
+        FloatConstant leftc = (FloatConstant) left;
+        if(leftc.getValue() == 0.0) {
+            resultExpr = right;
+        }
+    } else if (right instanceof FloatConstant) {
+        FloatConstant rightc = (FloatConstant) right;
+        if(rightc.getValue() == 0.0) {
+            resultExpr = left;
+        }
     }
   }
 
@@ -87,7 +110,11 @@ public class ConstantFolding implements ExpressionVisitor, ControlFlowVisitor {
     Expression left = resultExpr;
     node.getRight().accept(this);
     Expression right = resultExpr;
-    resultExpr = new Division(left, right);
+    if(left instanceof FloatConstant && ((FloatConstant)left).getValue() == 1.0) {
+        resultExpr = new Division(left, right);
+    } else {
+    resultExpr = new Multiplication(left, new  Division(new FloatConstant("1.0"), right));
+    }
     if ((left instanceof FloatConstant) &&
             (right instanceof FloatConstant)) {
       FloatConstant leftc = (FloatConstant) left;
@@ -127,6 +154,10 @@ public class ConstantFolding implements ExpressionVisitor, ControlFlowVisitor {
         resultExpr = left;
       } else if (floatConst.getValue() == 0.5) {
         resultExpr = new Division(left, new FloatConstant(2.0f));
+      } else if (floatConst.getValue() == -1.0) {
+        resultExpr = new Negation(left);
+      } else if (floatConst.getValue() == 0.0) {
+        resultExpr = right;
       }
 
     } else if ((left instanceof FloatConstant)) {
@@ -136,6 +167,10 @@ public class ConstantFolding implements ExpressionVisitor, ControlFlowVisitor {
         resultExpr = right;
       }  else  if (floatConst.getValue() == 0.5) {
         resultExpr = new Division(right, new FloatConstant(2.0f));
+      } else if (floatConst.getValue() == -1.0) {
+        resultExpr = new Negation(right);
+      } else if (floatConst.getValue() == 0.0) {
+        resultExpr = left;
       }
 
     } else if ((left instanceof MathFunctionCall) &&
@@ -197,11 +232,32 @@ public class ConstantFolding implements ExpressionVisitor, ControlFlowVisitor {
     node.getRight().accept(this);
     Expression right = resultExpr;
     resultExpr = new Exponentiation(left, right);
-    if (right instanceof FloatConstant) {
+    if(left instanceof FloatConstant && right instanceof FloatConstant) {
+      // const ^ const => const
+      FloatConstant leftc = (FloatConstant) left;
       FloatConstant rightc = (FloatConstant) right;
-      if (rightc.getValue() == 0.5) {
+      resultExpr = new FloatConstant(new Float(Math.pow(leftc.getValue(), rightc.getValue())));
+    } else if (left instanceof FloatConstant && ((FloatConstant)left).getValue() == 0.0) {
+      // 0 ^ x => 0
+      resultExpr = left;
+    } else if (right instanceof FloatConstant) {
+      // x ^ const
+      FloatConstant rightc = (FloatConstant) right;
+      boolean isSqrt = rightc.getValue() - (float) new Float(rightc.getValue()).intValue() == 0.5;
+      if(isSqrt && rightc.getValue() != 0.5) {
+          MathFunctionCall newsqrt = new MathFunctionCall(new Exponentiation(
+                  left, new FloatConstant(rightc.getValue() - 0.5f)), MathFunction.SQRT);
+          resultExpr = newsqrt;
+      }
+      if(rightc.getValue() == 1.0) {
+        // x ^ 1 => x
+        resultExpr = left;
+      }
+      else if (rightc.getValue() == 0.5) {
         MathFunctionCall newsqrt = new MathFunctionCall(left, MathFunction.SQRT);
         newsqrt.accept(this);
+      } else if (rightc.getValue() == 2.0) {
+          resultExpr = new Multiplication(left, left);
       }
     }
   }
@@ -228,7 +284,11 @@ public class ConstantFolding implements ExpressionVisitor, ControlFlowVisitor {
     resultExpr = new Negation(resultExpr);
     if ((previousExpr instanceof FloatConstant)) {
       FloatConstant operand = (FloatConstant) previousExpr;
-      resultExpr = new FloatConstant(-operand.getValue());
+      if(operand.getValue() == 0.0) {
+          resultExpr = new FloatConstant(0.0f);
+      } else {
+          resultExpr = new FloatConstant(-operand.getValue());
+      }
     } else if (previousExpr instanceof Negation) {
       Negation operand = (Negation) previousExpr;
       resultExpr = operand.getOperand();
@@ -300,46 +360,39 @@ public class ConstantFolding implements ExpressionVisitor, ControlFlowVisitor {
   public void visit(EndNode node) {
   }
 
-@Override
-public void visit(LoopNode node) {
-	// TODO Auto-generated method stub
-	
-}
+    @Override
+    public void visit(LogicalNegation node) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 
-@Override
-public void visit(BreakNode node) {
-	// TODO Auto-generated method stub
-	
-}
+    @Override
+    public void visit(FunctionArgument node) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 
-@Override
-public void visit(Macro node) {
-	// TODO Auto-generated method stub
-	
-}
+    @Override
+    public void visit(MacroCall node) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 
-@Override
-public void visit(ExpressionStatement node) {
-	// TODO Auto-generated method stub
-	
-}
+    @Override
+    public void visit(LoopNode node) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 
-@Override
-public void visit(LogicalNegation node) {
-	// TODO Auto-generated method stub
-	
-}
+    @Override
+    public void visit(BreakNode node) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 
-@Override
-public void visit(FunctionArgument node) {
-	// TODO Auto-generated method stub
-	
-}
+    @Override
+    public void visit(Macro node) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 
-@Override
-public void visit(MacroCall node) {
-	// TODO Auto-generated method stub
-	
-}
+    @Override
+    public void visit(ExpressionStatement node) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 
 }

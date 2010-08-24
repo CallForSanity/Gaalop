@@ -48,6 +48,7 @@ public class WordLengthGUI extends javax.swing.JDialog {
     pipelindedMulitplier = new javax.swing.JCheckBox();
     jLabel4 = new javax.swing.JLabel();
     monteCarloIters = new javax.swing.JTextField();
+    coregenedMults = new javax.swing.JCheckBox();
 
     setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
     setTitle("Wordlength Optimization");
@@ -87,6 +88,8 @@ public class WordLengthGUI extends javax.swing.JDialog {
       }
     });
 
+    coregenedMults.setText("Generate Multiplier");
+
     javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
     getContentPane().setLayout(layout);
     layout.setHorizontalGroup(
@@ -113,7 +116,9 @@ public class WordLengthGUI extends javax.swing.JDialog {
                           .addComponent(minFraclengthField, javax.swing.GroupLayout.Alignment.LEADING)
                           .addComponent(maxWordlengthField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 37, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 62, Short.MAX_VALUE)
-                        .addComponent(pipelindedMulitplier))))))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                          .addComponent(coregenedMults)
+                          .addComponent(pipelindedMulitplier)))))))
               .addGroup(layout.createSequentialGroup()
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 53, Short.MAX_VALUE)
@@ -136,12 +141,13 @@ public class WordLengthGUI extends javax.swing.JDialog {
         .addGap(18, 18, 18)
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
           .addComponent(jLabel3)
-          .addComponent(minFraclengthField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+          .addComponent(minFraclengthField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+          .addComponent(coregenedMults))
         .addGap(18, 18, 18)
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
           .addComponent(jLabel4)
           .addComponent(monteCarloIters, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 43, Short.MAX_VALUE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 39, Short.MAX_VALUE)
         .addComponent(jButton1)
         .addGap(41, 41, 41))
     );
@@ -157,6 +163,7 @@ public class WordLengthGUI extends javax.swing.JDialog {
       options.setMaxWordlength((Integer.parseInt(maxWordlengthField.getText())));
       options.setMonteCarloIterations(Integer.parseInt(monteCarloIters.getText()));
       ModlibWriter.mul_pipe = pipelindedMulitplier.isSelected();
+      ModlibWriter.mul_pipe_create = coregenedMults.isSelected();
       this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -170,7 +177,7 @@ public class WordLengthGUI extends javax.swing.JDialog {
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                WordLengthGUI dialog = new WordLengthGUI(new javax.swing.JFrame(), true, new Options());
+                WordLengthGUI dialog = new WordLengthGUI(new javax.swing.JFrame(), true, null);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     public void windowClosing(java.awt.event.WindowEvent e) {
                         System.exit(0);
@@ -182,6 +189,7 @@ public class WordLengthGUI extends javax.swing.JDialog {
     }
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
+  private javax.swing.JCheckBox coregenedMults;
   private javax.swing.JButton jButton1;
   private javax.swing.JLabel jLabel1;
   private javax.swing.JLabel jLabel2;

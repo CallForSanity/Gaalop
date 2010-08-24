@@ -44,5 +44,6 @@ public interface OperationVisitor {
     public void visit(BitwidthTransmogrify op);
     public void visit(Predicate op);
     public void visit(TypeConversion op);
+    public void visit(ConstantMultiplication op);
     
 }

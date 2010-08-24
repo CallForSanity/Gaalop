@@ -6,7 +6,7 @@
 package wordlengthoptimization;
 
 import datapath.graph.OperationVisitor;
-import datapath.graph.operations.Absolut;
+import datapath.graph.operations.*;
 import datapath.graph.operations.Add;
 import datapath.graph.operations.ArcCos;
 import datapath.graph.operations.BinaryOperation;
@@ -74,6 +74,7 @@ public class LimitBitwidthNewTypeCast implements OperationVisitor {
     Type type = op.getType();
     assert (type instanceof FixedPoint);
     FixedPoint fp = (FixedPoint) type;
+
 
     /* pump it up to get minimum fractionlength */
     if (fp.getFractionlength() < minFractionlength) {
@@ -268,5 +269,10 @@ public class LimitBitwidthNewTypeCast implements OperationVisitor {
   public void visit(TypeConversion op) {
     throw new UnsupportedOperationException("Not supported yet.");
   }
+
+   @Override
+    public void visit(ConstantMultiplication op) {
+        visit((Multiplication)op);
+    }
 
 }

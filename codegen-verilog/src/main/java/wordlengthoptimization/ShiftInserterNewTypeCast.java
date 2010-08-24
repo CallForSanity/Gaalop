@@ -7,7 +7,7 @@ package wordlengthoptimization;
 
 import datapath.graph.Graph;
 import datapath.graph.OperationVisitor;
-import datapath.graph.operations.Absolut;
+import datapath.graph.operations.*;
 import datapath.graph.operations.Add;
 import datapath.graph.operations.ArcCos;
 import datapath.graph.operations.BinaryOperation;
@@ -170,8 +170,9 @@ public class ShiftInserterNewTypeCast implements OperationVisitor {
   @Override
   public void visit(Add op) {
     /* if signed, we sign extend the inputs */
-        FixedPoint input = (FixedPoint) op.getType().clone();
-    input.setBitsize(input.getBitsize() -1 );
+    FixedPoint input = (FixedPoint) op.getType().clone();
+    input.setBitsize(input.getBitsize());
+    input.setSigned(op.isSigned());
     TypeConversion typeCast = new TypeConversion(input.clone());
     addToInput(op, op.getLhs(), typeCast);
     typeCast = new TypeConversion(input.clone());
@@ -182,7 +183,8 @@ public class ShiftInserterNewTypeCast implements OperationVisitor {
   public void visit(Subtraction op) {
     /* if signed, we sign extend the inputs */
     FixedPoint input = (FixedPoint) op.getType().clone();
-    input.setBitsize(input.getBitsize() -1 );
+    input.setBitsize(input.getBitsize());
+    input.setSigned(op.isSigned());
     TypeConversion typeCast = new TypeConversion(input.clone());
     addToInput(op, op.getLhs(), typeCast);
     typeCast = new TypeConversion(input.clone());
@@ -204,29 +206,50 @@ public class ShiftInserterNewTypeCast implements OperationVisitor {
     FixedPoint fpr = (FixedPoint) op.getRhs().getType().clone();
     FixedPoint oldType = (FixedPoint) op.getType();
     FixedPoint resultType = (FixedPoint)oldType.clone();
-    resultType.setToBitwidth(32);
+    oldType.setBitsize(64);
+    oldType.setFractionlength(32);
+
 
     /* in case they are bigger, reduce them */
-    fpl.restrictBitwidth(32);
+    //fpl.restrictBitwidth(32);
     fpr.restrictBitwidth(32);
 
     /* in case they are are smaller than 32 bit, set them to 32 bit */
     fpl.setBitsize(32);
     fpr.setBitsize(32);
 
+    /* divs are always signed */
+    fpl.setSigned(true);
+    fpr.setSigned(true);
+
+
+    /* left is always 1 */
+    fpl.setFractionlength(30);
+
+    if (fpl.getFractionlength() > fpr.getFractionlength()) {
+      oldType.setFractionlength(32 + (fpl.getFractionlength() - fpr.getFractionlength()));
+    } else {
+      fpr.setFractionlength(fpl.getFractionlength());
+    }
+    //resultType = new FixedPoint(1+ oldType.getFractionlength() + resultType.getIntBits(), oldType.getFractionlength(), true);
+
     /* cheat, TODO: program a sophisticated algorithm, or a lookuptable
-        for all 32 x 32 values */
+        for all 32 x 32 values
     if (fpl.getFractionlength() == 14 && fpr.getFractionlength() == 14) {
       fpl.setFractionlength(22);
       fpr.setFractionlength(8);
     } else     if (fpr.getFractionlength() >= 22) {
-      //fpl.setFractionlength();
-      fpr.setFractionlength(fpr.getFractionlength() - 14);
-    } else {
+      fpl.setFractionlength(22);
+      fpr.setFractionlength(8);
+    }else  if (fpr.getFractionlength() >= 20) {
+      fpl.setFractionlength(20);
+      fpr.setFractionlength(6);
+    }
+     else {
        System.out.println("DIV bitwdith determination not finished");
        System.out.println("Missing parameter for combination: " + fpl + " and " +fpr);
        assert(false);
-    }
+    } */
 
     /*
     int dividePrecision = fpl.getFractionlength() - fpr.getFractionlength();
@@ -255,10 +278,8 @@ public class ShiftInserterNewTypeCast implements OperationVisitor {
     addToInput(op, op.getRhs(), typeCast);
 
     /* fix output */
-    typeCast = new TypeConversion(oldType);
+    typeCast = new TypeConversion(resultType);
     addToOutput(op, typeCast);
-
-    op.setType(resultType);
   }
 
 
@@ -345,7 +366,15 @@ public class ShiftInserterNewTypeCast implements OperationVisitor {
 
   @Override
   public void visit(ConstantShift op) {
-
+    FixedPoint input = (FixedPoint) op.getType().clone();
+    FixedPoint prev = (FixedPoint) op.getData().getType();
+    input.setFractionlength(prev.getFractionlength());
+    if (op.getMode() == ShiftMode.ZeroShiftRight &&
+        input.getIntBits() == 0) {
+      input.setFractionlength(input.getFractionlength() - op.getShiftAmount());
+    }
+    TypeConversion typeCast = new TypeConversion(input);
+    addToInput(op, op.getData(), typeCast);
   }
 
   @Override
@@ -411,6 +440,11 @@ public class ShiftInserterNewTypeCast implements OperationVisitor {
   public void visit(TypeConversion op) {
     throw new UnsupportedOperationException("Not supported yet.");
   }
+
+   @Override
+    public void visit(ConstantMultiplication op) {
+        visit((Multiplication)op);
+    }
 
 
 }

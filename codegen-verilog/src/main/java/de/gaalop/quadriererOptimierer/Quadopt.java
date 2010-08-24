@@ -268,66 +268,38 @@ AssignmentNode currentAssignment;
 	        return two.equals(exponentiation.getRight());
 	    }
 
+    @Override
+    public void visit(LogicalNegation node) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 
+    @Override
+    public void visit(FunctionArgument node) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 
+    @Override
+    public void visit(MacroCall node) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 
-	@Override
-	public void visit(LoopNode node) {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void visit(LoopNode node) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 
+    @Override
+    public void visit(BreakNode node) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 
+    @Override
+    public void visit(Macro node) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 
-
-	@Override
-	public void visit(BreakNode node) {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-
-
-	@Override
-	public void visit(Macro node) {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-
-
-	@Override
-	public void visit(ExpressionStatement node) {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-
-
-	@Override
-	public void visit(LogicalNegation node) {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-
-
-	@Override
-	public void visit(FunctionArgument node) {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-
-
-	@Override
-	public void visit(MacroCall node) {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void visit(ExpressionStatement node) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }

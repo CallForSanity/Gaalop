@@ -10,6 +10,7 @@ import datapath.graph.operations.Add;
 import datapath.graph.operations.ArcCos;
 import datapath.graph.operations.BinaryOperation;
 import datapath.graph.operations.BitwidthTransmogrify;
+import datapath.graph.operations.ConstantMultiplication;
 import datapath.graph.operations.ConstantOperation;
 import datapath.graph.operations.ConstantShift;
 import datapath.graph.operations.Cos;
@@ -170,5 +171,10 @@ class DeadTreeEliminationVisitor implements OperationVisitor {
   @Override
   public void visit(TypeConversion op) {
   }
+
+    @Override
+    public void visit(ConstantMultiplication op) {
+        visit((Multiplication)op);
+    }
   
 }

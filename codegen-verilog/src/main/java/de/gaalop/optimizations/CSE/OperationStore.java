@@ -23,6 +23,7 @@ public class OperationStore {
    // HashSet<OperationToken> allops = new HashSet();
     HashMap<Integer, OperationToken> allOpsSet = new HashMap();
     HashMap<Integer, OperationToken> ReplaceAbleOpsSet = new HashMap();
+     private int savedoperations;
 
     public HashMap<Integer, OperationToken> getReplaceAbleOpsSet() {
         return ReplaceAbleOpsSet;
@@ -119,7 +120,7 @@ if (!optok.isUsedToReplace())
         int oldmaximum = 0;
         int newmaximum = 0;
         OperationToken winner = null;
-        int savedoperations = 0;
+        savedoperations = 0;
         for (Iterator it = summary.values().iterator(); it.hasNext();) {
             OperationToken optok = (OperationToken) it.next();
             if (optok.occurences > 1) {
@@ -140,6 +141,10 @@ if (!optok.isUsedToReplace())
             System.out.println("\n no Expressions to eliminate found");
         }
         System.out.println("***************************End**************************");
+    }
+
+    public int getSavedoperations() {
+        return savedoperations;
     }
 }
 

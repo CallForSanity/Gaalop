@@ -5,6 +5,7 @@
 package datapath.graph.operations;
 
 import datapath.graph.OperationVisitor;
+import datapath.graph.type.FixedPoint;
 import datapath.graph.type.Type;
 
 /**
@@ -36,6 +37,8 @@ public class Divide extends BinaryOperation {
     public int getDelay() {
         Type type = getType();
         int delay = getLhs().getOutputBitsize() + 2 + (isSigned() ? 2 : 0); //- getStageDelay();
+        if(type instanceof FixedPoint && getOutputBitsize() == 64)
+            delay = 32 + 32 + 4;
         if (type instanceof datapath.graph.type.Float) {
             delay = (type.getBitsize() == 32 ? 28 : 57); //- getStageDelay();
         }

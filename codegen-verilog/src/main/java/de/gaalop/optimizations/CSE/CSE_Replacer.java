@@ -32,6 +32,7 @@ import de.gaalop.dfg.LogicalAnd;
 import de.gaalop.dfg.LogicalNegation;
 import de.gaalop.dfg.LogicalOr;
 import de.gaalop.dfg.MacroCall;
+import de.gaalop.dfg.MathFunction;
 import de.gaalop.dfg.MathFunctionCall;
 import de.gaalop.dfg.Multiplication;
 import de.gaalop.dfg.MultivectorComponent;
@@ -143,7 +144,19 @@ public class CSE_Replacer implements ExpressionVisitor,ControlFlowVisitor {
     @Override
     public void visit(MathFunctionCall node) {
         //TODO Schluckt nachkommende werte
-        nx = node;
+          if (opstor.OperationShouldBeReplaced(node)) {
+          nx = new Variable(opstor.getReplacementID(node));
+         System.out.println("Replacer: Node  in Set: (  " + node.toString() + "  )    ---> Replacing with " + opstor.getReplacementID(node));
+
+
+        } else {
+        node.getOperand().accept(this);
+        nx = new MathFunctionCall(nx, node.getFunction());
+
+
+
+        }
+        //nx = node;
     }
 
     @Override
@@ -158,24 +171,36 @@ public class CSE_Replacer implements ExpressionVisitor,ControlFlowVisitor {
 
     @Override
     public void visit(Exponentiation node) {
-         if (opstor.OperationShouldBeReplaced(node)) {
-          nx = new Variable(opstor.getReplacementID(node));
-
-         System.out.println("Replacer: Node  in Set: (  " + node.toString() + "  )    ---> Replacing with " + opstor.getReplacementID(node));
-
+        Multiplication nodeMul;
+        if (isSquare(node)) {
+            nodeMul = new Multiplication(node.getLeft(), node.getLeft());
+            nx = nodeMul;
+            if (opstor.OperationShouldBeReplaced(nodeMul)) {
+                nx = new Variable(opstor.getReplacementID(nodeMul));
+            }
 
         } else {
-            node.getLeft().accept(this);
-            Expression lhs = nx;
-            node.getRight().accept(this);
-            Expression rhs = nx;
-            nx = new Exponentiation(lhs, rhs);
 
 
 
+
+            if (opstor.OperationShouldBeReplaced(node)) {
+                nx = new Variable(opstor.getReplacementID(node));
+
+                System.out.println("Replacer: Node  in Set: (  " + node.toString() + "  )    ---> Replacing with " + opstor.getReplacementID(node));
+
+
+            } else {
+                node.getLeft().accept(this);
+                Expression lhs = nx;
+                node.getRight().accept(this);
+                Expression rhs = nx;
+                nx = new Exponentiation(lhs, rhs);
+            }
 
         }
-    
+
+
     }
 
     @Override
@@ -246,7 +271,7 @@ public class CSE_Replacer implements ExpressionVisitor,ControlFlowVisitor {
     @Override
     public void visit(AssignmentNode node) {
 
-        System.out.println("Replacer : Assginment Node " + node.getVariable().toString()+" vistited------------------------------------");
+        System.out.println("Replacer : Assginment Node " + node.getVariable().toString()+" visited------------------------------------");
     
 
         node.getValue().accept(this);
@@ -276,46 +301,46 @@ public class CSE_Replacer implements ExpressionVisitor,ControlFlowVisitor {
         
     }
 
-	@Override
-	public void visit(LoopNode node) {
-		// TODO Auto-generated method stub
-		
-	}
+private boolean isSquare(Exponentiation exponentiation) {
+final FloatConstant two = new FloatConstant(2.0f);
+return two.equals(exponentiation.getRight());
+  }
 
-	@Override
-	public void visit(BreakNode node) {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void visit(LogicalNegation node) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 
-	@Override
-	public void visit(Macro node) {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void visit(FunctionArgument node) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 
-	@Override
-	public void visit(ExpressionStatement node) {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void visit(MacroCall node) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 
-	@Override
-	public void visit(LogicalNegation node) {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void visit(LoopNode node) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 
-	@Override
-	public void visit(FunctionArgument node) {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void visit(BreakNode node) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 
-	@Override
-	public void visit(MacroCall node) {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void visit(Macro node) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void visit(ExpressionStatement node) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+
 
 }
