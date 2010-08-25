@@ -264,4 +264,9 @@ public class LatexVisitor implements ControlFlowVisitor, ExpressionVisitor {
 	public void visit(MacroCall node) {
 		throw new IllegalArgumentException("Macros should have been inlined.");
 	}
+
+	@Override
+	public void visit(ColorNode node) {
+		node.getSuccessor().accept(this);
+	}
 }

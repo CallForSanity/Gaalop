@@ -11,6 +11,7 @@ import de.gaalop.Notifications;
 import de.gaalop.cfg.AssignmentNode;
 import de.gaalop.cfg.BlockEndNode;
 import de.gaalop.cfg.BreakNode;
+import de.gaalop.cfg.ColorNode;
 import de.gaalop.cfg.ControlFlowGraph;
 import de.gaalop.cfg.ControlFlowVisitor;
 import de.gaalop.cfg.EndNode;
@@ -143,6 +144,12 @@ public class InlineMacrosVisitor extends EmptyExpressionVisitor implements Contr
 
 		@Override
 		public void visit(EndNode node) {
+		}
+
+
+		@Override
+		public void visit(ColorNode node) {
+			node.getSuccessor().accept(this);
 		}
 		
 	}
@@ -311,6 +318,11 @@ public class InlineMacrosVisitor extends EmptyExpressionVisitor implements Contr
 				graph.addLocalVariable(v);
 			}
 		}
+	}
+
+	@Override
+	public void visit(ColorNode node) {
+		node.getSuccessor().accept(this);
 	}
 
 }

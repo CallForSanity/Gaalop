@@ -251,6 +251,11 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 		}
 	}
 
+	@Override
+	public void visit(ColorNode node) {
+		node.getSuccessor().accept(this);
+	}
+
 	private void addBinaryInfix(BinaryOperation op, String operator) {
 		addChild(op, op.getLeft());
 		code.append(operator);

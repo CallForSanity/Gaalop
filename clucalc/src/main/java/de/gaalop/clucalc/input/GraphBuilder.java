@@ -6,6 +6,7 @@ import de.gaalop.UsedVariablesVisitor;
 import de.gaalop.cfg.*;
 import de.gaalop.clucalc.algebra.*;
 import de.gaalop.dfg.Expression;
+import de.gaalop.dfg.FloatConstant;
 import de.gaalop.dfg.MacroCall;
 import de.gaalop.dfg.Variable;
 import de.gaalop.dfg.MathFunction;
@@ -110,7 +111,14 @@ public final class GraphBuilder {
 		public void visit(EndNode node) {
 		}
 
+		@Override
+		public void visit(ColorNode node) {
+			node.getSuccessor().accept(this);
+		}
+
 	}
+	
+	private final Map<String, ColorNode> COLORS;
 
 	private static final Map<String, String> illegalNames;
 
@@ -163,6 +171,18 @@ public final class GraphBuilder {
 			// initially set mode to 5D conformal algebra (in case this statement is missing in input)
 			setMode(new AlgebraN3());
 			setMode = false;
+		}
+		{
+			COLORS = new HashMap<String, ColorNode>();
+			COLORS.put("Black", getRBGColor(0, 0, 0));
+			COLORS.put("Blue", getRBGColor(0, 0, 1));
+			COLORS.put("Cyan", getRBGColor(0, 1, 1));
+			COLORS.put("Green", getRBGColor(0, 1, 0));
+			COLORS.put("Magenta", getRBGColor(1, 0, 1));
+			COLORS.put("Orange", getRBGColor(1, 0.7f, 0));
+			COLORS.put("Red", getRBGColor(1, 0, 0));
+			COLORS.put("White", getRBGColor(1, 1, 1));
+			COLORS.put("Yellow", getRBGColor(1, 1, 0));
 		}
 	}
 
@@ -342,6 +362,52 @@ public final class GraphBuilder {
 		BreakNode brk = new BreakNode(graph);
 		addNode(brk);
 		return brk;
+	}
+	
+	public void handleSlider(Variable var, String label, double min, double max, double step, double init) {
+		Slider slider = new Slider(var, label, min, max, step, init);
+		graph.addInputVariable(var);
+		graph.addSlider(slider);
+	}
+	
+	public ColorNode handleColor(List<Expression> args) {
+		ColorNode color = getRGBAColor(args);
+		addNode(color);
+		return color;
+	}
+	
+	public ColorNode handleColor(String name) {
+		ColorNode color = COLORS.get(name);
+		if (color == null) {
+			throw new IllegalArgumentException("Color " + name + " is not known.");
+		}
+		addNode(color);
+		return color;
+	}
+	
+	public void handleBGColor(List<Expression> args) {
+		graph.setBGColor(getRGBAColor(args));
+	}
+
+	private ColorNode getRGBAColor(List<Expression> args) {
+		if (args.size() < 3) {
+			throw new IllegalArgumentException("Argument must have 3 values for R, G and B");
+		}
+		Expression r = args.get(0);
+		Expression g = args.get(1);
+		Expression b = args.get(2);
+		Expression alpha = (args.size() == 4) ? args.get(3) : null; 
+		ColorNode color;
+		if (alpha == null) {
+			color = new ColorNode(graph, r, g, b);
+		} else {
+			color = new ColorNode(graph, r, g, b, alpha);
+		}
+		return color;
+	}
+
+	private ColorNode getRBGColor(float r, float g, float b) {
+		return new ColorNode(graph, new FloatConstant(r), new FloatConstant(g), new FloatConstant(b));
 	}
 
 	public Macro handleMacroDefinition(String id, List<SequentialNode> body, Expression ret) {

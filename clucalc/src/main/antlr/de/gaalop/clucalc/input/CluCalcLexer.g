@@ -28,6 +28,10 @@ COUNT_LITERAL: 'count';
 
 IGNORE_LITERAL: 'ignore';
 
+STRING_LITERAL
+    :  '"' ( ~('\\'|'"') )* '"'
+    ;
+
 fragment
 EXPONENT 
 	: 'e' MINUS? ('0'..'9')+
@@ -59,6 +63,26 @@ LOOP  : 'loop'
   
 BREAK : 'break'
   ;
+  
+SLIDER_LITERAL : 'Slider'
+  ;
+
+COLOR_LITERAL :  'Color'
+  ;
+  
+BGCOLOR_LITERAL : '_BGColor'
+  ;
+  
+BLACK : 'Black';
+BLUE : 'Blue';
+CYAN : 'Cyan';
+GREEN : 'Green';
+MAGENTA : 'Magenta';
+ORANGE : 'Orange';
+RED : 'Red';
+WHITE : 'White';
+YELLOW : 'Yellow';
+
 
 IDENTIFIER
 	:	('::')? LETTER (LETTER|DIGIT)*

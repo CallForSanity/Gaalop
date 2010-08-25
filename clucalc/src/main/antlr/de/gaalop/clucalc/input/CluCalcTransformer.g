@@ -65,6 +65,8 @@ statement returns [ArrayList<SequentialNode> nodes]
 	// Displayed assignment (ignore the display part)
 	| ^(COLON assignment) { $nodes.add(graphBuilder.handleAssignment($assignment.variable, $assignment.value)); }
 	
+	| ^(COLON id=variableOrConstant) { $nodes.add(graphBuilder.processExpressionStatement($id.result)); }
+	
 	// Stand-alone assignment
 	| assignment { $nodes.add(graphBuilder.handleAssignment($assignment.variable, $assignment.value)); }
 	
@@ -83,6 +85,22 @@ statement returns [ArrayList<SequentialNode> nodes]
 	}
 
   | macro
+
+  | pragma
+  
+  | slider
+  
+  | ^(COLOR arguments) {
+      $nodes.add(graphBuilder.handleColor($arguments.args));
+    }
+    
+  | ^(COLOR name=(BLACK | BLUE | CYAN | GREEN | MAGENTA | ORANGE | RED | WHITE | YELLOW)) {
+      $nodes.add(graphBuilder.handleColor($name.text));  
+  }
+    
+  | ^(BGCOLOR arguments) {
+      graphBuilder.handleBGColor($arguments.args);
+    }
  
 	// Some single-line expression (without assignment), e.g. macro call 
 	| expression {
@@ -91,8 +109,6 @@ statement returns [ArrayList<SequentialNode> nodes]
 	    $nodes.add(graphBuilder.processExpressionStatement(e)); 
 	  } 	  
 	}
-
-  | pragma
 	;
 	
 macro
@@ -185,6 +201,27 @@ statement_list returns [ArrayList<SequentialNode> args]
   : (arg=statement { $args.addAll($arg.nodes); })*
   ;
   
+slider
+  : ^(SLIDER var=variable args=slider_args) {
+      graphBuilder.handleSlider($var.result, $args.label, $args.min, $args.max, $args.step, $args.init);
+  }
+  ;
+  
+fragment slider_args returns [String label, double min, double max, double step, double init]
+  : id=STRING_LITERAL COMMA mi=constant COMMA ma=constant COMMA st=constant COMMA in=constant {
+      $label = $id.text.replaceAll("\"", "");
+      $min = $mi.value;
+      $max = $ma.value;
+      $step = $st.value;
+      $init = $in.value;
+  }
+  ;
+  
+fragment constant returns [double value]
+  : decimal_literal { $value = Double.parseDouble($decimal_literal.result); }
+  | float_literal { $value = Double.parseDouble($float_literal.result); }
+  ;
+  
 expression returns [Expression result]
 	// Addition
 	: ^(PLUS l=expression r=expression) { $result = new Addition($l.result, $r.result); }
@@ -245,4 +282,8 @@ arguments returns [ArrayList<Expression> args]
 
 float_literal returns [String result]
   : sign=MINUS? val=FLOATING_POINT_LITERAL  {$result = new String((sign!=null?$sign.text:"") + $val.text);}
-;
+  ;
+
+decimal_literal returns [String result]
+  : sign=MINUS? val=DECIMAL_LITERAL  {$result = new String((sign!=null?$sign.text:"") + $val.text);}
+  ;

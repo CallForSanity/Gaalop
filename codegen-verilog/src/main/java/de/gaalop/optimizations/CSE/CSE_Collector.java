@@ -7,6 +7,7 @@ package de.gaalop.optimizations.CSE;
 import de.gaalop.cfg.AssignmentNode;
 import de.gaalop.cfg.BlockEndNode;
 import de.gaalop.cfg.BreakNode;
+import de.gaalop.cfg.ColorNode;
 import de.gaalop.cfg.ControlFlowGraph;
 import de.gaalop.cfg.ControlFlowVisitor;
 import de.gaalop.cfg.EndNode;
@@ -286,6 +287,12 @@ public class CSE_Collector implements ExpressionVisitor, ControlFlowVisitor {
     public void visit(ExpressionStatement node) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
+
+
+	@Override
+	public void visit(ColorNode node) {
+		throw new UnsupportedOperationException("Not supported yet.");
+	}
 
 
 }

@@ -86,4 +86,11 @@ public interface ControlFlowVisitor {
      */
     void visit(EndNode node);
 
+    /**
+     * This method is called by {@link de.gaalop.cfg.ColorNode#accept(ControlFlowVisitor)}.
+     *
+     * @param node The object that called this method.
+     */
+	void visit(ColorNode node);
+
 }

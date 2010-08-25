@@ -16,6 +16,10 @@ tokens {
   MACRO;
   ARGUMENT;
   RETURN;
+  SLIDER;
+  STRING;
+  COLOR;
+  BGCOLOR;
 }
 
 @header {
@@ -136,6 +140,19 @@ constant
     |   FLOATING_POINT_LITERAL
     ;
     
+color 
+  : (COLON COLOR_LITERAL LBRACKET args=argument_expression_list RBRACKET SEMICOLON) -> ^(COLOR $args)
+  | COLON name=color_name SEMICOLON -> ^(COLOR $name)
+  ;
+  
+color_name
+  : (BLACK | BLUE | CYAN | GREEN | MAGENTA | ORANGE | RED | WHITE | YELLOW)
+  ;
+  
+bgcolor
+  : BGCOLOR_LITERAL EQUALS COLOR_LITERAL LBRACKET args=argument_expression_list RBRACKET SEMICOLON -> ^(BGCOLOR $args)
+  ;
+    
 function_argument
   : ARGUMENT_PREFIX index=DECIMAL_LITERAL RBRACKET -> ^(ARGUMENT $index)
   ;
@@ -152,6 +169,9 @@ statement_list
 
 statement 
   : expression_statement
+  | slider
+  | color
+  | bgcolor
   | macro_definition
   | draw_mode
   | block
@@ -159,6 +179,19 @@ statement
   | loop
   | BREAK
   | pragma 
+  ;
+  
+fragment slider
+  : IDENTIFIER EQUALS SLIDER_LITERAL LBRACKET slider_args RBRACKET SEMICOLON -> ^(SLIDER IDENTIFIER slider_args)
+  ;
+    
+fragment slider_args
+  : STRING_LITERAL COMMA! float_or_dec COMMA! float_or_dec COMMA! float_or_dec COMMA! float_or_dec
+  ;
+  
+fragment float_or_dec
+  : (MINUS)? DECIMAL_LITERAL
+  | float_literal
   ;
   
 macro_definition

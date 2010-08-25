@@ -66,4 +66,9 @@ public class FindStoreOutputNodes implements ControlFlowVisitor {
 	public void visit(Macro node) {
 		node.getSuccessor().accept(this);
 	}
+
+	@Override
+	public void visit(ColorNode node) {
+		node.getSuccessor().accept(this);
+	}
 }

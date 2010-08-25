@@ -107,4 +107,9 @@ public class EmptyControlFlowVisitor implements ControlFlowVisitor {
 		node.getSuccessor().accept(this);
 	}
 
+	@Override
+	public void visit(ColorNode node) {
+		node.getSuccessor().accept(this);
+	}
+
 }

@@ -257,4 +257,13 @@ public class CfgVisitor implements ControlFlowVisitor {
 	public void visit(Macro node) {
 		throw new IllegalStateException("Macros should have been inlined.");
 	}
+
+	@Override
+	public void visit(ColorNode node) {
+		appendIndent();
+		code.append(":");
+		code.append(node);
+		code.append(";\n");
+		node.getSuccessor().accept(this);
+	}
 }

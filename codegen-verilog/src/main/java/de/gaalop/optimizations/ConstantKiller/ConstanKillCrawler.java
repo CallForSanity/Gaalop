@@ -7,6 +7,7 @@ package de.gaalop.optimizations.ConstantKiller;
 import de.gaalop.cfg.AssignmentNode;
 import de.gaalop.cfg.BlockEndNode;
 import de.gaalop.cfg.BreakNode;
+import de.gaalop.cfg.ColorNode;
 import de.gaalop.cfg.ControlFlowVisitor;
 import de.gaalop.cfg.EndNode;
 import de.gaalop.cfg.ExpressionStatement;
@@ -121,6 +122,11 @@ public class ConstanKillCrawler implements ControlFlowVisitor, ExpressionVisitor
     public void visit(EndNode node) {
         System.out.println( " \n \n \n Constant Kill Run finished.....Replacements Made: "+ replacements+"  \n \n \n \n \n");
     }
+
+	@Override
+	public void visit(ColorNode node) {
+		throw new UnsupportedOperationException("Not supported yet.");
+	}
 
     @Override
     public void visit(Subtraction node) {

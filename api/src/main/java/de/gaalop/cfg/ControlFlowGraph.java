@@ -49,6 +49,9 @@ public final class ControlFlowGraph {
 	private InputFile source;
 
 	private Map<String, Macro> macros = new HashMap<String, Macro>();
+	private Set<Slider> sliders = new HashSet<Slider>();
+
+	private ColorNode bgColor;
 
 	/* store information about the pragmas */
 	private Set<String> pragmaOutputVariables = new HashSet<String>();
@@ -111,6 +114,22 @@ public final class ControlFlowGraph {
 	 */
 	public void addMacro(Macro macro) {
 		macros.put(macro.getName(), macro);
+	}
+
+	public void addSlider(Slider slider) {
+		sliders .add(slider);
+	}
+	
+	public Set<Slider> getSliders() {
+		return sliders;
+	}
+
+	public void setBGColor(ColorNode color) {
+		bgColor = color;
+	}
+	
+	public ColorNode getBGColor() {
+		return bgColor;
 	}
 
 	/**
@@ -485,6 +504,13 @@ public final class ControlFlowGraph {
 		@Override
 		public void visit(EndNode node) {
 			code.append("END");
+		}
+
+		@Override
+		public void visit(ColorNode node) {
+			appendIndent();
+			code.append(":");
+			code.append(node);
 		}
 
 	}

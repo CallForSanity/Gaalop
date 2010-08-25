@@ -8,6 +8,7 @@ package de.gaalop.optimizations;
 import de.gaalop.cfg.AssignmentNode;
 import de.gaalop.cfg.BlockEndNode;
 import de.gaalop.cfg.BreakNode;
+import de.gaalop.cfg.ColorNode;
 import de.gaalop.cfg.ControlFlowVisitor;
 import de.gaalop.cfg.EndNode;
 import de.gaalop.cfg.ExpressionStatement;
@@ -394,5 +395,10 @@ public class ConstantFolding implements ExpressionVisitor, ControlFlowVisitor {
     public void visit(ExpressionStatement node) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
+
+	@Override
+	public void visit(ColorNode node) {
+		throw new UnsupportedOperationException("Not supported yet.");
+	}
 
 }

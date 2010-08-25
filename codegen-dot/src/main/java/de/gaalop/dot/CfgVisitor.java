@@ -158,4 +158,9 @@ public class CfgVisitor implements ControlFlowVisitor {
 	public void visit(Macro node) {
 		throw new IllegalArgumentException("Macros should have been inlined.");
 	}
+
+	@Override
+	public void visit(ColorNode node) {
+		node.getSuccessor().accept(this);
+	}
 }

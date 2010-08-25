@@ -25,7 +25,6 @@ import de.gaalop.dfg.Multiplication;
 import de.gaalop.dfg.Negation;
 import java.util.Map.Entry;
 import wordlengthoptimization.*;
-import wordlengthoptimization.WordlengthOptimization;
 import datapath.graph.operations.constValue.*;
 
 public class VerilogIRConverterVisitorCookies implements ExpressionVisitor,
@@ -645,6 +644,11 @@ public class VerilogIRConverterVisitorCookies implements ExpressionVisitor,
     public void visit(ExpressionStatement node) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
+
+	@Override
+	public void visit(ColorNode node) {
+		throw new UnsupportedOperationException("Not supported yet.");
+	}
 
 
 	// public void pumpoutGraph(){

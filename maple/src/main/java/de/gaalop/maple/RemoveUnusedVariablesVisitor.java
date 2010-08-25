@@ -70,6 +70,11 @@ public class RemoveUnusedVariablesVisitor implements ControlFlowVisitor, Express
 	}
 
 	@Override
+	public void visit(ColorNode node) {
+		node.getSuccessor().accept(this);
+	}
+
+	@Override
 	public void visit(Subtraction node) {
 		node.getLeft().accept(this);
 		node.getRight().accept(this);
