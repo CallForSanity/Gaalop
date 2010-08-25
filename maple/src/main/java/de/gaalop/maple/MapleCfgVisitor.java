@@ -433,7 +433,7 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 					String optName = coefficient.getVariable().getName();
 					Variable coeffVariable = new Variable(optName.substring(0, optName.lastIndexOf(suffix)));
 					if (coeffVariable.equals(coefficient.getValue())) {
-						coefficient.setValue(new FloatConstant(0));
+						throw new RuntimeException("Cannot assign input variable " + variable);
 					}
 				}
 				initializeCoefficient(variable, coefficient.getValue(), component);
