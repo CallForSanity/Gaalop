@@ -333,7 +333,7 @@ public class MainForm {
         toolBar1.add(toolBar$Separator2);
         configureButton = new JButton();
         configureButton.setEnabled(true);
-        configureButton.setIcon(new ImageIcon(getClass().getResource("/de/gaalop/gui/applications-system.png")));
+        configureButton.setIcon(new ImageIcon(getClass().getResource("/de/gaalop/gui/preferences-system.png")));
         configureButton.setText("Configure");
         configureButton.setMnemonic('C');
         configureButton.setDisplayedMnemonicIndex(3);
