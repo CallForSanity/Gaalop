@@ -24,13 +24,13 @@ public class Main {
   private String inputFile;
 
   @Option(name = "-o", required = false, usage = "Sets the directory where the output files are created.")
-  private String outputDirectory = ".";
+  private String outputDirectory = "";
 
   @Option(name = "-parser", required = false, usage = "Sets the class name of the code parser plugin that should be used.")
   private String codeParserPlugin = "de.gaalop.clucalc.input.Plugin";
 
   @Option(name = "-generator", required = false, usage = "Sets the class name of the code generator plugin that should be used.")
-  private String codeGeneratorPlugin = "de.gaalop.clucalc.output.Plugin";
+  private String codeGeneratorPlugin = "de.gaalop.cpp.Plugin";
 
   @Option(name = "-optimizer", required = false, usage = "Sets the class name of the optimization strategy plugin that should be used.")
   private String optimizationStrategyPlugin = "de.gaalop.maple.Plugin";

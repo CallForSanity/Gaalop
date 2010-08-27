@@ -24,7 +24,7 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 
 	private int indentation = 0;
 
-	private boolean standalone = true;
+	private boolean standalone = false;
 
 	public String getCode() {
 		return code.toString();
@@ -43,7 +43,7 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 		FindStoreOutputNodes findOutput = new FindStoreOutputNodes();
 		graph.accept(findOutput);
 		for (StoreResultNode var : findOutput.getNodes()) {
-			String outputName = var.getValue().getName() + "_out";
+			String outputName = var.getValue().getName(); //+ "_out";
 			outputNamesMap.put(var, outputName);
 		}
 		if (standalone) {
@@ -136,14 +136,15 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 	public void visit(StoreResultNode node) {
 		assigned.add(node.getValue().getName());
 
-		appendIndentation();
+		/*appendIndentation();
 		code.append("memcpy(");
 		code.append(outputNamesMap.get(node));
 		code.append(", ");
 		code.append(node.getValue().getName());
 		code.append(", sizeof(");
 		code.append(node.getValue().getName());
-		code.append("));\n");
+		code.append("));\n");*/
+		code.append("\n");
 
 		node.getSuccessor().accept(this);
 	}

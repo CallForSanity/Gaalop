@@ -26,14 +26,14 @@ public enum CppCodeGenerator implements CodeGenerator {
     }
 
     private String generateFilename(ControlFlowGraph in) {
-        String filename = "gaalop.c";
+        String filename = "gaalop.cpp.g";
         if (in.getSource() != null) {
             filename = in.getSource().getName();
             int lastDotIndex = filename.lastIndexOf('.');
             if (lastDotIndex != -1) {
                 filename = filename.substring(0, lastDotIndex);
             }
-            filename += ".c";
+            filename += ".cpp.g";
         }
         return filename;
     }

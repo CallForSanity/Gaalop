@@ -51,9 +51,9 @@ public class Plugin extends Observable implements OptimizationStrategyPlugin {
 			mapleBinaryPath = maplePath + "/bin.APPLE_UNIVERSAL_OSX/";
 			mapleJavaPath = maplePath + "/java/";
 		} else if (Platform.isLinux()) {
-			String maplePath = "/net/bifur/gaalop/maple";
+			String maplePath = "/opt/maple13";
 			mapleJavaPath = maplePath + "/java/";
-			mapleBinaryPath = maplePath + "/bin.IBM_INTEL_LINUX/";
+			mapleBinaryPath = maplePath + "/bin.X86_64_LINUX/";
 
 		}
 	}
