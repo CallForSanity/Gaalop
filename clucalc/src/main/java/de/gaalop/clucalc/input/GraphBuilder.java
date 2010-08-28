@@ -125,7 +125,7 @@ public final class GraphBuilder {
 	static {
 		illegalNames = new HashMap<String, String>();
 		illegalNames.put("B", "B is the metric matrix in Maple");
-		illegalNames.put("condition_", "synthetic variable inserted by Gaalop");
+//		illegalNames.put("condition_", "synthetic variable inserted by Gaalop");
 		illegalNames.put("norm", "protected in Maple");
 		illegalNames.put("normal", "protected in Maple");
 		illegalNames.put("length", "protected in Maple");
@@ -264,6 +264,11 @@ public final class GraphBuilder {
 		if (variable.getName().startsWith("re")) {
 			throw new IllegalArgumentException("Variable '" + variable
 					+ "' cannot be used in Maple because of prefix 're' which is protected."
+					+ " Please choose another name.");
+		}
+		if (variable.getName().startsWith("condition_")) {
+			throw new IllegalArgumentException("Variable '" + variable 
+					+ "' cannot be used because of prefix 'condition_' which is used for conditional statements."
 					+ " Please choose another name.");
 		}
 	}
