@@ -10,9 +10,9 @@ int body(const int argc,const char* argv[],const char* gaalopInFileExtension,
     // settings
     std::string gaalopPath;
 #ifdef WIN32
-    readFile(gaalopPath,"../config/gaalop_settings.bat");
+    readFile(gaalopPath,"../config/gcd/gaalop_settings.bat");
 #else
-    readFile(gaalopPath,"../config/gaalop_settings.sh");
+    readFile(gaalopPath,"../share/gcd/gaalop_settings.sh");
 #endif
 
     // parse command line

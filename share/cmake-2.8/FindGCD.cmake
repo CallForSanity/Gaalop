@@ -3,8 +3,10 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 FIND_PACKAGE(CUDA)
 
 # find
-FIND_PATH(GCD_ROOT_DIR gaalop_compiler_driver DOC "Gaalop Compiler Driver root directory")
-FIND_LIBRARY(GCD_LIBRARY gcd PATHS "${GCD_ROOT_DIR}/lib")
+FIND_PATH(GCD_ROOT_DIR
+          NAMES bin/gcd-cpp bin/gcd-cuda include/gcd.h
+          DOC "Gaalop Compiler Driver root directory")
+FIND_LIBRARY(GCD_LIBRARY gcd HINTS "${GCD_ROOT_DIR}/lib")
 
 # determine system-specific call convention
 IF(WIN32)
