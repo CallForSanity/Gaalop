@@ -115,6 +115,10 @@ public class MainForm {
                     saveFileButton.setEnabled(true);
                     optimizeButton.setEnabled(true);
                     closeButton.setEnabled(true);
+                } else if (tabbedPane.getSelectedComponent() instanceof ConfigurationPanel) {
+                	saveFileButton.setEnabled(false);
+                	optimizeButton.setEnabled(false);
+                	closeButton.setEnabled(true);
                 } else {
                     saveFileButton.setEnabled(false);
                     optimizeButton.setEnabled(false);
