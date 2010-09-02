@@ -62,8 +62,8 @@ public final class GraphBuilder {
 
 		@Override
 		public void visit(AssignmentNode node) {
-			graph.addLocalVariable(node.getVariable());
 			findUndeclaredVariables(node.getValue());
+			graph.addLocalVariable(node.getVariable());
 			node.getSuccessor().accept(this);
 		}
 
