@@ -94,26 +94,26 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 	}
 
 	private static class UnrollLoopsVisitor extends EmptyControlFlowVisitor {
-		
+
 		/**
 		 * Removes break statements from the given node.
 		 * 
 		 * @author Christian Schwinn
-		 *
+		 * 
 		 */
 		private static class RemoveBreakVisitor extends EmptyControlFlowVisitor {
-			
+
 			private final IfThenElseNode root;
-			
+
 			RemoveBreakVisitor(IfThenElseNode root) {
 				this.root = root;
 			}
-			
+
 			@Override
 			public void visit(StartNode node) {
 				throw new IllegalStateException("This visitor is allowed to be called only on IfThenElseNodes");
 			}
-			
+
 			@Override
 			public void visit(IfThenElseNode node) {
 				node.getPositive().accept(this);
@@ -122,14 +122,14 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 					node.getSuccessor().accept(this);
 				}
 			}
-			
+
 			@Override
 			public void visit(BreakNode node) {
 				Node successor = node.getSuccessor();
 				node.getGraph().removeNode(node);
 				successor.accept(this);
 			}
-			
+
 		}
 
 		private LoopNode root;
@@ -277,81 +277,70 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 			return false;
 		}
 
+		/**
+		 * Compares equalities and inequalities component-wise. Both multivectors are optimized and subtracted to get
+		 * the components which are different. For these components, a comparison is added to the condition.
+		 * 
+		 * @param node equality or inequality node
+		 * @param equality whether to compare for equality or inequality (convenience to avoid instanceof checks)
+		 */
+		private void compareComponents(BinaryOperation node, boolean equality) {
+			Expression left = node.getLeft();
+			Expression right = node.getRight();
+
+			Subtraction difference = ExpressionFactory.subtract(left.copy(), right.copy());
+			Variable lVar = new Variable("condition_" + conditionSuffix++);
+			Variable rVar = new Variable("condition_" + conditionSuffix++);
+			Variable diff = new Variable("__temp__");
+
+			try {
+				engine.evaluate(generateCode(lVar) + ":=" + generateCode(left) + ";");
+				engine.evaluate(generateCode(rVar) + ":=" + generateCode(right) + ";");
+				engine.evaluate(generateCode(diff) + ":=" + generateCode(difference) + ";");
+
+				initializeCoefficients(lVar);
+				initializeCoefficients(rVar);
+
+				BinaryOperation newCondition = null;
+				for (AssignmentNode diffOpt : optimizeVariable(graph, diff)) {
+					if (diffOpt.getVariable() instanceof MultivectorComponent) {
+						MultivectorComponent comp = (MultivectorComponent) diffOpt.getVariable();
+						Variable lVarNew = new Variable(getTempVarName(lVar.getName(), comp.getBladeIndex()));
+						Variable rVarNew = new Variable(getTempVarName(rVar.getName(), comp.getBladeIndex()));
+						BinaryOperation comparison;
+						if (equality) {
+							comparison = new Equality(lVarNew, rVarNew);
+						} else {
+							comparison = new Inequality(lVarNew, rVarNew);
+						}
+						if (newCondition == null) {
+							newCondition = comparison;
+						} else {
+							newCondition = ExpressionFactory.and(newCondition, comparison);
+						}
+					}
+				}
+				root.replaceExpression(node, newCondition);
+			} catch (MapleEngineException e) {
+				throw new RuntimeException("Could not optimize (in)equality " + node + " in condition "
+						+ root.getCondition(), e);
+			}
+
+		}
+
 		@Override
 		public void visit(Equality node) {
-			reorderToLeft(node);
+			compareComponents(node, true);
 		}
 
 		@Override
 		public void visit(Inequality node) {
-			reorderToLeft(node);
+			compareComponents(node, false);
 		}
 
 		@Override
 		public void visit(Relation node) {
 			reorderToLeft(node);
-		}
-
-	}
-
-	/**
-	 * Simple helper visitor used to inline parts of conditional statements.
-	 * 
-	 * @author Christian Schwinn
-	 * 
-	 */
-	private class InlineBlockVisitor extends EmptyControlFlowVisitor {
-
-		private final IfThenElseNode root;
-		private final Node branch;
-		private final Node successor;
-
-		/**
-		 * Creates a new visitor with given root and branch.
-		 * 
-		 * @param root root node from which to inline a branch
-		 * @param branch first node of branch to be inlined
-		 */
-		public InlineBlockVisitor(IfThenElseNode root, Node branch) {
-			this.root = root;
-			this.branch = branch;
-			successor = root.getSuccessor();
-		}
-
-		private void replaceSuccessor(Node oldSuccessor, Node newSuccessor) {
-			Set<Node> predecessors = new HashSet<Node>(oldSuccessor.getPredecessors());
-			for (Node p : predecessors) {
-				p.replaceSuccessor(oldSuccessor, newSuccessor);
-			}
-		}
-
-		@Override
-		public void visit(IfThenElseNode node) {
-			// we peek only to next level of nested statements
-			if (node == root) {
-				if (node.getPositive() == branch) {
-					if (!(branch instanceof BlockEndNode)) {
-						replaceSuccessor(node, branch);
-					}
-					node.getPositive().accept(this);
-				} else if (node.getNegative() == branch) {
-					if (!(branch instanceof BlockEndNode)) {
-						replaceSuccessor(node, branch);
-					}
-					node.getNegative().accept(this);
-				}
-				graph.removeNode(node);
-			}
-			node.getSuccessor().accept(this);
-		}
-
-		@Override
-		public void visit(BlockEndNode node) {
-			// this relies on the fact that nested statements are being ignored in visit(IfThenElseNode),
-			// otherwise successor could be the wrong one
-			if (node.getBase() == root) {
-				replaceSuccessor(node, successor);
-			}
 		}
 
 	}
@@ -433,8 +422,8 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 					String optName = coefficient.getVariable().getName();
 					Variable coeffVariable = new Variable(optName.substring(0, optName.lastIndexOf(suffix)));
 					if (coeffVariable.equals(coefficient.getValue())) {
-						graph.addInputVariable(coeffVariable);
-//						throw new RuntimeException("Cannot assign input variable " + variable);
+						coefficient.setValue(new FloatConstant(0));
+						// throw new RuntimeException("Variable " + variable + " is not initialized in global space.");
 					}
 				}
 				initializeCoefficient(variable, coefficient.getValue(), component);
@@ -579,7 +568,11 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 	}
 
 	private String getTempVarName(MultivectorComponent component) {
-		return component.getName().replace('e', 'E').replace(suffix, "") + "__" + component.getBladeIndex();
+		return getTempVarName(component.getName(), component.getBladeIndex());
+	}
+
+	String getTempVarName(String variable, int index) {
+		return variable.replace('e', 'E').replace(suffix, "") + "__" + index;
 	}
 
 	@Override
@@ -607,7 +600,7 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 	/**
 	 * Simplifies the given variable and parses the Maple code to return the new nodes.
 	 */
-	private List<AssignmentNode> optimizeVariable(ControlFlowGraph graph, Variable v) {
+	List<AssignmentNode> optimizeVariable(ControlFlowGraph graph, Variable v) {
 		String simplification = simplify(v);
 		log.debug("Maple simplification of " + v + ": " + simplification);
 		return parseMapleCode(graph, simplification);
@@ -669,57 +662,8 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 			currentRoot = node;
 		}
 		Expression condition = node.getCondition();
-		try {
-			boolean unknown = false;
-			UsedVariablesVisitor visitor = new UsedVariablesVisitor();
-			condition.accept(visitor);
-			// check if there are unknown variables (otherwise Maple always returns false in evalb)
-			for (Variable v : visitor.getVariables()) {
-				String name = v.getName();
-				String result = engine.evaluate(name + ";");
-				if (result.equals(name + "\n")) {
-					unknown = true;
-					break;
-				}
-			}
-			if (!unknown) {
-				unknown = inlineIfBranch(node, condition);
-			}
-			if (unknown) {
 				handleUnknownBranches(node, condition);
 				node.getSuccessor().accept(this);
-			}
-		} catch (MapleEngineException e) {
-			throw new RuntimeException("Unable to check condition " + condition + " in if-statement " + node, e);
-		}
-	}
-
-	private boolean inlineIfBranch(IfThenElseNode node, Expression condition) throws MapleEngineException {
-		boolean unknown = false;
-		StringBuilder codeBuffer = new StringBuilder();
-		codeBuffer.append("evalb(");
-		codeBuffer.append(generateCode(condition));
-		codeBuffer.append(");\n");
-		// try to evaluate the condition
-		String result = engine.evaluate(codeBuffer.toString());
-		log.debug("Maple simplification of IF condition " + condition + ": " + result);
-		// if condition can be determined to be true or false, inline relevant part
-		if ("true\n".equals(result)) {
-			node.accept(new InlineBlockVisitor(node, node.getPositive()));
-			node.getPositive().accept(this);
-		} else if ("false\n".equals(result)) {
-			node.accept(new InlineBlockVisitor(node, node.getNegative()));
-			if (node.getNegative() instanceof BlockEndNode) {
-				node.getSuccessor().accept(this);
-			} else {
-				node.getNegative().accept(this);
-			}
-		} else {
-			// reset unknown status in order to process branches
-			Notifications.addWarning("Could not evaluate condition " + condition);
-			unknown = true;
-		}
-		return unknown;
 	}
 
 	private void handleUnknownBranches(IfThenElseNode node, Expression condition) {
@@ -744,9 +688,9 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 			UnrollLoopsVisitor ulv = new UnrollLoopsVisitor(node);
 			node.accept(ulv);
 			if (ulv.showWarning) {
-				Notifications.addWarning("Make sure that termination conditions for unroll-loops are " +
-						"always at beginning or end of a loop.\n" +
-						"Otherwise, partial loop bodies cannot be unrolled.");
+				Notifications.addWarning("Make sure that termination conditions for unroll-loops are "
+						+ "always at beginning or end of a loop.\n"
+						+ "Otherwise, partial loop bodies cannot be unrolled.");
 			}
 			ulv.firstNewNode.accept(this);
 		} else {

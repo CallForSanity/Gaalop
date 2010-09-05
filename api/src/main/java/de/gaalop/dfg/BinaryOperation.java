@@ -52,6 +52,9 @@ public abstract class BinaryOperation extends Expression {
     		right.replaceExpression(old, newExpression);
     	}
     	
+    	if (this == old) {
+    		
+    	}
     	
 //    	if (old == left && old == right) {
 //    		left = newExpression;
