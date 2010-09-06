@@ -1,1 +1,1 @@
-nvcc
+nvcc -Xcompiler "-x c++"

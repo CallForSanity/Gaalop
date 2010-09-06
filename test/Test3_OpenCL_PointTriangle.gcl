@@ -1,0 +1,57 @@
+__kernel void pointTriangleTest(__global bool* collision,
+			    	__global const float* triangles,
+			    	__global const float* point,
+			    	const float h,const int numTriangles)
+{
+	const int id = get_global_id(0);
+
+	if(id >= numTriangles)
+		return;
+
+	const float t1x = triangles[id * 9 + 0];
+	const float t1y = triangles[id * 9 + 1];
+	const float t1z = triangles[id * 9 + 2];
+	const float t2x = triangles[id * 9 + 3];
+	const float t2y = triangles[id * 9 + 4];
+	const float t2z = triangles[id * 9 + 5];
+	const float t3x = triangles[id * 9 + 6];
+	const float t3y = triangles[id * 9 + 7];
+	const float t3z = triangles[id * 9 + 8];
+	const float px = point[0];
+	const float py = point[1];
+	const float pz = point[2];
+
+#pragma gcd begin
+	// triangle properties
+	TrianglePoint1 = VecN3(t1x,t1y,t1z);
+	TrianglePoint2 = VecN3(t2x,t2y,t2z);
+	TrianglePoint3 = VecN3(t3x,t3y,t3z);
+
+	// point properties
+	TestPoint = VecN3(px,py,pz);
+
+	// construct plane
+	plane = *(TrianglePoint1 ^ TrianglePoint2 ^ TrianglePoint3 ^ einf);
+
+	// compute distance to plane
+	?d = plane . TestPoint;
+
+	// extract triangle normal
+	?normal_ = plane - (plane . e0) ^ einf;
+
+	// construct boundary planes			
+	side1 = *(TrianglePoint1 ^ TrianglePoint2 ^ normal_ ^ einf);
+	side2 = *(TrianglePoint2 ^ TrianglePoint3 ^ normal_ ^ einf);
+	side3 = *(TrianglePoint3 ^ TrianglePoint1 ^ normal_ ^ einf);
+
+	// compute distances
+	?d1 = side1 . TestPoint;
+	?d2 = side2 . TestPoint;
+	?d3 = side3 . TestPoint;
+#pragma gcd end
+
+	if(d[0]*d[0] > h*h || d1[0] <= 0.0f && d2[0] <= 0.0f && d3[0] <= 0.0f || d1[0] >= 0.0f && d2[0] >= 0.0f && d3[0] >= 0.0f)
+  		collision[id] = true;
+	else
+		collision[id] = false;
+}

@@ -1,6 +1,22 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 
-INCLUDE("../share/cmake-2.8/FindGCD.cmake")
+INCLUDE("../share/cmake-2.8/Modules/FindGCD.cmake")
 
-GCD_CPP_ADD_EXECUTABLE(test1 "Test1_PointTriangle.gcp")
-ADD_TEST(NAME "Test1_PointTriangle" COMMAND test1)
+# options
+OPTION(BUILD_WITH_CUDA "build with CUDA tests")
+OPTION(BUILD_WITH_OPENCL "build with OpenCL tests")
+
+GCD_CPP_ADD_EXECUTABLE(test1 "Test1_CPP_PointTriangle.gcp")
+ADD_TEST(NAME "Test1_CPP_PointTriangle" COMMAND test1)
+
+IF(BUILD_WITH_CUDA)
+FIND_PACKAGE(CUDA)
+GCD_CUDA_ADD_EXECUTABLE(test2 "Test2_CUDA_PointTriangle.gcu")
+ADD_TEST(NAME "Test2_CUDA_PointTriangle" COMMAND test2)
+ENDIF(BUILD_WITH_CUDA)
+
+IF(BUILD_WITH_OPENCL)
+INCLUDE("../share/cmake-2.8/Modules/FindOpenCL.cmake")
+GCD_OPENCL_ADD_EXECUTABLE(test3 "Test3_OpenCL_PointTriangle.cpp" "Test3_OpenCL_PointTriangle.gcl")
+ADD_TEST(NAME "Test3_OpenCL_PointTriangle" COMMAND test3)
+ENDIF(BUILD_WITH_OPENCL)

@@ -2,6 +2,12 @@
 
 int main(const int argc,const char* argv[])
 {
+    // execute body
+    std::string intermediateFilePath;
+    int result = body(intermediateFilePath,argc,argv,".clu.i",".clu.cpp.g",".cu.i");
+    if(result)
+	return result;
+
     // read settings
     std::string compilerPath;
 #ifdef WIN32
@@ -10,6 +16,16 @@ int main(const int argc,const char* argv[])
     readFile(compilerPath,"../share/gcd/cuda_settings.sh");
 #endif
 
-    // execute body
-    return body(argc,argv,".clu.i",".clu.cpp.g",".cu.i",compilerPath.c_str());
+    //  compiler command
+    std::stringstream compilerCommand;
+    compilerCommand << compilerPath;
+    for(unsigned int counter = 1; counter < argc - 1; ++counter)
+	compilerCommand << " \"" << argv[counter] << "\"";
+    compilerCommand << " \"" << intermediateFilePath << "\"";
+
+    // invoke regular NVCC compiler
+    std::cout << compilerCommand.str() << std::endl;
+    system(compilerCommand.str().c_str());
+
+    return result;
 }

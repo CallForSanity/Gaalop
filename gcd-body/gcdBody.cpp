@@ -1,30 +1,61 @@
+#ifdef WIN32
+#include <windows.h>
+#else
+#include <unistd.h>
+#endif
 #include "gcdBody.h"
 
 void readFile(std::stringstream& resultStream,const char* filePath);
 void readFile(std::stringstream& resultStream,const std::ifstream& fileStream);
 
-int body(const int argc,const char* argv[],const char* gaalopInFileExtension,
-  	 const char* gaalopOutFileExtension,const char* intermediateFileExtension,
-	 const char* compilerPath)
+int body(std::string& intermediateFilePath,
+         const int argc,const char* argv[],const char* gaalopInFileExtension,
+         const char* gaalopOutFileExtension,const char* intermediateFileExtension)
 {
+    // change working directory to application directory
+    std::string appPath(argv[0]);
+#ifdef WIN32
+    const size_t pos = appPath.find_last_of('\\');
+    //_chdir(appPath.substr(0,pos).c_str());
+    SetCurrentDirectory(appPath.substr(0,pos).c_str());
+    char dir[MAX_PATH];
+    GetCurrentDirectory(MAX_PATH,dir);
+    std::cout << dir << std::endl;
+#else
+    const size_t pos = appPath.find_last_of('/');
+    chdir(appPath.substr(0,pos).c_str());
+#endif
+
     // settings
     std::string gaalopPath;
 #ifdef WIN32
-    readFile(gaalopPath,"../config/gcd/gaalop_settings.bat");
+    readFile(gaalopPath,"../share/gcd/gaalop_settings.bat");
 #else
     readFile(gaalopPath,"../share/gcd/gaalop_settings.sh");
 #endif
 
     // parse command line
     const std::string inputFilePath(argv[argc - 1]);
-    const std::string intermediateFilePath(inputFilePath + intermediateFileExtension);
-    //  compiler command
-    std::stringstream compilerCommand;
-    //compilerCommand << "\"" << compilerPath << "\"";
-    compilerCommand << compilerPath;
-    for(unsigned int counter = 1; counter < argc - 1; ++counter)
-	compilerCommand << " \"" << argv[counter] << "\"";
-    compilerCommand << " \"" << intermediateFilePath << "\"";
+
+    // try to find output path
+    std::string outputFilePath(inputFilePath);
+    for(unsigned int counter = argc - 2; counter > 0; --counter)
+    {
+        const std::string arg(argv[counter]);
+        if(arg.rfind(".o") != std::string::npos || arg.rfind(".obj") != std::string::npos ||
+           arg.rfind(".gcp") != std::string::npos || arg.rfind(".gcu") != std::string::npos || arg.rfind(".gcl") != std::string::npos)
+        {
+            size_t pos = arg.find_last_of(".o");
+            if(pos == std::string::npos)
+                pos = arg.find_last_of(".obj");
+
+            outputFilePath = arg.substr(0,pos - 1);
+            break;
+        }
+    }
+
+    // set intermediate file path
+    intermediateFilePath = inputFilePath + intermediateFileExtension;
 
     // process input file
     // split into gaalop input files
@@ -42,7 +73,7 @@ int body(const int argc,const char* argv[],const char* gaalopInFileExtension,
             if(line.find("#pragma gcd begin") != std::string::npos)
             {
                 std::stringstream gaalopInFilePath;
-                gaalopInFilePath << inputFilePath << "." << ++gaalopFileCount << gaalopInFileExtension;
+                gaalopInFilePath << outputFilePath << "." << ++gaalopFileCount << gaalopInFileExtension;
                 std::ofstream gaalopInFile(gaalopInFilePath.str().c_str());
 
                 // read until end of optimized file
@@ -64,14 +95,13 @@ int body(const int argc,const char* argv[],const char* gaalopInFileExtension,
     // process gaalop intermediate files
     const int numGaalopFiles = gaalopInFilePathVector.size();
     #pragma omp parallel for
-    for(gaalopFileCount = 1; gaalopFileCount <= numGaalopFiles;
-        ++gaalopFileCount)
+    for(gaalopFileCount = 1; gaalopFileCount <= numGaalopFiles; ++gaalopFileCount)
     {
         // run Gaalop
         std::stringstream gaalopCommand;
         gaalopCommand << gaalopPath;
-	gaalopCommand << " \"" << inputFilePath << "." << gaalopFileCount << gaalopInFileExtension << "\"";
-	std::cout << gaalopCommand.str() << std::endl;
+        gaalopCommand << " \"" << outputFilePath << "." << gaalopFileCount << gaalopInFileExtension << "\"";
+        std::cout << gaalopCommand.str() << std::endl;
         system(gaalopCommand.str().c_str());
     }
 
@@ -90,9 +120,15 @@ int body(const int argc,const char* argv[],const char* gaalopInFileExtension,
             {
                 // merge optimized code
                 std::stringstream gaalopOutFilePath;
-                gaalopOutFilePath << inputFilePath << "." << ++gaalopFileCount << gaalopOutFileExtension;
+                gaalopOutFilePath << outputFilePath << "." << ++gaalopFileCount << gaalopOutFileExtension;
                 std::cout << gaalopOutFilePath.str().c_str() << std::endl;
                 std::ifstream gaalopOutFile(gaalopOutFilePath.str().c_str());
+                if(!gaalopOutFile.good())
+                {
+                    std::cerr << "fatal error: Gaalop-generated file not found. Check your Java installation. "\
+                                 "Also check your Maple directory using the Configuration Tool.\n";
+                    return -1;
+                }
                 while(gaalopOutFile.good())
                 {
                     getline(gaalopOutFile,line);
@@ -112,10 +148,6 @@ int body(const int argc,const char* argv[],const char* gaalopInFileExtension,
         }
     }
 
-    // invoke regular C++ compiler
-    std::cout << compilerCommand.str() << std::endl;
-    system(compilerCommand.str().c_str());
-
     return 0;
 }
 
@@ -124,7 +156,6 @@ void readFile(std::string& resultString,const char* filePath)
   std::stringstream resultStream;
   readFile(resultStream,filePath);
   resultString = resultStream.str();
-  //std::cout << resultString << std::endl;
 }
 
 void readFile(std::stringstream& resultStream,const char* filePath)
@@ -141,6 +172,4 @@ void readFile(std::stringstream& resultStream,std::ifstream& fileStream)
     getline(fileStream,line);
     resultStream << line;
   }
-
-  //resultStream << fileStream;
 }
