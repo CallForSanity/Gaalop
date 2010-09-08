@@ -55,6 +55,7 @@ public class TestbenchGenerator {
 		this.inputValues = inputValues;
 		try {
 			File file = new File(fileName);
+			System.out.println("Generating testbench for file " + file);
 			this.fileName = file.getName().substring(0, file.getName().indexOf(".clu"));
 			inputFile = readFile(file);
 		} catch (IOException e) {
@@ -208,6 +209,9 @@ public class TestbenchGenerator {
 		code.append("\tbool firstEntry = true;\n");
 		code.append("\tfor (int i = 0; i < 32; i++) {\n");
 		code.append("\t\tfloat value = mv[i];\n");
+		code.append("\t\tif (fabs(value) < 1.0e-008) {\n");
+		code.append("\t\t\tvalue = 0.0f;\n");
+		code.append("\t\t}\n");
 		code.append("\t\tif (value != 0) {\n");
 		code.append("\t\t\tif (firstEntry) {\n");
 		code.append("\t\t\t\tcout << value << \"^\" << CLU_BLADES[i];\n");

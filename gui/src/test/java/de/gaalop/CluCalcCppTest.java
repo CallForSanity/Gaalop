@@ -97,11 +97,11 @@ public class CluCalcCppTest {
 		compareMultivectors(results, expectedCppResults);
 	}
 	
-	private void compareMultivectors(List<OutputSet> actualList, List<String> cppValues) {
-		for (int i = 0; i < actualList.size(); i++) {
+	private void compareMultivectors(List<OutputSet> actualList, List<String> expectedCppValues) {
+		for (int i = 0; i < expectedCppValues.size(); i++) {
 			OutputSet actual = actualList.get(i);
 			assertEquals(actual.CLU_ORIGINAL, actual.CLU_OPT);
-			String cppResult = cppValues.get(i);
+			String cppResult = expectedCppValues.get(i);
 			assertEquals(cppResult, actual.CPP);
 		}
 	}
@@ -113,7 +113,7 @@ public class CluCalcCppTest {
 	 */
 	@Test
 	public void horizon() throws IOException {
-		String fileName = "C:/Users/Christian/Documents/Horizon.clu";
+		String fileName = getClass().getResource("/de/gaalop/Horizon.clu").getFile();
 		inputValues.put("mx", 0.0f);
 		inputValues.put("my", 0.0f);
 		inputValues.put("mz", 0.0f);
@@ -122,6 +122,7 @@ public class CluCalcCppTest {
 		inputValues.put("pz", 1.0f);
 		inputValues.put("r", 0.5f);
 		
+		// C
 		expectedCppResults.add("0.125^(e1^e) - 1^(e1^e0) + 0.125^(e2^e) - 1^(e2^e0) + 0.125^(e3^e) - 1^(e3^e0) - 0.25^E");
 		
 		generator = new TestbenchGenerator(fileName, PATH, inputValues);
@@ -135,19 +136,29 @@ public class CluCalcCppTest {
 	 */
 	@Test
 	public void inverseKinematics() throws IOException {
-		// FIXME: copy test cases and reference workspace-relative paths
-		String fileName = "C:/Users/Christian/Documents/Masterarbeit/GaalopCompiler/gravisma-2010/FPGA/IK_Gaalop-2.0_input.clu";
-		inputValues.put("pwx", 1.0f);
-		inputValues.put("pwy", 1.0f);
-		inputValues.put("pwz", 1.0f);
-		inputValues.put("d1", 1.50f);
-		inputValues.put("d2", 1.10f);
+		String fileName = getClass().getResource("/de/gaalop/IK_Gaalop-2.0_input.clu").getFile();
+		inputValues.put("pwx", 1.1f);
+		inputValues.put("pwy", 1.1f);
+		inputValues.put("pwz", 1.1f);
+		inputValues.put("d1", 1.40f);
+		inputValues.put("d2", 1.30f);
 		inputValues.put("phi", (float) Math.PI);
-		
-		expectedCppResults.add("0");
+				
+		// SwivelPlane
+		expectedCppResults.add("-1.1^e1 + 1.1^e2 + 1.11042e-007^e3");
+		// p_e
+		expectedCppResults.add("0.980883^e1 + 0.980883^e2 - 0.189039^e3 + 0.98^e + 1^e0");
+		// q_e
+		expectedCppResults.add("0.705162^1 + 0.709047^e23");
+		// q12
+		expectedCppResults.add("-0.657637^e12 + 0.532688^e13 - 0.532688^e23");
+		// q3
+		expectedCppResults.add("0.382683^1 - 0.92388^e12");		
+		// q_s
+		expectedCppResults.add("-0.607577^1 - 0.251667^e12 - 0.288289^e13 - 0.695991^e23");
 		
 		generator = new TestbenchGenerator(fileName, PATH, inputValues);
-		compare(1);
+		compare(6);
 	}
 
 }

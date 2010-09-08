@@ -68,6 +68,7 @@ public class ExtendedCLUCalcGenerator extends CfgVisitor {
 	
 	@Override
 	public void visit(Macro node) {
+		appendIndent();
 		code.append(node.getName());
 		code.append(" = {\n");
 		indent++;
@@ -81,6 +82,7 @@ public class ExtendedCLUCalcGenerator extends CfgVisitor {
 			code.append("\n");
 		}
 		indent--;
+		appendIndent();
 		code.append("}\n");
 		node.getSuccessor().accept(this);
 	}

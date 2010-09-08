@@ -179,7 +179,7 @@ public class DfgVisitor implements ExpressionVisitor {
 	@Override
 	public void visit(FunctionArgument node) {		
 		code.append("_P(");
-		node.getIndex();
+		code.append(node.getIndex());
 		code.append(")");
 	}
 
@@ -189,7 +189,9 @@ public class DfgVisitor implements ExpressionVisitor {
 		code.append("(");
 		for (Expression arg : node.getArguments()) {
 			arg.accept(this);
+			code.append(", ");
 		}
+		code.delete(code.length() - 2, code.length());
 		code.append(")");
 	}
 
