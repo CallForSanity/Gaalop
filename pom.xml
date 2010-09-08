@@ -103,4 +103,8 @@
             <url>http://nexus.code-camp.org/content/repositories/thirdparty/</url>
         </repository>
     </repositories>
+    
+    <properties>
+    	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
 </project>

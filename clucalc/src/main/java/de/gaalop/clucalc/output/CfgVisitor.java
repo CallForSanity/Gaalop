@@ -21,15 +21,15 @@ import org.apache.commons.logging.LogFactory;
 public class CfgVisitor implements ControlFlowVisitor {
 	
 	private static final String MAPLE_SUFFIX = "_opt";
-	private String codeSuffix;
+	String codeSuffix;
 	
 	private Log log = LogFactory.getLog(CfgVisitor.class);
 
 	private Map<String, Set<Integer>> assignedComponents = new HashMap<String, Set<Integer>>();
 
-	private StringBuilder code = new StringBuilder();
+	StringBuilder code = new StringBuilder();
 
-	private int indent;
+	int indent;
 	
 	public CfgVisitor(String suffix) {
 		codeSuffix = suffix;
@@ -145,7 +145,6 @@ public class CfgVisitor implements ControlFlowVisitor {
 		Set<Integer> var = assignedComponents.get(opt);
 		if (var == null) {
 			// no assignment for this variable at all -> keep ? operator
-			code.append(" = 0");
 		} else {
 			code.append(" = ");
 			for (int i = 0; i < node.getGraph().getBladeList().length; ++i) {
@@ -247,7 +246,7 @@ public class CfgVisitor implements ControlFlowVisitor {
 		code.append(visitor.getCode());
 	}
 
-	private void appendIndent() {
+	void appendIndent() {
 		for (int i = 0; i < indent; i++) {
 			code.append("\t");
 		}
