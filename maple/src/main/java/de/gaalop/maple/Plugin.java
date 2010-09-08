@@ -35,27 +35,20 @@ public class Plugin extends Observable implements OptimizationStrategyPlugin {
 	 * Try guessing a default value for the maple Path on Windows
 	 */
 	public Plugin() {
-		if (Platform.isWindows()) {
-			try {
-				Win32MapleFinder finder = new Win32MapleFinder();
-				String maplePath = finder.getMaplePathFromRegistry();
-				mapleBinaryPath = maplePath + "/bin.win/";
-				mapleJavaPath = maplePath + "/java/";
-				log.info("Maple Path from Windows Registry: " + "binary=\"" + mapleBinaryPath + "\", java=\"" + mapleJavaPath
-					+ "\"");
-			} catch (FileNotFoundException e) {
-				log.info("Unable to find Maple in the Windows registry.");
-			}
-		} else if (Platform.isMac()) {
-			String maplePath = "/Library/Frameworks/Maple.framework/Versions/13";
-			mapleBinaryPath = maplePath + "/bin.APPLE_UNIVERSAL_OSX/";
-			mapleJavaPath = maplePath + "/java/";
-		} else if (Platform.isLinux()) {
-			String maplePath = "/opt/maple13";
-			mapleJavaPath = maplePath + "/java/";
-			mapleBinaryPath = maplePath + "/bin.X86_64_LINUX/";
+        /*String maplePath = System.getenv("MAPLE");
+        if(maplePath.length() != 0)
+        {
+            mapleBinaryPath = maplePath + "/bin.win/";
+            mapleJavaPath = maplePath + "/java/";
+        }
+        mapleBinaryPath = "C:/Programme/Maple 12/bin.win/";
+        mapleJavaPath = "C:/Programme/Maple 12/java/";*/
+	}
 
-		}
+	public void setMaplePathsByMapleBinaryPath(String mapleBinaryPath_)
+	{
+        mapleBinaryPath = mapleBinaryPath_;
+        mapleJavaPath = mapleBinaryPath_ + "/../java";
 	}
 
 	public static void main(String[] args) {

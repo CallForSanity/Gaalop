@@ -12,9 +12,9 @@ import java.util.Set;
 
 /**
  * Main class of the Gaalop command line interface. Arguments are parsed using the args4j plugin.
- * 
+ *
  * @author Christian Schwinn
- * 
+ *
  */
 public class Main {
 
@@ -25,6 +25,9 @@ public class Main {
 
   @Option(name = "-o", required = false, usage = "Sets the directory where the output files are created.")
   private String outputDirectory = "";
+
+  @Option(name = "-m", required = false, usage = "Sets the Maple binary path.")
+  private String mapleBinaryPath = "";
 
   @Option(name = "-parser", required = false, usage = "Sets the class name of the code parser plugin that should be used.")
   private String codeParserPlugin = "de.gaalop.clucalc.input.Plugin";
@@ -37,7 +40,7 @@ public class Main {
 
   /**
    * Starts the command line interface of Gaalop.
-   * 
+   *
    * @param args -i to specify the input file (mandatory), -o to specify the output directory,
    * -parser to set the input parser, -generator to set the code generator plugin, -optimizer to
    * select the optimization strategy.
@@ -76,7 +79,15 @@ public class Main {
     if (outputDirectory.equals("-")) {
       printFileToConsole(output);
     } else {
-      File outFile = new File(outputDirectory, output.getName());
+      File outFile;
+      if(outputDirectory.length() == 0)
+        outFile = new File(output.getName());
+      else
+      {
+        // NOTE: output file does not return actual name, but the full path of the file
+        File tempFile = new File(output.getName());
+        outFile = new File(outputDirectory, tempFile.getName());
+      }
       PrintWriter writer = new PrintWriter(outFile, output.getEncoding().name());
       writer.print(output.getContent());
       writer.close();
@@ -118,6 +129,8 @@ public class Main {
     Set<OptimizationStrategyPlugin> plugins = Plugins.getOptimizationStrategyPlugins();
     for (OptimizationStrategyPlugin plugin : plugins) {
       if (plugin.getClass().getName().equals(optimizationStrategyPlugin)) {
+        if(mapleBinaryPath.length() != 0)
+          plugin.setMaplePathsByMapleBinaryPath(mapleBinaryPath);
         return plugin.createOptimizationStrategy();
       }
     }

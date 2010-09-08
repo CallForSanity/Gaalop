@@ -37,7 +37,7 @@ public class Main {
             } else {
                 mainMethod.invoke(null, new Object[]{args});
             }
-        /*} catch (ClassNotFoundException e) {
+        } catch (ClassNotFoundException e) {
             System.err.println("Unable to find " + MAIN_CLASS);
             e.printStackTrace();
         } catch (SecurityException e) {
@@ -54,12 +54,12 @@ public class Main {
             e.printStackTrace();
         } catch (InvocationTargetException e) {
             System.err.println("Main method threw an exception in " + MAIN_CLASS);
-            e.printStackTrace();*/
-        } catch(Throwable e) {
+            e.printStackTrace();
+        } /*catch(Throwable e) {
         	while(e.getCause() != null)
         		e = e.getCause();
         	System.err.println(e.getMessage());
-        }
+        }*/
     }
 
     /**

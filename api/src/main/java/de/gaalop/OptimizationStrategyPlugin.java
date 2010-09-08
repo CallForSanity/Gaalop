@@ -16,13 +16,14 @@ public interface OptimizationStrategyPlugin extends Plugin {
      * @return A new OptimizationStrategy instance. This instance can be shared only if it is thread-safe.
      */
     OptimizationStrategy createOptimizationStrategy();
-    
+
     /**
 	 * Wrapper method for {@link Observable#addObserver(Observer)}. Since interfaces cannot extend {@link Observer}, this method
 	 * has to be implemented to call {@link Observable#addObserver(Observer)} or by handling an own list of observers.
-	 * 
+	 *
 	 * @param observer observer to be registered for this plugin
 	 */
 	void addObserver(Observer observer);
 
+	void setMaplePathsByMapleBinaryPath(String mapleBinaryPath_);
 }

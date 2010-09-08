@@ -13,11 +13,11 @@ Dialog::Dialog(QWidget *parent) :
     ui->setupUi(this);
 
 #ifdef WIN32
-    QFile mapleBinaryDirFile("..\\share\\gcd\\maple_settings");
+    QFile mapleBinaryDirFile("..\\share\\gcd\\maple_settings.bat");
     QFile cppCompileCommandFile("..\\share\\gcd\\cpp_settings.bat");
     QFile cudaCompileCommandFile("..\\share\\gcd\\cuda_settings.bat");
 #else
-    QFile mapleBinaryDirFile("../share/gcd/maple_settings");
+    QFile mapleBinaryDirFile("../share/gcd/maple_settings.sh");
     QFile cppCompileCommandFile("../share/gcd/cpp_settings.sh");
     QFile cudaCompileCommandFile("../share/gcd/cuda_settings.sh");
 #endif
@@ -55,12 +55,12 @@ void Dialog::on_selectCudaCompileCommand_clicked()
 void Dialog::on_saveSettings_clicked()
 {
 #ifdef WIN32
-    QFile mapleBinaryDirFile("..\\share\\gcd\\maple_settings");
+    QFile mapleBinaryDirFile("..\\share\\gcd\\maple_settings.bat");
     QFile gaalopCommandFile("..\\share\\gcd\\gaalop_settings.bat");
     QFile cppCompileCommandFile("..\\share\\gcd\\cpp_settings.bat");
     QFile cudaCompileCommandFile("..\\share\\gcd\\cuda_settings.bat");
 #else
-    QFile mapleBinaryDirFile("../share/gcd/maple_settings");
+    QFile mapleBinaryDirFile("../share/gcd/maple_settings.sh");
     QFile gaalopCommandFile("../share/gcd/gaalop_settings.sh");
     QFile cppCompileCommandFile("../share/gcd/cpp_settings.sh");
     QFile cudaCompileCommandFile("../share/gcd/cuda_settings.sh");
@@ -75,11 +75,7 @@ void Dialog::on_saveSettings_clicked()
     QTextStream cudaCompileCommandStream(&cudaCompileCommandFile);
 
     mapleBinaryDirStream << ui->mapleBinaryDir->text();
-#ifdef WIN32
-    gaalopCommandStream << "set MAPLE=\"" << ui->mapleBinaryDir->text() << "\\..\"; cd ..\\share\\gcd\\target\\gaalop-1.0.0-bin; java -jar starter-1.0.0.jar -i";
-#else
-    gaalopCommandStream << "export MAPLE=\"" << ui->mapleBinaryDir->text() << "/..\"; cd ../share/gcd/target/gaalop-1.0.0-bin; java -jar starter-1.0.0.jar -i";
-#endif
+    gaalopCommandStream << "java -jar starter-1.0.0.jar -m \"" << ui->mapleBinaryDir->text() << "\" -i";
     cppCompileCommandStream << ui->cppCompileCommand->text();
     cudaCompileCommandStream << ui->cudaCompileCommand->text();
 }

@@ -1,1 +1,1 @@
-set MAPLE=C:\Programme\Maple 12; cd ..\share\gcd\target\gaalop-1.0.0-bin.dir; java -jar starter-1.0.0.jar -i
+java -jar starter-1.0.0.jar -m "C:/Programme/Maple 12/bin.win" -i

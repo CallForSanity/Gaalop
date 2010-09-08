@@ -1,8 +1,4 @@
-#ifdef WIN32
-#include <windows.h>
-#else
 #include <unistd.h>
-#endif
 #include "gcdBody.h"
 
 void readFile(std::stringstream& resultStream,const char* filePath);
@@ -16,23 +12,11 @@ int body(std::string& intermediateFilePath,
     std::string appPath(argv[0]);
 #ifdef WIN32
     const size_t pos = appPath.find_last_of('\\');
-    //_chdir(appPath.substr(0,pos).c_str());
-    SetCurrentDirectory(appPath.substr(0,pos).c_str());
-    char dir[MAX_PATH];
-    GetCurrentDirectory(MAX_PATH,dir);
-    std::cout << dir << std::endl;
 #else
     const size_t pos = appPath.find_last_of('/');
-    chdir(appPath.substr(0,pos).c_str());
 #endif
-
-    // settings
-    std::string gaalopPath;
-#ifdef WIN32
-    readFile(gaalopPath,"../share/gcd/gaalop_settings.bat");
-#else
-    readFile(gaalopPath,"../share/gcd/gaalop_settings.sh");
-#endif
+    appPath = appPath.substr(0,pos);
+    chdir(appPath.c_str());
 
     // parse command line
     const std::string inputFilePath(argv[argc - 1]);
@@ -93,7 +77,14 @@ int body(std::string& intermediateFilePath,
     }
 
     // process gaalop intermediate files
+    std::string gaalopPath;
+#ifdef WIN32
+    readFile(gaalopPath,"../share/gcd/gaalop_settings.bat");
+#else
+    readFile(gaalopPath,"../share/gcd/gaalop_settings.sh");
+#endif
     const int numGaalopFiles = gaalopInFilePathVector.size();
+    chdir("..\\share\\gcd\\target\\gaalop-1.0.0-bin");
     #pragma omp parallel for
     for(gaalopFileCount = 1; gaalopFileCount <= numGaalopFiles; ++gaalopFileCount)
     {
@@ -104,6 +95,8 @@ int body(std::string& intermediateFilePath,
         std::cout << gaalopCommand.str() << std::endl;
         system(gaalopCommand.str().c_str());
     }
+    //chdir(appPath.c_str());
+    chdir("..\\..\\..\\..\\bin");
 
     // compose intermediate file
     {
