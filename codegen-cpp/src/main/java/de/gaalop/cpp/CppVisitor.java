@@ -50,6 +50,7 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 	public void visit(StartNode node) {
 		graph = node.getGraph();
 
+		List<Variable> localVariables = sortVariables(graph.getLocalVariables());
 		if (standalone) {
 			code.append("void calculate(");
 
@@ -61,7 +62,7 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 				code.append(", ");
 			}
 
-			for (Variable var : graph.getLocalVariables()) {
+			for (Variable var : localVariables) {
 				code.append("float ");
 				code.append(var.getName());
 				code.append("[32], ");
@@ -74,7 +75,7 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 			code.append(") {\n");
 			indentation++;
 		} else {
-			for (Variable var : graph.getLocalVariables()) {
+			for (Variable var : localVariables) {
 				appendIndentation();
 				code.append("float ");
 				code.append(var.getName());

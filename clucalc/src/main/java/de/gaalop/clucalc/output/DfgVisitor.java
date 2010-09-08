@@ -178,12 +178,19 @@ public class DfgVisitor implements ExpressionVisitor {
 
 	@Override
 	public void visit(FunctionArgument node) {		
-		throw new IllegalStateException("Macros should have been inlined and are not allowed for output.");
+		code.append("_P(");
+		node.getIndex();
+		code.append(")");
 	}
 
 	@Override
 	public void visit(MacroCall node) {
-		throw new IllegalStateException("Macros should have been inlined and are not allowed for output.");		
+		code.append(node.getName());
+		code.append("(");
+		for (Expression arg : node.getArguments()) {
+			arg.accept(this);
+		}
+		code.append(")");
 	}
 
 }

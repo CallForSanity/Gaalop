@@ -240,7 +240,7 @@ public class CfgVisitor implements ControlFlowVisitor {
 		// nothing to do
 	}
 
-	private void addCode(Expression value) {
+	void addCode(Expression value) {
 		DfgVisitor visitor = new DfgVisitor(codeSuffix, MAPLE_SUFFIX);
 		value.accept(visitor);
 		code.append(visitor.getCode());

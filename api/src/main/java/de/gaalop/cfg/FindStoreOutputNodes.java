@@ -1,16 +1,16 @@
 package de.gaalop.cfg;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This visitor collects all nodes that store a result.
  */
 public class FindStoreOutputNodes implements ControlFlowVisitor {
 
-	private Set<StoreResultNode> nodes = new HashSet<StoreResultNode>();
+	private List<StoreResultNode> nodes = new ArrayList<StoreResultNode>();
 
-	public Set<StoreResultNode> getNodes() {
+	public List<StoreResultNode> getNodes() {
 		return nodes;
 	}
 

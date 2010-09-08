@@ -24,6 +24,8 @@ public class Plugin extends Observable implements OptimizationStrategyPlugin {
 	private static Log log = LogFactory.getLog(Plugin.class);
 
 	private static MapleSimplifier simplifier = null;
+	
+	private int progress, max;
 
 	/** This is a configuration property and should not be modified. */
 	@ConfigurationProperty(type = Type.TEXT)
@@ -139,16 +141,21 @@ public class Plugin extends Observable implements OptimizationStrategyPlugin {
 	}
 	
 	void notifyMaximum(int max) {
+		this.max = max;
 		setChanged();
 		notifyObservers(new Notifications.Number(max));
 	}
 
 	void notifyProgress() {
+		progress++;
+		int percent = progress * 100 / max;
+		System.out.println("Optimizing... " + percent + "%");
 		setChanged();
 		notifyObservers(new Notifications.Progress());
 	}
 
 	void notifyStart() {
+		progress = 0;
 		setChanged();
 		notifyObservers(new Notifications.Start());
 	}

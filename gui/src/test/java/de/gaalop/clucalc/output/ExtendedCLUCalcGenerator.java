@@ -1,8 +1,12 @@
 package de.gaalop.clucalc.output;
 
+import java.util.List;
+
 import de.gaalop.cfg.ControlFlowGraph;
 import de.gaalop.cfg.EndNode;
 import de.gaalop.cfg.FindStoreOutputNodes;
+import de.gaalop.cfg.Macro;
+import de.gaalop.cfg.SequentialNode;
 import de.gaalop.cfg.StartNode;
 import de.gaalop.cfg.StoreResultNode;
 import de.gaalop.clucalc.input.CluCalcFileHeader;
@@ -60,6 +64,25 @@ public class ExtendedCLUCalcGenerator extends CfgVisitor {
 		code.append("if (ToolName == \"calculate\") {\n");
 		indent++;
 		startNode.getSuccessor().accept(this);
+	}
+	
+	@Override
+	public void visit(Macro node) {
+		code.append(node.getName());
+		code.append(" = {\n");
+		indent++;
+		List<SequentialNode> body = node.getBody();
+		if (body != null && body.size() > 0) {
+			body.get(0).accept(this);
+		}
+		if (node.getReturnValue() != null) {
+			appendIndent();
+			addCode(node.getReturnValue());
+			code.append("\n");
+		}
+		indent--;
+		code.append("}\n");
+		node.getSuccessor().accept(this);
 	}
 
 	@Override

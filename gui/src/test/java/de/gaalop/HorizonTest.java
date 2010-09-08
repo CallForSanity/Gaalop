@@ -19,6 +19,11 @@ public class HorizonTest {
 		
 		TestbenchGenerator generator = new TestbenchGenerator(fileName, path, inputValues);
 		generator.run();
+		
+		String include = "C:/Program Files (x86)/CLUViz/v6_1/SDK/include";
+		String libpath = "C:/Program Files (x86)/CLUViz/v6_1/SDK/lib";
+		generator.createCompileScript(include, libpath);
+		generator.compile();
 	}
 	
 }

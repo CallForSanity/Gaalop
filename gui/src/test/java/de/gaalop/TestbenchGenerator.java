@@ -7,11 +7,12 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+import java.util.Scanner;
 
 import de.gaalop.CodeParserException;
 import de.gaalop.InputFile;
@@ -27,6 +28,7 @@ import de.gaalop.dfg.Variable;
 
 public class TestbenchGenerator {
 
+	private static final String SCRIPT_NAME = "compile.bat";
 	private final int MAX_MV_LENGTH = 2048;
 	private final String CLU_BLADES = "string CLU_BLADES[32] = {\n"
 			+ "\t\"1\",\n"
@@ -39,11 +41,12 @@ public class TestbenchGenerator {
 	private String fileName;
 	private String originalFileName;
 	private String optFileName;
+	private String cppFileName;
 	private InputFile inputFile;
 	private final CluCalcCodeParser parser = CluCalcCodeParser.INSTANCE;
 	private final OptimizationStrategy optimizer;
 	private List<Variable> inputVariables;
-	private List<StoreResultNode> outputNodes;
+	private List<Variable> outputVariables;
 	private final Map<String, Float> inputValues;
 
 	public TestbenchGenerator(String fileName, String path, Map<String, Float> inputValues) {
@@ -74,13 +77,63 @@ public class TestbenchGenerator {
 			optimizer.transform(graph);
 			optFileName = generateExtendedCluFile(graph, true);
 
-			generateTestbench(graph);
+			cppFileName = generateTestbench(graph);
 			System.out.println("Testbench has been generated successfully.");
 		} catch (CodeParserException e) {
 			e.printStackTrace();
 		} catch (OptimizationException e) {
 			e.printStackTrace();
 		}
+	}
+
+	/**
+	 * Generates a batch script to compile the testbench. To set the environment variables for the Visual Studio C++
+	 * compiler, the include and library paths have to be specified. These will be used in the script. Additionally, the
+	 * environment variable <code>VCINSTALLDIR</code> is expected to be set to the Visual Studio installation.
+	 * 
+	 * @param include
+	 * @param libpath
+	 */
+	public void createCompileScript(String include, String libpath) {
+		StringBuilder code = new StringBuilder();
+		String linesep = System.getProperty("line.separator");
+		code.append("call \"%VCINSTALLDIR%\\vcvarsall.bat\"" + linesep);
+
+		code.append("echo Compiling testbench..." + linesep);
+
+		code.append("cl /I\"");
+		code.append(include);
+		code.append("\" ");
+		code.append(cppFileName);
+		code.append(" /link /LIBPATH:\"");
+		code.append(libpath);
+		code.append("\" CLUViz.lib" + linesep);
+		
+		writeFile(code.toString(), SCRIPT_NAME);
+	}
+
+	/**
+	 * Compiles the testbench using the batch script created by {@link #createCompileScript(String, String)}.
+	 * 
+	 * @return the executable file for the testbench
+	 * @see #createCompileScript(String, String)
+	 */
+	public File compile() {
+		File script = new File(path + System.getProperty("file.separator") + SCRIPT_NAME);
+		ProcessBuilder pb = new ProcessBuilder(script.getAbsolutePath());
+		pb.directory(script.getParentFile());
+		try {
+			System.out.println("Calling " + script);
+			Process p = pb.start();
+			Scanner scanner = new Scanner(p.getInputStream());
+			while (scanner.hasNextLine()) {
+				System.out.println(scanner.nextLine());
+			}
+			scanner.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return new File(path + System.getProperty("file.separator") + fileName + ".exe");
 	}
 
 	private InputFile readFile(File file) throws IOException {
@@ -106,12 +159,13 @@ public class TestbenchGenerator {
 		if (opt) {
 			suffix = "_opt" + suffix;
 		}
-		return writeFile(code, suffix);
+		String name = fileName + suffix;
+		writeFile(code, name);
+		return name;
 	}
 
-	private String writeFile(String code, String suffix) {
-		String name = fileName + suffix;
-		File file = new File(path.getAbsolutePath() + System.getProperty("file.separator") + name);
+	private void writeFile(String code, String fileName) {
+		File file = new File(path.getAbsolutePath() + System.getProperty("file.separator") + fileName);
 		try {
 			PrintWriter writer = new PrintWriter(file);
 			writer.print(code);
@@ -120,32 +174,33 @@ public class TestbenchGenerator {
 			e.printStackTrace();
 		}
 		System.out.println("File " + file + " has been generated successfully.");
-		return name;
 	}
 
-	private void generateTestbench(ControlFlowGraph graph) {
+	private String generateTestbench(ControlFlowGraph graph) {
 		StringBuilder code = new StringBuilder();
 		// include directives
 		code.append("#include \"cluviz/CLUVizDLL.h\"\n");
 		code.append("#include <iostream>\n");
 		code.append("#include <string>\n");
-		
+
 		code.append("\nusing namespace std;\n\n");
-		
+
 		code.append("const char* dir = \"");
 		code.append(path.getAbsolutePath().replace(System.getProperty("file.separator"), "/"));
 		code.append("/\";\n\n");
-		
+
 		code.append(CLU_BLADES);
-		
+
 		addPrint(code);
-		
+
 		addCppCalculate(code, graph);
 		addCluCalculate(code, graph);
-		
+
 		addMain(code, graph);
-		
-		writeFile(code.toString(), ".cpp");
+
+		String name = fileName + ".cpp";
+		writeFile(code.toString(), name);
+		return name;
 	}
 
 	private void addPrint(StringBuilder code) {
@@ -159,19 +214,19 @@ public class TestbenchGenerator {
 		code.append("\t\t\t\tfirstEntry = false;\n");
 		code.append("\t\t\t} else {\n");
 		code.append("\t\t\t\tif (value > 0) {\n");
-		code.append("\t\t\t\t\tcout << \" + \"; \n");		
+		code.append("\t\t\t\t\tcout << \" + \"; \n");
 		code.append("\t\t\t\t} else {\n");
-		code.append("\t\t\t\t\tcout << \" - \"; \n");		
+		code.append("\t\t\t\t\tcout << \" - \"; \n");
 		code.append("\t\t\t\t}\n");
 		code.append("\t\t\t\tcout << fabs(value) << \"^\" << CLU_BLADES[i];\n");
-		code.append("\t\t\t}\n");		
-		code.append("\t\t}\n");		
-		code.append("\t}\n");		
-		code.append("\tif (firstEntry) {\n");		
-		code.append("\t\tcout << 0;\n");		
-		code.append("\t}\n");		
-		code.append("\tcout << endl;\n");		
-		code.append("}\n\n");		
+		code.append("\t\t\t}\n");
+		code.append("\t\t}\n");
+		code.append("\t}\n");
+		code.append("\tif (firstEntry) {\n");
+		code.append("\t\tcout << 0;\n");
+		code.append("\t}\n");
+		code.append("\tcout << endl;\n");
+		code.append("}\n\n");
 	}
 
 	private void addCppCalculate(StringBuilder code, ControlFlowGraph graph) {
@@ -180,8 +235,8 @@ public class TestbenchGenerator {
 		code.append(visitor.getCode());
 		code.append("\n");
 	}
-	
-	private List<Variable> sortVariables(Set<Variable> inputVariables) {
+
+	private List<Variable> sortVariables(Collection<Variable> inputVariables) {
 		List<Variable> variables = new ArrayList<Variable>(inputVariables);
 		Comparator<Variable> comparator = new Comparator<Variable>() {
 
@@ -194,7 +249,7 @@ public class TestbenchGenerator {
 		Collections.sort(variables, comparator);
 		return variables;
 	}
-	
+
 	private void addCluCalculate(StringBuilder code, ControlFlowGraph graph) {
 		code.append("void calculateCLU(char* fileName");
 		// create list to keep ordering consistent
@@ -204,18 +259,18 @@ public class TestbenchGenerator {
 			code.append(v.getName());
 		}
 		code.append(") {\n");
-		
+
 		code.append("\tchar pcDir[1024], *pcPos;\n");
 		code.append("\tstrncpy_s( pcDir, (const char *) dir, 1023 );\n");
 		code.append("\tpcPos = strrchr( pcDir, '/' );\n");
 		code.append("\t*pcPos = 0; \n\n");
-		
-		code.append("\tint iVizHandle = 0;\n");		
-		code.append("\tCLUViz::Start();\n");		
-		code.append("\tCLUViz::SetScriptPath(pcDir);\n");		
-		code.append("\tCLUViz::Create( iVizHandle, 0, 0, 0, 0, \"Gaalop Testbench\" );\n");		
+
+		code.append("\tint iVizHandle = 0;\n");
+		code.append("\tCLUViz::Start();\n");
+		code.append("\tCLUViz::SetScriptPath(pcDir);\n");
+		code.append("\tCLUViz::Create( iVizHandle, 0, 0, 0, 0, \"Gaalop Testbench\" );\n");
 		code.append("\tCLUViz::LoadScript( iVizHandle, fileName );\n\n");
-		
+
 		for (Variable v : inputVariables) {
 			code.append("\tCLUViz::SetVarNumber(iVizHandle, ");
 			code.append("\"");
@@ -224,17 +279,21 @@ public class TestbenchGenerator {
 			code.append(v.getName());
 			code.append(");\n");
 		}
-		
+
 		code.append("\t\n");
 		code.append("\tCLUViz::ExecUser(iVizHandle, \"calculate\");\n");
 		code.append("\tCLUViz::ExecUser(iVizHandle, \"toString\");\n\n");
-		
+
 		FindStoreOutputNodes visitor = new FindStoreOutputNodes();
 		graph.accept(visitor);
-		outputNodes = new ArrayList<StoreResultNode>(visitor.getNodes());
-		for (StoreResultNode mv : outputNodes) {
-			code.append("\tchar ");		
-			String name = mv.getValue().getName();
+		List<StoreResultNode> nodes = visitor.getNodes();
+		outputVariables = new ArrayList<Variable>();
+		for (StoreResultNode node : nodes) {
+			outputVariables.add(node.getValue());
+		}
+		for (Variable mv : outputVariables) {
+			code.append("\tchar ");
+			String name = mv.getName();
 			code.append(name);
 			code.append("[");
 			code.append(MAX_MV_LENGTH + 1);
@@ -250,8 +309,8 @@ public class TestbenchGenerator {
 			code.append(name);
 			code.append(");\n");
 		}
-		
-		code.append("\tCLUViz::Destroy(iVizHandle);\n");		
+
+		code.append("\tCLUViz::Destroy(iVizHandle);\n");
 		code.append("}\n\n");
 	}
 
@@ -269,13 +328,13 @@ public class TestbenchGenerator {
 			code.append(value);
 			code.append(";\n");
 		}
-		
-		for (StoreResultNode mv : outputNodes) {
+
+		for (Variable mv : outputVariables) {
 			code.append("\tfloat ");
-			code.append(mv.getValue().getName());
+			code.append(mv.getName());
 			code.append("[32] = { 0.0f };\n");
 		}
-		
+
 		code.append("\n");
 		code.append("\tcout << \"C++ output:\" << endl;\n");
 		code.append("\tcalculate(");
@@ -283,16 +342,18 @@ public class TestbenchGenerator {
 			code.append(v.getName());
 			code.append(", ");
 		}
-		for (StoreResultNode mv : outputNodes) {
-			code.append(mv.getValue().getName());
+		// keep consistent with method declaration, so use a sorted list
+		List<Variable> sortedOutputVariables = sortVariables(outputVariables);
+		for (Variable mv : sortedOutputVariables) {
+			code.append(mv.getName());
 			code.append(", ");
 		}
 		code.delete(code.length() - 2, code.length());
 		code.append(");\n");
-		
-		for (StoreResultNode mv : outputNodes) {
+
+		for (Variable mv : outputVariables) {
 			code.append("\tprintCluMV(");
-			code.append(mv.getValue().getName());
+			code.append(mv.getName());
 			code.append(");\n\n");
 		}
 
@@ -315,7 +376,7 @@ public class TestbenchGenerator {
 			code.append(v.getName());
 		}
 		code.append(");\n\n");
-		
+
 		code.append("\treturn 0;\n");
 		code.append("}\n");
 	}
