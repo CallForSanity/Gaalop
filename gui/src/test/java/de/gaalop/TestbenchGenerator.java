@@ -28,7 +28,6 @@ import de.gaalop.dfg.Variable;
 
 public class TestbenchGenerator {
 
-	private static final String SCRIPT_NAME = "compile.bat";
 	private final int MAX_MV_LENGTH = 2048;
 	private final String CLU_BLADES = "string CLU_BLADES[32] = {\n"
 			+ "\t\"1\",\n"
@@ -42,13 +41,14 @@ public class TestbenchGenerator {
 	private String originalFileName;
 	private String optFileName;
 	private String cppFileName;
+	private String compileScriptName;
 	private InputFile inputFile;
 	private final CluCalcCodeParser parser = CluCalcCodeParser.INSTANCE;
 	private final OptimizationStrategy optimizer;
 	private List<Variable> inputVariables;
 	private List<Variable> outputVariables;
 	private final Map<String, Float> inputValues;
-
+	
 	public TestbenchGenerator(String fileName, String path, Map<String, Float> inputValues) {
 		optimizer = new de.gaalop.maple.Plugin().createOptimizationStrategy();
 		this.path = new File(path);
@@ -110,7 +110,8 @@ public class TestbenchGenerator {
 		code.append(libpath);
 		code.append("\" CLUViz.lib" + linesep);
 		
-		writeFile(code.toString(), SCRIPT_NAME);
+		compileScriptName = "compile-" + fileName + ".bat";
+		writeFile(code.toString(), compileScriptName);
 	}
 
 	/**
@@ -120,7 +121,7 @@ public class TestbenchGenerator {
 	 * @see #createCompileScript(String, String)
 	 */
 	public File compile() {
-		File script = new File(path + System.getProperty("file.separator") + SCRIPT_NAME);
+		File script = new File(path + System.getProperty("file.separator") + compileScriptName);
 		ProcessBuilder pb = new ProcessBuilder(script.getAbsolutePath());
 		pb.directory(script.getParentFile());
 		try {

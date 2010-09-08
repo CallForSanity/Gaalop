@@ -1,5 +1,7 @@
 DefVarsN3();
 
+x = 3;
+
 multiplyByTen = {
 	i = 0;
 	x = 0;
