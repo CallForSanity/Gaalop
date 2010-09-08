@@ -149,16 +149,33 @@ public class CluCalcCppTest {
 		// p_e
 		expectedCppResults.add("0.980883^e1 + 0.980883^e2 - 0.189039^e3 + 0.98^e + 1^e0");
 		// q_e
-		expectedCppResults.add("0.705162^1 + 0.709047^e23");
+		expectedCppResults.add("0.705162 + 0.709047^e23");
 		// q12
 		expectedCppResults.add("-0.657637^e12 + 0.532688^e13 - 0.532688^e23");
 		// q3
-		expectedCppResults.add("0.382683^1 - 0.92388^e12");		
+		expectedCppResults.add("0.382683 - 0.92388^e12");		
 		// q_s
-		expectedCppResults.add("-0.607577^1 - 0.251667^e12 - 0.288289^e13 - 0.695991^e23");
+		expectedCppResults.add("-0.607577 - 0.251667^e12 - 0.288289^e13 - 0.695991^e23");
 		
 		generator = new TestbenchGenerator(fileName, PATH, inputValues);
 		compare(6);
+	}
+	
+	/**
+	 * Tests all-control-flow.clu example.
+	 * 
+	 * @throws IOException
+	 */
+	@Test
+	public void allControlFlow() throws IOException {
+		String fileName = getClass().getResource("/de/gaalop/all-control-flow.clu").getFile();
+		inputValues.put("x", 3.0f);
+		
+		// x
+		expectedCppResults.add("3e+010");
+		
+		generator = new TestbenchGenerator(fileName, PATH, inputValues);
+		compare(1);
 	}
 
 }

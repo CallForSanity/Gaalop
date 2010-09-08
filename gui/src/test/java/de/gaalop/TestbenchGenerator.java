@@ -213,8 +213,9 @@ public class TestbenchGenerator {
 		code.append("\t\t\tvalue = 0.0f;\n");
 		code.append("\t\t}\n");
 		code.append("\t\tif (value != 0) {\n");
+		code.append("\t\t\tstring blade = i == 0 ? \"\" : \"^\" + CLU_BLADES[i];\n");
 		code.append("\t\t\tif (firstEntry) {\n");
-		code.append("\t\t\t\tcout << value << \"^\" << CLU_BLADES[i];\n");
+		code.append("\t\t\t\tcout << value << blade;\n");
 		code.append("\t\t\t\tfirstEntry = false;\n");
 		code.append("\t\t\t} else {\n");
 		code.append("\t\t\t\tif (value > 0) {\n");
@@ -222,7 +223,7 @@ public class TestbenchGenerator {
 		code.append("\t\t\t\t} else {\n");
 		code.append("\t\t\t\t\tcout << \" - \"; \n");
 		code.append("\t\t\t\t}\n");
-		code.append("\t\t\t\tcout << fabs(value) << \"^\" << CLU_BLADES[i];\n");
+		code.append("\t\t\t\tcout << fabs(value) << blade;\n");
 		code.append("\t\t\t}\n");
 		code.append("\t\t}\n");
 		code.append("\t}\n");

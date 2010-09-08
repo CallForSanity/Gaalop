@@ -78,6 +78,9 @@ public class DfgVisitor implements ExpressionVisitor {
 
 	@Override
 	public void visit(Variable variable) {
+		if (variable.globalAccess()) {
+			code.append("::");
+		}
 		code.append(variable.getName().replace(optSuffix, suffix));
 	}
 
@@ -191,7 +194,9 @@ public class DfgVisitor implements ExpressionVisitor {
 			arg.accept(this);
 			code.append(", ");
 		}
-		code.delete(code.length() - 2, code.length());
+		if (node.getArguments().size() > 0) {
+			code.delete(code.length() - 2, code.length());
+		}
 		code.append(")");
 	}
 
