@@ -1,4 +1,4 @@
-package de.gaalop.gui;
+package de.gaalop;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import de.gaalop.CodeParserException;
@@ -43,10 +44,12 @@ public class TestbenchGenerator {
 	private final OptimizationStrategy optimizer;
 	private List<Variable> inputVariables;
 	private List<StoreResultNode> outputNodes;
+	private final Map<String, Float> inputValues;
 
-	public TestbenchGenerator(String fileName, String path) {
+	public TestbenchGenerator(String fileName, String path, Map<String, Float> inputValues) {
 		optimizer = new de.gaalop.maple.Plugin().createOptimizationStrategy();
 		this.path = new File(path);
+		this.inputValues = inputValues;
 		try {
 			File file = new File(fileName);
 			this.fileName = file.getName().substring(0, file.getName().indexOf(".clu"));
@@ -60,7 +63,7 @@ public class TestbenchGenerator {
 		if (args.length < 2) {
 			throw new IllegalArgumentException("Must provide file name and path to scripts");
 		}
-		TestbenchGenerator generator = new TestbenchGenerator(args[0], args[1]);
+		TestbenchGenerator generator = new TestbenchGenerator(args[0], args[1], null);
 		generator.run();
 	}
 
@@ -72,6 +75,7 @@ public class TestbenchGenerator {
 			optFileName = generateExtendedCluFile(graph, true);
 
 			generateTestbench(graph);
+			System.out.println("Testbench has been generated successfully.");
 		} catch (CodeParserException e) {
 			e.printStackTrace();
 		} catch (OptimizationException e) {
@@ -115,6 +119,7 @@ public class TestbenchGenerator {
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
+		System.out.println("File " + file + " has been generated successfully.");
 		return name;
 	}
 
@@ -133,7 +138,6 @@ public class TestbenchGenerator {
 		
 		code.append(CLU_BLADES);
 		
-		addRoundValue(code);
 		addPrint(code);
 		
 		addCppCalculate(code, graph);
@@ -144,12 +148,6 @@ public class TestbenchGenerator {
 		writeFile(code.toString(), ".cpp");
 	}
 
-	private void addRoundValue(StringBuilder code) {
-		code.append("float roundValue(float value) {\n");
-		code.append("\treturn floor( value * 100.0f + .5f) / 100.0f;\n");
-		code.append("}\n\n");
-	}
-
 	private void addPrint(StringBuilder code) {
 		code.append("void printCluMV(float mv[32]) {\n");
 		code.append("\tbool firstEntry = true;\n");
@@ -157,7 +155,7 @@ public class TestbenchGenerator {
 		code.append("\t\tfloat value = mv[i];\n");
 		code.append("\t\tif (value != 0) {\n");
 		code.append("\t\t\tif (firstEntry) {\n");
-		code.append("\t\t\t\tcout << roundValue(value) << \"^\" << CLU_BLADES[i];\n");
+		code.append("\t\t\t\tcout << value << \"^\" << CLU_BLADES[i];\n");
 		code.append("\t\t\t\tfirstEntry = false;\n");
 		code.append("\t\t\t} else {\n");
 		code.append("\t\t\t\tif (value > 0) {\n");
@@ -165,9 +163,12 @@ public class TestbenchGenerator {
 		code.append("\t\t\t\t} else {\n");
 		code.append("\t\t\t\t\tcout << \" - \"; \n");		
 		code.append("\t\t\t\t}\n");
-		code.append("\t\t\t\tcout << roundValue(fabs(value)) << \"^\" << CLU_BLADES[i];\n");
+		code.append("\t\t\t\tcout << fabs(value) << \"^\" << CLU_BLADES[i];\n");
 		code.append("\t\t\t}\n");		
 		code.append("\t\t}\n");		
+		code.append("\t}\n");		
+		code.append("\tif (firstEntry) {\n");		
+		code.append("\t\tcout << 0;\n");		
 		code.append("\t}\n");		
 		code.append("\tcout << endl;\n");		
 		code.append("}\n\n");		
@@ -258,10 +259,14 @@ public class TestbenchGenerator {
 		code.append("int main(int argc, char* argv[]) {\n");
 		for (Variable v : inputVariables) {
 			code.append("\tfloat ");
-			code.append(v.getName());
+			String name = v.getName();
+			code.append(name);
 			code.append(" = ");
-			// FIXME: initialize input variables somehow
-			code.append(0);
+			float value = 0.0f;
+			if (inputValues != null && inputValues.get(name) != null) {
+				value = inputValues.get(name);
+			}
+			code.append(value);
 			code.append(";\n");
 		}
 		
@@ -272,6 +277,7 @@ public class TestbenchGenerator {
 		}
 		
 		code.append("\n");
+		code.append("\tcout << \"C++ output:\" << endl;\n");
 		code.append("\tcalculate(");
 		for (Variable v : inputVariables) {
 			code.append(v.getName());
@@ -282,14 +288,15 @@ public class TestbenchGenerator {
 			code.append(", ");
 		}
 		code.delete(code.length() - 2, code.length());
-		code.append(");}\n");
+		code.append(");\n");
 		
 		for (StoreResultNode mv : outputNodes) {
 			code.append("\tprintCluMV(");
 			code.append(mv.getValue().getName());
 			code.append(");\n\n");
 		}
-		
+
+		code.append("\tcout << \"Original file output:\" << endl;\n");
 		code.append("\tcalculateCLU(\"");
 		code.append(originalFileName);
 		code.append("\"");
@@ -298,7 +305,8 @@ public class TestbenchGenerator {
 			code.append(v.getName());
 		}
 		code.append(");\n");
-		
+
+		code.append("\tcout << \"Optimized CLUCalc file output:\" << endl;\n");
 		code.append("\tcalculateCLU(\"");
 		code.append(optFileName);
 		code.append("\"");

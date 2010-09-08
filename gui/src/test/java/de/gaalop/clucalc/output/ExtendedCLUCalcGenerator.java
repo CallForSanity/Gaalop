@@ -57,7 +57,7 @@ public class ExtendedCLUCalcGenerator extends CfgVisitor {
 		}
 		code.append("\n");
 
-		code.append("if (ToolName == calculate) {\n");
+		code.append("if (ToolName == \"calculate\") {\n");
 		indent++;
 		startNode.getSuccessor().accept(this);
 	}
