@@ -5,7 +5,7 @@ import java.util.Map;
 
 public class HorizonTest {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws CodeParserException, OptimizationException {
 		String fileName = args[0];
 		String path = args[1];
 		Map<String, Float> inputValues = new HashMap<String, Float>();

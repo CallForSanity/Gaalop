@@ -48,7 +48,14 @@ public class TestbenchGenerator {
 	private List<Variable> inputVariables;
 	private List<Variable> outputVariables;
 	private final Map<String, Float> inputValues;
-	
+
+	/**
+	 * Creates a new testbench generator for given file, path and input values.
+	 * 
+	 * @param fileName
+	 * @param path
+	 * @param inputValues
+	 */
 	public TestbenchGenerator(String fileName, String path, Map<String, Float> inputValues) {
 		optimizer = new de.gaalop.maple.Plugin().createOptimizationStrategy();
 		this.path = new File(path);
@@ -63,7 +70,25 @@ public class TestbenchGenerator {
 		}
 	}
 
-	public static void main(String[] args) {
+	/**
+	 * Creates a new testbench generator for given file name and contents, path and input variables. No file is read.
+	 * 
+	 * @param fileName
+	 * @param content
+	 * @param path
+	 * @param inputValues
+	 */
+	public TestbenchGenerator(String fileName, String content, String path, Map<String, Float> inputValues) {
+		optimizer = new de.gaalop.maple.Plugin().createOptimizationStrategy();
+		this.path = new File(path);
+		this.inputValues = inputValues;
+		File file = new File(fileName);
+		System.out.println("Generating testbench for file " + file);
+		this.fileName = file.getName().substring(0, file.getName().indexOf(".clu"));
+		inputFile = new InputFile(file.getName(), content);
+	}
+
+	public static void main(String[] args) throws CodeParserException, OptimizationException {
 		if (args.length < 2) {
 			throw new IllegalArgumentException("Must provide file name and path to scripts");
 		}
@@ -71,20 +96,14 @@ public class TestbenchGenerator {
 		generator.run();
 	}
 
-	public void run() {
-		try {
-			ControlFlowGraph graph = parser.parseFile(inputFile);
-			originalFileName = generateExtendedCluFile(graph, false);
-			optimizer.transform(graph);
-			optFileName = generateExtendedCluFile(graph, true);
+	public void run() throws CodeParserException, OptimizationException {
+		ControlFlowGraph graph = parser.parseFile(inputFile);
+		originalFileName = generateExtendedCluFile(graph, false);
+		optimizer.transform(graph);
+		optFileName = generateExtendedCluFile(graph, true);
 
-			cppFileName = generateTestbench(graph);
-			System.out.println("Testbench has been generated successfully.");
-		} catch (CodeParserException e) {
-			e.printStackTrace();
-		} catch (OptimizationException e) {
-			e.printStackTrace();
-		}
+		cppFileName = generateTestbench(graph);
+		System.out.println("Testbench has been generated successfully.");
 	}
 
 	/**
@@ -109,7 +128,7 @@ public class TestbenchGenerator {
 		code.append(" /link /LIBPATH:\"");
 		code.append(libpath);
 		code.append("\" CLUViz.lib" + linesep);
-		
+
 		compileScriptName = "compile-" + fileName + ".bat";
 		writeFile(code.toString(), compileScriptName);
 	}
