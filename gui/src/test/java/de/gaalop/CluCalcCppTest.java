@@ -93,7 +93,10 @@ public class CluCalcCppTest {
 		return line;
 	}
 
-	private void compare(int numVectors) throws IOException {
+	private void compare(String fileName, int numVectors, List<String> expectedCppResults2) throws IOException {
+		assertEquals("Wrong number of expected values for output multivectors", numVectors, expectedCppResults.size());
+		generator = new TestbenchGenerator(fileName, PATH, inputValues);
+		
 		File exe = compile();
 		Scanner scanner = run(exe);
 		List<OutputSet> results = parseResult(scanner, numVectors);
@@ -103,9 +106,9 @@ public class CluCalcCppTest {
 	private void compareMultivectors(List<OutputSet> actualList, List<String> expectedCppValues) {
 		for (int i = 0; i < expectedCppValues.size(); i++) {
 			OutputSet actual = actualList.get(i);
-			assertEquals(actual.CLU_ORIGINAL, actual.CLU_OPT);
+			assertEquals("Original and optimized CLUCalc output are not equal", actual.CLU_ORIGINAL, actual.CLU_OPT);
 			String cppResult = expectedCppValues.get(i);
-			assertEquals(cppResult, actual.CPP);
+			assertEquals("Expected and actual C++ results do not match", cppResult, actual.CPP);
 		}
 	}
 
@@ -125,12 +128,11 @@ public class CluCalcCppTest {
 		inputValues.put("pz", 1.0f);
 		inputValues.put("r", 0.5f);
 
+		int outputMVs = 1;
 		// C
-		expectedCppResults
-				.add("0.125^(e1^e) - 1^(e1^e0) + 0.125^(e2^e) - 1^(e2^e0) + 0.125^(e3^e) - 1^(e3^e0) - 0.25^E");
+		expectedCppResults.add("0.125^(e1^e) - 1^(e1^e0) + 0.125^(e2^e) - 1^(e2^e0) + 0.125^(e3^e) - 1^(e3^e0) - 0.25^E");
 
-		generator = new TestbenchGenerator(fileName, PATH, inputValues);
-		compare(1);
+		compare(fileName, outputMVs, expectedCppResults);
 	}
 
 	/**
@@ -148,6 +150,7 @@ public class CluCalcCppTest {
 		inputValues.put("d2", 1.30f);
 		inputValues.put("phi", (float) Math.PI);
 
+		int outputMVs = 6;
 		// SwivelPlane
 		expectedCppResults.add("-1.1^e1 + 1.1^e2 + 1.11042e-007^e3");
 		// p_e
@@ -161,8 +164,7 @@ public class CluCalcCppTest {
 		// q_s
 		expectedCppResults.add("-0.607577 - 0.251667^e12 - 0.288289^e13 - 0.695991^e23");
 
-		generator = new TestbenchGenerator(fileName, PATH, inputValues);
-		compare(6);
+		compare(fileName, outputMVs, expectedCppResults);
 	}
 
 	/**
@@ -175,11 +177,54 @@ public class CluCalcCppTest {
 		String fileName = getClass().getResource("/de/gaalop/all-control-flow.clu").getFile();
 		// no input variables for this test
 
+		int outputMVs = 1;
 		// x
 		expectedCppResults.add("3e+010");
 
-		generator = new TestbenchGenerator(fileName, PATH, inputValues);
-		compare(1);
+		compare(fileName, outputMVs, expectedCppResults);
+	}
+	
+	@Test
+	public void loopNoUnrolling() throws IOException {
+		String fileName = getClass().getResource("/de/gaalop/loop_no_unrolling.clu").getFile();
+		inputValues.put("x", 1.0f);
+		inputValues.put("y", 1.0f);
+		inputValues.put("z", 1.0f);
+		inputValues.put("a", 2.0f);
+		inputValues.put("b", 2.0f);
+		inputValues.put("c", 2.0f);
+		
+		int outputMVs = 2;
+		// val
+		expectedCppResults.add("10 + 1^e1 + 1^e2 + 1^e3 + 1.5^e + 1^e0");
+		// var
+		expectedCppResults.add("2^e1 + 2^e2 + 2^e3 + 6^e + 1^e0");
+		
+		compare(fileName, outputMVs, expectedCppResults);
+	}
+	
+	/**
+	 * Tests the Nested If.clu example. 
+	 * 
+	 * @throws IOException
+	 */
+	@Test
+	public void nestedIf() throws IOException {
+		String fileName = getClass().getResource("/de/gaalop/Nested_If.clu").getFile();
+		inputValues.put("s1", 1.0f);
+		inputValues.put("s2", 1.0f);
+		inputValues.put("s3", 1.0f);
+		inputValues.put("r", 1.0f);
+		inputValues.put("z", 5.0f);
+		inputValues.put("p1", 3.0f);
+		inputValues.put("p2", 3.0f);
+		inputValues.put("p3", 3.0f);
+				
+		int outputMVs = 1;
+		// rslt
+		expectedCppResults.add("20^e1 + 40^e2 + 60^e3 + 140^e + 20^e0");
+		
+		compare(fileName, outputMVs, expectedCppResults);
 	}
 
 }
