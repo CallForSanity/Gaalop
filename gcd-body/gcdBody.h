@@ -11,8 +11,12 @@
 void readFile(std::string& resultString,const char* filePath);
 void readFile(std::stringstream& resultStream,const char* filePath);
 void readFile(std::stringstream& resultStream,std::ifstream& fileStream);
-int body(std::string& intermediateFilePath,
+int body(std::string& intermediateFilePath,std::string& outputFilePath,
 	 const int argc,const char* argv[],const char* gaalopInFileExtension,
-	 const char* gaalopOutFileExtension,const char* intermediateFileExtension);
+	 const char* gaalopOutFileExtension,const char* intermediateFileExtension,
+	 const char* outputFileExtension,const char* outputOption);
+void invokeCompiler(const std::string& compilerPath,const int argc,const char* argv[],
+                    const std::string& outputFilePath,const std::string& intermediateFilePath,
+                    const char* outputOption);
 
 #endif

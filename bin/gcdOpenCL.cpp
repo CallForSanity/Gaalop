@@ -3,10 +3,11 @@
 int main(const int argc,const char* argv[])
 {
     // execute body
-    std::string intermediateFilePath;
-    int result = body(intermediateFilePath,argc,argv,".clu.i",".clu.cpp.g",".cl.i");
+    std::string intermediateFilePath,outputFilePath;
+    int result = body(intermediateFilePath,outputFilePath,argc,argv,
+                      ".clu.i",".clu.cpp.g",".cl.i",".cl","-o");
     if(result)
-	return result;
+        return result;
 
     // configure settings
 #ifdef WIN32
@@ -19,8 +20,7 @@ int main(const int argc,const char* argv[])
     std::stringstream copyCommand;
     copyCommand << copyPath;
     copyCommand << " \"" << intermediateFilePath << "\"";
-    for(unsigned int counter = 1; counter < argc - 1; ++counter)
-	copyCommand << " \"" << argv[counter] << "\"";
+    copyCommand << " \"" << outputFilePath << "\"";
 
     // invoke copy command
     std::cout << copyCommand.str() << std::endl;

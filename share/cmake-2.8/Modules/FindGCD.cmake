@@ -34,11 +34,6 @@ MACRO(GCD_WRAP_SRCS generated_files)
 					   COMMAND "${GCD_CPP_BINARY}"
 					   ARGS ${GCD_ARGS} "-c" "-o" "${generated_file}" "${source_file}"
 					   MAIN_DEPENDENCY ${source_file})
-			#MESSAGE("${GCD_ROOT_DIR}")
-			#ADD_CUSTOM_COMMAND(OUTPUT ${generated_file}
-			#		   COMMAND ${CMAKE_COMMAND} -E chdir "${GCD_ROOT_DIR}/bin" "gcd-cpp"
-			#		   ARGS ${GCD_ARGS} "-c" "-o" "${generated_file}" "${source_file}"
-			#		   MAIN_DEPENDENCY ${source_file})
 			LIST(APPEND ${generated_files} ${generated_file})
 		ELSEIF(${source_file} MATCHES ".*\\.gcu$" AND NOT is_header)
 			get_filename_component(source_file_name ${source_file} NAME)
@@ -63,7 +58,7 @@ MACRO(GCD_WRAP_SRCS generated_files)
 			STRING(REPLACE "/" "\\" generated_file ${generated_file})
 			ADD_CUSTOM_COMMAND(OUTPUT ${generated_file}
 					   COMMAND "${GCD_OPENCL_BINARY}"
-					   ARGS "${generated_file}" "${source_file}"
+					   ARGS -o "${generated_file}" "${source_file}"
 					   MAIN_DEPENDENCY ${source_file})
 		ENDIF(${source_file} MATCHES ".*\\.gcp$" AND NOT is_header)
 	ENDFOREACH(source_file)

@@ -1,40 +1,78 @@
 #include <unistd.h>
 #include "gcdBody.h"
 
+#ifdef WIN32
+#define PATH_SEP '\\'
+#else
+#define PATH_SEP '/'
+#endif
+
 void readFile(std::stringstream& resultStream,const char* filePath);
 void readFile(std::stringstream& resultStream,const std::ifstream& fileStream);
 
-int body(std::string& intermediateFilePath,
+int body(std::string& intermediateFilePath,std::string& outputFilePath,
          const int argc,const char* argv[],const char* gaalopInFileExtension,
-         const char* gaalopOutFileExtension,const char* intermediateFileExtension)
+         const char* gaalopOutFileExtension,const char* intermediateFileExtension,
+         const char* outputFileExtension,const char* outputOption)
 {
+    // save working directory
+    char runPath[MAX_PATH];
+    getcwd(runPath,MAX_PATH);
+
     // change working directory to application directory
     std::string appPath(argv[0]);
-#ifdef WIN32
-    const size_t pos = appPath.find_last_of('\\');
-#else
-    const size_t pos = appPath.find_last_of('/');
-#endif
+    const size_t pos = appPath.find_last_of(PATH_SEP);
     appPath = appPath.substr(0,pos);
     chdir(appPath.c_str());
 
     // parse command line
-    const std::string inputFilePath(argv[argc - 1]);
+    std::string inputFilePath(argv[argc - 1]);
+    if(inputFilePath.find("\\") == std::string::npos &&
+       inputFilePath.find("/") == std::string::npos)
+    {
+        std::stringstream inputFilePathStream;
+        inputFilePathStream << runPath << PATH_SEP << inputFilePath;
+        inputFilePath = inputFilePathStream.str();
+    }
 
-    // try to find output path
-    std::string outputFilePath(inputFilePath);
+    // try to find temp file path and remove trailing extension
+    std::string tempFilePath(inputFilePath + outputFileExtension);
     for(unsigned int counter = argc - 2; counter > 0; --counter)
     {
-        const std::string arg(argv[counter]);
-        if(arg.rfind(".o") != std::string::npos || arg.rfind(".obj") != std::string::npos ||
-           arg.rfind(".gcp") != std::string::npos || arg.rfind(".gcu") != std::string::npos || arg.rfind(".gcl") != std::string::npos)
+        std::string arg(argv[counter]);
+        if(arg.rfind(outputFileExtension) != std::string::npos)
         {
-            size_t pos = arg.find_last_of(".o");
-            if(pos == std::string::npos)
-                pos = arg.find_last_of(".obj");
-
-            outputFilePath = arg.substr(0,pos - 1);
+            size_t pos = arg.find_last_of('.');
+            tempFilePath = arg.substr(0,pos - 1);
+            outputFilePath = arg;
             break;
+        }
+        else if(arg.rfind(outputOption) != std::string::npos)
+        {
+            arg = argv[++counter];
+            size_t pos = arg.find_last_of('.');
+            tempFilePath = arg.substr(0,pos - 1);
+            outputFilePath = arg;
+            break;
+        }
+    }
+
+    // convert to absolute paths
+    if(tempFilePath.find("\\") == std::string::npos &&
+       tempFilePath.find("/") == std::string::npos)
+    {
+        // gaalop output file
+        {
+            std::stringstream tempFilePathStream;
+            tempFilePathStream << runPath << PATH_SEP << tempFilePath;
+            tempFilePath = tempFilePathStream.str();
+        }
+
+        // output file
+        {
+            std::stringstream outputFilePathStream;
+            outputFilePathStream << runPath << PATH_SEP << outputFilePath;
+            outputFilePath = outputFilePathStream.str();
         }
     }
 
@@ -57,7 +95,7 @@ int body(std::string& intermediateFilePath,
             if(line.find("#pragma gcd begin") != std::string::npos)
             {
                 std::stringstream gaalopInFilePath;
-                gaalopInFilePath << outputFilePath << "." << ++gaalopFileCount << gaalopInFileExtension;
+                gaalopInFilePath << tempFilePath << "." << ++gaalopFileCount << gaalopInFileExtension;
                 std::ofstream gaalopInFile(gaalopInFilePath.str().c_str());
 
                 // read until end of optimized file
@@ -79,24 +117,29 @@ int body(std::string& intermediateFilePath,
     // process gaalop intermediate files
     std::string gaalopPath;
 #ifdef WIN32
-    readFile(gaalopPath,"../share/gcd/gaalop_settings.bat");
+    readFile(gaalopPath,"..\\share\\gcd\\gaalop_settings.bat");
+    chdir("..\\share\\gcd\\target\\gaalop-1.0.0-bin");
 #else
     readFile(gaalopPath,"../share/gcd/gaalop_settings.sh");
+    chdir("../share/gcd/target/gaalop-1.0.0-bin");
 #endif
     const int numGaalopFiles = gaalopInFilePathVector.size();
-    chdir("..\\share\\gcd\\target\\gaalop-1.0.0-bin");
     #pragma omp parallel for
     for(gaalopFileCount = 1; gaalopFileCount <= numGaalopFiles; ++gaalopFileCount)
     {
         // run Gaalop
         std::stringstream gaalopCommand;
         gaalopCommand << gaalopPath;
-        gaalopCommand << " \"" << outputFilePath << "." << gaalopFileCount << gaalopInFileExtension << "\"";
+        gaalopCommand << " \"" << tempFilePath << "." << gaalopFileCount << gaalopInFileExtension << "\"";
         std::cout << gaalopCommand.str() << std::endl;
         system(gaalopCommand.str().c_str());
     }
     //chdir(appPath.c_str());
+#ifdef WIN32
     chdir("..\\..\\..\\..\\bin");
+#else
+    chdir("../../../../bin");
+#endif
 
     // compose intermediate file
     {
@@ -113,7 +156,7 @@ int body(std::string& intermediateFilePath,
             {
                 // merge optimized code
                 std::stringstream gaalopOutFilePath;
-                gaalopOutFilePath << outputFilePath << "." << ++gaalopFileCount << gaalopOutFileExtension;
+                gaalopOutFilePath << tempFilePath << "." << ++gaalopFileCount << gaalopOutFileExtension;
                 std::cout << gaalopOutFilePath.str().c_str() << std::endl;
                 std::ifstream gaalopOutFile(gaalopOutFilePath.str().c_str());
                 if(!gaalopOutFile.good())
@@ -142,6 +185,31 @@ int body(std::string& intermediateFilePath,
     }
 
     return 0;
+}
+
+void invokeCompiler(const std::string& compilerPath,const int argc,const char* argv[],
+                    const std::string& outputFilePath,const std::string& intermediateFilePath,
+                    const char* outputOption)
+{
+    // compose compiler command
+    std::stringstream compilerCommand;
+    compilerCommand << compilerPath;
+    for(unsigned int counter = 1; counter < argc - 1; ++counter)
+    {
+        const std::string arg(argv[counter]);
+        if(arg.find(outputOption) != std::string::npos)
+        {
+            compilerCommand << " " << arg << " \"" << outputFilePath << "\"";
+            ++counter;
+        }
+        else
+            compilerCommand << " \"" << arg << "\"";
+    }
+    compilerCommand << " \"" << intermediateFilePath << "\"";
+
+    // invoke regular C++ compiler
+    std::cout << compilerCommand.str() << std::endl;
+    system(compilerCommand.str().c_str());
 }
 
 void readFile(std::string& resultString,const char* filePath)
