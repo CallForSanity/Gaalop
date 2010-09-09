@@ -478,7 +478,7 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 				Expression newValue = coefficient.getValue();
 				if (!newVariable.equals(newValue)) {
 					AssignmentNode newAssignment = new AssignmentNode(graph, newVariable, newValue);
-					base.insertAfter(newAssignment);
+					base.insertBefore(newAssignment);
 				}
 			}
 		}
@@ -497,7 +497,7 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 		for (MultivectorComponent zeroCoeff : zeroCoefficients) {
 			Variable newVariable = new Variable(getTempVarName(zeroCoeff));
 			AssignmentNode resetToZero = new AssignmentNode(graph, newVariable, new FloatConstant(0));
-			base.insertAfter(resetToZero);
+			base.insertBefore(resetToZero);
 		}
 	}
 

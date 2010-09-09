@@ -30,7 +30,8 @@ import static org.junit.Assert.*;
 @RunWith(Suite.class)
 @SuiteClasses(value = { 
 		FileTests.class, 
-		ErrorTests.class })
+		ErrorTests.class
+})
 public class CluCalcCppTest {
 
 	public static class OutputSet {
@@ -179,6 +180,44 @@ public class CluCalcCppTest {
 			compare(fileName, outputMVs);
 		}
 		
+		/**
+		 * Tests the equality_condition.clu example.
+		 * 
+		 * @throws Exception
+		 */
+		@Test
+		public void equalityCondition() throws Exception {
+			String fileName = getClass().getResource("/de/gaalop/equality_condition.clu").getFile();
+			inputValues.put("a", 1.0f);
+			inputValues.put("b", 2.0f);
+			inputValues.put("c", 3.0f);
+			inputValues.put("j", 2.0f);
+			inputValues.put("k", 3.0f);
+			
+			int outputMVs = 1;
+			// x
+			expectedCppResults.add("1");
+			
+			compare(fileName, outputMVs);			
+		}
+		
+		/**
+		 * Tests the unknown_if.clu example.
+		 * 
+		 * @throws Exception
+		 */
+		@Test
+		public void unknownIf() throws Exception {
+			String fileName = getClass().getResource("/de/gaalop/unknown_if.clu").getFile();
+			inputValues.put("unknown", 1.0f);
+			
+			int outputMVs = 1;
+			// r
+			expectedCppResults.add("150^(e2^e)");
+			
+			compare(fileName, outputMVs);			
+		}
+		
 	}
 
 	public static class ErrorTests {
@@ -191,6 +230,11 @@ public class CluCalcCppTest {
 			CluCalcCppTest.init();
 		}
 
+		/**
+		 * Tests if a code parser exception is thrown for missing question marks as expected.
+		 * 
+		 * @throws Exception
+		 */
 		@Test(expected = CodeParserException.class)
 		public void missingQuestionMark() throws Exception {
 			String content = "x = VecN3(1,2,3);";
@@ -202,6 +246,11 @@ public class CluCalcCppTest {
 			}
 		}
 
+		/**
+		 * Tests if a code parser exception is thrown for recursive assignments as expected.
+		 * 
+		 * @throws Exception
+		 */
 		@Test(expected = CodeParserException.class)
 		public void recursiveInputVariable() throws Exception {
 			String content = "?x = VecN3(1,2,x);";
@@ -212,6 +261,25 @@ public class CluCalcCppTest {
 				throw e;
 			}
 		}
+		
+		/**
+		 * Tests if a code parser exception is thrown for uninitialized variables in recursive assignments as expected.
+		 * 
+		 * @throws Exception
+		 */
+		@Test(expected = CodeParserException.class)
+		public void uninitializedVariable() throws Exception {
+			String fileName = getClass().getResource("/de/gaalop/uninitializedVariable.clu").getFile();
+			// no input variables for this test
+						
+			try {
+				compare(fileName, 0);	
+			} catch (CodeParserException e) {
+				assertEquals(RECURSIVE_X, e.getMessage());
+				throw e;
+			}
+		}
+		
 	}
 
 	final static String PATH = "C:/Users/Christian/Downloads/Testbench/";
