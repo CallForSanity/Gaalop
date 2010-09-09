@@ -188,6 +188,8 @@ public class DfgVisitor implements ExpressionVisitor {
 
 	@Override
 	public void visit(MacroCall node) {
+		// make sure access is always global (no restriction)
+		code.append("::");
 		code.append(node.getName());
 		code.append("(");
 		for (Expression arg : node.getArguments()) {

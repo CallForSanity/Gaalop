@@ -204,7 +204,7 @@ public class CluCalcCppTest {
 	}
 	
 	/**
-	 * Tests the Nested If.clu example. 
+	 * Tests the Nested_If.clu example. 
 	 * 
 	 * @throws IOException
 	 */
@@ -223,6 +223,23 @@ public class CluCalcCppTest {
 		int outputMVs = 1;
 		// rslt
 		expectedCppResults.add("20^e1 + 40^e2 + 60^e3 + 140^e + 20^e0");
+		
+		compare(fileName, outputMVs, expectedCppResults);
+	}
+	
+	/**
+	 * Tests the mixed_macros.clu example. 
+	 * 
+	 * @throws IOException
+	 */
+	@Test
+	public void mixedMacros() throws IOException {
+		String fileName = getClass().getResource("/de/gaalop/mixed_macros.clu").getFile();
+		// no input values for this test
+		
+		int outputMVs = 1;
+		// rslt
+		expectedCppResults.add("1.8225e+006");
 		
 		compare(fileName, outputMVs, expectedCppResults);
 	}

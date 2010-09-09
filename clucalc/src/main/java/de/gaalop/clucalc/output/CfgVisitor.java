@@ -124,6 +124,7 @@ public class CfgVisitor implements ControlFlowVisitor {
 	
 	@Override
 	public void visit(ExpressionStatement node) {
+		appendIndent();
 		addCode(node.getExpression());
 		code.append(";\n");
 		
