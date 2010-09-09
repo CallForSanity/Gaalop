@@ -1,4 +1,4 @@
-//#include "../include/gcd.h"
+#include "../include/gcd.h"
 
 bool pointTriangleTest(const float t1x,const float t1y,const float t1z,
 		       const float t2x,const float t2y,const float t2z,
@@ -24,7 +24,7 @@ plane = *(TrianglePoint1 ^ TrianglePoint2 ^ TrianglePoint3 ^ einf);
 // extract triangle normal
 ?normal_ = plane - (plane . e0) ^ einf;
 
-// construct boundary planes			
+// construct boundary planes
 side1 = *(TrianglePoint1 ^ TrianglePoint2 ^ normal_ ^ einf);
 side2 = *(TrianglePoint2 ^ TrianglePoint3 ^ normal_ ^ einf);
 side3 = *(TrianglePoint3 ^ TrianglePoint1 ^ normal_ ^ einf);
