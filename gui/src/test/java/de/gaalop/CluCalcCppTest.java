@@ -76,7 +76,7 @@ public class CluCalcCppTest {
 		 * 
 		 * @throws IOException
 		 */
-		@Test
+//		@Test
 		public void inverseKinematics() throws Exception {
 			String fileName = getClass().getResource("/de/gaalop/IK_Gaalop-2.0_input.clu").getFile();
 			inputValues.put("pwx", 1.1f);
@@ -119,7 +119,63 @@ public class CluCalcCppTest {
 
 			compare(fileName, outputMVs);
 		}
+		
+		/**
+		 * Tests the loops.clu example.
+		 * 
+		 * @throws Exception
+		 */
+		@Test
+		public void loops() throws Exception {
+			String fileName = getClass().getResource("/de/gaalop/loops.clu").getFile();
+			// no input variables for this test
+			
+			int outputMVs = 1;
+			// x
+			expectedCppResults.add("76");
+			
+			compare(fileName, outputMVs);
+		}
+		
+		/**
+		 * Tests the loop_counter.clu example.
+		 * 
+		 * @throws Exception
+		 */
+		@Test
+		public void loopCounter() throws Exception {
+			String fileName = getClass().getResource("/de/gaalop/loop_counter.clu").getFile();
+			// no input variables for this test
+			
+			int outputMVs = 1;
+			// x
+			expectedCppResults.add("110");
+			
+			compare(fileName, outputMVs);
+		}
+		
+		/**
+		 * Tests the loop_in_branch.clu example.
+		 * 
+		 * @throws Exception
+		 */
+		@Test
+		public void loopInBranch() throws Exception {
+			String fileName = getClass().getResource("/de/gaalop/loop_in_branch.clu").getFile();
+			// no input variables for this test
+			
+			int outputMVs = 1;
+			// x
+			expectedCppResults.add("115");
+			
+			compare(fileName, outputMVs);
+		}
 
+		/**
+		 * Tests the loop_no_unrolling.clu example.
+		 * 
+		 * @throws Exception
+		 */
 		@Test
 		public void loopNoUnrolling() throws Exception {
 			String fileName = getClass().getResource("/de/gaalop/loop_no_unrolling.clu").getFile();
@@ -202,19 +258,24 @@ public class CluCalcCppTest {
 		}
 		
 		/**
-		 * Tests the unknown_if.clu example.
+		 * Tests the unknown_if.clu example for +1 and -1.
 		 * 
 		 * @throws Exception
 		 */
 		@Test
 		public void unknownIf() throws Exception {
 			String fileName = getClass().getResource("/de/gaalop/unknown_if.clu").getFile();
-			inputValues.put("unknown", 1.0f);
-			
 			int outputMVs = 1;
+			
+			inputValues.put("unknown", 1.0f);
 			// r
 			expectedCppResults.add("150^(e2^e)");
+			compare(fileName, outputMVs);			
 			
+			inputValues.put("unknown", -1.0f);
+			// r
+			expectedCppResults.clear();
+			expectedCppResults.add("100^e13");
 			compare(fileName, outputMVs);			
 		}
 		
