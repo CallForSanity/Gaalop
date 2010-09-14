@@ -76,7 +76,7 @@ public class CluCalcCppTest {
 		 * 
 		 * @throws IOException
 		 */
-//		@Test
+		@Test
 		public void inverseKinematics() throws Exception {
 			String fileName = getClass().getResource("/de/gaalop/IK_Gaalop-2.0_input.clu").getFile();
 			inputValues.put("pwx", 1.1f);
