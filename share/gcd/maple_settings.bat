@@ -1,1 +1,1 @@
-C:\Programme\Maple 12
+C:\Programme\Maple 12\bin.win

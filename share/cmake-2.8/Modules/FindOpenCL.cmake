@@ -1,6 +1,6 @@
 # - Try to find OpenCL
 # Once done this will define
-#  
+#
 #  OPENCL_FOUND        - system has OpenCL
 #  OPENCL_INCLUDE_DIR  - the OpenCL include directory
 #  OPENCL_LIBRARIES    - link these to use OpenCL
@@ -37,3 +37,5 @@ ENDIF(OPENCL_LIBRARIES)
 MARK_AS_ADVANCED(
   OPENCL_INCLUDE_DIR
 )
+
+INCLUDE_DIRECTORIES(${OPENCL_INCLUDE_DIR})

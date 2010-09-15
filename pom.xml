@@ -19,8 +19,9 @@
         <module>gui</module>
         <module>codegen-cpp</module>
         <module>codegen-latex</module>
-        <module>starter</module>
         <module>codegen-dot</module>
+        <module>codegen-gaalet</module>
+        <module>starter</module>
     </modules>
 
     <!--

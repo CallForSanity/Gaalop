@@ -12,9 +12,9 @@ int main(const int argc,const char* argv[])
     // read settings
     std::string compilerPath;
 #ifdef WIN32
-    readFile(compilerPath,"../share/gcd/cpp_settings.bat");
+    readFile(compilerPath,"../share/gcd/cxx_settings.bat");
 #else
-    readFile(compilerPath,"../share/gcd/cpp_settings.sh");
+    readFile(compilerPath,"../share/gcd/cxx_settings.sh");
 #endif
 
     // invoke compiler

@@ -3,5 +3,5 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 INCLUDE(../share/cmake-2.8/Modules/FindGCD.cmake)
 
 FILE(GLOB src "*.cpp" "*.gcp")
-GCD_CPP_ADD_LIBRARY(gcd ${src})
+GCD_CXX_ADD_LIBRARY(gcd ${src})
 INSTALL(TARGETS gcd ARCHIVE DESTINATION lib)

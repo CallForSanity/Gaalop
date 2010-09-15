@@ -17,6 +17,7 @@ private:
     Ui::Dialog *ui;
 
 private slots:
+    void on_selectJavaCompileCommand_clicked();
     void on_selectMapleBinaryDir_clicked();
     void on_selectCppCompileCommand_clicked();
     void on_selectCudaCompileCommand_clicked();

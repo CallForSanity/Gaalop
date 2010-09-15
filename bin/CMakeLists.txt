@@ -1,12 +1,14 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 
 # build executables
-ADD_EXECUTABLE(gcd-cpp "gcdCpp.cpp")
-TARGET_LINK_LIBRARIES(gcd-cpp gcd-body)
+ADD_EXECUTABLE(gcd-cxx "gcdCxx.cpp")
+TARGET_LINK_LIBRARIES(gcd-cxx gcd-body)
 ADD_EXECUTABLE(gcd-cuda "gcdCuda.cpp")
 TARGET_LINK_LIBRARIES(gcd-cuda gcd-body)
 ADD_EXECUTABLE(gcd-opencl "gcdOpenCL.cpp")
 TARGET_LINK_LIBRARIES(gcd-opencl gcd-body)
+ADD_EXECUTABLE(gcd-java "gcdJava.cpp")
+TARGET_LINK_LIBRARIES(gcd-java gcd-body)
 
 # install
-INSTALL(TARGETS gcd-cpp gcd-cuda gcd-opencl RUNTIME DESTINATION bin)
+INSTALL(TARGETS gcd-cxx gcd-cuda gcd-opencl gcd-java RUNTIME DESTINATION bin)

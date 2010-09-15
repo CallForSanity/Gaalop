@@ -38,7 +38,7 @@ side3 = *(TrianglePoint3 ^ TrianglePoint1 ^ normal_ ^ einf);
 if(d[0]*d[0] > h*h)
   return false;
 
-if(d1[0] <= 0.0f && d2[0] <= 0.0f && d3[0] <= 0.0f || d1[0] >= 0.0f && d2[0] >= 0.0f && d3[0] >= 0.0f)
+if(d1[0] <= 0.0f && d2[SCALAR] <= 0.0f && d3[0] <= 0.0f || d1[0] >= 0.0f && d2[0] >= 0.0f && d3[0] >= 0.0f)
   return true;
 
 return false;

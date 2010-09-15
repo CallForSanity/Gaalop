@@ -23,6 +23,7 @@ int body(std::string& intermediateFilePath,std::string& outputFilePath,
     std::string appPath(argv[0]);
     const size_t pos = appPath.find_last_of(PATH_SEP);
     appPath = appPath.substr(0,pos);
+    std::cout << appPath << std::endl;
     chdir(appPath.c_str());
 
     // parse command line
@@ -47,7 +48,9 @@ int body(std::string& intermediateFilePath,std::string& outputFilePath,
             outputFilePath = arg;
             break;
         }
-        else if(arg.rfind(outputOption) != std::string::npos)
+        else if(arg.rfind("-o") != std::string::npos ||
+                arg.rfind("/o") != std::string::npos ||
+                arg.rfind(outputOption) != std::string::npos)
         {
             arg = argv[++counter];
             const size_t pos = arg.find_last_of('.');
@@ -140,12 +143,13 @@ int body(std::string& intermediateFilePath,std::string& outputFilePath,
 
     // compose intermediate file
     {
-        intermediateFilePath = tempFilePath + intermediateFileExtension;
-        size_t pos = tempFilePath.find_last_of('/');
+        size_t pos = inputFilePath.find_last_of('/');
         if(pos == std::string::npos)
-            pos = tempFilePath.find_last_of('\\');
+            pos = inputFilePath.find_last_of('\\');
         assert(pos != std::string::npos);
-        const std::string tempFileDir(tempFilePath.substr(0,pos + 1));
+        const std::string inputFileDir(inputFilePath.substr(0,pos + 1));
+
+        intermediateFilePath = tempFilePath + intermediateFileExtension;
         std::ofstream intermediateFile(intermediateFilePath.c_str());
         std::ifstream inputFile(inputFilePath.c_str());
         gaalopFileCount = 0;
@@ -154,10 +158,11 @@ int body(std::string& intermediateFilePath,std::string& outputFilePath,
             // read line
             getline(inputFile,line);
 
-            if(line.find("#include") != std::string::npos)
+            if(line.find("#include") != std::string::npos &&
+               line.find('\"') != std::string::npos)
             {
                 const size_t pos = line.find_first_of('\"') + 1;
-                intermediateFile << line.substr(0,pos) << tempFileDir;
+                intermediateFile << line.substr(0,pos) << inputFileDir;
                 intermediateFile << line.substr(pos,std::string::npos) << std::endl;
             }
             // found gaalop line - insert intermediate gaalop file
