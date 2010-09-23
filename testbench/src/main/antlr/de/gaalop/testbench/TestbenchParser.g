@@ -45,4 +45,4 @@ fragment blade
   | LBRACKET blade_string RBRACKET;
  
 fragment blade_string
-  : LETTER DECIMAL_LITERAL (WEDGE blade_string)*;
+  : LETTER DECIMAL_LITERAL? (WEDGE LETTER DECIMAL_LITERAL)?;

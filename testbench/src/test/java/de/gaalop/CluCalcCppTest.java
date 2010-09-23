@@ -8,6 +8,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
+import org.antlr.runtime.ANTLRStringStream;
+import org.antlr.runtime.CommonTokenStream;
+import org.antlr.runtime.RecognitionException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,7 +18,10 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 import de.gaalop.CluCalcCppTest.*;
+import de.gaalop.testbench.CoeffReader;
 import de.gaalop.testbench.TestbenchGenerator;
+import de.gaalop.testbench.TestbenchLexer;
+import de.gaalop.testbench.TestbenchParser;
 
 import static org.junit.Assert.*;
 
@@ -35,10 +41,49 @@ import static org.junit.Assert.*;
 })
 public class CluCalcCppTest {
 
-	public static class OutputSet {
-		public String CPP;
-		public String CLU_ORIGINAL;
-		public String CLU_OPT;
+public static class OutputSet {
+		
+		private double[] cppValues;
+		private double[] cluOriginalValues;
+		private double[] cluOptimizedValues;
+		
+		public void setCPP(String result) {
+			cppValues = parseString(result);
+		}
+		
+		public void setCLUOriginal(String result) {
+			cluOriginalValues = parseString(result);
+		}
+		
+		public void setCLUOptimized(String result) {
+			cluOptimizedValues = parseString(result);
+		}
+		
+		public double[] getCppValues() {
+			return cppValues;
+		}
+		
+		public double[] getCluOriginalValues() {
+			return cluOriginalValues;
+		}
+		
+		public double[] getCluOptimizedValues() {
+			return cluOptimizedValues;
+		}
+		
+		private double[] parseString(String string) {
+			ANTLRStringStream input = new ANTLRStringStream(string);
+			TestbenchLexer lexer = new TestbenchLexer(input);
+			CommonTokenStream tokenStream = new CommonTokenStream(lexer);
+			TestbenchParser parser = new TestbenchParser(tokenStream);
+			try {
+				CoeffReader reader = parser.line();
+				return reader.getCoeffs();
+			} catch (RecognitionException e) {
+				e.printStackTrace();
+			}
+			throw new IllegalStateException("Line " + string + " could not be parsed.");
+		}
 	}
 	
 	public static class FileTests {
@@ -64,11 +109,7 @@ public class CluCalcCppTest {
 			inputValues.put("pz", 1.0f);
 			inputValues.put("r", 0.5f);
 
-			int outputMVs = 1;
-			// C
-			expectedCppResults
-					.add("0.125^(e1^e) - 1^(e1^e0) + 0.125^(e2^e) - 1^(e2^e0) + 0.125^(e3^e) - 1^(e3^e0) - 0.25^E");
-
+			int outputMVs = 1; // C
 			compare(fileName, outputMVs);
 		}
 
@@ -87,20 +128,8 @@ public class CluCalcCppTest {
 			inputValues.put("d2", 1.30f);
 			inputValues.put("phi", (float) Math.PI);
 
-			int outputMVs = 6;
-			// SwivelPlane
-			expectedCppResults.add("-1.1^e1 + 1.1^e2 + 1.11042e-007^e3");
-			// p_e
-			expectedCppResults.add("0.980883^e1 + 0.980883^e2 - 0.189039^e3 + 0.98^e + 1^e0");
-			// q_e
-			expectedCppResults.add("0.705162 + 0.709047^e23");
-			// q12
-			expectedCppResults.add("-0.657637^e12 + 0.532688^e13 - 0.532688^e23");
-			// q3
-			expectedCppResults.add("0.382683 - 0.92388^e12");
-			// q_s
-			expectedCppResults.add("-0.607577 - 0.251667^e12 - 0.288289^e13 - 0.695991^e23");
-
+			int outputMVs = 6; // SwivelPlane, p_e, q_e, q12, q3, q_s
+			epsilon = 1.0e-3; // assume precision of original clucalc output
 			compare(fileName, outputMVs);
 		}
 
@@ -114,10 +143,7 @@ public class CluCalcCppTest {
 			String fileName = getClass().getResource("all-control-flow.clu").getFile();
 			// no input variables for this test
 
-			int outputMVs = 1;
-			// x
-			expectedCppResults.add("3e+010");
-
+			int outputMVs = 1; // x
 			compare(fileName, outputMVs);
 		}
 		
@@ -131,10 +157,7 @@ public class CluCalcCppTest {
 			String fileName = getClass().getResource("loops.clu").getFile();
 			// no input variables for this test
 			
-			int outputMVs = 1;
-			// x
-			expectedCppResults.add("76");
-			
+			int outputMVs = 1; // x
 			compare(fileName, outputMVs);
 		}
 		
@@ -148,10 +171,7 @@ public class CluCalcCppTest {
 			String fileName = getClass().getResource("loop_counter.clu").getFile();
 			// no input variables for this test
 			
-			int outputMVs = 1;
-			// x
-			expectedCppResults.add("110");
-			
+			int outputMVs = 1; // x
 			compare(fileName, outputMVs);
 		}
 		
@@ -165,10 +185,7 @@ public class CluCalcCppTest {
 			String fileName = getClass().getResource("loop_in_branch.clu").getFile();
 			// no input variables for this test
 			
-			int outputMVs = 1;
-			// x
-			expectedCppResults.add("115");
-			
+			int outputMVs = 1; // x
 			compare(fileName, outputMVs);
 		}
 
@@ -187,12 +204,7 @@ public class CluCalcCppTest {
 			inputValues.put("b", 2.0f);
 			inputValues.put("c", 2.0f);
 
-			int outputMVs = 2;
-			// val
-			expectedCppResults.add("10 + 1^e1 + 1^e2 + 1^e3 + 1.5^e + 1^e0");
-			// var
-			expectedCppResults.add("2^e1 + 2^e2 + 2^e3 + 6^e + 1^e0");
-
+			int outputMVs = 2; // val, var
 			compare(fileName, outputMVs);
 		}
 
@@ -213,10 +225,7 @@ public class CluCalcCppTest {
 			inputValues.put("p2", 3.0f);
 			inputValues.put("p3", 3.0f);
 
-			int outputMVs = 1;
-			// rslt
-			expectedCppResults.add("20^e1 + 40^e2 + 60^e3 + 140^e + 20^e0");
-
+			int outputMVs = 1; // rslt
 			compare(fileName, outputMVs);
 		}
 
@@ -230,10 +239,7 @@ public class CluCalcCppTest {
 			String fileName = getClass().getResource("mixed_macros.clu").getFile();
 			// no input values for this test
 
-			int outputMVs = 1;
-			// rslt
-			expectedCppResults.add("1.8225e+006");
-
+			int outputMVs = 1; // rslt
 			compare(fileName, outputMVs);
 		}
 		
@@ -251,10 +257,7 @@ public class CluCalcCppTest {
 			inputValues.put("j", 2.0f);
 			inputValues.put("k", 3.0f);
 			
-			int outputMVs = 1;
-			// x
-			expectedCppResults.add("1");
-			
+			int outputMVs = 1; // x
 			compare(fileName, outputMVs);			
 		}
 		
@@ -268,15 +271,10 @@ public class CluCalcCppTest {
 			String fileName = getClass().getResource("unknown_if.clu").getFile();
 			int outputMVs = 1;
 			
-			inputValues.put("unknown", 1.0f);
-			// r
-			expectedCppResults.add("150^(e2^e)");
+			inputValues.put("unknown", 1.0f); // r
 			compare(fileName, outputMVs);			
 			
-			inputValues.put("unknown", -1.0f);
-			// r
-			expectedCppResults.clear();
-			expectedCppResults.add("100^e13");
+			inputValues.put("unknown", -1.0f); // r
 			compare(fileName, outputMVs);			
 		}
 		
@@ -350,11 +348,12 @@ public class CluCalcCppTest {
 
 	static TestbenchGenerator generator;
 	static 	Map<String, Float> inputValues = new HashMap<String, Float>();
-	static List<String> expectedCppResults = new ArrayList<String>();
+	
+	static double epsilon = 0.0d;
 	
 	static void init() {
 		inputValues.clear();
-		expectedCppResults.clear();
+		epsilon = 0.0d;
 	}
 
 	private static File compile() throws Exception {
@@ -380,21 +379,21 @@ public class CluCalcCppTest {
 		// read CPP outputs
 		for (int i = 0; i < numElements; i++) {
 			String vector = printNextLine(scanner);
-			results.get(i).CPP = vector;
+			results.get(i).setCPP(vector);
 		}
 		// read CLU original header
 		printNextLine(scanner);
 		// read CLU original outputs
 		for (int i = 0; i < numElements; i++) {
 			String vector = printNextLine(scanner);
-			results.get(i).CLU_ORIGINAL = vector;
+			results.get(i).setCLUOriginal(vector);
 		}
 		// read CLU opt header
 		printNextLine(scanner);
 		// read CLU opt outputs
 		for (int i = 0; i < numElements; i++) {
 			String vector = printNextLine(scanner);
-			results.get(i).CLU_OPT = vector;
+			results.get(i).setCLUOptimized(vector);
 		}
 
 		return results;
@@ -407,19 +406,16 @@ public class CluCalcCppTest {
 	}
 
 	static void compare(String fileName, int numVectors) throws Exception {
-		assertEquals("Wrong number of expected values for output multivectors", numVectors, expectedCppResults.size());
 		generator = new TestbenchGenerator(fileName, PATH, inputValues);
-
-		File exe = compile();
-		Scanner scanner = run(exe);
-		List<OutputSet> results = parseResult(scanner, numVectors);
-		compareMultivectors(results);
+		doCompare(numVectors);		
 	}
 	
 	static void compare(String fileName, String contents, int numVectors) throws Exception {
-		assertEquals("Wrong number of expected values for output multivectors", numVectors, expectedCppResults.size());
 		generator = new TestbenchGenerator(fileName, contents, PATH, inputValues);
-		
+		doCompare(numVectors);		
+	}
+	
+	private static void doCompare(int numVectors) throws Exception {
 		File exe = compile();
 		Scanner scanner = run(exe);
 		List<OutputSet> results = parseResult(scanner, numVectors);
@@ -427,11 +423,15 @@ public class CluCalcCppTest {
 	}
 
 	private static void compareMultivectors(List<OutputSet> actualList) {
-		for (int i = 0; i < expectedCppResults.size(); i++) {
+		for (int i = 0; i < actualList.size(); i++) {
 			OutputSet actual = actualList.get(i);
-			assertEquals("Original and optimized CLUCalc output are not equal", actual.CLU_ORIGINAL, actual.CLU_OPT);
-			String cppResult = expectedCppResults.get(i);
-			assertEquals("Expected and actual C++ results do not match", cppResult, actual.CPP);
+			for (int element = 0; element < 32; element++) {
+				double cluOriginal = actual.getCluOriginalValues()[element];
+				double cluOptimized = actual.getCluOptimizedValues()[element];
+				double cpp = actual.getCppValues()[element];
+				assertEquals(cluOriginal, cluOptimized, epsilon);
+				assertEquals(cluOriginal, cpp, epsilon);
+			}
 		}
 	}
 

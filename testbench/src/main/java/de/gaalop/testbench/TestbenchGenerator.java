@@ -32,9 +32,9 @@ public class TestbenchGenerator {
 	private final String CLU_BLADES = "string CLU_BLADES[32] = {\n"
 			+ "\t\"1\",\n"
 			+ "\t\"e1\", \"e2\", \"e3\", \"e\", \"e0\",\n"
-			+ "\t\"e12\", \"e13\", \"(e1^e)\", \"(e1^e0)\", \"e23\", \"(e2^e)\", \"(e2^e0)\", \"(e3^e)\", \"(e3^e0)\", \"E\",\n"
-			+ "\t\"e123\", \"(e12^e)\", \"(e12^e0)\", \"(e13^e)\", \"(e13^e0)\", \"(e1^E)\", \"(e23^e)\", \"(e23^e0)\", \"(e2^E)\", \"(e3^E)\",\n"
-			+ "\t\"(e123^e)\", \"(e123^e0)\", \"(e12^E)\", \"(e13^E)\", \"(e23^E)\",\n" + "\t\"I\" \n" + "};\n\n";
+			+ "\t\"e12\", \"e31\", \"(e1^e)\", \"(e1^e0)\", \"e23\", \"(e2^e)\", \"(e2^e0)\", \"(e3^e)\", \"(e3^e0)\", \"E\",\n"
+			+ "\t\"e123\", \"(e12^e)\", \"(e12^e0)\", \"(e31^e)\", \"(e31^e0)\", \"(e1^E)\", \"(e23^e)\", \"(e23^e0)\", \"(e2^E)\", \"(e3^E)\",\n"
+			+ "\t\"(e123^e)\", \"(e123^e0)\", \"(e12^E)\", \"(e31^E)\", \"(e23^E)\",\n" + "\t\"I\" \n" + "};\n\n";
 
 	private File path;
 	private String fileName;
@@ -229,11 +229,11 @@ public class TestbenchGenerator {
 		code.append("\tbool firstEntry = true;\n");
 		code.append("\tfor (int i = 0; i < 32; i++) {\n");
 		code.append("\t\tfloat value = mv[i];\n");
-		code.append("\t\tif (fabs(value) < 1.0e-008) {\n");
-		code.append("\t\t\tvalue = 0.0f;\n");
-		code.append("\t\t}\n");
 		code.append("\t\tif (value != 0) {\n");
 		code.append("\t\t\tstring blade = i == 0 ? \"\" : \"^\" + CLU_BLADES[i];\n");
+		code.append("\t\t\tif (i == 7 || i == 19 || i == 20 || i == 29) {\n");
+		code.append("\t\t\t\tvalue = -value; // special handling for CLUCalc's handling of e1^e3 which is -e31\n");
+		code.append("\t\t\t}\n");
 		code.append("\t\t\tif (firstEntry) {\n");
 		code.append("\t\t\t\tcout << value << blade;\n");
 		code.append("\t\t\t\tfirstEntry = false;\n");
