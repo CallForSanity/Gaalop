@@ -3,6 +3,8 @@ package de.gaalop;
 import java.util.HashMap;
 import java.util.Map;
 
+import de.gaalop.testbench.TestbenchGenerator;
+
 public class HorizonTest {
 
 	public static void main(String[] args) throws CodeParserException, OptimizationException {

@@ -1,4 +1,4 @@
-package de.gaalop;
+package de.gaalop.testbench;
 
 import java.io.BufferedReader;
 import java.io.File;

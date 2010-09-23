@@ -15,6 +15,7 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 import de.gaalop.CluCalcCppTest.*;
+import de.gaalop.testbench.TestbenchGenerator;
 
 import static org.junit.Assert.*;
 
@@ -54,7 +55,7 @@ public class CluCalcCppTest {
 		 */
 		@Test
 		public void horizon() throws Exception {
-			String fileName = getClass().getResource("/de/gaalop/Horizon.clu").getFile();
+			String fileName = getClass().getResource("Horizon.clu").getFile();
 			inputValues.put("mx", 0.0f);
 			inputValues.put("my", 0.0f);
 			inputValues.put("mz", 0.0f);
@@ -78,7 +79,7 @@ public class CluCalcCppTest {
 		 */
 		@Test
 		public void inverseKinematics() throws Exception {
-			String fileName = getClass().getResource("/de/gaalop/IK_Gaalop-2.0_input.clu").getFile();
+			String fileName = getClass().getResource("IK_Gaalop-2.0_input.clu").getFile();
 			inputValues.put("pwx", 1.1f);
 			inputValues.put("pwy", 1.1f);
 			inputValues.put("pwz", 1.1f);
@@ -110,7 +111,7 @@ public class CluCalcCppTest {
 		 */
 		@Test
 		public void allControlFlow() throws Exception {
-			String fileName = getClass().getResource("/de/gaalop/all-control-flow.clu").getFile();
+			String fileName = getClass().getResource("all-control-flow.clu").getFile();
 			// no input variables for this test
 
 			int outputMVs = 1;
@@ -127,7 +128,7 @@ public class CluCalcCppTest {
 		 */
 		@Test
 		public void loops() throws Exception {
-			String fileName = getClass().getResource("/de/gaalop/loops.clu").getFile();
+			String fileName = getClass().getResource("loops.clu").getFile();
 			// no input variables for this test
 			
 			int outputMVs = 1;
@@ -144,7 +145,7 @@ public class CluCalcCppTest {
 		 */
 		@Test
 		public void loopCounter() throws Exception {
-			String fileName = getClass().getResource("/de/gaalop/loop_counter.clu").getFile();
+			String fileName = getClass().getResource("loop_counter.clu").getFile();
 			// no input variables for this test
 			
 			int outputMVs = 1;
@@ -161,7 +162,7 @@ public class CluCalcCppTest {
 		 */
 		@Test
 		public void loopInBranch() throws Exception {
-			String fileName = getClass().getResource("/de/gaalop/loop_in_branch.clu").getFile();
+			String fileName = getClass().getResource("loop_in_branch.clu").getFile();
 			// no input variables for this test
 			
 			int outputMVs = 1;
@@ -178,7 +179,7 @@ public class CluCalcCppTest {
 		 */
 		@Test
 		public void loopNoUnrolling() throws Exception {
-			String fileName = getClass().getResource("/de/gaalop/loop_no_unrolling.clu").getFile();
+			String fileName = getClass().getResource("loop_no_unrolling.clu").getFile();
 			inputValues.put("x", 1.0f);
 			inputValues.put("y", 1.0f);
 			inputValues.put("z", 1.0f);
@@ -202,7 +203,7 @@ public class CluCalcCppTest {
 		 */
 		@Test
 		public void nestedIf() throws Exception {
-			String fileName = getClass().getResource("/de/gaalop/Nested_If.clu").getFile();
+			String fileName = getClass().getResource("Nested_If.clu").getFile();
 			inputValues.put("s1", 1.0f);
 			inputValues.put("s2", 1.0f);
 			inputValues.put("s3", 1.0f);
@@ -226,7 +227,7 @@ public class CluCalcCppTest {
 		 */
 		@Test
 		public void mixedMacros() throws Exception {
-			String fileName = getClass().getResource("/de/gaalop/mixed_macros.clu").getFile();
+			String fileName = getClass().getResource("mixed_macros.clu").getFile();
 			// no input values for this test
 
 			int outputMVs = 1;
@@ -243,7 +244,7 @@ public class CluCalcCppTest {
 		 */
 		@Test
 		public void equalityCondition() throws Exception {
-			String fileName = getClass().getResource("/de/gaalop/equality_condition.clu").getFile();
+			String fileName = getClass().getResource("equality_condition.clu").getFile();
 			inputValues.put("a", 1.0f);
 			inputValues.put("b", 2.0f);
 			inputValues.put("c", 3.0f);
@@ -264,7 +265,7 @@ public class CluCalcCppTest {
 		 */
 		@Test
 		public void unknownIf() throws Exception {
-			String fileName = getClass().getResource("/de/gaalop/unknown_if.clu").getFile();
+			String fileName = getClass().getResource("unknown_if.clu").getFile();
 			int outputMVs = 1;
 			
 			inputValues.put("unknown", 1.0f);
@@ -330,7 +331,7 @@ public class CluCalcCppTest {
 		 */
 		@Test(expected = CodeParserException.class)
 		public void uninitializedVariable() throws Exception {
-			String fileName = getClass().getResource("/de/gaalop/uninitializedVariable.clu").getFile();
+			String fileName = getClass().getResource("uninitializedVariable.clu").getFile();
 			// no input variables for this test
 						
 			try {

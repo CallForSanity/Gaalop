@@ -10,6 +10,7 @@ import de.gaalop.cfg.SequentialNode;
 import de.gaalop.cfg.StartNode;
 import de.gaalop.cfg.StoreResultNode;
 import de.gaalop.clucalc.input.CluCalcFileHeader;
+import de.gaalop.clucalc.output.CfgVisitor;
 import de.gaalop.dfg.Variable;
 
 /**
