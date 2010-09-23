@@ -2,10 +2,13 @@ package de.gaalop;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Random;
 import java.util.Scanner;
 
 import org.antlr.runtime.ANTLRStringStream;
@@ -87,8 +90,15 @@ public class HorizonJUnitTest {
 	
 	public static class FileTests {
 		
+		private Random r = new Random(System.currentTimeMillis());
+		
+		private float nextFloat() {
+			return r.nextFloat();
+		}
+		
 		@Before
 		public void init() {
+			r.setSeed(System.currentTimeMillis());
 			HorizonJUnitTest.init();
 		}
 
@@ -100,13 +110,13 @@ public class HorizonJUnitTest {
 		@Test
 		public void horizon() throws Exception {
 			String fileName = getClass().getResource("Horizon.clu").getFile();
-			inputValues.put("mx", 0.0f);
-			inputValues.put("my", 0.0f);
-			inputValues.put("mz", 0.0f);
-			inputValues.put("px", 1.0f);
-			inputValues.put("py", 1.0f);
-			inputValues.put("pz", 1.0f);
-			inputValues.put("r", 0.5f);
+			inputValues.put("mx", nextFloat());
+			inputValues.put("my", nextFloat());
+			inputValues.put("mz", nextFloat());
+			inputValues.put("px", nextFloat());
+			inputValues.put("py", nextFloat());
+			inputValues.put("pz", nextFloat());
+			inputValues.put("r", nextFloat());
 
 			int outputMVs = 1;
 			compare(fileName, outputMVs);
@@ -192,13 +202,15 @@ public class HorizonJUnitTest {
 	}
 
 	private static void compareMultivectors(List<OutputSet> actualList) {
-		double epsilon = 0.0d;
 		for (int i = 0; i < actualList.size(); i++) {
 			OutputSet actual = actualList.get(i);
 			for (int element = 0; element < 32; element++) {
 				double cluOriginal = actual.getCluOriginalValues()[element];
 				double cluOptimized = actual.getCluOptimizedValues()[element];
 				double cpp = actual.getCppValues()[element];
+
+				double epsilon = getEpsilon(cluOriginal);
+				System.out.println("Using epsilon " + epsilon + " for " + cluOriginal);
 				assertEquals(cluOriginal, cluOptimized, epsilon);
 				String comparison = "Index " + element + ": " + cluOriginal + " == " + cluOptimized;
 				assertEquals(cluOriginal, cpp, epsilon);
@@ -208,6 +220,13 @@ public class HorizonJUnitTest {
 				}
 			}
 		}
+	}
+	
+	private static double getEpsilon(double d) {
+        Locale.setDefault(Locale.US);
+        String string = Double.toString(d);
+		int decimals = string.substring(string.lastIndexOf(DecimalFormatSymbols.getInstance().getDecimalSeparator())+1).length();
+		return Math.pow(10, -decimals);
 	}
 
 }

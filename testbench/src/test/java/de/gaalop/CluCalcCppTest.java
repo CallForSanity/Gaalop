@@ -2,10 +2,13 @@ package de.gaalop;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Random;
 import java.util.Scanner;
 
 import org.antlr.runtime.ANTLRStringStream;
@@ -88,8 +91,15 @@ public static class OutputSet {
 	
 	public static class FileTests {
 		
+		private Random r = new Random(System.currentTimeMillis());
+		
+		private float nextFloat() {
+			return r.nextFloat();
+		}
+		
 		@Before
 		public void init() {
+			r.setSeed(System.currentTimeMillis());
 			CluCalcCppTest.init();
 		}
 
@@ -101,13 +111,13 @@ public static class OutputSet {
 		@Test
 		public void horizon() throws Exception {
 			String fileName = getClass().getResource("Horizon.clu").getFile();
-			inputValues.put("mx", 0.0f);
-			inputValues.put("my", 0.0f);
-			inputValues.put("mz", 0.0f);
-			inputValues.put("px", 1.0f);
-			inputValues.put("py", 1.0f);
-			inputValues.put("pz", 1.0f);
-			inputValues.put("r", 0.5f);
+			inputValues.put("mx", nextFloat());
+			inputValues.put("my", nextFloat());
+			inputValues.put("mz", nextFloat());
+			inputValues.put("px", nextFloat());
+			inputValues.put("py", nextFloat());
+			inputValues.put("pz", nextFloat());
+			inputValues.put("r", nextFloat());
 
 			int outputMVs = 1; // C
 			compare(fileName, outputMVs);
@@ -121,15 +131,14 @@ public static class OutputSet {
 		@Test
 		public void inverseKinematics() throws Exception {
 			String fileName = getClass().getResource("IK_Gaalop-2.0_input.clu").getFile();
-			inputValues.put("pwx", 1.1f);
-			inputValues.put("pwy", 1.1f);
-			inputValues.put("pwz", 1.1f);
-			inputValues.put("d1", 1.40f);
-			inputValues.put("d2", 1.30f);
-			inputValues.put("phi", (float) Math.PI);
+			inputValues.put("pwx", nextFloat());
+			inputValues.put("pwy", nextFloat());
+			inputValues.put("pwz", nextFloat());
+			inputValues.put("d1", nextFloat());
+			inputValues.put("d2", nextFloat());
+			inputValues.put("phi", nextFloat());
 
 			int outputMVs = 6; // SwivelPlane, p_e, q_e, q12, q3, q_s
-			epsilon = 1.0e-3; // assume precision of original clucalc output
 			compare(fileName, outputMVs);
 		}
 
@@ -197,12 +206,12 @@ public static class OutputSet {
 		@Test
 		public void loopNoUnrolling() throws Exception {
 			String fileName = getClass().getResource("loop_no_unrolling.clu").getFile();
-			inputValues.put("x", 1.0f);
-			inputValues.put("y", 1.0f);
-			inputValues.put("z", 1.0f);
-			inputValues.put("a", 2.0f);
-			inputValues.put("b", 2.0f);
-			inputValues.put("c", 2.0f);
+			inputValues.put("x", nextFloat());
+			inputValues.put("y", nextFloat());
+			inputValues.put("z", nextFloat());
+			inputValues.put("a", nextFloat());
+			inputValues.put("b", nextFloat());
+			inputValues.put("c", nextFloat());
 
 			int outputMVs = 2; // val, var
 			compare(fileName, outputMVs);
@@ -216,14 +225,14 @@ public static class OutputSet {
 		@Test
 		public void nestedIf() throws Exception {
 			String fileName = getClass().getResource("Nested_If.clu").getFile();
-			inputValues.put("s1", 1.0f);
-			inputValues.put("s2", 1.0f);
-			inputValues.put("s3", 1.0f);
-			inputValues.put("r", 1.0f);
-			inputValues.put("z", 5.0f);
-			inputValues.put("p1", 3.0f);
-			inputValues.put("p2", 3.0f);
-			inputValues.put("p3", 3.0f);
+			inputValues.put("s1", nextFloat());
+			inputValues.put("s2", nextFloat());
+			inputValues.put("s3", nextFloat());
+			inputValues.put("r", nextFloat());
+			inputValues.put("z", nextFloat());
+			inputValues.put("p1", nextFloat());
+			inputValues.put("p2", nextFloat());
+			inputValues.put("p3", nextFloat());
 
 			int outputMVs = 1; // rslt
 			compare(fileName, outputMVs);
@@ -251,11 +260,11 @@ public static class OutputSet {
 		@Test
 		public void equalityCondition() throws Exception {
 			String fileName = getClass().getResource("equality_condition.clu").getFile();
-			inputValues.put("a", 1.0f);
-			inputValues.put("b", 2.0f);
-			inputValues.put("c", 3.0f);
-			inputValues.put("j", 2.0f);
-			inputValues.put("k", 3.0f);
+			inputValues.put("a", nextFloat());
+			inputValues.put("b", nextFloat());
+			inputValues.put("c", nextFloat());
+			inputValues.put("j", nextFloat());
+			inputValues.put("k", nextFloat());
 			
 			int outputMVs = 1; // x
 			compare(fileName, outputMVs);			
@@ -348,12 +357,9 @@ public static class OutputSet {
 
 	static TestbenchGenerator generator;
 	static 	Map<String, Float> inputValues = new HashMap<String, Float>();
-	
-	static double epsilon = 0.0d;
-	
+		
 	static void init() {
 		inputValues.clear();
-		epsilon = 0.0d;
 	}
 
 	private static File compile() throws Exception {
@@ -429,10 +435,18 @@ public static class OutputSet {
 				double cluOriginal = actual.getCluOriginalValues()[element];
 				double cluOptimized = actual.getCluOptimizedValues()[element];
 				double cpp = actual.getCppValues()[element];
+				double epsilon = getEpsilon(cluOriginal);
 				assertEquals(cluOriginal, cluOptimized, epsilon);
 				assertEquals(cluOriginal, cpp, epsilon);
 			}
 		}
+	}
+	
+	private static double getEpsilon(double d) {
+        Locale.setDefault(Locale.US);
+        String string = Double.toString(d);
+		int decimals = string.substring(string.lastIndexOf(DecimalFormatSymbols.getInstance().getDecimalSeparator())+1).length();
+		return Math.pow(10, -decimals);
 	}
 
 }
