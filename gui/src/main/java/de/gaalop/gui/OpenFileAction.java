@@ -23,6 +23,7 @@ public class OpenFileAction extends AbstractAction {
 	 * 
 	 */
 	private static final long serialVersionUID = 8586884650535842171L;
+	private static File lastDirectory = null;
 
 	private Log log = LogFactory.getLog(OpenFileAction.class);
 
@@ -39,6 +40,7 @@ public class OpenFileAction extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setCurrentDirectory(lastDirectory);
         fileChooser.setFileFilter(new FileFilter() {
 			
 			@Override
@@ -58,6 +60,7 @@ public class OpenFileAction extends AbstractAction {
         try {
             if (fileChooser.showOpenDialog(tabbedPane.getParent()) == JFileChooser.APPROVE_OPTION) {
                 String content = readFile(fileChooser.getSelectedFile());
+                lastDirectory = fileChooser.getSelectedFile().getParentFile();
 
                 SourceFilePanel filePanel = new SourceFilePanel(plugin, fileChooser.getSelectedFile(), content);
                 tabbedPane.addTab("", filePanel);

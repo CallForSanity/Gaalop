@@ -231,10 +231,6 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 			Expression left = node.getLeft();
 			Expression right = node.getRight();
 
-			if (containsTrueOrFalse(left) || containsTrueOrFalse(right)) {
-				return;
-			}
-
 			Subtraction lhs = ExpressionFactory.subtract(left.copy(), right.copy());
 			Variable condition = new Variable("condition_" + conditionSuffix++);
 			Expression newRight = new FloatConstant(0);
@@ -287,6 +283,10 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 		private void compareComponents(BinaryOperation node, boolean equality) {
 			Expression left = node.getLeft();
 			Expression right = node.getRight();
+			
+			if (containsTrueOrFalse(left) || containsTrueOrFalse(right)) {
+				return;
+			}
 
 			Subtraction difference = ExpressionFactory.subtract(left.copy(), right.copy());
 			Variable lVar = new Variable("condition_" + conditionSuffix++);
@@ -300,13 +300,23 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 
 				initializeCoefficients(lVar);
 				initializeCoefficients(rVar);
+				Set<Integer> lVarCoeffs = new HashSet<Integer>();
+				Set<Integer> rVarCoeffs = new HashSet<Integer>();
+				for (MultivectorComponent comp : initializedVariables.get(lVar)) {
+					lVarCoeffs.add(comp.getBladeIndex());
+				}
+				for (MultivectorComponent comp : initializedVariables.get(rVar)) {
+					rVarCoeffs.add(comp.getBladeIndex());
+				}
 
 				BinaryOperation newCondition = null;
 				for (AssignmentNode diffOpt : optimizeVariable(graph, diff)) {
 					if (diffOpt.getVariable() instanceof MultivectorComponent) {
 						MultivectorComponent comp = (MultivectorComponent) diffOpt.getVariable();
-						Variable lVarNew = new Variable(getTempVarName(lVar.getName(), comp.getBladeIndex()));
-						Variable rVarNew = new Variable(getTempVarName(rVar.getName(), comp.getBladeIndex()));
+						int index = comp.getBladeIndex();
+						Expression lVarNew = getNewExpression(lVar, lVarCoeffs, index);
+						Expression rVarNew = getNewExpression(rVar, rVarCoeffs, index);
+						
 						BinaryOperation comparison;
 						if (equality) {
 							comparison = new Equality(lVarNew, rVarNew);
@@ -326,6 +336,16 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 						+ root.getCondition(), e);
 			}
 
+		}
+
+		private Expression getNewExpression(Variable var, Set<Integer> coeffs, int index) {
+			Expression newExp;
+			if (coeffs.contains(index)) {
+				newExp = new Variable(getTempVarName(var.getName(), index));
+			} else {
+				newExp = new FloatConstant(0.0f);
+			}
+			return newExp;
 		}
 
 		@Override
@@ -361,7 +381,7 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 	private int blockDepth = 0;
 	private SequentialNode currentRoot;
 
-	private Map<Variable, Set<MultivectorComponent>> initializedVariables = new HashMap<Variable, Set<MultivectorComponent>>();
+	Map<Variable, Set<MultivectorComponent>> initializedVariables = new HashMap<Variable, Set<MultivectorComponent>>();
 
 	ControlFlowGraph graph;
 
@@ -388,7 +408,7 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 			successor.accept(this);
 			return;
 		}
-
+		
 		if (blockDepth > 0) {
 			// optimize current value of variable and add variables for coefficients in front of block
 			initializeCoefficients(node.getVariable());
@@ -662,8 +682,8 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 			currentRoot = node;
 		}
 		Expression condition = node.getCondition();
-				handleUnknownBranches(node, condition);
-				node.getSuccessor().accept(this);
+		handleUnknownBranches(node, condition);
+		node.getSuccessor().accept(this);
 	}
 
 	private void handleUnknownBranches(IfThenElseNode node, Expression condition) {

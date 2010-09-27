@@ -93,8 +93,10 @@ public static class OutputSet {
 		
 		private Random r = new Random(System.currentTimeMillis());
 		
-		private float nextFloat() {
-			return r.nextFloat();
+		private void generateInputValue(String variable) {
+			float nextFloat = r.nextFloat();
+			System.out.printf("Using %f for input variable %s\n", nextFloat, variable);
+			inputValues.put(variable, nextFloat);
 		}
 		
 		@Before
@@ -111,32 +113,34 @@ public static class OutputSet {
 		@Test
 		public void horizon() throws Exception {
 			String fileName = getClass().getResource("Horizon.clu").getFile();
-			inputValues.put("mx", nextFloat());
-			inputValues.put("my", nextFloat());
-			inputValues.put("mz", nextFloat());
-			inputValues.put("px", nextFloat());
-			inputValues.put("py", nextFloat());
-			inputValues.put("pz", nextFloat());
-			inputValues.put("r", nextFloat());
+			generateInputValue("mx");
+			generateInputValue("my");
+			generateInputValue("mz");
+			generateInputValue("px");
+			generateInputValue("py");
+			generateInputValue("pz");
+			generateInputValue("r");
 
 			int outputMVs = 1; // C
 			compare(fileName, outputMVs);
 		}
 
 		/**
-		 * Tests the inverse kinematics algorithm.
+		 * Tests the inverse kinematics algorithm.<br>
+		 * <br>
+		 * Note: this test case does not always succeed because of the use of random variables without auxiliary conditions.
 		 * 
 		 * @throws IOException
 		 */
 		@Test
 		public void inverseKinematics() throws Exception {
 			String fileName = getClass().getResource("IK_Gaalop-2.0_input.clu").getFile();
-			inputValues.put("pwx", nextFloat());
-			inputValues.put("pwy", nextFloat());
-			inputValues.put("pwz", nextFloat());
-			inputValues.put("d1", nextFloat());
-			inputValues.put("d2", nextFloat());
-			inputValues.put("phi", nextFloat());
+			generateInputValue("pwx");
+			generateInputValue("pwy");
+			generateInputValue("pwz");
+			generateInputValue("d1");
+			generateInputValue("d2");
+			generateInputValue("phi");
 
 			int outputMVs = 6; // SwivelPlane, p_e, q_e, q12, q3, q_s
 			compare(fileName, outputMVs);
@@ -206,12 +210,12 @@ public static class OutputSet {
 		@Test
 		public void loopNoUnrolling() throws Exception {
 			String fileName = getClass().getResource("loop_no_unrolling.clu").getFile();
-			inputValues.put("x", nextFloat());
-			inputValues.put("y", nextFloat());
-			inputValues.put("z", nextFloat());
-			inputValues.put("a", nextFloat());
-			inputValues.put("b", nextFloat());
-			inputValues.put("c", nextFloat());
+			generateInputValue("x");
+			generateInputValue("y");
+			generateInputValue("z");
+			generateInputValue("a");
+			generateInputValue("b");
+			generateInputValue("c");
 
 			int outputMVs = 2; // val, var
 			compare(fileName, outputMVs);
@@ -225,14 +229,14 @@ public static class OutputSet {
 		@Test
 		public void nestedIf() throws Exception {
 			String fileName = getClass().getResource("Nested_If.clu").getFile();
-			inputValues.put("s1", nextFloat());
-			inputValues.put("s2", nextFloat());
-			inputValues.put("s3", nextFloat());
-			inputValues.put("r", nextFloat());
-			inputValues.put("z", nextFloat());
-			inputValues.put("p1", nextFloat());
-			inputValues.put("p2", nextFloat());
-			inputValues.put("p3", nextFloat());
+			generateInputValue("s1");
+			generateInputValue("s2");
+			generateInputValue("s3");
+			generateInputValue("r");
+			generateInputValue("z");
+			generateInputValue("p1");
+			generateInputValue("p2");
+			generateInputValue("p3");
 
 			int outputMVs = 1; // rslt
 			compare(fileName, outputMVs);
@@ -260,11 +264,11 @@ public static class OutputSet {
 		@Test
 		public void equalityCondition() throws Exception {
 			String fileName = getClass().getResource("equality_condition.clu").getFile();
-			inputValues.put("a", nextFloat());
-			inputValues.put("b", nextFloat());
-			inputValues.put("c", nextFloat());
-			inputValues.put("j", nextFloat());
-			inputValues.put("k", nextFloat());
+			generateInputValue("a");
+			generateInputValue("b");
+			generateInputValue("c");
+			generateInputValue("j");
+			generateInputValue("k");
 			
 			int outputMVs = 1; // x
 			compare(fileName, outputMVs);			
