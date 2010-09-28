@@ -71,5 +71,14 @@ public class MapleStrategy implements OptimizationStrategy {
 		} catch (Exception e) {
 			throw new OptimizationException("Unable to remove unused variables from graph:\n" + e.getMessage(), e, graph);
 		}
+		try {
+			log.debug("Killing and folding constants.");
+			ConstantKillCrawler crawler = new ConstantKillCrawler();
+			graph.accept(crawler);
+			ConstantFolding folder = new ConstantFolding();
+			graph.accept(folder);
+		} catch (Exception e) {
+			throw new OptimizationException("Unable to eliminate constants:\n" + e.getMessage(), e, graph);
+		}
 	}
 }
