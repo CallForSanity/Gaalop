@@ -122,6 +122,7 @@ public static class OutputSet {
 			generateInputValue("r");
 
 			int outputMVs = 1; // C
+			outputNames.add("C");
 			compare(fileName, outputMVs);
 		}
 
@@ -138,11 +139,17 @@ public static class OutputSet {
 			generateInputValue("pwx");
 			generateInputValue("pwy");
 			generateInputValue("pwz");
-			generateInputValue("d1");
-			generateInputValue("d2");
+			inputValues.put("d1", 1.50f);
+			inputValues.put("d2", 1.10f);
 			generateInputValue("phi");
 
 			int outputMVs = 6; // SwivelPlane, p_e, q_e, q12, q3, q_s
+			outputNames.add("SwivelPlane");
+			outputNames.add("p_e");
+			outputNames.add("q_e");
+			outputNames.add("q12");
+			outputNames.add("q3");
+			outputNames.add("q_s");
 			compare(fileName, outputMVs);
 		}
 
@@ -157,6 +164,7 @@ public static class OutputSet {
 			// no input variables for this test
 
 			int outputMVs = 1; // x
+			outputNames.add("x");
 			compare(fileName, outputMVs);
 		}
 		
@@ -171,6 +179,7 @@ public static class OutputSet {
 			// no input variables for this test
 			
 			int outputMVs = 1; // x
+			outputNames.add("x");
 			compare(fileName, outputMVs);
 		}
 		
@@ -185,6 +194,7 @@ public static class OutputSet {
 			// no input variables for this test
 			
 			int outputMVs = 1; // x
+			outputNames.add("x");
 			compare(fileName, outputMVs);
 		}
 		
@@ -199,6 +209,7 @@ public static class OutputSet {
 			// no input variables for this test
 			
 			int outputMVs = 1; // x
+			outputNames.add("x");
 			compare(fileName, outputMVs);
 		}
 
@@ -218,6 +229,8 @@ public static class OutputSet {
 			generateInputValue("c");
 
 			int outputMVs = 2; // val, var
+			outputNames.add("val");
+			outputNames.add("var");
 			compare(fileName, outputMVs);
 		}
 
@@ -239,6 +252,7 @@ public static class OutputSet {
 			generateInputValue("p3");
 
 			int outputMVs = 1; // rslt
+			outputNames.add("rslt");
 			compare(fileName, outputMVs);
 		}
 
@@ -253,6 +267,8 @@ public static class OutputSet {
 			// no input values for this test
 
 			int outputMVs = 1; // rslt
+
+			outputNames.add("rslt");
 			compare(fileName, outputMVs);
 		}
 		
@@ -271,6 +287,7 @@ public static class OutputSet {
 			generateInputValue("k");
 			
 			int outputMVs = 1; // x
+			outputNames.add("x");
 			compare(fileName, outputMVs);			
 		}
 		
@@ -285,9 +302,11 @@ public static class OutputSet {
 			int outputMVs = 1;
 			
 			inputValues.put("unknown", 1.0f); // r
+			outputNames.add("r");
 			compare(fileName, outputMVs);			
 			
 			inputValues.put("unknown", -1.0f); // r
+			outputNames.add("r");
 			compare(fileName, outputMVs);			
 		}
 		
@@ -360,10 +379,12 @@ public static class OutputSet {
 	final static String LIBPATH = "C:/Program Files (x86)/CLUViz/v6_1/SDK/lib";
 
 	static TestbenchGenerator generator;
-	static 	Map<String, Float> inputValues = new HashMap<String, Float>();
+	static Map<String, Float> inputValues = new HashMap<String, Float>();
+	static List<String> outputNames = new ArrayList<String>();
 		
 	static void init() {
 		inputValues.clear();
+		outputNames.clear();
 	}
 
 	private static File compile() throws Exception {
@@ -440,8 +461,13 @@ public static class OutputSet {
 				double cluOptimized = actual.getCluOptimizedValues()[element];
 				double cpp = actual.getCppValues()[element];
 				double epsilon = getEpsilon(cluOriginal);
-				assertEquals(cluOriginal, cluOptimized, epsilon);
-				assertEquals(cluOriginal, cpp, epsilon);
+				try {
+					assertEquals(cluOriginal, cluOptimized, epsilon);
+					assertEquals(cluOriginal, cpp, epsilon);
+				} catch (AssertionError e) {
+					System.err.printf("Unequal coefficient at index %d for variable %s\n", element, outputNames.get(i));
+					throw e;
+				}
 			}
 		}
 	}

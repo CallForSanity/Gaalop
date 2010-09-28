@@ -75,8 +75,6 @@ public class MapleStrategy implements OptimizationStrategy {
 			log.debug("Killing and folding constants.");
 			ConstantKillCrawler crawler = new ConstantKillCrawler();
 			graph.accept(crawler);
-			ConstantFolding folder = new ConstantFolding();
-			graph.accept(folder);
 		} catch (Exception e) {
 			throw new OptimizationException("Unable to eliminate constants:\n" + e.getMessage(), e, graph);
 		}

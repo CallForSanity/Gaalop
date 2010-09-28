@@ -115,7 +115,6 @@ public class ConstantKillCrawler implements ControlFlowVisitor, ExpressionVisito
 
     @Override
     public void visit(BlockEndNode node) {
-        node.getSuccessor().accept(this);
     }
 
     @Override
@@ -261,66 +260,72 @@ public class ConstantKillCrawler implements ControlFlowVisitor, ExpressionVisito
 
     @Override
     public void visit(Reverse node) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        node.getOperand().accept(this);
     }
 
     @Override
     public void visit(LogicalOr node) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        node.getLeft().accept(this);
+        node.getRight().accept(this);
     }
 
     @Override
     public void visit(LogicalAnd node) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        node.getLeft().accept(this);
+        node.getRight().accept(this);
     }
 
     @Override
     public void visit(Equality node) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        node.getLeft().accept(this);
+        node.getRight().accept(this);
     }
 
     @Override
     public void visit(Inequality node) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        node.getLeft().accept(this);
+        node.getRight().accept(this);
     }
 
     @Override
-    public void visit(Relation relation) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void visit(Relation node) {
+        node.getLeft().accept(this);
+        node.getRight().accept(this);
     }
 
     @Override
     public void visit(LoopNode node) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    	node.getBody().accept(this);
     }
 
     @Override
     public void visit(BreakNode node) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        node.getSuccessor().accept(this);
     }
 
     @Override
     public void visit(Macro node) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        node.getSuccessor().accept(this);
     }
 
     @Override
     public void visit(ExpressionStatement node) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        node.getExpression().accept(this);
     }
 
     @Override
     public void visit(LogicalNegation node) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        node.getOperand().accept(this);
     }
 
     @Override
     public void visit(FunctionArgument node) {
-        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public void visit(MacroCall node) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        for (Expression arg : node.getArguments()) {
+        	arg.accept(this);
+        }
     }
 }

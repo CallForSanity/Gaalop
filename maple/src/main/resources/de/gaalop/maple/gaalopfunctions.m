@@ -26,6 +26,6 @@ t6$F+F2F&F&F&F&,
 I*pp_get2ndf*F$F&F'F&-Fdu6#-F.6$-F[t6$F]t,&F+F<FjvF<F`wF&F&F&F&,
 I'wurzelf*F$6#%%sclrGF&F&C%-%'assumeG6$Fgp.%%realG>Fgp-_Fdt%+scalarpartGFjnO-F[
 w6#-F^w6#FgpF&F&F&F&,
-I-innerproductf*6$F%F@6#%'resultGF&F&C$>Fgp-_Fdt%#LCG6$F+FF@%/FgpF`uO,$-Fhy6$FF
-F+F<OFgpF&F&F&F&,
+I-innerproductf*6$F%F@6#%'resultGF&F&C$>Fgp-_Fdt%#LCG6$F+FF@%/FgpF`uO-Fhy6$FFF+
+OFgpF&F&F&F&,
 I#&if*F&F&F&F&O-F`t6#F^qF&F&F&F&
