@@ -16,11 +16,13 @@ public class OperatorPriority {
         OPERATOR_PRIORITY = new HashMap<Class<? extends Expression>, Integer>();
 
         // Operator priority from high to low
+        OPERATOR_PRIORITY.put(BaseVector.class, 1000);
         OPERATOR_PRIORITY.put(FloatConstant.class, 1000);
         OPERATOR_PRIORITY.put(Variable.class, 1000);
         OPERATOR_PRIORITY.put(MultivectorComponent.class, 1000);
         OPERATOR_PRIORITY.put(MathFunctionCall.class, 1000);
         OPERATOR_PRIORITY.put(Exponentiation.class, 1000);
+        OPERATOR_PRIORITY.put(OuterProduct.class, 995);
         OPERATOR_PRIORITY.put(Negation.class, 990);
         OPERATOR_PRIORITY.put(Multiplication.class, 960);
         OPERATOR_PRIORITY.put(Division.class, 960);
