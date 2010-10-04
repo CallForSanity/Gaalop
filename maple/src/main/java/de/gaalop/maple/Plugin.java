@@ -34,6 +34,9 @@ public class Plugin extends Observable implements OptimizationStrategyPlugin {
 	/** This is a configuration property and should not be modified. */
 	@ConfigurationProperty(type = Type.TEXT)
 	public String mapleJavaPath;
+	
+	@ConfigurationProperty(type = Type.BOOLEAN)
+	public boolean constantFolding = false;
 
 	/**
 	 * Try guessing a default value for the maple Path on Windows
@@ -119,10 +122,26 @@ public class Plugin extends Observable implements OptimizationStrategyPlugin {
 	public void setMapleJavaPath(String mapleJavaPath) {
 		this.mapleJavaPath = mapleJavaPath;
 	}
+	
+	/**
+	 * Needed for BeanUtils to write configuration file.
+	 *
+	 */
+	public boolean getConstantFolding() {
+		return constantFolding;
+	}
+	
+	/**
+	 * Needed for BeanUtils to read configuration file.
+	 *
+	 */
+	public void setConstantFolding(boolean constantFolding) {
+		this.constantFolding = constantFolding;
+	}
 
 	@Override
 	public OptimizationStrategy createOptimizationStrategy() {
-		return new MapleStrategy(getSimplifier());
+		return new MapleStrategy(getSimplifier(), constantFolding);
 	}
 
 	@Override

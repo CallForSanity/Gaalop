@@ -98,5 +98,9 @@ public final class Relation extends BinaryOperation {
   public String getTypeString() {
     return type.toString();
   }
+  
+  public Type getType() {
+	return type;
+}
 
 }

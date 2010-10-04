@@ -36,8 +36,11 @@ public class MapleStrategy implements OptimizationStrategy {
 
 	private final MapleSimplifier simplifier;
 
-	MapleStrategy(MapleSimplifier simplifier) {
+	private final boolean constantFolding;
+
+	MapleStrategy(MapleSimplifier simplifier, boolean constantFolding) {
 		this.simplifier = simplifier;
+		this.constantFolding = constantFolding;
 	}
 
 	@Override
@@ -71,12 +74,14 @@ public class MapleStrategy implements OptimizationStrategy {
 		} catch (Exception e) {
 			throw new OptimizationException("Unable to remove unused variables from graph:\n" + e.getMessage(), e, graph);
 		}
-		try {
-			log.debug("Killing and folding constants.");
-			ConstantKillCrawler crawler = new ConstantKillCrawler();
-			graph.accept(crawler);
-		} catch (Exception e) {
-			throw new OptimizationException("Unable to eliminate constants:\n" + e.getMessage(), e, graph);
+		if (constantFolding) {
+			try {
+				log.debug("Folding constants.");
+				ConstantFolding folder = new ConstantFolding();
+				graph.accept(folder);
+			} catch (Exception e) {
+				throw new OptimizationException("Unable to eliminate constants:\n" + e.getMessage(), e, graph);
+			}
 		}
 	}
 }

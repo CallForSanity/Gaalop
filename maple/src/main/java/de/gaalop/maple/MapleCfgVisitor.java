@@ -53,6 +53,69 @@ import de.gaalop.maple.parser.MapleTransformer;
  * This visitor creates code for Maple.
  */
 public class MapleCfgVisitor implements ControlFlowVisitor {
+	
+	/**
+	 * Simple helper visitor used to inline parts of conditional statements.
+	 * 
+	 * @author Christian Schwinn
+	 * 
+	 */
+	private class InlineBlockVisitor extends EmptyControlFlowVisitor {
+
+		private final IfThenElseNode root;
+		private final Node branch;
+		private final Node successor;
+
+		/**
+		 * Creates a new visitor with given root and branch.
+		 * 
+		 * @param root root node from which to inline a branch
+		 * @param branch first node of branch to be inlined
+		 */
+		public InlineBlockVisitor(IfThenElseNode root, Node branch) {
+			this.root = root;
+			this.branch = branch;
+			successor = root.getSuccessor();
+		}
+
+		private void replaceSuccessor(Node oldSuccessor, Node newSuccessor) {
+			Set<Node> predecessors = new HashSet<Node>(oldSuccessor.getPredecessors());
+			for (Node p : predecessors) {
+				p.replaceSuccessor(oldSuccessor, newSuccessor);
+			}
+		}
+
+		@Override
+		public void visit(IfThenElseNode node) {
+			// we peek only to next level of nested statements
+			if (node == root) {
+				if (node.getPositive() == branch) {
+					if (!(branch instanceof BlockEndNode)) {
+						replaceSuccessor(node, branch);
+					}
+					node.getPositive().accept(this);
+				} else if (node.getNegative() == branch) {
+					if (!(branch instanceof BlockEndNode)) {
+						replaceSuccessor(node, branch);
+					}
+					node.getNegative().accept(this);
+				}
+				graph.removeNode(node);
+			}
+			node.getSuccessor().accept(this);
+		}
+
+		@Override
+		public void visit(BlockEndNode node) {
+			// this relies on the fact that nested statements are being ignored in visit(IfThenElseNode),
+			// otherwise successor could be the wrong one
+			if (node.getBase() == root) {
+				replaceSuccessor(node, successor);
+			}
+		}
+
+	}
+
 
 	private class InitializeVariablesVisitor extends EmptyControlFlowVisitor {
 
@@ -382,6 +445,7 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 	private SequentialNode currentRoot;
 
 	Map<Variable, Set<MultivectorComponent>> initializedVariables = new HashMap<Variable, Set<MultivectorComponent>>();
+	private final List<Variable> unknownVariables = new ArrayList<Variable>();
 
 	ControlFlowGraph graph;
 
@@ -393,6 +457,7 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 	@Override
 	public void visit(StartNode startNode) {
 		graph = startNode.getGraph();
+		unknownVariables.addAll(graph.getInputVariables()); 
 		plugin.notifyStart();
 		startNode.getSuccessor().accept(this);
 	}
@@ -407,6 +472,15 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 			// do not process this assignment
 			successor.accept(this);
 			return;
+		}
+		
+		UsedVariablesVisitor usedVariables = new UsedVariablesVisitor();
+		value.accept(usedVariables);
+		for (Variable var : usedVariables.getVariables()) {
+			if (unknownVariables.contains(var)) {
+				unknownVariables.add(variable);
+				break;
+			}
 		}
 		
 		if (blockDepth > 0) {
@@ -682,8 +756,43 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 			currentRoot = node;
 		}
 		Expression condition = node.getCondition();
-		handleUnknownBranches(node, condition);
-		node.getSuccessor().accept(this);
+		
+		UsedVariablesVisitor usedVariables = new UsedVariablesVisitor();
+		condition.accept(usedVariables);
+		boolean unknown = false;
+		for (Variable var : usedVariables.getVariables()) {
+			if (unknownVariables.contains(var)) {
+				unknown = true;
+				break;
+			}
+		}
+		if (!unknown) {
+			// try to evaluate condition to true or false
+			String evalb = "evalb(" + condition + ");";
+			try {
+				String result = engine.evaluate(evalb);
+				log.debug("evalb result for condition " + condition + ": " + result);
+				if ("true\n".equals(result)) {
+					InlineBlockVisitor inliner = new InlineBlockVisitor(node, node.getPositive());
+					node.accept(inliner);
+					node.getPositive().accept(this);
+				} else if ("false\n".equals(result)) {
+					InlineBlockVisitor inliner = new InlineBlockVisitor(node, node.getNegative());
+					node.accept(inliner);			
+					node.getNegative().accept(this);
+				} else {
+					unknown = true;
+				}
+			} catch (MapleEngineException e) {
+				e.printStackTrace();
+				unknown = true;
+			}
+		}
+		if (unknown) {
+			// condition contains unknown variables or evalb has failed to evaluate to true or false
+			handleUnknownBranches(node, condition);			
+			node.getSuccessor().accept(this);
+		}		
 	}
 
 	private void handleUnknownBranches(IfThenElseNode node, Expression condition) {

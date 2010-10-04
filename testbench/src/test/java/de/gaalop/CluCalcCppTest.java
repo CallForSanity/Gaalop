@@ -310,6 +310,18 @@ public static class OutputSet {
 			compare(fileName, outputMVs);			
 		}
 		
+		/**
+		 * Tests the unknown_condition.clu example.
+		 * 
+		 * @throws Exception
+		 */
+		@Test
+		public void unknownCondition() throws Exception {
+			String fileName = getClass().getResource("unknown_condition.clu").getFile();
+			int outputMVs = 1;
+			compare(fileName, outputMVs);
+		}
+		
 	}
 
 	public static class ErrorTests {
