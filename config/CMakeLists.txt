@@ -17,7 +17,7 @@ QT4_WRAP_CPP(moc_out ${hdr})
 QT4_WRAP_UI(ui_out ${uis})
 #QT4_ADD_RESOURCES(res_out ${res})
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR})
-ADD_EXECUTABLE(config ${src} ${moc_out} ${ui_out} ${res_out})
+ADD_EXECUTABLE(config ${src} ${hdr} ${moc_out} ${ui_out} ${res_out})
 TARGET_LINK_LIBRARIES(config ${QT_LIBRARIES})
 
 # install

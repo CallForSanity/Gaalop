@@ -1,3 +1,4 @@
+#include <assert.h>
 #include <unistd.h>
 #include "gcdBody.h"
 
@@ -16,8 +17,8 @@ int body(std::string& intermediateFilePath,std::string& outputFilePath,
          const char* outputFileExtension,const char* outputOption)
 {
     // save working directory
-    char runPath[MAX_PATH];
-    getcwd(runPath,MAX_PATH);
+    char runPath[4096];
+    getcwd(runPath,4096);
 
     // change working directory to application directory
     std::string appPath(argv[0]);
