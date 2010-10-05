@@ -38,7 +38,6 @@ public final class ControlFlowGraph {
 	private Set<Variable> localVariables = new HashSet<Variable>();
 	private Set<Variable> scalarVariables = new HashSet<Variable>();
 	private Set<Variable> inputVariables = new HashSet<Variable>();
-	private Set<Variable> ignoreVariables = new HashSet<Variable>();
 
 	private AlgebraSignature signature;
 
@@ -80,14 +79,6 @@ public final class ControlFlowGraph {
 
 	public void addPragmaOutputVariable(String name) {
 		pragmaOutputVariables.add(name);
-	}
-
-	public void addIgnoreVariable(Variable variable) {
-		ignoreVariables.add(variable);
-	}
-
-	public Set<Variable> getIgnoreVariables() {
-		return ignoreVariables;
 	}
 
 	public void addScalarVariable(Variable tempVariable) {

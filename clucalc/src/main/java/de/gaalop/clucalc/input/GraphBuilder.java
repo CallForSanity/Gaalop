@@ -196,16 +196,6 @@ public final class GraphBuilder {
 	}
 
 	/**
-	 * Adds a control variable for loops to the control flow graph.
-	 * 
-	 * @param variable
-	 */
-	public void addIgnoreVariable(Variable variable) {
-		graph.addIgnoreVariable(variable);
-		graph.addScalarVariable(variable);
-	}
-
-	/**
 	 * Adds a pragma hint for a variable, which defines value range for it. The pragma must be set before the variable
 	 * is added to the input variables, i.e. the pragma must appear for the use of the variable
 	 */
@@ -329,10 +319,9 @@ public final class GraphBuilder {
 	 * 
 	 * @param body list of statements belonging to body
 	 * @param iterations (optional) number of iterations for loop unrolling
-	 * @param counter (optional) counter variable
 	 * @return new {@link LoopNode} representing this statement.
 	 */
-	public LoopNode handleLoop(List<SequentialNode> body, String iterations, Variable counter) {
+	public LoopNode handleLoop(List<SequentialNode> body, String iterations) {
 		LoopNode loop = new LoopNode(graph);
 		addNode(loop);
 		rewireNodes(body, loop);
@@ -341,17 +330,6 @@ public final class GraphBuilder {
 		// save number of iterations and reset value for next loops
 		if (iterations != null) {
 			loop.setIterations(Integer.parseInt(iterations));
-		}
-		// save counter variable for this loop
-		if (counter != null) {
-			if (CheckGAVisitor.isGAVariable(counter)) {
-				throw new IllegalArgumentException("Counter variable " + counter + " is not scalar. Please use "
-						+ counter + " only as counter variable and do not assign Geometric Algebra expressions to it.");
-			}
-			loop.setCounterVariable(counter);
-			graph.removeLocalVariable(counter);
-			graph.addScalarVariable(counter);
-			graph.addIgnoreVariable(counter);
 		}
 
 		return loop;
@@ -549,9 +527,6 @@ public final class GraphBuilder {
 	public void finish() {
 		if (!setMode) {
 			Notifications.addWarning("Missing algebra mode has been set to " + mode);
-		}
-		for (Variable v : graph.getIgnoreVariables()) {
-			graph.removeLocalVariable(v);
 		}
 		FindStoreOutputNodes outputNodes = new FindStoreOutputNodes();
 		graph.accept(outputNodes);

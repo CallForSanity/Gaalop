@@ -1,12 +1,9 @@
 DefVarsN3();
 :IPNS;
 
-//#pragma ignore j
-
 x = 4;
 i = 0;
 
-//#pragma count i
 loop {
   x = 2+x;
   if (!!(i>9)) {

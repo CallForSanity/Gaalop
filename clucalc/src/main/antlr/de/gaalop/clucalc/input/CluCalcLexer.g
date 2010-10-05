@@ -26,8 +26,6 @@ UNROLL_LITERAL: 'unroll';
 
 COUNT_LITERAL: 'count';
 
-IGNORE_LITERAL: 'ignore';
-
 STRING_LITERAL
     :  '"' ( ~('\\'|'"') )* '"'
     ;

@@ -5,7 +5,7 @@ x = 3;
 multiplyByTen = {
 	i = 0;
 	x = 0;
-	//#pragma count i
+	
 	loop {
 		if (i > 9) {
 			break;
@@ -20,7 +20,7 @@ getX = { ::x }
 setX = { ::x = _P(1); }
 
 i = 0;
-//#pragma count i
+
 loop {
 	if (i > 9) {
 		break;

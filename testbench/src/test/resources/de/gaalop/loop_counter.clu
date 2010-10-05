@@ -11,8 +11,7 @@ loop {
 	}
 	x = x + 10;
 	j = 0;
-	
-	//#pragma count j
+		
 	loop {
 		if (j > 1) {
 			break;

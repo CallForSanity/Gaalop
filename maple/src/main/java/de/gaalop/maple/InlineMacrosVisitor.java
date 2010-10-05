@@ -118,14 +118,6 @@ public class InlineMacrosVisitor extends EmptyExpressionVisitor implements Contr
 
 		@Override
 		public void visit(LoopNode node) {
-			// reset control variable, if necessary
-			if (node.getCounterVariable() != null && graph.containsLocalVariable(node.getCounterVariable().getName())) {
-				String newName = newNames.get(node.getCounterVariable().getName());
-				Variable newCounter = new Variable(newName);
-				graph.addIgnoreVariable(newCounter);
-				graph.addScalarVariable(newCounter);
-				node.setCounterVariable(newCounter);
-			}
 			replaceSubtree(node.getBody());
 		}
 
@@ -314,9 +306,7 @@ public class InlineMacrosVisitor extends EmptyExpressionVisitor implements Contr
 		// add new local variables to graph
 		for (Variable v : newVariables) {
 			graph.removeInputVariable(v);
-			if (!graph.getIgnoreVariables().contains(v)) {
-				graph.addLocalVariable(v);
-			}
+			graph.addLocalVariable(v);
 		}
 	}
 
