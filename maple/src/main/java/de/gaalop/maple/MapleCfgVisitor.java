@@ -55,6 +55,27 @@ import de.gaalop.maple.parser.MapleTransformer;
  */
 public class MapleCfgVisitor implements ControlFlowVisitor {
 	
+	private static class RemoveEmptyNodesVisitor extends EmptyControlFlowVisitor {
+		
+		public RemoveEmptyNodesVisitor() {
+		}
+		
+		@Override
+		public void visit(IfThenElseNode node) {
+			Node successor = node.getSuccessor();
+			SequentialNode positive = node.getPositive();
+			SequentialNode negative = node.getNegative();
+			if (positive instanceof BlockEndNode && negative instanceof BlockEndNode) {
+				node.getGraph().removeNode(node);
+			} else {
+				positive.accept(this);
+				negative.accept(this);
+			}
+			successor.accept(this);
+		}
+		
+	}
+	
 	private static class CheckDependencyVisitor extends EmptyControlFlowVisitor {
 		
 		private int blockDepth = 0;
@@ -1005,6 +1026,8 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 
 	@Override
 	public void visit(EndNode endNode) {
+		RemoveEmptyNodesVisitor visitor = new RemoveEmptyNodesVisitor();
+		graph.accept(visitor);
 	}
 
 	@Override
