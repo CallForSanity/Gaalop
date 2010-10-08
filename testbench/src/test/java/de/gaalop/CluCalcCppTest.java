@@ -227,6 +227,7 @@ public static class OutputSet {
 			generateInputValue("a");
 			generateInputValue("b");
 			generateInputValue("c");
+			inputValues.put("unknown", 1.0f);
 
 			int outputMVs = 2; // val, var
 			outputNames.add("val");
@@ -319,6 +320,59 @@ public static class OutputSet {
 		public void unknownCondition() throws Exception {
 			String fileName = getClass().getResource("unknown_condition.clu").getFile();
 			int outputMVs = 1;
+			compare(fileName, outputMVs);
+		}
+
+		/**
+		 * Tests the if_reuse_vars.clu example.
+		 * 
+		 * @throws Exception
+		 */
+		@Test
+		public void ifReuseVars() throws Exception {
+			String fileName = getClass().getResource("if_reuse_vars.clu").getFile();
+			generateInputValue("a");
+			generateInputValue("b");
+			generateInputValue("c");
+			generateInputValue("p1");
+			generateInputValue("p2");
+			generateInputValue("p3");
+			generateInputValue("m1");
+			generateInputValue("m2");
+			generateInputValue("m3");
+			generateInputValue("phi");
+			inputValues.put("cond1", 1.0f);
+			inputValues.put("cond2", 1.0f);
+			inputValues.put("cond3", 1.0f);
+			inputValues.put("cond4", 1.0f);
+			inputValues.put("cond5", 1.0f);
+
+			int outputMVs = 2;
+			outputNames.add("testX");
+			outputNames.add("testFoo4");
+			compare(fileName, outputMVs);
+		}
+		
+		/**
+		 * Tests the if_reuse_opt.clu example.
+		 * 
+		 * @throws Exception
+		 */
+		@Test
+		public void ifReuseOpt() throws Exception {
+			String fileName = getClass().getResource("if_reuse_opt.clu").getFile();
+			generateInputValue("a");
+			generateInputValue("b");
+			generateInputValue("c");
+			generateInputValue("m1");
+			generateInputValue("m2");
+			generateInputValue("m3");
+			generateInputValue("phi");
+			inputValues.put("cond1", 1.0f);
+			inputValues.put("cond2", 1.0f);
+			
+			int outputMVs = 1;
+			outputNames.add("testX");
 			compare(fileName, outputMVs);
 		}
 		

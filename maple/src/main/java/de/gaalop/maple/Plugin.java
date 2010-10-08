@@ -168,9 +168,11 @@ public class Plugin extends Observable implements OptimizationStrategyPlugin {
 	void notifyProgress() {
 		progress++;
 		int percent = progress * 100 / max;
-		System.out.println("Optimizing... " + percent + "%");
-		setChanged();
-		notifyObservers(new Notifications.Progress());
+		if (percent <= 100) {
+			System.out.println("Optimizing... " + percent + "%");
+			setChanged();
+			notifyObservers(new Notifications.Progress());
+		}
 	}
 
 	void notifyStart() {

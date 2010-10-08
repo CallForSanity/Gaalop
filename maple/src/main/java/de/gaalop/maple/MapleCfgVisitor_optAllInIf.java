@@ -6,7 +6,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Stack;
 
 import org.antlr.runtime.ANTLRStringStream;
 import org.antlr.runtime.CommonTokenStream;
@@ -53,107 +52,7 @@ import de.gaalop.maple.parser.MapleTransformer;
 /**
  * This visitor creates code for Maple.
  */
-public class MapleCfgVisitor implements ControlFlowVisitor {
-	
-	private static class CheckDependencyVisitor extends EmptyControlFlowVisitor {
-		
-		private int blockDepth = 0;
-		private Set<Variable> optVariables = new HashSet<Variable>();
-		private Stack<SequentialNode> hierarchy = new Stack<SequentialNode>();
-		private Map<Variable, List<SequentialNode>> currentStack = new HashMap<Variable, List<SequentialNode>>();
-
-		public CheckDependencyVisitor() {
-		}
-		
-		public Set<Variable> getDependentVariables() {
-			return optVariables;
-		}
-		
-		@Override
-		public void visit(IfThenElseNode node) {
-			hierarchy.push(node);
-			blockDepth++;
-			node.getPositive().accept(this);
-			node.getNegative().accept(this);
-			blockDepth--;
-			hierarchy.pop();
-			
-			node.getSuccessor().accept(this);
-		}
-		
-		@Override
-		public void visit(LoopNode node) {
-			hierarchy.push(node);
-			blockDepth++;
-			node.getBody().accept(this);
-			blockDepth--;
-			hierarchy.pop();
-			
-			node.getSuccessor().accept(this);
-		}
-		
-		@Override
-		public void visit(AssignmentNode node) {
-			if (blockDepth > 0) {
-				Variable variable = node.getVariable();
-				currentStack.put(variable, new ArrayList<SequentialNode>(hierarchy));
-			}
-			checkVariables(node.getValue());
-			node.getSuccessor().accept(this);
-		}
-		
-		@Override
-		public void visit(StoreResultNode node) {
-			Variable variable = node.getValue();
-			checkVariable(variable);
-			node.getSuccessor().accept(this);
-		}
-		
-		@Override
-		public void visit(ExpressionStatement node) {
-			checkVariables(node.getExpression());
-			node.getSuccessor().accept(this);
-		}
-
-		private void checkVariables(Expression expression) {
-			de.gaalop.UsedVariablesVisitor usedVariables = new de.gaalop.UsedVariablesVisitor();
-			expression.accept(usedVariables);
-			// check for common hierarchy
-			for (Variable v : usedVariables.getVariables()) {
-				checkVariable(v);
-			}
-		}
-
-		private void checkVariable(Variable v) {
-			if (checkHierarchy(v)) {
-				optVariables.add(v);
-			}
-		}
-		
-		private boolean checkHierarchy(Variable v) {
-			List<SequentialNode> vStack = currentStack.get(v);
-			if (vStack == null) {
-				return false;
-			}
-			List<SequentialNode> variableList = new ArrayList<SequentialNode>(vStack);
-			List<SequentialNode> currentList = new ArrayList<SequentialNode>(hierarchy);
-			int min = Math.min(variableList.size(), currentList.size());
-			if (min == 0) {
-				// found reuse in global space
-				return true;
-			}
-			for (int i = 0; i < min; i++) {
-				if (variableList.get(i) != currentList.get(i)) {
-					return true;
-				}
-			}
-			if (variableList.size() > currentList.size()) {
-				return true;
-			}
-			return false;
-		}
-		
-	}
+public class MapleCfgVisitor_optAllInIf implements ControlFlowVisitor {
 	
 	/**
 	 * Simple helper visitor used to inline parts of conditional statements.
@@ -218,11 +117,11 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 	}
 
 
-	private class InitializeRecursiveVariablesVisitor extends EmptyControlFlowVisitor {
+	private class InitializeVariablesVisitor extends EmptyControlFlowVisitor {
 
 		private final LoopNode root;
 
-		InitializeRecursiveVariablesVisitor(LoopNode node) {
+		InitializeVariablesVisitor(LoopNode node) {
 			this.root = node;
 		}
 
@@ -235,19 +134,12 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 		public void visit(AssignmentNode node) {
 			// optimize current value of variable and add variables for coefficients in front of block
 			Variable variable = node.getVariable();
-			Expression value = node.getValue();
-			
-			UsedVariablesVisitor visitor = new UsedVariablesVisitor();
-			value.accept(visitor);
-			if (visitor.getVariables().contains(variable) || optVariables.contains(variable)) {
-				optVariables.add(variable);
-				// optimize current value of variable and add variables for coefficients in front of block
-				initializeCoefficients(variable);
-				// optimize value in a temporary variable and add missing initializations
-				initializeMissingCoefficients(node);
-				// reset Maple binding with linear combination of variables for coefficients
-				resetVariable(variable);				
-			}			
+			// optimize current value of variable and add variables for coefficients in front of block
+			initializeCoefficients(variable);
+			// optimize value in a temporary variable and add missing initializations
+			initializeMissingCoefficients(node);
+			// reset Maple binding with linear combination of variables for coefficients
+			resetVariable(variable);
 
 			node.getSuccessor().accept(this);
 		}
@@ -534,7 +426,7 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 
 	}
 
-	private Log log = LogFactory.getLog(MapleCfgVisitor.class);
+	private Log log = LogFactory.getLog(MapleCfgVisitor_optAllInIf.class);
 
 	private static final String suffix = "_opt";
 	static int conditionSuffix = 0;
@@ -548,32 +440,21 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 
 	/** Used to distinguish normal assignments and such from a loop or if-statement where GA must be eliminated. */
 	private int blockDepth = 0;
-	private boolean loopMode = false;
 	private SequentialNode currentRoot;
 
 	Map<Variable, Set<MultivectorComponent>> initializedVariables = new HashMap<Variable, Set<MultivectorComponent>>();
 	private final List<Variable> unknownVariables = new ArrayList<Variable>();
-	final Set<Variable> optVariables = new HashSet<Variable>();
-	
-	private Map<Variable, Variable> newNames = new HashMap<Variable, Variable>();
 
 	ControlFlowGraph graph;
 
-	private static int tempSuffix = 1;
-
-	public MapleCfgVisitor(MapleEngine engine, Plugin plugin) {
+	public MapleCfgVisitor_optAllInIf(MapleEngine engine, Plugin plugin) {
 		this.engine = engine;
 		this.plugin = plugin;
 	}
 
 	@Override
 	public void visit(StartNode startNode) {
-		graph = startNode.getGraph();
-		
-		CheckDependencyVisitor visitor = new CheckDependencyVisitor();
-		graph.accept(visitor);
-		optVariables.addAll(visitor.getDependentVariables());
-		
+		graph = startNode.getGraph();		
 		unknownVariables.addAll(graph.getInputVariables()); 
 		plugin.notifyStart();
 		startNode.getSuccessor().accept(this);
@@ -594,26 +475,7 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 			}
 		}
 		
-		boolean recursive = usedVariables.getVariables().contains(variable);
-		boolean optimize = optVariables.contains(variable) || (loopMode && recursive);
-		
-		if (blockDepth > 0 && !optimize) {
-			// create new variable name for this variable in current block
-			Variable newVariable = generateTempVariable(variable);
-			node.replaceExpression(variable, newVariable);
-			// replace each variable with new name, if existing
-			for (Variable var : usedVariables.getVariables()) {
-				Variable newName = newNames.get(var);
-				if (newName != null) {
-					value.replaceExpression(var, newName);
-				}
-			}
-			// add new variable (lhs) to map for use in subsequent assignments 
-			// -> prevent recursive assignments from producing wrong values
-			newNames.put(variable, newVariable);
-		}
-		
-		if (blockDepth > 0 && optimize) {
+		if (blockDepth > 0) {
 			// optimize current value of variable and add variables for coefficients in front of block
 			initializeCoefficients(node.getVariable());
 			// optimize value in a temporary variable and add missing initializations
@@ -625,7 +487,7 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 		// perform actual calculation
 		assignVariable(variable, value);
 
-		if (blockDepth > 0 && optimize) {
+		if (blockDepth > 0) {
 			// optimize new value and reset Maple binding with linear combination of new value
 			assignCoefficients(node, variable);
 		}
@@ -638,6 +500,7 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 
 	void initializeCoefficients(Variable variable) {
 		// FIXME: multiple if-statements lead to unnecessary initialization before second if, e.g. x__0 = x__0
+		// TODO: must remove stuff like var_opt[i] = ...; from gaalop / cliffordperformant 
 		List<AssignmentNode> coefficients = optimizeVariable(graph, variable);
 		for (AssignmentNode coefficient : coefficients) {
 			if (coefficient.getVariable() instanceof MultivectorComponent) {
@@ -665,9 +528,7 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 		if (!initCoefficients.contains(component)) {
 			graph.addScalarVariable(tempVar);
 			AssignmentNode initialization = new AssignmentNode(graph, tempVar, value);
-			if (!tempVar.equals(value)) {
-				currentRoot.insertBefore(initialization);
-			}
+			currentRoot.insertBefore(initialization);
 			initCoefficients.add(component);
 		}
 	}
@@ -801,10 +662,6 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 	String getTempVarName(String variable, int index) {
 		return variable.replace('e', 'E').replace(suffix, "") + "__" + index;
 	}
-	
-	private Variable generateTempVariable(Variable v) {
-		return new Variable(v + "__tmp__" + tempSuffix++);
-	}
 
 	@Override
 	public void visit(ExpressionStatement node) {
@@ -821,13 +678,10 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 
 	@Override
 	public void visit(StoreResultNode node) {
+		// FIXME: if this is in a branch, optimized coefficients may not be reused later (must use linear combination!)
 		List<AssignmentNode> newNodes = optimizeVariable(graph, node.getValue());
-		for (AssignmentNode newNode : newNodes) {
+		for (SequentialNode newNode : newNodes) {
 			node.insertBefore(newNode);
-		}
-		if (blockDepth > 0) {
-			// do not reuse coefficients in form v[i] but with helper variables, e.g. v__0
-			resetVariable(node.getValue());
 		}
 		node.getSuccessor().accept(this);
 	}
@@ -907,9 +761,6 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 				break;
 			}
 		}
-		if (loopMode) {
-			unknown = true;
-		}
 		if (!unknown) {
 			// try to evaluate condition to true or false
 			String evalb = "evalb(" + generateCode(condition) + ");";
@@ -944,14 +795,8 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 		condition.accept(reorder);
 
 		blockDepth++;
-		Map<Variable, Variable> currentMapping = new HashMap<Variable, Variable>(newNames);
 		node.getPositive().accept(this);
-		// restore previous mapping for variables
-		newNames = currentMapping;
-		
 		node.getNegative().accept(this);
-		// restore previous mapping for variables
-		newNames = currentMapping;
 		blockDepth--;
 
 		if (blockDepth == 0) {
@@ -974,19 +819,13 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 			if (blockDepth == 0) {
 				currentRoot = node;
 			}
-			InitializeRecursiveVariablesVisitor visitor = new InitializeRecursiveVariablesVisitor(node);
+			InitializeVariablesVisitor visitor = new InitializeVariablesVisitor(node);
 			node.accept(visitor);
-			
+
 			blockDepth++;
-			boolean oldMode = loopMode;
-			loopMode = true;
-			Map<Variable, Variable> currentMapping = new HashMap<Variable, Variable>(newNames);
 			node.getBody().accept(this);
-			// restore previous mapping for variables
-			newNames = currentMapping;
-			loopMode = oldMode;
 			blockDepth--;
-			
+
 			if (blockDepth == 0) {
 				initializedVariables.clear();
 			}
