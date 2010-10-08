@@ -28,7 +28,7 @@ ADD_SUBDIRECTORY(gcd-body)
 
 # build and install
 ADD_SUBDIRECTORY(bin)
-ADD_SUBDIRECTORY(config)
+ADD_SUBDIRECTORY(gcd-config)
 ADD_SUBDIRECTORY(share)
 
 # copy

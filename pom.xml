@@ -18,9 +18,10 @@
         <module>cli</module>
         <module>gui</module>
         <module>codegen-cpp</module>
+        <module>codegen-compressed</module>
+        <module>codegen-gaalet</module>
         <module>codegen-latex</module>
         <module>codegen-dot</module>
-        <module>codegen-gaalet</module>
         <module>starter</module>
     </modules>
 

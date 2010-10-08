@@ -47,7 +47,7 @@ MACRO(GCD_WRAP_SRCS generated_files)
 			LIST(APPEND ${generated_files} ${generated_file})
 		ELSEIF(${source_file} MATCHES ".*\\.gcu$" AND NOT is_header)
 			get_filename_component(source_file_name ${source_file} NAME)
-			SET(generated_file "${CMAKE_CURRENT_BINARY_DIR}/${source_file_name}.${generated_file_ext}")
+			SET(generated_file "${CMAKE_CURRENT_BINARY_DIR}/${source_file_name}${generated_file_ext}")
 
 			SET_SOURCE_FILES_PROPERTIES(${generated_file}
         	  				    PROPERTIES EXTERNAL_OBJECT true)
@@ -71,7 +71,6 @@ MACRO(GCD_WRAP_SRCS generated_files)
 					   ARGS -o "${generated_file}" "${source_file}"
 					   MAIN_DEPENDENCY ${source_file})
 		ELSEIF(${source_file} MATCHES ".*\\.gcj$" AND NOT is_header)
-            MESSAGE("Test")
 			get_filename_component(source_file_name ${source_file} NAME)
 			SET(generated_file "${CMAKE_CURRENT_BINARY_DIR}/${source_file_name}")
 
