@@ -637,7 +637,6 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 	}
 
 	void initializeCoefficients(Variable variable) {
-		// FIXME: multiple if-statements lead to unnecessary initialization before second if, e.g. x__0 = x__0
 		List<AssignmentNode> coefficients = optimizeVariable(graph, variable);
 		for (AssignmentNode coefficient : coefficients) {
 			if (coefficient.getVariable() instanceof MultivectorComponent) {
