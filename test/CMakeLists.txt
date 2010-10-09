@@ -23,3 +23,6 @@ ENDIF(BUILD_WITH_OPENCL)
 
 GCD_JAVA_ADD_EXECUTABLE(test4 "Test4_Java_PointTriangle.gcj")
 ADD_TEST(NAME "Test4_Java_PointTriangle" COMMAND test4)
+
+GCD_CXX_ADD_EXECUTABLE(test5 "Test2_CXX_Horizon.gcp")
+ADD_TEST(NAME "Test2_CXX_Horizon" COMMAND test5)
