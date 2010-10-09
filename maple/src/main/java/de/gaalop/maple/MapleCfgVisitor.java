@@ -78,7 +78,6 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 	
 	private static class CheckDependencyVisitor extends EmptyControlFlowVisitor {
 		
-		private int blockDepth = 0;
 		private Set<Variable> optVariables = new HashSet<Variable>();
 		private Stack<SequentialNode> hierarchy = new Stack<SequentialNode>();
 		private Map<Variable, List<SequentialNode>> currentStack = new HashMap<Variable, List<SequentialNode>>();
@@ -93,10 +92,8 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 		@Override
 		public void visit(IfThenElseNode node) {
 			hierarchy.push(node);
-			blockDepth++;
 			node.getPositive().accept(this);
 			node.getNegative().accept(this);
-			blockDepth--;
 			hierarchy.pop();
 			
 			node.getSuccessor().accept(this);
@@ -105,9 +102,7 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 		@Override
 		public void visit(LoopNode node) {
 			hierarchy.push(node);
-			blockDepth++;
 			node.getBody().accept(this);
-			blockDepth--;
 			hierarchy.pop();
 			
 			node.getSuccessor().accept(this);
@@ -115,7 +110,7 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 		
 		@Override
 		public void visit(AssignmentNode node) {
-			if (blockDepth > 0) {
+			if (!hierarchy.empty()) {
 				Variable variable = node.getVariable();
 				currentStack.put(variable, new ArrayList<SequentialNode>(hierarchy));
 			}
