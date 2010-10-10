@@ -984,6 +984,12 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 				break;
 			}
 		}
+		for (Variable var : usedVariables.getVariables()) {
+			Variable newName = newNames.get(var);
+			if (newName != null) {
+				condition.replaceExpression(var, newName);
+			}
+		}
 		if (loopMode) {
 			unknown = true;
 		}
