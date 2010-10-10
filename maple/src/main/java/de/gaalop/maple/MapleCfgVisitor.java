@@ -879,6 +879,12 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 		return variable.replace('e', 'E').replace(suffix, "") + "__" + index;
 	}
 	
+	/**
+	 * Generates a temporary variable as a replacement from variables in a branch.
+	 * 
+	 * @param v original variable
+	 * @return variable including __tmp__
+	 */
 	private Variable generateTempVariable(Variable v) {
 		return new Variable(v + "__tmp__" + tempSuffix++);
 	}
