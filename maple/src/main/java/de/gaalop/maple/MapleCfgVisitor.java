@@ -78,9 +78,59 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 	
 	private static class CheckDependencyVisitor extends EmptyControlFlowVisitor {
 		
+		private enum Branch {
+			POSITIVE, NEGATIVE, LOOP
+		}
+		
+		private static class Block {
+			
+			private final SequentialNode node;
+			private final Branch branch;
+
+			public Block(IfThenElseNode node, Branch branch) {
+				this.node = node;
+				this.branch = branch;
+			}
+			
+			public Block(LoopNode node) {
+				this.node = node;
+				this.branch = Branch.LOOP;
+			}
+			
+			public SequentialNode getNode() {
+				return node;
+			}
+			
+			public Branch getBranch() {
+				return branch;
+			}
+			
+			@Override
+			public boolean equals(Object obj) {
+				if (obj instanceof Block) {
+					Block block = (Block) obj;
+					if (node == block.getNode() && branch == block.getBranch()) {
+						return true;
+					}
+				}
+				return false;
+			}
+			
+			@Override
+			public int hashCode() {
+				return node.hashCode() + branch.hashCode();
+			}
+			
+			@Override
+			public String toString() {
+				return "BLOCK[" + node + ":" + branch + "]";
+			}
+			
+		}
+		
 		private Set<Variable> optVariables = new HashSet<Variable>();
-		private Stack<SequentialNode> hierarchy = new Stack<SequentialNode>();
-		private Map<Variable, List<SequentialNode>> currentStack = new HashMap<Variable, List<SequentialNode>>();
+		private Stack<Block> hierarchy = new Stack<Block>();
+		private Map<Variable, List<Block>> currentStack = new HashMap<Variable, List<Block>>();
 
 		public CheckDependencyVisitor() {
 		}
@@ -91,8 +141,10 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 		
 		@Override
 		public void visit(IfThenElseNode node) {
-			hierarchy.push(node);
+			hierarchy.push(new Block(node, Branch.POSITIVE));
 			node.getPositive().accept(this);
+			hierarchy.pop();
+			hierarchy.push(new Block(node, Branch.NEGATIVE));
 			node.getNegative().accept(this);
 			hierarchy.pop();
 			
@@ -101,7 +153,7 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 		
 		@Override
 		public void visit(LoopNode node) {
-			hierarchy.push(node);
+			hierarchy.push(new Block(node));
 			node.getBody().accept(this);
 			hierarchy.pop();
 			
@@ -110,11 +162,11 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 		
 		@Override
 		public void visit(AssignmentNode node) {
+			checkVariables(node.getValue());
 			if (!hierarchy.empty()) {
 				Variable variable = node.getVariable();
-				currentStack.put(variable, new ArrayList<SequentialNode>(hierarchy));
+				currentStack.put(variable, new ArrayList<Block>(hierarchy));
 			}
-			checkVariables(node.getValue());
 			node.getSuccessor().accept(this);
 		}
 		
@@ -147,20 +199,25 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 		}
 		
 		private boolean checkHierarchy(Variable v) {
-			List<SequentialNode> vStack = currentStack.get(v);
+			List<Block> vStack = currentStack.get(v);
 			if (vStack == null) {
 				return false;
 			}
-			List<SequentialNode> variableList = new ArrayList<SequentialNode>(vStack);
-			List<SequentialNode> currentList = new ArrayList<SequentialNode>(hierarchy);
+			List<Block> variableList = new ArrayList<Block>(vStack);
+			List<Block> currentList = new ArrayList<Block>(hierarchy);
 			int min = Math.min(variableList.size(), currentList.size());
 			if (min == 0) {
 				// found reuse in global space
 				return true;
 			}
 			for (int i = 0; i < min; i++) {
-				if (variableList.get(i) != currentList.get(i)) {
+				Block variableBlock = variableList.get(i);
+				Block currentBlock = currentList.get(i);
+				if (variableBlock.getNode() != currentBlock.getNode()) {
 					return true;
+				} else if (variableBlock.getBranch() != currentBlock.getBranch()) {
+					// reuse in different branches of if-statement
+					return false;
 				}
 			}
 			if (variableList.size() > currentList.size()) {
@@ -613,10 +670,10 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 		boolean recursive = usedVariables.getVariables().contains(variable);
 		boolean optimize = optVariables.contains(variable) || (loopMode && recursive);
 		
-		if (blockDepth > 0 && !optimize) {
-			// create new variable name for this variable in current block
-			Variable newVariable = generateTempVariable(variable);
-			node.replaceExpression(variable, newVariable);
+		if (blockDepth > 0) {
+			if (!optimize && successor instanceof StoreResultNode) {
+				optimize = true;
+			}
 			// replace each variable with new name, if existing
 			for (Variable var : usedVariables.getVariables()) {
 				Variable newName = newNames.get(var);
@@ -624,20 +681,26 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 					value.replaceExpression(var, newName);
 				}
 			}
-			// add new variable (lhs) to map for use in subsequent assignments 
-			// -> prevent recursive assignments from producing wrong values
-			newNames.put(variable, newVariable);
+			if (optimize) {
+				// optimize current value of variable and add variables for coefficients in front of block
+				initializeCoefficients(node.getVariable());
+				// optimize value in a temporary variable and add missing initializations
+				initializeMissingCoefficients(node);
+				// reset Maple binding with linear combination of variables for coefficients
+				resetVariable(variable);				
+			} else {
+				// create new variable name for this variable in current block
+				Variable newVariable = generateTempVariable(variable);
+				node.replaceExpression(variable, newVariable);
+				// add new variable (lhs) to map for use in subsequent assignments 
+				// -> prevent recursive assignments from producing wrong values
+				newNames.put(variable, newVariable);
+			}
+			// update local variables with new expressions
+			variable = node.getVariable();
+			value = node.getValue();
 		}
 		
-		if (blockDepth > 0 && optimize) {
-			// optimize current value of variable and add variables for coefficients in front of block
-			initializeCoefficients(node.getVariable());
-			// optimize value in a temporary variable and add missing initializations
-			initializeMissingCoefficients(node);
-			// reset Maple binding with linear combination of variables for coefficients
-			resetVariable(variable);
-		}
-
 		// perform actual calculation
 		assignVariable(variable, value);
 
@@ -795,7 +858,6 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 		codeBuffer.append(" := ");
 		codeBuffer.append(generateCode(value));
 		codeBuffer.append(";\n");
-
 		try {
 			engine.evaluate(codeBuffer.toString());
 		} catch (MapleEngineException e) {
