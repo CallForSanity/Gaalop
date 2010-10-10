@@ -4,6 +4,7 @@ import de.gaalop.cfg.*;
 import de.gaalop.dfg.Expression;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Stack;
 
 /**
  * This class exports a control flow graph to the DOT language used by GraphViz.
@@ -13,6 +14,7 @@ public class CfgVisitor implements ControlFlowVisitor {
     private StringBuilder result = new StringBuilder();
 
     private Map<Object, String> idMap = new HashMap<Object, String>();
+    private Stack<LoopNode> nestedLoops = new Stack<LoopNode>();
 
     private int highestId = 0;
     private static final String EDGE_COLOR_FORWARD = "darkolivegreen1";
@@ -40,6 +42,9 @@ public class CfgVisitor implements ControlFlowVisitor {
     }
 
     private void addEdge(Object n1, Object n2, String color) {
+    	if (n2 instanceof BlockEndNode) {
+    		return;
+    	}
         result.append('\t');
         result.append(getId(n1));
         result.append(" -> ");
@@ -122,23 +127,32 @@ public class CfgVisitor implements ControlFlowVisitor {
 	public void visit(LoopNode node) {
 		addNode(node, "loop");
 		addForwardEdge(node, node.getBody());
+		nestedLoops.push(node);
 		node.getBody().accept(this);
+		nestedLoops.pop();
 		
 		node.getSuccessor().accept(this);
 	}
 
 	@Override
-	public void visit(BreakNode breakNode) {
-		addNode(breakNode, "break");
+	public void visit(BreakNode node) {
+		addNode(node, "break");
+		addForwardEdge(node, nestedLoops.peek().getSuccessor());
+		node.getSuccessor().accept(this);
 	}
 
 	@Override
 	public void visit(BlockEndNode node) {
 		SequentialNode base = node.getBase();
 		if (base instanceof LoopNode) {
-			addBackwardsEdge(node, base);
+			for (Node p : node.getPredecessors()) {
+				if (idMap.containsKey(p)) {
+					addForwardEdge(p, base);
+				}
+			}
+		} else {
+			addForwardEdge(base, base.getSuccessor());
 		}
-		addForwardEdge(node, base.getSuccessor());
 	}
 
 	@Override
