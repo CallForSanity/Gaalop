@@ -234,6 +234,72 @@ public static class OutputSet {
 			outputNames.add("var");
 			compare(fileName, outputMVs);
 		}
+		
+		/**
+		 * Tests the loop_unroll_inner.clu example.
+		 * 
+		 * @throws Exception
+		 */
+		@Test
+		public void loopUnrollInner() throws Exception {
+			String fileName = getClass().getResource("loop_unroll_inner.clu").getFile();
+			generateInputValue("x");
+			generateInputValue("y");
+			generateInputValue("z");
+			generateInputValue("a");
+			generateInputValue("b");
+			generateInputValue("c");
+			inputValues.put("unknown", 1.0f);
+			
+			int outputMVs = 2; // val, var
+			outputNames.add("val");
+			outputNames.add("var");
+			compare(fileName, outputMVs);
+		}
+		
+		/**
+		 * Tests the loop_unroll_outer.clu example.
+		 * 
+		 * @throws Exception
+		 */
+		@Test
+		public void loopUnrollOuter() throws Exception {
+			String fileName = getClass().getResource("loop_unroll_outer.clu").getFile();
+			generateInputValue("x");
+			generateInputValue("y");
+			generateInputValue("z");
+			generateInputValue("a");
+			generateInputValue("b");
+			generateInputValue("c");
+			inputValues.put("unknown", 1.0f);
+			
+			int outputMVs = 2; // val, var
+			outputNames.add("val");
+			outputNames.add("var");
+			compare(fileName, outputMVs);
+		}
+		
+		/**
+		 * Tests the loop_unroll_both.clu example.
+		 * 
+		 * @throws Exception
+		 */
+		@Test
+		public void loopUnrollBoth() throws Exception {
+			String fileName = getClass().getResource("loop_unroll_both.clu").getFile();
+			generateInputValue("x");
+			generateInputValue("y");
+			generateInputValue("z");
+			generateInputValue("a");
+			generateInputValue("b");
+			generateInputValue("c");
+			inputValues.put("unknown", 1.0f);
+			
+			int outputMVs = 2; // val, var
+			outputNames.add("val");
+			outputNames.add("var");
+			compare(fileName, outputMVs);
+		}
 
 		/**
 		 * Tests the Nested_If.clu example.

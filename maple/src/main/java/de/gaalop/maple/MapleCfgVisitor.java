@@ -131,6 +131,7 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 		private Set<Variable> optVariables = new HashSet<Variable>();
 		private Stack<Block> hierarchy = new Stack<Block>();
 		private Map<Variable, List<Block>> currentStack = new HashMap<Variable, List<Block>>();
+		private boolean loopMode = false;
 
 		public CheckDependencyVisitor() {
 		}
@@ -153,18 +154,25 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 		
 		@Override
 		public void visit(LoopNode node) {
+			boolean oldLoopMode = loopMode;
+			loopMode = true;
 			hierarchy.push(new Block(node));
 			node.getBody().accept(this);
 			hierarchy.pop();
+			loopMode = oldLoopMode;
 			
 			node.getSuccessor().accept(this);
 		}
 		
 		@Override
 		public void visit(AssignmentNode node) {
-			checkVariables(node.getValue());
+			Variable variable = node.getVariable();
+			Set<Variable> usedVariables = checkVariables(node.getValue());
+			boolean recursive = usedVariables.contains(variable);
+			if (loopMode && recursive) {
+				optVariables.add(variable);
+			}
 			if (!hierarchy.empty()) {
-				Variable variable = node.getVariable();
 				currentStack.put(variable, new ArrayList<Block>(hierarchy));
 			}
 			node.getSuccessor().accept(this);
@@ -183,13 +191,14 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 			node.getSuccessor().accept(this);
 		}
 
-		private void checkVariables(Expression expression) {
+		private Set<Variable> checkVariables(Expression expression) {
 			de.gaalop.UsedVariablesVisitor usedVariables = new de.gaalop.UsedVariablesVisitor();
 			expression.accept(usedVariables);
 			// check for common hierarchy
 			for (Variable v : usedVariables.getVariables()) {
 				checkVariable(v);
 			}
+			return usedVariables.getVariables();
 		}
 
 		private void checkVariable(Variable v) {
@@ -337,43 +346,6 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 
 	private class UnrollLoopsVisitor extends EmptyControlFlowVisitor {
 
-		/**
-		 * Removes break statements from the given node.
-		 * 
-		 * @author Christian Schwinn
-		 * 
-		 */
-		private class RemoveBreakVisitor extends EmptyControlFlowVisitor {
-
-			private final IfThenElseNode root;
-
-			RemoveBreakVisitor(IfThenElseNode root) {
-				this.root = root;
-			}
-
-			@Override
-			public void visit(StartNode node) {
-				throw new IllegalStateException("This visitor is allowed to be called only on IfThenElseNodes");
-			}
-
-			@Override
-			public void visit(IfThenElseNode node) {
-				node.getPositive().accept(this);
-				node.getNegative().accept(this);
-				if (node != root) {
-					node.getSuccessor().accept(this);
-				}
-			}
-
-			@Override
-			public void visit(BreakNode node) {
-				Node successor = node.getSuccessor();
-				node.getGraph().removeNode(node);
-				successor.accept(this);
-			}
-
-		}
-
 		private LoopNode root;
 		SequentialNode firstNewNode;
 		boolean showWarning;
@@ -443,8 +415,6 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 			if (!(endOfLoop || startOfLoop)) {
 				showWarning = true;
 			}
-			RemoveBreakVisitor visitor = new RemoveBreakVisitor(newNode);
-			newNode.accept(visitor);
 			node.getSuccessor().accept(this);
 		}
 
@@ -667,8 +637,7 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 			}
 		}
 		
-		boolean recursive = usedVariables.getVariables().contains(variable);
-		boolean optimize = optVariables.contains(variable) || (loopMode && recursive);
+		boolean optimize = optVariables.contains(variable);
 		
 		if (blockDepth > 0) {
 			if (!optimize && successor instanceof StoreResultNode) {
@@ -1085,7 +1054,11 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 
 	@Override
 	public void visit(BreakNode node) {
-		// nothing to do
+		Node successor = node.getSuccessor();
+		if (!loopMode) {
+			node.getGraph().removeNode(node);
+		}
+		successor.accept(this);
 	}
 
 	@Override
