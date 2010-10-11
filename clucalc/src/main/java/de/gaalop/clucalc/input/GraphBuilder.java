@@ -256,11 +256,6 @@ public final class GraphBuilder {
 					+ "' cannot be used in Maple because of prefix 're' which is protected."
 					+ " Please choose another name.");
 		}
-		if (variable.getName().startsWith("condition_")) {
-			throw new IllegalArgumentException("Variable '" + variable 
-					+ "' cannot be used because of prefix 'condition_' which is used for conditional statements."
-					+ " Please choose another name.");
-		}
 	}
 
 	/**
