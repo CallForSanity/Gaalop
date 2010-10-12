@@ -49,6 +49,7 @@ public class MapleStrategy implements OptimizationStrategy {
 			log.debug("Inlining macros");
 			InlineMacrosVisitor visitor = new InlineMacrosVisitor();
 			graph.accept(visitor);
+			log.debug("Graph after macro inlining:\n" + graph.prettyPrint());
 		} catch (Exception e) {
 			throw new OptimizationException("Unable to inline macros:\n" + e.getMessage(), e, graph);
 		}
@@ -61,7 +62,6 @@ public class MapleStrategy implements OptimizationStrategy {
 		}
 		try {
 			log.debug("Simplifying graph using maple.");
-			log.debug("Graph:\n" + graph.prettyPrint());
 			simplifier.simplify(graph);
 		} catch (Exception e) {
 			throw new OptimizationException("Unable to simplify using maple:\n" + e.getMessage(), e, graph);
@@ -83,5 +83,6 @@ public class MapleStrategy implements OptimizationStrategy {
 				throw new OptimizationException("Unable to eliminate constants:\n" + e.getMessage(), e, graph);
 			}
 		}
+		log.debug("Graph after optimizations:\n" + graph.prettyPrint());
 	}
 }

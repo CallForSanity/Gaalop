@@ -57,6 +57,7 @@ public class InlineMacrosVisitor extends EmptyExpressionVisitor implements Contr
 			for (Variable v : visitor.getVariables()) {
 				if (graph.containsLocalVariable(v.getName()) && !v.globalAccess()) {
 					String unique = newNames.get(v.getName());
+					usedNames.add(unique);
 					Variable newVariable = new Variable(unique);
 					e.replaceExpression(v, newVariable);
 					newExpression = e;
@@ -147,6 +148,7 @@ public class InlineMacrosVisitor extends EmptyExpressionVisitor implements Contr
 	}
 
 	private Set<Node> visitedNodes = new HashSet<Node>();
+	Set<String> usedNames = new HashSet<String>();
 	Map<String, List<Expression>> currentArguments = new HashMap<String, List<Expression>>();
 	List<Variable> newVariables = new ArrayList<Variable>();
 	ControlFlowGraph graph;
@@ -154,8 +156,9 @@ public class InlineMacrosVisitor extends EmptyExpressionVisitor implements Contr
 	private String generateUniqueName(String original) {
 		String unique = original;
 		int i = 1;
-		while (graph.containsLocalVariable(unique)) {
-			unique = original + "__" + i;
+		while (graph.containsLocalVariable(unique) || usedNames.contains(unique)) {
+			// attention: must not collide with names of variables for multivector components in MapleCfgVisitor
+			unique = original + "_" + i + "_";
 			i++;
 		}
 		return unique;
@@ -292,8 +295,9 @@ public class InlineMacrosVisitor extends EmptyExpressionVisitor implements Contr
 			}
 			Expression returnValue = macro.getReturnValue().copy();
 			replacer.replaceInExpression(returnValue);
-			Variable retVal = new Variable(generateUniqueName("rslt"));
-			graph.addLocalVariable(retVal);
+			String unique = generateUniqueName("rslt");
+			Variable retVal = new Variable(unique);
+			usedNames.add(unique);
 			AssignmentNode result = new AssignmentNode(graph, retVal, returnValue);
 			UpdateMacroCallVisitor updater = new UpdateMacroCallVisitor(result);
 			result.getValue().accept(updater);

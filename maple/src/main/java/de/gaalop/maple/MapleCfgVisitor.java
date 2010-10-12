@@ -55,6 +55,28 @@ import de.gaalop.maple.parser.MapleTransformer;
  */
 public class MapleCfgVisitor implements ControlFlowVisitor {
 	
+	private class RemoveUnusedAssignmentsVisitor extends EmptyControlFlowVisitor {
+		
+		private final Set<String> unusedNames = new HashSet<String>();
+		
+		public RemoveUnusedAssignmentsVisitor(Set<MultivectorComponent> components) {
+			for (MultivectorComponent comp : components) {
+				unusedNames.add(getTempVarName(comp));
+			}
+		}
+				
+		@Override
+		public void visit(AssignmentNode node) {
+			Node successor = node.getSuccessor();
+			String name = node.getVariable().getName();
+			if (unusedNames.contains(name)) {
+				node.getGraph().removeNode(node);
+			}
+			successor.accept(this);
+		}
+		
+	}
+	
 	private static class RemoveEmptyNodesVisitor extends EmptyControlFlowVisitor {
 		
 		public RemoveEmptyNodesVisitor() {
@@ -300,11 +322,11 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 	}
 
 
-	private class InitializeRecursiveVariablesVisitor extends EmptyControlFlowVisitor {
+	private class InitializeVariablesInLoopVisitor extends EmptyControlFlowVisitor {
 
 		private final LoopNode root;
 
-		InitializeRecursiveVariablesVisitor(LoopNode node) {
+		InitializeVariablesInLoopVisitor(LoopNode node) {
 			this.root = node;
 		}
 
@@ -314,22 +336,15 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 		}
 
 		@Override
-		public void visit(AssignmentNode node) {
+		public void visit(AssignmentNode node) { 
 			// optimize current value of variable and add variables for coefficients in front of block
 			Variable variable = node.getVariable();
-			Expression value = node.getValue();
-			
-			UsedVariablesVisitor visitor = new UsedVariablesVisitor();
-			value.accept(visitor);
-			if (visitor.getVariables().contains(variable) || optVariables.contains(variable)) {
-				optVariables.add(variable);
-				// optimize current value of variable and add variables for coefficients in front of block
-				initializeCoefficients(variable);
-				// optimize value in a temporary variable and add missing initializations
-				initializeMissingCoefficients(node);
-				// reset Maple binding with linear combination of variables for coefficients
-				resetVariable(variable);				
-			}			
+			// optimize current value of variable and add variables for coefficients in front of block
+			initializeCoefficients(variable);
+			// optimize value in a temporary variable and add missing initializations
+			initializeMissingCoefficients(node);
+			// reset Maple binding with linear combination of variables for coefficients
+			resetVariable(variable);				
 
 			node.getSuccessor().accept(this);
 		}
@@ -444,7 +459,7 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 			Expression right = node.getRight();
 
 			Subtraction lhs = ExpressionFactory.subtract(left.copy(), right.copy());
-			Variable condition = new Variable("condition_" + conditionSuffix++);
+			Variable condition = new Variable(CONDITION_PREFIX + conditionSuffix++);
 			Expression newRight = new FloatConstant(0);
 			try {
 				String assignment = generateCode(condition) + ":=" + generateCode(lhs) + ";";
@@ -501,8 +516,8 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 			}
 
 			Subtraction difference = ExpressionFactory.subtract(left.copy(), right.copy());
-			Variable lVar = new Variable("condition_" + conditionSuffix++);
-			Variable rVar = new Variable("condition_" + conditionSuffix++);
+			Variable lVar = new Variable(CONDITION_PREFIX + conditionSuffix++);
+			Variable rVar = new Variable(CONDITION_PREFIX + conditionSuffix++);
 			Variable diff = new Variable("__temp__");
 
 			try {
@@ -579,6 +594,7 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 
 	private Log log = LogFactory.getLog(MapleCfgVisitor.class);
 
+	static final String CONDITION_PREFIX = "condition_";
 	private static final String suffix = "_opt";
 	static int conditionSuffix = 0;
 
@@ -597,6 +613,7 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 	Map<Variable, Set<MultivectorComponent>> initializedVariables = new HashMap<Variable, Set<MultivectorComponent>>();
 	private final List<Variable> unknownVariables = new ArrayList<Variable>();
 	final Set<Variable> optVariables = new HashSet<Variable>();
+	private final Set<MultivectorComponent> unusedInitializations = new HashSet<MultivectorComponent>();
 	
 	private Map<Variable, Variable> newNames = new HashMap<Variable, Variable>();
 
@@ -714,6 +731,7 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 			AssignmentNode initialization = new AssignmentNode(graph, tempVar, value);
 			if (!tempVar.equals(value)) {
 				currentRoot.insertBefore(initialization);
+				checkUnusedInitialization(component);
 			}
 			initCoefficients.add(component);
 		}
@@ -737,6 +755,7 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 				AssignmentNode initialization = new AssignmentNode(graph, tempVar, new FloatConstant(0));
 				currentRoot.insertBefore(initialization);
 				initCoefficients.add(originalComp);
+				checkUnusedInitialization(originalComp);
 			}
 		}
 	}
@@ -840,11 +859,12 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 		return visitor.getCode();
 	}
 
-	private String getTempVarName(MultivectorComponent component) {
+	String getTempVarName(MultivectorComponent component) {
 		return getTempVarName(component.getName(), component.getBladeIndex());
 	}
 
 	String getTempVarName(String variable, int index) {
+		// attention: must not collide with renamed variables from macro inlining 
 		return variable.replace('e', 'E').replace(suffix, "") + "__" + index;
 	}
 	
@@ -855,7 +875,15 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 	 * @return variable including __tmp__
 	 */
 	private Variable generateTempVariable(Variable v) {
-		return new Variable(v + "__tmp__" + tempSuffix++);
+		Variable newVariable = new Variable(v + "__tmp__" + tempSuffix++);
+		return newVariable;
+	}
+	
+	private void checkUnusedInitialization(MultivectorComponent component) {
+		String variableName = component.getName().replace(suffix, "");
+		if (!optVariables.contains(new Variable(variableName)) && !variableName.startsWith(CONDITION_PREFIX)) {
+			unusedInitializations.add(component);
+		}
 	}
 
 	@Override
@@ -945,9 +973,6 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 
 	@Override
 	public void visit(IfThenElseNode node) {
-		if (blockDepth == 0) {
-			currentRoot = node;
-		}
 		Expression condition = node.getCondition();
 		
 		UsedVariablesVisitor usedVariables = new UsedVariablesVisitor();
@@ -998,6 +1023,10 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 	}
 
 	private void handleUnknownBranches(IfThenElseNode node, Expression condition) {
+		if (blockDepth == 0) {
+			currentRoot = node;
+		}
+		
 		ReorderConditionVisitor reorder = new ReorderConditionVisitor(node);
 		condition.accept(reorder);
 
@@ -1011,10 +1040,10 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 		// restore previous mapping for variables
 		newNames = currentMapping;
 		blockDepth--;
-
+		
 		if (blockDepth == 0) {
 			initializedVariables.clear();
-		}
+		}		
 	}
 
 	@Override
@@ -1032,7 +1061,8 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 			if (blockDepth == 0) {
 				currentRoot = node;
 			}
-			InitializeRecursiveVariablesVisitor visitor = new InitializeRecursiveVariablesVisitor(node);
+			
+			InitializeVariablesInLoopVisitor visitor = new InitializeVariablesInLoopVisitor(node);
 			node.accept(visitor);
 			
 			blockDepth++;
@@ -1044,7 +1074,7 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 			newNames = currentMapping;
 			loopMode = oldMode;
 			blockDepth--;
-			
+						
 			if (blockDepth == 0) {
 				initializedVariables.clear();
 			}
@@ -1068,8 +1098,10 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 
 	@Override
 	public void visit(EndNode endNode) {
-		RemoveEmptyNodesVisitor visitor = new RemoveEmptyNodesVisitor();
-		graph.accept(visitor);
+		RemoveUnusedAssignmentsVisitor v1 = new RemoveUnusedAssignmentsVisitor(unusedInitializations);
+		graph.accept(v1);
+		RemoveEmptyNodesVisitor v2 = new RemoveEmptyNodesVisitor();
+		graph.accept(v2);
 	}
 
 	@Override

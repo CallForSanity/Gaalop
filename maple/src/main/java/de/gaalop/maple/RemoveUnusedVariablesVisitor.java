@@ -28,6 +28,7 @@ public class RemoveUnusedVariablesVisitor implements ControlFlowVisitor, Express
 	
 	@Override
 	public void visit(ExpressionStatement node) {
+		node.getExpression().accept(this);
 		node.getSuccessor().accept(this);
 	}
 
@@ -39,6 +40,7 @@ public class RemoveUnusedVariablesVisitor implements ControlFlowVisitor, Express
 
 	@Override
 	public void visit(IfThenElseNode node) {
+		node.getCondition().accept(this);
 		node.getPositive().accept(this);
 		node.getNegative().accept(this);
 		node.getSuccessor().accept(this);

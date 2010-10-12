@@ -32,7 +32,7 @@ public enum CluCalcCodeParser implements CodeParser {
 
     @Override
     public ControlFlowGraph parseFile(InputFile input) throws CodeParserException {
-        log.debug("Processing " + input.getName() + ", Content: " + input.getContent());
+        log.debug("Processing " + input.getName() + ", Content: \n" + input.getContent());
 
         ControlFlowGraph graph;
 

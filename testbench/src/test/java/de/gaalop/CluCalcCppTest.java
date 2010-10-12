@@ -317,6 +317,7 @@ public static class OutputSet {
 			generateInputValue("p1");
 			generateInputValue("p2");
 			generateInputValue("p3");
+			inputValues.put("z", 5.0f);
 
 			int outputMVs = 1; // rslt
 			outputNames.add("rslt");
@@ -606,9 +607,19 @@ public static class OutputSet {
 	
 	private static double getEpsilon(double d) {
         Locale.setDefault(Locale.US);
+        DecimalFormatSymbols format = DecimalFormatSymbols.getInstance();
         String string = Double.toString(d);
-		int decimals = string.substring(string.lastIndexOf(DecimalFormatSymbols.getInstance().getDecimalSeparator())+1).length();
-		return Math.pow(10, -decimals);
+        int pointIndex = string.indexOf(format.getDecimalSeparator());
+        int indexE = string.lastIndexOf(format.getExponentSeparator());
+        int exponent = 1;
+        if (indexE != -1) {
+        	exponent = Integer.parseInt(string.substring(indexE + 1));
+        }
+        int end = indexE == -1 ? string.length() : indexE;
+        String decimalPlaces = string.substring(pointIndex + 1, end);
+		int decimals = decimalPlaces.length();
+		
+		return Math.pow(10, exponent-decimals);
 	}
 
 }
