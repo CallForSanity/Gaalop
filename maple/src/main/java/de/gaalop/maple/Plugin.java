@@ -24,7 +24,7 @@ public class Plugin extends Observable implements OptimizationStrategyPlugin {
 	private static Log log = LogFactory.getLog(Plugin.class);
 
 	private static MapleSimplifier simplifier = null;
-	
+
 	private int progress, max;
 
 	/** This is a configuration property and should not be modified. */
@@ -34,7 +34,7 @@ public class Plugin extends Observable implements OptimizationStrategyPlugin {
 	/** This is a configuration property and should not be modified. */
 	@ConfigurationProperty(type = Type.TEXT)
 	public String mapleJavaPath;
-	
+
 	@ConfigurationProperty(type = Type.BOOLEAN)
 	public boolean constantFolding = false;
 
@@ -122,18 +122,18 @@ public class Plugin extends Observable implements OptimizationStrategyPlugin {
 	public void setMapleJavaPath(String mapleJavaPath) {
 		this.mapleJavaPath = mapleJavaPath;
 	}
-	
+
 	/**
 	 * Needed for BeanUtils to write configuration file.
-	 *
+	 * 
 	 */
 	public boolean getConstantFolding() {
 		return constantFolding;
 	}
-	
+
 	/**
 	 * Needed for BeanUtils to read configuration file.
-	 *
+	 * 
 	 */
 	public void setConstantFolding(boolean constantFolding) {
 		this.constantFolding = constantFolding;
@@ -158,7 +158,7 @@ public class Plugin extends Observable implements OptimizationStrategyPlugin {
 	public Image getIcon() {
 		return null; // To change body of implemented methods use File | Settings | File Templates.
 	}
-	
+
 	void notifyMaximum(int max) {
 		this.max = max;
 		setChanged();
@@ -168,11 +168,9 @@ public class Plugin extends Observable implements OptimizationStrategyPlugin {
 	void notifyProgress() {
 		progress++;
 		int percent = progress * 100 / max;
-		if (percent <= 100) {
-			System.out.println("Optimizing... " + percent + "%");
-			setChanged();
-			notifyObservers(new Notifications.Progress());
-		}
+		System.out.println("Optimizing... " + percent + "%");
+		setChanged();
+		notifyObservers(new Notifications.Progress());
 	}
 
 	void notifyStart() {

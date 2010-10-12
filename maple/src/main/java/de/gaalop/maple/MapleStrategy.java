@@ -1,10 +1,13 @@
 package de.gaalop.maple;
 
+import java.util.Stack;
+
 import de.gaalop.OptimizationException;
 import de.gaalop.OptimizationStrategy;
 import de.gaalop.cfg.AssignmentNode;
 import de.gaalop.cfg.ControlFlowGraph;
 import de.gaalop.cfg.EmptyControlFlowVisitor;
+import de.gaalop.cfg.LoopNode;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -19,14 +22,43 @@ public class MapleStrategy implements OptimizationStrategy {
 	
 	private static class AssignmentCounter extends EmptyControlFlowVisitor {
 		
-		protected int assignments;
+		protected int totalAssignments;
+		private int assignmentsInLoop;
+		private Stack<LoopNode> loops = new Stack<LoopNode>();
 		
 		AssignmentCounter() {
 		}
 
 		@Override
 		public void visit(AssignmentNode node) {
-			assignments++;
+			if (loops.isEmpty()) {
+				totalAssignments++;
+			} else {
+				assignmentsInLoop++;
+			}
+			node.getSuccessor().accept(this);
+		}
+		
+		@Override
+		public void visit(LoopNode node) {
+			int iterations = node.getIterations();
+			boolean unroll = iterations > 0;
+			int previousNumber = assignmentsInLoop;
+			if (unroll) {
+				assignmentsInLoop = 0;
+				loops.push(node);
+			}
+			node.getBody().accept(this);
+			if (unroll) {
+				loops.pop();
+				assignmentsInLoop *= iterations;
+				if (loops.isEmpty()) {
+					totalAssignments += assignmentsInLoop;
+				} else {
+					previousNumber += assignmentsInLoop;
+				}
+				assignmentsInLoop = previousNumber;
+			}
 			node.getSuccessor().accept(this);
 		}
 		
@@ -56,7 +88,7 @@ public class MapleStrategy implements OptimizationStrategy {
 		try {
 			AssignmentCounter counter = new AssignmentCounter();
 			graph.accept(counter);
-			simplifier.notifyMaximum(counter.assignments);
+			simplifier.notifyMaximum(counter.totalAssignments);
 		} catch (Exception e) {
 			throw new OptimizationException("Unable to count assignments in graph:\n" + e.getMessage(), graph);
 		}
