@@ -71,6 +71,7 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 			String name = node.getVariable().getName();
 			if (unusedNames.contains(name)) {
 				node.getGraph().removeNode(node);
+				node.getGraph().removeScalarVariable(name);
 			}
 			successor.accept(this);
 		}
