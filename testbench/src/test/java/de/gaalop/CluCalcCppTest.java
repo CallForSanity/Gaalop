@@ -38,42 +38,39 @@ import static org.junit.Assert.*;
  * 
  */
 @RunWith(Suite.class)
-@SuiteClasses(value = { 
-		FileTests.class, 
-		ErrorTests.class
-})
+@SuiteClasses(value = { FileTests.class, ErrorTests.class })
 public class CluCalcCppTest {
 
-public static class OutputSet {
-		
+	public static class OutputSet {
+
 		private double[] cppValues;
 		private double[] cluOriginalValues;
 		private double[] cluOptimizedValues;
-		
+
 		public void setCPP(String result) {
 			cppValues = parseString(result);
 		}
-		
+
 		public void setCLUOriginal(String result) {
 			cluOriginalValues = parseString(result);
 		}
-		
+
 		public void setCLUOptimized(String result) {
 			cluOptimizedValues = parseString(result);
 		}
-		
+
 		public double[] getCppValues() {
 			return cppValues;
 		}
-		
+
 		public double[] getCluOriginalValues() {
 			return cluOriginalValues;
 		}
-		
+
 		public double[] getCluOptimizedValues() {
 			return cluOptimizedValues;
 		}
-		
+
 		private double[] parseString(String string) {
 			ANTLRStringStream input = new ANTLRStringStream(string);
 			TestbenchLexer lexer = new TestbenchLexer(input);
@@ -88,17 +85,19 @@ public static class OutputSet {
 			throw new IllegalStateException("Line " + string + " could not be parsed.");
 		}
 	}
-	
+
 	public static class FileTests {
-		
+
 		private Random r = new Random(System.currentTimeMillis());
-		
+
 		private void generateInputValue(String variable) {
 			float nextFloat = r.nextFloat();
-			System.out.printf("Using %f for input variable %s\n", nextFloat, variable);
+			if (DEBUG) {
+				System.out.printf("Using %f for input variable %s\n", nextFloat, variable);
+			}
 			inputValues.put(variable, nextFloat);
 		}
-		
+
 		@Before
 		public void init() {
 			r.setSeed(System.currentTimeMillis());
@@ -129,7 +128,8 @@ public static class OutputSet {
 		/**
 		 * Tests the inverse kinematics algorithm.<br>
 		 * <br>
-		 * Note: this test case does not always succeed because of the use of random variables without auxiliary conditions.
+		 * Note: this test case does not always succeed because of the use of random variables without auxiliary
+		 * conditions.
 		 * 
 		 * @throws IOException
 		 */
@@ -167,7 +167,7 @@ public static class OutputSet {
 			outputNames.add("x");
 			compare(fileName, outputMVs);
 		}
-		
+
 		/**
 		 * Tests the loops.clu example.
 		 * 
@@ -177,12 +177,12 @@ public static class OutputSet {
 		public void loops() throws Exception {
 			String fileName = getClass().getResource("loops.clu").getFile();
 			// no input variables for this test
-			
+
 			int outputMVs = 1; // x
 			outputNames.add("x");
 			compare(fileName, outputMVs);
 		}
-		
+
 		/**
 		 * Tests the loop_counter.clu example.
 		 * 
@@ -192,12 +192,12 @@ public static class OutputSet {
 		public void loopCounter() throws Exception {
 			String fileName = getClass().getResource("loop_counter.clu").getFile();
 			// no input variables for this test
-			
+
 			int outputMVs = 1; // x
 			outputNames.add("x");
 			compare(fileName, outputMVs);
 		}
-		
+
 		/**
 		 * Tests the loop_in_branch.clu example.
 		 * 
@@ -207,7 +207,7 @@ public static class OutputSet {
 		public void loopInBranch() throws Exception {
 			String fileName = getClass().getResource("loop_in_branch.clu").getFile();
 			// no input variables for this test
-			
+
 			int outputMVs = 1; // x
 			outputNames.add("x");
 			compare(fileName, outputMVs);
@@ -234,7 +234,7 @@ public static class OutputSet {
 			outputNames.add("var");
 			compare(fileName, outputMVs);
 		}
-		
+
 		/**
 		 * Tests the loop_unroll_inner.clu example.
 		 * 
@@ -250,13 +250,13 @@ public static class OutputSet {
 			generateInputValue("b");
 			generateInputValue("c");
 			inputValues.put("unknown", 1.0f);
-			
+
 			int outputMVs = 2; // val, var
 			outputNames.add("val");
 			outputNames.add("var");
 			compare(fileName, outputMVs);
 		}
-		
+
 		/**
 		 * Tests the loop_unroll_outer.clu example.
 		 * 
@@ -272,13 +272,13 @@ public static class OutputSet {
 			generateInputValue("b");
 			generateInputValue("c");
 			inputValues.put("unknown", 1.0f);
-			
+
 			int outputMVs = 2; // val, var
 			outputNames.add("val");
 			outputNames.add("var");
 			compare(fileName, outputMVs);
 		}
-		
+
 		/**
 		 * Tests the loop_unroll_both.clu example.
 		 * 
@@ -294,7 +294,7 @@ public static class OutputSet {
 			generateInputValue("b");
 			generateInputValue("c");
 			inputValues.put("unknown", 1.0f);
-			
+
 			int outputMVs = 2; // val, var
 			outputNames.add("val");
 			outputNames.add("var");
@@ -339,7 +339,7 @@ public static class OutputSet {
 			outputNames.add("rslt");
 			compare(fileName, outputMVs);
 		}
-		
+
 		/**
 		 * Tests the equality_condition.clu example.
 		 * 
@@ -353,12 +353,12 @@ public static class OutputSet {
 			generateInputValue("c");
 			generateInputValue("j");
 			generateInputValue("k");
-			
+
 			int outputMVs = 1; // x
 			outputNames.add("x");
-			compare(fileName, outputMVs);			
+			compare(fileName, outputMVs);
 		}
-		
+
 		/**
 		 * Tests the unknown_if.clu example for +1 and -1.
 		 * 
@@ -368,16 +368,15 @@ public static class OutputSet {
 		public void unknownIf() throws Exception {
 			String fileName = getClass().getResource("unknown_if.clu").getFile();
 			int outputMVs = 1;
-			
+
 			inputValues.put("unknown", 1.0f); // r
 			outputNames.add("r");
-			compare(fileName, outputMVs);			
-			
+			compare(fileName, outputMVs);
+
 			inputValues.put("unknown", -1.0f); // r
-			outputNames.add("r");
-			compare(fileName, outputMVs);			
+			compare(fileName, outputMVs);
 		}
-		
+
 		/**
 		 * Tests the unknown_condition.clu example.
 		 * 
@@ -387,6 +386,7 @@ public static class OutputSet {
 		public void unknownCondition() throws Exception {
 			String fileName = getClass().getResource("unknown_condition.clu").getFile();
 			int outputMVs = 1;
+			outputNames.add("a");
 			compare(fileName, outputMVs);
 		}
 
@@ -419,7 +419,7 @@ public static class OutputSet {
 			outputNames.add("testFoo4");
 			compare(fileName, outputMVs);
 		}
-		
+
 		/**
 		 * Tests the if_reuse_opt.clu example.
 		 * 
@@ -437,16 +437,16 @@ public static class OutputSet {
 			generateInputValue("phi");
 			inputValues.put("cond1", 1.0f);
 			inputValues.put("cond2", 1.0f);
-			
+
 			int outputMVs = 1;
 			outputNames.add("testX");
 			compare(fileName, outputMVs);
 		}
-		
+
 	}
 
 	public static class ErrorTests {
-			
+
 		private static final String RECURSIVE_X = "The Variable x cannot be a local variable and an input variable at the same time.";
 		private static final String NO_OPT = "There are no lines marked for optimization ('?')";
 
@@ -486,7 +486,7 @@ public static class OutputSet {
 				throw e;
 			}
 		}
-		
+
 		/**
 		 * Tests if a code parser exception is thrown for uninitialized variables in recursive assignments as expected.
 		 * 
@@ -496,25 +496,27 @@ public static class OutputSet {
 		public void uninitializedVariable() throws Exception {
 			String fileName = getClass().getResource("uninitializedVariable.clu").getFile();
 			// no input variables for this test
-						
+
 			try {
-				compare(fileName, 0);	
+				compare(fileName, 0);
 			} catch (CodeParserException e) {
 				assertEquals(RECURSIVE_X, e.getMessage());
 				throw e;
 			}
 		}
-		
+
 	}
 
 	final static String PATH = "C:/Users/Christian/Downloads/Testbench/";
 	final static String INCLUDE = "C:/Program Files (x86)/CLUViz/v6_1/SDK/include";
 	final static String LIBPATH = "C:/Program Files (x86)/CLUViz/v6_1/SDK/lib";
 
+	public static boolean DEBUG = true;
+
 	static TestbenchGenerator generator;
 	static Map<String, Float> inputValues = new HashMap<String, Float>();
 	static List<String> outputNames = new ArrayList<String>();
-		
+
 	static void init() {
 		inputValues.clear();
 		outputNames.clear();
@@ -565,21 +567,25 @@ public static class OutputSet {
 
 	private static String printNextLine(Scanner scanner) {
 		String line = scanner.nextLine();
-		System.out.println(line);
+		if (DEBUG) {
+			System.out.println(line);
+		}
 		return line;
 	}
 
 	static void compare(String fileName, int numVectors) throws Exception {
 		generator = new TestbenchGenerator(fileName, PATH, inputValues);
-		doCompare(numVectors);		
+		doCompare(numVectors);
 	}
-	
+
 	static void compare(String fileName, String contents, int numVectors) throws Exception {
 		generator = new TestbenchGenerator(fileName, contents, PATH, inputValues);
-		doCompare(numVectors);		
+		doCompare(numVectors);
 	}
-	
+
 	private static void doCompare(int numVectors) throws Exception {
+		assertEquals("Numbers of output multivectors and output names do not match. Forgot to add output names?",
+				numVectors, outputNames.size());
 		File exe = compile();
 		Scanner scanner = run(exe);
 		List<OutputSet> results = parseResult(scanner, numVectors);
@@ -589,37 +595,43 @@ public static class OutputSet {
 	private static void compareMultivectors(List<OutputSet> actualList) {
 		for (int i = 0; i < actualList.size(); i++) {
 			OutputSet actual = actualList.get(i);
+			String outputName = outputNames.get(i);
 			for (int element = 0; element < 32; element++) {
 				double cluOriginal = actual.getCluOriginalValues()[element];
 				double cluOptimized = actual.getCluOptimizedValues()[element];
 				double cpp = actual.getCppValues()[element];
 				double epsilon = getEpsilon(cluOriginal);
 				try {
+					boolean allZero = (cluOriginal + cluOptimized + cpp) == 0;
+					if (DEBUG && !allZero) {
+						System.out.printf("comparing %s[%d]: %f\t%f\t%f\n", outputName, element, cluOriginal,
+								cluOptimized, cpp);
+					}
 					assertEquals(cluOriginal, cluOptimized, epsilon);
 					assertEquals(cluOriginal, cpp, epsilon);
 				} catch (AssertionError e) {
-					System.err.printf("Unequal coefficient at index %d for variable %s\n", element, outputNames.get(i));
+					System.err.printf("Unequal coefficient at index %d for variable %s\n", element, outputName);
 					throw e;
 				}
 			}
 		}
 	}
-	
+
 	private static double getEpsilon(double d) {
-        Locale.setDefault(Locale.US);
-        DecimalFormatSymbols format = DecimalFormatSymbols.getInstance();
-        String string = Double.toString(d);
-        int pointIndex = string.indexOf(format.getDecimalSeparator());
-        int indexE = string.lastIndexOf(format.getExponentSeparator());
-        int exponent = 1;
-        if (indexE != -1) {
-        	exponent = Integer.parseInt(string.substring(indexE + 1));
-        }
-        int end = indexE == -1 ? string.length() : indexE;
-        String decimalPlaces = string.substring(pointIndex + 1, end);
+		Locale.setDefault(Locale.US);
+		DecimalFormatSymbols format = DecimalFormatSymbols.getInstance();
+		String string = Double.toString(d);
+		int pointIndex = string.indexOf(format.getDecimalSeparator());
+		int indexE = string.lastIndexOf(format.getExponentSeparator());
+		int exponent = 1;
+		if (indexE != -1) {
+			exponent = Integer.parseInt(string.substring(indexE + 1));
+		}
+		int end = indexE == -1 ? string.length() : indexE;
+		String decimalPlaces = string.substring(pointIndex + 1, end);
 		int decimals = decimalPlaces.length();
-		
-		return Math.pow(10, exponent-decimals);
+
+		return Math.pow(10, exponent - decimals);
 	}
 
 }
