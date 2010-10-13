@@ -54,17 +54,23 @@ import de.gaalop.maple.parser.MapleTransformer;
  * This visitor creates code for Maple.
  */
 public class MapleCfgVisitor implements ControlFlowVisitor {
-	
+
+	/**
+	 * This visitor removes assignments to unused helper variables, e.g. resulting from inlined macros or loops.
+	 * 
+	 * @author Christian Schwinn
+	 * 
+	 */
 	private class RemoveUnusedAssignmentsVisitor extends EmptyControlFlowVisitor {
-		
+
 		private final Set<String> unusedNames = new HashSet<String>();
-		
+
 		public RemoveUnusedAssignmentsVisitor(Set<MultivectorComponent> components) {
 			for (MultivectorComponent comp : components) {
 				unusedNames.add(getTempVarName(comp));
 			}
 		}
-				
+
 		@Override
 		public void visit(AssignmentNode node) {
 			Node successor = node.getSuccessor();
@@ -75,14 +81,21 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 			}
 			successor.accept(this);
 		}
-		
+
 	}
-	
+
+	/**
+	 * This visitor removes empty nodes like {@link IfThenElseNode} from the graph. During loop unrolling, conditional
+	 * statements could have become empty because of the removal of <code>break</code> statements.
+	 * 
+	 * @author Christian Schwinn
+	 * 
+	 */
 	private static class RemoveEmptyNodesVisitor extends EmptyControlFlowVisitor {
-		
+
 		public RemoveEmptyNodesVisitor() {
 		}
-		
+
 		@Override
 		public void visit(IfThenElseNode node) {
 			Node successor = node.getSuccessor();
@@ -96,17 +109,29 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 			}
 			successor.accept(this);
 		}
-		
+
 	}
-	
+
+	/**
+	 * This class checks variables for reuse after conditional statements or loops. The detection of these variables is
+	 * necessary to trigger a forced optimization for assignments within an {@link IfThenElseNode} or {@link LoopNode}.
+	 * For each assignment to a variable within a {@link Block} the current hierarchy of blocks is saved in a stack,
+	 * representing the current scope. If the assigned variable is reused later, the scope of the variable reuse is
+	 * compared with the last scope of the assignment. If the variable is identified to be reused, it is saved in the
+	 * list of reused variables, which can be queried by {@link CheckDependencyVisitor#getDependentVariables()} after
+	 * the graph has been traversed.
+	 * 
+	 * @author Christian Schwinn
+	 * 
+	 */
 	private static class CheckDependencyVisitor extends EmptyControlFlowVisitor {
-		
+
 		private enum Branch {
 			POSITIVE, NEGATIVE, LOOP
 		}
-		
+
 		private static class Block {
-			
+
 			private final SequentialNode node;
 			private final Branch branch;
 
@@ -114,20 +139,20 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 				this.node = node;
 				this.branch = branch;
 			}
-			
+
 			public Block(LoopNode node) {
 				this.node = node;
 				this.branch = Branch.LOOP;
 			}
-			
+
 			public SequentialNode getNode() {
 				return node;
 			}
-			
+
 			public Branch getBranch() {
 				return branch;
 			}
-			
+
 			@Override
 			public boolean equals(Object obj) {
 				if (obj instanceof Block) {
@@ -138,19 +163,19 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 				}
 				return false;
 			}
-			
+
 			@Override
 			public int hashCode() {
 				return node.hashCode() + branch.hashCode();
 			}
-			
+
 			@Override
 			public String toString() {
 				return "BLOCK[" + node + ":" + branch + "]";
 			}
-			
+
 		}
-		
+
 		private Set<Variable> optVariables = new HashSet<Variable>();
 		private Stack<Block> hierarchy = new Stack<Block>();
 		private Map<Variable, List<Block>> currentStack = new HashMap<Variable, List<Block>>();
@@ -158,11 +183,11 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 
 		public CheckDependencyVisitor() {
 		}
-		
+
 		public Set<Variable> getDependentVariables() {
 			return optVariables;
 		}
-		
+
 		@Override
 		public void visit(IfThenElseNode node) {
 			hierarchy.push(new Block(node, Branch.POSITIVE));
@@ -171,10 +196,10 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 			hierarchy.push(new Block(node, Branch.NEGATIVE));
 			node.getNegative().accept(this);
 			hierarchy.pop();
-			
+
 			node.getSuccessor().accept(this);
 		}
-		
+
 		@Override
 		public void visit(LoopNode node) {
 			boolean oldLoopMode = loopMode;
@@ -183,10 +208,10 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 			node.getBody().accept(this);
 			hierarchy.pop();
 			loopMode = oldLoopMode;
-			
+
 			node.getSuccessor().accept(this);
 		}
-		
+
 		@Override
 		public void visit(AssignmentNode node) {
 			Variable variable = node.getVariable();
@@ -200,14 +225,14 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 			}
 			node.getSuccessor().accept(this);
 		}
-		
+
 		@Override
 		public void visit(StoreResultNode node) {
 			Variable variable = node.getValue();
 			checkVariable(variable);
 			node.getSuccessor().accept(this);
 		}
-		
+
 		@Override
 		public void visit(ExpressionStatement node) {
 			checkVariables(node.getExpression());
@@ -229,7 +254,7 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 				optVariables.add(v);
 			}
 		}
-		
+
 		private boolean checkHierarchy(Variable v) {
 			List<Block> vStack = currentStack.get(v);
 			if (vStack == null) {
@@ -257,11 +282,12 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 			}
 			return false;
 		}
-		
+
 	}
-	
+
 	/**
-	 * Simple helper visitor used to inline parts of conditional statements.
+	 * Simple visitor used to inline the relevant branch of an if-statement. The other branch is cut off and the
+	 * original {@link IfThenElseNode} is removed from the graph.
 	 * 
 	 * @author Christian Schwinn
 	 * 
@@ -322,7 +348,19 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 
 	}
 
-
+	/**
+	 * This visitor has to be called before a loop is processed by {@link MapleCfgVisitor}. It makes sure that assigned
+	 * variables are initialized in front of the outermost loop. Although initialization is also performed in
+	 * {@link MapleCfgVisitor#visit(AssignmentNode)}, this step is required to make sure variables are initialized with
+	 * the full set of symbolic coefficients (linear combination) when they are reused within the loop. Otherwise, the
+	 * structure of multivectors could change in the loop and previous assignments would only "see" parts of the
+	 * non-zero coefficients. This is required because loops are executed more than one time and after the first
+	 * iteration multivectors could consist of more components than before. This visitor guarantees that all
+	 * coefficients are initialized right away.
+	 * 
+	 * @author Christian Schwinn
+	 * 
+	 */
 	private class InitializeVariablesInLoopVisitor extends EmptyControlFlowVisitor {
 
 		private final LoopNode root;
@@ -337,7 +375,7 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 		}
 
 		@Override
-		public void visit(AssignmentNode node) { 
+		public void visit(AssignmentNode node) {
 			// optimize current value of variable and add variables for coefficients in front of block
 			Variable variable = node.getVariable();
 			// optimize current value of variable and add variables for coefficients in front of block
@@ -345,7 +383,7 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 			// optimize value in a temporary variable and add missing initializations
 			initializeMissingCoefficients(node);
 			// reset Maple binding with linear combination of variables for coefficients
-			resetVariable(variable);				
+			resetVariable(variable);
 
 			node.getSuccessor().accept(this);
 		}
@@ -360,6 +398,17 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 
 	}
 
+	/**
+	 * This visitor performs loop unrolling on-the-fly, i.e. every time a loop is visited which has the iterations
+	 * property set to a value greater than zero. Unrolling means to copy the body of the loop as many times as
+	 * specified by {@link LoopNode#getIterations()} and removing the corresponding {@link LoopNode} from the graph.
+	 * Nested loops are not unrolled right away, instead they are copied like other statements, too. Unrolling of nested
+	 * loops is performed in the context of {@link MapleCfgVisitor#visit(LoopNode)} when the inner loop is processed for
+	 * optimization. The loop to be unrolled therefore has to be specified in the constructor.
+	 * 
+	 * @author Christian Schwinn
+	 * 
+	 */
 	private class UnrollLoopsVisitor extends EmptyControlFlowVisitor {
 
 		private LoopNode root;
@@ -442,7 +491,9 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 	}
 
 	/**
-	 * This visitor re-orders compare operations like >, <= or == to a left-hand side expression that is compared to 0.
+	 * This visitor reorders relational operations to a left-hand side expression that is compared to 0. Equalities and
+	 * inequalities are processed by optimizing both sides of the comparison and replacing the condition by a
+	 * component-by-component comparison of each coefficient.
 	 * 
 	 * @author Christian Schwinn
 	 * 
@@ -511,7 +562,7 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 		private void compareComponents(BinaryOperation node, boolean equality) {
 			Expression left = node.getLeft();
 			Expression right = node.getRight();
-			
+
 			if (containsTrueOrFalse(left) || containsTrueOrFalse(right)) {
 				return;
 			}
@@ -544,7 +595,7 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 						int index = comp.getBladeIndex();
 						Expression lVarNew = getNewExpression(lVar, lVarCoeffs, index);
 						Expression rVarNew = getNewExpression(rVar, rVarCoeffs, index);
-						
+
 						BinaryOperation comparison;
 						if (equality) {
 							comparison = new Equality(lVarNew, rVarNew);
@@ -596,8 +647,8 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 	private Log log = LogFactory.getLog(MapleCfgVisitor.class);
 
 	static final String CONDITION_PREFIX = "condition_";
-	private static final String suffix = "_opt";
 	static int conditionSuffix = 0;
+	private static final String suffix = "_opt";
 
 	MapleEngine engine;
 
@@ -609,18 +660,24 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 	/** Used to distinguish normal assignments and such from a loop or if-statement where GA must be eliminated. */
 	private int blockDepth = 0;
 	private boolean loopMode = false;
+	/** Used to insert synthetic variables in front of this {@link IfThenElseNode} or {@link LoopNode} **/
 	private SequentialNode currentRoot;
 
+	/** Keeps track of which synthetic variables for multivector coefficients already have been initialized. **/
 	Map<Variable, Set<MultivectorComponent>> initializedVariables = new HashMap<Variable, Set<MultivectorComponent>>();
+	/** Used to detect unknown variables which would make an if-condition undecidable at compile-time. **/
 	private final List<Variable> unknownVariables = new ArrayList<Variable>();
+	/** Variables determined to be optimized in any case. **/
 	final Set<Variable> optVariables = new HashSet<Variable>();
+	/** Keeps track of synthetic variables which were initialized but can be removed afterwards. **/
 	private final Set<MultivectorComponent> unusedInitializations = new HashSet<MultivectorComponent>();
-	
+
+	/** Current mapping of new variable names used for renaming in branches to avoid backtracking after then-part. **/
 	private Map<Variable, Variable> newNames = new HashMap<Variable, Variable>();
+	/** Suffix to be appended to temporary variables for renaming in branches. **/
+	private static int tempSuffix = 1;
 
 	ControlFlowGraph graph;
-
-	private static int tempSuffix = 1;
 
 	public MapleCfgVisitor(MapleEngine engine, Plugin plugin) {
 		this.engine = engine;
@@ -630,12 +687,12 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 	@Override
 	public void visit(StartNode startNode) {
 		graph = startNode.getGraph();
-		
+
 		CheckDependencyVisitor visitor = new CheckDependencyVisitor();
 		graph.accept(visitor);
 		optVariables.addAll(visitor.getDependentVariables());
-		
-		unknownVariables.addAll(graph.getInputVariables()); 
+
+		unknownVariables.addAll(graph.getInputVariables());
 		plugin.notifyStart();
 		startNode.getSuccessor().accept(this);
 	}
@@ -654,9 +711,9 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 				break;
 			}
 		}
-		
+
 		boolean optimize = optVariables.contains(variable);
-		
+
 		if (blockDepth > 0) {
 			if (!optimize && successor instanceof StoreResultNode) {
 				optimize = true;
@@ -674,12 +731,12 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 				// optimize value in a temporary variable and add missing initializations
 				initializeMissingCoefficients(node);
 				// reset Maple binding with linear combination of variables for coefficients
-				resetVariable(variable);				
+				resetVariable(variable);
 			} else {
 				// create new variable name for this variable in current block
 				Variable newVariable = generateTempVariable(variable);
 				node.replaceExpression(variable, newVariable);
-				// add new variable (lhs) to map for use in subsequent assignments 
+				// add new variable (lhs) to map for use in subsequent assignments
 				// -> prevent recursive assignments from producing wrong values
 				newNames.put(variable, newVariable);
 			}
@@ -687,7 +744,7 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 			variable = node.getVariable();
 			value = node.getValue();
 		}
-		
+
 		// perform actual calculation
 		assignVariable(variable, value);
 
@@ -702,6 +759,11 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 		successor.accept(this);
 	}
 
+	/**
+	 * Initializes synthetic variables representing the current coefficients of the given variable.
+	 * 
+	 * @param variable Variable to be initialized in front of the current root.
+	 */
 	void initializeCoefficients(Variable variable) {
 		List<AssignmentNode> coefficients = optimizeVariable(graph, variable);
 		for (AssignmentNode coefficient : coefficients) {
@@ -721,6 +783,13 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 		}
 	}
 
+	/**
+	 * Helper method for {@link #initializeCoefficients(Variable)} to initialize a single coefficient.
+	 * 
+	 * @param variable Variable to be initialized.
+	 * @param value Current value of variable.
+	 * @param component Component to be assigned, resulting from previous optimization.
+	 */
 	private void initializeCoefficient(Variable variable, Expression value, MultivectorComponent component) {
 		Variable tempVar = new Variable(getTempVarName(component));
 		if (initializedVariables.get(variable) == null) {
@@ -738,6 +807,12 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 		}
 	}
 
+	/**
+	 * Initializes synthetic variables in front of the current root which have not been initialized before. This has to
+	 * be done when a variable is reassigned in a branch, resulting in new multivector components.
+	 * 
+	 * @param node Assignment which potentially changes the structure of the assigned multivector.
+	 */
 	void initializeMissingCoefficients(AssignmentNode node) {
 		Variable temp = new Variable("__temp__");
 		assignVariable(temp, node.getValue());
@@ -761,6 +836,13 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 		}
 	}
 
+	/**
+	 * Assigns new values to synthetic variables representing the multivector's coefficients. The given node is used as
+	 * the basis in front of which these assignments are inserted into the graph.
+	 * 
+	 * @param base Basis in front of which to insert new assignments.
+	 * @param variable Variable to be optimized.
+	 */
 	private void assignCoefficients(AssignmentNode base, Variable variable) {
 		List<AssignmentNode> coefficients = optimizeVariable(graph, variable);
 		List<MultivectorComponent> newValues = new ArrayList<MultivectorComponent>();
@@ -780,6 +862,13 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 		resetVariable(variable);
 	}
 
+	/**
+	 * Resets synthetic variables to zero which are not part of the multivector anymore.
+	 * 
+	 * @param base Basis in front of which to insert the reset statements.
+	 * @param variable Variable which has been reassigned.
+	 * @param newValues Multivector components resulting from current optimization.
+	 */
 	private void resetZeroCoefficients(AssignmentNode base, Variable variable, List<MultivectorComponent> newValues) {
 		List<MultivectorComponent> zeroCoefficients = new ArrayList<MultivectorComponent>();
 		for (MultivectorComponent initCoeff : initializedVariables.get(variable)) {
@@ -795,6 +884,13 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 		}
 	}
 
+	/**
+	 * Resets the Maple binding of the given variable to a linear combination of symbolic coefficients. Concrete
+	 * coefficients are the synthetic variables which have been initialized in front of the current root and have been
+	 * assigned in the current branch.
+	 * 
+	 * @param variable Variable to be reset as a linear combination using previously assigned synthetic variables.
+	 */
 	void resetVariable(Variable variable) {
 		Set<MultivectorComponent> components = initializedVariables.get(variable);
 		if (components == null || components.size() == 0) {
@@ -854,21 +950,40 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 		}
 	}
 
+	/**
+	 * Generates the Maple equivalent code for the given expression.
+	 * 
+	 * @param expression Expression to be translated.
+	 * @return the corresponding Maple code
+	 */
 	String generateCode(Expression expression) {
 		MapleDfgVisitor visitor = new MapleDfgVisitor();
 		expression.accept(visitor);
 		return visitor.getCode();
 	}
 
+	/**
+	 * Convenience method for {@link #generateTempVariable(Variable)}.
+	 * 
+	 * @param component
+	 * @return the name of the corresponding synthetic variable
+	 */
 	String getTempVarName(MultivectorComponent component) {
 		return getTempVarName(component.getName(), component.getBladeIndex());
 	}
 
+	/**
+	 * Generates the name of the synthetic variable representing the coefficient at given index for the given variable.
+	 * 
+	 * @param variable Variable name.
+	 * @param index Index of coefficient.
+	 * @return <code>variable__index</code>
+	 */
 	String getTempVarName(String variable, int index) {
-		// attention: must not collide with renamed variables from macro inlining 
+		// attention: must not collide with renamed variables from macro inlining
 		return variable.replace('e', 'E').replace(suffix, "") + "__" + index;
 	}
-	
+
 	/**
 	 * Generates a temporary variable as a replacement from variables in a branch.
 	 * 
@@ -879,7 +994,12 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 		Variable newVariable = new Variable(v + "__tmp__" + tempSuffix++);
 		return newVariable;
 	}
-	
+
+	/**
+	 * Checks if the initialization of a synthetic variable has to be kept in the code.
+	 * 
+	 * @param component Name and index of the synthetic variable to be checked.
+	 */
 	private void checkUnusedInitialization(MultivectorComponent component) {
 		String variableName = component.getName().replace(suffix, "");
 		if (!optVariables.contains(new Variable(variableName)) && !variableName.startsWith(CONDITION_PREFIX)) {
@@ -975,7 +1095,7 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 	@Override
 	public void visit(IfThenElseNode node) {
 		Expression condition = node.getCondition();
-		
+
 		UsedVariablesVisitor usedVariables = new UsedVariablesVisitor();
 		condition.accept(usedVariables);
 		boolean unknown = false;
@@ -1006,7 +1126,7 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 					node.getPositive().accept(this);
 				} else if ("false\n".equals(result)) {
 					InlineBlockVisitor inliner = new InlineBlockVisitor(node, node.getNegative());
-					node.accept(inliner);			
+					node.accept(inliner);
 					node.getNegative().accept(this);
 				} else {
 					unknown = true;
@@ -1018,16 +1138,23 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 		}
 		if (unknown) {
 			// condition contains unknown variables or evalb has failed to evaluate to true or false
-			handleUnknownBranches(node, condition);			
+			handleUnknownBranches(node, condition);
 			node.getSuccessor().accept(this);
-		}		
+		}
 	}
 
+	/**
+	 * Performs the "regular" handling of {@link IfThenElseNode} which cannot be inlined due to an undecidable
+	 * condition.
+	 * 
+	 * @param node {@link IfThenElseNode} to be processed.
+	 * @param condition Condition which has to be reordered and checked for GA.
+	 */
 	private void handleUnknownBranches(IfThenElseNode node, Expression condition) {
 		if (blockDepth == 0) {
 			currentRoot = node;
 		}
-		
+
 		ReorderConditionVisitor reorder = new ReorderConditionVisitor(node);
 		condition.accept(reorder);
 
@@ -1036,15 +1163,15 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 		node.getPositive().accept(this);
 		// restore previous mapping for variables
 		newNames = currentMapping;
-		
+
 		node.getNegative().accept(this);
 		// restore previous mapping for variables
 		newNames = currentMapping;
 		blockDepth--;
-		
+
 		if (blockDepth == 0) {
 			initializedVariables.clear();
-		}		
+		}
 	}
 
 	@Override
@@ -1062,10 +1189,17 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 			if (blockDepth == 0) {
 				currentRoot = node;
 			}
-			
+
+			/*
+			 * Initialize synthetic variables of assigned values in front of the current root. Additional to the normal
+			 * initialization in visit(AssignmentNode), synthetic variables have to be present for every potential
+			 * coefficient which might result from an assignment anywhere in the loop. This is necessary since the structure
+			 * of multivectors can change in the loop body and the loop is executed more than one time (in contrast to 
+			 * if-statements, which are processed only once).
+			 */
 			InitializeVariablesInLoopVisitor visitor = new InitializeVariablesInLoopVisitor(node);
 			node.accept(visitor);
-			
+
 			blockDepth++;
 			boolean oldMode = loopMode;
 			loopMode = true;
@@ -1075,7 +1209,7 @@ public class MapleCfgVisitor implements ControlFlowVisitor {
 			newNames = currentMapping;
 			loopMode = oldMode;
 			blockDepth--;
-						
+
 			if (blockDepth == 0) {
 				initializedVariables.clear();
 			}
