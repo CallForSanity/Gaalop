@@ -64,27 +64,29 @@ public class LatexVisitor implements ControlFlowVisitor, ExpressionVisitor {
 
     @Override
 	public void visit(IfThenElseNode node) {
-	  code.append("if (");
+	  code.append("\\text{IF } (");
 	  node.getCondition().accept(this);
-	  code.append(") {\n");
+	  code.append(") \\\\\n");
 	  node.getPositive().accept(this);
-	  code.append("} else {\n");
-	  node.getNegative().accept(this);
-	  code.append("}\\\\\n");
+	  if (!(node.getNegative() instanceof BlockEndNode)) {
+		  code.append("\\text{ELSE} \\\\\n");
+		  node.getNegative().accept(this);
+	  }
+	  code.append("\\text{END IF} \\\\\n");
 	  node.getSuccessor().accept(this);
 	}
 
 	@Override
 	public void visit(LoopNode node) {
-		code.append("loop {\n");
+		code.append("\\text{LOOP} \\\\\n");
 		node.getBody().accept(this);
-		code.append("}\\\\\n");
+		code.append("\\text{END LOOP} \\\\\n");
 		node.getSuccessor().accept(this);
 	}
 
 	@Override
 	public void visit(BreakNode breakNode) {
-		code.append("break\\\\");
+		code.append("\\text{break}\\\\");
 		breakNode.getSuccessor().accept(this);
 	}
 
@@ -157,19 +159,18 @@ public class LatexVisitor implements ControlFlowVisitor, ExpressionVisitor {
     @Override
     public void visit(Variable variable) {
         String name = variable.getName();
-
-        addIdentifier(name);
+        code.append(name.replace("_", "\\_"));
     }
 
     private void addIdentifier(String name) {
         Matcher matcher = INDEXED_NUMBER.matcher(name);
         if (matcher.matches()) {
-            code.append(matcher.group(1));
+            code.append(matcher.group(1).replace("_", "\\_"));
             code.append("_{");
             code.append(matcher.group(2));
             code.append("}");
         } else {
-            code.append(name);
+            code.append(name.replace("_", "\\_"));
         }
     }
 
