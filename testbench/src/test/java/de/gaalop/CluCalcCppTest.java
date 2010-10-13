@@ -604,8 +604,8 @@ public class CluCalcCppTest {
 				try {
 					boolean allZero = (cluOriginal + cluOptimized + cpp) == 0;
 					if (DEBUG && !allZero) {
-						System.out.printf("comparing %s[%d]: %f\t%f\t%f\n", outputName, element, cluOriginal,
-								cluOptimized, cpp);
+						System.out.printf("comparing %s[%d]: %f\t%f\t%f\tepsilon=%f\n", outputName, element, cluOriginal,
+								cluOptimized, cpp, epsilon);
 					}
 					assertEquals(cluOriginal, cluOptimized, epsilon);
 					assertEquals(cluOriginal, cpp, epsilon);
