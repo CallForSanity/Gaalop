@@ -71,6 +71,7 @@ public class LatexVisitor implements ControlFlowVisitor, ExpressionVisitor {
 	  code.append("} else {\n");
 	  node.getNegative().accept(this);
 	  code.append("}\\\\\n");
+	  node.getSuccessor().accept(this);
 	}
 
 	@Override
@@ -78,11 +79,13 @@ public class LatexVisitor implements ControlFlowVisitor, ExpressionVisitor {
 		code.append("loop {\n");
 		node.getBody().accept(this);
 		code.append("}\\\\\n");
+		node.getSuccessor().accept(this);
 	}
 
 	@Override
 	public void visit(BreakNode breakNode) {
-		code.append("break");
+		code.append("break\\\\");
+		breakNode.getSuccessor().accept(this);
 	}
 
 	@Override
