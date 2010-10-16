@@ -14,6 +14,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -29,6 +30,7 @@ public class SourceFilePanel extends JPanel {
 	private static final long serialVersionUID = -662488304785792145L;
 
 	private final static Map<String, SimpleAttributeSet> KEYWORDS;
+	private final static Pattern PATTERN;
 
 	static {
 		KEYWORDS = new HashMap<String, SimpleAttributeSet>();
@@ -79,6 +81,16 @@ public class SourceFilePanel extends JPanel {
 		KEYWORDS.put("normal ", forbidden);
 		KEYWORDS.put("length ", forbidden);
 		KEYWORDS.put("point ", forbidden);
+		
+		String regex = "";
+		Iterator<String> it = KEYWORDS.keySet().iterator();
+		while (it.hasNext()) {
+			regex += it.next() + "+";
+			if (it.hasNext()) {
+				regex += "|";
+			}
+		}
+		PATTERN = Pattern.compile(regex);
 	}
 
 	private final CodeParserPlugin parserPlugin;
@@ -130,14 +142,12 @@ public class SourceFilePanel extends JPanel {
 	void formatCode(String content) {
 		try {
 			StyledDocument doc = textPane.getStyledDocument();
-			for (String keyword : KEYWORDS.keySet()) {
-				Pattern pattern = Pattern.compile(keyword + "+");
-				Matcher matcher = pattern.matcher(content);
-				while (matcher.find()) {
-					int start = matcher.start();
-					int end = matcher.end();
-					doc.setCharacterAttributes(start, end-start, KEYWORDS.get(keyword), false);
-				}
+			Matcher matcher = PATTERN.matcher(content);
+			while (matcher.find()) {
+				int start = matcher.start();
+				int end = matcher.end();
+				String keyword = matcher.group();
+				doc.setCharacterAttributes(start, end-start, KEYWORDS.get(keyword), false);
 			}
 		} catch (Exception e) {
 			System.err.println(e);
