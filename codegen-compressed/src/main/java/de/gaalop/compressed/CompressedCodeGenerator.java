@@ -45,7 +45,7 @@ public enum CompressedCodeGenerator implements CodeGenerator {
      * @return
      */
     private String generateCode(ControlFlowGraph in) {
-        CppVisitor visitor = new CppVisitor();
+        CompressedVisitor visitor = new CompressedVisitor();
         in.accept(visitor);
         return visitor.getCode();
     }

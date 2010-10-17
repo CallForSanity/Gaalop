@@ -1,0 +1,22 @@
+__kernel void horizonKernel(__global float* circleCenters,__global const float* points)
+{
+	const int id = get_global_id(0);
+
+	const float px = points[3*id+0];
+	const float py = points[3*id+1];
+	const float pz = points[3*id+2];
+
+#pragma gcd begin
+    P = VecN3(px,py,pz);
+    r = 1;
+    S = e0-0.5*r*r*einf;
+    C = S^(P+(P.S)*einf);
+    ?homogenCenter = C*einf*C;
+    ?scale = -homogenCenter.einf;
+    ?euclidCenter = homogenCenter / scale;
+#pragma gcd end
+
+    circleCenters[3*id+0] = euclidCenter[1];
+    circleCenters[3*id+1] = euclidCenter[2];
+    circleCenters[3*id+2] = euclidCenter[4];
+}

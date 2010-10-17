@@ -1,0 +1,20 @@
+#include <iostream>
+#include <gcd.h>
+
+int main()
+{
+#pragma gcd begin
+  P = VecN3(1,1,0);
+  r = 1;
+  S = e0-0.5*r*r*einf;
+  C = S^(P+(P.S)*einf);
+  ?homogenCenter = C*einf*C;
+  ?scale = -homogenCenter.einf;
+  ?euclidCenter = homogenCenter / scale;
+#pragma gcd end
+  std::cout << homogenCenter[E0] << std::endl;
+  std::cout << euclidCenter[E0] << std::endl;
+  std::cout << euclidCenter[E1] << "," << euclidCenter[E2] << "," << euclidCenter[E3];
+
+  return !(euclidCenter[E1] == 0.5f && euclidCenter[E2] == 0.5f && euclidCenter[E3] == 0.0f);
+}

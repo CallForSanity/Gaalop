@@ -1,4 +1,4 @@
-#include "../include/gcd.h"
+#include <gcd.h>
 
 bool pointTriangleTest(const float t1x,const float t1y,const float t1z,
 		       const float t2x,const float t2y,const float t2z,

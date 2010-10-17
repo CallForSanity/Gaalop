@@ -13,7 +13,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class CompressedVisitor implements ControlFlowVisitor, ExpressionVisitor {
 
-	private Log log = LogFactory.getLog(CppVisitor.class);
+	private Log log = LogFactory.getLog(CompressedVisitor.class);
 
 	private StringBuilder code = new StringBuilder();
 
@@ -21,6 +21,10 @@ public class CompressedVisitor implements ControlFlowVisitor, ExpressionVisitor 
 
 	// Maps the nodes that output variables to their result parameter names
 	private Map<StoreResultNode, String> outputNamesMap = new HashMap<StoreResultNode, String>();
+
+	// multivector component count map
+	private Map<String, Integer> mvComponentCountMap = new HashMap<String, Integer>();
+	private Map<String, Integer> mvComponentUsageMap = new HashMap<String, Integer>();
 
 	private int indentation = 0;
 
@@ -35,6 +39,18 @@ public class CompressedVisitor implements ControlFlowVisitor, ExpressionVisitor 
 			code.append('\t');
 		}
 	}
+
+    public int getNumMvComponents(SequentialNode node,String mvName) {
+        int numMvComponents = 0;
+        AssignmentNode assNode;
+        while((node = (SequentialNode)node.getSuccessor()) != null) {
+            if((assNode = (AssignmentNode)node) != null &&
+               assNode.getVariable().getName().equals(mvName))
+                numMvComponents++;
+        }
+
+        return numMvComponents;
+    }
 
 	@Override
 	public void visit(StartNode node) {
@@ -76,7 +92,9 @@ public class CompressedVisitor implements ControlFlowVisitor, ExpressionVisitor 
 			appendIndentation();
 			code.append("float ");
 			code.append(var.getName());
-			code.append("[32];\n");
+			code.append("[");
+			code.append(getNumMvComponents(node,var.getName()));
+			code.append("];\n");
 		}
 
 		if (!graph.getLocalVariables().isEmpty()) {
@@ -124,13 +142,10 @@ public class CompressedVisitor implements ControlFlowVisitor, ExpressionVisitor 
 		}
 
 		appendIndentation();
-		//node.getValue().class.name();
-		if(.getValue() != 0.0f)
-            node.getVariable().accept(this);
-            code.append(" = ");
-            node.getValue().accept(this);
-            code.append(";\n");
-		}
+        node.getVariable().accept(this);
+        code.append(" = ");
+        node.getValue().accept(this);
+        code.append(";\n");
 
 		node.getSuccessor().accept(this);
 	}
@@ -268,16 +283,28 @@ public class CompressedVisitor implements ControlFlowVisitor, ExpressionVisitor 
 
 	@Override
 	public void visit(Variable variable) {
-		// usually there are no
+		// usually there are none
 		code.append(variable.getName());
 	}
 
 	@Override
 	public void visit(MultivectorComponent component) {
+	    Integer count = mvComponentCountMap.get(component.getName());
+	    Integer usage = mvComponentUsageMap.get(component.getName());
+	    if(count == null)
+            count = 0;
+	    if(usage == null)
+            usage = 0;
+
 		code.append(component.getName());
 		code.append('[');
-		code.append(component.getBladeIndex());
+		code.append(count);
 		code.append(']');
+
+		usage |= component.getBladeIndex();
+
+		mvComponentCountMap.put(component.getName(),count + 1);
+		mvComponentUsageMap.put(component.getName(),usage);
 	}
 
 	@Override

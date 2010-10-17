@@ -76,7 +76,12 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 			appendIndentation();
 			code.append("float ");
 			code.append(var.getName());
-			code.append("[32];\n");
+			code.append("[32]={0.0f");
+
+            for(int counter = 1; counter < 32; ++counter)
+                code.append(",0.0f");
+
+            code.append("};\n");
 		}
 
 		if (!graph.getLocalVariables().isEmpty()) {
@@ -88,7 +93,7 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 
 	/**
 	 * Sorts a set of variables by name to make the order deterministic.
-	 * 
+	 *
 	 * @param inputVariables
 	 * @return
 	 */
