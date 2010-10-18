@@ -1,4 +1,4 @@
-package de.gaalop.compressed;
+package de.gaalop.gealg.output;
 
 import de.gaalop.dfg.*;
 

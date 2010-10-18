@@ -1,4 +1,4 @@
-package de.gaalop.compressed;
+package de.gaalop.gealg.output;
 
 import de.gaalop.CodeGenerator;
 import de.gaalop.CodeGeneratorPlugin;
@@ -20,7 +20,7 @@ public class Plugin implements CodeGeneratorPlugin {
     private Image icon;
 
     public Plugin() {
-        URL url = getClass().getResource("icon.png");
+        URL url = getClass().getResource("/de/gaalop/gaalet/icon.png");
         if (url != null) {
             try {
                 icon = ImageIO.read(url);
@@ -34,17 +34,17 @@ public class Plugin implements CodeGeneratorPlugin {
 
     @Override
     public CodeGenerator createCodeGenerator() {
-        return CompressedCodeGenerator.INSTANCE;
+        return CppCodeGenerator.INSTANCE;
     }
 
     @Override
     public String getName() {
-        return "Compressed Storage C/C++";
+        return "C/C++ (gealg)";
     }
 
     @Override
     public String getDescription() {
-        return "This plugin generates compressed storage C/C++ code.";
+        return "This plugin generates C/C++ code putting the output data in a gealg mulivector.";
     }
 
     @Override

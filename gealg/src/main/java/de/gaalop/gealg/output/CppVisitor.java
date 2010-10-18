@@ -1,7 +1,9 @@
-package de.gaalop.compressed;
+package de.gaalop.gealg.output;
 
 import de.gaalop.cfg.*;
 import de.gaalop.dfg.*;
+import de.gaalop.gealg.GealgMultiVector;
+import de.gaalop.gealg.NameTable;
 
 import java.util.*;
 
@@ -11,24 +13,26 @@ import org.apache.commons.logging.LogFactory;
 /**
  * This visitor traverses the control and data flow graphs and generates C/C++ code.
  */
-public class CompressedVisitor implements ControlFlowVisitor, ExpressionVisitor {
+public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 
-	private Log log = LogFactory.getLog(CompressedVisitor.class);
+	private Log log = LogFactory.getLog(CppVisitor.class);
 
 	private StringBuilder code = new StringBuilder();
 
 	private ControlFlowGraph graph;
+	
+	private static String suffix = "_opt";
 
 	// Maps the nodes that output variables to their result parameter names
 	private Map<StoreResultNode, String> outputNamesMap = new HashMap<StoreResultNode, String>();
 
-	// multivector component count map
-	private Map<String, Integer> mvComponentCountMap = new HashMap<String, Integer>();
-	private Map<String, Integer> mvComponentUsageMap = new HashMap<String, Integer>();
-
 	private int indentation = 0;
 
 	private boolean standalone = false;
+	
+	private boolean ifPossible = true; // dont know if we can misuse gealgs mv as arrays.
+	
+	private Set<GealgMultiVector> vectorSet = new HashSet<GealgMultiVector>();
 
 	public String getCode() {
 		return code.toString();
@@ -39,18 +43,10 @@ public class CompressedVisitor implements ControlFlowVisitor, ExpressionVisitor 
 			code.append('\t');
 		}
 	}
-
-    public int getNumMvComponents(SequentialNode node,String mvName) {
-        int numMvComponents = 0;
-        AssignmentNode assNode;
-        while((node = (SequentialNode)node.getSuccessor()) != null) {
-            if((assNode = (AssignmentNode)node) != null &&
-               assNode.getVariable().getName().equals(mvName))
-                numMvComponents++;
-        }
-
-        return numMvComponents;
-    }
+	
+	private void printVarName(String key) {
+		code.append(NameTable.getInstance().get(key));
+	}
 
 	@Override
 	public void visit(StartNode node) {
@@ -59,7 +55,8 @@ public class CompressedVisitor implements ControlFlowVisitor, ExpressionVisitor 
 		FindStoreOutputNodes findOutput = new FindStoreOutputNodes();
 		graph.accept(findOutput);
 		for (StoreResultNode var : findOutput.getNodes()) {
-			String outputName = var.getValue().getName(); //+ "_out";
+			String outputName = var.getValue().getName() + "_out";
+		
 			outputNamesMap.put(var, outputName);
 		}
 		if (standalone) {
@@ -69,13 +66,13 @@ public class CompressedVisitor implements ControlFlowVisitor, ExpressionVisitor 
 			List<Variable> inputParameters = sortVariables(graph.getInputVariables());
 			for (Variable var : inputParameters) {
 				code.append("float "); // The assumption here is that they all are normal scalars
-				code.append(var.getName());
+				printVarName(var.getName());
 				code.append(", ");
 			}
 
 			for (StoreResultNode var : findOutput.getNodes()) {
 				code.append("float **");
-				code.append(outputNamesMap.get(var));
+				printVarName(outputNamesMap.get(var));
 				code.append(", ");
 			}
 
@@ -87,26 +84,76 @@ public class CompressedVisitor implements ControlFlowVisitor, ExpressionVisitor 
 			indentation++;
 		}
 
-		// Declare local variables
+
+		if (ifPossible && !standalone) {
+			List<Variable> inputParameters = sortVariables(graph.getInputVariables());			
+			for (Variable var : inputParameters) {
+				FieldsUsedVisitor fieldVisitor = new FieldsUsedVisitor(var.getName());
+				graph.accept(fieldVisitor);
+				code.append("// This is input: ");
+				code.append(fieldVisitor.giveDefinition());
+				code.append("\n");	
+			}
+			code.append("\n");	
+			
+			for (StoreResultNode var : findOutput.getNodes()) {
+				FieldsUsedVisitor fieldVisitor = new FieldsUsedVisitor(var.getValue().getName());
+				graph.accept(fieldVisitor);
+				code.append("// This is output: ");
+				code.append(fieldVisitor.giveDefinition());
+				code.append("\n");				
+			}
+		}
+
+		handleLocalVariables();
+		createVectorSet(findOutput);
+		node.getSuccessor().accept(this);
+	}
+	
+	private void createVectorSet (FindStoreOutputNodes findOutput) {
+		for (Variable var : graph.getInputVariables()) {
+			FieldsUsedVisitor fieldVisitor = new FieldsUsedVisitor(var.getName());
+			graph.accept(fieldVisitor);
+			vectorSet.add(fieldVisitor.getMultiVector());		
+		}
 		for (Variable var : graph.getLocalVariables()) {
+			FieldsUsedVisitor fieldVisitor = new FieldsUsedVisitor(var.getName());
+			graph.accept(fieldVisitor);
+			vectorSet.add(fieldVisitor.getMultiVector());		
+		}	
+		for (StoreResultNode var : findOutput.getNodes()) {
+			FieldsUsedVisitor fieldVisitor = new FieldsUsedVisitor(var.getValue().getName());
+			graph.accept(fieldVisitor);
+			vectorSet.add(fieldVisitor.getMultiVector());							
+		}
+	}
+	
+	/**	
+	* Declare local variables
+	*	 but first but local variables in a set, so we reduce redundancy
+	*/
+	private void handleLocalVariables() {
+		Set <String> varNames = new HashSet<String> ();
+		for (Variable var : graph.getLocalVariables()) {
+			varNames.add(var.getName());			
+		}		
+		for (String var : varNames) {
 			appendIndentation();
-			code.append("float ");
-			code.append(var.getName());
-			code.append("[");
-			code.append(getNumMvComponents(node,var.getName()));
-			code.append("];\n");
+			FieldsUsedVisitor fieldVisitor = new FieldsUsedVisitor(var);
+			graph.accept(fieldVisitor);
+			code.append(fieldVisitor.giveDefinition());
+			code.append("\n");
 		}
 
 		if (!graph.getLocalVariables().isEmpty()) {
 			code.append("\n");
-		}
-
-		node.getSuccessor().accept(this);
+		}				
 	}
-
+	
+	
 	/**
 	 * Sorts a set of variables by name to make the order deterministic.
-	 *
+	 * 
 	 * @param inputVariables
 	 * @return
 	 */
@@ -142,10 +189,10 @@ public class CompressedVisitor implements ControlFlowVisitor, ExpressionVisitor 
 		}
 
 		appendIndentation();
-        node.getVariable().accept(this);
-        code.append(" = ");
-        node.getValue().accept(this);
-        code.append(";\n");
+		node.getVariable().accept(this);
+		code.append(" = ");
+		node.getValue().accept(this);
+		code.append(";\n");
 
 		node.getSuccessor().accept(this);
 	}
@@ -153,16 +200,15 @@ public class CompressedVisitor implements ControlFlowVisitor, ExpressionVisitor 
 	@Override
 	public void visit(StoreResultNode node) {
 		assigned.add(node.getValue().getName());
+//		appendIndentation();
+//		code.append("memcpy(");
+//		code.append(outputNamesMap.get(node));
+//		code.append(", ");
+//		code.append(node.getValue().getName());
+//		code.append(", sizeof(");
+//		code.append(node.getValue().getName());
+//		code.append("));\n");
 
-		/*appendIndentation();
-		code.append("memcpy(");
-		code.append(outputNamesMap.get(node));
-		code.append(", ");
-		code.append(node.getValue().getName());
-		code.append(", sizeof(");
-		code.append(node.getValue().getName());
-		code.append("));\n");*/
-		code.append("\n");
 
 		node.getSuccessor().accept(this);
 	}
@@ -170,6 +216,7 @@ public class CompressedVisitor implements ControlFlowVisitor, ExpressionVisitor 
 	@Override
 	public void visit(IfThenElseNode node) {
 		appendIndentation();
+		code.append("\n");
 		code.append("if (");
 		node.getCondition().accept(this);
 		code.append(") {\n");
@@ -203,6 +250,7 @@ public class CompressedVisitor implements ControlFlowVisitor, ExpressionVisitor 
 				appendIndentation();
 				code.append("}\n");
 			}
+			code.append("\n");
 		}
 
 		node.getSuccessor().accept(this);
@@ -254,7 +302,7 @@ public class CompressedVisitor implements ControlFlowVisitor, ExpressionVisitor 
 
 	@Override
 	public void visit(InnerProduct innerProduct) {
-		throw new UnsupportedOperationException("The compressed storage C/C++ backend does not support the inner product.");
+		addBinaryInfix(innerProduct, " & ");
 	}
 
 	@Override
@@ -283,28 +331,25 @@ public class CompressedVisitor implements ControlFlowVisitor, ExpressionVisitor 
 
 	@Override
 	public void visit(Variable variable) {
-		// usually there are none
-		code.append(variable.getName());
+		// usually there are no
+		printVarName(variable.getName());
 	}
 
 	@Override
 	public void visit(MultivectorComponent component) {
-	    Integer count = mvComponentCountMap.get(component.getName());
-	    Integer usage = mvComponentUsageMap.get(component.getName());
-	    if(count == null)
-            count = 0;
-	    if(usage == null)
-            usage = 0;
-
-		code.append(component.getName());
+		String name = component.getName().replace(suffix, "");
+		int pos = -1;
+		for (GealgMultiVector vec : vectorSet) {
+			if (name.equals(vec.getName()))
+				pos = vec.getBladePosInArray(component.getBladeIndex());
+		}
+		
+		printVarName(name);
 		code.append('[');
-		code.append(count);
+		code.append(pos);
 		code.append(']');
-
-		usage |= component.getBladeIndex();
-
-		mvComponentCountMap.put(component.getName(),count + 1);
-		mvComponentUsageMap.put(component.getName(),usage);
+		
+		//System.out.println("but here is a mv");
 	}
 
 	@Override
@@ -329,17 +374,17 @@ public class CompressedVisitor implements ControlFlowVisitor, ExpressionVisitor 
 	@Override
 	public void visit(FloatConstant floatConstant) {
 		code.append(Float.toString(floatConstant.getValue()));
-		code.append('f');
+		//code.append('f');
 	}
 
 	@Override
 	public void visit(OuterProduct outerProduct) {
-		throw new UnsupportedOperationException("The compressed storage C/C++ backend does not support the outer product.");
+		addBinaryInfix(outerProduct, " ^ ");
 	}
 
 	@Override
 	public void visit(BaseVector baseVector) {
-		throw new UnsupportedOperationException("The compressed storage C/C++ backend does not support base vectors.");
+		code.append(baseVector.toString());
 	}
 
 	@Override
@@ -350,7 +395,9 @@ public class CompressedVisitor implements ControlFlowVisitor, ExpressionVisitor 
 
 	@Override
 	public void visit(Reverse node) {
-		throw new UnsupportedOperationException("The compressed storage C/C++ backend does not support the reverse operation.");
+		//throw new UnsupportedOperationException("The C/C++ backend does not support the reverse operation.");
+		code.append('~');
+		addChild(node, node.getOperand());
 	}
 
 	@Override
@@ -377,4 +424,7 @@ public class CompressedVisitor implements ControlFlowVisitor, ExpressionVisitor 
 	public void visit(Relation relation) {
 		addBinaryInfix(relation, relation.getTypeString());
 	}
+
+
+
 }
