@@ -12,6 +12,8 @@
                 <include>de.gaalop:cli</include>
                 <include>de.gaalop:clucalc</include>
                 <include>de.gaalop:codegen-cpp</include>
+		<include>de.gaalop:codegen-compressed</include>
+		<include>de.gaalop:gealg</include>
                 <include>de.gaalop:codegen-latex</include>
                 <include>de.gaalop:gui</include>
                 <include>de.gaalop:maple</include>

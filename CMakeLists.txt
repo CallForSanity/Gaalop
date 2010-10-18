@@ -14,6 +14,9 @@ if( WIN32 AND NOT UNIX )
 endif()
 INCLUDE(CPack)
 
+# build body
+ADD_SUBDIRECTORY(gcd-body)
+
 # use packages
 OPTION(BUILD_WITH_OPENMP "build with OpenMP")
 if(BUILD_WITH_OPENMP)
@@ -25,9 +28,6 @@ if(BUILD_WITH_OPENMP)
     TARGET_LINK_LIBRARIES(gcd-body gomp)
   endif(UNIX)
 endif(BUILD_WITH_OPENMP)
-
-# build body
-ADD_SUBDIRECTORY(gcd-body)
 
 # build and install
 ADD_SUBDIRECTORY(bin)

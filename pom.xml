@@ -19,7 +19,7 @@
         <module>gui</module>
         <module>codegen-cpp</module>
         <module>codegen-compressed</module>
-        <module>codegen-gaalet</module>
+        <module>gealg</module>
         <module>codegen-latex</module>
         <module>codegen-dot</module>
         <module>starter</module>
