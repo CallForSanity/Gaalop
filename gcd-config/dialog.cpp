@@ -111,7 +111,9 @@ void Dialog::on_saveSettings_clicked()
     gaalopCommandStream << "java -jar starter-1.0.0.jar -m \""
 			<< ui->mapleBinaryDir->lineEdit()->text() << "\" -i";
 #else
-    gaalopCommandStream << "export MAPLE=\"" << ui->mapleBinaryDir->lineEdit()->text()
+    gaalopCommandStream << "export PATH=\"$PATH:" << ui->mapleBinaryDir->lineEdit()->text()
+                        << "/../bin\"; export LD_LIBRARY_PATH=\"" << ui->mapleBinaryDir->lineEdit()->text()
+                        << "\"; export MAPLE=\"" << ui->mapleBinaryDir->lineEdit()->text()
 			<< "/..\"; java -jar starter-1.0.0.jar -m \""
 			<< ui->mapleBinaryDir->lineEdit()->text() << "\" -i";
 #endif
