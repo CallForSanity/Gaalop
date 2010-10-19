@@ -1,1 +1,1 @@
-export PATH=$PATH:/net/bifur/gaalop/maple/bin; export MAPLE=/net/bifur/gaalop/maple; export LD_LIBRARY_PATH=/net/bifur/gaalop/maple/bin.IBM_INTEL_LINUX; java -jar starter-1.0.0.jar -generator de.gaalop.compressed.Plugin -m "/scratch/gaalop/maple/bin.IBM_INTEL_LINUX/" -i
+export PATH="$PATH:/scratch/gaalop/maple/bin.IBM_INTEL_LINUX/../bin"; export LD_LIBRARY_PATH="/scratch/gaalop/maple/bin.IBM_INTEL_LINUX"; export MAPLE="/scratch/gaalop/maple/bin.IBM_INTEL_LINUX/.."; java -jar starter-1.0.0.jar -m "/scratch/gaalop/maple/bin.IBM_INTEL_LINUX" -i

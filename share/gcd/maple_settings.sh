@@ -1,1 +1,1 @@
-/opt/maple13/bin.X86_64_LINUX
+/scratch/gaalop/maple/bin.IBM_INTEL_LINUX
