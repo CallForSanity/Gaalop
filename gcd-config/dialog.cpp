@@ -32,12 +32,12 @@ Dialog::Dialog(QWidget *parent) :
 
 #ifdef WIN32
     QFile mapleBinaryDirFile("..\\share\\gcd\\maple_settings.bat");
-    QFile cppCompileCommandFile("..\\share\\gcd\\cpp_settings.bat");
+    QFile cppCompileCommandFile("..\\share\\gcd\\cxx_settings.bat");
     QFile cudaCompileCommandFile("..\\share\\gcd\\cuda_settings.bat");
     QFile javaCompileCommandFile("..\\share\\gcd\\java_settings.bat");
 #else
     QFile mapleBinaryDirFile("../share/gcd/maple_settings.sh");
-    QFile cppCompileCommandFile("../share/gcd/cpp_settings.sh");
+    QFile cppCompileCommandFile("../share/gcd/cxx_settings.sh");
     QFile cudaCompileCommandFile("../share/gcd/cuda_settings.sh");
     QFile javaCompileCommandFile("../share/gcd/java_settings.sh");
 #endif
@@ -85,13 +85,13 @@ void Dialog::on_saveSettings_clicked()
 #ifdef WIN32
     QFile mapleBinaryDirFile("..\\share\\gcd\\maple_settings.bat");
     QFile gaalopCommandFile("..\\share\\gcd\\gaalop_settings.bat");
-    QFile cppCompileCommandFile("..\\share\\gcd\\cpp_settings.bat");
+    QFile cppCompileCommandFile("..\\share\\gcd\\cxx_settings.bat");
     QFile cudaCompileCommandFile("..\\share\\gcd\\cuda_settings.bat");
     QFile javaCompileCommandFile("..\\share\\gcd\\java_settings.bat");
 #else
     QFile mapleBinaryDirFile("../share/gcd/maple_settings.sh");
     QFile gaalopCommandFile("../share/gcd/gaalop_settings.sh");
-    QFile cppCompileCommandFile("../share/gcd/cpp_settings.sh");
+    QFile cppCompileCommandFile("../share/gcd/cxx_settings.sh");
     QFile cudaCompileCommandFile("../share/gcd/cuda_settings.sh");
     QFile javaCompileCommandFile("../share/gcd/java_settings.sh");
 #endif

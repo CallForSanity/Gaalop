@@ -64,8 +64,6 @@ MACRO(GCD_WRAP_SRCS generated_files)
 			SET_SOURCE_FILES_PROPERTIES(${generated_file}
         	  				    PROPERTIES EXTERNAL_OBJECT true)
 
-			STRING(REPLACE "/" "\\" source_file ${source_file})
-			STRING(REPLACE "/" "\\" generated_file ${generated_file})
 			ADD_CUSTOM_COMMAND(OUTPUT ${generated_file}
 					   COMMAND "${GCD_OPENCL_BINARY}"
 					   ARGS -o "${generated_file}" "${source_file}"
