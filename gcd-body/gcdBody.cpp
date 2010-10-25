@@ -154,10 +154,12 @@ int body(std::string& intermediateFilePath,std::string& outputFilePath,
         std::ofstream intermediateFile(intermediateFilePath.c_str());
         std::ifstream inputFile(inputFilePath.c_str());
         gaalopFileCount = 0;
+	unsigned int lineCount = 1; // think one line ahead
         while(inputFile.good())
         {
             // read line
             getline(inputFile,line);
+	    ++lineCount;
 
             if(line.find("#include") != std::string::npos &&
                line.find('\"') != std::string::npos)
@@ -169,6 +171,9 @@ int body(std::string& intermediateFilePath,std::string& outputFilePath,
             // found gaalop line - insert intermediate gaalop file
             else if(line.find("#pragma gcd begin") != std::string::npos)
             {
+		// line pragma for compile errors
+		intermediateFile << "#line " << lineCount << " \"" << inputFilePath << "\"\n";
+
                 // merge optimized code
                 std::stringstream gaalopOutFilePath;
                 gaalopOutFilePath << tempFilePath << '.' << ++gaalopFileCount << gaalopOutFileExtension;
@@ -190,9 +195,13 @@ int body(std::string& intermediateFilePath,std::string& outputFilePath,
                 while(inputFile.good())
                 {
                     getline(inputFile,line);
+		    ++lineCount;
                     if(line.find("#pragma gcd end") != std::string::npos)
                         break;
                 }
+
+		// line pragma for compile errors
+		intermediateFile << "#line " << lineCount << " \"" << inputFilePath << "\"\n";
             }
             else
                 intermediateFile << line << std::endl;
