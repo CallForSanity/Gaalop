@@ -16,6 +16,12 @@ int body(std::string& intermediateFilePath,std::string& outputFilePath,
          const char* gaalopOutFileExtension,const char* intermediateFileExtension,
          const char* outputFileExtension,const char* outputOption)
 {
+    if(argc <= 1)
+    {
+	std::cout << "usage: specify build parameters/files.\n";
+	return -1;
+    }
+
     // save working directory
     char runPath[4096];
     getcwd(runPath,4096);
@@ -182,7 +188,7 @@ int body(std::string& intermediateFilePath,std::string& outputFilePath,
                 if(!gaalopOutFile.good())
                 {
                     std::cerr << "fatal error: Gaalop-generated file not found. Check your Java installation. "\
-                                 "Also check your Maple directory using the Configuration Tool.\n";
+                                 "Also check your Maple directory and Cliffordlib using the Configuration Tool.\n";
                     return -1;
                 }
                 while(gaalopOutFile.good())

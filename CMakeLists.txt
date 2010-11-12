@@ -24,9 +24,6 @@ if(BUILD_WITH_OPENMP)
   if(OPENMP_FOUND)
     SET(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS})
   endif(OPENMP_FOUND)
-  if(UNIX)
-    TARGET_LINK_LIBRARIES(gcd-body gomp)
-  endif(UNIX)
 endif(BUILD_WITH_OPENMP)
 
 # build and install
@@ -38,7 +35,7 @@ ADD_SUBDIRECTORY(share)
 FILE(COPY target DESTINATION share/gcd)
 
 # install
-INSTALL(DIRECTORY target DESTINATION share/gcd)
+INSTALL(DIRECTORY target DESTINATION share/gcd PATTERN ".svn" EXCLUDE)
 
 # set root dir
 SET(GCD_ROOT_DIR "${CMAKE_CURRENT_BINARY_DIR}")
@@ -52,3 +49,6 @@ OPTION(BUILD_WITH_TESTS "build with tests")
 IF(BUILD_WITH_TESTS)
 	ADD_SUBDIRECTORY(test)
 ENDIF(BUILD_WITH_TESTS)
+
+# install tests
+INSTALL(DIRECTORY test DESTINATION share/gcd PATTERN ".svn" EXCLUDE)

@@ -1,2 +1,6 @@
 FILE(GLOB src "*.cpp")
 ADD_LIBRARY(gcd-body ${src})
+
+IF(UNIX AND NOT WIN32)
+	TARGET_LINK_LIBRARIES(gcd-body gomp)
+ENDIF(UNIX AND NOT WIN32)

@@ -50,7 +50,9 @@ __kernel void pointTriangleTest(__global bool* collision,
 	?d3 = side3 . TestPoint;
 #pragma gcd end
 
-	if(d[0]*d[0] > h*h || d1[0] <= 0.0f && d2[0] <= 0.0f && d3[0] <= 0.0f || d1[0] >= 0.0f && d2[0] >= 0.0f && d3[0] >= 0.0f)
+	if(d[0]*d[0] > h*h ||
+	   d1[0] <= 0.0f && d2[0] <= 0.0f && d3[0] <= 0.0f ||
+	   d1[0] >= 0.0f && d2[0] >= 0.0f && d3[0] >= 0.0f)
   		collision[id] = true;
 	else
 		collision[id] = false;
