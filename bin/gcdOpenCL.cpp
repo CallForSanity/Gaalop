@@ -23,8 +23,14 @@ int main(const int argc,const char* argv[])
     copyCommand << " \"" << outputFilePath << "\"";
 
     // invoke copy command
-    std::cout << copyCommand.str() << std::endl;
-    system(copyCommand.str().c_str());
+    std::string copyCommandString;
+#ifdef WIN32
+    findAndReplaceString(copyCommandString,copyCommand.str(),std::string('\\'),std::string('/'));
+#else
+    copyCommandString = copyCommand.str();
+#endif
+    std::cout << copyCommandString << std::endl;
+    system(copyCommandString.c_str());
 
     return result;
 }

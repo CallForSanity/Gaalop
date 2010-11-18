@@ -264,3 +264,17 @@ void readFile(std::stringstream& resultStream,std::ifstream& fileStream)
     resultStream << line;
   }
 }
+
+void findAndReplaceString(std::string& dest, std::string& source, const std::string& search,const std::string& replace)
+{
+	std::string buffer;
+	std::stringstream replaced("");
+	std::stringstream original(source);
+	while(original >> buffer)
+	{
+		if(buffer == search) replaced << replace << " ";
+		else replaced << buffer << " ";
+	}
+
+	replaced >> dest;
+}
