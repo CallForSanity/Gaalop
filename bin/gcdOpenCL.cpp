@@ -25,7 +25,7 @@ int main(const int argc,const char* argv[])
     // invoke copy command
     std::string copyCommandString;
 #ifdef WIN32
-    findAndReplaceString(copyCommandString,copyCommand.str(),std::string('\\'),std::string('/'));
+    findAndReplaceString(copyCommandString,copyCommand.str(),std::string("\\"),std::string("/"));
 #else
     copyCommandString = copyCommand.str();
 #endif

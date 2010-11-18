@@ -265,7 +265,7 @@ void readFile(std::stringstream& resultStream,std::ifstream& fileStream)
   }
 }
 
-void findAndReplaceString(std::string& dest, std::string& source, const std::string& search,const std::string& replace)
+void findAndReplaceString(std::string& dest,const std::string& source, const std::string& search,const std::string& replace)
 {
 	std::string buffer;
 	std::stringstream replaced("");
