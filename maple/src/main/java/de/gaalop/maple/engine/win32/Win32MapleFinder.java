@@ -13,7 +13,7 @@ public final class Win32MapleFinder {
      * @throws FileNotFoundException
      */
     public String getMaplePathFromRegistry() throws FileNotFoundException {
-        return "C:\\Program Files (x86)\\Maple 12";
+        return "C:\\Program Files (x86)\\Maple 13";
     }
 }
 //

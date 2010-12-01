@@ -3,18 +3,17 @@ package de.gaalop.dfg;
 /**
  * This is the base class for all nodes that model operations taking one operand.
  */
-public abstract class UnaryOperation implements Expression {
+public abstract class UnaryOperation extends Expression {
 
     private Expression operand;
 
     /**
      * Constructs a new unary operation with one operand.
      *
-     * @param operand A dataflow graph modelling the operand for the operation.
+     * @param operand A dataflow graph modeling the operand for the operation.
      */
     public UnaryOperation(Expression operand) {
         super();
-
         this.operand = operand;
     }
 
@@ -33,6 +32,15 @@ public abstract class UnaryOperation implements Expression {
     @Override
     public boolean isComposite() {
         return true;
+    }
+    
+    @Override
+    public void replaceExpression(Expression old, Expression newExpression) {
+    	if (old == operand) {
+    		operand = newExpression;
+    	} else {
+    		operand.replaceExpression(old, newExpression);
+    	}
     }
 
     /**

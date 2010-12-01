@@ -74,6 +74,24 @@ public final class AssignmentNode extends SequentialNode {
     public void accept(ControlFlowVisitor visitor) {
         visitor.visit(this);
     }
+    
+    @Override
+    public void replaceExpression(Expression old, Expression newExpression) {
+    	if (variable == old && newExpression instanceof Variable) {
+    		variable = (Variable) newExpression;
+    	}
+    	if (value == old) {
+    		value = newExpression;
+    	} else {
+    		// recursively try to replace expression
+    		value.replaceExpression(old, newExpression);
+    	}
+    }
+    
+    @Override
+    public AssignmentNode copyElements() {
+    	return new AssignmentNode(getGraph(), variable.copy(), value.copy());
+    }
 
     /**
      * Converts this assignment into a human readable string by calling the <code>toString</code> methods on both

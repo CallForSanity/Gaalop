@@ -1,5 +1,6 @@
 package de.gaalop.clucalc.output;
 
+import de.gaalop.Notifications;
 import de.gaalop.cfg.*;
 import de.gaalop.clucalc.input.CluCalcFileHeader;
 import de.gaalop.dfg.Expression;
@@ -11,16 +12,28 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
  * Visits the control structure of the control dataflow graph.
  */
 public class CfgVisitor implements ControlFlowVisitor {
+	
+	private static final String MAPLE_SUFFIX = "_opt";
+	String codeSuffix;
+	
+	private Log log = LogFactory.getLog(CfgVisitor.class);
 
 	private Map<String, Set<Integer>> assignedComponents = new HashMap<String, Set<Integer>>();
 
-	private StringBuilder code = new StringBuilder();
+	StringBuilder code = new StringBuilder();
 
-	private int indent;
+	int indent;
+	
+	public CfgVisitor(String suffix) {
+		codeSuffix = suffix;
+	}
 
 	public String getCode() {
 		return code.toString();
@@ -53,7 +66,7 @@ public class CfgVisitor implements ControlFlowVisitor {
 
 		// Generate the local variables for all local variables
 		for (Variable localVariable : startNode.getGraph().getLocalVariables()) {
-			code.append(localVariable.getName());
+			code.append(localVariable.getName() + codeSuffix);
 			code.append(" = List(");
 			code.append(startNode.getGraph().getBladeList().length);
 			code.append(");\n");
@@ -73,6 +86,9 @@ public class CfgVisitor implements ControlFlowVisitor {
 		Set<Integer> assigned = assignedComponents.get(assignmentNode.getVariable().getName());
 		if (assigned != null && assigned.isEmpty()) {
 			// in this case the variable is reused and should be reset
+			String message = "Variable " + assignmentNode.getVariable().getName() + " has been reset for reuse.";
+			log.warn(message);
+			Notifications.addWarning(message);
 			appendIndent();
 			code.append(assignmentNode.getVariable().getName());
 			code.append(" = List(32); // reset for reuse\n");
@@ -88,7 +104,7 @@ public class CfgVisitor implements ControlFlowVisitor {
 			MultivectorComponent component = (MultivectorComponent) assignmentNode.getVariable();
 			Expression[] bladeList = assignmentNode.getGraph().getBladeList();
 
-			DfgVisitor bladeVisitor = new DfgVisitor();
+			DfgVisitor bladeVisitor = new DfgVisitor(codeSuffix, MAPLE_SUFFIX);
 			bladeList[component.getBladeIndex()].accept(bladeVisitor);
 			code.append(bladeVisitor.getCode());
 
@@ -105,6 +121,15 @@ public class CfgVisitor implements ControlFlowVisitor {
 
 		assignmentNode.getSuccessor().accept(this);
 	}
+	
+	@Override
+	public void visit(ExpressionStatement node) {
+		appendIndent();
+		addCode(node.getExpression());
+		code.append(";\n");
+		
+		node.getSuccessor().accept(this);
+	}
 
 	@Override
 	public void visit(StoreResultNode node) {
@@ -115,13 +140,14 @@ public class CfgVisitor implements ControlFlowVisitor {
 		// Reassemble all output variables in the value
 		Variable outputVariable = (Variable) node.getValue();
 
-		code.append(outputVariable.getName());
-		code.append(" = ");
-		Set<Integer> var = assignedComponents.get(outputVariable.getName());
+		String variableName = outputVariable.getName();
+		String opt = variableName + MAPLE_SUFFIX;
+		code.append(variableName);
+		Set<Integer> var = assignedComponents.get(opt);
 		if (var == null) {
-			// no assignment for this variable at all -> 0
-			code.append(0);
+			// no assignment for this variable at all -> keep ? operator
 		} else {
+			code.append(" = ");
 			for (int i = 0; i < node.getGraph().getBladeList().length; ++i) {
 				if (!var.contains(i)) {
 					continue;
@@ -129,7 +155,7 @@ public class CfgVisitor implements ControlFlowVisitor {
 
 				Expression blade = node.getGraph().getBladeList()[i];
 
-				code.append(outputVariable.getName());
+				code.append(opt.replace(MAPLE_SUFFIX, codeSuffix));
 				code.append("(");
 				code.append(i + 1);
 				code.append(")");
@@ -142,7 +168,7 @@ public class CfgVisitor implements ControlFlowVisitor {
 		}
 
 		// reset the set of assigned components, so variable can be reused
-		assignedComponents.put(outputVariable.getName(), new HashSet<Integer>());
+		assignedComponents.put(opt, new HashSet<Integer>());
 
 		code.append(";\n");
 
@@ -151,6 +177,7 @@ public class CfgVisitor implements ControlFlowVisitor {
 
 	@Override
 	public void visit(IfThenElseNode node) {
+		code.append('\n');
 		appendIndent();
 		code.append("if (");
 		addCode(node.getCondition());
@@ -164,7 +191,7 @@ public class CfgVisitor implements ControlFlowVisitor {
 		code.append("}");
 
 		if (node.getNegative() instanceof BlockEndNode) {
-			code.append("\n");
+			code.append("\n\n");
 		} else {
 			code.append(" else ");
 
@@ -183,11 +210,30 @@ public class CfgVisitor implements ControlFlowVisitor {
 			if (!isElseIf) {
 				indent--;
 				appendIndent();
-				code.append("}\n");
+				code.append("}\n\n");
 			}
 		}
 
 		node.getSuccessor().accept(this);
+	}
+	
+	@Override
+	public void visit(LoopNode node) {
+		appendIndent();
+		code.append("loop {\n");
+		indent++;
+		node.getBody().accept(this);
+		indent--;
+		appendIndent();
+		code.append("}\n");
+		
+		node.getSuccessor().accept(this);
+	}
+	
+	@Override
+	public void visit(BreakNode breakNode) {
+		appendIndent();
+		code.append("break;\n");
 	}
 
 	@Override
@@ -195,15 +241,29 @@ public class CfgVisitor implements ControlFlowVisitor {
 		// nothing to do
 	}
 
-	private void addCode(Expression value) {
-		DfgVisitor visitor = new DfgVisitor();
+	void addCode(Expression value) {
+		DfgVisitor visitor = new DfgVisitor(codeSuffix, MAPLE_SUFFIX);
 		value.accept(visitor);
 		code.append(visitor.getCode());
 	}
 
-	private void appendIndent() {
+	void appendIndent() {
 		for (int i = 0; i < indent; i++) {
 			code.append("\t");
 		}
+	}
+
+	@Override
+	public void visit(Macro node) {
+		throw new IllegalStateException("Macros should have been inlined.");
+	}
+
+	@Override
+	public void visit(ColorNode node) {
+		appendIndent();
+		code.append(":");
+		code.append(node);
+		code.append(";\n");
+		node.getSuccessor().accept(this);
 	}
 }

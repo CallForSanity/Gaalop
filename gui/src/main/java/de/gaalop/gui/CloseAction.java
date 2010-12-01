@@ -23,7 +23,7 @@ public class CloseAction extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         Component selected = tabbedPane.getSelectedComponent();
-        if (selected instanceof SourceFilePanel) {
+        if (selected instanceof SourceFilePanel || selected instanceof ConfigurationPanel) {
             tabbedPane.remove(selected);
         }
     }

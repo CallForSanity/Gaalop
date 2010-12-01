@@ -22,6 +22,14 @@ RANGE_LITERAL : 'range';
 
 OUTPUT_LITERAL: 'output';
 
+UNROLL_LITERAL: 'unroll';
+
+COUNT_LITERAL: 'count';
+
+STRING_LITERAL
+    :  '"' ( ~('\\'|'"') )* '"'
+    ;
+
 fragment
 EXPONENT 
 	: 'e' MINUS? ('0'..'9')+
@@ -32,7 +40,11 @@ FLOATTYPESUFFIX
 	: ('f'|'d')
 	;
 	
-OPNS	:	'OPNS'
+OPNS
+  @after {
+    throw new IllegalArgumentException("OPNS is currently not supported by the Maple backend. Please use the IPNS.");
+  }
+  :	'OPNS'
 	;
 	
 IPNS	:	'IPNS'
@@ -43,10 +55,40 @@ IF		:	'if'
 	
 ELSE	:	'else'
 	;
+	
+LOOP  : 'loop'
+  ;
+  
+BREAK : 'break'
+  ;
+  
+SLIDER_LITERAL : 'Slider'
+  ;
+
+COLOR_LITERAL :  'Color'
+  ;
+  
+BGCOLOR_LITERAL : '_BGColor'
+  ;
+  
+BLACK : 'Black';
+BLUE : 'Blue';
+CYAN : 'Cyan';
+GREEN : 'Green';
+MAGENTA : 'Magenta';
+ORANGE : 'Orange';
+RED : 'Red';
+WHITE : 'White';
+YELLOW : 'Yellow';
+
 
 IDENTIFIER
-	:	LETTER (LETTER|DIGIT)*
+	:	('::')? LETTER (LETTER|DIGIT)*
 	;
+	
+ARGUMENT_PREFIX
+  : '_P('
+  ;
 
 fragment
 LETTER
@@ -193,4 +235,11 @@ LESS_OR_EQUAL
 GREATER_OR_EQUAL 
 	:	'>='
 	;
+
+REFERENCE_OPERATOR
+  @after{ 
+    throw new IllegalArgumentException("The reference operator (->) is not supported. Please use standard assignments instead."); 
+  }
+  : '->'
+  ;
 

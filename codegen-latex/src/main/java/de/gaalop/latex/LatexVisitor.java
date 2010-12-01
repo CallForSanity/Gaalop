@@ -45,6 +45,13 @@ public class LatexVisitor implements ControlFlowVisitor, ExpressionVisitor {
 
         node.getSuccessor().accept(this);
     }
+	
+	@Override
+	public void visit(ExpressionStatement node) {
+		node.getExpression().accept(this);
+		code.append("\\\\\n");
+		node.getSuccessor().accept(this);
+	}
 
     @Override
     public void visit(StoreResultNode node) {
@@ -56,6 +63,38 @@ public class LatexVisitor implements ControlFlowVisitor, ExpressionVisitor {
     }
 
     @Override
+	public void visit(IfThenElseNode node) {
+	  code.append("\\text{IF } (");
+	  node.getCondition().accept(this);
+	  code.append(") \\\\\n");
+	  node.getPositive().accept(this);
+	  if (!(node.getNegative() instanceof BlockEndNode)) {
+		  code.append("\\text{ELSE} \\\\\n");
+		  node.getNegative().accept(this);
+	  }
+	  code.append("\\text{END IF} \\\\\n");
+	  node.getSuccessor().accept(this);
+	}
+
+	@Override
+	public void visit(LoopNode node) {
+		code.append("\\text{LOOP} \\\\\n");
+		node.getBody().accept(this);
+		code.append("\\text{END LOOP} \\\\\n");
+		node.getSuccessor().accept(this);
+	}
+
+	@Override
+	public void visit(BreakNode breakNode) {
+		code.append("\\text{break}\\\\");
+		breakNode.getSuccessor().accept(this);
+	}
+
+	@Override
+	public void visit(BlockEndNode node) {
+	}
+
+	@Override
     public void visit(EndNode node) {
         code.append("\\end{align*}\n");
     }
@@ -120,25 +159,24 @@ public class LatexVisitor implements ControlFlowVisitor, ExpressionVisitor {
     @Override
     public void visit(Variable variable) {
         String name = variable.getName();
-
-        addIdentifier(name);
+        code.append(name.replace("_", "\\_"));
     }
 
     private void addIdentifier(String name) {
         Matcher matcher = INDEXED_NUMBER.matcher(name);
         if (matcher.matches()) {
-            code.append(matcher.group(1));
+            code.append(matcher.group(1).replace("_", "\\_"));
             code.append("_{");
             code.append(matcher.group(2));
             code.append("}");
         } else {
-            code.append(name);
+            code.append(name.replace("_", "\\_"));
         }
     }
 
     @Override
     public void visit(MultivectorComponent component) {
-        addIdentifier(component.getName());
+        addIdentifier(component.getName().replace("_opt", ""));
         code.append("_{");
         code.append(component.getBladeIndex());
         code.append('}');
@@ -186,44 +224,53 @@ public class LatexVisitor implements ControlFlowVisitor, ExpressionVisitor {
     }
 
     @Override
-    public void visit(IfThenElseNode node) {
-      // TODO Auto-generated method stub
-      
-    }
-
-    @Override
     public void visit(LogicalOr node) {
-      // TODO Auto-generated method stub
-      
+      addBinaryInfix(node, " \\vee ");
     }
 
     @Override
     public void visit(LogicalAnd node) {
-      // TODO Auto-generated method stub
-      
+      addBinaryInfix(node, " \\wedge ");
+    }
+    
+    @Override
+    public void visit(LogicalNegation node) {
+    	code.append("!");
+    	node.getOperand().accept(this);
     }
 
     @Override
     public void visit(Equality node) {
-      // TODO Auto-generated method stub
-      
+      addBinaryInfix(node, " == ");
     }
 
     @Override
     public void visit(Inequality node) {
-      // TODO Auto-generated method stub
-      
+      addBinaryInfix(node, " \neq ");
     }
 
     @Override
     public void visit(Relation relation) {
-      // TODO Auto-generated method stub
-      
+      addBinaryInfix(relation, relation.getTypeString());
     }
 
-    @Override
-    public void visit(BlockEndNode node) {
-      // TODO Auto-generated method stub
-      
-    }
+	@Override
+	public void visit(Macro node) {
+		throw new IllegalArgumentException("Macros should have been inlined.");
+	}
+
+	@Override
+	public void visit(FunctionArgument node) {
+		throw new IllegalArgumentException("Macros should have been inlined.");
+	}
+
+	@Override
+	public void visit(MacroCall node) {
+		throw new IllegalArgumentException("Macros should have been inlined.");
+	}
+
+	@Override
+	public void visit(ColorNode node) {
+		node.getSuccessor().accept(this);
+	}
 }

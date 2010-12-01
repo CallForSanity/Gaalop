@@ -49,6 +49,11 @@ public final class StartNode extends SequentialNode {
     }
     
     @Override
+    public StartNode copyElements() {
+    	throw new UnsupportedOperationException("The start node is not supposed to be copied.");
+    }
+    
+    @Override
     public String toString() {
     	return "Start";
     }

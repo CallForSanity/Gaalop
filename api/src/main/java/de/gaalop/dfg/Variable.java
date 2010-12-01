@@ -3,7 +3,7 @@ package de.gaalop.dfg;
 /**
  * This class represents a dataflow graph node that models a variable.
  */
-public class Variable implements Expression {
+public class Variable extends Expression {
 
 	private String name;
 
@@ -25,6 +25,8 @@ public class Variable implements Expression {
 	 */
 	private String maxValue = null;
 
+	private boolean global;
+
 	public void setMaxValue(String maxValue) {
 		this.maxValue = maxValue;
 	}
@@ -34,12 +36,21 @@ public class Variable implements Expression {
 	}
 
 	/**
-	 * Constructs a new node modelling a named variable.
+	 * Constructs a new node modeling a named variable.
 	 * 
 	 * @param name The name of the variable.
 	 */
 	public Variable(String name) {
-		this.name = name;
+		if (name.startsWith("::") && name.length() > 2) {
+			this.global = true;
+			this.name = name.substring(2);
+		} else {
+			this.name = name;
+		}
+	}
+	
+	public boolean globalAccess() {
+		return global;
 	}
 
 	/**
@@ -61,8 +72,9 @@ public class Variable implements Expression {
 	}
 
 	@Override
-	public Expression copy() {
+	public Variable copy() {
 		Variable v = new Variable(this.name);
+		v.global = global;
 		v.setMaxValue(this.getMaxValue());
 		v.setMinValue(this.getMinValue());
 		return v;
@@ -86,6 +98,19 @@ public class Variable implements Expression {
 		visitor.visit(this);
 	}
 
+	@Override
+	public void replaceExpression(Expression old, Expression newExpression) {
+		if (old instanceof Variable && newExpression instanceof Variable) {
+			Variable oldVar = (Variable) old;
+			Variable newVar = (Variable) newExpression;
+			if (oldVar.getName() == name && oldVar.getMinValue() == minValue && oldVar.getMaxValue() == maxValue) {
+				name = newVar.getName();
+				minValue = newVar.getMinValue();
+				maxValue = newVar.getMaxValue();
+			}
+		}
+	}
+
 	/**
 	 * Compares two variables for equality.
 	 * 
@@ -96,12 +121,15 @@ public class Variable implements Expression {
 	 */
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
 
 		Variable variable = (Variable) o;
 
-		if (!name.equals(variable.name)) return false;
+		if (!name.equals(variable.name))
+			return false;
 
 		return true;
 	}

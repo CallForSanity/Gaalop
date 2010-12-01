@@ -21,6 +21,8 @@
         <module>codegen-latex</module>
         <module>starter</module>
         <module>codegen-dot</module>
+        <module>setup</module>
+        <module>codegen-verilog</module>
     </modules>
 
     <!--
@@ -101,4 +103,8 @@
             <url>http://nexus.code-camp.org/content/repositories/thirdparty/</url>
         </repository>
     </repositories>
+    
+    <properties>
+    	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
 </project>

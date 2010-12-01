@@ -24,6 +24,7 @@
         <moduleSet>
             <includes>
                 <include>de.gaalop:starter</include>
+                <include>de.gaalop:setup</include>
             </includes>
             <binaries>
                 <includeDependencies>false</includeDependencies>

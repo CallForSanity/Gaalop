@@ -13,4 +13,22 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD})
 public @interface ConfigurationProperty {
+	
+	Type type();
+	
+	/**
+	 * This type provides meta information about the type of the annotated field.
+	 * 
+	 * @author Christian Schwinn
+	 */
+	public enum Type {
+		/** String values */
+		TEXT,
+		
+		/** Integer numbers */
+		NUMBER,
+		
+		/** Boolean values */
+		BOOLEAN
+	}
 }

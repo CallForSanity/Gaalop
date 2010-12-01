@@ -52,9 +52,45 @@ public interface ControlFlowVisitor {
     void visit(BlockEndNode node);
 
     /**
+     * This method is called by {@link de.gaalop.cfg.LoopNode#accept(ControlFlowVisitor)}.
+     *
+     * @param node The object that called this method.
+     */
+    void visit(LoopNode node);
+    
+    /**
+     * This method is called by {@link de.gaalop.cfg.BreakNode#accept(ControlFlowVisitor)}.
+     *
+     * @param node The object that called this method.
+     */
+    void visit(BreakNode node);
+
+	/**
+	 * This method is called by {@link de.gaalop.cfg.Macro#accept(ControlFlowVisitor)}.
+	 *
+	 * @param node The object that called this method.
+	 */
+	void visit(Macro node);
+
+	/**
+	 * This method is called by {@link de.gaalop.cfg.ExpressionStatement#accept(ControlFlowVisitor)}.
+	 *
+	 * @param node The object that called this method.
+	 */
+	void visit(ExpressionStatement node);
+	
+	/**
      * This method is called by {@link de.gaalop.cfg.EndNode#accept(ControlFlowVisitor)}.
      *
      * @param node The object that called this method.
      */
     void visit(EndNode node);
+
+    /**
+     * This method is called by {@link de.gaalop.cfg.ColorNode#accept(ControlFlowVisitor)}.
+     *
+     * @param node The object that called this method.
+     */
+	void visit(ColorNode node);
+
 }

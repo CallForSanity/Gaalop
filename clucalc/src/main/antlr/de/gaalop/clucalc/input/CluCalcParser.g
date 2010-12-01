@@ -9,11 +9,17 @@ options {
 
 tokens {
   FUNCTION;
-  PROCEDURE;
   NEGATION;
   DUAL;
   BLOCK;
   ELSEIF;
+  MACRO;
+  ARGUMENT;
+  RETURN;
+  SLIDER;
+  STRING;
+  COLOR;
+  BGCOLOR;
 }
 
 @header {
@@ -50,6 +56,7 @@ float_literal:
 pragma
   : PRAGMA RANGE_LITERAL float_literal LESS_OR_EQUAL IDENTIFIER LESS_OR_EQUAL float_literal
   | PRAGMA OUTPUT_LITERAL IDENTIFIER
+  | PRAGMA IGNORE_LITERAL IDENTIFIER
   ;
 
 /*
@@ -57,7 +64,6 @@ pragma
 */
 expression
   : lvalue EQUALS expression -> ^(EQUALS lvalue expression)
-  | additive_expression
   | logical_or_expression
   ;
 
@@ -110,6 +116,7 @@ unary_expression
   | STAR operand=unary_expression -> ^(DUAL $operand)
   | MINUS operand=unary_expression -> ^(NEGATION $operand)
   | REVERSE operand=unary_expression -> ^(REVERSE $operand)
+  | DOUBLE_NOT operand=unary_expression -> ^(DOUBLE_NOT $operand)
   ;
   
 postfix_expression
@@ -118,12 +125,13 @@ postfix_expression
   ;
 
 function_call
-  : (name=IDENTIFIER LBRACKET args=argument_expression_list RBRACKET)
-  -> ^(FUNCTION $name $args)
+  : (name=IDENTIFIER LBRACKET args=argument_expression_list? RBRACKET)
+  -> ^(FUNCTION $name $args?)
   ;
 
 primary_expression
   : IDENTIFIER
+  | function_argument 
   | constant
   | LBRACKET! expression RBRACKET!
   ;
@@ -131,6 +139,23 @@ constant
     :   DECIMAL_LITERAL
     |   FLOATING_POINT_LITERAL
     ;
+    
+color 
+  : (COLON COLOR_LITERAL LBRACKET args=argument_expression_list RBRACKET SEMICOLON) -> ^(COLOR $args)
+  | COLON name=color_name SEMICOLON -> ^(COLOR $name)
+  ;
+  
+color_name
+  : (BLACK | BLUE | CYAN | GREEN | MAGENTA | ORANGE | RED | WHITE | YELLOW)
+  ;
+  
+bgcolor
+  : BGCOLOR_LITERAL EQUALS COLOR_LITERAL LBRACKET args=argument_expression_list RBRACKET SEMICOLON -> ^(BGCOLOR $args)
+  ;
+    
+function_argument
+  : ARGUMENT_PREFIX index=DECIMAL_LITERAL RBRACKET -> ^(ARGUMENT $index)
+  ;
 
 /*
   Statements
@@ -144,13 +169,40 @@ statement_list
 
 statement 
   : expression_statement
-  | procedure_call
+  | slider
+  | color
+  | bgcolor
+  | macro_definition
   | draw_mode
   | block
   | if_statement
+  | loop
+  | BREAK
   | pragma 
   ;
-
+  
+fragment slider
+  : IDENTIFIER EQUALS SLIDER_LITERAL LBRACKET slider_args RBRACKET SEMICOLON -> ^(SLIDER IDENTIFIER slider_args)
+  ;
+    
+fragment slider_args
+  : STRING_LITERAL COMMA! float_or_dec COMMA! float_or_dec COMMA! float_or_dec COMMA! float_or_dec
+  ;
+  
+fragment float_or_dec
+  : (MINUS)? DECIMAL_LITERAL
+  | float_literal
+  ;
+  
+macro_definition
+  : id=IDENTIFIER EQUALS CLBRACKET statement* e=return_value? CRBRACKET -> ^(MACRO $id statement* $e?)
+  ;
+  
+return_value
+  : add=additive_expression -> ^(RETURN $add)
+  | or=logical_or_expression -> ^(RETURN $or)
+  ;
+  
 block
   : CLBRACKET statement* CRBRACKET -> ^(BLOCK statement*)
   ;
@@ -159,11 +211,7 @@ draw_mode
   : (COLON IPNS) -> ^(IPNS)
   | (COLON OPNS) -> ^(OPNS)
   ;
-  
-procedure_call
-  : (name=IDENTIFIER LBRACKET RBRACKET) -> ^(PROCEDURE $name)
-  ;
-  
+    
 expression_statement
   : SEMICOLON!
   | (QUESTIONMARK^ | COLON^)? expression SEMICOLON!
@@ -179,4 +227,8 @@ if_statement
 else_part
   : ELSE block -> ^(ELSE block)
   | ELSE stmt=if_statement -> ^(ELSEIF $stmt)
+  ;
+  
+loop
+  : (PRAGMA UNROLL_LITERAL number=DECIMAL_LITERAL)? LOOP stmt=statement -> ^(LOOP $stmt $number?)
   ;

@@ -2,6 +2,7 @@ package de.gaalop.clucalc.input;
 
 import de.gaalop.CodeParser;
 import de.gaalop.CodeParserPlugin;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -54,14 +55,4 @@ public class Plugin extends Observable implements CodeParserPlugin {
     	CluCalcCodeParser.INSTANCE.setPluginReference(this);
         return CluCalcCodeParser.INSTANCE;
     }
-        
-    /**
-     * Notifies this class' observers about new maximum number of assignments.
-     * 
-     * @param n
-     */
-	void setNumberOfAssignments(int n) {
-		setChanged();
-		notifyObservers(Integer.valueOf(n));
-	}
 }

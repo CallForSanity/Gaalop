@@ -59,6 +59,7 @@ public class ResultForm {
         for (OutputFile file : files) {
             JScrollPane filePane = new OutputFilePane(file);
             JTextPane textPane = new JTextPane();
+            textPane.setFont(Font.getFont(Font.SANS_SERIF));
             textPane.setText(file.getContent());
             filePane.setViewportView(textPane);
             tabbedPane.add(file.getName(), filePane);

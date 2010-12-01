@@ -10,7 +10,11 @@ import java.io.StringWriter;
 import java.io.PrintWriter;
 
 public class ErrorDialog extends JDialog {
-    private JPanel contentPane;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 2734636520548199800L;
+	private JPanel contentPane;
     private JButton buttonOk;
     private JEditorPane editorPane1;
     private JScrollPane scrollPane;
@@ -40,7 +44,7 @@ public class ErrorDialog extends JDialog {
         dispose();
     }
 
-    public static void show(Exception e) {
+    public static void show(Throwable e) {
         ErrorDialog dialog = new ErrorDialog();
         dialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         dialog.textPanel.setText(e.getMessage());
@@ -50,7 +54,7 @@ public class ErrorDialog extends JDialog {
         dialog.setVisible(true);
     }
 
-    private static String getStackTrace(Exception e) {
+    private static String getStackTrace(Throwable e) {
         StringWriter stringWriter = new StringWriter();
         PrintWriter printWriter = new PrintWriter(stringWriter);
         e.printStackTrace(printWriter);
@@ -75,7 +79,7 @@ public class ErrorDialog extends JDialog {
     private void $$$setupUI$$$() {
         contentPane = new JPanel();
         contentPane.setLayout(new BorderLayout(0, 0));
-        contentPane.setPreferredSize(new Dimension(480, 300));
+        contentPane.setPreferredSize(new Dimension(480, 270));
         final JPanel panel1 = new JPanel();
         panel1.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 10));
         contentPane.add(panel1, BorderLayout.SOUTH);

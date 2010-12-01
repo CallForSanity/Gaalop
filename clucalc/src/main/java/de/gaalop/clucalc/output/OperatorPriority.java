@@ -32,6 +32,10 @@ public class OperatorPriority {
     OPERATOR_PRIORITY.put(Subtraction.class, 950);
     OPERATOR_PRIORITY.put(Addition.class, 940);
     OPERATOR_PRIORITY.put(Relation.class, 930);
+    OPERATOR_PRIORITY.put(LogicalAnd.class, 930);
+    OPERATOR_PRIORITY.put(LogicalOr.class, 930);
+    OPERATOR_PRIORITY.put(Equality.class, 920);
+    OPERATOR_PRIORITY.put(Inequality.class, 920);
   }
 
   /**

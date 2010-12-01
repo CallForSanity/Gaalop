@@ -1,27 +1,30 @@
 package de.gaalop.cfg;
 
-import de.gaalop.InputFile;
-import de.gaalop.dfg.Expression;
-import de.gaalop.dfg.Variable;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import de.gaalop.InputFile;
+import de.gaalop.dfg.Expression;
+import de.gaalop.dfg.Variable;
 
 /**
  * This class models a control dataflow graph.
  * <p/>
- * It is usually created by a <code>CodeParser</code> and then processed by an <code>OptimizationStrategy</code> before it is
- * again converted to source code by a <code>CodeGenerator</code>.
+ * It is usually created by a <code>CodeParser</code> and then processed by an <code>OptimizationStrategy</code> before
+ * it is again converted to source code by a <code>CodeGenerator</code>.
  * <p/>
- * A ControlFlowGraph instance only holds references to the first and last node of the graph, which are modeled by the classes
- * StartNode and EndNode.
+ * A ControlFlowGraph instance only holds references to the first and last node of the graph, which are modeled by the
+ * classes StartNode and EndNode.
  * 
  * @author Sebastian Hartte
+ * @author Christian Schwinn
  * @see de.gaalop.CodeGenerator
  * @see de.gaalop.CodeParser
  * @see de.gaalop.OptimizationStrategy
@@ -33,7 +36,7 @@ public final class ControlFlowGraph {
 	private Log log = LogFactory.getLog(ControlFlowGraph.class);
 
 	private Set<Variable> localVariables = new HashSet<Variable>();
-
+	private Set<Variable> scalarVariables = new HashSet<Variable>();
 	private Set<Variable> inputVariables = new HashSet<Variable>();
 
 	private AlgebraSignature signature;
@@ -44,6 +47,11 @@ public final class ControlFlowGraph {
 
 	private InputFile source;
 
+	private Map<String, Macro> macros = new HashMap<String, Macro>();
+	private Set<Slider> sliders = new HashSet<Slider>();
+
+	private ColorNode bgColor;
+
 	/* store information about the pragmas */
 	private Set<String> pragmaOutputVariables = new HashSet<String>();
 
@@ -51,9 +59,9 @@ public final class ControlFlowGraph {
 	private HashMap<String, String> pragmaMaxValue = new HashMap<String, String>();
 
 	/**
-	 * This field contains a list of blades that correspond to the indices of a multi vector that is represented by an array. This
-	 * list can be modified, but whenever the underlying signature is changed, the blade list is automatically regenerated to a
-	 * sane value.
+	 * This field contains a list of blades that correspond to the indices of a multi vector that is represented by an
+	 * array. This list can be modified, but whenever the underlying signature is changed, the blade list is
+	 * automatically regenerated to a sane value.
 	 */
 	private Expression[] bladeList;
 
@@ -73,13 +81,69 @@ public final class ControlFlowGraph {
 		pragmaOutputVariables.add(name);
 	}
 
+	public void addScalarVariable(Variable tempVariable) {
+		scalarVariables.add(tempVariable);
+	}
+	
+	public void removeScalarVariable(String name) {
+		scalarVariables.remove(new Variable(name));
+	}
+
+	public Set<Variable> getScalarVariables() {
+		return scalarVariables;
+	}
+
 	/**
-	 * Adds a pragma hint for a variable, which defines value range for it. The pragma must be set before the variable is added to
-	 * the input variables, i.e. the pragma must appear for the use of the variable
+	 * Adds a pragma hint for a variable, which defines value range for it. The pragma must be set before the variable
+	 * is added to the input variables, i.e. the pragma must appear for the use of the variable
 	 */
 	public void addPragmaMinMaxValues(String variable, String min, String max) {
 		pragmaMaxValue.put(variable, max);
 		pragmaMinValue.put(variable, min);
+	}
+
+	/**
+	 * Adds a new macro definition.
+	 * 
+	 * @param macro new macro definition
+	 */
+	public void addMacro(Macro macro) {
+		macros.put(macro.getName(), macro);
+	}
+
+	public void addSlider(Slider slider) {
+		sliders .add(slider);
+	}
+	
+	public Set<Slider> getSliders() {
+		return sliders;
+	}
+
+	public void setBGColor(ColorNode color) {
+		bgColor = color;
+	}
+	
+	public ColorNode getBGColor() {
+		return bgColor;
+	}
+
+	/**
+	 * Returns the macro definition of a macro with given name, if available.
+	 * 
+	 * @param name name of macro to be returned
+	 * @return macro definition according to name or null, if not found
+	 */
+	public Macro getMacro(String name) {
+		return macros.get(name);
+	}
+
+	/**
+	 * Returns a list of macro definitions that are contained in this graph.
+	 * 
+	 * @return list of macro definitions
+	 */
+	public Set<Macro> getMacros() {
+		return new HashSet<Macro>(macros.values());
 	}
 
 	/**
@@ -97,9 +161,9 @@ public final class ControlFlowGraph {
 	/**
 	 * Gets the list of blades this control flow graph is using.
 	 * <p/>
-	 * Once the representation of multivectors has been lowered, this array can be used to identify the blades the elements of a
-	 * multivector array correspond to. This information can then be used to create a linear combination of the array elements
-	 * with the content of this array to reverse the lowering.
+	 * Once the representation of multivectors has been lowered, this array can be used to identify the blades the
+	 * elements of a multivector array correspond to. This information can then be used to create a linear combination
+	 * of the array elements with the content of this array to reverse the lowering.
 	 * <p/>
 	 * In a new graph this is equal to the default blade list of the underlying algebra signature.
 	 * 
@@ -199,7 +263,7 @@ public final class ControlFlowGraph {
 		// Check that the given variable is not part of the inputVariables set
 		if (inputVariables.contains(variable)) {
 			throw new IllegalArgumentException("The Variable " + variable.getName()
-				+ " cannot be a local variable and an input variable at the same time.");
+					+ " cannot be a local variable and an input variable at the same time.");
 		}
 
 		localVariables.add(variable);
@@ -208,12 +272,27 @@ public final class ControlFlowGraph {
 	/**
 	 * Removes a local variable from this graph.
 	 * <p/>
-	 * If <code>variable</code> is also an ouptut variable, it is removed from that set as well.
+	 * If <code>variable</code> is also an output variable, it is removed from that set as well.
 	 * 
 	 * @param variable The variable that should be removed.
 	 */
 	public void removeLocalVariable(Variable variable) {
 		localVariables.remove(variable);
+	}
+
+	/**
+	 * Determines whether there is a local variable with given name defined in this graph.
+	 * 
+	 * @param name name of variable
+	 * @return true, if a local variable with given name exists, false otherwise
+	 */
+	public boolean containsLocalVariable(String name) {
+		for (Variable v : localVariables) {
+			if (v.getName().equals(name)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -223,10 +302,21 @@ public final class ControlFlowGraph {
 	 * @throws IllegalArgumentException If <code>variable</code> is a local variable in this graph.
 	 */
 	public void addInputVariable(Variable variable) {
+		String name = variable.getName();
+		if ("true".equals(name) || "false".equals(name)) {
+			// ignore these keywords
+			return;
+		}
+		
 		// Check that the given variable is not part of the localVariables set
 		if (localVariables.contains(variable)) {
-			throw new IllegalArgumentException("The Variable " + variable.getName()
-				+ " cannot be a local variable and an input variable at the same time.");
+			throw new IllegalArgumentException("The Variable " + name
+					+ " cannot be a local variable and an input variable at the same time.");
+		}
+
+		if (name.contains("e")) {
+			throw new IllegalArgumentException("Input variable " + variable
+					+ " contains 'e' which is not supported by Maple.");
 		}
 
 		inputVariables.add(variable);
@@ -254,28 +344,19 @@ public final class ControlFlowGraph {
 	}
 
 	/**
-	 * Removes the given node from the control flow graph. The graph will be traversed in order to find the node to be removed.
-	 * Once the desired node is found, its predecessors are rewired to have the old node's successor as direct successors.
+	 * Removes the given node from the control flow graph. The graph will be traversed in order to find the node to be
+	 * removed. Once the desired node is found, its predecessors are rewired to have the old node's successor as direct
+	 * successors.
 	 * 
 	 * @param node node to be removed
 	 */
 	public void removeNode(SequentialNode node) {
 		Node successor = node.getSuccessor();
 		successor.removePredecessor(node);
-		for (Node predecessor : node.getPredecessors()) {
+		Set<Node> predecessors = new HashSet<Node>(node.getPredecessors());
+		for (Node predecessor : predecessors) {
 			successor.addPredecessor(predecessor);
-			if (predecessor instanceof IfThenElseNode) {
-				IfThenElseNode ifthenelse = (IfThenElseNode) predecessor;
-				if (node == ifthenelse.getPositive()) {
-					ifthenelse.setPositive(successor);
-				} else if (node == ifthenelse.getNegative()) {
-					ifthenelse.setNegative(successor);
-				} else {
-					ifthenelse.replaceSuccessor(node, successor);
-				}
-			} else {
-				predecessor.replaceSuccessor(node, successor);
-			}
+			predecessor.replaceSuccessor(node, successor);
 		}
 	}
 
@@ -283,10 +364,10 @@ public final class ControlFlowGraph {
 	public String toString() {
 		SequentialNode curr = startNode;
 		StringBuilder sb = new StringBuilder();
-		sb.append("CFG [");
+		sb.append("CFG:\n");
 		sb.append(startNode);
 		do {
-			sb.append(" -> ");
+			sb.append("\n--> ");
 			if (curr.getSuccessor() instanceof SequentialNode) {
 				curr = (SequentialNode) curr.getSuccessor();
 				sb.append(curr);
@@ -296,7 +377,136 @@ public final class ControlFlowGraph {
 				break;
 			}
 		} while (true);
-		sb.append(']');
 		return sb.toString();
+	}
+
+	public String prettyPrint() {
+		Printer printer = new Printer();
+		accept(printer);
+		return printer.getCode();
+	}
+
+	private static class Printer implements ControlFlowVisitor {
+
+		private int indent = 0;
+		private StringBuilder code = new StringBuilder();
+
+		Printer() {
+			// empty non-private constructor
+		}
+
+		String getCode() {
+			return code.toString();
+		}
+
+		private void appendIndent() {
+			for (int i = 0; i < indent; i++) {
+				code.append('\t');
+			}
+		}
+
+		@Override
+		public void visit(StartNode node) {
+			code.append("START\n");
+			node.getSuccessor().accept(this);
+		}
+
+		@Override
+		public void visit(AssignmentNode node) {
+			appendIndent();
+			code.append(node.getVariable());
+			code.append(" = ");
+			code.append(node.getValue());
+			code.append(";\n");
+			node.getSuccessor().accept(this);
+		}
+
+		@Override
+		public void visit(StoreResultNode node) {
+			appendIndent();
+			code.append(node);
+			code.append(";\n");
+			node.getSuccessor().accept(this);
+		}
+
+		@Override
+		public void visit(IfThenElseNode node) {
+			appendIndent();
+			code.append("if (");
+			code.append(node.getCondition());
+			code.append(") {\n");
+			indent++;
+			node.getPositive().accept(this);
+			indent--;
+			appendIndent();
+			code.append("} else {");
+			indent++;
+			node.getNegative().accept(this);
+			indent--;
+			appendIndent();
+			code.append("}\n");
+			node.getSuccessor().accept(this);
+		}
+
+		@Override
+		public void visit(BlockEndNode node) {
+		}
+
+		@Override
+		public void visit(LoopNode node) {
+			appendIndent();
+			code.append("loop {\n");
+			indent++;
+			node.getBody().accept(this);
+			indent--;
+			appendIndent();
+			code.append("}\n");
+			node.getSuccessor().accept(this);
+		}
+
+		@Override
+		public void visit(BreakNode node) {
+			appendIndent();
+			code.append("break;\n");
+		}
+
+		@Override
+		public void visit(Macro node) {
+			appendIndent();
+			code.append(node.getName());
+			code.append(" = {\n");
+			indent++;
+			if (node.getBody().size() > 0) {
+				node.getBody().get(0).accept(this);
+			}
+			if (node.getReturnValue() != null) {
+				appendIndent();
+				code.append(node.getReturnValue());
+			}
+			indent--;
+			appendIndent();
+			code.append("}\n");
+			node.getSuccessor().accept(this);
+		}
+
+		@Override
+		public void visit(ExpressionStatement node) {
+			appendIndent();
+			code.append(node);
+			node.getSuccessor().accept(this);
+		}
+
+		@Override
+		public void visit(EndNode node) {
+			code.append("END");
+		}
+
+		@Override
+		public void visit(ColorNode node) {
+			appendIndent();
+			code.append(":");
+			code.append(node);
+		}
+
 	}
 }

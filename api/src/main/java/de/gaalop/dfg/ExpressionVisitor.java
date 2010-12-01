@@ -116,7 +116,14 @@ public interface ExpressionVisitor {
      *
      * @param node The object that called this method.
      */
-    void visit(LogicalAnd node);
+    void visit(LogicalAnd node); 
+    
+    /**
+     * This method is called by {@link LogicalNegation#accept(ExpressionVisitor)}.
+     * 
+     * @param node The object that called this method.
+     */
+    void visit(LogicalNegation node);
     
     /**
      * This method is called by {@link de.gaalop.dfg.Equality#accept(ExpressionVisitor)}.
@@ -138,4 +145,19 @@ public interface ExpressionVisitor {
      * @param node The object that called this method.
      */
     void visit(Relation relation);
+
+    /**
+     * This method is called by {@link de.gaalop.dfg.FunctionArgument#accept(ExpressionVisitor)}.
+     *
+     * @param node The object that called this method.
+     */
+	void visit(FunctionArgument node);
+	
+	/**
+	 * This method is called by {@link de.gaalop.dfg.MacroCall#accept(ExpressionVisitor)}.
+	 *
+	 * @param node The object that called this method.
+	 */
+	void visit(MacroCall node);
+
 }

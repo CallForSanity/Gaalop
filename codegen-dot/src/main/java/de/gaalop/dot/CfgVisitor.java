@@ -4,6 +4,7 @@ import de.gaalop.cfg.*;
 import de.gaalop.dfg.Expression;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Stack;
 
 /**
  * This class exports a control flow graph to the DOT language used by GraphViz.
@@ -13,6 +14,7 @@ public class CfgVisitor implements ControlFlowVisitor {
     private StringBuilder result = new StringBuilder();
 
     private Map<Object, String> idMap = new HashMap<Object, String>();
+    private Stack<LoopNode> nestedLoops = new Stack<LoopNode>();
 
     private int highestId = 0;
     private static final String EDGE_COLOR_FORWARD = "darkolivegreen1";
@@ -40,6 +42,9 @@ public class CfgVisitor implements ControlFlowVisitor {
     }
 
     private void addEdge(Object n1, Object n2, String color) {
+    	if (n2 instanceof BlockEndNode) {
+    		return;
+    	}
         result.append('\t');
         result.append(getId(n1));
         result.append(" -> ");
@@ -56,12 +61,6 @@ public class CfgVisitor implements ControlFlowVisitor {
         result.append("\"];\n");
 
         addPredecessorEdges(node);
-    }
-
-    @Override
-    public void visit(EndNode endNode) {
-        addNode(endNode, "End");
-        result.append("}\n");
     }
 
     private void addPredecessorEdges(Node node) {
@@ -97,30 +96,85 @@ public class CfgVisitor implements ControlFlowVisitor {
 
         assignmentNode.getSuccessor().accept(this);
     }
+	
+	@Override
+	public void visit(ExpressionStatement node) {
+		addNode(node, "Expression:\\n" + node.getExpression());
+		node.getSuccessor().accept(this);
+	}
 
     @Override
-    public void visit(StoreResultNode node) {
-        addNode(node, "Output:\\n" + node.getValue());
-        addForwardEdge(node, node.getSuccessor());
-        node.getSuccessor().accept(this);
-    }
+	public void visit(StoreResultNode node) {
+	    addNode(node, "Output:\\n" + node.getValue());
+	    addForwardEdge(node, node.getSuccessor());
+	    node.getSuccessor().accept(this);
+	}
 
-    private String getCode(Expression expression, String prefix) {
+	@Override
+	public void visit(IfThenElseNode node) {
+		String label = "if\\n" + node.getCondition().toString();
+		addNode(node, label);
+		addForwardEdge(node, node.getPositive());
+		node.getPositive().accept(this);
+		if (!(node.getNegative() instanceof BlockEndNode)) {
+			addForwardEdge(node, node.getNegative());
+			node.getNegative().accept(this);
+		}
+		node.getSuccessor().accept(this);
+	}
+
+	@Override
+	public void visit(LoopNode node) {
+		addNode(node, "loop");
+		addForwardEdge(node, node.getBody());
+		nestedLoops.push(node);
+		node.getBody().accept(this);
+		nestedLoops.pop();
+		
+		node.getSuccessor().accept(this);
+	}
+
+	@Override
+	public void visit(BreakNode node) {
+		addNode(node, "break");
+		addForwardEdge(node, nestedLoops.peek().getSuccessor());
+		node.getSuccessor().accept(this);
+	}
+
+	@Override
+	public void visit(BlockEndNode node) {
+		SequentialNode base = node.getBase();
+		if (base instanceof LoopNode) {
+			for (Node p : node.getPredecessors()) {
+				if (idMap.containsKey(p)) {
+					addForwardEdge(p, base);
+				}
+			}
+		} else {
+			addForwardEdge(base, base.getSuccessor());
+		}
+	}
+
+	@Override
+	public void visit(EndNode endNode) {
+	    addNode(endNode, "End");
+	    result.append("}\n");
+	}
+
+	private String getCode(Expression expression, String prefix) {
         DfgVisitor visitor = new DfgVisitor();
         visitor.setIdPrefix(prefix);
         expression.accept(visitor);
         return visitor.toString();
     }
 
-    @Override
-    public void visit(IfThenElseNode node) {
-      // TODO Auto-generated method stub
-      
-    }
+	@Override
+	public void visit(Macro node) {
+		throw new IllegalArgumentException("Macros should have been inlined.");
+	}
 
-    @Override
-    public void visit(BlockEndNode node) {
-      // TODO Auto-generated method stub
-      
-    }
+	@Override
+	public void visit(ColorNode node) {
+		node.getSuccessor().accept(this);
+	}
 }

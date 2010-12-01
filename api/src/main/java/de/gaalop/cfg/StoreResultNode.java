@@ -1,5 +1,6 @@
 package de.gaalop.cfg;
 
+import de.gaalop.dfg.Expression;
 import de.gaalop.dfg.Variable;
 
 /**
@@ -37,6 +38,13 @@ public final class StoreResultNode extends SequentialNode {
     public void setValue(Variable value) {
         this.value = value;
     }
+    
+    @Override
+    public void replaceExpression(Expression old, Expression newExpression) {
+    	if (value == old && newExpression instanceof Variable) {
+    		value = (Variable) newExpression;
+    	}
+    }
 
     /**
      * Calls {@link de.gaalop.cfg.ControlFlowVisitor#visit(StoreResultNode)} on a visitor.
@@ -46,6 +54,11 @@ public final class StoreResultNode extends SequentialNode {
     @Override
     public void accept(ControlFlowVisitor visitor) {
         visitor.visit(this);
+    }
+    
+    @Override
+    public StoreResultNode copyElements() {
+    	return new StoreResultNode(getGraph(), value.copy());
     }
     
     @Override

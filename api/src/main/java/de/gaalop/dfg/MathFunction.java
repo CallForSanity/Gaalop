@@ -74,5 +74,9 @@ public enum MathFunction {
     /**
      * Evaluates the tangent of an angle.
      */
-    TAN
+    TAN;
+    
+    public String toString() { 
+    	return super.toString().toLowerCase();
+    }
 }

@@ -46,9 +46,12 @@ public class MapleDfgVisitor implements ExpressionVisitor {
 
 	@Override
 	public void visit(Division division) {
+		if (division.getRight().equals(new FloatConstant(0.0f))) {
+			throw new IllegalArgumentException("Division by zero: " + division);
+		}
 		codeBuffer.append("subs(Id=1,");
-		handleInfix(division, ") &c inverse(");
-		codeBuffer.append(')');
+		handleInfix(division, ") &c inverse(simplify(");
+		codeBuffer.append("))");
 	}
 
 	@Override
@@ -57,10 +60,11 @@ public class MapleDfgVisitor implements ExpressionVisitor {
 			throw new IllegalStateException("This visitor cannot process the inner product in non-clifford mode.");
 		}
 		codeBuffer.append("subs(Id=1,innerproduct(");
+		codeBuffer.append("simplify(");
 		innerProduct.getLeft().accept(this);
-		codeBuffer.append(',');
+		codeBuffer.append("), simplify(");
 		innerProduct.getRight().accept(this);
-		codeBuffer.append("))");
+		codeBuffer.append(")))");
 	}
 
 	@Override
@@ -78,15 +82,19 @@ public class MapleDfgVisitor implements ExpressionVisitor {
 	public void visit(MathFunctionCall mathFunctionCall) {
 		MathFunction function = mathFunctionCall.getFunction();
 
-		// Special case: abs() has to be translated to self-defined mul_abs() (see cliffordfunctions.mws)
 		if (function == MathFunction.ABS) {
+			// Special case: abs() -> mul_abs() (see cliffordfunctions.mws)
 			codeBuffer.append("mul_abs");
+		} else if (function == MathFunction.SQRT) {
+			// Special case: sqrt() -> wurzel() (see cliffordfunctions.mws)
+			codeBuffer.append("wurzel");
 		} else {
 			codeBuffer.append(function.toString().toLowerCase());
 		}
-		codeBuffer.append('(');
+		// additional simplification to remove 1.00000000 which causes Cliffordlib's LC to fail
+		codeBuffer.append("(simplify(");
 		mathFunctionCall.getOperand().accept(this);
-		codeBuffer.append(')');
+		codeBuffer.append("))");
 	}
 
 	@Override
@@ -155,31 +163,43 @@ public class MapleDfgVisitor implements ExpressionVisitor {
 
 	@Override
 	public void visit(LogicalOr node) {
-		// TODO Auto-generated method stub
-
+		handleInfix(node, "or");
 	}
 
 	@Override
 	public void visit(LogicalAnd node) {
-		// TODO Auto-generated method stub
-
+		handleInfix(node, "and");
+	}
+	
+	@Override
+	public void visit(LogicalNegation node) {
+		codeBuffer.append("(not(");
+		node.getOperand().accept(this);
+		codeBuffer.append("))");
 	}
 
 	@Override
 	public void visit(Equality node) {
-		// TODO Auto-generated method stub
-
+		handleInfix(node, "=");
 	}
 
 	@Override
 	public void visit(Inequality node) {
-		// TODO Auto-generated method stub
-
+		handleInfix(node, "<>");
 	}
 
 	@Override
 	public void visit(Relation relation) {
-		// TODO Auto-generated method stub
+		handleInfix(relation, relation.getTypeString());
+	}
 
+	@Override
+	public void visit(FunctionArgument node) {
+		throw new IllegalStateException("Macros should have been inlined, so function arguments are not allowed here.");
+	}
+
+	@Override
+	public void visit(MacroCall node) {		
+		throw new IllegalStateException("Macros should have been inlined, so macro calls are not allowed here.");
 	}
 }

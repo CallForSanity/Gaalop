@@ -14,6 +14,7 @@ tokens {
 	FUNCTION;
 	MV_SUBSCRIPT; // Accessing one MV component
 	VARIABLE;
+	ASSIGN;
 	ASSIGNBLADE; // Assigns a blade to a MV component
 	NEGATION; // Unary Negation
 
@@ -34,7 +35,7 @@ program	:
 	;
 
 statement
-	: ( declareArray | assignCoefficient ) SEMICOLON!
+	: ( declareArray | assignCoefficient | assignment ) SEMICOLON!
 	; 
 
 // Declare a new multivector (we know how many coefficients)
@@ -45,6 +46,10 @@ declareArray
 assignCoefficient
 	: (mvName=IDENTIFIER LSBRACKET bladeIndex=DECIMAL_LITERAL RSBRACKET ASSIGNMENT value=additive_expression) -> ^(COEFFICIENT $mvName $bladeIndex $value)
 	;
+	
+assignment
+  : var=IDENTIFIER ASSIGNMENT value=additive_expression -> ^(ASSIGN $var $value)
+  ;
 
 coefficientExpression
 	: coefficientBlade ( PLUS! coefficientBlade )*

@@ -32,14 +32,14 @@ public enum CluCalcCodeParser implements CodeParser {
 
     @Override
     public ControlFlowGraph parseFile(InputFile input) throws CodeParserException {
-        log.debug("Processing " + input.getName() + ", Content: " + input.getContent());
+        log.debug("Processing " + input.getName() + ", Content: \n" + input.getContent());
 
         ControlFlowGraph graph;
 
         try {
             graph = parse(input);
         } catch (Throwable e) {
-            throw new CodeParserException(input, "Unable to parse CluCalc file.\n" + e.getMessage(), e);
+            throw new CodeParserException(input, e.getMessage(), e);
         }
 
         graph.setSource(input);
@@ -70,9 +70,6 @@ public enum CluCalcCodeParser implements CodeParser {
         CommonTreeNodeStream treeNodeStream = new CommonTreeNodeStream(parserResult.getTree());
         CluCalcTransformer transformer = new CluCalcTransformer(treeNodeStream);
         ControlFlowGraph graph = transformer.script();
-        if (plugin != null) {
-        	plugin.setNumberOfAssignments(transformer.getNumberOfAssignments());
-        }
 
         if (!parser.getErrors().isEmpty()) {
             StringBuilder message = new StringBuilder();

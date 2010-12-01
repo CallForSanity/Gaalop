@@ -250,7 +250,10 @@ public class AlgebraSignature {
      */
     private static class BladeComparator implements Comparator<List<BaseVector>> {
 
-      @Override
+      public BladeComparator() {
+      }
+
+	@Override
       public int compare(List<BaseVector> o1, List<BaseVector> o2) {
         if (o1.size() < o2.size()) {
           return -1;

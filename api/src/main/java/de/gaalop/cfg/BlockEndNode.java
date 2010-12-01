@@ -6,14 +6,17 @@ package de.gaalop.cfg;
  * @author Christian Schwinn
  */
 public final class BlockEndNode extends SequentialNode {
+	
+	private SequentialNode base;
 
     /**
      * Constructs a block end node.
      *
      * @param graph    The control flow graph the new node should belong to.
      */
-    public BlockEndNode(ControlFlowGraph graph) {
+    public BlockEndNode(ControlFlowGraph graph, SequentialNode base) {
         super(graph);
+        this.base = base;
     }
 
     /**
@@ -25,14 +28,32 @@ public final class BlockEndNode extends SequentialNode {
         visitor.visit(this);
     }
     
-    @Override
-    public Node getSuccessor() {
-      throw new UnsupportedOperationException("A block end node is not supposed to have a successor");
-    }
+    public SequentialNode getBase() {
+		return base;
+	}
+    
+//    @Override
+//    public Node getSuccessor() {
+//      throw new UnsupportedOperationException("A block end node is not supposed to have a successor");
+//    }
+//    
+//    @Override
+//    void setSuccessor(Node successor) {
+//      throw new UnsupportedOperationException("A block end node is not supposed to have a successor");
+//    }
     
     @Override
-    void setSuccessor(Node successor) {
-      throw new UnsupportedOperationException("A block end node is not supposed to have a successor");
+    public BlockEndNode copyElements() {
+    	return new BlockEndNode(getGraph(), null);
+    }
+    
+    /**
+     * Has to be called each time {@link #copyElements()} is called on a block end node to update the new base. 
+     * 
+     * @param newBase new node where this block end belongs to
+     */
+    void updateBase(SequentialNode newBase) {
+    	base = newBase;
     }
 
     @Override

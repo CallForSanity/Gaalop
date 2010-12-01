@@ -16,12 +16,12 @@ public class MapleEngineException extends Exception {
   }
 
   public MapleEngineException(String message, String lastEvaluatedCommand) {
-    super(message);
+    super(message + " Command was: " + lastEvaluatedCommand);
     this.lastEvaluatedCommand = lastEvaluatedCommand;
   }
 
   public MapleEngineException(String message, String lastEvaluatedCommand, Throwable cause) {
-    super(message, cause);
+    super(message + " Command was: " + lastEvaluatedCommand, cause);
     this.lastEvaluatedCommand = lastEvaluatedCommand;
   }
 
