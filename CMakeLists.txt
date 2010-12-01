@@ -1,4 +1,5 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
+CMAKE_POLICY(SET CMP0011 NEW)
 PROJECT(GaalopCompilerDriver)
 
 ENABLE_TESTING()
@@ -35,7 +36,7 @@ ADD_SUBDIRECTORY(share)
 
 # build
 add_custom_target(gaalop ALL COMMENT "Compiling Gaalop.")
-add_custom_command(TARGET gaalop COMMAND ${MVN_BINARY} package assembly:directory WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+add_custom_command(TARGET gaalop COMMAND ${MVN_BINARY} -DupdateOnly=true package assembly:directory WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 add_custom_command(TARGET clean COMMAND ${MVN_BINARY} clean WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 # copy
 COPY_DIRECTORY(gaalop-copy "target/gaalop*" "share/gcd/gaalop")
