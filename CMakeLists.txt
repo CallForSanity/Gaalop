@@ -1,4 +1,4 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
+CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 PROJECT(GaalopCompilerDriver)
 
 ENABLE_TESTING()
@@ -18,6 +18,8 @@ INCLUDE(CPack)
 ADD_SUBDIRECTORY(gcd-body)
 
 # use packages
+FIND_PACKAGE(Maven REQUIRED)
+INCLUDE(share/cmake-2.8/Modules/CopyFiles.cmake)
 OPTION(BUILD_WITH_OPENMP "build with OpenMP")
 if(BUILD_WITH_OPENMP)
   FIND_PACKAGE(OpenMP)
@@ -31,11 +33,17 @@ ADD_SUBDIRECTORY(bin)
 ADD_SUBDIRECTORY(gcd-config)
 ADD_SUBDIRECTORY(share)
 
+# build
+add_custom_target(gaalop ALL COMMENT "Compiling Gaalop.")
+add_custom_command(TARGET gaalop COMMAND ${MVN_BINARY} package assembly:directory WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+add_custom_command(TARGET clean COMMAND ${MVN_BINARY} clean WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 # copy
-FILE(COPY target DESTINATION share/gcd)
-
+COPY_DIRECTORY(gaalop-copy "target/gaalop*" "share/gcd/gaalop")
+COPY_DIRECTORY(dependencies-copy dependencies "share/gcd/gaalop/plugins")
 # install
-INSTALL(DIRECTORY target DESTINATION share/gcd PATTERN ".svn" EXCLUDE)
+FILE(GLOB GAALOP_BUILD_TARGET_DIR "target/gaalop*")
+INSTALL(DIRECTORY ${GAALOP_BUILD_TARGET_DIR} DESTINATION share/gcd PATTERN ".svn" EXCLUDE)
+INSTALL(DIRECTORY dependencies DESTINATION share/gcd/gaalop/plugins PATTERN ".svn" EXCLUDE)
 
 # set root dir
 SET(GCD_ROOT_DIR "${CMAKE_CURRENT_BINARY_DIR}")

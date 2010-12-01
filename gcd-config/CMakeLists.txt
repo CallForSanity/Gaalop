@@ -1,5 +1,3 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
-
 # options
 OPTION(BUILD_WITH_QT "build with Qt")
 

@@ -125,10 +125,10 @@ int body(std::string& intermediateFilePath,std::string& outputFilePath,
     std::string gaalopPath;
 #ifdef WIN32
     readFile(gaalopPath,"..\\share\\gcd\\gaalop_settings.bat");
-    chdir("..\\share\\gcd\\target\\gaalop-1.0.0-bin");
+    chdir("..\\share\\gcd\\gaalop");
 #else
     readFile(gaalopPath,"../share/gcd/gaalop_settings.sh");
-    chdir("../share/gcd/target/gaalop-1.0.0-bin");
+    chdir("../share/gcd/gaalop");
 #endif
     const int numGaalopFiles = gaalopInFilePathVector.size();
     #pragma omp parallel for
@@ -143,9 +143,9 @@ int body(std::string& intermediateFilePath,std::string& outputFilePath,
     }
     //chdir(appPath.c_str());
 #ifdef WIN32
-    chdir("..\\..\\..\\..\\bin");
+    chdir("..\\..\\..\\bin");
 #else
-    chdir("../../../../bin");
+    chdir("../../../bin");
 #endif
 
     // compose intermediate file

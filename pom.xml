@@ -18,11 +18,11 @@
         <module>cli</module>
         <module>gui</module>
         <module>codegen-cpp</module>
-        <module>codegen-compressed</module>
-        <module>codegen-gaalet</module>
         <module>codegen-latex</module>
-        <module>codegen-dot</module>
         <module>starter</module>
+        <module>codegen-dot</module>
+        <module>setup</module>
+        <module>codegen-verilog</module>
     </modules>
 
     <!--
@@ -103,4 +103,8 @@
             <url>http://nexus.code-camp.org/content/repositories/thirdparty/</url>
         </repository>
     </repositories>
+    
+    <properties>
+    	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
 </project>
