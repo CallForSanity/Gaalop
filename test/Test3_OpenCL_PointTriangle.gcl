@@ -1,3 +1,44 @@
+enum BLADES
+{
+SCALAR,
+
+E1,
+E2,
+E3,
+EINF,
+E0,
+
+E12,
+E13,
+E1INF,
+E10,
+E23,
+E2INF,
+E20,
+E3INF,
+E30,
+EINF0,
+
+E123,
+E12INF,
+E120,
+E13INF,
+E130,
+E1INF0,
+E23INF,
+E230,
+E2INF0,
+E3INF0,
+
+E123INF,
+E1230,
+E12INF0,
+E13INF0,
+E23INF0,
+
+E123INF0
+};
+
 __kernel void pointTriangleTest(__global bool* collision,
 			    	__global const float* triangles,
 			    	__global const float* point,
@@ -50,9 +91,9 @@ __kernel void pointTriangleTest(__global bool* collision,
 	?d3 = side3 . TestPoint;
 #pragma gcd end
 
-	if(d[0]*d[0] > h*h ||
-	   d1[0] <= 0.0f && d2[0] <= 0.0f && d3[0] <= 0.0f ||
-	   d1[0] >= 0.0f && d2[0] >= 0.0f && d3[0] >= 0.0f)
+	if(d[SCALAR]*d[SCALAR] > h*h ||
+	   d1[SCALAR] <= 0.0f && d2[SCALAR] <= 0.0f && d3[SCALAR] <= 0.0f ||
+	   d1[SCALAR] >= 0.0f && d2[SCALAR] >= 0.0f && d3[SCALAR] >= 0.0f)
   		collision[id] = true;
 	else
 		collision[id] = false;
