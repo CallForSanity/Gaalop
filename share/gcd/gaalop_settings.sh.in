@@ -1,0 +1,5 @@
+#!/bin/sh
+export PATH="$PATH:${SETTINGS_MAPLE_BIN_DIR}/../bin"
+export LD_LIBRARY_PATH="${SETTINGS_MAPLE_BIN_DIR}"
+export MAPLE="${SETTINGS_MAPLE_BIN_DIR}/.."
+java -jar starter-1.0.0.jar -m "${SETTINGS_MAPLE_BIN_DIR}" -i $*

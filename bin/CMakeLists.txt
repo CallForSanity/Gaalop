@@ -1,5 +1,3 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
-
 # build executables
 ADD_EXECUTABLE(gcd-cxx "gcdCxx.cpp")
 TARGET_LINK_LIBRARIES(gcd-cxx gcd-body)

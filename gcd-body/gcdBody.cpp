@@ -16,7 +16,7 @@ int body(std::string& intermediateFilePath,std::string& outputFilePath,
          const char* gaalopOutFileExtension,const char* intermediateFileExtension,
          const char* outputFileExtension,const char* outputOption)
 {
-    if(argc <= 1)
+    if(argc <= 2)
     {
 	std::cout << "usage: specify build parameters/files.\n";
 	return -1;
@@ -123,13 +123,16 @@ int body(std::string& intermediateFilePath,std::string& outputFilePath,
 
     // process gaalop intermediate files
     std::string gaalopPath;
+
 #ifdef WIN32
     readFile(gaalopPath,"..\\share\\gcd\\gaalop_settings.bat");
     chdir("..\\share\\gcd\\gaalop");
 #else
-    readFile(gaalopPath,"../share/gcd/gaalop_settings.sh");
+    //readFile(gaalopPath,"../share/gcd/gaalop_settings.sh");
     chdir("../share/gcd/gaalop");
+    gaalopPath = "../gaalop_settings.sh";
 #endif
+
     const int numGaalopFiles = gaalopInFilePathVector.size();
     #pragma omp parallel for
     for(gaalopFileCount = 1; gaalopFileCount <= numGaalopFiles; ++gaalopFileCount)
@@ -138,7 +141,7 @@ int body(std::string& intermediateFilePath,std::string& outputFilePath,
         std::stringstream gaalopCommand;
         gaalopCommand << gaalopPath;
         gaalopCommand << " \"" << tempFilePath << '.' << gaalopFileCount << gaalopInFileExtension << '\"';
-        std::cout << gaalopCommand.str() << std::endl;
+        //std::cout << gaalopCommand.str() << std::endl;
         system(gaalopCommand.str().c_str());
     }
     //chdir(appPath.c_str());
