@@ -59,7 +59,7 @@ public class Main {
     	while(t.getCause() != null)
     		t = t.getCause();
     	
-    	System.out.println(t.getMessage());
+    	System.err.println(t.getMessage());
     }
   }
 

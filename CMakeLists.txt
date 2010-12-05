@@ -39,6 +39,7 @@ add_custom_target(gaalop ALL COMMENT "Compiling Gaalop.")
 add_custom_command(TARGET gaalop COMMAND ${MVN_BINARY} -DupdateOnly=true package assembly:directory WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 add_custom_command(TARGET clean COMMAND ${MVN_BINARY} clean WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 # copy
+COPY_DIRECTORY(include-copy include include)
 COPY_DIRECTORY(gaalop-copy "target/gaalop*" "share/gcd/gaalop")
 COPY_DIRECTORY(dependencies-copy dependencies "share/gcd/gaalop/plugins")
 # install
