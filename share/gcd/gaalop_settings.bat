@@ -1,1 +1,0 @@
-java -jar starter-1.0.0.jar -m "C:\Program Files (x86)\Maple 12\bin.win" -i

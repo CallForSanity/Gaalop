@@ -1,1 +1,0 @@
-export PATH="$PATH:/opt/maple13/bin.X86_64_LINUX/../bin"; export LD_LIBRARY_PATH="/opt/maple13/bin.X86_64_LINUX"; export MAPLE="/opt/maple13/bin.X86_64_LINUX/.."; java -jar starter-1.0.0.jar -m "/opt/maple13/bin.X86_64_LINUX" -i

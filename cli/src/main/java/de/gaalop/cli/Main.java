@@ -55,6 +55,12 @@ public class Main {
       System.err.println(e.getMessage());
       parser.printUsage(System.err);
     }
+    catch(Throwable t) {
+    	while(t.getCause() != null)
+    		t = t.getCause();
+    	
+    	System.out.println(t.getMessage());
+    }
   }
 
   /**
