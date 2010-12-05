@@ -43,8 +43,8 @@ COPY_DIRECTORY(gaalop-copy "target/gaalop*" "share/gcd/gaalop")
 COPY_DIRECTORY(dependencies-copy dependencies "share/gcd/gaalop/plugins")
 # install
 FILE(GLOB GAALOP_BUILD_TARGET_DIR "target/gaalop*")
-INSTALL(DIRECTORY ${GAALOP_BUILD_TARGET_DIR} DESTINATION share/gcd PATTERN ".svn" EXCLUDE)
-INSTALL(DIRECTORY dependencies DESTINATION share/gcd/gaalop/plugins PATTERN ".svn" EXCLUDE)
+INSTALL(DIRECTORY "${GAALOP_BUILD_TARGET_DIR}/." DESTINATION share/gcd/gaalop PATTERN ".svn" EXCLUDE)
+INSTALL(DIRECTORY "dependencies/." DESTINATION share/gcd/gaalop/plugins PATTERN ".svn" EXCLUDE)
 
 # set root dir
 SET(GCD_ROOT_DIR "${CMAKE_CURRENT_BINARY_DIR}")
