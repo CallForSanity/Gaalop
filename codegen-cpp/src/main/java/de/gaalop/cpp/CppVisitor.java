@@ -77,6 +77,13 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 		} else {
 			for (Variable var : localVariables) {
 				appendIndentation();
+
+				// GCD definition
+				code.append("#pragma gcd multivector ");
+				code.append(var.getName());
+				code.append('\n');
+				
+				// standard definition
 				code.append("float ");
 				code.append(var.getName());
 				code.append("[32] = { 0.0f };\n");
@@ -283,6 +290,23 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 
 	@Override
 	public void visit(MultivectorComponent component) {
+		// GCD definition
+		String componentName = component.getName().replace(suffix, "") + '_' + component.getBladeIndex();
+		if(!assigned.contains(componentName))
+		{
+			code.append("#pragma gcd multivector_component ");
+			code.append(component.getName().replace(suffix, ""));
+			code.append(' ');
+			code.append(component.getBladeIndex());
+			code.append('\n');
+			code.append("const float ");
+			code.append(componentName);
+			code.append(" = ");
+			
+			assigned.add(componentName);
+		}
+
+		// standard definition
 		code.append(component.getName().replace(suffix, ""));
 		code.append('[');
 		code.append(component.getBladeIndex());

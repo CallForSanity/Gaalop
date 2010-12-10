@@ -1,7 +1,11 @@
+#include <vector>
+#include <map>
 #include <assert.h>
 #include <unistd.h>
+#include "../include/gcd.h"
 #include "gcdBody.h"
 
+#define PATH_LENGTH 4096
 #ifdef WIN32
 #define PATH_SEP '\\'
 #else
@@ -23,8 +27,8 @@ int body(std::string& intermediateFilePath,std::string& outputFilePath,
     }
 
     // save working directory
-    char runPath[4096];
-    getcwd(runPath,4096);
+    char runPath[PATH_LENGTH];
+    getcwd(runPath,PATH_LENGTH);
 
     // change working directory to application directory
     std::string appPath(argv[0]);
@@ -87,9 +91,8 @@ int body(std::string& intermediateFilePath,std::string& outputFilePath,
     }
 
     // process input file
-    // split into gaalop input files
-    int gaalopFileCount = 0;
-    std::vector<std::string> gaalopInFilePathVector;
+    // split into gaalop input files and save in memory
+    std::vector<std::string> gaalopInFileVector;
     std::string line;
     {
         std::ifstream inputFile(inputFilePath.c_str());
@@ -101,9 +104,7 @@ int body(std::string& intermediateFilePath,std::string& outputFilePath,
             // found gaalop line
             if(line.find("#pragma gcd begin") != std::string::npos)
             {
-                std::stringstream gaalopInFilePath;
-                gaalopInFilePath << tempFilePath << '.' << ++gaalopFileCount << gaalopInFileExtension;
-                std::ofstream gaalopInFile(gaalopInFilePath.str().c_str());
+                std::stringstream gaalopInFile;
 
                 // read until end of optimized file
                 while(inputFile.good())
@@ -116,14 +117,13 @@ int body(std::string& intermediateFilePath,std::string& outputFilePath,
                 }
 
                 // add to vector
-                gaalopInFilePathVector.push_back(gaalopInFilePath.str().c_str());
+		gaalopInFileVector.push_back(gaalopInFile.str());
             }
         }
     }
 
-    // process gaalop intermediate files
+    // process gaalop intermediate files - call gaalop
     std::string gaalopPath;
-
 #ifdef WIN32
     readFile(gaalopPath,"..\\share\\gcd\\gaalop_settings.bat");
     chdir("..\\share\\gcd\\gaalop");
@@ -132,19 +132,154 @@ int body(std::string& intermediateFilePath,std::string& outputFilePath,
     chdir("../share/gcd/gaalop");
     gaalopPath = "../gaalop_settings.sh";
 #endif
-
-    const int numGaalopFiles = gaalopInFilePathVector.size();
-    #pragma omp parallel for
-    for(gaalopFileCount = 1; gaalopFileCount <= numGaalopFiles; ++gaalopFileCount)
+    std::stringstream variables;
+    for(int gaalopFileCount = 0; gaalopFileCount < gaalopInFileVector.size(); ++gaalopFileCount)
     {
+        // retrieve multivectors from previous parts
+	if(gaalopFileCount > 0)
+	{
+		std::vector<std::string> mvNames;
+		std::multimap<std::string,int> mvComponents;
+
+        	std::stringstream gaalopOutFilePath;
+		gaalopOutFilePath << tempFilePath << '.' << gaalopFileCount - 1 << gaalopOutFileExtension;
+		std::cout << gaalopOutFilePath.str() << std::endl;
+		std::ifstream gaalopOutFile(gaalopOutFilePath.str().c_str());
+		if(!gaalopOutFile.good())
+		{
+			std::cerr << "fatal error: Gaalop-generated file not found. Check your Java installation. "\
+        	                         "Also check your Maple directory and Cliffordlib using the Configuration Tool.\n";
+			return -1;
+        	}
+        	while(gaalopOutFile.good())
+        	{
+        		getline(gaalopOutFile,line);
+
+			// retrieve multivector declarations
+			{
+				const std::string mvSearchString("#pragma gcd multivector ");
+				size_t statementPos = line.find(mvSearchString);
+				if(statementPos != std::string::npos)
+					mvNames.push_back(line.substr(statementPos + mvSearchString.length()));
+			}
+			
+			// retrieve multivector component decalrations
+			{
+				const std::string mvCompSearchString("#pragma gcd multivector_component ");
+				size_t statementPos = line.find(mvCompSearchString);
+				if(statementPos != std::string::npos)
+				{
+					std::stringstream lineStream(line.substr(statementPos + mvCompSearchString.length()));
+					std::string mvName; lineStream >> mvName;
+					int mvBladeIndex; lineStream >> mvBladeIndex;
+					mvComponents.insert(std::multimap<std::string,int>::value_type(mvName,mvBladeIndex));
+				}
+			}
+        	}
+
+		for(std::vector<std::string>::const_iterator mvNamesIter = mvNames.begin(); mvNamesIter != mvNames.end(); ++mvNamesIter)
+		{
+			const std::string& mvName = *mvNamesIter;
+			variables << mvName << " = 0";
+
+			std::pair<std::multimap<std::string,int>::const_iterator,std::multimap<std::string,int>::const_iterator> mvComponentRange = mvComponents.equal_range(mvName);
+			for(std::multimap<std::string,int>::const_iterator mvComponentIter = mvComponentRange.first; mvComponentIter != mvComponentRange.second; ++mvComponentIter)
+			{
+				switch(mvComponentIter->second)
+				{
+				case SCALAR:
+					variables << " +" << mvName << '_' << SCALAR;
+					break;
+
+				case E1:
+					variables << " +e1*" << mvName << '_' << E1;
+					break;
+				case E2:
+					variables << " +e2*" << mvName << '_' << E2;
+					break;
+				case E3:
+					variables << " +e3*" << mvName << '_' << E3;
+					break;
+				case EINF:
+					variables << " +einf*" << mvName << '_' << EINF;
+					break;
+				case E0:
+					variables << " +e0*" << mvName << '_' << E0;
+					break;
+
+				case E12:
+					variables << " +e1^e2*" << mvName << '_' << E12;
+					break;
+				case E13:
+					variables << " +e1^e3*" << mvName << '_' << E13;
+					break;
+				case E1INF:
+					variables << " +e1^einf*" << mvName << '_' << E1INF;
+					break;
+				case E10:
+					variables << " +e1^e0*" << mvName << '_' << E10;
+					break;
+				case E23:
+					variables << " +e2^e3*" << mvName << '_' << E23;
+					break;
+				case E2INF:
+					variables << " +e2^einf*" << mvName << '_' << E2INF;
+					break;
+				case E20:
+					variables << " +e2^e0*" << mvName << '_' << E20;
+					break;
+				case E3INF:
+					variables << " +e3^einf*" << mvName << '_' << E3INF;
+					break;
+				case E30:
+					variables << " +e3^e0*" << mvName << '_' << E30;
+					break;
+				case EINF0:
+					variables << " +einf^e0*" << mvName << '_' << EINF0;
+					break;
+
+				case E123INF:
+					variables << " +e1^e2^e3^einf*" << mvName << '_' << E123INF;
+					break;
+				case E1230:
+					variables << " +e1^e2^e3^e0*" << mvName << '_' << E1230;
+					break;
+				case E12INF0:
+					variables << " +e1^e2^einf^e0*" << mvName << '_' << E12INF0;
+					break;
+				case E13INF0:
+					variables << " +e1^e3^einf^e0*" << mvName << '_' << E13INF0;
+					break;
+				case E23INF0:
+					variables << " +e2^e3^einf^e0*" << mvName << '_' << E23INF0;
+					break;
+
+				case E123INF0:
+					variables << " +e1^e2^e3^einf^e0*" << mvName << '_' << E123INF0;
+					break;
+				}
+			}
+
+			variables << ";\n";
+		}
+	}
+
+	// compose gaalop input file
+	{
+	        std::stringstream gaalopInFilePath;
+        	gaalopInFilePath << tempFilePath << '.' << gaalopFileCount << gaalopInFileExtension;
+	        std::ofstream gaalopInFile(gaalopInFilePath.str().c_str());
+		gaalopInFile << variables.str() << gaalopInFileVector[gaalopFileCount];
+	}
+
         // run Gaalop
-        std::stringstream gaalopCommand;
-        gaalopCommand << gaalopPath;
-        gaalopCommand << " \"" << tempFilePath << '.' << gaalopFileCount << gaalopInFileExtension << '\"';
-        //std::cout << gaalopCommand.str() << std::endl;
-        system(gaalopCommand.str().c_str());
+	{
+	        std::stringstream gaalopCommand;
+        	gaalopCommand << gaalopPath;
+	        gaalopCommand << " \"" << tempFilePath << '.' << gaalopFileCount << gaalopInFileExtension << '\"';
+        	system(gaalopCommand.str().c_str());
+	}
     }
-    //chdir(appPath.c_str());
 #ifdef WIN32
     chdir("..\\..\\..\\bin");
 #else
@@ -162,7 +297,7 @@ int body(std::string& intermediateFilePath,std::string& outputFilePath,
         intermediateFilePath = tempFilePath + intermediateFileExtension;
         std::ofstream intermediateFile(intermediateFilePath.c_str());
         std::ifstream inputFile(inputFilePath.c_str());
-        gaalopFileCount = 0;
+        unsigned int gaalopFileCount = 0;
 	unsigned int lineCount = 1; // think one line ahead
         while(inputFile.good())
         {
@@ -175,7 +310,7 @@ int body(std::string& intermediateFilePath,std::string& outputFilePath,
             {
                 const size_t pos = line.find_first_of('\"') + 1;
                 intermediateFile << line.substr(0,pos) << inputFileDir;
-                intermediateFile << line.substr(pos,std::string::npos) << std::endl;
+                intermediateFile << line.substr(pos) << std::endl;
             }
             // found gaalop line - insert intermediate gaalop file
             else if(line.find("#pragma gcd begin") != std::string::npos)
@@ -185,8 +320,8 @@ int body(std::string& intermediateFilePath,std::string& outputFilePath,
 
                 // merge optimized code
                 std::stringstream gaalopOutFilePath;
-                gaalopOutFilePath << tempFilePath << '.' << ++gaalopFileCount << gaalopOutFileExtension;
-                std::cout << gaalopOutFilePath.str().c_str() << std::endl;
+                gaalopOutFilePath << tempFilePath << '.' << gaalopFileCount++ << gaalopOutFileExtension;
+                std::cout << gaalopOutFilePath.str() << std::endl;
                 std::ifstream gaalopOutFile(gaalopOutFilePath.str().c_str());
                 if(!gaalopOutFile.good())
                 {

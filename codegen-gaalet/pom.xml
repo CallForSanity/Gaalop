@@ -9,7 +9,7 @@
     <modelVersion>4.0.0</modelVersion>
     <name>Gaalet C/C++ Plugin</name>
     <groupId>de.gaalop</groupId>
-    <artifactId>gaalet</artifactId>
+    <artifactId>codegen-gaalet</artifactId>
     <version>1.0.0</version>
     <dependencies>
         <dependency>

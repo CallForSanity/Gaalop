@@ -1,4 +1,4 @@
-package de.gaalop.gealg.output;
+package de.gaalop.gaalet.output;
 
 import de.gaalop.dfg.*;
 
