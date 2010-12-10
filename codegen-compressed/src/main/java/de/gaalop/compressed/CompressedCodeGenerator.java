@@ -9,11 +9,15 @@ import java.util.Collections;
 import java.nio.charset.Charset;
 
 /**
- * This class facilitates compressed storage C/C++ code generation.
+ * This class facilitates compressed C/C++ code generation.
  */
-public enum CompressedCodeGenerator implements CodeGenerator {
-
-    INSTANCE;
+public class CompressedCodeGenerator implements CodeGenerator {
+    
+    private final Plugin plugin;
+    
+    CompressedCodeGenerator(Plugin plugin) {
+    	this.plugin = plugin;
+    }
 
     @Override
     public Set<OutputFile> generate(ControlFlowGraph in) {
@@ -45,8 +49,12 @@ public enum CompressedCodeGenerator implements CodeGenerator {
      * @return
      */
     private String generateCode(ControlFlowGraph in) {
-        CompressedVisitor visitor = new CompressedVisitor();
-        in.accept(visitor);
+        CompressedVisitor visitor = new CompressedVisitor(plugin.getStandalone());
+        try {
+        	in.accept(visitor);
+        } catch (Throwable error) {
+        	plugin.notifyError(error);
+        }
         return visitor.getCode();
     }
 

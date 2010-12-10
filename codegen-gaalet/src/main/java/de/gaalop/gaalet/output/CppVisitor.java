@@ -1,9 +1,9 @@
 package de.gaalop.gealg.output;
 
+import de.gaalop.Notifications;
 import de.gaalop.cfg.*;
 import de.gaalop.dfg.*;
-import de.gaalop.gealg.GealgMultiVector;
-import de.gaalop.gealg.NameTable;
+import de.gaalop.gealg.*;
 
 import java.util.*;
 
@@ -17,22 +17,50 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 
 	private Log log = LogFactory.getLog(CppVisitor.class);
 
+	private boolean standalone = false;
+
+	private final String suffix = "_opt";
+
 	private StringBuilder code = new StringBuilder();
 
 	private ControlFlowGraph graph;
-	
-	private static String suffix = "_opt";
-
-	// Maps the nodes that output variables to their result parameter names
-	private Map<StoreResultNode, String> outputNamesMap = new HashMap<StoreResultNode, String>();
 
 	private int indentation = 0;
 
-	private boolean standalone = false;
-	
+	private Set<String> assigned = new HashSet<String>();
+		
 	private boolean ifPossible = true; // dont know if we can misuse gealgs mv as arrays.
 	
 	private Set<GealgMultiVector> vectorSet = new HashSet<GealgMultiVector>();
+	
+	private void printVarName(String key) {
+		code.append(NameTable.getInstance().get(key));
+	}
+
+	@Override
+	public void visit(MultivectorComponent component) {
+		String name = component.getName().replace(suffix, "");
+		int pos = -1;
+		for (GealgMultiVector vec : vectorSet) {
+			if (name.equals(vec.getName()))
+				pos = vec.getBladePosInArray(component.getBladeIndex());
+		}
+		
+		printVarName(name);
+		code.append('[');
+		code.append(pos);
+		code.append(']');
+		
+		//System.out.println("but here is a mv");
+	}
+
+	public CppVisitor(boolean standalone) {
+		this.standalone = standalone;
+	}
+	
+	public void setStandalone(boolean standalone) {
+		this.standalone = standalone;
+	}
 
 	public String getCode() {
 		return code.toString();
@@ -43,22 +71,12 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 			code.append('\t');
 		}
 	}
-	
-	private void printVarName(String key) {
-		code.append(NameTable.getInstance().get(key));
-	}
 
 	@Override
 	public void visit(StartNode node) {
 		graph = node.getGraph();
 
-		FindStoreOutputNodes findOutput = new FindStoreOutputNodes();
-		graph.accept(findOutput);
-		for (StoreResultNode var : findOutput.getNodes()) {
-			String outputName = var.getValue().getName() + "_out";
-		
-			outputNamesMap.put(var, outputName);
-		}
+		List<Variable> localVariables = sortVariables(graph.getLocalVariables());
 		if (standalone) {
 			code.append("void calculate(");
 
@@ -66,94 +84,53 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 			List<Variable> inputParameters = sortVariables(graph.getInputVariables());
 			for (Variable var : inputParameters) {
 				code.append("float "); // The assumption here is that they all are normal scalars
-				printVarName(var.getName());
+				code.append(var.getName());
 				code.append(", ");
 			}
 
-			for (StoreResultNode var : findOutput.getNodes()) {
-				code.append("float **");
-				printVarName(outputNamesMap.get(var));
-				code.append(", ");
+			for (Variable var : localVariables) {
+				code.append("float ");
+				code.append(var.getName());
+				code.append("[32], ");
 			}
 
-			if (!graph.getInputVariables().isEmpty() || !findOutput.getNodes().isEmpty()) {
+			if (graph.getLocalVariables().size() > 0) {
 				code.setLength(code.length() - 2);
 			}
 
 			code.append(") {\n");
 			indentation++;
-		}
-
-
-		if (ifPossible && !standalone) {
-			List<Variable> inputParameters = sortVariables(graph.getInputVariables());			
-			for (Variable var : inputParameters) {
-				FieldsUsedVisitor fieldVisitor = new FieldsUsedVisitor(var.getName());
-				graph.accept(fieldVisitor);
-				code.append("// This is input: ");
-				code.append(fieldVisitor.giveDefinition());
-				code.append("\n");	
-			}
-			code.append("\n");	
-			
-			for (StoreResultNode var : findOutput.getNodes()) {
-				FieldsUsedVisitor fieldVisitor = new FieldsUsedVisitor(var.getValue().getName());
-				graph.accept(fieldVisitor);
-				code.append("// This is output: ");
-				code.append(fieldVisitor.giveDefinition());
-				code.append("\n");				
+		} else {
+			for (Variable var : localVariables) {
+				appendIndentation();
+				code.append("float ");
+				code.append(var.getName());
+				code.append("[32] = { 0.0f };\n");
 			}
 		}
 
-		handleLocalVariables();
-		createVectorSet(findOutput);
-		node.getSuccessor().accept(this);
-	}
-	
-	private void createVectorSet (FindStoreOutputNodes findOutput) {
-		for (Variable var : graph.getInputVariables()) {
-			FieldsUsedVisitor fieldVisitor = new FieldsUsedVisitor(var.getName());
-			graph.accept(fieldVisitor);
-			vectorSet.add(fieldVisitor.getMultiVector());		
-		}
-		for (Variable var : graph.getLocalVariables()) {
-			FieldsUsedVisitor fieldVisitor = new FieldsUsedVisitor(var.getName());
-			graph.accept(fieldVisitor);
-			vectorSet.add(fieldVisitor.getMultiVector());		
-		}	
-		for (StoreResultNode var : findOutput.getNodes()) {
-			FieldsUsedVisitor fieldVisitor = new FieldsUsedVisitor(var.getValue().getName());
-			graph.accept(fieldVisitor);
-			vectorSet.add(fieldVisitor.getMultiVector());							
-		}
-	}
-	
-	/**	
-	* Declare local variables
-	*	 but first but local variables in a set, so we reduce redundancy
-	*/
-	private void handleLocalVariables() {
-		Set <String> varNames = new HashSet<String> ();
-		for (Variable var : graph.getLocalVariables()) {
-			varNames.add(var.getName());			
-		}		
-		for (String var : varNames) {
+		if (graph.getScalarVariables().size() > 0) {
 			appendIndentation();
-			FieldsUsedVisitor fieldVisitor = new FieldsUsedVisitor(var);
-			graph.accept(fieldVisitor);
-			code.append(fieldVisitor.giveDefinition());
-			code.append("\n");
+			code.append("float ");
+
+			for (Variable tmp : graph.getScalarVariables()) {
+				code.append(tmp.getName());
+				code.append(", ");
+			}
+			code.delete(code.length() - 2, code.length());
+			code.append(";\n");
 		}
 
 		if (!graph.getLocalVariables().isEmpty()) {
 			code.append("\n");
-		}				
+		}
+
+		node.getSuccessor().accept(this);
 	}
-	
-	
+
 	/**
 	 * Sorts a set of variables by name to make the order deterministic.
-	 * 
+	 *
 	 * @param inputVariables
 	 * @return
 	 */
@@ -171,20 +148,20 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 		return variables;
 	}
 
-	Set<String> assigned = new HashSet<String>();
-
 	@Override
 	public void visit(AssignmentNode node) {
-		if (assigned.contains(node.getVariable().getName())) {
-			log.warn("Reuse of variable " + node.getVariable().getName()
-				+ ". Make sure to reset this variable or use another name.");
+		String variable = node.getVariable().getName();
+		if (assigned.contains(variable)) {
+			String message = "Variable " + variable + " has been reset for reuse.";
+			log.warn(message);
+			Notifications.addWarning(message);
 			code.append("\n");
 			appendIndentation();
-			code.append("// Warning: reuse of variable ");
+			code.append("memset(");
 			code.append(node.getVariable().getName());
-			code.append(".\n");
-			appendIndentation();
-			code.append("// Make sure to reset this variable or use another name.\n");
+			code.append(", 0, sizeof(");
+			code.append(variable);
+			code.append(")); // Reset variable for reuse.\n");
 			assigned.remove(node.getVariable().getName());
 		}
 
@@ -199,24 +176,15 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 
 	@Override
 	public void visit(StoreResultNode node) {
-		assigned.add(node.getValue().getName());
-//		appendIndentation();
-//		code.append("memcpy(");
-//		code.append(outputNamesMap.get(node));
-//		code.append(", ");
-//		code.append(node.getValue().getName());
-//		code.append(", sizeof(");
-//		code.append(node.getValue().getName());
-//		code.append("));\n");
-
-
+		assigned.add(node.getValue().getName() + suffix);
 		node.getSuccessor().accept(this);
 	}
 
 	@Override
 	public void visit(IfThenElseNode node) {
+		Expression condition = node.getCondition();
+
 		appendIndentation();
-		code.append("\n");
 		code.append("if (");
 		node.getCondition().accept(this);
 		code.append(") {\n");
@@ -250,7 +218,6 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 				appendIndentation();
 				code.append("}\n");
 			}
-			code.append("\n");
 		}
 
 		node.getSuccessor().accept(this);
@@ -267,6 +234,11 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 			indentation--;
 			code.append("}\n");
 		}
+	}
+
+	@Override
+	public void visit(ColorNode node) {
+		node.getSuccessor().accept(this);
 	}
 
 	private void addBinaryInfix(BinaryOperation op, String operator) {
@@ -302,7 +274,7 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 
 	@Override
 	public void visit(InnerProduct innerProduct) {
-		addBinaryInfix(innerProduct, " & ");
+		throw new UnsupportedOperationException("The C/C++ backend does not support the inner product.");
 	}
 
 	@Override
@@ -332,24 +304,7 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 	@Override
 	public void visit(Variable variable) {
 		// usually there are no
-		printVarName(variable.getName());
-	}
-
-	@Override
-	public void visit(MultivectorComponent component) {
-		String name = component.getName().replace(suffix, "");
-		int pos = -1;
-		for (GealgMultiVector vec : vectorSet) {
-			if (name.equals(vec.getName()))
-				pos = vec.getBladePosInArray(component.getBladeIndex());
-		}
-		
-		printVarName(name);
-		code.append('[');
-		code.append(pos);
-		code.append(']');
-		
-		//System.out.println("but here is a mv");
+		code.append(variable.getName());
 	}
 
 	@Override
@@ -374,17 +329,17 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 	@Override
 	public void visit(FloatConstant floatConstant) {
 		code.append(Float.toString(floatConstant.getValue()));
-		//code.append('f');
+		code.append('f');
 	}
 
 	@Override
 	public void visit(OuterProduct outerProduct) {
-		addBinaryInfix(outerProduct, " ^ ");
+		throw new UnsupportedOperationException("The C/C++ backend does not support the outer product.");
 	}
 
 	@Override
 	public void visit(BaseVector baseVector) {
-		code.append(baseVector.toString());
+		throw new UnsupportedOperationException("The C/C++ backend does not support base vectors.");
 	}
 
 	@Override
@@ -395,9 +350,7 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 
 	@Override
 	public void visit(Reverse node) {
-		//throw new UnsupportedOperationException("The C/C++ backend does not support the reverse operation.");
-		code.append('~');
-		addChild(node, node.getOperand());
+		throw new UnsupportedOperationException("The C/C++ backend does not support the reverse operation.");
 	}
 
 	@Override
@@ -425,6 +378,42 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 		addBinaryInfix(relation, relation.getTypeString());
 	}
 
+	@Override
+	public void visit(Macro node) {
+		throw new IllegalStateException("Macros should have been inlined and removed from the graph.");
+	}
 
+	@Override
+	public void visit(FunctionArgument node) {
+		throw new IllegalStateException("Macros should have been inlined and no function arguments should be the graph.");
+	}
 
+	@Override
+	public void visit(MacroCall node) {
+		throw new IllegalStateException("Macros should have been inlined and no macro calls should be in the graph.");
+	}
+
+	@Override
+	public void visit(LoopNode node) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visit(BreakNode node) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visit(ExpressionStatement node) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visit(LogicalNegation node) {
+		// TODO Auto-generated method stub
+		
+	}
 }
