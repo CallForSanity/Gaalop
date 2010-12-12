@@ -17,8 +17,8 @@
         <module>clucalc</module>
         <module>cli</module>
         <module>codegen-cpp</module>
-        <module>codegen-compressed</module>
         <module>codegen-gaalet</module>
+        <module>codegen-compressed</module>
         <module>starter</module>
     </modules>
 

@@ -17,8 +17,9 @@ void readFile(std::stringstream& resultStream,const std::ifstream& fileStream);
 
 int body(std::string& intermediateFilePath,std::string& outputFilePath,
          const int argc,const char* argv[],const char* gaalopInFileExtension,
-         const char* gaalopOutFileExtension,const char* intermediateFileExtension,
-         const char* outputFileExtension,const char* outputOption)
+         const char* gaalopOutFileExtension,const char* gaalopGenerator,
+	 const char* intermediateFileExtension,const char* outputFileExtension,
+	 const char* outputOption)
 {
     if(argc <= 2)
     {
@@ -276,7 +277,7 @@ int body(std::string& intermediateFilePath,std::string& outputFilePath,
 	{
 	        std::stringstream gaalopCommand;
         	gaalopCommand << gaalopPath;
-	        gaalopCommand << " \"" << tempFilePath << '.' << gaalopFileCount << gaalopInFileExtension << '\"';
+	        gaalopCommand << " -generator " << gaalopGenerator << " -i \"" << tempFilePath << '.' << gaalopFileCount << gaalopInFileExtension << '\"';
         	system(gaalopCommand.str().c_str());
 	}
     }

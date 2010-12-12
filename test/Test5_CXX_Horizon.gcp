@@ -12,9 +12,11 @@ int main()
   ?scale = -homogenCenter.einf;
   ?euclidCenter = homogenCenter / scale;
 #pragma gcd end
-  std::cout << homogenCenter[E0] << std::endl;
-  std::cout << euclidCenter[E0] << std::endl;
-  std::cout << euclidCenter[E1] << "," << euclidCenter[E2] << "," << euclidCenter[E3];
+  std::cout << homogenCenter.element<E0>() << std::endl;
+  std::cout << euclidCenter.element<E0>() << std::endl;
+  std::cout << euclidCenter.element<E1>() << "," << euclidCenter.element<E2>() << "," << euclidCenter.element<E3>() << std::endl;
 
-  return !(euclidCenter[E1] == 0.5f && euclidCenter[E2] == 0.5f && euclidCenter[E3] == 0.0f);
+  std::cout << homogenCenter;
+
+  return !(euclidCenter.element<E1>() == 0.5f && euclidCenter.element<E2>() == 0.5f && euclidCenter.element<E3>() == 0.0f);
 }

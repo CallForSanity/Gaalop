@@ -5,7 +5,7 @@ int main(const int argc,const char* argv[])
     // execute body
     std::string intermediateFilePath,outputFilePath;
     int result = body(intermediateFilePath,outputFilePath,argc,argv,
-                      ".clu.i",".clu.cpp.g",".cl.i",".cl","-o");
+                      ".clu.i",".clu.cpp.g","de.gaalop.compressed.Plugin",".cl.i",".cl","-o");
     if(result)
         return result;
 

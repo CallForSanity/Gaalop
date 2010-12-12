@@ -23,5 +23,11 @@
 		<version>3.1.1</version>
 		<type>jar</type>
         </dependency>
+	<dependency>
+		<groupId>de.gaalop</groupId>
+		<artifactId>codegen-cpp</artifactId>
+		<version>1.0.0</version>
+		<type>jar</type>
+        </dependency>
     </dependencies>
 </project>

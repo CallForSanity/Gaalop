@@ -35,11 +35,11 @@ side3 = *(TrianglePoint3 ^ TrianglePoint1 ^ normal_ ^ einf);
 ?d3 = side3 . TestPoint;
 #pragma gcd end
 
-if(d[SCALAR]*d[SCALAR] > h*h)
+if(d.element<SCALAR>()*d.element<SCALAR>() > h*h)
   return false;
 
-if(d1[SCALAR] <= 0.0f && d2[SCALAR] <= 0.0f && d3[SCALAR] <= 0.0f ||
-   d1[SCALAR] >= 0.0f && d2[SCALAR] >= 0.0f && d3[SCALAR] >= 0.0f)
+if(d1.element<SCALAR>() <= 0.0f && d2.element<SCALAR>() <= 0.0f && d3.element<SCALAR>() <= 0.0f ||
+   d1.element<SCALAR>() >= 0.0f && d2.element<SCALAR>() >= 0.0f && d3.element<SCALAR>() >= 0.0f)
   return true;
 
 return false;

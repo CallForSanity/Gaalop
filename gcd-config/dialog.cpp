@@ -109,15 +109,18 @@ void Dialog::on_saveSettings_clicked()
     mapleBinaryDirStream << ui->mapleBinaryDir->lineEdit()->text();
 #ifdef WIN32
     gaalopCommandStream << "java -jar starter-1.0.0.jar -m \""
-			<< ui->mapleBinaryDir->lineEdit()->text() << "\" -i";
+                        << ui->mapleBinaryDir->lineEdit()->text() << '\" %*';
+    cppCompileCommandStream << ui->cppCompileCommand->lineEdit()->text() << " %*";
+    cudaCompileCommandStream << ui->cudaCompileCommand->lineEdit()->text() << " %*";
+    javaCompileCommandStream << ui->javaCompileCommand->lineEdit()->text() << " %*";
 #else
-    gaalopCommandStream << "export PATH=\"$PATH:" << ui->mapleBinaryDir->lineEdit()->text()
-                        << "/../bin\"; export LD_LIBRARY_PATH=\"" << ui->mapleBinaryDir->lineEdit()->text()
-                        << "\"; export MAPLE=\"" << ui->mapleBinaryDir->lineEdit()->text()
-			<< "/..\"; java -jar starter-1.0.0.jar -m \""
-			<< ui->mapleBinaryDir->lineEdit()->text() << "\" -i";
+    gaalopCommandStream << "#!/bin/sh\nexport PATH=\"$PATH:" << ui->mapleBinaryDir->lineEdit()->text()
+                        << "/../bin\";\nexport LD_LIBRARY_PATH=\"" << ui->mapleBinaryDir->lineEdit()->text()
+                        << "\";\nexport MAPLE=\"" << ui->mapleBinaryDir->lineEdit()->text()
+                        << "/..\";\njava -jar starter-1.0.0.jar -m \""
+                        << ui->mapleBinaryDir->lineEdit()->text() << "\" $*";
+    cppCompileCommandStream << "#!/bin/sh\n" << ui->cppCompileCommand->lineEdit()->text() << " $*";
+    cudaCompileCommandStream << "#!/bin/sh\n" << ui->cudaCompileCommand->lineEdit()->text() << " $*";
+    javaCompileCommandStream << "#!/bin/sh\n" << ui->javaCompileCommand->lineEdit()->text() << " $*";
 #endif
-    cppCompileCommandStream << ui->cppCompileCommand->lineEdit()->text();
-    cudaCompileCommandStream << ui->cudaCompileCommand->lineEdit()->text();
-    javaCompileCommandStream << ui->javaCompileCommand->lineEdit()->text();
 }

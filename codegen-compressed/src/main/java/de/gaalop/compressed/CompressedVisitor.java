@@ -3,6 +3,8 @@ package de.gaalop.compressed;
 import de.gaalop.Notifications;
 import de.gaalop.cfg.*;
 import de.gaalop.dfg.*;
+import de.gaalop.gealg.*;
+import de.gaalop.gaalet.output.*;
 
 import java.util.*;
 
@@ -12,45 +14,23 @@ import org.apache.commons.logging.LogFactory;
 /**
  * This visitor traverses the control and data flow graphs and generates C/C++ code.
  */
-public class CompressedVisitor implements ControlFlowVisitor, ExpressionVisitor {
+public class CompressedVisitor extends de.gaalop.gaalet.output.CppVisitor {
 
-	private Log log = LogFactory.getLog(CompressedVisitor.class);
-
-	private boolean standalone = false;
-
-	private final String suffix = "_opt";
-
-	private StringBuilder code = new StringBuilder();
-
-	private ControlFlowGraph graph;
-
-	private int indentation = 0;
-
-	private Set<String> assigned = new HashSet<String>();
-	
 	public CompressedVisitor(boolean standalone) {
-		this.standalone = standalone;
-	}
-	
-	public void setStandalone(boolean standalone) {
-		this.standalone = standalone;
-	}
-
-	public String getCode() {
-		return code.toString();
-	}
-
-	private void appendIndentation() {
-		for (int i = 0; i < indentation; ++i) {
-			code.append('\t');
-		}
+		super(standalone);
 	}
 
 	@Override
 	public void visit(StartNode node) {
 		graph = node.getGraph();
 
-		List<Variable> localVariables = sortVariables(graph.getLocalVariables());
+		FindStoreOutputNodes findOutput = new FindStoreOutputNodes();
+		graph.accept(findOutput);
+		for (StoreResultNode var : findOutput.getNodes()) {
+			String outputName = var.getValue().getName() + "_out";
+		
+			outputNamesMap.put(var, outputName);
+		}
 		if (standalone) {
 			code.append("void calculate(");
 
@@ -58,344 +38,62 @@ public class CompressedVisitor implements ControlFlowVisitor, ExpressionVisitor 
 			List<Variable> inputParameters = sortVariables(graph.getInputVariables());
 			for (Variable var : inputParameters) {
 				code.append("float "); // The assumption here is that they all are normal scalars
-				code.append(var.getName());
+				printVarName(var.getName());
 				code.append(", ");
 			}
 
-			for (Variable var : localVariables) {
-				code.append("float ");
-				code.append(var.getName());
-				code.append("[32], ");
+			for (StoreResultNode var : findOutput.getNodes()) {
+				code.append("float **");
+				printVarName(outputNamesMap.get(var));
+				code.append(", ");
 			}
 
-			if (graph.getLocalVariables().size() > 0) {
+			if (!graph.getInputVariables().isEmpty() || !findOutput.getNodes().isEmpty()) {
 				code.setLength(code.length() - 2);
 			}
 
 			code.append(") {\n");
 			indentation++;
-		} else {
-			for (Variable var : localVariables) {
-				appendIndentation();
-				code.append("float ");
-				code.append(var.getName());
-				code.append("[32] = { 0.0f };\n");
-			}
 		}
 
-		if (graph.getScalarVariables().size() > 0) {
+		handleLocalVariables();
+		createVectorSet(findOutput);
+		node.getSuccessor().accept(this);
+	}
+	
+	/**	
+	* Declare local variables
+	*	 but first local variables in a set, so we reduce redundancy
+	*/
+	@Override
+	protected void handleLocalVariables() {
+		Set <String> varNames = new HashSet<String> ();
+		for (Variable var : graph.getLocalVariables()) {
+			varNames.add(var.getName());			
+		}		
+		for (String var : varNames) {
 			appendIndentation();
-			code.append("float ");
+			FieldsUsedVisitor fieldVisitor = new FieldsUsedVisitor(var);
 
-			for (Variable tmp : graph.getScalarVariables()) {
-				code.append(tmp.getName());
-				code.append(", ");
+			// GCD definition
+			if(gcdMetaInfo) {
+				code.append("#pragma gcd multivector ");
+				code.append(var);
+				code.append('\n');
 			}
-			code.delete(code.length() - 2, code.length());
+
+			// standard definition
+			graph.accept(fieldVisitor);
+			int size = fieldVisitor.getMultiVector().getGaalopBlades().size();		
+			code.append(variableType + ' ' + fieldVisitor.getMultiVector().getName());
+			if(size > 0)
+			    	code.append("[" + size + "]");
 			code.append(";\n");
 		}
 
 		if (!graph.getLocalVariables().isEmpty()) {
 			code.append("\n");
-		}
-
-		node.getSuccessor().accept(this);
+		}				
 	}
 
-	/**
-	 * Sorts a set of variables by name to make the order deterministic.
-	 *
-	 * @param inputVariables
-	 * @return
-	 */
-	private List<Variable> sortVariables(Set<Variable> inputVariables) {
-		List<Variable> variables = new ArrayList<Variable>(inputVariables);
-		Comparator<Variable> comparator = new Comparator<Variable>() {
-
-			@Override
-			public int compare(Variable o1, Variable o2) {
-				return o1.getName().compareToIgnoreCase(o2.getName());
-			}
-		};
-
-		Collections.sort(variables, comparator);
-		return variables;
-	}
-
-	@Override
-	public void visit(AssignmentNode node) {
-		String variable = node.getVariable().getName();
-		if (assigned.contains(variable)) {
-			String message = "Variable " + variable + " has been reset for reuse.";
-			log.warn(message);
-			Notifications.addWarning(message);
-			code.append("\n");
-			appendIndentation();
-			code.append("memset(");
-			code.append(node.getVariable().getName());
-			code.append(", 0, sizeof(");
-			code.append(variable);
-			code.append(")); // Reset variable for reuse.\n");
-			assigned.remove(node.getVariable().getName());
-		}
-
-		appendIndentation();
-		node.getVariable().accept(this);
-		code.append(" = ");
-		node.getValue().accept(this);
-		code.append(";\n");
-
-		node.getSuccessor().accept(this);
-	}
-
-	@Override
-	public void visit(StoreResultNode node) {
-		assigned.add(node.getValue().getName() + suffix);
-		node.getSuccessor().accept(this);
-	}
-
-	@Override
-	public void visit(IfThenElseNode node) {
-		Expression condition = node.getCondition();
-
-		appendIndentation();
-		code.append("if (");
-		node.getCondition().accept(this);
-		code.append(") {\n");
-
-		indentation++;
-		node.getPositive().accept(this);
-		indentation--;
-
-		appendIndentation();
-		code.append("}");
-
-		if (node.getNegative() instanceof BlockEndNode) {
-			code.append("\n");
-		} else {
-			code.append(" else ");
-
-			boolean isElseIf = false;
-			if (node.getNegative() instanceof IfThenElseNode) {
-				IfThenElseNode ifthenelse = (IfThenElseNode) node.getNegative();
-				isElseIf = ifthenelse.isElseIf();
-			}
-			if (!isElseIf) {
-				code.append("{\n");
-				indentation++;
-			}
-
-			node.getNegative().accept(this);
-
-			if (!isElseIf) {
-				indentation--;
-				appendIndentation();
-				code.append("}\n");
-			}
-		}
-
-		node.getSuccessor().accept(this);
-	}
-
-	@Override
-	public void visit(BlockEndNode node) {
-		// nothing to do
-	}
-
-	@Override
-	public void visit(EndNode node) {
-		if (standalone) {
-			indentation--;
-			code.append("}\n");
-		}
-	}
-
-	@Override
-	public void visit(ColorNode node) {
-		node.getSuccessor().accept(this);
-	}
-
-	private void addBinaryInfix(BinaryOperation op, String operator) {
-		addChild(op, op.getLeft());
-		code.append(operator);
-		addChild(op, op.getRight());
-	}
-
-	private void addChild(Expression parent, Expression child) {
-		if (OperatorPriority.hasLowerPriority(parent, child)) {
-			code.append('(');
-			child.accept(this);
-			code.append(')');
-		} else {
-			child.accept(this);
-		}
-	}
-
-	@Override
-	public void visit(Subtraction subtraction) {
-		addBinaryInfix(subtraction, " - ");
-	}
-
-	@Override
-	public void visit(Addition addition) {
-		addBinaryInfix(addition, " + ");
-	}
-
-	@Override
-	public void visit(Division division) {
-		addBinaryInfix(division, " / ");
-	}
-
-	@Override
-	public void visit(InnerProduct innerProduct) {
-		throw new UnsupportedOperationException("The C/C++ backend does not support the inner product.");
-	}
-
-	@Override
-	public void visit(Multiplication multiplication) {
-		addBinaryInfix(multiplication, " * ");
-	}
-
-	@Override
-	public void visit(MathFunctionCall mathFunctionCall) {
-		String funcName;
-		switch (mathFunctionCall.getFunction()) {
-		case ABS:
-			funcName = "fabs";
-			break;
-		case SQRT:
-			funcName = "sqrtf";
-			break;
-		default:
-			funcName = mathFunctionCall.getFunction().toString().toLowerCase();
-		}
-		code.append(funcName);
-		code.append('(');
-		mathFunctionCall.getOperand().accept(this);
-		code.append(')');
-	}
-
-	@Override
-	public void visit(Variable variable) {
-		// usually there are no
-		code.append(variable.getName());
-	}
-
-	@Override
-	public void visit(MultivectorComponent component) {
-		code.append(component.getName().replace(suffix, ""));
-		code.append('[');
-		code.append(component.getBladeIndex());
-		code.append(']');
-	}
-
-	@Override
-	public void visit(Exponentiation exponentiation) {
-		if (isSquare(exponentiation)) {
-			Multiplication m = new Multiplication(exponentiation.getLeft(), exponentiation.getLeft());
-			m.accept(this);
-		} else {
-			code.append("pow(");
-			exponentiation.getLeft().accept(this);
-			code.append(',');
-			exponentiation.getRight().accept(this);
-			code.append(')');
-		}
-	}
-
-	private boolean isSquare(Exponentiation exponentiation) {
-		final FloatConstant two = new FloatConstant(2.0f);
-		return two.equals(exponentiation.getRight());
-	}
-
-	@Override
-	public void visit(FloatConstant floatConstant) {
-		code.append(Float.toString(floatConstant.getValue()));
-		code.append('f');
-	}
-
-	@Override
-	public void visit(OuterProduct outerProduct) {
-		throw new UnsupportedOperationException("The C/C++ backend does not support the outer product.");
-	}
-
-	@Override
-	public void visit(BaseVector baseVector) {
-		throw new UnsupportedOperationException("The C/C++ backend does not support base vectors.");
-	}
-
-	@Override
-	public void visit(Negation negation) {
-		code.append('-');
-		addChild(negation, negation.getOperand());
-	}
-
-	@Override
-	public void visit(Reverse node) {
-		throw new UnsupportedOperationException("The C/C++ backend does not support the reverse operation.");
-	}
-
-	@Override
-	public void visit(LogicalOr node) {
-		addBinaryInfix(node, " || ");
-	}
-
-	@Override
-	public void visit(LogicalAnd node) {
-		addBinaryInfix(node, " && ");
-	}
-
-	@Override
-	public void visit(Equality node) {
-		addBinaryInfix(node, " == ");
-	}
-
-	@Override
-	public void visit(Inequality node) {
-		addBinaryInfix(node, " != ");
-	}
-
-	@Override
-	public void visit(Relation relation) {
-		addBinaryInfix(relation, relation.getTypeString());
-	}
-
-	@Override
-	public void visit(Macro node) {
-		throw new IllegalStateException("Macros should have been inlined and removed from the graph.");
-	}
-
-	@Override
-	public void visit(FunctionArgument node) {
-		throw new IllegalStateException("Macros should have been inlined and no function arguments should be the graph.");
-	}
-
-	@Override
-	public void visit(MacroCall node) {
-		throw new IllegalStateException("Macros should have been inlined and no macro calls should be in the graph.");
-	}
-
-	@Override
-	public void visit(LoopNode node) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void visit(BreakNode node) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void visit(ExpressionStatement node) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void visit(LogicalNegation node) {
-		// TODO Auto-generated method stub
-		
-	}
 }

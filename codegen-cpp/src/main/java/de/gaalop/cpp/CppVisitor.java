@@ -14,19 +14,20 @@ import org.apache.commons.logging.LogFactory;
  */
 public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 
-	private Log log = LogFactory.getLog(CppVisitor.class);
+	protected Log log = LogFactory.getLog(CppVisitor.class);
 
-	private boolean standalone = false;
+	protected boolean standalone = false;
+	protected boolean gcdMetaInfo = true;
 
-	private final String suffix = "_opt";
+	protected final String suffix = "_opt";
 
-	private StringBuilder code = new StringBuilder();
+	protected StringBuilder code = new StringBuilder();
 
-	private ControlFlowGraph graph;
+	protected ControlFlowGraph graph;
 
-	private int indentation = 0;
+	protected int indentation = 0;
 
-	private Set<String> assigned = new HashSet<String>();
+	protected Set<String> assigned = new HashSet<String>();
 	
 	public CppVisitor(boolean standalone) {
 		this.standalone = standalone;
@@ -40,7 +41,7 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 		return code.toString();
 	}
 
-	private void appendIndentation() {
+	protected void appendIndentation() {
 		for (int i = 0; i < indentation; ++i) {
 			code.append('\t');
 		}
@@ -79,9 +80,11 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 				appendIndentation();
 
 				// GCD definition
-				code.append("#pragma gcd multivector ");
-				code.append(var.getName());
-				code.append('\n');
+				if(gcdMetaInfo) {
+					code.append("#pragma gcd multivector ");
+					code.append(var.getName());
+					code.append('\n');
+				}
 				
 				// standard definition
 				code.append("float ");
@@ -115,7 +118,7 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 	 * @param inputVariables
 	 * @return
 	 */
-	private List<Variable> sortVariables(Set<Variable> inputVariables) {
+	protected List<Variable> sortVariables(Set<Variable> inputVariables) {
 		List<Variable> variables = new ArrayList<Variable>(inputVariables);
 		Comparator<Variable> comparator = new Comparator<Variable>() {
 
@@ -222,13 +225,13 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 		node.getSuccessor().accept(this);
 	}
 
-	private void addBinaryInfix(BinaryOperation op, String operator) {
+	protected void addBinaryInfix(BinaryOperation op, String operator) {
 		addChild(op, op.getLeft());
 		code.append(operator);
 		addChild(op, op.getRight());
 	}
 
-	private void addChild(Expression parent, Expression child) {
+	protected void addChild(Expression parent, Expression child) {
 		if (OperatorPriority.hasLowerPriority(parent, child)) {
 			code.append('(');
 			child.accept(this);
@@ -292,7 +295,7 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 	public void visit(MultivectorComponent component) {
 		// GCD definition
 		String componentName = component.getName().replace(suffix, "") + '_' + component.getBladeIndex();
-		if(!assigned.contains(componentName))
+		if(gcdMetaInfo && !assigned.contains(componentName))
 		{
 			code.append("#pragma gcd multivector_component ");
 			code.append(component.getName().replace(suffix, ""));
@@ -327,7 +330,7 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 		}
 	}
 
-	private boolean isSquare(Exponentiation exponentiation) {
+	protected boolean isSquare(Exponentiation exponentiation) {
 		final FloatConstant two = new FloatConstant(2.0f);
 		return two.equals(exponentiation.getRight());
 	}
