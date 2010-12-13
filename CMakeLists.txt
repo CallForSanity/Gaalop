@@ -49,7 +49,7 @@ INSTALL(DIRECTORY "${GAALOP_BUILD_TARGET_DIR}/." DESTINATION share/gcd/gaalop PA
 INSTALL(DIRECTORY "dependencies/." DESTINATION share/gcd/gaalop/plugins PATTERN ".svn" EXCLUDE)
 
 # set root dir
-SET(GCD_ROOT_DIR "${CMAKE_CURRENT_BINARY_DIR}" CACHE FORCE)
+SET(GCD_ROOT_DIR "${CMAKE_CURRENT_BINARY_DIR}" CACHE PATH "Gaalop Compiler Driver root directory" FORCE)
 
 # build and install helper library
 ADD_SUBDIRECTORY(include)
