@@ -143,21 +143,24 @@ public class CppVisitor extends de.gaalop.cpp.CppVisitor {
 		}				
 	}
 
-	/**
-	 * Sorts a set of variables by name to make the order deterministic.
-	 *
-	 * @param inputVariables
-	 * @return
-	 */
-
 	@Override
 	public void visit(MultivectorComponent component) {
+		// get blade pos in array
+		String name = component.getName().replace(suffix, "");
+		int pos = -1;
+		for (GealgMultiVector vec : vectorSet) {
+			if(name.equals(vec.getName()))
+				pos = vec.getBladePosInArray(component.getBladeIndex());
+		}
+
 		// GCD definition
 		String componentName = component.getName().replace(suffix, "") + '_' + component.getBladeIndex();
 		if(gcdMetaInfo && !assigned.contains(componentName))
 		{
 			code.append("#pragma gcd multivector_component ");
 			code.append(component.getName().replace(suffix, ""));
+			code.append(' ');
+			code.append(component.getBladeName());
 			code.append(' ');
 			code.append(component.getBladeIndex());
 			code.append('\n');
@@ -168,14 +171,7 @@ public class CppVisitor extends de.gaalop.cpp.CppVisitor {
 			assigned.add(componentName);
 		}
 
-		// standard definition
-		String name = component.getName().replace(suffix, "");
-		int pos = -1;
-		for (GealgMultiVector vec : vectorSet) {
-			if (name.equals(vec.getName()))
-				pos = vec.getBladePosInArray(component.getBladeIndex());
-		}
-		
+		// standard definition		
 		printVarName(name);
 		code.append('[');
 		code.append(pos);

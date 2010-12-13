@@ -147,7 +147,7 @@ int main(int argc, char **argv)
     std::cout << circleCenters[0] << "," << circleCenters[1] << "," << circleCenters[2] << std::endl;
 
     // Cleanup and leave
-    Cleanup(circleCenters[0] == 0.5f && circleCenters[1] == 0.5f && circleCenters[2] == 0.0f);
+    Cleanup(!(circleCenters[0] == 0.5f && circleCenters[1] == 0.5f && circleCenters[2] == 0.0f));
 }
 
 void Cleanup (int iExitCode)

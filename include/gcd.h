@@ -4,7 +4,7 @@
 #include "gaalet.h"
 
 #ifdef GCD_OLD_GAALET_MV_IDX
-enum BLADES
+enum MV_BLADE_INDEX
 {
 SCALAR,
 
@@ -53,35 +53,35 @@ E123INF0
 #define EINF (0x1 << 3)
 #define E0 (0x1 << 4)
 
-#define E12 (E1 + E2)
-#define E13 (E1 + E3)
-#define E1INF (E1 + EINF)
-#define E10 (E1 + E0)
-#define E23 (E2 + E3)
-#define E2INF (E2 + EINF)
-#define E20 (E2 + E0)
-#define E3INF (E3 + EINF)
-#define E30 (E3 + E0)
-#define EINF0 (EINF + E0)
+#define E12 (E1 | E2)
+#define E13 (E1 | E3)
+#define E1INF (E1 | EINF)
+#define E10 (E1 | E0)
+#define E23 (E2 | E3)
+#define E2INF (E2 | EINF)
+#define E20 (E2 | E0)
+#define E3INF (E3 | EINF)
+#define E30 (E3 | E0)
+#define EINF0 (EINF | E0)
 
-#define E123 (E1 + E2 + E3)
-#define E12INF (E1 + E2 + EINF)
-#define E120 (E1 + E2 + E0)
-#define E13INF (E1 + E3 + EINF)
-#define E130 (E1 + E3 + E0)
-#define E1INF0 (E1 + EINF + E0)
-#define E23INF (E2 + E3 + EINF)
-#define E230 (E2 + E3 + E0)
-#define E2INF0 (E2 + EINF + E0)
-#define E3INF0 (E3 + EINF + E0)
+#define E123 (E1 | E2 | E3)
+#define E12INF (E1 | E2 | EINF)
+#define E120 (E1 | E2 | E0)
+#define E13INF (E1 | E3 | EINF)
+#define E130 (E1 | E3 | E0)
+#define E1INF0 (E1 | EINF | E0)
+#define E23INF (E2 | E3 | EINF)
+#define E230 (E2 | E3 | E0)
+#define E2INF0 (E2 | EINF | E0)
+#define E3INF0 (E3 | EINF | E0)
 
-#define E123INF (E1 + E2 + E3 + EINF)
-#define E1230 (E1 + E2 + E3 + E0)
-#define E12INF0 (E1 + E2 + EINF + E0)
-#define E13INF0 (E1 + E3 + EINF + E0)
-#define E23INF0 (E2 + E3 + EINF + E0)
+#define E123INF (E1 | E2 | E3 | EINF)
+#define E1230 (E1 | E2 | E3 | E0)
+#define E12INF0 (E1 | E2 | EINF | E0)
+#define E13INF0 (E1 | E3 | EINF | E0)
+#define E23INF0 (E2 | E3 | EINF | E0)
 
-#define E123INF0 (E1 + E2 + E3 + EINF + E0)
+#define E123INF0 (E1 | E2 | E3 | EINF | E0)
 #endif
 
 void GaalopMapPosition(float* p,const float* p_in);

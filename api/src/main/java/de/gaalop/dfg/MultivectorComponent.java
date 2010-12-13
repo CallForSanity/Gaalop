@@ -90,5 +90,82 @@ public final class MultivectorComponent extends Variable {
         result = 31 * result + bladeIndex;
         return result;
     }
-}
 
+    public String getBladeName()
+    {
+	switch(bladeIndex)
+	{
+		case 0:
+			return "1";
+
+		case 1:
+			return "e1";
+		case 2:
+			return "e2";
+		case 3:
+			return "e3";
+		case 4:
+			return "einf";
+		case 5:
+			return "e0";
+
+		case 6:
+			return "e1^e2";
+		case 7:
+			return "e1^e3";
+		case 8:
+			return "e1^einf";
+		case 9:
+			return "e1^e0";
+		case 10:
+			return "e2^e3";
+		case 11:
+			return "e2^einf";
+		case 12:
+			return "e2^e0";
+		case 13:
+			return "e3^einf";
+		case 14:
+			return "e3^e0";
+		case 15:
+			return "einf^e0";
+
+		case 16:
+			return "e1^e2^e3";
+		case 17:
+			return "e1^e2^einf";
+		case 18:
+			return "e1^e2^e0";
+		case 19:
+			return "e1^e3^einf";
+		case 20:
+			return "e1^e3^e0";
+		case 21:
+			return "e1^einf^e0";
+		case 22:
+			return "e2^e3^einf";
+		case 23:
+			return "e2^e3^e0";
+		case 24:
+			return "e2^einf^e0";
+		case 25:
+			return "e3^einf^e0";
+
+		case 26:
+			return "e1^e2^e3^einf";
+		case 27:
+			return "e1^e2^e3^e0";
+		case 28:
+			return "e1^e2^einf^e0";
+		case 29:
+			return "e1^e3^einf^e0";
+		case 30:
+			return "e2^e3^einf^e0";
+
+		case 31:
+			return "e1^e2^e3^einf^e0";
+		default:
+			return "error";
+	}
+    }
+}

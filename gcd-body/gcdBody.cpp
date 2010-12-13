@@ -12,6 +12,12 @@
 #define PATH_SEP '/'
 #endif
 
+struct MvComponent
+{
+	std::string bladeName;
+	int bladeArrayIndex;
+};
+
 void readFile(std::stringstream& resultStream,const char* filePath);
 void readFile(std::stringstream& resultStream,const std::ifstream& fileStream);
 
@@ -140,7 +146,7 @@ int body(std::string& intermediateFilePath,std::string& outputFilePath,
 	if(gaalopFileCount > 0)
 	{
 		std::vector<std::string> mvNames;
-		std::multimap<std::string,int> mvComponents;
+		std::multimap<std::string,MvComponent> mvComponents;
 
         	std::stringstream gaalopOutFilePath;
 		gaalopOutFilePath << tempFilePath << '.' << gaalopFileCount - 1 << gaalopOutFileExtension;
@@ -170,10 +176,13 @@ int body(std::string& intermediateFilePath,std::string& outputFilePath,
 				size_t statementPos = line.find(mvCompSearchString);
 				if(statementPos != std::string::npos)
 				{
+					std::string mvName;
+					MvComponent mvComp;
 					std::stringstream lineStream(line.substr(statementPos + mvCompSearchString.length()));
-					std::string mvName; lineStream >> mvName;
-					int mvBladeIndex; lineStream >> mvBladeIndex;
-					mvComponents.insert(std::multimap<std::string,int>::value_type(mvName,mvBladeIndex));
+					lineStream >> mvName;
+					lineStream >> mvComp.bladeName;
+					lineStream >> mvComp.bladeArrayIndex;
+					mvComponents.insert(std::multimap<std::string,MvComponent>::value_type(mvName,mvComp));
 				}
 			}
         	}
@@ -183,83 +192,9 @@ int body(std::string& intermediateFilePath,std::string& outputFilePath,
 			const std::string& mvName = *mvNamesIter;
 			variables << mvName << " = 0";
 
-			std::pair<std::multimap<std::string,int>::const_iterator,std::multimap<std::string,int>::const_iterator> mvComponentRange = mvComponents.equal_range(mvName);
-			for(std::multimap<std::string,int>::const_iterator mvComponentIter = mvComponentRange.first; mvComponentIter != mvComponentRange.second; ++mvComponentIter)
-			{
-				switch(mvComponentIter->second)
-				{
-				case SCALAR:
-					variables << " +" << mvName << '_' << SCALAR;
-					break;
-
-				case E1:
-					variables << " +e1*" << mvName << '_' << E1;
-					break;
-				case E2:
-					variables << " +e2*" << mvName << '_' << E2;
-					break;
-				case E3:
-					variables << " +e3*" << mvName << '_' << E3;
-					break;
-				case EINF:
-					variables << " +einf*" << mvName << '_' << EINF;
-					break;
-				case E0:
-					variables << " +e0*" << mvName << '_' << E0;
-					break;
-
-				case E12:
-					variables << " +e1^e2*" << mvName << '_' << E12;
-					break;
-				case E13:
-					variables << " +e1^e3*" << mvName << '_' << E13;
-					break;
-				case E1INF:
-					variables << " +e1^einf*" << mvName << '_' << E1INF;
-					break;
-				case E10:
-					variables << " +e1^e0*" << mvName << '_' << E10;
-					break;
-				case E23:
-					variables << " +e2^e3*" << mvName << '_' << E23;
-					break;
-				case E2INF:
-					variables << " +e2^einf*" << mvName << '_' << E2INF;
-					break;
-				case E20:
-					variables << " +e2^e0*" << mvName << '_' << E20;
-					break;
-				case E3INF:
-					variables << " +e3^einf*" << mvName << '_' << E3INF;
-					break;
-				case E30:
-					variables << " +e3^e0*" << mvName << '_' << E30;
-					break;
-				case EINF0:
-					variables << " +einf^e0*" << mvName << '_' << EINF0;
-					break;
-
-				case E123INF:
-					variables << " +e1^e2^e3^einf*" << mvName << '_' << E123INF;
-					break;
-				case E1230:
-					variables << " +e1^e2^e3^e0*" << mvName << '_' << E1230;
-					break;
-				case E12INF0:
-					variables << " +e1^e2^einf^e0*" << mvName << '_' << E12INF0;
-					break;
-				case E13INF0:
-					variables << " +e1^e3^einf^e0*" << mvName << '_' << E13INF0;
-					break;
-				case E23INF0:
-					variables << " +e2^e3^einf^e0*" << mvName << '_' << E23INF0;
-					break;
-
-				case E123INF0:
-					variables << " +e1^e2^e3^einf^e0*" << mvName << '_' << E123INF0;
-					break;
-				}
-			}
+			std::pair<std::multimap<std::string,MvComponent>::const_iterator,std::multimap<std::string,MvComponent>::const_iterator> mvComponentRange = mvComponents.equal_range(mvName);
+			for(std::multimap<std::string,MvComponent>::const_iterator mvComponentIter = mvComponentRange.first; mvComponentIter != mvComponentRange.second; ++mvComponentIter)
+				variables << " +" << mvComponentIter->second.bladeName << '*' << mvName << '_' << mvComponentIter->second.bladeArrayIndex;
 
 			variables << ";\n";
 		}

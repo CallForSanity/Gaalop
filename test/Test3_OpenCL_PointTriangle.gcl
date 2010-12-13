@@ -1,4 +1,4 @@
-enum BLADES
+enum MV_BLADE_INDEX
 {
 SCALAR,
 
@@ -38,6 +38,22 @@ E23INF0,
 
 E123INF0
 };
+
+float getMvComp(const float* mv,const unsigned int usageDescriptor,const unsigned int idx)
+{
+	unsigned int cnt = 0;
+	for(unsigned int counter = 0; counter <= idx; ++counter)
+	{
+		if(usageDescriptor & (1 << counter))
+		{
+			if(idx == counter)
+				return mv[cnt];
+			++cnt;
+		}
+	}
+
+	return 0.0f;
+}
 
 __kernel void pointTriangleTest(__global bool* collision,
 			    	__global const float* triangles,
@@ -90,10 +106,15 @@ __kernel void pointTriangleTest(__global bool* collision,
 	?d2 = side2 . TestPoint;
 	?d3 = side3 . TestPoint;
 #pragma gcd end
+	collision[id] = true;
 
-	if(d[SCALAR]*d[SCALAR] > h*h ||
-	   d1[SCALAR] <= 0.0f && d2[SCALAR] <= 0.0f && d3[SCALAR] <= 0.0f ||
-	   d1[SCALAR] >= 0.0f && d2[SCALAR] >= 0.0f && d3[SCALAR] >= 0.0f)
+	const float d_ = getMvComp(d,d_usage,SCALAR);
+	const float d1_ = getMvComp(d1,d1_usage,SCALAR);
+	const float d2_ = getMvComp(d2,d2_usage,SCALAR);
+	const float d3_ = getMvComp(d3,d3_usage,SCALAR);
+	if(d_*d_ > h*h ||
+	   d1_ <= 0.0f && d2_ <= 0.0f && d3_ <= 0.0f ||
+	   d1_ >= 0.0f && d2_ >= 0.0f && d3_ >= 0.0f)
   		collision[id] = true;
 	else
 		collision[id] = false;

@@ -89,11 +89,23 @@ public class CompressedVisitor extends de.gaalop.gaalet.output.CppVisitor {
 			if(size > 0)
 			    	code.append("[" + size + "]");
 			code.append(";\n");
+
+			// blade usage definition
+			Iterator<Integer> it = fieldVisitor.getMultiVector().getGaalopBlades().keySet().iterator();
+			code.append("const unsigned int ");
+			code.append(var);
+			code.append("_usage = 0");
+			while (it.hasNext()) {
+				code.append(" | (1 << ");
+				code.append(it.next());
+				code.append(')');
+			}
+
+			code.append(";\n");
 		}
 
 		if (!graph.getLocalVariables().isEmpty()) {
 			code.append("\n");
 		}				
 	}
-
 }
