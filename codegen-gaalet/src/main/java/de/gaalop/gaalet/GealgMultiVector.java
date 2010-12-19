@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
+import java.util.TreeMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -20,12 +20,12 @@ import de.gaalop.dfg.FloatConstant;
 public class GealgMultiVector {
 
 	public 
-	LinkedHashMap<Integer, Expression>  gaalopBlades; // blade number, value
+	TreeMap<Integer, Expression>  gaalopBlades; // blade number, value
 	String name;
 	
 	public GealgMultiVector(String name) {
 		this.name = name;
-		gaalopBlades = new LinkedHashMap<Integer,Expression>();
+		gaalopBlades = new TreeMap<Integer,Expression>();
 	}
 	
 	public String getDefinition() {
@@ -33,8 +33,7 @@ public class GealgMultiVector {
 		
 		String result = " ";
 		
-		//create the hex string out of that list.	
-		
+		//create the hex string out of that list.
 		Set<Integer> gealg= list.keySet();
 		Iterator<Integer> it = gealg.iterator();
 
@@ -74,16 +73,7 @@ public class GealgMultiVector {
 	};
 	
 	public void addComponent(int GaalopBlade) {
-		
-//		for (int gaalop : gaalopBlades) { //no blade doubled
-//			if (gaalop == GaalopBlade)
-//				return;
-//		}
-		//if (gaalopBlades.get(GaalopBlade) != null)
-		//	return; // no doubles
 		gaalopBlades.put(new Integer(GaalopBlade),null);
-		//gaalopBlades.put(new Integer(GaalopBlade+1),0.0f);		
-		//System.out.println(this.name + " " + GaalopBlade + " assigned  size: " + gaalopBlades.toString());
 	}
 	
 	@Override
@@ -101,24 +91,17 @@ public class GealgMultiVector {
 	private Map<Integer,Expression>  getSortedGealgBlades() {
 		Map<Integer,Expression> gealgList = getUnsortedGealgBlades();
 			
-//		Collections.sort(gealgList);
-//		Collections.reverse(gealgList);
 		return gealgList;
 	}
 
 	public void addGealgBlades(String blade) {
-		//for (int n = 0; n < blades.length(); n=n+2) {
-
-			int gaalop = GealgBladeTable.numberToBlade(blade);
+		int gaalop = GealgBladeTable.numberToBlade(blade);
 			
-			//System.out.println(this.name + " " + blades.substring(n, n+2) + " becomes:" + new Integer(gaalop));
-			addComponent(gaalop);
-		//}
-		
+		addComponent(gaalop);
 	}
 	
 	public Map<Integer,Expression> getUnsortedGealgBlades(){
-		Map<Integer, Expression>  gealgList = new LinkedHashMap<Integer,Expression>();
+		Map<Integer, Expression>  gealgList = new TreeMap<Integer,Expression>();
 		
 		for (Entry<Integer, Expression> newBlade : gaalopBlades.entrySet() ) {
 			gealgList.put(GealgBladeTable.gaalopToGaalet(newBlade.getKey()),newBlade.getValue());
@@ -139,7 +122,7 @@ public class GealgMultiVector {
 
 		Set<Integer> list=gaalopBlades.keySet();
 		System.out.println(gaalopBlades.size());
-		return (Integer) list.toArray()[index];
+		return (Integer)list.toArray()[index];
 	}
 
 	public void addGealgTupel(Integer gealgBlade, Expression value) {

@@ -8,13 +8,13 @@ enum MV_BLADE_INDEX
 {
 SCALAR,
 
-E1,
+E1, // 1
 E2,
 E3,
 EINF,
 E0,
 
-E12,
+E12, // 6
 E13,
 E1INF,
 E10,
@@ -25,7 +25,7 @@ E3INF,
 E30,
 EINF0,
 
-E123,
+E123, // 16
 E12INF,
 E120,
 E13INF,
@@ -36,22 +36,22 @@ E230,
 E2INF0,
 E3INF0,
 
-E123INF,
+E123INF, // 26
 E1230,
 E12INF0,
 E13INF0,
 E23INF0,
 
-E123INF0
+E123INF0 // 31
 };
 #else
-#define SCALAR 0x0
+#define SCALAR 0
 
-#define E1 (0x1 << 0)
-#define E2 (0x1 << 1)
-#define E3 (0x1 << 2)
-#define EINF (0x1 << 3)
-#define E0 (0x1 << 4)
+#define E1 (1 << 0)
+#define E2 (1 << 1)
+#define E3 (1 << 2)
+#define EINF (1 << 3)
+#define E0 (1 << 4)
 
 #define E12 (E1 | E2)
 #define E13 (E1 | E3)

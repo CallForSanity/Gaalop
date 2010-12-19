@@ -53,8 +53,6 @@ public class FieldsUsedVisitor implements ControlFlowVisitor, ExpressionVisitor{
 			definition += printVarName(multivector.getName()) + ";";
 		} else {
 		    definition = "gaalet::cm::mv<";
-			//definition += size;
-			//definition += ", ";
 			definition += createHexString();
 			definition += ">::type " + printVarName(multivector.getName()) + ';';				
 		}
