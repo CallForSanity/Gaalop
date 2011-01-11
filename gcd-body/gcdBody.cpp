@@ -14,6 +14,7 @@
 
 struct MvComponent
 {
+	std::string bladeHandle;
 	std::string bladeName;
 	int bladeArrayIndex;
 };
@@ -180,6 +181,7 @@ int body(std::string& intermediateFilePath,std::string& outputFilePath,
 					MvComponent mvComp;
 					std::stringstream lineStream(line.substr(statementPos + mvCompSearchString.length()));
 					lineStream >> mvName;
+					lineStream >> mvComp.bladeHandle;
 					lineStream >> mvComp.bladeName;
 					lineStream >> mvComp.bladeArrayIndex;
 					mvComponents.insert(std::multimap<std::string,MvComponent>::value_type(mvName,mvComp));
@@ -194,7 +196,7 @@ int body(std::string& intermediateFilePath,std::string& outputFilePath,
 
 			std::pair<std::multimap<std::string,MvComponent>::const_iterator,std::multimap<std::string,MvComponent>::const_iterator> mvComponentRange = mvComponents.equal_range(mvName);
 			for(std::multimap<std::string,MvComponent>::const_iterator mvComponentIter = mvComponentRange.first; mvComponentIter != mvComponentRange.second; ++mvComponentIter)
-				variables << " +" << mvComponentIter->second.bladeName << '*' << mvName << '_' << mvComponentIter->second.bladeArrayIndex;
+				variables << " +" << mvComponentIter->second.bladeName << '*' << mvName << '_' << mvComponentIter->second.bladeHandle;
 
 			variables << ";\n";
 		}

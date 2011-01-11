@@ -87,7 +87,11 @@ public class CompressedVisitor extends de.gaalop.gaalet.output.CppVisitor {
 			int size = fieldVisitor.getMultiVector().getGaalopBlades().size();		
 			code.append(variableType + ' ' + fieldVisitor.getMultiVector().getName());
 			if(size > 0)
-			    	code.append("[" + size + "]");
+			{
+			    	code.append('[');
+				code.append(size);
+				code.append(']');
+			}
 			code.append(";\n");
 
 			// blade usage definition

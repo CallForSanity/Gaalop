@@ -294,22 +294,7 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 	@Override
 	public void visit(MultivectorComponent component) {
 		// GCD definition
-		String componentName = component.getName().replace(suffix, "") + '_' + component.getBladeIndex();
-		if(gcdMetaInfo && !assigned.contains(componentName))
-		{
-			code.append("#pragma gcd multivector_component ");
-			code.append(component.getName().replace(suffix, ""));
-			code.append(' ');
-			code.append(component.getBladeName());
-			code.append(' ');
-			code.append(component.getBladeIndex());
-			code.append('\n');
-			code.append("const float ");
-			code.append(componentName);
-			code.append(" = ");
-			
-			assigned.add(componentName);
-		}
+		component.gcdDefinition(code,assigned,suffix,gcdMetaInfo);
 
 		// standard definition
 		code.append(component.getName().replace(suffix, ""));

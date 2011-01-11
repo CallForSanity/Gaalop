@@ -1,5 +1,7 @@
 package de.gaalop.dfg;
 
+import java.util.*;
+
 /**
  * This class represents a single multivector component. A multivector component is identified
  * by the variable that represents the multivector itself and the index of the component.
@@ -168,4 +170,104 @@ public final class MultivectorComponent extends Variable {
 			return "error";
 	}
     }
+
+    public String getBladeHandle()
+    {
+	switch(bladeIndex)
+	{
+		case 0:
+			return "SCALAR";
+
+		case 1:
+			return "E1";
+		case 2:
+			return "E2";
+		case 3:
+			return "E3";
+		case 4:
+			return "EINF";
+		case 5:
+			return "E0";
+
+		case 6:
+			return "E12";
+		case 7:
+			return "E13";
+		case 8:
+			return "E1INF";
+		case 9:
+			return "E10";
+		case 10:
+			return "E23";
+		case 11:
+			return "E2INF";
+		case 12:
+			return "E20";
+		case 13:
+			return "E3INF";
+		case 14:
+			return "E30";
+		case 15:
+			return "EINF0";
+
+		case 16:
+			return "E123";
+		case 17:
+			return "E12INF";
+		case 18:
+			return "E120";
+		case 19:
+			return "E13INF";
+		case 20:
+			return "E130";
+		case 21:
+			return "E1INF0";
+		case 22:
+			return "E23INF";
+		case 23:
+			return "E230";
+		case 24:
+			return "E2INF0";
+		case 25:
+			return "E3INF0";
+
+		case 26:
+			return "E123INF";
+		case 27:
+			return "E1230";
+		case 28:
+			return "E12INF0";
+		case 29:
+			return "E13INF0";
+		case 30:
+			return "E23INF0";
+
+		case 31:
+			return "E123INF0";
+		default:
+			return "error";
+	}
+   }
+
+   public void gcdDefinition(StringBuilder code,Set<String> assigned,String suffix,boolean gcdMetaInfo)
+   {
+	String componentName = getName().replace(suffix, "") + '_' + getBladeHandle();
+	if(gcdMetaInfo && !assigned.contains(componentName))
+	{
+		code.append("#pragma gcd multivector_component ");
+		code.append(getName().replace(suffix, ""));
+		code.append(' ');
+		code.append(getBladeHandle());
+		code.append(' ');
+		code.append(getBladeName());
+		code.append(' ');
+		code.append(getBladeIndex());
+		code.append('\n');
+		code.append("const float ");
+		code.append(componentName);
+		code.append(" = ");
+			
+		assigned.add(componentName);
+	}
+   }
 }
