@@ -1,6 +1,7 @@
 package de.gaalop.maple;
 
 import com.sun.jna.Platform;
+import de.gaalop.CompilerFacade;
 import de.gaalop.ConfigurationProperty;
 import de.gaalop.Notifications;
 import de.gaalop.OptimizationStrategy;
@@ -41,6 +42,10 @@ public class Plugin extends Observable implements OptimizationStrategyPlugin {
 
 	@ConfigurationProperty(type = Type.BOOLEAN)
 	public boolean constantFolding = false;
+	
+	/** This is a configuration property and should not be modified. */
+	@ConfigurationProperty(type = Type.BOOLEAN)
+	public boolean useCodeSegmenter;
 
 	/**
 	 * Try guessing a default value for the maple Path on Windows
@@ -156,6 +161,16 @@ public class Plugin extends Observable implements OptimizationStrategyPlugin {
 	 */
 	public void setConstantFolding(boolean constantFolding) {
 		this.constantFolding = constantFolding;
+	}
+	
+	public boolean getUseCodeSegmenter() {
+		useCodeSegmenter = CompilerFacade.isUseCodeSegmenter();
+		return useCodeSegmenter;
+	}
+
+	public void setUseCodeSegmenter(boolean useCodeSegmenter) {
+		this.useCodeSegmenter = useCodeSegmenter;
+		CompilerFacade.setUseCodeSegmenter(useCodeSegmenter);
 	}
 
 	@Override
