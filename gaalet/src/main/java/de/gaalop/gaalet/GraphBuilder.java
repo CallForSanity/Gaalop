@@ -3,7 +3,7 @@ package de.gaalop.gaalet;
 import de.gaalop.CheckGAVisitor;
 import de.gaalop.cfg.*;
 import de.gaalop.clucalc.algebra.*;
-//import de.gaalop.clucalc.input.UsedVariablesVisitor;
+import de.gaalop.UsedVariablesVisitor;
 import de.gaalop.dfg.Expression;
 import de.gaalop.dfg.MacroCall;
 import de.gaalop.dfg.MultivectorComponent;
@@ -219,7 +219,7 @@ public final class GraphBuilder {
 	 * @param variable
 	 */
 	public void addIgnoreVariable(Variable variable) {
-		graph.addIgnoreVariable(variable);
+		//graph.addIgnoreVariable(variable);
 		graph.addScalarVariable(variable);
 	}
 	
@@ -266,7 +266,7 @@ public final class GraphBuilder {
 			loop.setCounterVariable(counter);
 			graph.removeLocalVariable(counter);
 			graph.addScalarVariable(counter);
-			graph.addIgnoreVariable(counter);
+			//graph.addIgnoreVariable(counter);
 		}
 
 		return loop;
@@ -623,9 +623,9 @@ public final class GraphBuilder {
 	 */
 	public void finish() {
 
-		for (Variable v : graph.getIgnoreVariables()) {
-			graph.removeLocalVariable(v);
-		}
+//		for (Variable v : graph.getIgnoreVariables()) {
+//			graph.removeLocalVariable(v);
+//		}
 		FindStoreOutputNodes outputNodes = new FindStoreOutputNodes();
 		graph.accept(outputNodes);
 		

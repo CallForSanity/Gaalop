@@ -23,6 +23,7 @@
         <module>codegen-dot</module>
         <module>setup</module>
         <module>codegen-verilog</module>
+	<module>gaalet</module>	
     </modules>
 
     <!--

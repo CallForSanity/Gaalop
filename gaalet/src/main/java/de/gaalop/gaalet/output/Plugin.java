@@ -23,8 +23,9 @@ public class Plugin implements CodeGeneratorPlugin {
 
     private Image icon;
     
-    @ConfigurationProperty(type = Type.TEXT)
-    public String variableType;  
+    //@ConfigurationProperty(type = Type.TEXT)
+    private
+    String variableType = "double";  
    
 	/** This is a configuration property and should not be modified. */
 	@ConfigurationProperty(type = Type.BOOLEAN)

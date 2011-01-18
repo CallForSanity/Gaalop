@@ -48,6 +48,11 @@
             <artifactId>codegen-verilog</artifactId>
             <version>1.0.0</version>
         </dependency>
+         <dependency>
+            <groupId>de.gaalop</groupId>
+            <artifactId>gaalet</artifactId>
+            <version>1.0.0</version>
+        </dependency>        
         <dependency>
             <groupId>commons-beanutils</groupId>
             <artifactId>commons-beanutils</artifactId>
