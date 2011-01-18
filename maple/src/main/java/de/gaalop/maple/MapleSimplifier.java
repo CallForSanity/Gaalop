@@ -56,7 +56,7 @@ public class MapleSimplifier {
         engine.evaluate("with(Clifford);");
 
         // Load our Maple modules
-        loadModule("gaalop.m");
+        loadModule(plugin.getGaalopPath());
         loadModule("gaalopfunctions.m");
 
         // Misc initialization

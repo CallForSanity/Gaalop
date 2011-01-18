@@ -4,8 +4,9 @@
 <comment>Gaalop Configuration File</comment>
 <entry key="de.gaalop.clucalc.output.Plugin.suffix">_opt</entry>
 <entry key="de.gaalop.maple.Plugin.constantFolding">false</entry>
+<entry key="de.gaalop.maple.Plugin.gaalopPath">gaalopCA_4_1.m</entry>
 <entry key="de.gaalop.cpp.Plugin.standalone">true</entry>
-<entry key="de.gaalop.gaalet.output.Plugin.useNameTable">false</entry>
+<entry key="de.gaalop.gaalet.output.Plugin.useNameTable">true</entry>
 <entry key="de.gaalop.maple.Plugin.mapleBinaryPath">/net/bifur/gaalop/maple/bin.IBM_INTEL_LINUX/</entry>
 <entry key="de.gaalop.maple.Plugin.mapleJavaPath">/net/bifur/gaalop/maple/java/</entry>
 </properties>

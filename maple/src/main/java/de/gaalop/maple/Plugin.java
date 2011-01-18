@@ -34,6 +34,10 @@ public class Plugin extends Observable implements OptimizationStrategyPlugin {
 	/** This is a configuration property and should not be modified. */
 	@ConfigurationProperty(type = Type.TEXT)
 	public String mapleJavaPath;
+	
+	/** This is a configuration property and should not be modified. */
+	@ConfigurationProperty(type = Type.TEXT)
+	public String gaalopPath;	
 
 	@ConfigurationProperty(type = Type.BOOLEAN)
 	public boolean constantFolding = false;
@@ -123,6 +127,21 @@ public class Plugin extends Observable implements OptimizationStrategyPlugin {
 		this.mapleJavaPath = mapleJavaPath;
 	}
 
+	/**
+	 * @return gaalopPath the path to the maple optimization file.
+	 */
+	public String getGaalopPath() {
+		return gaalopPath;
+	}
+	/**
+	 * If you want another signature to be used for the generation of the multivector arrays, you can
+	 * write your own gaalop.m file. In order to use it you set the path here.
+	 * @param gaalopPath set the path to the gaalop.m file you want to use.
+	 */
+	public void setGaalopPath(String gaalopPath) {
+		this.gaalopPath = gaalopPath;
+	}	
+	
 	/**
 	 * Needed for BeanUtils to write configuration file.
 	 * 
