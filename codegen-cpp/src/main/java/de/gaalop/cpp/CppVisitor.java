@@ -14,19 +14,19 @@ import org.apache.commons.logging.LogFactory;
  */
 public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 
-	private Log log = LogFactory.getLog(CppVisitor.class);
+	protected Log log = LogFactory.getLog(CppVisitor.class);
 
-	private boolean standalone = true;
+	protected boolean standalone = true;
 
-	private final String suffix = "_opt";
+	protected final String suffix = "_opt";
 
-	private StringBuilder code = new StringBuilder();
+	protected StringBuilder code = new StringBuilder();
 
-	private ControlFlowGraph graph;
+	protected ControlFlowGraph graph;
 
-	private int indentation = 0;
+	protected int indentation = 0;
 
-	private Set<String> assigned = new HashSet<String>();
+	protected Set<String> assigned = new HashSet<String>();
 	
 	public CppVisitor(boolean standalone) {
 		this.standalone = standalone;
@@ -40,7 +40,7 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 		return code.toString();
 	}
 
-	private void appendIndentation() {
+	protected void appendIndentation() {
 		for (int i = 0; i < indentation; ++i) {
 			code.append('\t');
 		}
@@ -107,7 +107,7 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 	 * @param inputVariables
 	 * @return
 	 */
-	private List<Variable> sortVariables(Set<Variable> inputVariables) {
+	protected List<Variable> sortVariables(Set<Variable> inputVariables) {
 		List<Variable> variables = new ArrayList<Variable>(inputVariables);
 		Comparator<Variable> comparator = new Comparator<Variable>() {
 
@@ -257,13 +257,13 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 		node.getSuccessor().accept(this);
 	}
 
-	private void addBinaryInfix(BinaryOperation op, String operator) {
+	protected void addBinaryInfix(BinaryOperation op, String operator) {
 		addChild(op, op.getLeft());
 		code.append(operator);
 		addChild(op, op.getRight());
 	}
 
-	private void addChild(Expression parent, Expression child) {
+	protected void addChild(Expression parent, Expression child) {
 		if (OperatorPriority.hasLowerPriority(parent, child)) {
 			code.append('(');
 			child.accept(this);
@@ -345,7 +345,7 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 		}
 	}
 
-	private boolean isSquare(Exponentiation exponentiation) {
+	protected boolean isSquare(Exponentiation exponentiation) {
 		final FloatConstant two = new FloatConstant(2.0f);
 		return two.equals(exponentiation.getRight());
 	}
