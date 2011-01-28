@@ -1,42 +1,15 @@
-enum MV_BLADE_INDEX
-{
-SCALAR,
+enum MV_BLADE_INDEX {
+	SCALAR,
 
-E1,
-E2,
-E3,
-EINF,
-E0,
+	E1, E2, E3, EINF, E0,
 
-E12,
-E13,
-E1INF,
-E10,
-E23,
-E2INF,
-E20,
-E3INF,
-E30,
-EINF0,
+	E12, E13, E1INF, E10, E23, E2INF, E20, E3INF, E30, EINF0,
 
-E123,
-E12INF,
-E120,
-E13INF,
-E130,
-E1INF0,
-E23INF,
-E230,
-E2INF0,
-E3INF0,
+	E123, E12INF, E120, E13INF, E130, E1INF0, E23INF, E230, E2INF0, E3INF0,
 
-E123INF,
-E1230,
-E12INF0,
-E13INF0,
-E23INF0,
+	E123INF, E1230, E12INF0, E13INF0, E23INF0,
 
-E123INF0
+	E123INF0
 };
 
 float getMvComp(const float* mv,const unsigned int usageDescriptor,const unsigned int idx)
@@ -47,7 +20,7 @@ float getMvComp(const float* mv,const unsigned int usageDescriptor,const unsigne
 		if(usageDescriptor & (1 << counter))
 		{
 			if(idx == counter)
-				return mv[cnt];
+			return mv[cnt];
 			++cnt;
 		}
 	}
@@ -64,16 +37,16 @@ __kernel void horizonKernel(__global float* circleCenters,__global const float* 
 	const float pz = points[3*id+2];
 
 #pragma gcd begin
-    P = VecN3(px,py,pz);
-    r = 1;
-    S = e0-0.5*r*r*einf;
-    C = S^(P+(P.S)*einf);
-    ?homogenCenter = C*einf*C;
-    ?scale = -homogenCenter.einf;
-    ?euclidCenter = homogenCenter / scale;
+	P = VecN3(px,py,pz);
+	r = 1;
+	S = e0-0.5*r*r*einf;
+	C = S^(P+(P.S)*einf);
+	?homogenCenter = C*einf*C;
+	?scale = -homogenCenter.einf;
+	?euclidCenter = homogenCenter / scale;
 #pragma gcd end
 
-    circleCenters[3*id+0] = getMvComp(euclidCenter,euclidCenter_usage,E1);
-    circleCenters[3*id+1] = getMvComp(euclidCenter,euclidCenter_usage,E2);
-    circleCenters[3*id+2] = getMvComp(euclidCenter,euclidCenter_usage,E3);
+	circleCenters[3*id+0] = getMvComp(euclidCenter,euclidCenter_usage,E1);
+	circleCenters[3*id+1] = getMvComp(euclidCenter,euclidCenter_usage,E2);
+	circleCenters[3*id+2] = getMvComp(euclidCenter,euclidCenter_usage,E3);
 }
