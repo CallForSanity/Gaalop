@@ -140,27 +140,6 @@ public class CppVisitor extends de.gaalop.cpp.CppVisitor {
 		}				
 	}
 	
-	
-	/**
-	 * Sorts a set of variables by name to make the order deterministic.
-	 * 
-	 * @param inputVariables
-	 * @return
-	 */
-	private List<Variable> sortVariables(Set<Variable> inputVariables) {
-		List<Variable> variables = new ArrayList<Variable>(inputVariables);
-		Comparator<Variable> comparator = new Comparator<Variable>() {
-
-			@Override
-			public int compare(Variable o1, Variable o2) {
-				return o1.getName().compareToIgnoreCase(o2.getName());
-			}
-		};
-
-		Collections.sort(variables, comparator);
-		return variables;
-	}
-
 	@Override
 	public void visit(AssignmentNode node) {
 		if (assigned.contains(node.getVariable().getName())) {

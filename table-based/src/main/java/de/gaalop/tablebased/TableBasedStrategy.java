@@ -93,10 +93,10 @@ public class TableBasedStrategy implements OptimizationStrategy {
 			throw new OptimizationException("Unable to count assignments in graph:\n" + e.getMessage(), graph);
 		}
 		try {
-			log.debug("Simplifying graph using maple.");
+			log.debug("Simplifying graph using Table Based Approach.");
 			simplifier.simplify(graph);
 		} catch (Exception e) {
-			throw new OptimizationException("Unable to simplify using maple:\n" + e.getMessage(), e, graph);
+			throw new OptimizationException("Unable to simplify using Table Based Approach:\n" + e.getMessage(), e, graph);
 		}
 
 		try {

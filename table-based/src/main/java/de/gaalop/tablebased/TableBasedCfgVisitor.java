@@ -44,6 +44,7 @@ import de.gaalop.dfg.MultivectorComponent;
 import de.gaalop.dfg.Relation;
 import de.gaalop.dfg.Subtraction;
 import de.gaalop.dfg.Variable;
+import de.gaalop.tablebased.engine.TableBasedEngine;
 
 /**
  * This visitor creates code for Maple.
@@ -635,6 +636,8 @@ public class TableBasedCfgVisitor implements ControlFlowVisitor {
 	static final String CONDITION_PREFIX = "condition_";
 	static int conditionSuffix = 0;
 	private static final String suffix = "_opt";
+	
+	TableBasedEngine engine;
 
 	private HashMap<String, String> oldMinVal;
 	private HashMap<String, String> oldMaxVal;
@@ -1009,12 +1012,13 @@ public class TableBasedCfgVisitor implements ControlFlowVisitor {
 	}
 
 	/**
-	 * Simplifies the given variable and parses the Maple code to return the new nodes.
+	 * Simplifies the given variable and returns the new nodes.
 	 */
 	List<AssignmentNode> optimizeVariable(ControlFlowGraph graph, Variable v) {
-		String simplification = simplify(v);
+		/*String simplification = simplify(v);
 		log.debug("Maple simplification of " + v + ": " + simplification);
-		return parseMapleCode(graph, simplification);
+		return parseMapleCode(graph, simplification);*/
+		return engine.evaluate(v);
 	}
 
 	/**
@@ -1023,7 +1027,7 @@ public class TableBasedCfgVisitor implements ControlFlowVisitor {
 	 * @param expression The data flow graph that should be simplified
 	 * @return The code Maple returned as the simplification.
 	 */
-	String simplify(Expression expression) {
+	/*String simplify(Expression expression) {
 		StringBuilder codeBuffer = new StringBuilder();
 		codeBuffer.append("gaalop(");
 		codeBuffer.append(generateCode(expression));
@@ -1031,7 +1035,7 @@ public class TableBasedCfgVisitor implements ControlFlowVisitor {
 
 			//return engine.evaluate(codeBuffer.toString());
 		return null;
-	}
+	}*/
 
 	/**
 	 * Parses a snippet of maple code and returns a list of CFG nodes that implement the returned maple expressions.
@@ -1040,11 +1044,11 @@ public class TableBasedCfgVisitor implements ControlFlowVisitor {
 	 * @param mapleCode The code returned by Maple.
 	 * @return A list of control flow nodes modeling the returned code.
 	 */
-	List<AssignmentNode> parseMapleCode(ControlFlowGraph graph, String mapleCode) {
+	/*List<AssignmentNode> parseMapleCode(ControlFlowGraph graph, String mapleCode) {
 		oldMinVal = new HashMap<String, String>();
 		oldMaxVal = new HashMap<String, String>();
 
-		/* fill the Maps with the min and maxvalues from the nodes */
+		// fill the Maps with the min and maxvalues from the nodes
 		for (Variable v : graph.getInputVariables()) {
 			if (v.getMinValue() != null)
 				oldMinVal.put(v.getName(), v.getMinValue());
@@ -1060,10 +1064,10 @@ public class TableBasedCfgVisitor implements ControlFlowVisitor {
 			return transformer.script(graph, oldMinVal, oldMaxVal);
 		} catch (RecognitionException e) {
 			throw new RuntimeException(e);
-		}*/
+		}
 		
 		return null;
-	}
+	}*/
 
 	@Override
 	public void visit(IfThenElseNode node) {
