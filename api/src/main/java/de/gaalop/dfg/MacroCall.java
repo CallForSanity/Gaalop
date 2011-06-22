@@ -51,7 +51,9 @@ public class MacroCall extends Expression {
 		// create a deep copy of args list
 		List<Expression> newArgs = new ArrayList<Expression>();
 		for (Expression e : args) {
-			newArgs.add(e.copy());
+			Expression eCopy = e.copy();
+			eCopy.setGAPP(getGAPP());
+			newArgs.add(eCopy);
 		}
 		return new MacroCall(name, newArgs);
 	}

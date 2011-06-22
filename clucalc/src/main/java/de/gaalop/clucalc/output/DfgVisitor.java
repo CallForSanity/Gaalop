@@ -138,8 +138,10 @@ public class DfgVisitor implements ExpressionVisitor {
 
 	@Override
 	public void visit(Negation negation) {
+                code.append('(');
 		code.append('-');
 		addChild(negation, negation.getOperand());
+                code.append(')');
 	}
 
 	@Override

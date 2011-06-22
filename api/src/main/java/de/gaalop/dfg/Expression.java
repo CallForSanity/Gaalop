@@ -1,5 +1,7 @@
 package de.gaalop.dfg;
 
+import de.gaalop.gapp.GAPP;
+
 /**
  * This class represents a node of a dataflow graph.
  * 
@@ -39,4 +41,41 @@ public abstract class Expression {
 	 * @param visitor The object that the visit method should be called on.
 	 */
 	public abstract void accept(ExpressionVisitor visitor);
+	
+	/**
+	 * This method copy the gapp instance
+	 * @return The gapp instance
+	 * 
+	 * @author Christian Steinmetz
+	 */
+	protected GAPP copyGAPP() {
+            if (gapp != null)
+		return gapp.getCopy();
+            else
+                return null;
+	}
+	
+	/**
+	 * The GAPP instance. (GAPP = Geometric Algebra Algorithm Parallelism Program)
+	 * 
+	 * @author Christian Steinmetz
+	 */
+	private GAPP gapp;
+	
+	/**
+	 * Getter for the GAPP instance
+	 * @return The GAPP instance
+	 */
+	public GAPP getGAPP() {
+		return gapp;
+	}
+	
+	/**
+	 * Setter for the GAPP instance
+	 * @param gapp The GAPP instance to set
+	 */
+	public void setGAPP(GAPP gapp) {
+		this.gapp = gapp;
+	}
+
 }

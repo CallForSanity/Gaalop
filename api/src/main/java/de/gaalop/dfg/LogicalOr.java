@@ -29,7 +29,9 @@ public final class LogicalOr extends BinaryOperation {
 
     @Override
     public Expression copy() {
-        return new LogicalOr(getLeft().copy(), getRight().copy());
+        Expression result = new LogicalOr(getLeft().copy(), getRight().copy());
+    	result.setGAPP(copyGAPP());
+    	return result;
     }
 
     /**

@@ -29,7 +29,9 @@ public final class InnerProduct extends BinaryOperation {
 
     @Override
     public Expression copy() {
-        return new InnerProduct(getLeft().copy(), getRight().copy());
+    	Expression result = new InnerProduct(getLeft().copy(), getRight().copy());
+    	result.setGAPP(copyGAPP());
+    	return result;
     }
 
     /**

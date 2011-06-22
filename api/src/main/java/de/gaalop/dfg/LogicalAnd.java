@@ -29,7 +29,9 @@ public final class LogicalAnd extends BinaryOperation {
 
     @Override
     public Expression copy() {
-        return new LogicalAnd(getLeft().copy(), getRight().copy());
+    	Expression result = new LogicalAnd(getLeft().copy(), getRight().copy());
+    	result.setGAPP(copyGAPP());
+    	return result;
     }
 
     /**

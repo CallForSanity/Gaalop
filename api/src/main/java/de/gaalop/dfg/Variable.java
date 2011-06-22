@@ -77,6 +77,7 @@ public class Variable extends Expression {
 		v.global = global;
 		v.setMaxValue(this.getMaxValue());
 		v.setMinValue(this.getMinValue());
+		v.setGAPP(getGAPP());
 		return v;
 	}
 

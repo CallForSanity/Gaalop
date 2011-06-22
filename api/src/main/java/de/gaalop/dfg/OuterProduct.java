@@ -32,7 +32,9 @@ public final class OuterProduct extends BinaryOperation {
 
     @Override
     public Expression copy() {
-        return new OuterProduct(getLeft().copy(), getRight().copy());
+    	Expression result = new OuterProduct(getLeft().copy(), getRight().copy());
+        result.setGAPP(copyGAPP());
+    	return result;
     }
 
     /**
