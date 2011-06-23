@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package de.gaalop.gappImporting.cfgimport;
+package de.gaalop.tba.cfgImport;
 
 import de.gaalop.cfg.AssignmentNode;
 import de.gaalop.cfg.BlockEndNode;

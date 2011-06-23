@@ -1,4 +1,4 @@
-package de.gaalop.gappImporting.cfgimport;
+package de.gaalop.gappImporting;
 
 import java.util.LinkedList;
 

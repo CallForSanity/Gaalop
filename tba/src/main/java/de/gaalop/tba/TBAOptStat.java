@@ -3,8 +3,8 @@ package de.gaalop.tba;
 import de.gaalop.OptimizationException;
 import de.gaalop.OptimizationStrategy;
 import de.gaalop.cfg.ControlFlowGraph;
-import de.gaalop.gappImporting.cfgimport.CFGImporter2;
-import de.gaalop.gappImporting.cfgimport.ConstantFolding;
+import de.gaalop.tba.cfgImport.CFGImporter2;
+import de.gaalop.tba.cfgImport.ConstantFolding;
 
 public class TBAOptStat implements OptimizationStrategy {
 

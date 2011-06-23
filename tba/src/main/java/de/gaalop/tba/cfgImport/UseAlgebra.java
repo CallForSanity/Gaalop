@@ -1,10 +1,13 @@
-package de.gaalop.gappImporting.cfgimport;
+package de.gaalop.tba.cfgImport;
 
 import de.gaalop.tba.Algebra;
 import de.gaalop.tba.IMultTable;
 import de.gaalop.tba.MultTableImpl;
 import de.gaalop.tba.MultTableLoader;
 import de.gaalop.tba.Multivector;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class UseAlgebra {
 
@@ -20,8 +23,11 @@ public class UseAlgebra {
 		tableOuter = new MultTableImpl();
 		tableGeo = new MultTableImpl();
 		MultTableLoader loader = new MultTableLoader();
-		
-		loader.load(tableInner, tableOuter, tableGeo, algebra,"productsGA5d.csv","replacesGA5d.csv");
+                try {
+                    loader.load(tableInner, tableOuter, tableGeo, algebra, "productsGA5d.csv", "replacesGA5d.csv");
+                } catch (IOException ex) {
+                    Logger.getLogger(UseAlgebra.class.getName()).log(Level.SEVERE, null, ex);
+                }
 	}
 	
 	public Multivector inner(Integer factor1, Integer factor2) {

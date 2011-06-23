@@ -28,7 +28,7 @@
         </dependency>
         <dependency>
             <groupId>de.gaalop</groupId>
-            <artifactId>gapp</artifactId>
+            <artifactId>codegen-java</artifactId>
             <version>1.0.0</version>
         </dependency>
     </dependencies>

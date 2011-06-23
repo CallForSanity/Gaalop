@@ -1,4 +1,4 @@
-package de.gaalop.gappImporting.cfgimport;
+package de.gaalop.tba.cfgImport;
 
 import java.util.HashMap;
 
