@@ -1,7 +1,5 @@
 package de.gaalop.tba;
 
-import de.gaalop.tba.Multivector;
-
 public class MultTableImpl implements IMultTable {
 
 	private Multivector[][] products;

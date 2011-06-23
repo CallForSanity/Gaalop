@@ -2,11 +2,12 @@ package de.gaalop.tba;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Algebra {
 
@@ -19,7 +20,11 @@ public class Algebra {
 	
 	public Algebra(String filename_products) {
 		blades = new Vector<Blade>();
-		load(filename_products);
+                try {
+                    load(filename_products);
+                } catch (IOException ex) {
+                    Logger.getLogger(Algebra.class.getName()).log(Level.SEVERE, null, ex);
+                }
 	}
 	
 	public Vector<Blade> getBlades() {
@@ -36,7 +41,7 @@ public class Algebra {
 	}
 	
 	public int getIndex(Blade bladeExpr) {
-		if (bladeExpr.getBases().size() == 0) return 0;
+		if (bladeExpr.getBases().isEmpty()) return 0;
 		for (int i=0;i<blades.size();i++)
 			if (blades.get(i).equals(bladeExpr)) 
 				return i;
@@ -51,34 +56,26 @@ public class Algebra {
 		this.base = base;
 	}
 
-	public void load(String filename_products) {
-		try {
-                        InputStream resourceAsStream = getClass().getResourceAsStream(filename_products);
+	public void load(String filename_products) throws IOException {
+            InputStream resourceAsStream = getClass().getResourceAsStream(filename_products);
+
+            BufferedReader d = new BufferedReader(new InputStreamReader(resourceAsStream));
+
+            String readed = d.readLine();
+
+            base = readed.split(";");
+
+            int line = 0;
+            while (d.ready()) {
+                readed = d.readLine();
+                Blade b = Blade.parseStr(readed,this);
+                setBlade(line,b);
+
+                line++;
+            }
 
 
-			BufferedReader d = new BufferedReader(new InputStreamReader(resourceAsStream));
-			
-			String readed = d.readLine();
-			
-			String[] base = readed.split(";");
-			setBase(base);
-			
-			int line = 0;
-			while (d.ready()) {
-				readed = d.readLine();
-				Blade b = Blade.parseStr(readed,this);
-				setBlade(line,b);
-				
-				line++;
-			}
-			
-			
-			d.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+            d.close();
 	}
 	
 }
