@@ -30,10 +30,9 @@ import de.gaalop.gapp.variables.GAPPMultivector;
 import de.gaalop.gapp.variables.GAPPSignedMultivectorComponent;
 import de.gaalop.gapp.variables.GAPPVariable;
 import de.gaalop.gapp.variables.GAPPVector;
-import de.gaalop.tba.cfgImport.CFGImporter2;
+import de.gaalop.tba.cfgImport.CFGImporter;
 import de.gaalop.tba.cfgImport.ConstantFolding;
 import de.gaalop.gapp.instructionSet.GAPPAssignMv;
-import de.gaalop.gapp.instructionSet.GAPPBaseInstruction;
 import de.gaalop.gapp.instructionSet.GAPPDotVectors;
 import de.gaalop.gapp.instructionSet.GAPPResetMv;
 import de.gaalop.gapp.instructionSet.GAPPSetVector;
@@ -57,7 +56,7 @@ public class GAPPProgram {
     public static void main(String[] args) {
 
 
-        CFGImporter2 c = new CFGImporter2();
+        CFGImporter c = new CFGImporter();
 
         CluCalcCodeParser instance = CluCalcCodeParser.INSTANCE;
         InputFile input = new InputFile("kreis.clu", readFile(new File("/daten/kreis.clu")));

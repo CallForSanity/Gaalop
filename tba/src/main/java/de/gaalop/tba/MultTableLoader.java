@@ -37,7 +37,8 @@ public class MultTableLoader {
         return replaces;
     }
 
-    private void loadProducts(IMultTable tableInner, IMultTable tableOuter, IMultTable tableGeo, Algebra algebra, String filename_Products, LinkedList<ReplaceString> replaces) throws IOException {
+    private void loadProducts(UseAlgebra useAlgebra, String filename_Products, LinkedList<ReplaceString> replaces) throws IOException {
+        Algebra algebra = useAlgebra.getAlgebra();
         String[] base = algebra.getBase();
         InputStream resourceAsStream = getClass().getResourceAsStream(filename_Products);
 
@@ -57,9 +58,9 @@ public class MultTableLoader {
                 int index0 = algebra.getIndex(Blade.parseStr(parts[0], algebra));
                 int index1 = algebra.getIndex(Blade.parseStr(parts[1], algebra));
 
-                tableInner.setProduct(index0, index1, Multivector.parse(parts[2], base, algebra));
-                tableOuter.setProduct(index0, index1, Multivector.parse(parts[3], base, algebra));
-                tableGeo.setProduct(index0, index1, Multivector.parse(parts[4], base, algebra));
+                useAlgebra.getTableInner().setProduct(index0, index1, Multivector.parse(parts[2], base, algebra));
+                useAlgebra.getTableOuter().setProduct(index0, index1, Multivector.parse(parts[3], base, algebra));
+                useAlgebra.getTableGeo().setProduct(index0, index1, Multivector.parse(parts[4], base, algebra));
             }
 
             line++;
@@ -68,8 +69,14 @@ public class MultTableLoader {
         d.close();
     }
 
-    private void insertStandardProducts(int bladeCount, IMultTable tableInner, IMultTable tableOuter, IMultTable tableGeo, Algebra algebra) {
+    private void insertStandardProducts(int bladeCount, UseAlgebra useAlgebra) {
+        Algebra algebra = useAlgebra.getAlgebra();
         //insert standard products with 1
+
+        IMultTable tableInner = useAlgebra.getTableInner();
+        IMultTable tableOuter = useAlgebra.getTableOuter();
+        IMultTable tableGeo = useAlgebra.getTableGeo();
+
 
         for (int i = 0; i < bladeCount; i++) {
             Blade blade = algebra.getBlade(i);
@@ -88,16 +95,16 @@ public class MultTableLoader {
         }
     }
 
-    public void load(IMultTable tableInner, IMultTable tableOuter, IMultTable tableGeo, Algebra algebra, String filename_Products, String filename_Replaces) throws IOException {
+    public void load(UseAlgebra useAlgebra, String filename_Products, String filename_Replaces) throws IOException {
 
-        int bladeCount = algebra.getBlades().size();
-        tableInner.createTable(bladeCount);
-        tableOuter.createTable(bladeCount);
-        tableGeo.createTable(bladeCount);
+        int bladeCount = useAlgebra.getAlgebra().getBlades().size();
+        useAlgebra.getTableInner().createTable(bladeCount);
+        useAlgebra.getTableOuter().createTable(bladeCount);
+        useAlgebra.getTableGeo().createTable(bladeCount);
 
         LinkedList<ReplaceString> replaces = loadReplaces(filename_Replaces);
-        loadProducts(tableInner, tableOuter, tableGeo, algebra, filename_Products, replaces);
-        insertStandardProducts(bladeCount, tableInner, tableOuter, tableGeo, algebra);
+        loadProducts(useAlgebra, filename_Products, replaces);
+        insertStandardProducts(bladeCount, useAlgebra);
 
     }
 }

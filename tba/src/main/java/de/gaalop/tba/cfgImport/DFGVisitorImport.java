@@ -1,5 +1,6 @@
 package de.gaalop.tba.cfgImport;
 
+import de.gaalop.tba.UseAlgebra;
 import java.util.HashMap;
 
 import de.gaalop.tba.Multivector;
@@ -32,7 +33,7 @@ import de.gaalop.dfg.Reverse;
 import de.gaalop.dfg.Subtraction;
 import de.gaalop.dfg.Variable;
 
-public class CFGExpressionVisitor extends EmptyExpressionVisitor {
+public class DFGVisitorImport extends EmptyExpressionVisitor {
 //implements ExpressionVisitor {
 	
 	private Variable currentOutputVariable;
@@ -49,7 +50,7 @@ public class CFGExpressionVisitor extends EmptyExpressionVisitor {
 	private final byte OUTER = 1;
 	private final byte GEO = 2;
 	
-	public CFGExpressionVisitor() {
+	public DFGVisitorImport() {
 		counterMv = 0;
 		
 		//load 5d conformal algebra

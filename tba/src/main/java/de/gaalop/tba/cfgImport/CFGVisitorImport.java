@@ -12,11 +12,11 @@ import de.gaalop.dfg.Variable;
 
 public class CFGVisitorImport extends EmptyControlFlowVisitor {
 
-	private CFGExpressionVisitor cfgExpressionVisitor;
+	private DFGVisitorImport cfgExpressionVisitor;
 	
 	public HashMap<String,MvExpressions> variables;
 	
-	public CFGVisitorImport(CFGExpressionVisitor cfgExpressionVisitor) {
+	public CFGVisitorImport(DFGVisitorImport cfgExpressionVisitor) {
 		this.cfgExpressionVisitor = cfgExpressionVisitor;
 		variables = new HashMap<String, MvExpressions>();
 	}

@@ -1,7 +1,7 @@
 package de.gaalop.tba;
 
 import de.gaalop.cfg.ControlFlowGraph;
-import de.gaalop.tba.cfgImport.CFGImporter2;
+import de.gaalop.tba.cfgImport.CFGImporter;
 import de.gaalop.tba.cfgImport.ConstantFolding;
 
 /**
@@ -45,7 +45,7 @@ public class TestTBA {
     private ControlFlowGraph modifyGraph(ControlFlowGraph graphIn) {
         ControlFlowGraph graphOut = null;
 
-        CFGImporter2 importer = new CFGImporter2();
+        CFGImporter importer = new CFGImporter();
         graphOut = importer.importGraph(graphIn);
 
         ConstantFolding folding = new ConstantFolding();
