@@ -1,13 +1,6 @@
 package de.gaalop.gappImporting;
 
-import de.gaalop.gappImporting.GAPPProgram;
-import de.gaalop.gapp.instructionSet.GAPPAddMv;
-import de.gaalop.gapp.instructionSet.GAPPAssignMv;
 import de.gaalop.gapp.instructionSet.GAPPBaseInstruction;
-import de.gaalop.gapp.instructionSet.GAPPDotVectors;
-import de.gaalop.gapp.instructionSet.GAPPResetMv;
-import de.gaalop.gapp.instructionSet.GAPPSetMv;
-import de.gaalop.gapp.instructionSet.GAPPSetVector;
 import de.gaalop.gapp.variables.GAPPMultivector;
 import de.gaalop.gapp.variables.GAPPVariable;
 import de.gaalop.gapp.variables.GAPPVariableBase;
@@ -29,42 +22,32 @@ import java.util.regex.Pattern;
 public class GAPPProgramReader implements VariableGetter {
 
         private static final Pattern WHITESPACE_PATTERN = Pattern.compile("\\s");
-	
 	private HashMap<String,GAPPVariableBase> variables;
 
-	//TODO Syntax richtig parsen
-	public GAPP readFile(File f) {
+	public GAPP readFile(File f) throws FileNotFoundException, IOException {
 		GAPP program = new GAPP();
 		
 		variables = new HashMap<String,GAPPVariableBase>();
-		try {
-			BufferedReader r = new BufferedReader(new FileReader(f));
-			
-			while (r.ready()) {
-				String line = r.readLine().trim();
+                BufferedReader r = new BufferedReader(new FileReader(f));
 
-                               
-                                String[] parts = WHITESPACE_PATTERN.split(line, 2);
+                while (r.ready()) {
+                        String line = r.readLine().trim();
 
-                                if (parts.length == 2) {
-                                    //create instruction from string
-                                    InstructionType type = InstructionType.valueOf(parts[0]);
-                                    GAPPBaseInstruction gappInstruction = GAPPInstancer.instanciate(type, parts[1], this);
-                                    program.addInstruction(gappInstruction);
-                                } else {
-                                    System.err.println("Instruction isn't in a valid format: "+line);
-                                }
-				
-			}
-			
-			r.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
 
+                        String[] parts = WHITESPACE_PATTERN.split(line, 2);
+
+                        if (parts.length == 2) {
+                            //create instruction from string
+                            InstructionType type = InstructionType.valueOf(parts[0]);
+                            GAPPBaseInstruction gappInstruction = GAPPInstancer.instanciate(type, parts[1], this);
+                            program.addInstruction(gappInstruction);
+                        } else {
+                            System.err.println("Instruction isn't in a valid format: "+line);
+                        }
+
+                }
+
+                r.close();
 		return program;
 	}
 
