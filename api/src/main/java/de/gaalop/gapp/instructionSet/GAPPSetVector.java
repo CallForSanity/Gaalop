@@ -19,8 +19,7 @@ public class GAPPSetVector extends GAPPBaseInstruction {
     private GAPPMultivector sourceMv;
     private Selectorset selectorsSrc;
 
-    public GAPPSetVector(String parseArguments, VariableGetter getter) {
-        parseFromString(parseArguments, getter);
+    public GAPPSetVector() {
     }
 
     public GAPPSetVector(GAPPVector destination, Vector<GAPPSignedMultivectorComponent> selectors) {
@@ -34,18 +33,6 @@ public class GAPPSetVector extends GAPPBaseInstruction {
 
     public void add(GAPPSignedMultivectorComponent toAdd) {
         destination.slots.add(toAdd);
-    }
-
-    @Override
-    public void parseFromString(String toParse, VariableGetter getter) {
-        String[] partsEquation = toParse.split("=");
-
-        //Parse left side
-        destination = parseVector(partsEquation[0].trim(), getter);
-
-        //Parse right side
-        selectorsSrc = new Selectorset();
-        sourceMv = parseMultivectorWithSelectors(partsEquation[1].trim(), selectorsSrc, getter);
     }
 
     @Override
@@ -64,4 +51,18 @@ public class GAPPSetVector extends GAPPBaseInstruction {
     public GAPPMultivector getSourceMv() {
         return sourceMv;
     }
+
+    public void setDestination(GAPPVector destination) {
+        this.destination = destination;
+    }
+
+    public void setSelectorsSrc(Selectorset selectorsSrc) {
+        this.selectorsSrc = selectorsSrc;
+    }
+
+    public void setSourceMv(GAPPMultivector sourceMv) {
+        this.sourceMv = sourceMv;
+    }
+
+
 }

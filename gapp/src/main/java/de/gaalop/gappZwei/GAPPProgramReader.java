@@ -8,7 +8,6 @@ import de.gaalop.gapp.instructionSet.GAPPDotVectors;
 import de.gaalop.gapp.instructionSet.GAPPResetMv;
 import de.gaalop.gapp.instructionSet.GAPPSetMv;
 import de.gaalop.gapp.instructionSet.GAPPSetVector;
-import de.gaalop.gapp.instructionSet.EInstruction;
 import de.gaalop.gapp.variables.GAPPMultivector;
 import de.gaalop.gapp.variables.GAPPVariable;
 import de.gaalop.gapp.variables.GAPPVariableBase;
@@ -21,12 +20,15 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
 
-import de.gaalop.cfg.AlgebraSignature;
-import de.gaalop.clucalc.algebra.AlgebraN3;
 import de.gaalop.gapp.GAPP;
+import de.gaalop.gapp.GAPPInstancer;
 import de.gaalop.gapp.VariableGetter;
+import de.gaalop.gapp.visitor.InstructionType;
+import java.util.regex.Pattern;
 
 public class GAPPProgramReader implements VariableGetter {
+
+        private static final Pattern WHITESPACE_PATTERN = Pattern.compile("\\s");
 	
 	private HashMap<String,GAPPVariableBase> variables;
 
@@ -40,42 +42,18 @@ public class GAPPProgramReader implements VariableGetter {
 			
 			while (r.ready()) {
 				String line = r.readLine().trim();
-				
-				int indexSpace = line.indexOf(' '); //TODO tabs too
-			
-				String instruction = line.substring(0,indexSpace);
-				String arguments = line.substring(indexSpace+1,line.length()-1); //remove front instruction aand semicolon
-				
-				//create instruction from string
-				EInstruction inst = EInstruction.valueOf(instruction);
-				
-				if (inst  == null) 
-					System.err.println("instruction don't exists: "+instruction);
-				
-				GAPPBaseInstruction gappInstruction = null;
 
-				switch (inst) {
-				case resetMv:
-					gappInstruction = new GAPPResetMv(arguments,this);
-					break;
-				case assignMv:
-					gappInstruction = new GAPPAssignMv(arguments,this);
-					break;
-				case setMv:
-					gappInstruction = new GAPPSetMv(arguments,this);
-					break;
-				case addMv:
-					gappInstruction = new GAPPAddMv(arguments,this);
-					break;
-				case setVector:
-					gappInstruction = new GAPPSetVector(arguments,this);
-					break;
-				case dotVectors:
-					gappInstruction = new GAPPDotVectors(arguments,this);
-					break;
-				}
-				
-				program.addInstruction(gappInstruction);
+                               
+                                String[] parts = WHITESPACE_PATTERN.split(line, 2);
+
+                                if (parts.length == 2) {
+                                    //create instruction from string
+                                    InstructionType type = InstructionType.valueOf(parts[0]);
+                                    GAPPBaseInstruction gappInstruction = GAPPInstancer.instanciate(type, parts[1], this);
+                                    program.addInstruction(gappInstruction);
+                                } else {
+                                    System.err.println("Instruction isn't in a valid format: "+line);
+                                }
 				
 			}
 			

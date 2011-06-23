@@ -20,8 +20,7 @@ public class GAPPDotVectors extends GAPPBaseInstruction {
     private GAPPVector part1;
     private GAPPVector part2;
 
-    public GAPPDotVectors(String parseArguments, VariableGetter getter) {
-        parseFromString(parseArguments, getter);
+    public GAPPDotVectors() {
     }
 
     public GAPPDotVectors(GAPPMultivector destination, Integer destSelector,
@@ -30,29 +29,6 @@ public class GAPPDotVectors extends GAPPBaseInstruction {
         this.destSelector = destSelector;
         this.part1 = part1;
         this.part2 = part2;
-    }
-
-    @Override
-    public void parseFromString(String toParse, VariableGetter getter) {
-        String[] partsEquation = toParse.split("=");
-
-        //Parse left side
-        Selectorset selectorsDest = new Selectorset();
-        destination = parseMultivectorWithSelectors(partsEquation[0].trim(), selectorsDest, getter);
-        destSelector = selectorsDest.get(0);
-
-        //Parse right side
-
-        String rightSide = partsEquation[1].trim();
-
-        if ((rightSide.charAt(0) != '<') || (rightSide.charAt(rightSide.length() - 1)) != '>') {
-            System.err.println("Parse error. Wrong syntax in dotVectors instruction:" + toParse);
-        } else {
-            String[] partsDotProduct = rightSide.split(",");
-            part1 = parseVector(partsDotProduct[0], getter);
-            part2 = parseVector(partsDotProduct[1], getter);
-        }
-
     }
 
     @Override
@@ -75,4 +51,24 @@ public class GAPPDotVectors extends GAPPBaseInstruction {
     public GAPPVector getPart2() {
         return part2;
     }
+
+    public void setDestSelector(Integer destSelector) {
+        this.destSelector = destSelector;
+    }
+
+    public void setDestination(GAPPMultivector destination) {
+        this.destination = destination;
+    }
+
+    public void setPart1(GAPPVector part1) {
+        this.part1 = part1;
+    }
+
+    public void setPart2(GAPPVector part2) {
+        this.part2 = part2;
+    }
+
+    
+
+
 }

@@ -4,18 +4,18 @@ public class GAPPVariable extends GAPPVariableBase {
 
     private boolean constant;
     private float value;
-    private String name;
+  
 
     public GAPPVariable(String name) {
+        super(name);
         constant = false;
         value = 0;
-        this.name = name;
     }
 
     public GAPPVariable(float constantValue) {
+        super(null);
         constant = true;
         this.value = constantValue;
-        name = null;
     }
 
     public boolean isConstant() {
@@ -24,10 +24,6 @@ public class GAPPVariable extends GAPPVariableBase {
 
     public float getValue() {
         return value;
-    }
-
-    public String getName() {
-        return name;
     }
 
     @Override

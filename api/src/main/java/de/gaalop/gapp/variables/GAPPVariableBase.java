@@ -4,6 +4,15 @@ public class GAPPVariableBase {
 
     protected String name;
 
+    public GAPPVariableBase() {
+    }
+
+    public GAPPVariableBase(String name) {
+        this.name = name;
+    }
+
+    
+
     public String getName() {
         return name;
     }

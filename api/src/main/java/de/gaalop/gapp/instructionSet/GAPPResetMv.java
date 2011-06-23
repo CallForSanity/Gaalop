@@ -11,17 +11,11 @@ public class GAPPResetMv extends GAPPBaseInstruction {
 
     private GAPPMultivector destinationMv;
 
-    public GAPPResetMv(String parseArguments, VariableGetter getter) {
-        parseFromString(parseArguments, getter);
+    public GAPPResetMv() {
     }
 
     public GAPPResetMv(GAPPMultivector destinationMv) {
         this.destinationMv = destinationMv;
-    }
-
-    @Override
-    public void parseFromString(String toParse, VariableGetter getter) {
-        destinationMv = parseMultivectorWithSelectors(toParse, null, getter);
     }
 
     @Override
@@ -32,4 +26,10 @@ public class GAPPResetMv extends GAPPBaseInstruction {
     public GAPPMultivector getDestinationMv() {
         return destinationMv;
     }
+
+    public void setDestinationMv(GAPPMultivector destinationMv) {
+        this.destinationMv = destinationMv;
+    }
+
+    
 }

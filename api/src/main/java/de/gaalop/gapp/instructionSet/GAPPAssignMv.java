@@ -19,8 +19,7 @@ public class GAPPAssignMv extends GAPPBaseInstruction {
     private Selectorset selectors;
     private Variableset values;
 
-    public GAPPAssignMv(String parseArguments, VariableGetter getter) {
-        parseFromString(parseArguments, getter);
+    public GAPPAssignMv() {
     }
 
     public GAPPAssignMv(GAPPMultivector destinationMv, Selectorset selectors, Variableset values) {
@@ -42,19 +41,6 @@ public class GAPPAssignMv extends GAPPBaseInstruction {
     }
 
     @Override
-    public void parseFromString(String toParse, VariableGetter getter) {
-        String[] partsEquation = toParse.split("=");
-
-        //Parse left side
-        selectors = new Selectorset();
-        destinationMv = parseMultivectorWithSelectors(partsEquation[0].trim(), selectors, getter);
-
-        //Parse right side
-        values = new Variableset();
-        parseSelectors(partsEquation[1].trim(), values, getter);
-    }
-
-    @Override
     public void accept(GAPPVisitor visitor, Object arg) {
         visitor.visitAssignMv(this, arg);
     }
@@ -70,4 +56,20 @@ public class GAPPAssignMv extends GAPPBaseInstruction {
     public Variableset getValues() {
         return values;
     }
+
+    public void setDestinationMv(GAPPMultivector destinationMv) {
+        this.destinationMv = destinationMv;
+    }
+
+    public void setSelectors(Selectorset selectors) {
+        this.selectors = selectors;
+    }
+
+    public void setValues(Variableset values) {
+        this.values = values;
+    }
+
+    
+
+
 }
