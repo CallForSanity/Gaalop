@@ -1,7 +1,6 @@
 package de.gaalop.gapp.instructionSet;
 
 import de.gaalop.gapp.Selectorset;
-import de.gaalop.gapp.VariableGetter;
 import de.gaalop.gapp.variables.GAPPMultivector;
 import de.gaalop.gapp.variables.GAPPSignedMultivectorComponent;
 import de.gaalop.gapp.variables.GAPPVector;
@@ -9,9 +8,12 @@ import de.gaalop.gapp.visitor.GAPPVisitor;
 import java.util.Vector;
 
 /**
-Composes the multivector part (vector) part	from dest
-selected elements. sel0 , sel1 , up to sel31 , are a blade
-selectors. Parts and blade selectors are explained below.
+ * Represents the addMv command in the GAPP IR.
+ *
+ * Description from the paper:
+ * Composes the multivector part (vector) part	from dest
+ * selected elements. sel0 , sel1 , up to sel31 , are a blade
+ * selectors. Parts and blade selectors are explained below.
  */
 public class GAPPSetVector extends GAPPBaseInstruction {
 

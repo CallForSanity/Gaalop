@@ -2,30 +2,29 @@ package de.gaalop.gapp.variables;
 
 import java.util.Vector;
 
+/**
+ * Represents a vector in the GAPP IR.
+ *
+ * A vector contains components, which are not organized in fixed order
+ *
+ * @author christian
+ */
 public class GAPPVector extends GAPPVariableBase {
 
     public Vector<GAPPSignedMultivectorComponent> slots;
 
-    public GAPPSignedMultivectorComponent getComponent(int index) {
-        return slots.get(index);
-    }
-
-    public int getSize() {
-        return slots.size();
-    }
-
-    public void setSize(int size) {
-        slots.setSize(size);
-    }
-
     public GAPPVector(String name, Vector<GAPPSignedMultivectorComponent> slots) {
+        super(name);
         this.slots = slots;
-        this.name = name;
     }
 
     public GAPPVector(String name) {
+        super(name);
         this.slots = new Vector<GAPPSignedMultivectorComponent>();
-        this.name = name;
+    }
+
+    public GAPPSignedMultivectorComponent getComponent(int index) {
+        return slots.get(index);
     }
 
     public void add(GAPPSignedMultivectorComponent comp) {
@@ -36,8 +35,16 @@ public class GAPPVector extends GAPPVariableBase {
         return name;
     }
 
-    public void incSize() {
-        slots.add(new GAPPSignedMultivectorComponent());
-
+    public int getSize() {
+        return slots.size();
     }
+
+    public void setSize(int size) {
+        slots.setSize(size);
+    }
+
+
+
+
+    
 }

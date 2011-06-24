@@ -1,22 +1,21 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package de.gaalop.gapp;
 
 import de.gaalop.gapp.visitor.InstructionType;
 import de.gaalop.gapp.instructionSet.*;
 
-
 /**
- *
+ * This class is used for instancing GAPP instructions
  * @author christian
  */
 public class GAPPInstancer {
 
-    public static GAPPBaseInstruction instanciate(InstructionType inst,String arguments,VariableGetter getter) {
-        switch (inst) {
+    /**
+     * Creates a new instance of a given type of a GAPP instruction
+     * @param type The type of the new instruction instance
+     * @return The new instance
+     */
+    public static GAPPBaseInstruction instanciate(InstructionType type) {
+        switch (type) {
             case resetMv:
                     return new GAPPResetMv();
             case assignMv:
@@ -30,7 +29,7 @@ public class GAPPInstancer {
             case dotVectors:
                     return new GAPPDotVectors();
             default:
-                System.err.println("GAPPInstancer: Type "+inst+" isn't known, so it can't be instanced");
+                System.err.println("GAPPInstancer: Type "+type+" isn't known, so it can't be instanced");
                 return null;
             }
     }

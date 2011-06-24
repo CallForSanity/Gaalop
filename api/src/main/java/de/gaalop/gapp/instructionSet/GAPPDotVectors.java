@@ -1,16 +1,17 @@
 package de.gaalop.gapp.instructionSet;
 
 import de.gaalop.gapp.visitor.GAPPVisitor;
-import de.gaalop.gapp.Selectorset;
-import de.gaalop.gapp.VariableGetter;
 import de.gaalop.gapp.variables.GAPPMultivector;
 import de.gaalop.gapp.variables.GAPPVector;
 
 /**
-Perform a scalar multiplication (dot product) on the two
-multivector parts (vectors) (part1 and part2 ). Save the
-result in multivector mvdest at the location selected by
-selector sel.
+ * Represents the dotVectors command in the GAPP IR.
+ *
+ * Description from the paper:
+ * Perform a scalar multiplication (dot product) on the two
+ * multivector parts (vectors) (part1 and part2 ). Save the
+ * result in multivector mvdest at the location selected by
+ * selector sel.
 
  */
 public class GAPPDotVectors extends GAPPBaseInstruction {

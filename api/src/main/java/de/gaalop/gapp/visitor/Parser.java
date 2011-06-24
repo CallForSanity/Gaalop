@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package de.gaalop.gapp.visitor;
 
 import de.gaalop.gapp.variables.GAPPMultivector;
@@ -18,7 +13,7 @@ import de.gaalop.gapp.instructionSet.GAPPSetVector;
 import de.gaalop.gapp.variables.GAPPVector;
 
 /**
- *
+ * Implements a visitor that parses string representations of pre-created GAPPInstructions
  * @author christian
  */
 public class Parser implements GAPPVisitor {
@@ -129,6 +124,15 @@ public class Parser implements GAPPVisitor {
         return null;
     }
 
+    /**
+     * Parses a string and returns a congruous multivector.
+     * Modifies the returnSelectors arguement, which must be not-null.
+     *
+     * @param string The string, representing a multivector with selectors
+     * @param returnSelectors A initiated Selectorset instance, which holds the selectors after this method
+     * @param getter The used variable getter
+     * @return The congruous multivector
+     */
     protected GAPPMultivector parseMultivectorWithSelectors(String string, Selectorset returnSelectors, VariableGetter getter) {
         int indexOfBracket = string.indexOf('[');
         GAPPMultivector mv = getter.parseMultivector(string.substring(0, indexOfBracket));
@@ -139,18 +143,30 @@ public class Parser implements GAPPVisitor {
             returnSelectors.add(Integer.parseInt(curPart.trim()));
         }
 
-
         return mv;
     }
 
-    protected void parseSelectors(String string, Variableset values2, VariableGetter getter) {
+    /**
+     * Parses a string which contains selectors
+     *
+     * @param string The string, representing selectors
+     * @param values The values set which is modified in this method
+     * @param getter The used variable getter
+     */
+    protected void parseSelectors(String string, Variableset values, VariableGetter getter) {
         String[] partsSelectors = string.split(",");
         for (String curPart : partsSelectors) {
-            values2.add(getter.parseVariable(curPart.trim()));
+            values.add(getter.parseVariable(curPart.trim()));
         }
 
     }
 
+    /**
+     * Parses a string and returns a vector
+     * @param string The string, representing the vector
+     * @param getter The used variable getter
+     * @return The congruous vector
+     */
     protected GAPPVector parseVector(String string, VariableGetter getter) {
         return getter.parseVector(string);
     }

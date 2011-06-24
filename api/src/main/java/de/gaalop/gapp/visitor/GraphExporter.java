@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package de.gaalop.gapp.visitor;
 
 import de.gaalop.cfg.AssignmentNode;
@@ -18,24 +14,24 @@ import de.gaalop.gapp.instructionSet.GAPPResetMv;
 import de.gaalop.gapp.instructionSet.GAPPSetMv;
 import de.gaalop.gapp.instructionSet.GAPPSetVector;
 
-import de.gaalop.gapp.variables.GAPPVariable;
+import de.gaalop.gapp.variables.GAPPScalarVariable;
 import de.gaalop.gapp.variables.GAPPVector;
 import de.gaalop.gapp.variables.GAPPVariableBase;
 import java.util.HashMap;
 
 /**
- *
+ * Implements a concrete vistor that exports a gapp programm in a given control-flow-graph
  * @author christian
  */
 public class GraphExporter implements GAPPVisitor {
 
     private ControlFlowGraph graph;
 
-    private HashMap<GAPPVariableBase,Variable> variablen;
+    private HashMap<GAPPVariableBase,Variable> variables;
 
-    public GraphExporter(ControlFlowGraph graph, HashMap<GAPPVariableBase,Variable> variablen) {
+    public GraphExporter(ControlFlowGraph graph, HashMap<GAPPVariableBase,Variable> variables) {
         this.graph = graph;
-        this.variablen = variablen;
+        this.variables = variables;
     }
 
     @Override
@@ -52,7 +48,7 @@ public class GraphExporter implements GAPPVisitor {
     @Override
     public Object visitAssignMv(GAPPAssignMv gappAssignMv, Object arg) {
         for (int i = 0; i < gappAssignMv.getValues().size(); i++) {
-            GAPPVariable curVar = gappAssignMv.getValues().get(i);
+            GAPPScalarVariable curVar = gappAssignMv.getValues().get(i);
             Expression value = (curVar.isConstant())
                     ? new FloatConstant(curVar.getValue())
                     : new Variable(curVar.getName());
@@ -76,12 +72,12 @@ public class GraphExporter implements GAPPVisitor {
         Expression sum;
         if (part1.getSize() > 0) {
             sum = ExpressionFactory.product(new MultivectorComponent(part1.getName(), 0), new MultivectorComponent(part2.getName(), 0));
-            if ((part1.getComponent(0).sign == -1) ^ (part2.getComponent(0).sign == -1)) {
+            if ((part1.getComponent(0).getSign() == -1) ^ (part2.getComponent(0).getSign() == -1)) {
                 sum = ExpressionFactory.subtract(new FloatConstant(0), sum);
             }
 
             for (int i = 1; i < part1.getSize(); i++) {
-                if ((part1.getComponent(i).sign == -1) ^ (part2.getComponent(i).sign == -1)) {
+                if ((part1.getComponent(i).getSign() == -1) ^ (part2.getComponent(i).getSign() == -1)) {
                     sum = ExpressionFactory.subtract(sum, ExpressionFactory.product(new MultivectorComponent(part1.getName(), i), new MultivectorComponent(part2.getName(), i)));
                 } else {
                     sum = ExpressionFactory.sum(sum, ExpressionFactory.product(new MultivectorComponent(part1.getName(), i), new MultivectorComponent(part2.getName(), i)));
@@ -98,7 +94,7 @@ public class GraphExporter implements GAPPVisitor {
     @Override
     public Object visitResetMv(GAPPResetMv gappResetMv, Object arg) {
         graph.getEndNode().insertBefore(
-                new AssignmentNode(graph,variablen.get(gappResetMv.getDestinationMv()), new FloatConstant(0)));
+                new AssignmentNode(graph,variables.get(gappResetMv.getDestinationMv()), new FloatConstant(0)));
         return null;
     }
 
@@ -117,14 +113,16 @@ public class GraphExporter implements GAPPVisitor {
     public Object visitSetVector(GAPPSetVector gappSetVector, Object arg) {
         for (int i = 0; i < gappSetVector.getDestination().slots.size(); i++) {
             graph.getEndNode().insertBefore(
-                    new AssignmentNode(graph,
-                    new MultivectorComponent(gappSetVector.getDestination().getName(), i),
-                    gappSetVector.getDestination().slots.get(i).getMultivectorComponent()));
+                    new AssignmentNode(
+                        graph,
+                        new MultivectorComponent(gappSetVector.getDestination().getName(),i),
+                        variables.get(gappSetVector.getDestination().slots.get(i).getParent())
+                    ));
         }
         return null;
     }
 
-        public ControlFlowGraph getGraph() {
+    public ControlFlowGraph getGraph() {
         return graph;
     }
 

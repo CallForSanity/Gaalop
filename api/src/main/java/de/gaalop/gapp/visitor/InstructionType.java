@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package de.gaalop.gapp.visitor;
 
 import de.gaalop.gapp.instructionSet.GAPPAddMv;
@@ -13,7 +8,8 @@ import de.gaalop.gapp.instructionSet.GAPPSetMv;
 import de.gaalop.gapp.instructionSet.GAPPSetVector;
 
 /**
- *
+ * Declares all commands of the GAPP IR
+ * and implements a visitor for determining type of a given GAPPBaseInstruction instance
  * @author christian
  */
 public enum InstructionType implements GAPPVisitor {

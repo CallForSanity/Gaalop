@@ -2,13 +2,15 @@ package de.gaalop.gapp.instructionSet;
 
 import de.gaalop.gapp.visitor.GAPPVisitor;
 import de.gaalop.gapp.Selectorset;
-import de.gaalop.gapp.VariableGetter;
 import de.gaalop.gapp.variables.GAPPMultivector;
 
 /**
-Adds the selected blades from multivector mvsrc to multivector mvdest . 
-All non-selected blades remain unmodiﬁed. 
-This is restricted to one source and one destination multivector.
+ * Represents the addMv command in the GAPP IR.
+ *
+ * Description from the paper:
+ * Adds the selected blades from multivector mvsrc to multivector mvdest .
+ * All non-selected blades remain unmodiﬁed.
+ * This is restricted to one source and one destination multivector.
  */
 public class GAPPAddMv extends GAPPBaseInstruction {
 

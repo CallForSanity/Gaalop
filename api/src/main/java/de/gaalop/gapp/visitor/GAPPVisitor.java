@@ -1,14 +1,9 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package de.gaalop.gapp.visitor;
 
 import de.gaalop.gapp.instructionSet.*;
 
 /**
- * Defines a interface of a visitor for the GAPP Data structure
+ * Declares a interface of a visitor for the GAPP data structure
  * @author christian
  */
 public interface GAPPVisitor {

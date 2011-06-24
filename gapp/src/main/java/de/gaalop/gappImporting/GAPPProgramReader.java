@@ -2,7 +2,7 @@ package de.gaalop.gappImporting;
 
 import de.gaalop.gapp.instructionSet.GAPPBaseInstruction;
 import de.gaalop.gapp.variables.GAPPMultivector;
-import de.gaalop.gapp.variables.GAPPVariable;
+import de.gaalop.gapp.variables.GAPPScalarVariable;
 import de.gaalop.gapp.variables.GAPPVariableBase;
 import de.gaalop.gapp.variables.GAPPVector;
 
@@ -17,6 +17,7 @@ import de.gaalop.gapp.GAPP;
 import de.gaalop.gapp.GAPPInstancer;
 import de.gaalop.gapp.VariableGetter;
 import de.gaalop.gapp.visitor.InstructionType;
+import de.gaalop.gapp.visitor.Parser;
 import java.util.regex.Pattern;
 
 public class GAPPProgramReader implements VariableGetter {
@@ -30,6 +31,8 @@ public class GAPPProgramReader implements VariableGetter {
 		variables = new HashMap<String,GAPPVariableBase>();
                 BufferedReader r = new BufferedReader(new FileReader(f));
 
+                Parser parser = new Parser(this);
+
                 while (r.ready()) {
                         String line = r.readLine().trim();
 
@@ -39,7 +42,8 @@ public class GAPPProgramReader implements VariableGetter {
                         if (parts.length == 2) {
                             //create instruction from string
                             InstructionType type = InstructionType.valueOf(parts[0]);
-                            GAPPBaseInstruction gappInstruction = GAPPInstancer.instanciate(type, parts[1], this);
+                            GAPPBaseInstruction gappInstruction = GAPPInstancer.instanciate(type);
+                            gappInstruction.accept(parser, parts[1]);
                             program.addInstruction(gappInstruction);
                         } else {
                             System.err.println("Instruction isn't in a valid format: "+line);
@@ -74,11 +78,11 @@ public class GAPPProgramReader implements VariableGetter {
 	}
 
 	@Override
-	public GAPPVariable parseVariable(String string) {
+	public GAPPScalarVariable parseVariable(String string) {
 		if (variables.containsKey(string))
-			return (GAPPVariable) variables.get(string);
+			return (GAPPScalarVariable) variables.get(string);
 		else {
-			GAPPVariable result = new GAPPVariable(0);
+			GAPPScalarVariable result = new GAPPScalarVariable(0);
 			variables.put(string, result);
 			return result;
 		}

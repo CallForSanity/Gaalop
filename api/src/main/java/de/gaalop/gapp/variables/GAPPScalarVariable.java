@@ -1,18 +1,24 @@
 package de.gaalop.gapp.variables;
 
-public class GAPPVariable extends GAPPVariableBase {
+/**
+ * Represents a scalar in the GAPP IR.
+ *
+ * A multivector contains components, which are organized in a fixed blade list.
+ *
+ * @author christian
+ */
+public class GAPPScalarVariable extends GAPPVariableBase {
 
     private boolean constant;
     private float value;
   
-
-    public GAPPVariable(String name) {
+    public GAPPScalarVariable(String name) {
         super(name);
         constant = false;
         value = 0;
     }
 
-    public GAPPVariable(float constantValue) {
+    public GAPPScalarVariable(float constantValue) {
         super(null);
         constant = true;
         this.value = constantValue;
@@ -27,7 +33,8 @@ public class GAPPVariable extends GAPPVariableBase {
     }
 
     @Override
-    public String toString() {
+    public String prettyPrint() {
         return (constant) ? Float.toString(value) : name;
     }
+
 }

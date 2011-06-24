@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package de.gaalop.gapp.visitor;
 
 import de.gaalop.gapp.Selectorset;
@@ -15,11 +10,12 @@ import de.gaalop.gapp.instructionSet.GAPPSetMv;
 import de.gaalop.gapp.instructionSet.GAPPSetVector;
 
 import de.gaalop.gapp.variables.GAPPMultivector;
-import de.gaalop.gapp.variables.GAPPVariable;
+import de.gaalop.gapp.variables.GAPPScalarVariable;
 import de.gaalop.gapp.variables.GAPPVector;
 
 /**
- *
+ * Implements a visitor,
+ * that returns a pretty-formed string of the visited GAPPInstruction instance
  * @author christian
  */
 public class PrettyPrint implements GAPPVisitor {
@@ -34,14 +30,26 @@ public class PrettyPrint implements GAPPVisitor {
         return result.toString();
     }
 
+    /**
+     * Pretty prints a vector at the end of result
+     * @param vector The vector
+     */
     private void printVector(GAPPVector vector) {
-        result.append(vector.getName());
+        result.append(vector.prettyPrint());
     }
-
+    
+    /**
+     * Pretty prints a multivector at the end of result
+     * @param multiVector The multivector
+     */
     private void printMultivector(GAPPMultivector multiVector) {
-        result.append(multiVector.getName());
+        result.append(multiVector.prettyPrint());
     }
 
+    /**
+     * Pretty prints a selectorset at the end of result
+     * @param selectorset The selectorset
+     */
     private void printSelectors(Selectorset selectorset) {
         result.append("[");
         for (Integer cur: selectorset) {
@@ -51,15 +59,24 @@ public class PrettyPrint implements GAPPVisitor {
         result.append("]");
     }
 
+   /**
+     * Pretty prints a variableset at the end of result
+     * @param variableset The variableset
+     */
     private void printVariableSet(Variableset variableset) {
         result.append("[");
-        for (GAPPVariable cur: variableset) {
+        for (GAPPScalarVariable cur: variableset) {
             result.append(",");
             result.append(cur.toString());
         }
         result.append("]");
     }
 
+   /**
+     * Pretty prints a dot product of two vectors at the end of result
+     * @param vector1 The first vector of the dot product
+     * @param vector2 The second vector of the dot product
+     */
     private void printDotProduct(GAPPVector vector1, GAPPVector vector2) {
         result.append("<");
         printVector(vector1);

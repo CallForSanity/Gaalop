@@ -24,6 +24,12 @@ import de.gaalop.cfg.StoreResultNode;
  */
 public class CFGImporter implements ControlFlowVisitor {
 
+    private DFGImporter dfgImporter;
+
+    public CFGImporter(DFGImporter dfgImporter) {
+        this.dfgImporter = dfgImporter;
+    }
+
     @Override
     public void visit(StartNode node) {
         throw new UnsupportedOperationException("Not supported yet.");

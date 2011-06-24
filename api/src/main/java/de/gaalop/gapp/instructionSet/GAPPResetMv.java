@@ -1,11 +1,13 @@
 package de.gaalop.gapp.instructionSet;
 
 import de.gaalop.gapp.visitor.GAPPVisitor;
-import de.gaalop.gapp.VariableGetter;
 import de.gaalop.gapp.variables.GAPPMultivector;
 
 /**
-Zeros all blades of multivector mvdest .
+ * Represents the resetMv command in the GAPP IR.
+ *
+ * Description from the paper:
+ * Zeros all blades of multivector mvdest .
  */
 public class GAPPResetMv extends GAPPBaseInstruction {
 

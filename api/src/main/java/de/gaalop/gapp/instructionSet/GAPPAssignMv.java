@@ -3,14 +3,16 @@ package de.gaalop.gapp.instructionSet;
 import de.gaalop.gapp.Selectorset;
 import de.gaalop.gapp.Variableset;
 import de.gaalop.gapp.variables.GAPPMultivector;
-import de.gaalop.gapp.variables.GAPPVariable;
+import de.gaalop.gapp.variables.GAPPScalarVariable;
 import de.gaalop.gapp.visitor.GAPPVisitor;
-import java.util.Vector;
 
 /**
-Assign values val0 , val1 , . . . , valn at blades selected by
-positive selectors sel0 , sel1 , . . . , seln . Blade selectors are
-explained below. This is restricted to one source multivector.
+ * Represents the assignMv command in the GAPP IR.
+ *
+ * Description from the paper:
+ * Assign values val0 , val1 , . . . , valn at blades selected by
+ * positive selectors sel0 , sel1 , . . . , seln . Blade selectors are
+ * explained below. This is restricted to one source multivector.
  */
 public class GAPPAssignMv extends GAPPBaseInstruction {
 
@@ -34,7 +36,7 @@ public class GAPPAssignMv extends GAPPBaseInstruction {
         this.values = new Variableset();
     }
 
-    public void add(int selector, GAPPVariable toAdd) {
+    public void add(int selector, GAPPScalarVariable toAdd) {
         selectors.add(selector);
         values.add(toAdd);
     }
