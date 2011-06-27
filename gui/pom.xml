@@ -23,11 +23,17 @@
             <artifactId>clucalc</artifactId>
             <version>1.0.0</version>
         </dependency>
-        <dependency>
+<!--        <dependency>
             <groupId>de.gaalop</groupId>
             <artifactId>maple</artifactId>
             <version>1.0.0</version>
+        </dependency>-->
+        <dependency>
+            <groupId>com.sun.jna</groupId>
+            <artifactId>jna</artifactId>
+            <version>3.0.5</version>
         </dependency>
+        
         <dependency>
             <groupId>de.gaalop</groupId>
             <artifactId>codegen-cpp</artifactId>
