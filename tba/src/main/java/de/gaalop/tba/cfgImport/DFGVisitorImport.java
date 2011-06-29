@@ -437,16 +437,12 @@ public class DFGVisitorImport extends EmptyExpressionVisitor {
 
 	@Override
 	public void visit(FunctionArgument node) {
-		super.visit(node);
-		// TODO Chris FunctionArgument
-		System.err.println("FunctionArgument isn't implemented yet!");
+		throw new IllegalStateException("Macros should have been inlined and no function arguments should be the graph.");
 	}
 
 	@Override
 	public void visit(MacroCall node) {
-		super.visit(node);
-		// TODO Chris MacroCall
-		System.err.println("MacroCall isn't implemented yet!");
+            throw new IllegalStateException("Macros should have been inlined and no macro calls should be in the graph.");
 	}
 
 	
