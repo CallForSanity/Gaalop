@@ -4,6 +4,7 @@ import de.gaalop.CodeGeneratorPlugin;
 import de.gaalop.CodeParserPlugin;
 import de.gaalop.OptimizationStrategyPlugin;
 import de.gaalop.Plugins;
+import java.awt.event.ItemEvent;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -15,6 +16,7 @@ import javax.swing.event.HyperlinkListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemListener;
 import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -40,12 +42,14 @@ public class MainForm {
     private JButton closeButton;
     private StatusBar statusBar;
 
+    private JComboBox strategyComboBox;
+
     private Log log = LogFactory.getLog(MainForm.class);
 
     public MainForm() {
         $$$setupUI$$$();
 
-        contentPane.setPreferredSize(new Dimension(640, 480));
+        contentPane.setPreferredSize(new Dimension(900, 480));
 
         // The optimize button shows a menu with available output formats
         optimizeButton.addActionListener(new ActionListener() {
@@ -65,6 +69,25 @@ public class MainForm {
                 }
             }
         });
+
+        List<OptimizationStrategyPlugin> strategies = new ArrayList<OptimizationStrategyPlugin>();
+        strategies.addAll(Plugins.getOptimizationStrategyPlugins());
+        for (OptimizationStrategyPlugin strategy: strategies)
+            strategyComboBox.addItem(strategy.getClass().getName());
+        strategyComboBox.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+               Preferences prefs = Preferences.userNodeForPackage(MainForm.class);
+
+               prefs.put("preferredOptimizationPlugin",(String) strategyComboBox.getSelectedItem());
+
+            }
+        });
+
+        if (strategyComboBox.getSelectedItem() != null) {
+            Preferences prefs = Preferences.userNodeForPackage(MainForm.class);
+            prefs.put("preferredOptimizationPlugin",(String) strategyComboBox.getSelectedItem());
+        }
         
         configureButton.addActionListener(new ActionListener() {
           
@@ -342,6 +365,12 @@ public class MainForm {
         configureButton.setMnemonic('C');
         configureButton.setDisplayedMnemonicIndex(3);
         toolBar1.add(configureButton);
+
+        strategyComboBox = new JComboBox();
+        strategyComboBox.setEnabled(true);
+        strategyComboBox.setToolTipText("Choose here the OptimizationStrategy to be used for optimization.");
+        toolBar1.add(strategyComboBox);
+
         final JToolBar.Separator toolBar$Separator1 = new JToolBar.Separator();
         toolBar1.add(toolBar$Separator1);
         optimizeButton = new JButton();
