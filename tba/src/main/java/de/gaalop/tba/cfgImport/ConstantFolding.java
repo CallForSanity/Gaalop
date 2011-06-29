@@ -52,6 +52,12 @@ public class ConstantFolding implements ExpressionVisitor, ControlFlowVisitor {
   /* global visitor return variable */
   private Expression resultExpr;
 
+  private static final float EPSILON = (float) 10E-10;
+
+  private boolean floatEquals(float shouldBe, float is) {
+    return (Math.abs(shouldBe-is) <= EPSILON);
+  }
+
   @Override
   public void visit(Subtraction node) {
     node.getLeft().accept(this);
@@ -69,12 +75,12 @@ public class ConstantFolding implements ExpressionVisitor, ControlFlowVisitor {
       resultExpr = new Addition(left, neg.getOperand());
     } else if (left instanceof FloatConstant) {
       FloatConstant leftc = (FloatConstant) left;
-      if(leftc.getValue() == 0.0) {
+      if(floatEquals(leftc.getValue(),0.0f)) {
           resultExpr = new Negation(right);
       }
     } else if(right instanceof FloatConstant) {
       FloatConstant rightc = (FloatConstant) right;
-      if(rightc.getValue() == 0.0) {
+      if(floatEquals(rightc.getValue(),0.0f)) {
           resultExpr = left;
       }
     }
@@ -94,12 +100,12 @@ public class ConstantFolding implements ExpressionVisitor, ControlFlowVisitor {
       resultExpr = new FloatConstant(leftc.getValue() + rightc.getValue());
     } else if(left instanceof FloatConstant) {
         FloatConstant leftc = (FloatConstant) left;
-        if(leftc.getValue() == 0.0) {
+        if(floatEquals(leftc.getValue(),0.0f)) {
             resultExpr = right;
         }
     } else if (right instanceof FloatConstant) {
         FloatConstant rightc = (FloatConstant) right;
-        if(rightc.getValue() == 0.0) {
+        if(floatEquals(rightc.getValue(),0.0f)) {
             resultExpr = left;
         }
     }
@@ -111,10 +117,10 @@ public class ConstantFolding implements ExpressionVisitor, ControlFlowVisitor {
     Expression left = resultExpr;
     node.getRight().accept(this);
     Expression right = resultExpr;
-    if(left instanceof FloatConstant && ((FloatConstant)left).getValue() == 1.0) {
+    if(left instanceof FloatConstant && floatEquals(((FloatConstant)left).getValue(),1.0f)) {
         resultExpr = new Division(left, right);
     } else {
-    resultExpr = new Multiplication(left, new  Division(new FloatConstant("1.0"), right));
+    resultExpr = new Multiplication(left, new  Division(new FloatConstant(1.0f), right));
     }
     if ((left instanceof FloatConstant) &&
             (right instanceof FloatConstant)) {
@@ -124,7 +130,7 @@ public class ConstantFolding implements ExpressionVisitor, ControlFlowVisitor {
     } else if ((node.getRight() instanceof FloatConstant)) {
        /* division by 1 gets canceld */
       FloatConstant floatConst = (FloatConstant) node.getRight();
-      if (floatConst.getValue() == 1.0) {
+      if (floatEquals(floatConst.getValue(),1.0f)) {
         resultExpr = left;
       }
     }
@@ -151,26 +157,26 @@ public class ConstantFolding implements ExpressionVisitor, ControlFlowVisitor {
     } else if ((right instanceof FloatConstant)) {
        /* mult by 1 gets canceld */
       FloatConstant floatConst = (FloatConstant) right;
-      if (floatConst.getValue() == 1.0) {
+      if (floatEquals(floatConst.getValue(),1.0f)) {
         resultExpr = left;
-      } else if (floatConst.getValue() == 0.5) {
+      } else if (floatEquals(floatConst.getValue(),0.5f)) {
         resultExpr = new Division(left, new FloatConstant(2.0f));
-      } else if (floatConst.getValue() == -1.0) {
+      } else if (floatEquals(floatConst.getValue(),-1.0f)) {
         resultExpr = new Negation(left);
-      } else if (floatConst.getValue() == 0.0) {
+      } else if (floatEquals(floatConst.getValue(),0.0f)) {
         resultExpr = right;
       }
 
     } else if ((left instanceof FloatConstant)) {
         /* mult by 1 gets canceld */
       FloatConstant floatConst = (FloatConstant) left;
-      if (floatConst.getValue() == 1.0) {
+      if (floatEquals(floatConst.getValue(),1.0f)) {
         resultExpr = right;
-      }  else  if (floatConst.getValue() == 0.5) {
+      }  else  if (floatEquals(floatConst.getValue(),0.5f)) {
         resultExpr = new Division(right, new FloatConstant(2.0f));
-      } else if (floatConst.getValue() == -1.0) {
+      } else if (floatEquals(floatConst.getValue(),-1.0f)) {
         resultExpr = new Negation(right);
-      } else if (floatConst.getValue() == 0.0) {
+      } else if (floatEquals(floatConst.getValue(),0.0f)) {
         resultExpr = left;
       }
 
@@ -242,26 +248,26 @@ public class ConstantFolding implements ExpressionVisitor, ControlFlowVisitor {
       FloatConstant leftc = (FloatConstant) left;
       FloatConstant rightc = (FloatConstant) right;
       resultExpr = new FloatConstant(new Float(Math.pow(leftc.getValue(), rightc.getValue())));
-    } else if (left instanceof FloatConstant && ((FloatConstant)left).getValue() == 0.0) {
+    } else if (left instanceof FloatConstant && floatEquals(((FloatConstant)left).getValue(),0.0f)) {
       // 0 ^ x => 0
       resultExpr = left;
     } else if (right instanceof FloatConstant) {
       // x ^ const
       FloatConstant rightc = (FloatConstant) right;
-      boolean isSqrt = rightc.getValue() - (float) new Float(rightc.getValue()).intValue() == 0.5;
-      if(isSqrt && rightc.getValue() != 0.5) {
+      boolean isSqrt = floatEquals(rightc.getValue() - (float) new Float(rightc.getValue()).intValue(),0.5f);
+      if(isSqrt && !floatEquals(rightc.getValue(),0.5f)) {
           MathFunctionCall newsqrt = new MathFunctionCall(new Exponentiation(
                   left, new FloatConstant(rightc.getValue() - 0.5f)), MathFunction.SQRT);
           resultExpr = newsqrt;
       }
-      if(rightc.getValue() == 1.0) {
+      if(floatEquals(rightc.getValue(),1.0f)) {
         // x ^ 1 => x
         resultExpr = left;
       }
-      else if (rightc.getValue() == 0.5) {
+      else if (floatEquals(rightc.getValue(),0.5f)) {
         MathFunctionCall newsqrt = new MathFunctionCall(left, MathFunction.SQRT);
         newsqrt.accept(this);
-      } else if (rightc.getValue() == 2.0) {
+      } else if (floatEquals(rightc.getValue(),2.0f)) {
           resultExpr = new Multiplication(left, left);
       }
     }
@@ -289,7 +295,7 @@ public class ConstantFolding implements ExpressionVisitor, ControlFlowVisitor {
     resultExpr = new Negation(resultExpr);
     if ((previousExpr instanceof FloatConstant)) {
       FloatConstant operand = (FloatConstant) previousExpr;
-      if(operand.getValue() == 0.0) {
+      if(floatEquals(operand.getValue(),0.0f)) {
           resultExpr = new FloatConstant(0.0f);
       } else {
           resultExpr = new FloatConstant(-operand.getValue());

@@ -13,7 +13,6 @@ import de.gaalop.dfg.EmptyExpressionVisitor;
 import de.gaalop.dfg.Equality;
 import de.gaalop.dfg.Exponentiation;
 import de.gaalop.dfg.Expression;
-import de.gaalop.dfg.ExpressionFactory;
 import de.gaalop.dfg.FloatConstant;
 import de.gaalop.dfg.FunctionArgument;
 import de.gaalop.dfg.Inequality;
@@ -73,21 +72,18 @@ public class DFGVisitorImport extends EmptyExpressionVisitor {
 		counterMv++;
 		return new MvExpressions(counterMv+"",bladeCount);
 	}
-	
-	private void calculateUsingMultTable(byte typeProduct,BinaryOperation node) {
-		MvExpressions left = expressions.get(node.getLeft());
-		MvExpressions right = expressions.get(node.getRight());
-		
-		MvExpressions result = createNewMvExpressions();
-		
-		for (int bladeL = 0;bladeL<bladeCount;bladeL++) 
+
+        private MvExpressions calculateUsingMultTable(byte typeProduct, MvExpressions left, MvExpressions right) {
+            MvExpressions result = createNewMvExpressions();
+
+		for (int bladeL = 0;bladeL<bladeCount;bladeL++)
 			if (left.bladeExpressions[bladeL] != null)
 			{
 				for (int bladeR = 0;bladeR<bladeCount;bladeR++)
 					if (right.bladeExpressions[bladeR] != null)
 					{
 						Expression prodExpr = new Multiplication(left.bladeExpressions[bladeL],right.bladeExpressions[bladeR]);
-						
+
 						Multivector prodMv = null;
 						switch (typeProduct) {
 						case INNER:
@@ -103,19 +99,27 @@ public class DFGVisitorImport extends EmptyExpressionVisitor {
 							System.err.println("Product type is unknown!");
 							break;
 						}
-						
+
 						double[] prod = prodMv.getValueArr();
-						
-						for (int bladeResult = 0;bladeResult<bladeCount;bladeResult++) 
+
+						for (int bladeResult = 0;bladeResult<bladeCount;bladeResult++)
 							if (Math.abs(prod[bladeResult])>EPSILON) {
 								Expression prodExpri = new Multiplication(prodExpr,new FloatConstant((float) prod[bladeResult]));
-								if (result.bladeExpressions[bladeResult] == null) 
+								if (result.bladeExpressions[bladeResult] == null)
 									result.bladeExpressions[bladeResult] = prodExpri;
-								else 
+								else
 									result.bladeExpressions[bladeResult] = new Addition(result.bladeExpressions[bladeResult],prodExpri);
 							}
 					}
 			}
+            return result;
+        }
+	
+	private void calculateUsingMultTable(byte typeProduct, BinaryOperation node) {
+		MvExpressions left = expressions.get(node.getLeft());
+		MvExpressions right = expressions.get(node.getRight());
+		
+		MvExpressions result = calculateUsingMultTable(typeProduct, left, right);
 		
 		expressions.put(node, result);
 	}
@@ -169,18 +173,31 @@ public class DFGVisitorImport extends EmptyExpressionVisitor {
 		
 	}
 
+        private MvExpressions getReverse(MvExpressions mv) {
+                MvExpressions result = createNewMvExpressions();
+
+		for (int blade=0;blade<bladeCount;blade++)
+                    if (mv.bladeExpressions[blade] != null) {
+                            int k = usedAlgebra.getGrade(blade);
+                            if (((k*(k-1))/2) % 2 == 0)
+                                    result.bladeExpressions[blade] = mv.bladeExpressions[blade];
+                            else
+                                    result.bladeExpressions[blade] = new Negation(mv.bladeExpressions[blade]);
+                    }
+                return result;
+        }
+
 	@Override
 	public void visit(Division node) {
 		super.visit(node);
-		System.err.println("Warning: Divison isn't implemented fully yet! Only scalars.");
-		
-		MvExpressions result = createNewMvExpressions();
-		
+
 		MvExpressions l = expressions.get(node.getLeft());
-		for (int blade=0;blade<bladeCount;blade++)
-			if (l.bladeExpressions[blade] != null)
-				result.bladeExpressions[blade] = new Division(l.bladeExpressions[blade],expressions.get(node.getRight()).bladeExpressions[0]);
-		
+                MvExpressions r = expressions.get(node.getRight());
+
+                MvExpressions revR = getReverse(r);
+
+                MvExpressions result = calculateUsingMultTable(GEO, l, revR);
+
 		expressions.put(node, result);
 		
 	}
@@ -207,19 +224,16 @@ public class DFGVisitorImport extends EmptyExpressionVisitor {
 		switch (node.getFunction()) {
 		case ABS:
 			//sqrt(abs(op*op))
-			
-			Expression a = node.getOperand();
-			Expression aReverse = new Reverse(a);
+                    
+                        MvExpressions op = expressions.get(node.getOperand());
+                        MvExpressions opR = getReverse(op);
+                        MvExpressions prod = calculateUsingMultTable(GEO, op, opR);
 
-			Expression prod = new Multiplication(a, aReverse);
-			prod.accept(this);
-			
-			Expression i0 = expressions.get(prod).bladeExpressions[0];
+			Expression i0 = prod.bladeExpressions[0];
 			
 			if (i0 == null) i0 = new FloatConstant(0);
 			
 			result.bladeExpressions[0] = new MathFunctionCall(new MathFunctionCall(i0,MathFunction.ABS),MathFunction.SQRT);
-			
 			
 			break;
 		case SQRT:
@@ -227,7 +241,8 @@ public class DFGVisitorImport extends EmptyExpressionVisitor {
 			result.bladeExpressions[0] = new MathFunctionCall(expressions.get(node.getOperand()).bladeExpressions[0],MathFunction.SQRT);
 			break;
 		default:
-			System.err.println("MathFunction "+node.getFunction().toString()+" isn't implemented yet!");
+			result.bladeExpressions[0] = new MathFunctionCall(expressions.get(node.getOperand()).bladeExpressions[0],node.getFunction());
+                        System.err.println("Warning: "+node.getFunction().toString()+" is only implemented for scalar inputs!");
 			return;
 		}
 		
@@ -262,12 +277,7 @@ public class DFGVisitorImport extends EmptyExpressionVisitor {
 		expressions.put(node,variables.get(node.toString()));
 	}
 
-	@Override
-	public void visit(Exponentiation node) {
-		super.visit(node);
-		// TODO Auto-generated method stub
-		System.err.println("Exponentiation isn't implemented yet!");
-	}
+
 
 	@Override
 	public void visit(FloatConstant node) {
@@ -288,7 +298,7 @@ public class DFGVisitorImport extends EmptyExpressionVisitor {
 		super.visit(node);
 	
 		MvExpressions result = createNewMvExpressions(); 
-		result.bladeExpressions[node.getOrder()] = new FloatConstant(1); //TODO change for other algebras
+		result.bladeExpressions[node.getOrder()] = new FloatConstant(1); //TODO ? change for other algebras
 		expressions.put(node,result);
 	}
 
@@ -313,16 +323,7 @@ public class DFGVisitorImport extends EmptyExpressionVisitor {
 		
 		MvExpressions op = expressions.get(node.getOperand());
 		
-		MvExpressions result = createNewMvExpressions();
-		
-		for (int blade=0;blade<bladeCount;blade++) 
-			if (op.bladeExpressions[blade] != null) {
-				int k = usedAlgebra.getGrade(blade);
-				if (((k*(k-1))/2) % 2 == 0)
-					result.bladeExpressions[blade] = op.bladeExpressions[blade];
-				else
-					result.bladeExpressions[blade] = new Negation(op.bladeExpressions[blade]);
-			}
+		MvExpressions result = getReverse(op);
 		
 		expressions.put(node, result);
 		
@@ -333,57 +334,120 @@ public class DFGVisitorImport extends EmptyExpressionVisitor {
 	@Override
 	public void visit(LogicalOr node) {
 		super.visit(node);
-		// TODO Auto-generated method stub
-		System.err.println("LogicalOr isn't implemented yet!");
+		MvExpressions l = expressions.get(node.getLeft());
+                MvExpressions r = expressions.get(node.getRight());
+
+                MvExpressions result = createNewMvExpressions();
+
+                result.bladeExpressions[0] = new LogicalOr(l.bladeExpressions[0], r.bladeExpressions[0]);
+                
+		expressions.put(node, result);
+
+		System.err.println("Warning: LogicalOr is only implemented for scalars!");
 	}
 
 	@Override
 	public void visit(LogicalAnd node) {
 		super.visit(node);
-		// TODO Auto-generated method stub
-		System.err.println("LogicalAnd isn't implemented yet!");
+		MvExpressions l = expressions.get(node.getLeft());
+                MvExpressions r = expressions.get(node.getRight());
+
+                MvExpressions result = createNewMvExpressions();
+
+                result.bladeExpressions[0] = new LogicalAnd(l.bladeExpressions[0], r.bladeExpressions[0]);
+
+		expressions.put(node, result);
+
+		System.err.println("Warning: LogicalAnd is only implemented for scalars!");
 	}
 
 	@Override
 	public void visit(LogicalNegation node) {
-		super.visit(node);
-		// TODO Auto-generated method stub
-		System.err.println("LogicalNegation isn't implemented yet!");
+                super.visit(node);
+		MvExpressions op = expressions.get(node.getOperand());
+
+                MvExpressions result = createNewMvExpressions();
+
+                result.bladeExpressions[0] = new LogicalNegation(op.bladeExpressions[0]);
+
+		expressions.put(node, result);
+
+		System.err.println("Warning: LogicalNegation is only implemented for scalars!");
 	}
 
 	@Override
 	public void visit(Equality node) {
 		super.visit(node);
-		// TODO Auto-generated method stub
-		System.err.println("Equality isn't implemented yet!");
+		MvExpressions l = expressions.get(node.getLeft());
+                MvExpressions r = expressions.get(node.getRight());
+
+                MvExpressions result = createNewMvExpressions();
+
+                result.bladeExpressions[0] = new Equality(l.bladeExpressions[0], r.bladeExpressions[0]);
+
+		expressions.put(node, result);
+
+		System.err.println("Warning: Equality is only implemented for scalars!");
 	}
 
 	@Override
 	public void visit(Inequality node) {
 		super.visit(node);
-		// TODO Auto-generated method stub
-		System.err.println("Inequality isn't implemented yet!");
+		MvExpressions l = expressions.get(node.getLeft());
+                MvExpressions r = expressions.get(node.getRight());
+
+                MvExpressions result = createNewMvExpressions();
+
+                result.bladeExpressions[0] = new Inequality(l.bladeExpressions[0], r.bladeExpressions[0]);
+
+		expressions.put(node, result);
+
+		System.err.println("Warning: Inequality is only implemented for scalars!");
 	}
 
 	@Override
-	public void visit(Relation relation) {
-		super.visit(relation);
-		// TODO Auto-generated method stub
-		System.err.println("Relation isn't implemented yet!");
+	public void visit(Relation node) {
+		super.visit(node);
+		MvExpressions l = expressions.get(node.getLeft());
+                MvExpressions r = expressions.get(node.getRight());
+
+                MvExpressions result = createNewMvExpressions();
+
+                result.bladeExpressions[0] = new Relation(l.bladeExpressions[0], r.bladeExpressions[0],node.getType());
+
+		expressions.put(node, result);
+
+		System.err.println("Warning: Relation is only implemented for scalars!");
+	}
+
+        @Override
+	public void visit(Exponentiation node) {
+		super.visit(node);
+		MvExpressions l = expressions.get(node.getLeft());
+                MvExpressions r = expressions.get(node.getRight());
+
+                MvExpressions result = createNewMvExpressions();
+
+                result.bladeExpressions[0] = new Exponentiation(l.bladeExpressions[0], r.bladeExpressions[0]);
+
+		expressions.put(node, result);
+
+		System.err.println("Warning: Exponentiation is only implemented for scalars!");
 	}
 
 	@Override
 	public void visit(FunctionArgument node) {
 		super.visit(node);
-		// TODO Auto-generated method stub
+		// TODO Chris FunctionArgument
 		System.err.println("FunctionArgument isn't implemented yet!");
 	}
 
 	@Override
 	public void visit(MacroCall node) {
 		super.visit(node);
-		// TODO Auto-generated method stub
+		// TODO Chris MacroCall
 		System.err.println("MacroCall isn't implemented yet!");
 	}
+
 	
 }
