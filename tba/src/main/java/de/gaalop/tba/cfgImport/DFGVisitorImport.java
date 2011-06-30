@@ -42,23 +42,25 @@ public class DFGVisitorImport extends EmptyExpressionVisitor {
 	
 	private int counterMv;
 	public int bladeCount;
-	private UseAlgebra usedAlgebra;
+
+
+        private UseAlgebra usedAlgebra;
+	
 	private final double EPSILON = 10E-07;
 	
 	private final byte INNER = 0;
 	private final byte OUTER = 1;
 	private final byte GEO = 2;
 	
-	public DFGVisitorImport() {
+	public DFGVisitorImport(UseAlgebra usedAlgebra) {
+                this.usedAlgebra = usedAlgebra;
 		counterMv = 0;
-		
-		//load 5d conformal algebra
-		usedAlgebra = new UseAlgebra();
-		usedAlgebra.load5dAlgebra();
-		bladeCount = 32;
+
+		bladeCount = usedAlgebra.getBladeCount();
 		
 		expressions = new HashMap<Expression, MvExpressions>();
 	}
+
 
 	public Variable getCurrentOutputVariable() {
 		return currentOutputVariable;

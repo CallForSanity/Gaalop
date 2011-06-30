@@ -17,72 +17,25 @@ import de.gaalop.cfg.LoopNode;
 import de.gaalop.cfg.Macro;
 import de.gaalop.cfg.StartNode;
 import de.gaalop.cfg.StoreResultNode;
+import java.util.Set;
 
 /**
  *
  * @author christian
  */
-public class CFGImporter implements ControlFlowVisitor {
+public class CFGImporter extends EmptyCFGVisitor {
 
-    private DFGImporter dfgImporter;
-
-    public CFGImporter(DFGImporter dfgImporter) {
-        this.dfgImporter = dfgImporter;
-    }
-
-    @Override
-    public void visit(StartNode node) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
+    private DFGImporter dfgImporter = new DFGImporter();
 
     @Override
     public void visit(AssignmentNode node) {
-        throw new UnsupportedOperationException("Not supported yet.");
+
+        //TODO node.
     }
 
     @Override
     public void visit(StoreResultNode node) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
 
-    @Override
-    public void visit(IfThenElseNode node) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void visit(BlockEndNode node) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void visit(LoopNode node) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void visit(BreakNode node) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void visit(Macro node) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void visit(ExpressionStatement node) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void visit(EndNode node) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void visit(ColorNode node) {
-        throw new UnsupportedOperationException("Not supported yet.");
     }
 
 }

@@ -2,7 +2,7 @@ package de.gaalop.tba;
 
 import de.gaalop.cfg.ControlFlowGraph;
 import de.gaalop.tba.cfgImport.CFGImporter;
-import de.gaalop.tba.cfgImport.ConstantFolding;
+import de.gaalop.tba.cfgImport.optimization.ConstantFolding;
 
 /**
  * This class implements a basic starter kit for testing the tba plugin
