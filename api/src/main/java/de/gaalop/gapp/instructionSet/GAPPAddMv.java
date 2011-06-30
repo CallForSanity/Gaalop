@@ -31,8 +31,8 @@ public class GAPPAddMv extends GAPPBaseInstruction {
     }
 
     @Override
-    public void accept(GAPPVisitor visitor, Object arg) {
-        visitor.visitAddMv(this, arg);
+    public Object accept(GAPPVisitor visitor, Object arg) {
+        return visitor.visitAddMv(this, arg);
     }
 
     public GAPPMultivector getDestinationMv() {

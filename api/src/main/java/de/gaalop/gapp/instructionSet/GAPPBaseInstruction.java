@@ -15,7 +15,9 @@ public abstract class GAPPBaseInstruction {
      *
      * @param visitor The visitor to be used for calling
      * @param arg The argument used in calls
+     *
+     * @return An result object (null is permitted)
      */
-    public abstract void accept(GAPPVisitor visitor, Object arg);
+    public abstract Object accept(GAPPVisitor visitor, Object arg);
     
 }

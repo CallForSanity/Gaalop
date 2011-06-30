@@ -53,9 +53,10 @@ public class DfgVisitor implements ExpressionVisitor {
     }
     
     private void handleGapp(Expression expression) {
-		// TODO Chs: handle Gapp
-		addNode(expression, "GAPP");
-	}
+        GappVisitorDot visitor = new GappVisitorDot();
+        expression.getGAPP().accept(visitor,null);
+        addNode(expression, "GAPP | "+visitor.getResultString());
+    }
 
     private void addBinaryOp(BinaryOperation op, String label) {
         if (op.getGAPP() != null) {
@@ -203,13 +204,13 @@ public class DfgVisitor implements ExpressionVisitor {
     	addBinaryOp(relation, relation.getTypeString());
     }
 
-	@Override
-	public void visit(FunctionArgument node) {
-		throw new IllegalArgumentException("Macros should have been inlined.");
-	}
+    @Override
+    public void visit(FunctionArgument node) {
+            throw new IllegalArgumentException("Macros should have been inlined.");
+    }
 
-	@Override
-	public void visit(MacroCall node) {
-		throw new IllegalArgumentException("Macros should have been inlined.");
-	}
+    @Override
+    public void visit(MacroCall node) {
+            throw new IllegalArgumentException("Macros should have been inlined.");
+    }
 }

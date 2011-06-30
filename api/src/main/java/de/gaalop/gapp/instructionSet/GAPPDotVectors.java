@@ -33,8 +33,8 @@ public class GAPPDotVectors extends GAPPBaseInstruction {
     }
 
     @Override
-    public void accept(GAPPVisitor visitor, Object arg) {
-        visitor.visitDotVectors(this, arg);
+    public Object accept(GAPPVisitor visitor, Object arg) {
+        return visitor.visitDotVectors(this, arg);
     }
 
     public Integer getDestSelector() {

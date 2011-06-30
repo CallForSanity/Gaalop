@@ -38,8 +38,8 @@ public class GAPPSetVector extends GAPPBaseInstruction {
     }
 
     @Override
-    public void accept(GAPPVisitor visitor, Object arg) {
-        visitor.visitSetVector(this, arg);
+    public Object accept(GAPPVisitor visitor, Object arg) {
+        return visitor.visitSetVector(this, arg);
     }
 
     public GAPPVector getDestination() {
