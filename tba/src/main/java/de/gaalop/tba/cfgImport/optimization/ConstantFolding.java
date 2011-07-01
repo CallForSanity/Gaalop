@@ -371,27 +371,146 @@ public class ConstantFolding implements ExpressionVisitor, ControlFlowVisitor {
 
   @Override
   public void visit(LogicalOr node) {
-    resultExpr = node; //TODO chs there is potential for optimization!
+    node.getLeft().accept(this);
+    Expression left = resultExpr;
+    node.getRight().accept(this);
+    Expression right = resultExpr;
+    resultExpr = new LogicalOr(left, right);
+    if (isConstant(left)) {
+        FloatConstant leftc = (FloatConstant) left;
+        if(floatEquals(leftc.getValue(),0.0f)) {
+            resultExpr = right;
+            setGraphModified();
+        } 
+        if(floatEquals(leftc.getValue(),1.0f)) {
+            resultExpr = left;
+            setGraphModified();
+        }
+    } else if (isConstant(right)) {
+        FloatConstant rightc = (FloatConstant) right;
+        if(floatEquals(rightc.getValue(),0.0f)) {
+            resultExpr = left;
+            setGraphModified();
+        }
+        if(floatEquals(rightc.getValue(),1.0f)) {
+            resultExpr = right;
+            setGraphModified();
+        }
+    }
   }
 
   @Override
   public void visit(LogicalAnd node) {
-    resultExpr = node; //TODO chs there is potential for optimization!
+    node.getLeft().accept(this);
+    Expression left = resultExpr;
+    node.getRight().accept(this);
+    Expression right = resultExpr;
+    resultExpr = new LogicalAnd(left, right);
+    if (isConstant(left)) {
+        FloatConstant leftc = (FloatConstant) left;
+        if (isConstant(right)) {
+            FloatConstant rightc = (FloatConstant) right;
+
+            if (floatEquals(leftc.getValue(),1.0f) && floatEquals(rightc.getValue(),1.0f))
+                resultExpr = left;
+            else
+                resultExpr = new FloatConstant(0.0f);
+
+            setGraphModified();
+        } else {
+            if(floatEquals(leftc.getValue(),0.0f)) {
+                resultExpr = left;
+                setGraphModified();
+            }
+        }
+
+    } else if (isConstant(right)) {
+        FloatConstant rightc = (FloatConstant) right;
+        if(floatEquals(rightc.getValue(),0.0f)) {
+            resultExpr = right;
+            setGraphModified();
+        }
+    }
   }
 
   @Override
   public void visit(Equality node) {
-    resultExpr = node; //TODO chs there is potential for optimization!
+    node.getLeft().accept(this);
+    Expression left = resultExpr;
+    node.getRight().accept(this);
+    Expression right = resultExpr;
+    resultExpr = new Equality(left, right);
+    if (isConstant(left) && isConstant(right)) {
+        FloatConstant leftc = (FloatConstant) left;
+        FloatConstant rightc = (FloatConstant) right;
+        if(floatEquals(leftc.getValue(),rightc.getValue())) 
+            resultExpr = new FloatConstant(1.0f);
+        else
+            resultExpr = new FloatConstant(0.0f);
+        setGraphModified();
+    } 
   }
 
   @Override
   public void visit(Inequality node) {
-    resultExpr = node; //TODO chs there is potential for optimization!
+    node.getLeft().accept(this);
+    Expression left = resultExpr;
+    node.getRight().accept(this);
+    Expression right = resultExpr;
+    resultExpr = new Inequality(left, right);
+    if (isConstant(left) && isConstant(right)) {
+        FloatConstant leftc = (FloatConstant) left;
+        FloatConstant rightc = (FloatConstant) right;
+        if(floatEquals(leftc.getValue(),rightc.getValue()))
+            resultExpr = new FloatConstant(0.0f);
+        else
+            resultExpr = new FloatConstant(1.0f);
+        setGraphModified();
+    }
   }
 
   @Override
   public void visit(Relation relation) {
-    resultExpr = relation; //TODO chs there is potential for optimization!
+    relation.getLeft().accept(this);
+    Expression left = resultExpr;
+    relation.getRight().accept(this);
+    Expression right = resultExpr;
+    resultExpr = new Relation(left, right, relation.getType());
+    if (isConstant(left) && isConstant(right)) {
+        FloatConstant leftc = (FloatConstant) left;
+        FloatConstant rightc = (FloatConstant) right;
+
+        boolean unknown = false;
+
+        switch (relation.getType()) {
+            case GREATER:
+                resultExpr = (leftc.getValue() > rightc.getValue())
+                        ? new FloatConstant(1.0f)
+                        : new FloatConstant(0.0f);
+                break;
+            case GREATER_OR_EQUAL:
+                resultExpr = (leftc.getValue() >= rightc.getValue())
+                        ? new FloatConstant(1.0f)
+                        : new FloatConstant(0.0f);
+                break;
+            case LESS:
+                resultExpr = (leftc.getValue() < rightc.getValue())
+                        ? new FloatConstant(1.0f)
+                        : new FloatConstant(0.0f);
+                break;
+            case LESS_OR_EQUAL:
+                resultExpr = (leftc.getValue() <= rightc.getValue())
+                        ? new FloatConstant(1.0f)
+                        : new FloatConstant(0.0f);
+                break;
+            default:
+                System.err.println("Warning: Unknown relation type "+relation.getTypeString()+": Relation won't be optimized.");
+                unknown = true;
+                break;
+        }
+
+        if (!unknown) setGraphModified();
+    }
   }
 
   @Override
