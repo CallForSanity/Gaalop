@@ -67,7 +67,7 @@ public abstract class Expression {
 	 * @return The GAPP instance
 	 */
 	public GAPP getGAPP() {
-		return gapp;
+            return gapp;
 	}
 	
 	/**
@@ -75,7 +75,7 @@ public abstract class Expression {
 	 * @param gapp The GAPP instance to set
 	 */
 	public void setGAPP(GAPP gapp) {
-		this.gapp = gapp;
+            this.gapp = gapp;
 	}
 
 }

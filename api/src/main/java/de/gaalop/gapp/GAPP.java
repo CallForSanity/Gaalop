@@ -22,7 +22,7 @@ public class GAPP {
      * @return The copy
      */
     public GAPP getCopy() {
-        //TODO Chris GAPP.getCopy();
+        //TODO chs GAPP.getCopy();
         return null;
     }
 

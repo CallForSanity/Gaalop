@@ -34,7 +34,7 @@ public class Blade {
 		 }
 		 
 		  String[] parts = toParse.split("\\^");
-		  //TODO Achtung ändern in richtigen Koeffizienten
+		  //TODO chs Achtung ändern in richtigen Koeffizienten
 		  if (parts[0].startsWith("-1")) {
 		    result.setSign((byte) -1);
 		    parts[0] = parts[0].substring(2);
