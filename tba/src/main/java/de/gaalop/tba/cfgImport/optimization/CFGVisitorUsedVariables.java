@@ -23,7 +23,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 
 /**
- * Visitor to optimize a ControlFlowGraph via variable usage analysis
+ * Visitor to optimize a ControlFlowGraph via variable usage analysis.
+ * The graph is not modified here, only information for modifying is collected
  * @author christian
  */
 public class CFGVisitorUsedVariables implements ControlFlowVisitor {

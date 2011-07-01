@@ -28,20 +28,23 @@ public class CFGImporter {
         ControlFlowVisitor vCFG = new CFGVisitorImport(vDFG);
         graph.accept(vCFG);
 
-        optimizeGraph(graph);
-        optimizeGraph(graph);
-
+        while (optimizeGraph(graph)) {
+        }
 
         return graph;
     }
 
     /**
-     * Optimizes the graph (Dead code elimination)
+     * Optimizes the graph (Dead code elimination, ConstantFolding, Constant propagation)
      * Uses the StoreResultNode for output marking of variables
-     * and fetch information from the pragma output variables of the graph
+     * and fetch information from the pragma output variables of the graph.
+     * Returns, if graph has changed.
      * @param graph The graph, that should be optimized
+     * @return <value>true</value> if graph has changed, <value>false</value> otherwise
      */
-    private void optimizeGraph(ControlFlowGraph graph) {
+    private boolean optimizeGraph(ControlFlowGraph graph) {
+
+        boolean result = false;
 
         // traverse the graph in the opposite direction
         NodeCollectorControlFlowVisitor v = new NodeCollectorControlFlowVisitor();
@@ -73,18 +76,21 @@ public class CFGImporter {
             cur.accept(cfgVariableVisitor);
         }
 
-
-
+        if (!cfgVariableVisitor.getNodeRemovals().isEmpty())
+            result = true;
 
         // remove all nodes that are marked for removal
-        for (SequentialNode node: cfgVariableVisitor.getNodeRemovals()) {
+        for (SequentialNode node: cfgVariableVisitor.getNodeRemovals()) 
             graph.removeNode(node);
-        }
+        
 
 
         ConstantPropagation propagation = new ConstantPropagation();
         graph.accept(propagation);
 
+        result = result || propagation.isGraphModified();
+
+        return result;
     }
 
 }

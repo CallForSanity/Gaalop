@@ -54,9 +54,19 @@ public class ConstantFolding implements ExpressionVisitor, ControlFlowVisitor {
 
   private static final float EPSILON = (float) 10E-10;
 
-    public Expression getResultExpr() {
-        return resultExpr;
-    }
+  private boolean graphModified = false;
+
+  public Expression getResultExpr() {
+      return resultExpr;
+  }
+
+  public boolean isGraphModified() {
+      return graphModified;
+  }
+
+  private void setGraphModified() {
+      graphModified = true;
+  }
 
 
   private boolean floatEquals(float shouldBe, float is) {
@@ -75,18 +85,22 @@ public class ConstantFolding implements ExpressionVisitor, ControlFlowVisitor {
       FloatConstant leftc = (FloatConstant) left;
       FloatConstant rightc = (FloatConstant) right;
       resultExpr = new FloatConstant(leftc.getValue() - rightc.getValue());
+      setGraphModified();
     } else if (right instanceof Negation) {
       Negation neg = (Negation) right;
       resultExpr = new Addition(left, neg.getOperand());
+      setGraphModified();
     } else if (left instanceof FloatConstant) {
       FloatConstant leftc = (FloatConstant) left;
       if(floatEquals(leftc.getValue(),0.0f)) {
           resultExpr = new Negation(right);
+          setGraphModified();
       }
     } else if(right instanceof FloatConstant) {
       FloatConstant rightc = (FloatConstant) right;
       if(floatEquals(rightc.getValue(),0.0f)) {
           resultExpr = left;
+          setGraphModified();
       }
     }
   }
@@ -103,15 +117,18 @@ public class ConstantFolding implements ExpressionVisitor, ControlFlowVisitor {
       FloatConstant leftc = (FloatConstant) left;
       FloatConstant rightc = (FloatConstant) right;
       resultExpr = new FloatConstant(leftc.getValue() + rightc.getValue());
+      setGraphModified();
     } else if(left instanceof FloatConstant) {
         FloatConstant leftc = (FloatConstant) left;
         if(floatEquals(leftc.getValue(),0.0f)) {
             resultExpr = right;
+            setGraphModified();
         }
     } else if (right instanceof FloatConstant) {
         FloatConstant rightc = (FloatConstant) right;
         if(floatEquals(rightc.getValue(),0.0f)) {
             resultExpr = left;
+            setGraphModified();
         }
     }
   }
@@ -122,21 +139,19 @@ public class ConstantFolding implements ExpressionVisitor, ControlFlowVisitor {
     Expression left = resultExpr;
     node.getRight().accept(this);
     Expression right = resultExpr;
-    if(left instanceof FloatConstant && floatEquals(((FloatConstant)left).getValue(),1.0f)) {
-        resultExpr = new Division(left, right);
-    } else {
-    resultExpr = new Multiplication(left, new  Division(new FloatConstant(1.0f), right));
-    }
+    resultExpr = new Division(left, right);
     if ((left instanceof FloatConstant) &&
             (right instanceof FloatConstant)) {
       FloatConstant leftc = (FloatConstant) left;
       FloatConstant rightc = (FloatConstant) right;
       resultExpr = new FloatConstant(leftc.getValue() / rightc.getValue());
+      setGraphModified();
     } else if ((node.getRight() instanceof FloatConstant)) {
-       /* division by 1 gets canceld */
+       /* division by 1 gets canceled */
       FloatConstant floatConst = (FloatConstant) node.getRight();
       if (floatEquals(floatConst.getValue(),1.0f)) {
         resultExpr = left;
+        setGraphModified();
       }
     }
 
@@ -159,30 +174,38 @@ public class ConstantFolding implements ExpressionVisitor, ControlFlowVisitor {
       FloatConstant leftc = (FloatConstant) left;
       FloatConstant rightc = (FloatConstant) right;
       resultExpr = new FloatConstant(leftc.getValue() * rightc.getValue());
+      setGraphModified();
     } else if ((right instanceof FloatConstant)) {
-       /* mult by 1 gets canceld */
+       /* mult by 1 gets canceled */
       FloatConstant floatConst = (FloatConstant) right;
       if (floatEquals(floatConst.getValue(),1.0f)) {
         resultExpr = left;
+        setGraphModified();
       } else if (floatEquals(floatConst.getValue(),0.5f)) {
         resultExpr = new Division(left, new FloatConstant(2.0f));
+        setGraphModified();
       } else if (floatEquals(floatConst.getValue(),-1.0f)) {
         resultExpr = new Negation(left);
+        setGraphModified();
       } else if (floatEquals(floatConst.getValue(),0.0f)) {
         resultExpr = right;
+        setGraphModified();
       }
-
     } else if ((left instanceof FloatConstant)) {
         /* mult by 1 gets canceld */
       FloatConstant floatConst = (FloatConstant) left;
       if (floatEquals(floatConst.getValue(),1.0f)) {
         resultExpr = right;
+        setGraphModified();
       }  else  if (floatEquals(floatConst.getValue(),0.5f)) {
         resultExpr = new Division(right, new FloatConstant(2.0f));
+        setGraphModified();
       } else if (floatEquals(floatConst.getValue(),-1.0f)) {
         resultExpr = new Negation(right);
+        setGraphModified();
       } else if (floatEquals(floatConst.getValue(),0.0f)) {
         resultExpr = left;
+        setGraphModified();
       }
 
     } else if ((left instanceof MathFunctionCall) &&
@@ -193,10 +216,12 @@ public class ConstantFolding implements ExpressionVisitor, ControlFlowVisitor {
       if ((leftFunc.getFunction() == MathFunction.ABS) &&
               (rightFunc.getFunction() == MathFunction.ABS)) {
         resultExpr = new MathFunctionCall(new Multiplication(rightFunc.getOperand(), leftFunc.getOperand()), MathFunction.ABS);
+        setGraphModified();
       }
       if ((leftFunc.getFunction() == MathFunction.SQRT) &&
               (rightFunc.getFunction() == MathFunction.SQRT)) {
         resultExpr = new MathFunctionCall(new Multiplication(rightFunc.getOperand(), leftFunc.getOperand()), MathFunction.SQRT);
+        setGraphModified();
       }
     }
   }
@@ -205,28 +230,33 @@ public class ConstantFolding implements ExpressionVisitor, ControlFlowVisitor {
   @Override
   public void visit(MathFunctionCall node) {
     node.getOperand().accept(this);
-    Expression previousExpr = resultExpr;
-    resultExpr = new MathFunctionCall(previousExpr, node.getFunction());
+    Expression operandExpr = resultExpr;
+    resultExpr = new MathFunctionCall(operandExpr, node.getFunction());
     if ((node.getFunction() == MathFunction.SQRT) &&
-            (previousExpr instanceof FloatConstant)) {
-      FloatConstant operand = (FloatConstant) previousExpr;
+            (operandExpr instanceof FloatConstant)) {
+      FloatConstant operand = (FloatConstant) operandExpr;
       resultExpr = new FloatConstant((float) Math.sqrt(operand.getValue()));
+      setGraphModified();
     } else if ((node.getFunction() == MathFunction.ABS) &&
-            (previousExpr instanceof MathFunctionCall)) {
+            (operandExpr instanceof MathFunctionCall)) {
       /* remove abs() around sqrts, as they are always positive */
-      MathFunctionCall insideFunc = (MathFunctionCall) previousExpr;
-      if (insideFunc.getFunction() == MathFunction.ABS ||
-              insideFunc.getFunction() == MathFunction.SQRT)
-        resultExpr = previousExpr;
+      MathFunctionCall insideFunc = (MathFunctionCall) operandExpr;
+        if (insideFunc.getFunction() == MathFunction.ABS ||
+                insideFunc.getFunction() == MathFunction.SQRT) {
+          resultExpr = operandExpr;
+          setGraphModified();
+        }
     } else if ((node.getFunction() == MathFunction.SQRT) &&
-            ((!(previousExpr instanceof MathFunctionCall)) ||
-            (((MathFunctionCall) previousExpr).getFunction() != MathFunction.ABS))) {
+            ((!(operandExpr instanceof MathFunctionCall)) ||
+            (((MathFunctionCall) operandExpr).getFunction() != MathFunction.ABS))) {
       /* insert in every sqrt() an abs() */
-      resultExpr = new MathFunctionCall(new MathFunctionCall(previousExpr, MathFunction.ABS), MathFunction.SQRT);
+      resultExpr = new MathFunctionCall(new MathFunctionCall(operandExpr, MathFunction.ABS), MathFunction.SQRT);
+      setGraphModified();
     } else if ((node.getFunction() == MathFunction.ABS) &&
-            (previousExpr instanceof FloatConstant)) {
-        FloatConstant operand = (FloatConstant) previousExpr;
+            (operandExpr instanceof FloatConstant)) {
+        FloatConstant operand = (FloatConstant) operandExpr;
         resultExpr = new FloatConstant((float) Math.abs(operand.getValue()));
+        setGraphModified();
       } 
 
   }
@@ -253,27 +283,33 @@ public class ConstantFolding implements ExpressionVisitor, ControlFlowVisitor {
       FloatConstant leftc = (FloatConstant) left;
       FloatConstant rightc = (FloatConstant) right;
       resultExpr = new FloatConstant(new Float(Math.pow(leftc.getValue(), rightc.getValue())));
+      setGraphModified();
     } else if (left instanceof FloatConstant && floatEquals(((FloatConstant)left).getValue(),0.0f)) {
       // 0 ^ x => 0
       resultExpr = left;
+      setGraphModified();
     } else if (right instanceof FloatConstant) {
-      // x ^ const
+      // x ^ const 
       FloatConstant rightc = (FloatConstant) right;
       boolean isSqrt = floatEquals(rightc.getValue() - (float) new Float(rightc.getValue()).intValue(),0.5f);
       if(isSqrt && !floatEquals(rightc.getValue(),0.5f)) {
           MathFunctionCall newsqrt = new MathFunctionCall(new Exponentiation(
                   left, new FloatConstant(rightc.getValue() - 0.5f)), MathFunction.SQRT);
           resultExpr = newsqrt;
+          setGraphModified();
       }
       if(floatEquals(rightc.getValue(),1.0f)) {
         // x ^ 1 => x
         resultExpr = left;
+        setGraphModified();
       }
       else if (floatEquals(rightc.getValue(),0.5f)) {
         MathFunctionCall newsqrt = new MathFunctionCall(left, MathFunction.SQRT);
         newsqrt.accept(this);
+        setGraphModified();
       } else if (floatEquals(rightc.getValue(),2.0f)) {
           resultExpr = new Multiplication(left, left);
+          setGraphModified();
       }
     }
   }
@@ -296,20 +332,23 @@ public class ConstantFolding implements ExpressionVisitor, ControlFlowVisitor {
   @Override
   public void visit(Negation node) {
     node.getOperand().accept(this);
-    Expression previousExpr = resultExpr;
+    Expression operandExpr = resultExpr;
     resultExpr = new Negation(resultExpr);
-    if ((previousExpr instanceof FloatConstant)) {
-      FloatConstant operand = (FloatConstant) previousExpr;
+    if ((operandExpr instanceof FloatConstant)) {
+      FloatConstant operand = (FloatConstant) operandExpr;
       if(floatEquals(operand.getValue(),0.0f)) {
           resultExpr = new FloatConstant(0.0f);
       } else {
           resultExpr = new FloatConstant(-operand.getValue());
       }
-    } else if (previousExpr instanceof Negation) {
-      Negation operand = (Negation) previousExpr;
+      setGraphModified();
+    } else if (operandExpr instanceof Negation) {
+      Negation operand = (Negation) operandExpr;
       resultExpr = operand.getOperand();
+      setGraphModified();
     }
   }
+
 
   @Override
   public void visit(Reverse node) {
@@ -318,31 +357,28 @@ public class ConstantFolding implements ExpressionVisitor, ControlFlowVisitor {
 
   @Override
   public void visit(LogicalOr node) {
-    resultExpr = node;
+    resultExpr = node; //TODO chs there is potential for optimization!
   }
 
   @Override
   public void visit(LogicalAnd node) {
-    resultExpr = node;
+    resultExpr = node; //TODO chs there is potential for optimization!
   }
 
   @Override
   public void visit(Equality node) {
-    resultExpr = node;
+    resultExpr = node; //TODO chs there is potential for optimization!
   }
 
   @Override
   public void visit(Inequality node) {
-    resultExpr = node;
+    resultExpr = node; //TODO chs there is potential for optimization!
   }
 
   @Override
   public void visit(Relation relation) {
-    resultExpr = relation;
+    resultExpr = relation; //TODO chs there is potential for optimization!
   }
-
-
-
 
   @Override
   public void visit(StartNode node) {
@@ -417,5 +453,7 @@ public class ConstantFolding implements ExpressionVisitor, ControlFlowVisitor {
 	public void visit(ColorNode node) {
 		node.getSuccessor().accept(this);
 	}
+
+
 
 }

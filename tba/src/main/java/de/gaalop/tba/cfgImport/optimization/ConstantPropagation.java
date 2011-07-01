@@ -22,8 +22,18 @@ public class ConstantPropagation extends EmptyControlFlowVisitor {
 
     private DFGVisitorUsedVariables dfgVisitorUsedVariables = new DFGVisitorUsedVariables();
 
+    private boolean graphModified = false;
+
+    public boolean isGraphModified() {
+        return graphModified;
+    }
+
+    private void setGraphModified() {
+        graphModified = true;
+    }
+
     /**
-     * Performs constant propagtion on an Expression and returns the result expression
+     * Performs constant propagtion on an expression and returns the result expression
      * @param expression the expression for constant propagtion
      * @return the result expression, where constant variables are constant
      */
@@ -40,10 +50,13 @@ public class ConstantPropagation extends EmptyControlFlowVisitor {
                 } else {
                     expression.replaceExpression(varComp.getReferredExpression(),mapConstants.get(varComp));
                 }
+
+                setGraphModified();
             }
 
         // do a constant folding on the value
         expression.accept(constantFolding);
+        if (constantFolding.isGraphModified()) setGraphModified();
         
         return constantFolding.getResultExpr();
     }
@@ -98,5 +111,7 @@ public class ConstantPropagation extends EmptyControlFlowVisitor {
         expression.accept(checker);
         return checker.isFloatConstant();
     }
+
+
 
 }
