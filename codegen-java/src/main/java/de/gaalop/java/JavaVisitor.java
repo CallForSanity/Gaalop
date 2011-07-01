@@ -87,7 +87,7 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
 				declared.add(var.getName());
 			}
 
-			if (graph.getLocalVariables().size() > 0) {
+			if (inputParameters.size() > 0) {
 				code.setLength(code.length() - 2);
 			}
 

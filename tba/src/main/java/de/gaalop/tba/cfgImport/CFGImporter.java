@@ -6,6 +6,7 @@ import de.gaalop.cfg.Node;
 import de.gaalop.cfg.SequentialNode;
 import de.gaalop.tba.UseAlgebra;
 import de.gaalop.tba.cfgImport.optimization.CFGVisitorUsedVariables;
+import de.gaalop.tba.cfgImport.optimization.ConstantPropagation;
 import de.gaalop.tba.cfgImport.optimization.NodeCollectorControlFlowVisitor;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -29,6 +30,7 @@ public class CFGImporter {
 
         optimizeGraph(graph);
         optimizeGraph(graph);
+
 
         return graph;
     }
@@ -71,10 +73,17 @@ public class CFGImporter {
             cur.accept(cfgVariableVisitor);
         }
 
+
+
+
         // remove all nodes that are marked for removal
-        for (SequentialNode node: cfgVariableVisitor.getNodeRemovals()) 
+        for (SequentialNode node: cfgVariableVisitor.getNodeRemovals()) {
             graph.removeNode(node);
-        
+        }
+
+
+        ConstantPropagation propagation = new ConstantPropagation();
+        graph.accept(propagation);
 
     }
 
