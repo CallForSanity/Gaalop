@@ -189,6 +189,25 @@ public class DFGVisitorImport extends EmptyExpressionVisitor {
                 return result;
         }
 
+        /**
+         * Returns the inverse of a MvExpressions object
+         * @param mv The MvExpressions object to be inversed
+         * @return The inverse
+         */
+        private MvExpressions getInverse(MvExpressions mv) {
+             MvExpressions revR = getReverse(mv);
+             MvExpressions length = calculateUsingMultTable(GEO, mv, revR);
+
+             MvExpressions result = createNewMvExpressions();
+
+             //TODO chs What if mv.bladeExpressions[0] == 0, a priori not decidable, if there are variables
+             for (int blade=0;blade<bladeCount;blade++)
+                 if (mv.bladeExpressions[blade] != null)
+                    result.bladeExpressions[blade] = new Division(mv.bladeExpressions[blade],length.bladeExpressions[0]);
+
+             return result;
+        }
+
 	@Override
 	public void visit(Division node) {
 		super.visit(node);
@@ -196,9 +215,9 @@ public class DFGVisitorImport extends EmptyExpressionVisitor {
 		MvExpressions l = expressions.get(node.getLeft());
                 MvExpressions r = expressions.get(node.getRight());
 
-                MvExpressions revR = getReverse(r);
+                MvExpressions inverse = getInverse(r);
 
-                MvExpressions result = calculateUsingMultTable(GEO, l, revR);
+                MvExpressions result = calculateUsingMultTable(GEO, l, inverse);
 
 		expressions.put(node, result);
 		

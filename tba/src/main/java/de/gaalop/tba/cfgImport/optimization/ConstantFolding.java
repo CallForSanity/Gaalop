@@ -54,6 +54,11 @@ public class ConstantFolding implements ExpressionVisitor, ControlFlowVisitor {
 
   private static final float EPSILON = (float) 10E-10;
 
+    public Expression getResultExpr() {
+        return resultExpr;
+    }
+
+
   private boolean floatEquals(float shouldBe, float is) {
     return (Math.abs(shouldBe-is) <= EPSILON);
   }

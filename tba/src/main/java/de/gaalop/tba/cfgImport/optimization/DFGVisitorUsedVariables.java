@@ -23,7 +23,7 @@ public class DFGVisitorUsedVariables extends DFGTraversalVisitor {
 
     @Override
     public void visit(MultivectorComponent node) {
-        variables.add(new VariableComponent(node.getName(), node.getBladeIndex()));
+        variables.add(new VariableComponent(node.getName(), node.getBladeIndex(),node));
     }
 
 }

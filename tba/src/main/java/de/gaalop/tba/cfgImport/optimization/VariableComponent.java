@@ -5,6 +5,8 @@
 
 package de.gaalop.tba.cfgImport.optimization;
 
+import de.gaalop.dfg.Expression;
+
 /**
  * Implements a component of a variable
  * @author christian
@@ -13,10 +15,12 @@ public class VariableComponent {
 
     private String name;
     private int bladeIndex;
+    private Expression referredExpression;
 
-    public VariableComponent(String name, int bladeIndex) {
+    public VariableComponent(String name, int bladeIndex, Expression referredExpression) {
         this.name = name;
         this.bladeIndex = bladeIndex;
+        this.referredExpression = referredExpression;
     }
 
     public int getBladeIndex() {
@@ -33,6 +37,14 @@ public class VariableComponent {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Expression getReferredExpression() {
+        return referredExpression;
+    }
+
+    public void setReferredExpression(Expression referredExpression) {
+        this.referredExpression = referredExpression;
     }
 
     @Override

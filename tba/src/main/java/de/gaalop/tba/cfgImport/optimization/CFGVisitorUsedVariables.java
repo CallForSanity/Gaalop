@@ -74,13 +74,13 @@ public class CFGVisitorUsedVariables implements ControlFlowVisitor {
         if (outputBlades.containsKey(name)) {
             // only special blades are outputted
             for (Integer bladeIndex: outputBlades.get(name)) 
-                variableUsage.addUsage(new VariableComponent(name, bladeIndex));
+                variableUsage.addUsage(new VariableComponent(name, bladeIndex,node.getValue()));
         } else {
             // all blades are outputted
             int bladeCount = usedAlgebra.getBladeCount();
 
             for (int blade = 0; blade<bladeCount; bladeCount++)
-                variableUsage.addUsage(new VariableComponent(name, blade));
+                variableUsage.addUsage(new VariableComponent(name, blade,node.getValue()));
         }
         
     }

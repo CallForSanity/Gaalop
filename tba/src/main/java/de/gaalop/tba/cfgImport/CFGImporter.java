@@ -28,6 +28,7 @@ public class CFGImporter {
         graph.accept(vCFG);
 
         optimizeGraph(graph);
+        optimizeGraph(graph);
 
         return graph;
     }
