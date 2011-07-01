@@ -4,9 +4,7 @@ import java.util.HashMap;
 
 import de.gaalop.cfg.AssignmentNode;
 import de.gaalop.cfg.EmptyControlFlowVisitor;
-import de.gaalop.cfg.Node;
 import de.gaalop.dfg.Expression;
-import de.gaalop.dfg.FloatConstant;
 import de.gaalop.dfg.MultivectorComponent;
 import de.gaalop.dfg.Variable;
 
