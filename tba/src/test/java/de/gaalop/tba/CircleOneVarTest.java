@@ -2,33 +2,22 @@ package de.gaalop.tba;
 
 import org.junit.Ignore;
 import java.awt.Point;
-import java.util.HashMap;
 import java.util.LinkedList;
 
-import static org.junit.Assert.*;
-
 /**
- *
+ * Implements a circle of three points test with one variable
  * @author christian
  */
 @Ignore
 public class CircleOneVarTest extends GenericCircleTest {
 
     boolean[] commented;
-    private Point p1;
-    private Point p2;
-    private Point p3;
+
     private int n;
 
-    
-
-    private static final double EPSILON = 10E-4;
-
-    public CircleOneVarTest(boolean[] commented, Point p1, Point p2, Point p3, int n) {
+    public CircleOneVarTest(Point p1, Point p2, Point p3, boolean[] commented, int n) {
+        super(p1,p2,p3);
         this.commented = commented;
-        this.p1 = p1;
-        this.p2 = p2;
-        this.p3 = p3;
         this.n = n;
     }
 

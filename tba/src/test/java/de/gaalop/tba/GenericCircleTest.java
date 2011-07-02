@@ -5,6 +5,7 @@
 
 package de.gaalop.tba;
 
+import java.awt.Point;
 import java.util.LinkedList;
 
 /**
@@ -13,7 +14,19 @@ import java.util.LinkedList;
  */
 public abstract class GenericCircleTest implements GenericTestable {
 
+    protected static final double EPSILON = 10E-4;
+
     protected abstract String constantDefinition();
+
+    protected Point p1;
+    protected Point p2;
+    protected Point p3;
+
+    public GenericCircleTest(Point p1, Point p2, Point p3) {
+        this.p1 = p1;
+        this.p2 = p2;
+        this.p3 = p3;
+    }
 
     @Override
     public String getCLUScript() {

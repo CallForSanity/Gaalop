@@ -1,16 +1,8 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package de.gaalop.tba;
 
 import org.junit.Ignore;
 import java.awt.Point;
-import java.util.HashMap;
 import java.util.LinkedList;
-
-import static org.junit.Assert.*;
 
 /**
  * Implements a circle of three points test with no variables
@@ -19,16 +11,8 @@ import static org.junit.Assert.*;
 @Ignore
 public class CircleNoVarsTest extends GenericCircleTest {
 
-    private Point p1;
-    private Point p2;
-    private Point p3;
-
-    private static final double EPSILON = 10E-4;
-
     public CircleNoVarsTest(Point p1, Point p2, Point p3) {
-        this.p1 = p1;
-        this.p2 = p2;
-        this.p3 = p3;
+        super(p1, p2, p3);
     }
 
     @Override
