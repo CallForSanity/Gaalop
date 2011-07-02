@@ -15,8 +15,6 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
 
 	protected Log log = LogFactory.getLog(JavaVisitor.class);
 
-	protected boolean standalone = true;
-
 	protected final String suffix = "_opt";
 
 	protected StringBuilder code = new StringBuilder();
@@ -28,14 +26,6 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
 	protected Set<String> assigned = new HashSet<String>();
 	
 	protected Set<String> declared = new HashSet<String>();
-	
-	public JavaVisitor(boolean standalone) {
-		this.standalone = standalone;
-	}
-	
-	public void setStandalone(boolean standalone) {
-		this.standalone = standalone;
-	}
 
 	public String getCode() {
 		return code.toString();

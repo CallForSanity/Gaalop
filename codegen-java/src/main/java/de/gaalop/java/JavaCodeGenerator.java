@@ -49,7 +49,7 @@ public class JavaCodeGenerator implements CodeGenerator {
      * @return
      */
     private String generateCode(ControlFlowGraph in) {
-        JavaVisitor visitor = new JavaVisitor(plugin.getStandalone());
+        JavaVisitor visitor = new JavaVisitor();
         try {
         	in.accept(visitor);
         } catch (Throwable error) {
