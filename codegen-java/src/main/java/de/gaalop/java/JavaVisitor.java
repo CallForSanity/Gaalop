@@ -1,6 +1,5 @@
 package de.gaalop.java;
 
-import de.gaalop.Notifications;
 import de.gaalop.cfg.*;
 import de.gaalop.dfg.*;
 
@@ -52,70 +51,77 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
 	public void visit(StartNode node) {
 		graph = node.getGraph();
 
-		List<Variable> localVariables = sortVariables(graph.getLocalVariables());
-		if (standalone) {
-			
-			//process all members
-			
-			FindStoreOutputNodes stores = new FindStoreOutputNodes();
-			graph.accept(stores);
-			
-			
-			code.append("import java.util.Arrays;\n\n");
-			
-			LinkedList<String> clearingList = new LinkedList<String>();
-			for (StoreResultNode cnode: stores.getNodes()) {
-				String valStr = cnode.getValue().toString();
-				if (!declared.contains(valStr)) {
-					declared.add(valStr);
-					code.append("public double[] "+valStr+" = new double[32]"+";\n");
-					clearingList.add(valStr);
-				}
-			}
-			code.append("\n");
-			
-			code.append("public void calculate(");
-			
-			
+                //process all members
 
-			// Input Parameters
-			List<Variable> inputParameters = sortVariables(graph.getInputVariables());
-			for (Variable var : inputParameters) {
-				code.append("double "); // The assumption here is that they all are normal scalars
-				code.append(var.getName());
-				code.append(", ");
-				declared.add(var.getName());
-			}
+                FindStoreOutputNodes stores = new FindStoreOutputNodes();
+                graph.accept(stores);
 
-			if (inputParameters.size() > 0) {
-				code.setLength(code.length() - 2);
-			}
 
-			code.append(") {\n");
-			indentation++;
-			for (String curClear: clearingList) {
-				appendIndentation();
-				code.append("Arrays.fill("+curClear+",0);\n");
-			}
-			
-		} else {
+                //code.append("import java.util.Arrays;\n\n");
 
-		}
+                code.append("public "+graph.getSource().getName()+"() implements GAProgram {\n");
+                indentation++;
 
-		if (graph.getScalarVariables().size() > 0) {
-			appendIndentation();
-			code.append("double ");
-			for (Variable tmp : graph.getScalarVariables()) {
-				code.append(tmp.getName());
-				code.append(", ");
-			}
-			code.delete(code.length() - 2, code.length());
-			code.append(";\n");
-		}
 
-		if (!graph.getLocalVariables().isEmpty()) {
-			code.append("\n");
-		}
+                appendIndentation();
+                code.append("// input variables\n");
+                for (Variable inputVar: graph.getInputVariables()) {
+                    String variableName = inputVar.toString();
+                    declared.add(variableName);
+                    appendIndentation();
+                    code.append("private float "+variableName+";\n");
+                }
+                code.append("\n");
+
+                appendIndentation();
+                code.append("// output variables\n");
+                for (String outputVarStr: graph.getPragmaOutputVariables()) {
+                    declared.add(outputVarStr);
+                    appendIndentation();
+                    code.append("private float "+outputVarStr+";\n");
+                }
+                code.append("\n");
+
+                // getValue for output variables
+                appendIndentation();
+                code.append("@Override\n");
+                appendIndentation();
+                code.append("public float getValue(String varName) {\n");
+                indentation++;
+
+                for (Variable inputVar: graph.getInputVariables()) {
+                    appendIndentation();
+                    code.append("if (varName.equals(\""+inputVar+"\") return "+inputVar+";\n");
+                }
+
+                indentation--;
+                appendIndentation();
+                code.append("}\n"); // close procedure getValue
+                code.append("\n");
+                // setValue for input variables
+                appendIndentation();
+                code.append("@Override\n");
+                appendIndentation();
+                code.append("public void setValue(String varName, float value) {\n");
+                indentation++;
+
+                for (String outputVar: graph.getPragmaOutputVariables()) {
+                    appendIndentation();
+                    code.append("if (varName.equals(\""+outputVar+"\") "+outputVar+" = value;\n");
+                }
+
+                indentation--;
+                appendIndentation();
+                code.append("}\n"); // close procedure setValue
+
+                appendIndentation();
+                code.append("\n");
+
+                appendIndentation();
+                code.append("@Override\n");
+                appendIndentation();
+                code.append("public void calculate() {\n");
+                indentation++;
 
 		node.getSuccessor().accept(this);
 	}
@@ -140,55 +146,29 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
 		return variables;
 	}
 
+        private String getVarName(Variable var) {
+            if (!(var instanceof MultivectorComponent)) {
+                System.err.println("There is a varibale, which is no Multivector Component: " + var.toString());
+                return null;
+            } else
+                return var.getName() + "_" +((MultivectorComponent) var).getBladeIndex();
+
+        }
+
 	@Override
 	public void visit(AssignmentNode node) {
-		String variable = node.getVariable().getName();
-		if (assigned.contains(variable)) {
-			String message = "Variable " + variable + " has been reset for reuse.";
-			log.warn(message);
-			Notifications.addWarning(message);
-			code.append("\n");
-			appendIndentation();
-			code.append("memset(");
-			code.append(variable);
-			code.append(", 0, sizeof(");
-			code.append(variable);
-			code.append(")); // Reset variable for reuse.\n");
-			assigned.remove(variable);
-		}
-
-		appendIndentation();
+		String varName = getVarName(node.getVariable());
 		
-		String varName = node.getVariable().getName();
-		
+                appendIndentation();
 		if (!declared.contains(varName)) {
 			declared.add(varName);
-			code.append("double[] "+varName+" = new double[32];\n");
-			appendIndentation();
-			code.append("Arrays.fill("+varName+",0);\n");
-			appendIndentation();
-			code.append("\n");
-			appendIndentation();
+			code.append("float ");
 		} 
-			
-		
-		node.getVariable().accept(this);
+
+                node.getVariable().accept(this);
 		code.append(" = ");
 		node.getValue().accept(this);
-		code.append(";");
-
-		if (node.getVariable() instanceof MultivectorComponent) {
-			code.append(" // ");
-
-			MultivectorComponent component = (MultivectorComponent) node.getVariable();
-			Expression[] bladeList = node.getGraph().getBladeList();
-
-			BladePrinter bladeVisitor = new BladePrinter();
-			bladeList[component.getBladeIndex()].accept(bladeVisitor);
-			code.append(bladeVisitor.getCode());
-		}
-
-		code.append('\n');
+		code.append(";\n");
 
 		node.getSuccessor().accept(this);
 	}
@@ -279,10 +259,12 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
 
 	@Override
 	public void visit(EndNode node) {
-		if (standalone) {
-			indentation--;
-			code.append("}\n");
-		}
+            indentation--;
+            appendIndentation();
+            code.append("}\n"); // close procedure calculate
+            indentation--;
+            appendIndentation();
+            code.append("}\n"); // close class
 	}
 
 	@Override
@@ -354,16 +336,11 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
 
 	@Override
 	public void visit(Variable variable) {
-		// usually there are no
-		code.append(variable.getName());
 	}
 
 	@Override
 	public void visit(MultivectorComponent component) {
-		code.append(component.getName().replace(suffix, ""));
-		code.append('[');
-		code.append(component.getBladeIndex());
-		code.append(']');
+		code.append(getVarName(component));
 	}
 
 	@Override
@@ -388,7 +365,7 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
 	@Override
 	public void visit(FloatConstant floatConstant) {
 		code.append(Float.toString(floatConstant.getValue()));
-		code.append('d');
+		code.append('f');
 	}
 
 	@Override
@@ -458,4 +435,41 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
 	public void visit(MacroCall node) {
 		throw new IllegalStateException("Macros should have been inlined and no macro calls should be in the graph.");
 	}
+
+        /**
+         * Returns a interface source for external Java programs,
+         * which use the optimized code
+         * @return The String containing the java interface source
+         */
+        public static String createGAInterface() {
+           return
+            "\n"+
+            "\n"+
+            "/**\n"+
+            " * Performs the calculations specified in a Geometric Algebra Program\n"+
+            " */\n"+
+            "public interface GAProgram {\n"+
+            "\n"+
+            "    /**\n"+
+            "     * Performs the calculation\n"+
+            "     */\n"+
+            "    public void calculate();\n"+
+            "\n"+
+            "    /**\n"+
+            "     * Returns the value of a variable\n"+
+            "     * @param varName The variable name, specified in the Geometric Algebra program\n"+
+            "     * @return The value of the variable with the given name\n"+
+            "     */\n"+
+            "    public float getValue(String varName);\n"+
+            "\n"+
+            "    /**\n"+
+            "     * Sets the value of a variable\n"+
+            "     * @param varName The variable name, specified in the Geometric Algebra program\n"+
+            "     * @param value The value\n"+
+            "     */\n"+
+            "    public void setValue(String varName, float value);\n"+
+            "\n"+
+            "}\n";
+        }
+
 }
