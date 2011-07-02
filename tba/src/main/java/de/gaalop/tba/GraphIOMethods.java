@@ -35,11 +35,11 @@ public class GraphIOMethods {
             try {
                 return parser.parseFile(inputFile);
             } catch (CodeParserException ex) {
-                Logger.getLogger(TestTBA.class.getName()).log(Level.SEVERE, "CodeParserException", ex);
+                Logger.getLogger(GraphIOMethods.class.getName()).log(Level.SEVERE, "CodeParserException", ex);
                 return null;
             }
         } catch (IOException ex) {
-            Logger.getLogger(TestTBA.class.getName()).log(Level.SEVERE, "IOException", ex);
+            Logger.getLogger(GraphIOMethods.class.getName()).log(Level.SEVERE, "IOException", ex);
             return null;
         }
     }
@@ -63,7 +63,7 @@ public class GraphIOMethods {
                  try {
                     FileMethods.writeFile(new File(filename), outFiles.iterator().next().getContent());
                 } catch (IOException ex) {
-                    Logger.getLogger(TestTBA.class.getName()).log(Level.SEVERE, "IOException", ex);
+                    Logger.getLogger(GraphIOMethods.class.getName()).log(Level.SEVERE, "IOException", ex);
                 }
             } else {
                 // numerate output files
@@ -72,14 +72,14 @@ public class GraphIOMethods {
                     try {
                         FileMethods.writeFile(new File(filename+i), curFile.getContent());
                     } catch (IOException ex) {
-                        Logger.getLogger(TestTBA.class.getName()).log(Level.SEVERE, "IOException", ex);
+                        Logger.getLogger(GraphIOMethods.class.getName()).log(Level.SEVERE, "IOException", ex);
                     }
                     i++;
                 }
             }
 
         } catch (CodeGeneratorException ex) {
-            Logger.getLogger(TestTBA.class.getName()).log(Level.SEVERE, "CodeGeneratorException", ex);
+            Logger.getLogger(GraphIOMethods.class.getName()).log(Level.SEVERE, "CodeGeneratorException", ex);
         }
 
     }

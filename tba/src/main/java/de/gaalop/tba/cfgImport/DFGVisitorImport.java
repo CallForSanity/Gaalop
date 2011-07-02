@@ -286,7 +286,7 @@ public class DFGVisitorImport extends EmptyExpressionVisitor {
 		} else {
 			//input variable!
 			v = createNewMvExpressions();
-			v.bladeExpressions[0] = node;
+			v.bladeExpressions[0] = node; // TODO Varibale removal
 		}
 		
 		expressions.put(node,v);

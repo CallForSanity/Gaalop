@@ -49,14 +49,15 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
 
                 //code.append("import java.util.Arrays;\n\n");
 
-                code.append("public "+graph.getSource().getName()+"() implements GAProgram {\n");
+                code.append("public class "+graph.getSource().getName()+" implements GAProgram {\n");
                 indentation++;
 
 
                 appendIndentation();
                 code.append("// input variables\n");
                 for (Variable inputVar: graph.getInputVariables()) {
-                    String variableName = inputVar.toString();
+
+                    String variableName = getVarName(inputVar);
                     declared.add(variableName);
                     appendIndentation();
                     code.append("private float "+variableName+";\n");
@@ -79,10 +80,13 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
                 code.append("public float getValue(String varName) {\n");
                 indentation++;
 
-                for (Variable inputVar: graph.getInputVariables()) {
+                for (String outputVar: graph.getPragmaOutputVariables()) {
                     appendIndentation();
-                    code.append("if (varName.equals(\""+inputVar+"\") return "+inputVar+";\n");
+                    code.append("if (varName.equals(\""+outputVar+"\")) return "+outputVar+";\n");
                 }
+
+                appendIndentation();
+                code.append("return 0.0f;\n");
 
                 indentation--;
                 appendIndentation();
@@ -92,13 +96,15 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
                 appendIndentation();
                 code.append("@Override\n");
                 appendIndentation();
-                code.append("public void setValue(String varName, float value) {\n");
+                code.append("public boolean setValue(String varName, float value) {\n");
                 indentation++;
 
-                for (String outputVar: graph.getPragmaOutputVariables()) {
+                for (Variable inputVar: graph.getInputVariables()) {
                     appendIndentation();
-                    code.append("if (varName.equals(\""+outputVar+"\") "+outputVar+" = value;\n");
+                    code.append("if (varName.equals(\""+getVarName(inputVar)+"\")) { "+getVarName(inputVar)+" = value; return true; }\n");
                 }
+                appendIndentation();
+                code.append("return false;\n");
 
                 indentation--;
                 appendIndentation();
@@ -138,8 +144,7 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
 
         private String getVarName(Variable var) {
             if (!(var instanceof MultivectorComponent)) {
-                System.err.println("There is a varibale, which is no Multivector Component: " + var.toString());
-                return null;
+                return var.getName() + "_0";
             } else
                 return var.getName() + "_" +((MultivectorComponent) var).getBladeIndex();
 
@@ -313,7 +318,7 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
 			funcName = "Math.abs";
 			break;
 		case SQRT:
-			funcName = "Math.sqrt";
+			funcName = "(float) Math.sqrt";
 			break;
 		default:
 			funcName = mathFunctionCall.getFunction().toString().toLowerCase();
@@ -326,6 +331,7 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
 
 	@Override
 	public void visit(Variable variable) {
+           code.append(getVarName(variable));
 	}
 
 	@Override
@@ -426,40 +432,6 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
 		throw new IllegalStateException("Macros should have been inlined and no macro calls should be in the graph.");
 	}
 
-        /**
-         * Returns a interface source for external Java programs,
-         * which use the optimized code
-         * @return The String containing the java interface source
-         */
-        public static String createGAInterface() {
-           return
-            "\n"+
-            "\n"+
-            "/**\n"+
-            " * Performs the calculations specified in a Geometric Algebra Program\n"+
-            " */\n"+
-            "public interface GAProgram {\n"+
-            "\n"+
-            "    /**\n"+
-            "     * Performs the calculation\n"+
-            "     */\n"+
-            "    public void calculate();\n"+
-            "\n"+
-            "    /**\n"+
-            "     * Returns the value of a variable\n"+
-            "     * @param varName The variable name, specified in the Geometric Algebra program\n"+
-            "     * @return The value of the variable with the given name\n"+
-            "     */\n"+
-            "    public float getValue(String varName);\n"+
-            "\n"+
-            "    /**\n"+
-            "     * Sets the value of a variable\n"+
-            "     * @param varName The variable name, specified in the Geometric Algebra program\n"+
-            "     * @param value The value\n"+
-            "     */\n"+
-            "    public void setValue(String varName, float value);\n"+
-            "\n"+
-            "}\n";
-        }
+
 
 }

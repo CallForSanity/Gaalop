@@ -3,6 +3,8 @@ package de.gaalop.tba.cfgImport.optimization;
 import de.gaalop.dfg.MultivectorComponent;
 import de.gaalop.dfg.Variable;
 import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -18,7 +20,11 @@ public class DFGVisitorUsedVariables extends DFGTraversalVisitor {
 
     @Override
     public void visit(Variable node) {
-        System.err.println("Variables aren't allowed in the imported graph");
+        try {
+            throw new Exception("Variables aren't allowed in the imported graph");
+        } catch (Exception ex) {
+            Logger.getLogger(DFGVisitorUsedVariables.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Override

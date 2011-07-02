@@ -28,8 +28,8 @@ public class CFGImporter {
         ControlFlowVisitor vCFG = new CFGVisitorImport(vDFG);
         graph.accept(vCFG);
 
-        while (optimizeGraph(graph)) {
-        }
+       // while (optimizeGraph(graph)) {
+       // }
 
         return graph;
     }
