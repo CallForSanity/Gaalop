@@ -1,5 +1,6 @@
 package de.gaalop.tba.cfgImport;
 
+import de.gaalop.tba.cfgImport.optimization.OneExpressionRemoval;
 import de.gaalop.cfg.ControlFlowGraph;
 import de.gaalop.cfg.ControlFlowVisitor;
 import de.gaalop.cfg.Node;
@@ -28,14 +29,14 @@ public class CFGImporter {
         ControlFlowVisitor vCFG = new CFGVisitorImport(vDFG);
         graph.accept(vCFG);
 
-       // while (optimizeGraph(graph)) {
-       // }
+        while (optimizeGraph(graph)) {
+        }
 
         return graph;
     }
 
     /**
-     * Optimizes the graph (Dead code elimination, ConstantFolding, Constant propagation)
+     * Optimizes the graph (Dead code elimination, ConstantFolding, Constant propagation, One Expressions removal)
      * Uses the StoreResultNode for output marking of variables
      * and fetch information from the pragma output variables of the graph.
      * Returns, if graph has changed.
@@ -46,14 +47,25 @@ public class CFGImporter {
 
         boolean result = false;
 
+        result = result || removeUnusedAssignments(graph);
+
+        result = result || doConstantPropagation(graph);
+        
+        result = result || removeOneExpressions(graph);
+        
+        return result;
+    }
+
+    private boolean removeUnusedAssignments(ControlFlowGraph graph) {
+
         // traverse the graph in the opposite direction
         NodeCollectorControlFlowVisitor v = new NodeCollectorControlFlowVisitor();
         graph.accept(v);
-
         LinkedList<Node> nodeList = v.getNodeList();
 
+        // list output blades
         HashMap<String,LinkedList<Integer>> outputBlades = new HashMap<String,LinkedList<Integer>>();
-  
+
         for (String output: graph.getPragmaOutputVariables()) {
             String[] parts = output.split("_");
             LinkedList<Integer> list;
@@ -76,21 +88,30 @@ public class CFGImporter {
             cur.accept(cfgVariableVisitor);
         }
 
-        if (!cfgVariableVisitor.getNodeRemovals().isEmpty())
-            result = true;
-
         // remove all nodes that are marked for removal
-        for (SequentialNode node: cfgVariableVisitor.getNodeRemovals()) 
+        for (SequentialNode node: cfgVariableVisitor.getNodeRemovals())
             graph.removeNode(node);
-        
 
+        return !cfgVariableVisitor.getNodeRemovals().isEmpty();
 
+    }
+
+    private boolean doConstantPropagation(ControlFlowGraph graph) {
         ConstantPropagation propagation = new ConstantPropagation();
         graph.accept(propagation);
 
-        result = result || propagation.isGraphModified();
+        return propagation.isGraphModified();
+    }
 
-        return result;
+    private boolean removeOneExpressions(ControlFlowGraph graph) {
+        OneExpressionRemoval oneExpressionRemoval = new OneExpressionRemoval();
+        graph.accept(oneExpressionRemoval);
+
+        // remove all nodes that are marked for removal
+        for (SequentialNode node: oneExpressionRemoval.getNodeRemovals())
+           graph.removeNode(node);
+
+        return oneExpressionRemoval.isGraphModified();
     }
 
 }

@@ -5,12 +5,12 @@ package de.gaalop.dfg;
  */
 public class Variable extends Expression {
 
-	private String name;
+	protected String name;
 
 	/**
 	 * Define the value range of this variable. In case it is not know, it is set to null
 	 */
-	private String minValue = null;
+	protected String minValue = null;
 
 	public String getMaxValue() {
 		return maxValue;
@@ -23,7 +23,7 @@ public class Variable extends Expression {
 	/**
 	 * Define the value range of this variable. In case it is not know, it is set to null
 	 */
-	private String maxValue = null;
+	protected String maxValue = null;
 
 	private boolean global;
 
@@ -101,6 +101,7 @@ public class Variable extends Expression {
 
 	@Override
 	public void replaceExpression(Expression old, Expression newExpression) {
+
 		if (old instanceof Variable && newExpression instanceof Variable) {
 			Variable oldVar = (Variable) old;
 			Variable newVar = (Variable) newExpression;

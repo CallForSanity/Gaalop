@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package de.gaalop.tba.cfgImport.optimization;
 
 import de.gaalop.dfg.Expression;
@@ -62,5 +57,12 @@ public class VariableComponent {
 
         return true;
     }
+
+    @Override
+    public String toString() {
+        return name+"_"+bladeIndex;
+    }
+
+
 
 }

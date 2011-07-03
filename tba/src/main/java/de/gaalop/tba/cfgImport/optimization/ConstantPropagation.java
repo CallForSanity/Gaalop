@@ -1,12 +1,16 @@
 package de.gaalop.tba.cfgImport.optimization;
 
+import de.gaalop.api.dfg.DFGNodeType;
+import de.gaalop.api.dfg.DFGNodeTypeGetter;
 import de.gaalop.cfg.AssignmentNode;
 import de.gaalop.cfg.ColorNode;
 import de.gaalop.cfg.EmptyControlFlowVisitor;
 import de.gaalop.cfg.ExpressionStatement;
+import de.gaalop.cfg.StartNode;
 import de.gaalop.cfg.StoreResultNode;
 import de.gaalop.dfg.Expression;
 import de.gaalop.dfg.FloatConstant;
+import de.gaalop.dfg.Variable;
 import java.util.HashMap;
 
 /**
@@ -107,10 +111,9 @@ public class ConstantPropagation extends EmptyControlFlowVisitor {
      * @return <value>true</value> if the expression is a FloatConstant, <value>false</value> otherwise
      */
     private boolean isFloatConstant(Expression expression) {
-        FloatConstantChecker checker = new FloatConstantChecker();
-        expression.accept(checker);
-        return checker.isFloatConstant();
+        return DFGNodeTypeGetter.getTypeOfDFGNode(expression) == DFGNodeType.FloatConstant;
     }
+
 
 
 

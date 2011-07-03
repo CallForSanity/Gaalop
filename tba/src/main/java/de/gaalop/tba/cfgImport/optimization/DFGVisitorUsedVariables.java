@@ -20,11 +20,7 @@ public class DFGVisitorUsedVariables extends DFGTraversalVisitor {
 
     @Override
     public void visit(Variable node) {
-        try {
-            throw new Exception("Variables aren't allowed in the imported graph");
-        } catch (Exception ex) {
-            Logger.getLogger(DFGVisitorUsedVariables.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        variables.add(new VariableComponent(node.getName(), 0,node));
     }
 
     @Override

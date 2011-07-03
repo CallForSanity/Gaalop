@@ -57,8 +57,8 @@ public class TestCreator {
         beginTestCase();
 
         // create all tests
-        testCircleNoVars();
-        testCircleOneVar();
+        //testCircleNoVars();
+        //testCircleOneVar();
         testCircleOnlyVars();
 
         endTestCase();
