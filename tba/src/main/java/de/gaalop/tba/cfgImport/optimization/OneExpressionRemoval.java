@@ -12,6 +12,7 @@ import de.gaalop.cfg.StoreResultNode;
 import de.gaalop.dfg.Expression;
 import de.gaalop.dfg.MultivectorComponent;
 import de.gaalop.dfg.Variable;
+import de.gaalop.tba.cfgImport.optimization.VariableComponent;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;

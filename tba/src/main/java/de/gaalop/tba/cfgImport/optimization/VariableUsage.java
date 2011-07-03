@@ -5,6 +5,7 @@
 
 package de.gaalop.tba.cfgImport.optimization;
 
+import de.gaalop.tba.cfgImport.optimization.VariableComponent;
 import java.util.HashSet;
 
 /**

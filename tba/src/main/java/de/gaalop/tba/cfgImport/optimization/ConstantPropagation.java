@@ -11,6 +11,7 @@ import de.gaalop.cfg.StoreResultNode;
 import de.gaalop.dfg.Expression;
 import de.gaalop.dfg.FloatConstant;
 import de.gaalop.dfg.Variable;
+import de.gaalop.tba.cfgImport.optimization.VariableComponent;
 import java.util.HashMap;
 
 /**

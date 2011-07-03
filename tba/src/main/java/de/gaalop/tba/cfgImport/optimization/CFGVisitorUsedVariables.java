@@ -19,6 +19,7 @@ import de.gaalop.cfg.SequentialNode;
 import de.gaalop.cfg.StartNode;
 import de.gaalop.cfg.StoreResultNode;
 import de.gaalop.tba.UseAlgebra;
+import de.gaalop.tba.cfgImport.optimization.VariableComponent;
 import java.util.HashMap;
 import java.util.LinkedList;
 
