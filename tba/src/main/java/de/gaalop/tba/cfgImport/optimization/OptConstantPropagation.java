@@ -1,13 +1,7 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package de.gaalop.tba.cfgImport.optimization;
 
 import de.gaalop.cfg.ControlFlowGraph;
 import de.gaalop.tba.UseAlgebra;
-import de.gaalop.tba.cfgImport.optimization.OptimizationStrategyWithModifyFlag;
 
 /**
  *
@@ -17,6 +11,9 @@ public class OptConstantPropagation implements OptimizationStrategyWithModifyFla
 
     @Override
     public boolean transform(ControlFlowGraph graph, UseAlgebra usedAlgebra) {
+        // TODO chs: After implementing Control Flow in Optimization ConstantPropagation, remove this statement.
+        if (ContainsControlFlow.containsControlFlow(graph)) return false;
+
         ConstantPropagation propagation = new ConstantPropagation();
         graph.accept(propagation);
         return propagation.isGraphModified();

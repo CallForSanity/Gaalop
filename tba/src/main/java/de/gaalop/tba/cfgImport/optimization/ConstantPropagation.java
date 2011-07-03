@@ -6,12 +6,9 @@ import de.gaalop.cfg.AssignmentNode;
 import de.gaalop.cfg.ColorNode;
 import de.gaalop.cfg.EmptyControlFlowVisitor;
 import de.gaalop.cfg.ExpressionStatement;
-import de.gaalop.cfg.StartNode;
 import de.gaalop.cfg.StoreResultNode;
 import de.gaalop.dfg.Expression;
 import de.gaalop.dfg.FloatConstant;
-import de.gaalop.dfg.Variable;
-import de.gaalop.tba.cfgImport.optimization.VariableComponent;
 import java.util.HashMap;
 
 /**
@@ -114,8 +111,5 @@ public class ConstantPropagation extends EmptyControlFlowVisitor {
     private boolean isFloatConstant(Expression expression) {
         return DFGNodeTypeGetter.getTypeOfDFGNode(expression) == DFGNodeType.FloatConstant;
     }
-
-
-
 
 }

@@ -26,6 +26,9 @@ public class OptUnusedAssignmentsRemoval implements OptimizationStrategyWithModi
 
     @Override
     public boolean transform(ControlFlowGraph graph, UseAlgebra usedAlgebra) {
+        // TODO chs: After implementing Control Flow in Optimization UnusedAssignmentsRemoval, remove this statement.
+        if (ContainsControlFlow.containsControlFlow(graph)) return false;
+
         // traverse the graph in the opposite direction
         NodeCollectorControlFlowVisitor v = new NodeCollectorControlFlowVisitor();
         graph.accept(v);

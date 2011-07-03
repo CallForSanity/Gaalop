@@ -8,7 +8,6 @@ package de.gaalop.tba.cfgImport.optimization;
 import de.gaalop.cfg.ControlFlowGraph;
 import de.gaalop.cfg.SequentialNode;
 import de.gaalop.tba.UseAlgebra;
-import de.gaalop.tba.cfgImport.optimization.OptimizationStrategyWithModifyFlag;
 
 /**
  *
@@ -18,6 +17,10 @@ public class OptOneExpressionsRemoval implements OptimizationStrategyWithModifyF
 
     @Override
     public boolean transform(ControlFlowGraph graph, UseAlgebra usedAlgebra) {
+
+        // TODO chs: After implementing Control Flow in Optimization OneExpressionsRemoval, remove this statement.
+        if (ContainsControlFlow.containsControlFlow(graph)) return false;
+
         OneExpressionRemoval oneExpressionRemoval = new OneExpressionRemoval();
         graph.accept(oneExpressionRemoval);
 
