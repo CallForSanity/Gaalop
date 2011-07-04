@@ -6,11 +6,13 @@
 package de.gaalop.tba;
 
 import java.util.LinkedList;
+import org.junit.Ignore;
 
 /**
  *
  * @author christian
  */
+@Ignore
 public class MultipleAssignmentsTest implements GenericTestable {
 
     protected static final double EPSILON = 10E-4;

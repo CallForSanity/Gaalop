@@ -3,8 +3,10 @@
  * and open the template in the editor.
  */
 
-package de.gaalop.tba.cfgImport.optimization;
+package de.gaalop.tba.cfgImport;
 
+import de.gaalop.cfg.BlockEndNode;
+import de.gaalop.cfg.BreakNode;
 import de.gaalop.cfg.ControlFlowGraph;
 import de.gaalop.cfg.EmptyControlFlowVisitor;
 import de.gaalop.cfg.IfThenElseNode;
@@ -32,6 +34,16 @@ public class ContainsControlFlow extends EmptyControlFlowVisitor {
         containsControlFlow = true;
     }
 
+    @Override
+    public void visit(BreakNode node) {
+        containsControlFlow = true;
+    }
+
+    @Override
+    public void visit(BlockEndNode node) {
+        containsControlFlow = true;
+    }
+    
     public static boolean containsControlFlow(ControlFlowGraph graph) {
         ContainsControlFlow c = new ContainsControlFlow();
         graph.accept(c);

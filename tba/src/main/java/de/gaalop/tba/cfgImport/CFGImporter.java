@@ -29,6 +29,12 @@ public class CFGImporter {
 
     public ControlFlowGraph importGraph(ControlFlowGraph graph) {
 
+        // TODO chs: After implementing Control Flow in TBA CFGImport, remove this statement.
+        if (ContainsControlFlow.containsControlFlow(graph)) {
+            System.err.println("Due to Control Flow Existence in Source, TBA isn't assigned on graph!");
+            return graph;
+        }
+
         DFGVisitorImport vDFG = new DFGVisitorImport(usedAlgebra);
         ControlFlowVisitor vCFG = new CFGVisitorImport(vDFG);
         graph.accept(vCFG);

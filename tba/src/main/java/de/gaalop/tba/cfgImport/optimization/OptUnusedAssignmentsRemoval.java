@@ -5,6 +5,7 @@
 
 package de.gaalop.tba.cfgImport.optimization;
 
+import de.gaalop.tba.cfgImport.ContainsControlFlow;
 import de.gaalop.OptimizationException;
 import de.gaalop.OptimizationStrategy;
 import de.gaalop.cfg.ControlFlowGraph;
@@ -27,7 +28,10 @@ public class OptUnusedAssignmentsRemoval implements OptimizationStrategyWithModi
     @Override
     public boolean transform(ControlFlowGraph graph, UseAlgebra usedAlgebra) {
         // TODO chs: After implementing Control Flow in Optimization UnusedAssignmentsRemoval, remove this statement.
-        if (ContainsControlFlow.containsControlFlow(graph)) return false;
+        if (ContainsControlFlow.containsControlFlow(graph)) {
+            System.err.println("Due to Control Flow Existence in Source, Optimization UnusedAssignmentsRemoval isn't assigned on graph!");
+            return false;
+        }
 
         // traverse the graph in the opposite direction
         NodeCollectorControlFlowVisitor v = new NodeCollectorControlFlowVisitor();
