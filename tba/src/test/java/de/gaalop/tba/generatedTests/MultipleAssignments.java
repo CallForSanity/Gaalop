@@ -216,6 +216,7 @@ public class MultipleAssignments implements GAProgram {
 	
 	@Override
 	public void calculate() {
+		b_7 = 1.0f;
 		b_0 = 0.0f;
 		b_1 = 0.0f;
 		b_2 = 0.0f;
@@ -223,7 +224,6 @@ public class MultipleAssignments implements GAProgram {
 		b_4 = 0.0f;
 		b_5 = 0.0f;
 		b_6 = 0.0f;
-		b_7 = 1.0f;
 		b_8 = 0.0f;
 		b_9 = 0.0f;
 		b_10 = 0.0f;
@@ -248,6 +248,7 @@ public class MultipleAssignments implements GAProgram {
 		b_29 = 0.0f;
 		b_30 = 0.0f;
 		b_31 = 0.0f;
+		d_7 = 1.0f;
 		d_0 = 0.0f;
 		d_1 = 0.0f;
 		d_2 = 0.0f;
@@ -255,7 +256,6 @@ public class MultipleAssignments implements GAProgram {
 		d_4 = 0.0f;
 		d_5 = 0.0f;
 		d_6 = 0.0f;
-		d_7 = 1.0f;
 		d_8 = 0.0f;
 		d_9 = 0.0f;
 		d_10 = 0.0f;

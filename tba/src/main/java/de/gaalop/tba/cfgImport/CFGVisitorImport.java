@@ -8,6 +8,7 @@ import de.gaalop.dfg.Expression;
 import de.gaalop.dfg.FloatConstant;
 import de.gaalop.dfg.MultivectorComponent;
 import de.gaalop.dfg.Variable;
+import java.util.LinkedList;
 
 public class CFGVisitorImport extends EmptyControlFlowVisitor {
 
@@ -35,9 +36,8 @@ public class CFGVisitorImport extends EmptyControlFlowVisitor {
 		
 		
 		AssignmentNode lastNode = node;
-		
-		
-		
+	
+		// At first, output all assignments
 		for (int i=0;i<cfgExpressionVisitor.bladeCount;i++) 
 		{
 			
@@ -48,15 +48,26 @@ public class CFGVisitorImport extends EmptyControlFlowVisitor {
 				
 				lastNode.insertAfter(insNode);
 				lastNode = insNode;
-			} else
+			} 
+			
+		}
+
+                // zero all null expressions
+                for (int i=0;i<cfgExpressionVisitor.bladeCount;i++)
+		{
+
+			Expression e = mvExpr.bladeExpressions[i];
+
+			if (e==null) 
                         {
                             AssignmentNode insNode = new AssignmentNode(node.getGraph(), new MultivectorComponent(variable.getName(),i),new FloatConstant(0.0f));
 
 				lastNode.insertAfter(insNode);
 				lastNode = insNode;
                         }
-			
+
 		}
+
 		
 		node.getGraph().removeNode(node);
 		
