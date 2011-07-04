@@ -57,9 +57,10 @@ public class TestCreator {
         beginTestCase();
 
         // create all tests
-        //testCircleNoVars();
-        //testCircleOneVar();
+        testCircleNoVars();
+        testCircleOneVar();
         testCircleOnlyVars();
+        testMultipleAssignmentsTest();
 
         endTestCase();
     }
@@ -136,6 +137,10 @@ public class TestCreator {
         test(new CircleOnlyVarsTest(new Point(5,2),new Point(3,9),new Point(6,4)),"CircleOnlyVars");
 
         //TODO more tests
+    }
+
+    private void testMultipleAssignmentsTest() {
+        test(new MultipleAssignmentsTest(),"MultipleAssignments");
     }
 
     private void writeFile(OutputFile outputFile) {
