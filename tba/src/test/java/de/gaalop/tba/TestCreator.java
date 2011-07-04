@@ -62,6 +62,8 @@ public class TestCreator {
         testCircleOnlyVars();
         testMultipleAssignmentsTest();
 
+        //TODO chs include after implementation of control flow:  testSimpleControlFlowTest();
+
         endTestCase();
     }
 
@@ -136,6 +138,10 @@ public class TestCreator {
 
     private void testMultipleAssignmentsTest() {
         test(new MultipleAssignmentsTest(),"MultipleAssignments");
+    }
+
+    private void testSimpleControlFlowTest() {
+        test(new SimpleControlFlowTest(),"SimpleControlFlow");
     }
 
     private void writeFile(OutputFile outputFile) {
