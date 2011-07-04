@@ -1,5 +1,7 @@
 package de.gaalop.tba.generatedTests;
 
+import java.util.HashMap;
+
 public class MultipleAssignments implements GAProgram {
 	// input variables
 
@@ -138,6 +140,75 @@ public class MultipleAssignments implements GAProgram {
 		return 0.0f;
 	}
 
+	@Override
+	public HashMap<String,Float> getValues() {
+		HashMap<String,Float> result = new HashMap<String,Float>();
+		result.put("d_29",d_29);
+		result.put("d_28",d_28);
+		result.put("d_27",d_27);
+		result.put("d_30",d_30);
+		result.put("d_31",d_31);
+		result.put("b_29",b_29);
+		result.put("b_28",b_28);
+		result.put("b_27",b_27);
+		result.put("b_26",b_26);
+		result.put("b_25",b_25);
+		result.put("d_9",d_9);
+		result.put("d_7",d_7);
+		result.put("d_8",d_8);
+		result.put("b_30",b_30);
+		result.put("d_5",d_5);
+		result.put("b_31",b_31);
+		result.put("d_6",d_6);
+		result.put("d_3",d_3);
+		result.put("d_4",d_4);
+		result.put("d_1",d_1);
+		result.put("d_2",d_2);
+		result.put("d_0",d_0);
+		result.put("b_5",b_5);
+		result.put("b_6",b_6);
+		result.put("b_7",b_7);
+		result.put("b_8",b_8);
+		result.put("b_9",b_9);
+		result.put("b_15",b_15);
+		result.put("b_14",b_14);
+		result.put("b_17",b_17);
+		result.put("b_16",b_16);
+		result.put("b_0",b_0);
+		result.put("b_19",b_19);
+		result.put("b_1",b_1);
+		result.put("b_18",b_18);
+		result.put("b_2",b_2);
+		result.put("b_3",b_3);
+		result.put("b_4",b_4);
+		result.put("b_20",b_20);
+		result.put("b_21",b_21);
+		result.put("b_22",b_22);
+		result.put("b_23",b_23);
+		result.put("b_24",b_24);
+		result.put("d_14",d_14);
+		result.put("d_15",d_15);
+		result.put("d_12",d_12);
+		result.put("d_13",d_13);
+		result.put("d_10",d_10);
+		result.put("d_11",d_11);
+		result.put("d_17",d_17);
+		result.put("d_16",d_16);
+		result.put("d_19",d_19);
+		result.put("d_18",d_18);
+		result.put("b_12",b_12);
+		result.put("b_13",b_13);
+		result.put("b_10",b_10);
+		result.put("b_11",b_11);
+		result.put("d_23",d_23);
+		result.put("d_24",d_24);
+		result.put("d_25",d_25);
+		result.put("d_26",d_26);
+		result.put("d_20",d_20);
+		result.put("d_21",d_21);
+		result.put("d_22",d_22);
+		return result;
+	}
 	@Override
 	public boolean setValue(String varName, float value) {
 		return false;

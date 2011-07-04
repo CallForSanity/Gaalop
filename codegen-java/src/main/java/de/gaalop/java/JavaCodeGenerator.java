@@ -78,6 +78,8 @@ public class JavaCodeGenerator implements CodeGenerator {
            return
             "\n"+
             "\n"+
+            "import java.util.HashMap;\n"+
+            "\n"+
             "/**\n"+
             " * Performs the calculations specified in a Geometric Algebra Program\n"+
             " */\n"+
@@ -103,7 +105,15 @@ public class JavaCodeGenerator implements CodeGenerator {
             "     */\n"+
             "    public boolean setValue(String varName, float value);\n"+
             "\n"+
+            "    /**\n"+
+            "      * Returns all values in a map name->value\n"+
+            "      * @return The map which contains all values\n"+
+            "      */\n"+
+            "     public HashMap<String,Float> getValues();\n"+
+            "\n"+
             "}\n";
         }
+
+
 
 }

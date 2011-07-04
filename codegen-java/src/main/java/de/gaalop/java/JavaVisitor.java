@@ -47,7 +47,7 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
                 graph.accept(stores);
 
 
-                //code.append("import java.util.Arrays;\n\n");
+                code.append("import java.util.HashMap;\n\n");
 
                 code.append("public class "+graph.getSource().getName()+" implements GAProgram {\n");
                 indentation++;
@@ -92,6 +92,30 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
                 appendIndentation();
                 code.append("}\n"); // close procedure getValue
                 code.append("\n");
+
+                 //TODO getValues for output variables
+                appendIndentation();
+                code.append("@Override\n");
+                appendIndentation();
+                code.append("public HashMap<String,Float> getValues() {\n");
+                indentation++;
+
+                appendIndentation();
+                    code.append("HashMap<String,Float> result = new HashMap<String,Float>();\n");
+
+                for (String outputVar: graph.getPragmaOutputVariables()) {
+                    appendIndentation();
+                    code.append("result.put(\""+outputVar+"\","+outputVar+");\n");
+                }
+
+                appendIndentation();
+                code.append("return result;\n");
+
+                indentation--;
+                appendIndentation();
+                code.append("}\n"); // close procedure getValues
+
+
                 // setValue for input variables
                 appendIndentation();
                 code.append("@Override\n");

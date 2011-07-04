@@ -2,6 +2,8 @@ package de.gaalop.tba.generatedTests;
 
 
 
+import java.util.HashMap;
+
 /**
  * Performs the calculations specified in a Geometric Algebra Program
  */
@@ -26,5 +28,11 @@ public interface GAProgram {
      * @returns <value>true</value> if the setting was successful, <value>false</value> otherwise
      */
     public boolean setValue(String varName, float value);
+
+    /**
+      * Returns all values in a map name->value
+      * @return The map which contains all values
+      */
+     public HashMap<String,Float> getValues();
 
 }

@@ -91,12 +91,7 @@ public class TestCreator {
                 out.println("    inst.calculate();");
                 out.println("    // collect outputs");
 
-                out.println("    HashMap<String,Float> outputs = new HashMap<String,Float>();");
-
-
-                for (String output: testable.getOutputs()) {
-                    out.println("    outputs.put(\""+output+"\",inst.getValue(\""+output+"\"));");
-                }
+                out.println("    HashMap<String,Float> outputs = inst.getValues();");
 
                 out.println("    // check outputs");
                 out.println(io.getCheckOutputsCode());

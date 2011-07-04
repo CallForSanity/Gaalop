@@ -1,5 +1,7 @@
 package de.gaalop.tba.generatedTests;
 
+import java.util.HashMap;
+
 public class CircleOnlyVars implements GAProgram {
 	// input variables
 	private float y1_0;
@@ -22,6 +24,14 @@ public class CircleOnlyVars implements GAProgram {
 		return 0.0f;
 	}
 
+	@Override
+	public HashMap<String,Float> getValues() {
+		HashMap<String,Float> result = new HashMap<String,Float>();
+		result.put("m_1",m_1);
+		result.put("r_0",r_0);
+		result.put("m_2",m_2);
+		return result;
+	}
 	@Override
 	public boolean setValue(String varName, float value) {
 		if (varName.equals("y1_0")) { y1_0 = value; return true; }

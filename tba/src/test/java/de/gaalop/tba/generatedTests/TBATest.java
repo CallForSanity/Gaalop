@@ -11,10 +11,7 @@ public class TBATest {
     CircleNoVars inst = new CircleNoVars();
     inst.calculate();
     // collect outputs
-    HashMap<String,Float> outputs = new HashMap<String,Float>();
-    outputs.put("m_1",inst.getValue("m_1"));
-    outputs.put("m_2",inst.getValue("m_2"));
-    outputs.put("r_0",inst.getValue("r_0"));
+    HashMap<String,Float> outputs = inst.getValues();
     // check outputs
 // check containing r_0,m_1,m_2
 assertTrue(outputs.containsKey("r_0"));
@@ -37,10 +34,7 @@ assertEquals(3, outputs.size());
     assertTrue(inst.setValue("x1_0",-25.0f));
     inst.calculate();
     // collect outputs
-    HashMap<String,Float> outputs = new HashMap<String,Float>();
-    outputs.put("m_1",inst.getValue("m_1"));
-    outputs.put("m_2",inst.getValue("m_2"));
-    outputs.put("r_0",inst.getValue("r_0"));
+    HashMap<String,Float> outputs = inst.getValues();
     // check outputs
 // check containing r_0,m_1,m_2
 assertTrue(outputs.containsKey("r_0"));
@@ -63,10 +57,7 @@ assertEquals(3, outputs.size());
     assertTrue(inst.setValue("x1_0",-24.0f));
     inst.calculate();
     // collect outputs
-    HashMap<String,Float> outputs = new HashMap<String,Float>();
-    outputs.put("m_1",inst.getValue("m_1"));
-    outputs.put("m_2",inst.getValue("m_2"));
-    outputs.put("r_0",inst.getValue("r_0"));
+    HashMap<String,Float> outputs = inst.getValues();
     // check outputs
 // check containing r_0,m_1,m_2
 assertTrue(outputs.containsKey("r_0"));
@@ -89,10 +80,7 @@ assertEquals(3, outputs.size());
     assertTrue(inst.setValue("x1_0",-23.0f));
     inst.calculate();
     // collect outputs
-    HashMap<String,Float> outputs = new HashMap<String,Float>();
-    outputs.put("m_1",inst.getValue("m_1"));
-    outputs.put("m_2",inst.getValue("m_2"));
-    outputs.put("r_0",inst.getValue("r_0"));
+    HashMap<String,Float> outputs = inst.getValues();
     // check outputs
 // check containing r_0,m_1,m_2
 assertTrue(outputs.containsKey("r_0"));
@@ -115,10 +103,7 @@ assertEquals(3, outputs.size());
     assertTrue(inst.setValue("x1_0",-22.0f));
     inst.calculate();
     // collect outputs
-    HashMap<String,Float> outputs = new HashMap<String,Float>();
-    outputs.put("m_1",inst.getValue("m_1"));
-    outputs.put("m_2",inst.getValue("m_2"));
-    outputs.put("r_0",inst.getValue("r_0"));
+    HashMap<String,Float> outputs = inst.getValues();
     // check outputs
 // check containing r_0,m_1,m_2
 assertTrue(outputs.containsKey("r_0"));
@@ -141,10 +126,7 @@ assertEquals(3, outputs.size());
     assertTrue(inst.setValue("x1_0",-21.0f));
     inst.calculate();
     // collect outputs
-    HashMap<String,Float> outputs = new HashMap<String,Float>();
-    outputs.put("m_1",inst.getValue("m_1"));
-    outputs.put("m_2",inst.getValue("m_2"));
-    outputs.put("r_0",inst.getValue("r_0"));
+    HashMap<String,Float> outputs = inst.getValues();
     // check outputs
 // check containing r_0,m_1,m_2
 assertTrue(outputs.containsKey("r_0"));
@@ -167,10 +149,7 @@ assertEquals(3, outputs.size());
     assertTrue(inst.setValue("x1_0",-20.0f));
     inst.calculate();
     // collect outputs
-    HashMap<String,Float> outputs = new HashMap<String,Float>();
-    outputs.put("m_1",inst.getValue("m_1"));
-    outputs.put("m_2",inst.getValue("m_2"));
-    outputs.put("r_0",inst.getValue("r_0"));
+    HashMap<String,Float> outputs = inst.getValues();
     // check outputs
 // check containing r_0,m_1,m_2
 assertTrue(outputs.containsKey("r_0"));
@@ -193,10 +172,7 @@ assertEquals(3, outputs.size());
     assertTrue(inst.setValue("x1_0",-19.0f));
     inst.calculate();
     // collect outputs
-    HashMap<String,Float> outputs = new HashMap<String,Float>();
-    outputs.put("m_1",inst.getValue("m_1"));
-    outputs.put("m_2",inst.getValue("m_2"));
-    outputs.put("r_0",inst.getValue("r_0"));
+    HashMap<String,Float> outputs = inst.getValues();
     // check outputs
 // check containing r_0,m_1,m_2
 assertTrue(outputs.containsKey("r_0"));
@@ -219,10 +195,7 @@ assertEquals(3, outputs.size());
     assertTrue(inst.setValue("x1_0",-18.0f));
     inst.calculate();
     // collect outputs
-    HashMap<String,Float> outputs = new HashMap<String,Float>();
-    outputs.put("m_1",inst.getValue("m_1"));
-    outputs.put("m_2",inst.getValue("m_2"));
-    outputs.put("r_0",inst.getValue("r_0"));
+    HashMap<String,Float> outputs = inst.getValues();
     // check outputs
 // check containing r_0,m_1,m_2
 assertTrue(outputs.containsKey("r_0"));
@@ -245,10 +218,7 @@ assertEquals(3, outputs.size());
     assertTrue(inst.setValue("x1_0",-17.0f));
     inst.calculate();
     // collect outputs
-    HashMap<String,Float> outputs = new HashMap<String,Float>();
-    outputs.put("m_1",inst.getValue("m_1"));
-    outputs.put("m_2",inst.getValue("m_2"));
-    outputs.put("r_0",inst.getValue("r_0"));
+    HashMap<String,Float> outputs = inst.getValues();
     // check outputs
 // check containing r_0,m_1,m_2
 assertTrue(outputs.containsKey("r_0"));
@@ -271,10 +241,7 @@ assertEquals(3, outputs.size());
     assertTrue(inst.setValue("x1_0",-16.0f));
     inst.calculate();
     // collect outputs
-    HashMap<String,Float> outputs = new HashMap<String,Float>();
-    outputs.put("m_1",inst.getValue("m_1"));
-    outputs.put("m_2",inst.getValue("m_2"));
-    outputs.put("r_0",inst.getValue("r_0"));
+    HashMap<String,Float> outputs = inst.getValues();
     // check outputs
 // check containing r_0,m_1,m_2
 assertTrue(outputs.containsKey("r_0"));
@@ -297,10 +264,7 @@ assertEquals(3, outputs.size());
     assertTrue(inst.setValue("x1_0",-15.0f));
     inst.calculate();
     // collect outputs
-    HashMap<String,Float> outputs = new HashMap<String,Float>();
-    outputs.put("m_1",inst.getValue("m_1"));
-    outputs.put("m_2",inst.getValue("m_2"));
-    outputs.put("r_0",inst.getValue("r_0"));
+    HashMap<String,Float> outputs = inst.getValues();
     // check outputs
 // check containing r_0,m_1,m_2
 assertTrue(outputs.containsKey("r_0"));
@@ -323,10 +287,7 @@ assertEquals(3, outputs.size());
     assertTrue(inst.setValue("x1_0",-14.0f));
     inst.calculate();
     // collect outputs
-    HashMap<String,Float> outputs = new HashMap<String,Float>();
-    outputs.put("m_1",inst.getValue("m_1"));
-    outputs.put("m_2",inst.getValue("m_2"));
-    outputs.put("r_0",inst.getValue("r_0"));
+    HashMap<String,Float> outputs = inst.getValues();
     // check outputs
 // check containing r_0,m_1,m_2
 assertTrue(outputs.containsKey("r_0"));
@@ -349,10 +310,7 @@ assertEquals(3, outputs.size());
     assertTrue(inst.setValue("x1_0",-13.0f));
     inst.calculate();
     // collect outputs
-    HashMap<String,Float> outputs = new HashMap<String,Float>();
-    outputs.put("m_1",inst.getValue("m_1"));
-    outputs.put("m_2",inst.getValue("m_2"));
-    outputs.put("r_0",inst.getValue("r_0"));
+    HashMap<String,Float> outputs = inst.getValues();
     // check outputs
 // check containing r_0,m_1,m_2
 assertTrue(outputs.containsKey("r_0"));
@@ -375,10 +333,7 @@ assertEquals(3, outputs.size());
     assertTrue(inst.setValue("x1_0",-12.0f));
     inst.calculate();
     // collect outputs
-    HashMap<String,Float> outputs = new HashMap<String,Float>();
-    outputs.put("m_1",inst.getValue("m_1"));
-    outputs.put("m_2",inst.getValue("m_2"));
-    outputs.put("r_0",inst.getValue("r_0"));
+    HashMap<String,Float> outputs = inst.getValues();
     // check outputs
 // check containing r_0,m_1,m_2
 assertTrue(outputs.containsKey("r_0"));
@@ -401,10 +356,7 @@ assertEquals(3, outputs.size());
     assertTrue(inst.setValue("x1_0",-11.0f));
     inst.calculate();
     // collect outputs
-    HashMap<String,Float> outputs = new HashMap<String,Float>();
-    outputs.put("m_1",inst.getValue("m_1"));
-    outputs.put("m_2",inst.getValue("m_2"));
-    outputs.put("r_0",inst.getValue("r_0"));
+    HashMap<String,Float> outputs = inst.getValues();
     // check outputs
 // check containing r_0,m_1,m_2
 assertTrue(outputs.containsKey("r_0"));
@@ -427,10 +379,7 @@ assertEquals(3, outputs.size());
     assertTrue(inst.setValue("x1_0",-10.0f));
     inst.calculate();
     // collect outputs
-    HashMap<String,Float> outputs = new HashMap<String,Float>();
-    outputs.put("m_1",inst.getValue("m_1"));
-    outputs.put("m_2",inst.getValue("m_2"));
-    outputs.put("r_0",inst.getValue("r_0"));
+    HashMap<String,Float> outputs = inst.getValues();
     // check outputs
 // check containing r_0,m_1,m_2
 assertTrue(outputs.containsKey("r_0"));
@@ -453,10 +402,7 @@ assertEquals(3, outputs.size());
     assertTrue(inst.setValue("x1_0",-9.0f));
     inst.calculate();
     // collect outputs
-    HashMap<String,Float> outputs = new HashMap<String,Float>();
-    outputs.put("m_1",inst.getValue("m_1"));
-    outputs.put("m_2",inst.getValue("m_2"));
-    outputs.put("r_0",inst.getValue("r_0"));
+    HashMap<String,Float> outputs = inst.getValues();
     // check outputs
 // check containing r_0,m_1,m_2
 assertTrue(outputs.containsKey("r_0"));
@@ -479,10 +425,7 @@ assertEquals(3, outputs.size());
     assertTrue(inst.setValue("x1_0",-8.0f));
     inst.calculate();
     // collect outputs
-    HashMap<String,Float> outputs = new HashMap<String,Float>();
-    outputs.put("m_1",inst.getValue("m_1"));
-    outputs.put("m_2",inst.getValue("m_2"));
-    outputs.put("r_0",inst.getValue("r_0"));
+    HashMap<String,Float> outputs = inst.getValues();
     // check outputs
 // check containing r_0,m_1,m_2
 assertTrue(outputs.containsKey("r_0"));
@@ -505,10 +448,7 @@ assertEquals(3, outputs.size());
     assertTrue(inst.setValue("x1_0",-7.0f));
     inst.calculate();
     // collect outputs
-    HashMap<String,Float> outputs = new HashMap<String,Float>();
-    outputs.put("m_1",inst.getValue("m_1"));
-    outputs.put("m_2",inst.getValue("m_2"));
-    outputs.put("r_0",inst.getValue("r_0"));
+    HashMap<String,Float> outputs = inst.getValues();
     // check outputs
 // check containing r_0,m_1,m_2
 assertTrue(outputs.containsKey("r_0"));
@@ -531,10 +471,7 @@ assertEquals(3, outputs.size());
     assertTrue(inst.setValue("x1_0",-6.0f));
     inst.calculate();
     // collect outputs
-    HashMap<String,Float> outputs = new HashMap<String,Float>();
-    outputs.put("m_1",inst.getValue("m_1"));
-    outputs.put("m_2",inst.getValue("m_2"));
-    outputs.put("r_0",inst.getValue("r_0"));
+    HashMap<String,Float> outputs = inst.getValues();
     // check outputs
 // check containing r_0,m_1,m_2
 assertTrue(outputs.containsKey("r_0"));
@@ -557,10 +494,7 @@ assertEquals(3, outputs.size());
     assertTrue(inst.setValue("x1_0",-5.0f));
     inst.calculate();
     // collect outputs
-    HashMap<String,Float> outputs = new HashMap<String,Float>();
-    outputs.put("m_1",inst.getValue("m_1"));
-    outputs.put("m_2",inst.getValue("m_2"));
-    outputs.put("r_0",inst.getValue("r_0"));
+    HashMap<String,Float> outputs = inst.getValues();
     // check outputs
 // check containing r_0,m_1,m_2
 assertTrue(outputs.containsKey("r_0"));
@@ -583,10 +517,7 @@ assertEquals(3, outputs.size());
     assertTrue(inst.setValue("x1_0",-4.0f));
     inst.calculate();
     // collect outputs
-    HashMap<String,Float> outputs = new HashMap<String,Float>();
-    outputs.put("m_1",inst.getValue("m_1"));
-    outputs.put("m_2",inst.getValue("m_2"));
-    outputs.put("r_0",inst.getValue("r_0"));
+    HashMap<String,Float> outputs = inst.getValues();
     // check outputs
 // check containing r_0,m_1,m_2
 assertTrue(outputs.containsKey("r_0"));
@@ -609,10 +540,7 @@ assertEquals(3, outputs.size());
     assertTrue(inst.setValue("x1_0",-3.0f));
     inst.calculate();
     // collect outputs
-    HashMap<String,Float> outputs = new HashMap<String,Float>();
-    outputs.put("m_1",inst.getValue("m_1"));
-    outputs.put("m_2",inst.getValue("m_2"));
-    outputs.put("r_0",inst.getValue("r_0"));
+    HashMap<String,Float> outputs = inst.getValues();
     // check outputs
 // check containing r_0,m_1,m_2
 assertTrue(outputs.containsKey("r_0"));
@@ -635,10 +563,7 @@ assertEquals(3, outputs.size());
     assertTrue(inst.setValue("x1_0",-2.0f));
     inst.calculate();
     // collect outputs
-    HashMap<String,Float> outputs = new HashMap<String,Float>();
-    outputs.put("m_1",inst.getValue("m_1"));
-    outputs.put("m_2",inst.getValue("m_2"));
-    outputs.put("r_0",inst.getValue("r_0"));
+    HashMap<String,Float> outputs = inst.getValues();
     // check outputs
 // check containing r_0,m_1,m_2
 assertTrue(outputs.containsKey("r_0"));
@@ -661,10 +586,7 @@ assertEquals(3, outputs.size());
     assertTrue(inst.setValue("x1_0",-1.0f));
     inst.calculate();
     // collect outputs
-    HashMap<String,Float> outputs = new HashMap<String,Float>();
-    outputs.put("m_1",inst.getValue("m_1"));
-    outputs.put("m_2",inst.getValue("m_2"));
-    outputs.put("r_0",inst.getValue("r_0"));
+    HashMap<String,Float> outputs = inst.getValues();
     // check outputs
 // check containing r_0,m_1,m_2
 assertTrue(outputs.containsKey("r_0"));
@@ -687,10 +609,7 @@ assertEquals(3, outputs.size());
     assertTrue(inst.setValue("x1_0",0.0f));
     inst.calculate();
     // collect outputs
-    HashMap<String,Float> outputs = new HashMap<String,Float>();
-    outputs.put("m_1",inst.getValue("m_1"));
-    outputs.put("m_2",inst.getValue("m_2"));
-    outputs.put("r_0",inst.getValue("r_0"));
+    HashMap<String,Float> outputs = inst.getValues();
     // check outputs
 // check containing r_0,m_1,m_2
 assertTrue(outputs.containsKey("r_0"));
@@ -713,10 +632,7 @@ assertEquals(3, outputs.size());
     assertTrue(inst.setValue("x1_0",1.0f));
     inst.calculate();
     // collect outputs
-    HashMap<String,Float> outputs = new HashMap<String,Float>();
-    outputs.put("m_1",inst.getValue("m_1"));
-    outputs.put("m_2",inst.getValue("m_2"));
-    outputs.put("r_0",inst.getValue("r_0"));
+    HashMap<String,Float> outputs = inst.getValues();
     // check outputs
 // check containing r_0,m_1,m_2
 assertTrue(outputs.containsKey("r_0"));
@@ -739,10 +655,7 @@ assertEquals(3, outputs.size());
     assertTrue(inst.setValue("x1_0",2.0f));
     inst.calculate();
     // collect outputs
-    HashMap<String,Float> outputs = new HashMap<String,Float>();
-    outputs.put("m_1",inst.getValue("m_1"));
-    outputs.put("m_2",inst.getValue("m_2"));
-    outputs.put("r_0",inst.getValue("r_0"));
+    HashMap<String,Float> outputs = inst.getValues();
     // check outputs
 // check containing r_0,m_1,m_2
 assertTrue(outputs.containsKey("r_0"));
@@ -765,10 +678,7 @@ assertEquals(3, outputs.size());
     assertTrue(inst.setValue("x1_0",3.0f));
     inst.calculate();
     // collect outputs
-    HashMap<String,Float> outputs = new HashMap<String,Float>();
-    outputs.put("m_1",inst.getValue("m_1"));
-    outputs.put("m_2",inst.getValue("m_2"));
-    outputs.put("r_0",inst.getValue("r_0"));
+    HashMap<String,Float> outputs = inst.getValues();
     // check outputs
 // check containing r_0,m_1,m_2
 assertTrue(outputs.containsKey("r_0"));
@@ -791,10 +701,7 @@ assertEquals(3, outputs.size());
     assertTrue(inst.setValue("x1_0",4.0f));
     inst.calculate();
     // collect outputs
-    HashMap<String,Float> outputs = new HashMap<String,Float>();
-    outputs.put("m_1",inst.getValue("m_1"));
-    outputs.put("m_2",inst.getValue("m_2"));
-    outputs.put("r_0",inst.getValue("r_0"));
+    HashMap<String,Float> outputs = inst.getValues();
     // check outputs
 // check containing r_0,m_1,m_2
 assertTrue(outputs.containsKey("r_0"));
@@ -817,10 +724,7 @@ assertEquals(3, outputs.size());
     assertTrue(inst.setValue("x1_0",5.0f));
     inst.calculate();
     // collect outputs
-    HashMap<String,Float> outputs = new HashMap<String,Float>();
-    outputs.put("m_1",inst.getValue("m_1"));
-    outputs.put("m_2",inst.getValue("m_2"));
-    outputs.put("r_0",inst.getValue("r_0"));
+    HashMap<String,Float> outputs = inst.getValues();
     // check outputs
 // check containing r_0,m_1,m_2
 assertTrue(outputs.containsKey("r_0"));
@@ -843,10 +747,7 @@ assertEquals(3, outputs.size());
     assertTrue(inst.setValue("x1_0",6.0f));
     inst.calculate();
     // collect outputs
-    HashMap<String,Float> outputs = new HashMap<String,Float>();
-    outputs.put("m_1",inst.getValue("m_1"));
-    outputs.put("m_2",inst.getValue("m_2"));
-    outputs.put("r_0",inst.getValue("r_0"));
+    HashMap<String,Float> outputs = inst.getValues();
     // check outputs
 // check containing r_0,m_1,m_2
 assertTrue(outputs.containsKey("r_0"));
@@ -869,10 +770,7 @@ assertEquals(3, outputs.size());
     assertTrue(inst.setValue("x1_0",7.0f));
     inst.calculate();
     // collect outputs
-    HashMap<String,Float> outputs = new HashMap<String,Float>();
-    outputs.put("m_1",inst.getValue("m_1"));
-    outputs.put("m_2",inst.getValue("m_2"));
-    outputs.put("r_0",inst.getValue("r_0"));
+    HashMap<String,Float> outputs = inst.getValues();
     // check outputs
 // check containing r_0,m_1,m_2
 assertTrue(outputs.containsKey("r_0"));
@@ -895,10 +793,7 @@ assertEquals(3, outputs.size());
     assertTrue(inst.setValue("x1_0",8.0f));
     inst.calculate();
     // collect outputs
-    HashMap<String,Float> outputs = new HashMap<String,Float>();
-    outputs.put("m_1",inst.getValue("m_1"));
-    outputs.put("m_2",inst.getValue("m_2"));
-    outputs.put("r_0",inst.getValue("r_0"));
+    HashMap<String,Float> outputs = inst.getValues();
     // check outputs
 // check containing r_0,m_1,m_2
 assertTrue(outputs.containsKey("r_0"));
@@ -921,10 +816,7 @@ assertEquals(3, outputs.size());
     assertTrue(inst.setValue("x1_0",9.0f));
     inst.calculate();
     // collect outputs
-    HashMap<String,Float> outputs = new HashMap<String,Float>();
-    outputs.put("m_1",inst.getValue("m_1"));
-    outputs.put("m_2",inst.getValue("m_2"));
-    outputs.put("r_0",inst.getValue("r_0"));
+    HashMap<String,Float> outputs = inst.getValues();
     // check outputs
 // check containing r_0,m_1,m_2
 assertTrue(outputs.containsKey("r_0"));
@@ -947,10 +839,7 @@ assertEquals(3, outputs.size());
     assertTrue(inst.setValue("x1_0",10.0f));
     inst.calculate();
     // collect outputs
-    HashMap<String,Float> outputs = new HashMap<String,Float>();
-    outputs.put("m_1",inst.getValue("m_1"));
-    outputs.put("m_2",inst.getValue("m_2"));
-    outputs.put("r_0",inst.getValue("r_0"));
+    HashMap<String,Float> outputs = inst.getValues();
     // check outputs
 // check containing r_0,m_1,m_2
 assertTrue(outputs.containsKey("r_0"));
@@ -973,10 +862,7 @@ assertEquals(3, outputs.size());
     assertTrue(inst.setValue("x1_0",11.0f));
     inst.calculate();
     // collect outputs
-    HashMap<String,Float> outputs = new HashMap<String,Float>();
-    outputs.put("m_1",inst.getValue("m_1"));
-    outputs.put("m_2",inst.getValue("m_2"));
-    outputs.put("r_0",inst.getValue("r_0"));
+    HashMap<String,Float> outputs = inst.getValues();
     // check outputs
 // check containing r_0,m_1,m_2
 assertTrue(outputs.containsKey("r_0"));
@@ -999,10 +885,7 @@ assertEquals(3, outputs.size());
     assertTrue(inst.setValue("x1_0",12.0f));
     inst.calculate();
     // collect outputs
-    HashMap<String,Float> outputs = new HashMap<String,Float>();
-    outputs.put("m_1",inst.getValue("m_1"));
-    outputs.put("m_2",inst.getValue("m_2"));
-    outputs.put("r_0",inst.getValue("r_0"));
+    HashMap<String,Float> outputs = inst.getValues();
     // check outputs
 // check containing r_0,m_1,m_2
 assertTrue(outputs.containsKey("r_0"));
@@ -1025,10 +908,7 @@ assertEquals(3, outputs.size());
     assertTrue(inst.setValue("x1_0",13.0f));
     inst.calculate();
     // collect outputs
-    HashMap<String,Float> outputs = new HashMap<String,Float>();
-    outputs.put("m_1",inst.getValue("m_1"));
-    outputs.put("m_2",inst.getValue("m_2"));
-    outputs.put("r_0",inst.getValue("r_0"));
+    HashMap<String,Float> outputs = inst.getValues();
     // check outputs
 // check containing r_0,m_1,m_2
 assertTrue(outputs.containsKey("r_0"));
@@ -1051,10 +931,7 @@ assertEquals(3, outputs.size());
     assertTrue(inst.setValue("x1_0",14.0f));
     inst.calculate();
     // collect outputs
-    HashMap<String,Float> outputs = new HashMap<String,Float>();
-    outputs.put("m_1",inst.getValue("m_1"));
-    outputs.put("m_2",inst.getValue("m_2"));
-    outputs.put("r_0",inst.getValue("r_0"));
+    HashMap<String,Float> outputs = inst.getValues();
     // check outputs
 // check containing r_0,m_1,m_2
 assertTrue(outputs.containsKey("r_0"));
@@ -1077,10 +954,7 @@ assertEquals(3, outputs.size());
     assertTrue(inst.setValue("x1_0",15.0f));
     inst.calculate();
     // collect outputs
-    HashMap<String,Float> outputs = new HashMap<String,Float>();
-    outputs.put("m_1",inst.getValue("m_1"));
-    outputs.put("m_2",inst.getValue("m_2"));
-    outputs.put("r_0",inst.getValue("r_0"));
+    HashMap<String,Float> outputs = inst.getValues();
     // check outputs
 // check containing r_0,m_1,m_2
 assertTrue(outputs.containsKey("r_0"));
@@ -1103,10 +977,7 @@ assertEquals(3, outputs.size());
     assertTrue(inst.setValue("x1_0",16.0f));
     inst.calculate();
     // collect outputs
-    HashMap<String,Float> outputs = new HashMap<String,Float>();
-    outputs.put("m_1",inst.getValue("m_1"));
-    outputs.put("m_2",inst.getValue("m_2"));
-    outputs.put("r_0",inst.getValue("r_0"));
+    HashMap<String,Float> outputs = inst.getValues();
     // check outputs
 // check containing r_0,m_1,m_2
 assertTrue(outputs.containsKey("r_0"));
@@ -1129,10 +1000,7 @@ assertEquals(3, outputs.size());
     assertTrue(inst.setValue("x1_0",17.0f));
     inst.calculate();
     // collect outputs
-    HashMap<String,Float> outputs = new HashMap<String,Float>();
-    outputs.put("m_1",inst.getValue("m_1"));
-    outputs.put("m_2",inst.getValue("m_2"));
-    outputs.put("r_0",inst.getValue("r_0"));
+    HashMap<String,Float> outputs = inst.getValues();
     // check outputs
 // check containing r_0,m_1,m_2
 assertTrue(outputs.containsKey("r_0"));
@@ -1155,10 +1023,7 @@ assertEquals(3, outputs.size());
     assertTrue(inst.setValue("x1_0",18.0f));
     inst.calculate();
     // collect outputs
-    HashMap<String,Float> outputs = new HashMap<String,Float>();
-    outputs.put("m_1",inst.getValue("m_1"));
-    outputs.put("m_2",inst.getValue("m_2"));
-    outputs.put("r_0",inst.getValue("r_0"));
+    HashMap<String,Float> outputs = inst.getValues();
     // check outputs
 // check containing r_0,m_1,m_2
 assertTrue(outputs.containsKey("r_0"));
@@ -1181,10 +1046,7 @@ assertEquals(3, outputs.size());
     assertTrue(inst.setValue("x1_0",19.0f));
     inst.calculate();
     // collect outputs
-    HashMap<String,Float> outputs = new HashMap<String,Float>();
-    outputs.put("m_1",inst.getValue("m_1"));
-    outputs.put("m_2",inst.getValue("m_2"));
-    outputs.put("r_0",inst.getValue("r_0"));
+    HashMap<String,Float> outputs = inst.getValues();
     // check outputs
 // check containing r_0,m_1,m_2
 assertTrue(outputs.containsKey("r_0"));
@@ -1207,10 +1069,7 @@ assertEquals(3, outputs.size());
     assertTrue(inst.setValue("x1_0",20.0f));
     inst.calculate();
     // collect outputs
-    HashMap<String,Float> outputs = new HashMap<String,Float>();
-    outputs.put("m_1",inst.getValue("m_1"));
-    outputs.put("m_2",inst.getValue("m_2"));
-    outputs.put("r_0",inst.getValue("r_0"));
+    HashMap<String,Float> outputs = inst.getValues();
     // check outputs
 // check containing r_0,m_1,m_2
 assertTrue(outputs.containsKey("r_0"));
@@ -1233,10 +1092,7 @@ assertEquals(3, outputs.size());
     assertTrue(inst.setValue("x1_0",21.0f));
     inst.calculate();
     // collect outputs
-    HashMap<String,Float> outputs = new HashMap<String,Float>();
-    outputs.put("m_1",inst.getValue("m_1"));
-    outputs.put("m_2",inst.getValue("m_2"));
-    outputs.put("r_0",inst.getValue("r_0"));
+    HashMap<String,Float> outputs = inst.getValues();
     // check outputs
 // check containing r_0,m_1,m_2
 assertTrue(outputs.containsKey("r_0"));
@@ -1259,10 +1115,7 @@ assertEquals(3, outputs.size());
     assertTrue(inst.setValue("x1_0",22.0f));
     inst.calculate();
     // collect outputs
-    HashMap<String,Float> outputs = new HashMap<String,Float>();
-    outputs.put("m_1",inst.getValue("m_1"));
-    outputs.put("m_2",inst.getValue("m_2"));
-    outputs.put("r_0",inst.getValue("r_0"));
+    HashMap<String,Float> outputs = inst.getValues();
     // check outputs
 // check containing r_0,m_1,m_2
 assertTrue(outputs.containsKey("r_0"));
@@ -1285,10 +1138,7 @@ assertEquals(3, outputs.size());
     assertTrue(inst.setValue("x1_0",23.0f));
     inst.calculate();
     // collect outputs
-    HashMap<String,Float> outputs = new HashMap<String,Float>();
-    outputs.put("m_1",inst.getValue("m_1"));
-    outputs.put("m_2",inst.getValue("m_2"));
-    outputs.put("r_0",inst.getValue("r_0"));
+    HashMap<String,Float> outputs = inst.getValues();
     // check outputs
 // check containing r_0,m_1,m_2
 assertTrue(outputs.containsKey("r_0"));
@@ -1311,10 +1161,7 @@ assertEquals(3, outputs.size());
     assertTrue(inst.setValue("x1_0",24.0f));
     inst.calculate();
     // collect outputs
-    HashMap<String,Float> outputs = new HashMap<String,Float>();
-    outputs.put("m_1",inst.getValue("m_1"));
-    outputs.put("m_2",inst.getValue("m_2"));
-    outputs.put("r_0",inst.getValue("r_0"));
+    HashMap<String,Float> outputs = inst.getValues();
     // check outputs
 // check containing r_0,m_1,m_2
 assertTrue(outputs.containsKey("r_0"));
@@ -1337,10 +1184,7 @@ assertEquals(3, outputs.size());
     assertTrue(inst.setValue("x1_0",25.0f));
     inst.calculate();
     // collect outputs
-    HashMap<String,Float> outputs = new HashMap<String,Float>();
-    outputs.put("m_1",inst.getValue("m_1"));
-    outputs.put("m_2",inst.getValue("m_2"));
-    outputs.put("r_0",inst.getValue("r_0"));
+    HashMap<String,Float> outputs = inst.getValues();
     // check outputs
 // check containing r_0,m_1,m_2
 assertTrue(outputs.containsKey("r_0"));
@@ -1368,10 +1212,7 @@ assertEquals(3, outputs.size());
     assertTrue(inst.setValue("y3_0",4.0f));
     inst.calculate();
     // collect outputs
-    HashMap<String,Float> outputs = new HashMap<String,Float>();
-    outputs.put("m_1",inst.getValue("m_1"));
-    outputs.put("m_2",inst.getValue("m_2"));
-    outputs.put("r_0",inst.getValue("r_0"));
+    HashMap<String,Float> outputs = inst.getValues();
     // check outputs
 // check containing r_0,m_1,m_2
 assertTrue(outputs.containsKey("r_0"));
@@ -1393,71 +1234,7 @@ assertEquals(3, outputs.size());
     MultipleAssignments inst = new MultipleAssignments();
     inst.calculate();
     // collect outputs
-    HashMap<String,Float> outputs = new HashMap<String,Float>();
-    outputs.put("b_0",inst.getValue("b_0"));
-    outputs.put("b_1",inst.getValue("b_1"));
-    outputs.put("b_2",inst.getValue("b_2"));
-    outputs.put("b_3",inst.getValue("b_3"));
-    outputs.put("b_4",inst.getValue("b_4"));
-    outputs.put("b_5",inst.getValue("b_5"));
-    outputs.put("b_6",inst.getValue("b_6"));
-    outputs.put("b_7",inst.getValue("b_7"));
-    outputs.put("b_8",inst.getValue("b_8"));
-    outputs.put("b_9",inst.getValue("b_9"));
-    outputs.put("b_10",inst.getValue("b_10"));
-    outputs.put("b_11",inst.getValue("b_11"));
-    outputs.put("b_12",inst.getValue("b_12"));
-    outputs.put("b_13",inst.getValue("b_13"));
-    outputs.put("b_14",inst.getValue("b_14"));
-    outputs.put("b_15",inst.getValue("b_15"));
-    outputs.put("b_16",inst.getValue("b_16"));
-    outputs.put("b_17",inst.getValue("b_17"));
-    outputs.put("b_18",inst.getValue("b_18"));
-    outputs.put("b_19",inst.getValue("b_19"));
-    outputs.put("b_20",inst.getValue("b_20"));
-    outputs.put("b_21",inst.getValue("b_21"));
-    outputs.put("b_22",inst.getValue("b_22"));
-    outputs.put("b_23",inst.getValue("b_23"));
-    outputs.put("b_24",inst.getValue("b_24"));
-    outputs.put("b_25",inst.getValue("b_25"));
-    outputs.put("b_26",inst.getValue("b_26"));
-    outputs.put("b_27",inst.getValue("b_27"));
-    outputs.put("b_28",inst.getValue("b_28"));
-    outputs.put("b_29",inst.getValue("b_29"));
-    outputs.put("b_30",inst.getValue("b_30"));
-    outputs.put("b_31",inst.getValue("b_31"));
-    outputs.put("d_0",inst.getValue("d_0"));
-    outputs.put("d_1",inst.getValue("d_1"));
-    outputs.put("d_2",inst.getValue("d_2"));
-    outputs.put("d_3",inst.getValue("d_3"));
-    outputs.put("d_4",inst.getValue("d_4"));
-    outputs.put("d_5",inst.getValue("d_5"));
-    outputs.put("d_6",inst.getValue("d_6"));
-    outputs.put("d_7",inst.getValue("d_7"));
-    outputs.put("d_8",inst.getValue("d_8"));
-    outputs.put("d_9",inst.getValue("d_9"));
-    outputs.put("d_10",inst.getValue("d_10"));
-    outputs.put("d_11",inst.getValue("d_11"));
-    outputs.put("d_12",inst.getValue("d_12"));
-    outputs.put("d_13",inst.getValue("d_13"));
-    outputs.put("d_14",inst.getValue("d_14"));
-    outputs.put("d_15",inst.getValue("d_15"));
-    outputs.put("d_16",inst.getValue("d_16"));
-    outputs.put("d_17",inst.getValue("d_17"));
-    outputs.put("d_18",inst.getValue("d_18"));
-    outputs.put("d_19",inst.getValue("d_19"));
-    outputs.put("d_20",inst.getValue("d_20"));
-    outputs.put("d_21",inst.getValue("d_21"));
-    outputs.put("d_22",inst.getValue("d_22"));
-    outputs.put("d_23",inst.getValue("d_23"));
-    outputs.put("d_24",inst.getValue("d_24"));
-    outputs.put("d_25",inst.getValue("d_25"));
-    outputs.put("d_26",inst.getValue("d_26"));
-    outputs.put("d_27",inst.getValue("d_27"));
-    outputs.put("d_28",inst.getValue("d_28"));
-    outputs.put("d_29",inst.getValue("d_29"));
-    outputs.put("d_30",inst.getValue("d_30"));
-    outputs.put("d_31",inst.getValue("d_31"));
+    HashMap<String,Float> outputs = inst.getValues();
     // check outputs
 assertEquals(outputs.get("b_0"),outputs.get("d_0"),0.001);
 assertEquals(outputs.get("b_1"),outputs.get("d_1"),0.001);
