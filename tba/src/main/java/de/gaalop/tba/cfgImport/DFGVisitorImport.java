@@ -35,8 +35,6 @@ import de.gaalop.dfg.Variable;
 public class DFGVisitorImport extends EmptyExpressionVisitor {
 //implements ExpressionVisitor {
 	
-	private Variable currentOutputVariable;
-	
 	public HashMap<Expression,MvExpressions> expressions;
 	public HashMap<String,MvExpressions> variables;
 	
@@ -59,15 +57,6 @@ public class DFGVisitorImport extends EmptyExpressionVisitor {
 		bladeCount = usedAlgebra.getBladeCount();
 		
 		expressions = new HashMap<Expression, MvExpressions>();
-	}
-
-
-	public Variable getCurrentOutputVariable() {
-		return currentOutputVariable;
-	}
-
-	public void setCurrentOutputVariable(Variable currentOutputVariable) {
-		this.currentOutputVariable = currentOutputVariable;
 	}
 
 	private MvExpressions createNewMvExpressions() {
