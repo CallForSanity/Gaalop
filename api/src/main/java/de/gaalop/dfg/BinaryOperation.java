@@ -107,4 +107,17 @@ public abstract class BinaryOperation extends Expression {
         result = 31 * result + (right != null ? right.hashCode() : 0);
         return result;
     }
+
+    public void setLeft(Expression left) {
+        this.left = left;
+    }
+
+    public void setRight(Expression right) {
+        this.right = right;
+    }
+
+    
+
+
+
 }

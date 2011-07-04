@@ -246,16 +246,15 @@ public class ConstantFolding implements ExpressionVisitor, ControlFlowVisitor {
     node.getOperand().accept(this);
     Expression operandExpr = resultExpr;
     resultExpr = new MathFunctionCall(operandExpr, node.getFunction());
-    return;
-    /*
-    if ((node.getFunction() == MathFunction.SQRT) &&
+    return; //TODO chs why results this in a endless loop, when uncommenting?
+    /*if ((node.getFunction() == MathFunction.SQRT) &&
             isConstant(operandExpr)) {
       FloatConstant operand = (FloatConstant) operandExpr;
       resultExpr = new FloatConstant((float) Math.sqrt(operand.getValue()));
       setGraphModified();
     } else if ((node.getFunction() == MathFunction.ABS) &&
             (DFGNodeTypeGetter.getTypeOfDFGNode(operandExpr) == DFGNodeType.MathFunctionCall)) {
-     */ /* remove abs() around sqrts, as they are always positive */ /*
+     // remove abs() around sqrts, as they are always positive
       MathFunctionCall insideFunc = (MathFunctionCall) operandExpr;
         if (insideFunc.getFunction() == MathFunction.ABS ||
                 insideFunc.getFunction() == MathFunction.SQRT) {
@@ -265,7 +264,7 @@ public class ConstantFolding implements ExpressionVisitor, ControlFlowVisitor {
     } else if ((node.getFunction() == MathFunction.SQRT) &&
             ((!(DFGNodeTypeGetter.getTypeOfDFGNode(operandExpr) == DFGNodeType.MathFunctionCall)) ||
             (((MathFunctionCall) operandExpr).getFunction() != MathFunction.ABS))) {
-      /* insert in every sqrt() an abs() */ /*
+      // insert in every sqrt() an abs()
       resultExpr = new MathFunctionCall(new MathFunctionCall(operandExpr, MathFunction.ABS), MathFunction.SQRT);
       setGraphModified();
     } else if ((node.getFunction() == MathFunction.ABS) &&
@@ -273,8 +272,8 @@ public class ConstantFolding implements ExpressionVisitor, ControlFlowVisitor {
         FloatConstant operand = (FloatConstant) operandExpr;
         resultExpr = new FloatConstant((float) Math.abs(operand.getValue()));
         setGraphModified();
-      } 
-*/
+      } */
+
   }
 
   @Override

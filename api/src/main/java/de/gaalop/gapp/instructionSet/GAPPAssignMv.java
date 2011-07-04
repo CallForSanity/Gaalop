@@ -10,9 +10,10 @@ import de.gaalop.gapp.visitor.GAPPVisitor;
  * Represents the assignMv command in the GAPP IR.
  *
  * Description from the paper:
- * Assign values val0 , val1 , . . . , valn at blades selected by
- * positive selectors sel0 , sel1 , . . . , seln . Blade selectors are
- * explained below. This is restricted to one source multivector.
+ * Assigns scalar values or variables val0 , val1 , . . . , valn at
+ * blades selected by positive selectors sel0 , sel1 , . . . , seln .
+ * Blade selectors are explained below. This is restricted
+ * to one source multivector.
  */
 public class GAPPAssignMv extends GAPPBaseInstruction {
 

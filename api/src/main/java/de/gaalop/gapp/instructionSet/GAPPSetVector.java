@@ -11,9 +11,10 @@ import java.util.Vector;
  * Represents the addMv command in the GAPP IR.
  *
  * Description from the paper:
- * Composes the multivector part (vector) part	from dest
- * selected elements. sel0 , sel1 , up to sel31 , are a blade
- * selectors. Parts and blade selectors are explained below.
+ * Composes the vector (part of a multivector) partdest
+ * from selected elements. sel0 , sel1 , up to sel31 , are a
+ * blade selectors. Parts and blade selectors are explained
+ * below.
  */
 public class GAPPSetVector extends GAPPBaseInstruction {
 

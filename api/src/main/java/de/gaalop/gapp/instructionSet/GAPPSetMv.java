@@ -10,12 +10,12 @@ import de.gaalop.gapp.visitor.GAPPVisitor;
  * Description from the paper:
  * Copies the selected blades from multivector mvsrc to
  * multivector mvdest . dest0 , src0 , dest1 , src1 , up to dest31
- * and src31 , are blade selectors. Note that it is invalid language syntax
- * to have more than one source multivector speciﬁed in this command.
- * To copy elements from several multivectors it is required to use multiple setMv()commands,
- * one for each multivector.
- * sThis function isrestricted to one source and destination multivector.
-
+ * and src31 , are blade selectors. Note that it is invalid
+ * language syntax to have more than one source multivector
+ * speciﬁed in this command. To copy elements from
+ * several multivectors it is required to use multiple setMv
+ * commands, one for each multivector. This command is
+ * restricted to one source and destination multivector.
  */
 public class GAPPSetMv extends GAPPBaseInstruction {
 
