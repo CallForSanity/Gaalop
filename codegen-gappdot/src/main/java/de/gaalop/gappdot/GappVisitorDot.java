@@ -7,6 +7,7 @@ package de.gaalop.gappdot;
 
 import de.gaalop.gapp.instructionSet.GAPPAddMv;
 import de.gaalop.gapp.instructionSet.GAPPAssignMv;
+import de.gaalop.gapp.instructionSet.GAPPCalculate;
 import de.gaalop.gapp.instructionSet.GAPPDotVectors;
 import de.gaalop.gapp.instructionSet.GAPPResetMv;
 import de.gaalop.gapp.instructionSet.GAPPSetMv;
@@ -77,6 +78,14 @@ public class GappVisitorDot implements GAPPVisitor {
     public Object visitSetVector(GAPPSetVector gappSetVector, Object arg) {
         prettyPrinter.clear();
         gappSetVector.accept(prettyPrinter, null);
+        result.append(prettyPrinter.getResultString());
+        return null;
+    }
+
+    @Override
+    public Object visitCalculate(GAPPCalculate gappCalculate, Object arg) {
+        prettyPrinter.clear();
+        gappCalculate.accept(prettyPrinter, null);
         result.append(prettyPrinter.getResultString());
         return null;
     }

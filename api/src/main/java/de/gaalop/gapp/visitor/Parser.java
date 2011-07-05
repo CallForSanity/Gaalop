@@ -1,9 +1,11 @@
 package de.gaalop.gapp.visitor;
 
+import de.gaalop.gapp.instructionSet.GAPPCalculate;
 import de.gaalop.gapp.variables.GAPPMultivector;
 import de.gaalop.gapp.Selectorset;
 import de.gaalop.gapp.VariableGetter;
 import de.gaalop.gapp.Variableset;
+import de.gaalop.gapp.instructionSet.CalculationType;
 import de.gaalop.gapp.instructionSet.GAPPAddMv;
 import de.gaalop.gapp.instructionSet.GAPPAssignMv;
 import de.gaalop.gapp.instructionSet.GAPPDotVectors;
@@ -124,6 +126,31 @@ public class Parser implements GAPPVisitor {
         return null;
     }
 
+    @Override
+    public Object visitCalculate(GAPPCalculate gappCalculate, Object arg) {
+        String[] partsEquation = ((String) arg).split("=");
+
+        //Parse left side
+        gappCalculate.setTarget(getter.parseMultivector(partsEquation[0]));
+
+        int indexOfBracket = partsEquation[1].indexOf('(');
+        String operator = partsEquation[1].substring(0, indexOfBracket);
+        String argumentsString = partsEquation[1].substring(indexOfBracket+1,partsEquation[1].indexOf(')'));
+        String[] args = argumentsString.split(",");
+
+        gappCalculate.setType(CalculationType.valueOf(operator));
+        if (args.length == 1) {
+            gappCalculate.setOperand1(getter.parseMultivector(args[0]));
+        } else
+            if (args.length == 2) {
+                gappCalculate.setOperand1(getter.parseMultivector(args[0]));
+                gappCalculate.setOperand2(getter.parseMultivector(args[1]));
+            } else
+                System.err.println("parse error: calculate, not one or two operands specified!");
+        
+        return null;
+    }
+
     /**
      * Parses a string and returns a congruous multivector.
      * Modifies the returnSelectors arguement, which must be not-null.
@@ -170,5 +197,9 @@ public class Parser implements GAPPVisitor {
     protected GAPPVector parseVector(String string, VariableGetter getter) {
         return getter.parseVector(string);
     }
+
+
+
+    
 
 }

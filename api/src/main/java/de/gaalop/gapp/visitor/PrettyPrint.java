@@ -4,6 +4,7 @@ import de.gaalop.gapp.Selectorset;
 import de.gaalop.gapp.Variableset;
 import de.gaalop.gapp.instructionSet.GAPPAddMv;
 import de.gaalop.gapp.instructionSet.GAPPAssignMv;
+import de.gaalop.gapp.instructionSet.GAPPCalculate;
 import de.gaalop.gapp.instructionSet.GAPPDotVectors;
 import de.gaalop.gapp.instructionSet.GAPPResetMv;
 import de.gaalop.gapp.instructionSet.GAPPSetMv;
@@ -155,6 +156,24 @@ public class PrettyPrint implements GAPPVisitor {
         result.append(";\n");
         return null;
     }
+
+    @Override
+    public Object visitCalculate(GAPPCalculate gappCalculate, Object arg) {
+        result.append("calculate ");
+        printMultivector(gappCalculate.getTarget());
+        result.append(" = ");
+        result.append(gappCalculate.getType().toString());
+        result.append("(");
+        printMultivector(gappCalculate.getOperand1());
+        if (gappCalculate.getOperand2() != null) {
+            result.append(",");
+            printMultivector(gappCalculate.getOperand2());
+        }
+        result.append(");\n");
+        return null;
+    }
+
+    
 
 
 

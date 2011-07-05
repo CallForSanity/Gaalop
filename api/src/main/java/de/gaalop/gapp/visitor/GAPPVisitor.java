@@ -14,5 +14,6 @@ public interface GAPPVisitor {
     public Object visitResetMv(GAPPResetMv gappResetMv, Object arg);
     public Object visitSetMv(GAPPSetMv gappSetMv, Object arg);
     public Object visitSetVector(GAPPSetVector gappSetVector, Object arg);
+    public Object visitCalculate(GAPPCalculate gappCalculate, Object arg);
 
 }
