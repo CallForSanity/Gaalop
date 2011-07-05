@@ -11,7 +11,7 @@ import de.gaalop.tba.cfgImport.optimization.OptUnusedAssignmentsRemoval;
 import java.util.LinkedList;
 
 public class CFGImporter {
-
+    //TODO chs use Maxima optional for further optimization (choosable in GUI)
     private UseAlgebra usedAlgebra;
 
     private LinkedList<OptimizationStrategyWithModifyFlag> optimizations;
