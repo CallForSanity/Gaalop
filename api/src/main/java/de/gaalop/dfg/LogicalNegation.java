@@ -19,9 +19,7 @@ public class LogicalNegation extends UnaryOperation {
 
 	@Override
 	public Expression copy() {
-		Expression result = new LogicalNegation(getOperand().copy());
-    	result.setGAPP(copyGAPP());
-    	return result;
+            return new LogicalNegation(getOperand().copy());
 	}
 	
 	@Override

@@ -39,7 +39,7 @@ public class GAPPImporter {
             importer.importGraph(graph);
 
            // CodeGenerator generator = (new de.gaalop.clucalc.output.Plugin()).createCodeGenerator();
-            CodeGenerator generator = (new GAPPCodeGeneratorPlugin()).createCodeGenerator();
+            CodeGenerator generator = (new de.gaalop.gappdot.Plugin()).createCodeGenerator();
             Set<OutputFile> outputFiles = generator.generate(graph);
 
           for (OutputFile outputFile: outputFiles)

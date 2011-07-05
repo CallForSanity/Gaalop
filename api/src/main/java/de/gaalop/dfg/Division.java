@@ -29,9 +29,7 @@ public final class Division extends BinaryOperation {
 
     @Override
     public Expression copy() {
-        Expression result = new Division(getLeft().copy(), getRight().copy());
-    	result.setGAPP(copyGAPP());
-    	return result;
+        return new Division(getLeft().copy(), getRight().copy());
     }
 
     /**

@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import de.gaalop.dfg.Expression;
-import de.gaalop.gapp.GAPP;
 
 /**
  * This abstract class serves as the base class for all control flow nodes in a control flow graph.
@@ -126,42 +125,4 @@ public abstract class Node {
 		predecessors.clear(); // previous predecessors are no predecessors anymore
 		addPredecessor(newNode);
 	}
-
-
-        /**
-	 * This method copy the gapp instance
-	 * @return The gapp instance
-	 *
-	 * @author Christian Steinmetz
-	 */
-	protected GAPP copyGAPP() {
-            if (gapp != null)
-		return gapp.getCopy();
-            else
-                return null;
-	}
-
-	/**
-	 * The GAPP instance. (GAPP = Geometric Algebra Algorithm Parallelism Program)
-	 *
-	 * @author Christian Steinmetz
-	 */
-	private GAPP gapp;
-
-	/**
-	 * Getter for the GAPP instance
-	 * @return The GAPP instance
-	 */
-	public GAPP getGAPP() {
-            return gapp;
-	}
-
-	/**
-	 * Setter for the GAPP instance
-	 * @param gapp The GAPP instance to set
-	 */
-	public void setGAPP(GAPP gapp) {
-            this.gapp = gapp;
-	}
-
 }

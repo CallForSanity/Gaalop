@@ -2,6 +2,7 @@ package de.gaalop.cfg;
 
 import de.gaalop.dfg.Expression;
 import de.gaalop.dfg.Variable;
+import de.gaalop.gapp.GAPP;
 
 /**
  * This node models the assignment of an expression to a variable or multivector component.
@@ -90,7 +91,9 @@ public final class AssignmentNode extends SequentialNode {
     
     @Override
     public AssignmentNode copyElements() {
-    	return new AssignmentNode(getGraph(), variable.copy(), value.copy());
+    	AssignmentNode result = new AssignmentNode(getGraph(), variable.copy(), value.copy());
+        result.setGAPP(copyGAPP());
+        return result;
     }
 
     /**
@@ -104,4 +107,41 @@ public final class AssignmentNode extends SequentialNode {
     public String toString() {
         return variable + " := " + value;
     }
+
+    /**
+	 * This method copy the gapp instance
+	 * @return The gapp instance
+	 *
+	 * @author Christian Steinmetz
+	 */
+	protected GAPP copyGAPP() {
+            if (gapp != null)
+		return gapp.getCopy();
+            else
+                return null;
+	}
+
+	/**
+	 * The GAPP instance. (GAPP = Geometric Algebra Algorithm Parallelism Program)
+	 *
+	 * @author Christian Steinmetz
+	 */
+	private GAPP gapp;
+
+	/**
+	 * Getter for the GAPP instance
+	 * @return The GAPP instance
+	 */
+	public GAPP getGAPP() {
+            return gapp;
+	}
+
+	/**
+	 * Setter for the GAPP instance
+	 * @param gapp The GAPP instance to set
+	 */
+	public void setGAPP(GAPP gapp) {
+            this.gapp = gapp;
+	}
+
 }

@@ -29,9 +29,7 @@ public final class Inequality extends BinaryOperation {
 
     @Override
     public Expression copy() {
-        Expression result = new Inequality(getLeft().copy(), getRight().copy());
-    	result.setGAPP(copyGAPP());
-    	return result;
+        return new Inequality(getLeft().copy(), getRight().copy());
     }
 
     /**

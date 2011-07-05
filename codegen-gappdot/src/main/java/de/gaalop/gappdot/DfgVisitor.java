@@ -51,26 +51,14 @@ public class DfgVisitor implements ExpressionVisitor {
         result.append(label);
         result.append("\", shape=\"box\"];\n");
     }
-    
-    private void handleGapp(Expression expression) {
-        GappVisitorDot visitor = new GappVisitorDot();
-        expression.getGAPP().accept(visitor,null);
-        addNode(expression, "GAPP | "+visitor.getResultString());
-    }
 
     private void addBinaryOp(BinaryOperation op, String label) {
-        if (op.getGAPP() != null) {
-        	handleGapp(op);
-        } else {
-        	addNode(op, label);
-	        op.getLeft().accept(this);
-	        op.getRight().accept(this);
-	        addEdge(op.getLeft(), op);
-	        addEdge(op.getRight(), op);
-        }
+        addNode(op, label);
+        op.getLeft().accept(this);
+        op.getRight().accept(this);
+        addEdge(op.getLeft(), op);
+        addEdge(op.getRight(), op);
     }
-
-
 
 	@Override
     public void visit(Subtraction subtraction) {
@@ -99,22 +87,14 @@ public class DfgVisitor implements ExpressionVisitor {
 
     @Override
     public void visit(MathFunctionCall mathFunctionCall) {
-    	if (mathFunctionCall.getGAPP() != null) {
-        	handleGapp(mathFunctionCall);
-        } else {
-	        addNode(mathFunctionCall, mathFunctionCall.getFunction().toString());
-	        mathFunctionCall.getOperand().accept(this);
-	        addEdge(mathFunctionCall.getOperand(), mathFunctionCall);
-        }
+        addNode(mathFunctionCall, mathFunctionCall.getFunction().toString());
+        mathFunctionCall.getOperand().accept(this);
+        addEdge(mathFunctionCall.getOperand(), mathFunctionCall);
     }
 
     @Override
     public void visit(BaseVector baseVector) {
-    	if (baseVector.getGAPP() != null) {
-        	handleGapp(baseVector);
-        } else {    
-        	addNode(baseVector, baseVector.toString());
-        }
+    	addNode(baseVector, baseVector.toString());
     }
 
     @Override
@@ -128,31 +108,19 @@ public class DfgVisitor implements ExpressionVisitor {
     }
 
     private void addUnaryOp(UnaryOperation node, String operator) {
-    	if (node.getGAPP() != null) {
-        	handleGapp(node);
-        } else { 
-	        addNode(node, operator);
-	        node.getOperand().accept(this);
-	        addEdge(node.getOperand(), node);
-        }
+        addNode(node, operator);
+        node.getOperand().accept(this);
+        addEdge(node.getOperand(), node);
     }
 
     @Override
     public void visit(Variable variable) {
-    	if (variable.getGAPP() != null) {
-        	handleGapp(variable);
-        } else { 
-        	addNode(variable, variable.toString());
-        }
+        addNode(variable, variable.toString());
     }
 
     @Override
     public void visit(MultivectorComponent component) {
-    	if (component.getGAPP() != null) {
-        	handleGapp(component);
-        } else { 
-        	addNode(component, component.toString());
-        }
+        addNode(component, component.toString());
     }
 
     @Override
@@ -162,11 +130,7 @@ public class DfgVisitor implements ExpressionVisitor {
 
     @Override
     public void visit(FloatConstant floatConstant) {
-    	if (floatConstant.getGAPP() != null) {
-        	handleGapp(floatConstant);
-        } else { 
-        	addNode(floatConstant, floatConstant.toString());
-        }
+        addNode(floatConstant, floatConstant.toString());
     }
 
     @Override

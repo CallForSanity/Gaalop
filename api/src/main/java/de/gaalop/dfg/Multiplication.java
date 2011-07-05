@@ -30,9 +30,7 @@ public final class Multiplication extends BinaryOperation {
 
     @Override
     public Expression copy() {
-    	Expression result = new Multiplication(getLeft().copy(), getRight().copy());
-        result.setGAPP(copyGAPP());
-    	return result;
+    	return new Multiplication(getLeft().copy(), getRight().copy());
     }
 
     /**

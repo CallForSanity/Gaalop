@@ -29,9 +29,7 @@ public final class Subtraction extends BinaryOperation {
 
     @Override
     public Expression copy() {
-        Expression result = new Subtraction(getLeft().copy(), getRight().copy());
-        result.setGAPP(copyGAPP());
-    	return result;
+        return new Subtraction(getLeft().copy(), getRight().copy());
     }
 
     /**

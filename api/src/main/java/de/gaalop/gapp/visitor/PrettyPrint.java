@@ -26,6 +26,10 @@ public class PrettyPrint implements GAPPVisitor {
         result = new StringBuilder();
     }
 
+    public void clear() {
+        result.setLength(0);
+    }
+
     public String getResultString() {
         return result.toString();
     }

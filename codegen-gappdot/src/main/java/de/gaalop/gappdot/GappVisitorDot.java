@@ -35,32 +35,50 @@ public class GappVisitorDot implements GAPPVisitor {
 
     @Override
     public Object visitAddMv(GAPPAddMv gappAddMv, Object arg) {
-        return gappAddMv.accept(prettyPrinter, null);
+        prettyPrinter.clear();
+        gappAddMv.accept(prettyPrinter, null);
+        result.append(prettyPrinter.getResultString());
+        return null;
     }
 
     @Override
     public Object visitAssignMv(GAPPAssignMv gappAssignMv, Object arg) {
-        return gappAssignMv.accept(prettyPrinter, null);
+        prettyPrinter.clear();
+        gappAssignMv.accept(prettyPrinter, null);
+        result.append(prettyPrinter.getResultString());
+        return null;
     }
 
     @Override
     public Object visitDotVectors(GAPPDotVectors gappDotVectors, Object arg) {
-        return gappDotVectors.accept(prettyPrinter, null);
+        prettyPrinter.clear();
+        gappDotVectors.accept(prettyPrinter, null);
+        result.append(prettyPrinter.getResultString());
+        return null;
     }
 
     @Override
     public Object visitResetMv(GAPPResetMv gappResetMv, Object arg) {
-        return gappResetMv.accept(prettyPrinter, null);
+        prettyPrinter.clear();
+        gappResetMv.accept(prettyPrinter, null);
+        result.append(prettyPrinter.getResultString());
+        return null;
     }
 
     @Override
     public Object visitSetMv(GAPPSetMv gappSetMv, Object arg) {
-        return gappSetMv.accept(prettyPrinter, null);
+        prettyPrinter.clear();
+        gappSetMv.accept(prettyPrinter, null);
+        result.append(prettyPrinter.getResultString());
+        return null;
     }
 
     @Override
     public Object visitSetVector(GAPPSetVector gappSetVector, Object arg) {
-        return gappSetVector.accept(prettyPrinter, null);
+        prettyPrinter.clear();
+        gappSetVector.accept(prettyPrinter, null);
+        result.append(prettyPrinter.getResultString());
+        return null;
     }
 
 

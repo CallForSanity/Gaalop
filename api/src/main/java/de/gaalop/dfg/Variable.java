@@ -71,13 +71,12 @@ public class Variable extends Expression {
 		return name;
 	}
 
-	@Override
+@Override
 	public Variable copy() {
 		Variable v = new Variable(this.name);
 		v.global = global;
 		v.setMaxValue(this.getMaxValue());
 		v.setMinValue(this.getMinValue());
-		v.setGAPP(getGAPP());
 		return v;
 	}
 

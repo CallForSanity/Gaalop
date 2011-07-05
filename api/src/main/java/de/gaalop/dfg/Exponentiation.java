@@ -23,9 +23,7 @@ public final class Exponentiation extends BinaryOperation {
 
     @Override
     public Expression copy() {
-        Expression result = new Exponentiation(getLeft().copy(), getRight().copy());
-    	result.setGAPP(copyGAPP());
-    	return result;
+        return new Exponentiation(getLeft().copy(), getRight().copy());
     }
 
     /**

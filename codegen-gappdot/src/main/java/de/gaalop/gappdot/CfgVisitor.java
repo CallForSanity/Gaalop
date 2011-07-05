@@ -2,6 +2,8 @@ package de.gaalop.gappdot;
 
 import de.gaalop.cfg.*;
 import de.gaalop.dfg.Expression;
+import de.gaalop.gapp.GAPP;
+import de.gaalop.gapp.visitor.PrettyPrint;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
@@ -80,19 +82,35 @@ public class CfgVisitor implements ControlFlowVisitor {
         startNode.getSuccessor().accept(this);
     }
 
+   private void addNodeDFG(Object node, String label, String prefix) {
+        result.append("\t");
+        result.append(prefix);
+        result.append("1");
+        result.append(" [label=\"");
+        result.append(label);
+        result.append("\", shape=\"record\"];\n");
+    }
+
     @Override
     public void visit(AssignmentNode assignmentNode) {
         addNode(assignmentNode, "Assignment:\\n" + assignmentNode.getVariable());
         addForwardEdge(assignmentNode, assignmentNode.getSuccessor());
 
         String subnodePrefix = getId(assignmentNode) + "_";
-        String stmtList = getCode(assignmentNode.getValue(), subnodePrefix);
+        String stmtList;
+        if (assignmentNode.getGAPP() != null) {
+            stmtList = getCode(assignmentNode.getGAPP(),subnodePrefix);
+        } else 
+            stmtList = getCode(assignmentNode.getValue(), subnodePrefix);
+
         result.append(stmtList);
         result.append("\t");
         result.append(subnodePrefix);
         result.append("1 -> ");
         result.append(getId(assignmentNode));
         result.append(";\n");
+        
+        
 
         assignmentNode.getSuccessor().accept(this);
     }
@@ -162,11 +180,18 @@ public class CfgVisitor implements ControlFlowVisitor {
 	}
 
 	private String getCode(Expression expression, String prefix) {
-        DfgVisitor visitor = new DfgVisitor();
-        visitor.setIdPrefix(prefix);
-        expression.accept(visitor);
-        return visitor.toString();
-    }
+            DfgVisitor visitor = new DfgVisitor();
+            visitor.setIdPrefix(prefix);
+            expression.accept(visitor);
+            return visitor.toString();
+        }
+
+        private String getCode(GAPP gapp, String prefix) {
+            PrettyPrint printer = new PrettyPrint();
+            gapp.accept(printer, null);
+            addNodeDFG(gapp, "{GAPP | "+printer.getResultString().replaceAll("\n","\\\\n")+"}", prefix);
+            return "";
+        }
 
 	@Override
 	public void visit(Macro node) {

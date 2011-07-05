@@ -82,9 +82,7 @@ public final class Relation extends BinaryOperation {
 
   @Override
   public Expression copy() {
-	Expression result = new Relation(getLeft().copy(), getRight().copy(), type);
-    result.setGAPP(copyGAPP());
-	return result;
+	return new Relation(getLeft().copy(), getRight().copy(), type);
   }
 
   /**

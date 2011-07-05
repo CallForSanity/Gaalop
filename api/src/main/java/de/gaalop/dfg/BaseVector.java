@@ -66,9 +66,7 @@ public final class BaseVector extends Expression {
 
 	@Override
 	public Expression copy() {
-		Expression result = new BaseVector(this.index);
-    	result.setGAPP(copyGAPP());
-    	return result;
+            return new BaseVector(this.index);
 	}
 
 	/**

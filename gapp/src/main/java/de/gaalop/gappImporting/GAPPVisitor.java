@@ -29,7 +29,7 @@ public class GAPPVisitor extends EmptyControlFlowVisitor {
 
     protected StringBuilder code = new StringBuilder();
 
-    private boolean genericVisit(Node node) {
+    private boolean genericVisit(AssignmentNode node) {
         if (node.getGAPP() == null) return false;
 
         PrettyPrint printer = new PrettyPrint();
@@ -46,7 +46,6 @@ public class GAPPVisitor extends EmptyControlFlowVisitor {
 
     @Override
     public void visit(StartNode node) {
-        genericVisit(node);
         super.visit(node);
     }
 
