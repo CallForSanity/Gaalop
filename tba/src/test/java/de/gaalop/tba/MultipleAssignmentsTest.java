@@ -63,16 +63,6 @@ public class MultipleAssignmentsTest implements GenericTestable {
         return result;
     }
 
-    @Override
-    public LinkedList<String> getOutputs() {
-        LinkedList<String> result = new LinkedList<String>();
-
-        outputOfCompleteMv(result, "b");
-        outputOfCompleteMv(result, "d");
-
-        return result;
-    }
-
     private void outputOfCompleteMv(LinkedList<String> outputs, String mvName) {
         for (int blade=0;blade<32;blade++) 
             outputs.add(mvName+"_"+blade);

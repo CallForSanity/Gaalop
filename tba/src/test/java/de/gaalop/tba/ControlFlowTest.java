@@ -8,7 +8,7 @@ import org.junit.Ignore;
  * @author christian
  */
 @Ignore
-public class SimpleControlFlowTest implements GenericTestable {
+public class ControlFlowTest implements GenericTestable {
 
     protected static final double EPSILON = 10E-4;
 
@@ -86,15 +86,6 @@ public class SimpleControlFlowTest implements GenericTestable {
         });
 
        return result;
-    }
-
-    @Override
-    public LinkedList<String> getOutputs() {
-        LinkedList<String> result = new LinkedList<String>();
-        result.add("a_0");
-        result.add("b_0");
-        result.add("c_0");
-        return result;
     }
 
 }

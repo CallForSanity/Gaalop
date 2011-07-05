@@ -37,6 +37,38 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
 		}
 	}
 
+        private LinkedList<String> getOutputs() {
+            LinkedList<String> outputs = new LinkedList<String>();
+
+            HashSet<String> known = new HashSet<String>();
+            
+            for (String outputVarStr: graph.getPragmaOutputVariables()) {
+                declared.add(outputVarStr);
+                outputs.add(outputVarStr);
+                known.add(outputVarStr.split("_")[0]);
+            }
+
+                //get StoreResultNodes in graph
+                FindStoreOutputNodes storeOutputNodesVisitor = new FindStoreOutputNodes();
+                graph.accept(storeOutputNodesVisitor);
+                for (StoreResultNode s: storeOutputNodesVisitor.getNodes()) {
+                    String name = s.getValue().getName();
+
+                    // TODO chs And MultivectorComponents?
+                    if (!known.contains(name)) {
+                        known.add(name);
+                        int bladeCount = (int) Math.pow(2,graph.getSignature().getDimension());
+                        for (int blade=0;blade<bladeCount;blade++) {
+                            String bladeName = name+"_"+blade;
+                            outputs.add(bladeName);
+                            declared.add(bladeName);
+                        }
+                    }
+
+                }
+            return outputs;
+        }
+
 	@Override
 	public void visit(StartNode node) {
 		graph = node.getGraph();
@@ -63,13 +95,14 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
                     code.append("private float "+variableName+";\n");
                 }
                 code.append("\n");
+        
+                LinkedList<String> outputs = getOutputs();
 
                 appendIndentation();
                 code.append("// output variables\n");
-                for (String outputVarStr: graph.getPragmaOutputVariables()) {
-                    declared.add(outputVarStr);
+                for (String curOutput: outputs) {
                     appendIndentation();
-                    code.append("private float "+outputVarStr+";\n");
+                    code.append("private float "+curOutput+";\n");
                 }
                 code.append("\n");
 
@@ -80,9 +113,9 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
                 code.append("public float getValue(String varName) {\n");
                 indentation++;
 
-                for (String outputVar: graph.getPragmaOutputVariables()) {
+                for (String curOutput: outputs) {
                     appendIndentation();
-                    code.append("if (varName.equals(\""+outputVar+"\")) return "+outputVar+";\n");
+                    code.append("if (varName.equals(\""+curOutput+"\")) return "+curOutput+";\n");
                 }
 
                 appendIndentation();
@@ -103,9 +136,9 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
                 appendIndentation();
                     code.append("HashMap<String,Float> result = new HashMap<String,Float>();\n");
 
-                for (String outputVar: graph.getPragmaOutputVariables()) {
+                for (String curOutput: outputs) {
                     appendIndentation();
-                    code.append("result.put(\""+outputVar+"\","+outputVar+");\n");
+                    code.append("result.put(\""+curOutput+"\","+curOutput+");\n");
                 }
 
                 appendIndentation();

@@ -1,12 +1,6 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package de.gaalop.tba;
 
 import java.awt.Point;
-import java.util.LinkedList;
 
 /**
  * Implements a generic circle of three points test
@@ -66,17 +60,6 @@ public abstract class GenericCircleTest implements GenericTestable {
      */
     protected String getDistance(String p1x, String p1y, String p2x, String p2y) {
         return "(float) Math.sqrt(("+p2x+"-"+p1x+")*("+p2x+"-"+p1x+") + ("+p2y+"-"+p1y+")*("+p2y+"-"+p1y+"))";
-    }
-
-    @Override
-    public LinkedList<String> getOutputs() {
-        LinkedList<String> result = new LinkedList<String>();
-
-        result.add("m_1");
-        result.add("m_2");
-        result.add("r_0");
-
-        return result;
     }
 
 }

@@ -12,7 +12,6 @@ import de.gaalop.cfg.ControlFlowGraph;
 import java.awt.Point;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
-import java.util.LinkedList;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -63,6 +62,7 @@ public class TestCreator {
             testCircleNoVars();
             testCircleOneVar();
             testCircleOnlyVars();
+            testOutputCount();
         } catch (OptimizationException e) {
                 throw new Exception("CompileError in positive tests: "+e);
         }
@@ -80,12 +80,12 @@ public class TestCreator {
 
         valid = true;
          try {
-            testSimpleControlFlowTest();
+            testControlFlowTest();
         } catch (OptimizationException e) {
             valid = false;
         }
         if (valid)
-            throw new Exception("No CompileError in negative test SimpleControlFlowTest");
+            throw new Exception("No CompileError in negative test ControlFlowTest");
 
 
         endTestCase();
@@ -162,16 +162,20 @@ public class TestCreator {
         test(new MultipleAssignmentsTest(),"MultipleAssignments");
     }
 
-    private void testSimpleControlFlowTest() throws OptimizationException {
-        test(new SimpleControlFlowTest(),"SimpleControlFlow");
+    private void testControlFlowTest() throws OptimizationException {
+        test(new ControlFlowTest(),"ControlFlow");
+    }
+
+    private void testOutputCount() throws OptimizationException {
+        test(new OutputCountTest(),"OutputCount");
     }
 
     private void writeFile(OutputFile outputFile) {
         try {
-            PrintWriter out = new PrintWriter("src/test/java/de/gaalop/tba/generatedTests/"+outputFile.getName());
-            out.println("package de.gaalop.tba.generatedTests;\n");
-            out.print(outputFile.getContent());
-            out.close();
+            PrintWriter out1 = new PrintWriter("src/test/java/de/gaalop/tba/generatedTests/"+outputFile.getName());
+            out1.println("package de.gaalop.tba.generatedTests;\n");
+            out1.print(outputFile.getContent());
+            out1.close();
         } catch (FileNotFoundException ex) {
             Logger.getLogger(TestCreator.class.getName()).log(Level.SEVERE, null, ex);
         }
