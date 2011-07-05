@@ -26,7 +26,7 @@ import org.junit.Ignore;
 @Ignore
 public class TestCreator {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         new TestCreator();
     }
 
@@ -53,21 +53,45 @@ public class TestCreator {
             out.close();
     }
 
-    public TestCreator() {
+    public TestCreator() throws Exception {
         beginTestCase();
 
         // create all tests
-        testCircleNoVars();
-        testCircleOneVar();
-        testCircleOnlyVars();
-        testMultipleAssignmentsTest();
 
-        //TODO chs include after implementation of control flow:  testSimpleControlFlowTest();
+        //positive tests - tests that should be compiled
+        try {
+            testCircleNoVars();
+            testCircleOneVar();
+            testCircleOnlyVars();
+        } catch (OptimizationException e) {
+                throw new Exception("CompileError in positive tests: "+e);
+        }
+
+        //negative tests - tests shouldn't be compiled, since they aren't conform to specification
+        boolean valid = true;
+         try {
+            testMultipleAssignmentsTest();
+        } catch (OptimizationException e) {
+            valid = false;
+        }
+        if (valid)
+            throw new Exception("No CompileError in negative test MultipleAssignmentsTest");
+
+
+        valid = true;
+         try {
+            testSimpleControlFlowTest();
+        } catch (OptimizationException e) {
+            valid = false;
+        }
+        if (valid)
+            throw new Exception("No CompileError in negative test SimpleControlFlowTest");
+
 
         endTestCase();
     }
 
-    private void test(GenericTestable testable, String cluName) {
+    private void test(GenericTestable testable, String cluName) throws OptimizationException {
         try {
             CodeParser parser = (new de.gaalop.clucalc.input.Plugin()).createCodeParser();
             ControlFlowGraph graph = parser.parseFile(new InputFile(cluName, testable.getCLUScript()));
@@ -106,8 +130,6 @@ public class TestCreator {
 
         } catch (CodeParserException ex) {
             Logger.getLogger(TestCreator.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (OptimizationException ex1) {
-            Logger.getLogger(TestCreator.class.getName()).log(Level.SEVERE, null, ex1);
         } catch (CodeGeneratorException ex) {
                 Logger.getLogger(TestCreator.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -116,31 +138,31 @@ public class TestCreator {
     }
 
     
-    private void testCircleNoVars() {
+    private void testCircleNoVars() throws OptimizationException {
         test(new CircleNoVarsTest(new Point(5,2),new Point(3,9),new Point(6,4)),"CircleNoVars");
 
         //TODO more tests
     }
 
    
-    private void testCircleOneVar() {
+    private void testCircleOneVar() throws OptimizationException {
         test(new CircleOneVarTest(new Point(5,2),new Point(3,9),new Point(6,4),new boolean[]{true,false,false,false,false,false},50),"CircleOneVar");
         
         //TODO more tests
     }
 
     
-    private void testCircleOnlyVars() {
+    private void testCircleOnlyVars() throws OptimizationException {
         test(new CircleOnlyVarsTest(new Point(5,2),new Point(3,9),new Point(6,4)),"CircleOnlyVars");
 
         //TODO more tests
     }
 
-    private void testMultipleAssignmentsTest() {
+    private void testMultipleAssignmentsTest() throws OptimizationException {
         test(new MultipleAssignmentsTest(),"MultipleAssignments");
     }
 
-    private void testSimpleControlFlowTest() {
+    private void testSimpleControlFlowTest() throws OptimizationException {
         test(new SimpleControlFlowTest(),"SimpleControlFlow");
     }
 

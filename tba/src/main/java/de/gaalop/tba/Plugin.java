@@ -1,11 +1,20 @@
 package de.gaalop.tba;
 
+import de.gaalop.ConfigurationProperty;
+import de.gaalop.ConfigurationProperty.Type;
 import java.awt.Image;
 import java.util.Observable;
 import de.gaalop.OptimizationStrategy;
 import de.gaalop.OptimizationStrategyPlugin;
 
 public class Plugin extends Observable implements OptimizationStrategyPlugin {
+
+        @ConfigurationProperty(type = Type.BOOLEAN)
+        public boolean gcd = false;
+
+        public boolean isGcd() {
+            return gcd;
+        }
 
 	@Override
 	public String getDescription() {
@@ -24,7 +33,7 @@ public class Plugin extends Observable implements OptimizationStrategyPlugin {
 
 	@Override
 	public OptimizationStrategy createOptimizationStrategy() {
-            return new TBAOptStat();
+        return new TBAOptStat(this);
 	}
 
 }

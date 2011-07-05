@@ -50,8 +50,8 @@ public abstract class GenericCircleTest implements GenericTestable {
 
             "c = *(p1^p2^p3);"+"\n"+
 
-            "m = c*einf*c;"+"\n"+
-            "?m = -m/(m.einf);"+"\n"+
+            "mtmp = c*einf*c;"+"\n"+
+            "?m = -mtmp/(mtmp.einf);"+"\n"+
             "?r = sqrt(abs(c.c/((einf.c)*(einf.c))));"+"\n"
             ;
     }

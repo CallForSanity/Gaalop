@@ -1,5 +1,6 @@
 package de.gaalop.tba.cfgImport;
 
+import de.gaalop.OptimizationException;
 import de.gaalop.cfg.ControlFlowGraph;
 import de.gaalop.cfg.ControlFlowVisitor;
 import de.gaalop.tba.UseAlgebra;
@@ -10,30 +11,35 @@ import de.gaalop.tba.cfgImport.optimization.OptUnusedAssignmentsRemoval;
 import java.util.LinkedList;
 
 public class CFGImporter {
-    //TODO chs: Implement Control Flow!
+
     private UseAlgebra usedAlgebra;
 
     private LinkedList<OptimizationStrategyWithModifyFlag> optimizations;
 
-    public CFGImporter() {
+    public CFGImporter(boolean gcd) {
         //load 5d conformal algebra
         usedAlgebra = new UseAlgebra();
         usedAlgebra.load5dAlgebra();
         
         optimizations = new LinkedList<OptimizationStrategyWithModifyFlag>();
-        
-        optimizations.add(new OptUnusedAssignmentsRemoval());
+
+
         optimizations.add(new OptConstantPropagation());
-        optimizations.add(new OptOneExpressionsRemoval());
+
+        if (!gcd) {
+            optimizations.add(new OptUnusedAssignmentsRemoval());
+            optimizations.add(new OptOneExpressionsRemoval());
+        }
+        
     }
 
-    public ControlFlowGraph importGraph(ControlFlowGraph graph) {
+    public ControlFlowGraph importGraph(ControlFlowGraph graph) throws OptimizationException {
+        
+        if (ContainsControlFlow.containsControlFlow(graph)) 
+            throw new OptimizationException("Due to Control Flow Existence in Source, TBA isn't assigned on graph!", graph);
 
-        // TODO chs: After implementing Control Flow in TBA CFGImport, remove this statement.
-        if (ContainsControlFlow.containsControlFlow(graph)) {
-            System.err.println("Due to Control Flow Existence in Source, TBA isn't assigned on graph!");
-            return graph;
-        }
+        if (ContainsMulipleAssignments.containsMulipleAssignments(graph))
+            throw new OptimizationException("Due to Existence of MultipleAssignments in Source, TBA isn't assigned on graph!", graph);
 
         DFGVisitorImport vDFG = new DFGVisitorImport(usedAlgebra);
         ControlFlowVisitor vCFG = new CFGVisitorImport(vDFG);

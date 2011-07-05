@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package de.gaalop.tba.cfgImport;
 
 import de.gaalop.cfg.BlockEndNode;
@@ -13,7 +8,7 @@ import de.gaalop.cfg.IfThenElseNode;
 import de.gaalop.cfg.LoopNode;
 
 /**
- *
+ * Visitor for checking of Control Flow in a ControlFlowGraph
  * @author christian
  */
 public class ContainsControlFlow extends EmptyControlFlowVisitor {
@@ -43,7 +38,12 @@ public class ContainsControlFlow extends EmptyControlFlowVisitor {
     public void visit(BlockEndNode node) {
         containsControlFlow = true;
     }
-    
+
+    /**
+     * Determines, if a given ControlFlowGraph contains Control Flow
+     * @param graph The ControlFlowGraph, which should be checked
+     * @return <value>true</value> if the graph contains Control Flow, <value>false</value> otherwise
+     */
     public static boolean containsControlFlow(ControlFlowGraph graph) {
         ContainsControlFlow c = new ContainsControlFlow();
         graph.accept(c);

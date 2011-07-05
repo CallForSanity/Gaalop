@@ -1229,45 +1229,4 @@ assertEquals((float) Math.sqrt((6-m_x)*(6-m_x) + (4-m_y)*(4-m_y)),r_0,0.001);
 assertEquals(3, outputs.size());
 
   }
-  @Test
-  public void testMultipleAssignments0() {
-    MultipleAssignments inst = new MultipleAssignments();
-    inst.calculate();
-    // collect outputs
-    HashMap<String,Float> outputs = inst.getValues();
-    // check outputs
-assertEquals(outputs.get("b_0"),outputs.get("d_0"),0.001);
-assertEquals(outputs.get("b_1"),outputs.get("d_1"),0.001);
-assertEquals(outputs.get("b_2"),outputs.get("d_2"),0.001);
-assertEquals(outputs.get("b_3"),outputs.get("d_3"),0.001);
-assertEquals(outputs.get("b_4"),outputs.get("d_4"),0.001);
-assertEquals(outputs.get("b_5"),outputs.get("d_5"),0.001);
-assertEquals(outputs.get("b_6"),outputs.get("d_6"),0.001);
-assertEquals(outputs.get("b_7"),outputs.get("d_7"),0.001);
-assertEquals(outputs.get("b_8"),outputs.get("d_8"),0.001);
-assertEquals(outputs.get("b_9"),outputs.get("d_9"),0.001);
-assertEquals(outputs.get("b_10"),outputs.get("d_10"),0.001);
-assertEquals(outputs.get("b_11"),outputs.get("d_11"),0.001);
-assertEquals(outputs.get("b_12"),outputs.get("d_12"),0.001);
-assertEquals(outputs.get("b_13"),outputs.get("d_13"),0.001);
-assertEquals(outputs.get("b_14"),outputs.get("d_14"),0.001);
-assertEquals(outputs.get("b_15"),outputs.get("d_15"),0.001);
-assertEquals(outputs.get("b_16"),outputs.get("d_16"),0.001);
-assertEquals(outputs.get("b_17"),outputs.get("d_17"),0.001);
-assertEquals(outputs.get("b_18"),outputs.get("d_18"),0.001);
-assertEquals(outputs.get("b_19"),outputs.get("d_19"),0.001);
-assertEquals(outputs.get("b_20"),outputs.get("d_20"),0.001);
-assertEquals(outputs.get("b_21"),outputs.get("d_21"),0.001);
-assertEquals(outputs.get("b_22"),outputs.get("d_22"),0.001);
-assertEquals(outputs.get("b_23"),outputs.get("d_23"),0.001);
-assertEquals(outputs.get("b_24"),outputs.get("d_24"),0.001);
-assertEquals(outputs.get("b_25"),outputs.get("d_25"),0.001);
-assertEquals(outputs.get("b_26"),outputs.get("d_26"),0.001);
-assertEquals(outputs.get("b_27"),outputs.get("d_27"),0.001);
-assertEquals(outputs.get("b_28"),outputs.get("d_28"),0.001);
-assertEquals(outputs.get("b_29"),outputs.get("d_29"),0.001);
-assertEquals(outputs.get("b_30"),outputs.get("d_30"),0.001);
-assertEquals(outputs.get("b_31"),outputs.get("d_31"),0.001);
-
-  }
 }

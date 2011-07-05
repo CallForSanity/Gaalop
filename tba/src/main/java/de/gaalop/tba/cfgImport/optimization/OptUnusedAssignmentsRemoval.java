@@ -1,19 +1,9 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package de.gaalop.tba.cfgImport.optimization;
 
-import de.gaalop.tba.cfgImport.ContainsControlFlow;
-import de.gaalop.OptimizationException;
-import de.gaalop.OptimizationStrategy;
 import de.gaalop.cfg.ControlFlowGraph;
 import de.gaalop.cfg.Node;
 import de.gaalop.cfg.SequentialNode;
 import de.gaalop.tba.UseAlgebra;
-import de.gaalop.tba.cfgImport.optimization.NodeCollectorControlFlowVisitor;
-import de.gaalop.tba.cfgImport.optimization.OptimizationStrategyWithModifyFlag;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -27,12 +17,6 @@ public class OptUnusedAssignmentsRemoval implements OptimizationStrategyWithModi
 
     @Override
     public boolean transform(ControlFlowGraph graph, UseAlgebra usedAlgebra) {
-        // TODO chs: After implementing Control Flow in Optimization UnusedAssignmentsRemoval, remove this statement.
-        if (ContainsControlFlow.containsControlFlow(graph)) {
-            System.err.println("Due to Control Flow Existence in Source, Optimization UnusedAssignmentsRemoval isn't assigned on graph!");
-            return false;
-        }
-
         // traverse the graph in the opposite direction
         NodeCollectorControlFlowVisitor v = new NodeCollectorControlFlowVisitor();
         graph.accept(v);
