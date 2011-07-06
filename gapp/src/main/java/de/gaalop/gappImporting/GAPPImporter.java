@@ -9,6 +9,7 @@ import de.gaalop.OptimizationException;
 import de.gaalop.OptimizationStrategy;
 import de.gaalop.OutputFile;
 import de.gaalop.cfg.ControlFlowGraph;
+import de.gaalop.tba.cfgImport.DFGVisitorImport;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.Set;
@@ -21,16 +22,21 @@ import java.util.logging.Logger;
  */
 public class GAPPImporter {
 
-    	public ControlFlowGraph importGraph(ControlFlowGraph graph) {
+    	public ControlFlowGraph importGraph(ControlFlowGraph graph) throws OptimizationException {
             Splitter splitter = new Splitter(graph);
             graph.accept(splitter);
 
-            CFGImporter vCFG = new CFGImporter();
+            // do a full tba visit on graph to calculate MvExpressions
+            de.gaalop.tba.cfgImport.CFGImporter importer = new de.gaalop.tba.cfgImport.CFGImporter(true);
+            importer.importGraph(graph);
+            DFGVisitorImport vDFG = importer.getvDFG();
+
+            CFGImporter vCFG = new CFGImporter(importer.getUsedAlgebra(),vDFG.expressions);
             graph.accept(vCFG);
             return graph;
 	}
 
-        public static void main(String[] args) {
+        public static void main(String[] args) throws OptimizationException {
             try {
             CodeParser parser = (new de.gaalop.clucalc.input.Plugin()).createCodeParser();
             ControlFlowGraph graph = parser.parseFile(new InputFile("Circle", getSource()));

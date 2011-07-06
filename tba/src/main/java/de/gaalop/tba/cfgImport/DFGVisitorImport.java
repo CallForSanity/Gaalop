@@ -46,9 +46,9 @@ public class DFGVisitorImport extends EmptyExpressionVisitor {
 	
 	private final double EPSILON = 10E-07;
 	
-	private final byte INNER = 0;
-	private final byte OUTER = 1;
-	private final byte GEO = 2;
+	public static final byte INNER = 0;
+	public static final byte OUTER = 1;
+	public static final byte GEO = 2;
 	
 	public DFGVisitorImport(UseAlgebra usedAlgebra) {
                 this.usedAlgebra = usedAlgebra;

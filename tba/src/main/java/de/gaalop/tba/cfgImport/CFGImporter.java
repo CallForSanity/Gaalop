@@ -16,6 +16,18 @@ public class CFGImporter {
 
     private LinkedList<OptimizationStrategyWithModifyFlag> optimizations;
 
+    private DFGVisitorImport vDFG;
+
+    public DFGVisitorImport getvDFG() {
+        return vDFG;
+    }
+
+    public UseAlgebra getUsedAlgebra() {
+        return usedAlgebra;
+    }
+
+    
+
     public CFGImporter(boolean gcd) {
         //load 5d conformal algebra
         usedAlgebra = new UseAlgebra();
@@ -41,7 +53,7 @@ public class CFGImporter {
         if (ContainsMulipleAssignments.containsMulipleAssignments(graph))
             throw new OptimizationException("Due to Existence of MultipleAssignments in Source, TBA isn't assigned on graph!", graph);
 
-        DFGVisitorImport vDFG = new DFGVisitorImport(usedAlgebra);
+        vDFG = new DFGVisitorImport(usedAlgebra);
         ControlFlowVisitor vCFG = new CFGVisitorImport(vDFG);
         graph.accept(vCFG);
 
