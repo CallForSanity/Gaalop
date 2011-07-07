@@ -58,9 +58,10 @@ public class PrettyPrint implements GAPPVisitor {
     private void printSelectors(Selectorset selectorset) {
         result.append("[");
         for (Integer cur: selectorset) {
-            result.append(",");
             result.append(cur);
+            result.append(",");
         }
+        result.deleteCharAt(result.length()-1);
         result.append("]");
     }
 
@@ -71,9 +72,10 @@ public class PrettyPrint implements GAPPVisitor {
     private void printVariableSet(Variableset variableset) {
         result.append("[");
         for (GAPPScalarVariable cur: variableset) {
+            result.append(cur.prettyPrint());
             result.append(",");
-            result.append(cur.toString());
         }
+        result.deleteCharAt(result.length()-1);
         result.append("]");
     }
 

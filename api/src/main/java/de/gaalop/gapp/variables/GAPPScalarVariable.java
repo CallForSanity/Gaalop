@@ -19,7 +19,7 @@ public class GAPPScalarVariable extends GAPPVariableBase {
     }
 
     public GAPPScalarVariable(float constantValue) {
-        super(null);
+        super(""); //TODO chs ih
         constant = true;
         this.value = constantValue;
     }

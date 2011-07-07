@@ -34,6 +34,13 @@ public class GAPPVariableBase {
         this.name = name;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof GAPPVariableBase)) return false;
+        return name.equals(((GAPPVariableBase) obj).name);
+    }
+
+
 
 
 }

@@ -27,7 +27,7 @@ public class GAPPImporter {
             graph.accept(splitter);
 
             // do a full tba visit on graph to calculate MvExpressions
-            de.gaalop.tba.cfgImport.CFGImporter importer = new de.gaalop.tba.cfgImport.CFGImporter(true);
+            de.gaalop.tba.cfgImport.CFGImporter importer = new de.gaalop.tba.cfgImport.CFGImporter(true,true);
             importer.importGraph(graph);
             DFGVisitorImport vDFG = importer.getvDFG();
 
@@ -48,7 +48,13 @@ public class GAPPImporter {
             CodeGenerator generator = (new de.gaalop.gappdot.Plugin()).createCodeGenerator();
             Set<OutputFile> outputFiles = generator.generate(graph);
 
+            CodeGenerator generator2 = (new GAPPCodeGeneratorPlugin()).createCodeGenerator();
+            Set<OutputFile> outputFiles2 = generator2.generate(graph);
+
           for (OutputFile outputFile: outputFiles)
+                writeFile(outputFile);
+
+          for (OutputFile outputFile: outputFiles2)
                 writeFile(outputFile);
 
 
@@ -70,10 +76,9 @@ public class GAPPImporter {
             "//#pragma output r_0"+"\n"+
 
             "\n"+
-
-            "v1 = x1*e1+y1*e2;"+"\n"+
-            "v2 = x2*e1+y2*e2;"+"\n"+
-            "v3 = x3*e1+y3*e2;"+"\n"+
+           "v1 = x1*e1+y1*e2;"+"\n"+
+   //         "v2 = x2*e1+y2*e2;"+"\n"+
+   //         "v3 = x3*e1+y3*e2;"+"\n"+
 
     //        "p1 = v1 + 0.5*v1*v1*einf + e0;"+"\n"+
     //        "p2 = v2 + 0.5*v2*v2*einf + e0;"+"\n"+

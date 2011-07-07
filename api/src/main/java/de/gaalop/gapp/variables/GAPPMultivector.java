@@ -25,5 +25,6 @@ public class GAPPMultivector extends GAPPVariableBase {
     public void setComponents(Vector<GAPPMultivectorComponent> components) {
         this.components = components;
     }
-    
+
+
 }

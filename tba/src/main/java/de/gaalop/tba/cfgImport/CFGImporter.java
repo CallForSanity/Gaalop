@@ -18,6 +18,8 @@ public class CFGImporter {
 
     private DFGVisitorImport vDFG;
 
+    private boolean getOnlyMvExpressions;
+
     public DFGVisitorImport getvDFG() {
         return vDFG;
     }
@@ -28,7 +30,9 @@ public class CFGImporter {
 
     
 
-    public CFGImporter(boolean gcd) {
+    public CFGImporter(boolean gcd,boolean getOnlyMvExpressions) {
+        this.getOnlyMvExpressions = getOnlyMvExpressions;
+
         //load 5d conformal algebra
         usedAlgebra = new UseAlgebra();
         usedAlgebra.load5dAlgebra();
@@ -54,7 +58,7 @@ public class CFGImporter {
             throw new OptimizationException("Due to Existence of MultipleAssignments in Source, TBA isn't assigned on graph!", graph);
 
         vDFG = new DFGVisitorImport(usedAlgebra);
-        ControlFlowVisitor vCFG = new CFGVisitorImport(vDFG);
+        ControlFlowVisitor vCFG = new CFGVisitorImport(vDFG,getOnlyMvExpressions);
         graph.accept(vCFG);
 
         boolean repeat;

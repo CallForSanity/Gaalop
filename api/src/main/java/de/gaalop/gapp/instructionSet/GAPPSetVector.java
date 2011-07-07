@@ -25,13 +25,12 @@ public class GAPPSetVector extends GAPPBaseInstruction {
     public GAPPSetVector() {
     }
 
-    public GAPPSetVector(GAPPVector destination, Vector<GAPPSignedMultivectorComponent> selectors) {
-        this.destination = destination;
-        destination.slots = selectors;
-    }
+    
 
-    public GAPPSetVector(GAPPVector destination) {
+    public GAPPSetVector(GAPPVector destination, GAPPMultivector sourceMv, Selectorset selectorsSrc) {
         this.destination = destination;
+        this.sourceMv = sourceMv;
+        this.selectorsSrc = selectorsSrc;
     }
 
     public void add(GAPPSignedMultivectorComponent toAdd) {

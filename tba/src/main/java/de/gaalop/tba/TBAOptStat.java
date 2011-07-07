@@ -16,7 +16,7 @@ public class TBAOptStat implements OptimizationStrategy {
         
 	@Override
 	public void transform(ControlFlowGraph graph) throws OptimizationException {
-            CFGImporter importer = new CFGImporter(plugin.isGcd());
+            CFGImporter importer = new CFGImporter(plugin.isGcd(),false);
             importer.importGraph(graph);
         }
 

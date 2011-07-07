@@ -15,10 +15,13 @@ public class CFGVisitorImport extends EmptyControlFlowVisitor {
 	private DFGVisitorImport cfgExpressionVisitor;
 	
 	public HashMap<String,MvExpressions> variables;
+
+        private boolean getOnlyMvExpressions;
 	
-	public CFGVisitorImport(DFGVisitorImport cfgExpressionVisitor) {
+	public CFGVisitorImport(DFGVisitorImport cfgExpressionVisitor, boolean getOnlyMvExpressions) {
 		this.cfgExpressionVisitor = cfgExpressionVisitor;
 		variables = new HashMap<String, MvExpressions>();
+                this.getOnlyMvExpressions = getOnlyMvExpressions;
 	}
 	
 	@Override
@@ -33,9 +36,10 @@ public class CFGVisitorImport extends EmptyControlFlowVisitor {
 		MvExpressions mvExpr = cfgExpressionVisitor.expressions.get(value);
 		variables.put(variable.toString(), mvExpr);
 		
-		
-		
 		AssignmentNode lastNode = node;
+
+                if (!getOnlyMvExpressions) {
+		
 	
 		// At first, output all assignments
 		for (int i=0;i<cfgExpressionVisitor.bladeCount;i++) 
@@ -70,6 +74,7 @@ public class CFGVisitorImport extends EmptyControlFlowVisitor {
 
 		
 		node.getGraph().removeNode(node);
+            }
 		
 		lastNode.getSuccessor().accept(this);
 	}
