@@ -1,6 +1,7 @@
 package de.gaalop.gapp.instructionSet;
 
 import de.gaalop.gapp.visitor.GAPPVisitor;
+import de.gaalop.gapp.visitor.PrettyPrint;
 
 /**
  * Represents a base command from the GAPP IR.
@@ -19,5 +20,14 @@ public abstract class GAPPBaseInstruction {
      * @return An result object (null is permitted)
      */
     public abstract Object accept(GAPPVisitor visitor, Object arg);
-    
+
+    @Override
+    public String toString() {
+        PrettyPrint printer = new PrettyPrint();
+        accept(printer, null);
+        return printer.getResultString();
+    }
+
+
+
 }

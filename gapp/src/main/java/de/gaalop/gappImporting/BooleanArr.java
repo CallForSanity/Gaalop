@@ -36,4 +36,9 @@ public class BooleanArr {
         components[blade] = value;
     }
 
+    public void or(BooleanArr booleanArr) {
+        for (int blade=0;blade<components.length;blade++)
+            components[blade] = components[blade] || booleanArr.getComponent(blade);
+    }
+
 }

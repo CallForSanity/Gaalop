@@ -69,7 +69,7 @@ public class Splitter extends EmptyControlFlowVisitor implements ExpressionVisit
         Variable result;
 
         do {
-            result = new Variable("tmp"+tmpVariablesCounter);
+            result = new Variable("sTmp"+tmpVariablesCounter);
             tmpVariablesCounter++;
         } while (variables.contains(result));
 

@@ -8,7 +8,7 @@ import de.gaalop.gapp.instructionSet.GAPPResetMv;
 import de.gaalop.gapp.instructionSet.GAPPSetMv;
 import de.gaalop.gapp.instructionSet.GAPPSetVector;
 import de.gaalop.gapp.variables.GAPPScalarVariable;
-import de.gaalop.gapp.visitor.GAPPVisitor;
+import de.gaalop.gapp.visitor.CFGGAPPVisitor;
 import de.gaalop.tba.UseAlgebra;
 import java.util.HashMap;
 
@@ -16,7 +16,7 @@ import java.util.HashMap;
  * GAPP Visitor to execute (simulate) a GAPP Program
  * @author christian
  */
-public class Executer implements GAPPVisitor {
+public class Executer extends CFGGAPPVisitor {
 
     private HashMap<String,MultivectorWithValues> values = new HashMap<String,MultivectorWithValues>();
     private HashMap<String,VectorWithValues> vectors = new HashMap<String,VectorWithValues>();
@@ -25,35 +25,33 @@ public class Executer implements GAPPVisitor {
 
     private HashMap<String,Float> inputValues;
 
+    public MultivectorWithValues getValue(String name) {
+        return values.get(name);
+    }
+
     public Executer(UseAlgebra usedAlgebra, HashMap<String,Float> inputValues) {
         this.inputValues = inputValues;
         this.usedAlgebra = usedAlgebra;
     }
 
-    private MultivectorWithValues createNewMultivectorWithValues(String name) {
-        MultivectorWithValues result = new MultivectorWithValues(usedAlgebra.getBladeCount());
-        values.put(name,result);
-        return result;
-    }
-
     private MultivectorWithValues getMultivector(String name) {
         if (values.containsKey(name))
             return values.get(name);
-        else
-            return createNewMultivectorWithValues(name);
-    }
-
-    private VectorWithValues createNewVectorWithValues(String name) {
-        VectorWithValues result = new VectorWithValues();
-        vectors.put(name,result);
-        return result;
+        else {
+            MultivectorWithValues newMv = new MultivectorWithValues(usedAlgebra.getBladeCount());
+            values.put(name, newMv);
+            return newMv;
+        }
     }
 
     private VectorWithValues getVector(String name) {
-        if (values.containsKey(name))
+        if (vectors.containsKey(name))
             return vectors.get(name);
-        else
-            return createNewVectorWithValues(name);
+        else {
+            VectorWithValues newVec = new VectorWithValues();
+            vectors.put(name, newVec);
+            return newVec;
+        }
     }
 
     private float getVariableValue(String name) {
@@ -117,6 +115,7 @@ public class Executer implements GAPPVisitor {
 
     @Override
     public Object visitSetVector(GAPPSetVector gappSetVector, Object arg) {
+
         VectorWithValues destination = getVector(gappSetVector.getDestination().getName());
         MultivectorWithValues source = getMultivector(gappSetVector.getSourceMv().getName());
         Selectorset selSrc = gappSetVector.getSelectorsSrc();
@@ -124,7 +123,7 @@ public class Executer implements GAPPVisitor {
         int selCount = gappSetVector.getSelectorsSrc().size();
         destination.setEntries(new float[selCount]);
         for (int sel=0;sel<selCount;sel++)
-            destination.getEntries()[sel] = source.getEntries()[selSrc.get(sel)];
+            destination.setEntry(sel, source.getEntries()[selSrc.get(sel)]);
 
         return null;
     }

@@ -82,47 +82,63 @@ public class CFGImporter extends EmptyControlFlowVisitor implements ExpressionVi
 
     private HashMap<Variable, GAPPMultivector> mapVariableGAPPMv = new HashMap<Variable, GAPPMultivector>();
     private HashMap<GAPPMultivector, BooleanArr> assigned = new HashMap<GAPPMultivector, BooleanArr>();
-    
+
+    private BooleanArr getBooleanArr(GAPPMultivector mv) {
+        if (assigned.containsKey(mv))
+            return assigned.get(mv);
+        else {
+            BooleanArr arr = new BooleanArr(usedAlgebra.getBladeCount());
+            assigned.put(mv, arr);
+            return arr;
+        }
+
+    }
 
     public CFGImporter(UseAlgebra usedAlgebra, HashMap<Expression, MvExpressions> expressions) {
         this.expressions = expressions;
         this.usedAlgebra = usedAlgebra;
     }
 
-    private GAPPMultivector createGAPPMvFromVariable(Variable variable) {
+    private GAPPMultivector createGAPPMvFromVariable(Variable variable, boolean scalar,boolean assign) {
 
-        GAPPMultivector mv = new GAPPMultivector(variable.getName());
+        GAPPMultivector mv = new GAPPMultivector(createNewName(true));
+
+        MvExpressions expr = new MvExpressions(variable.getName(),usedAlgebra.getBladeCount());
+        expr.bladeExpressions[0] = variable;
+
+        if (assign)
+            assignVectorFromMvExpressions(mv, expr);
         mapVariableGAPPMv.put(variable, mv);
-        // assignVectorFromMvExpressions(mv, expressions.get(node));
-        BooleanArr arr = new BooleanArr(usedAlgebra.getBladeCount());
-        arr.setComponent(0, true);
-        assigned.put(mv, arr);
+        if (scalar)
+            getBooleanArr(mv).setComponent(0, true);
 
         return mv;
     }
 
     @Override
     public void visit(AssignmentNode node) {
-        destination = createGAPPMvFromVariable(node.getVariable());
         curGAPP = new GAPP();
+        destination = new GAPPMultivector(node.getVariable().getName());
+        mapVariableGAPPMv.put(node.getVariable(), destination);
+
         node.setGAPP(curGAPP);
         node.getValue().accept(this);
         super.visit(node);
     }
+    
     private GAPPMultivector destination;
     private int tmpCounter = 0;
 
-    private String createNewName() {
+    private String createNewName(boolean mv) {
 
-        while (mapVariableGAPPMv.containsKey(new Variable(("tmp" + tmpCounter)))) {
+        String prefix = (mv) ? "mTmp" : "vTmp";
+
+        while (mapVariableGAPPMv.containsKey(new Variable((prefix + tmpCounter)))) 
             tmpCounter++;
-        }
-
 
         tmpCounter++;
 
-        return "tmp" + (tmpCounter - 1);
-
+        return prefix + (tmpCounter - 1);
     }
 
     private Selectorset getSelectorSetAllBladesPositive() {
@@ -134,7 +150,7 @@ public class CFGImporter extends EmptyControlFlowVisitor implements ExpressionVi
     }
 
     private Selectorset getSelectorSetAllBladesPositiveAndAssigned(GAPPMultivector mv) {
-        BooleanArr arr = assigned.get(mv);
+        BooleanArr arr = getBooleanArr(mv);
         Selectorset result = new Selectorset();
         for (int blade = 0; blade < usedAlgebra.getBladeCount(); blade++) {
             if (arr.getComponent(blade)) {
@@ -154,7 +170,7 @@ public class CFGImporter extends EmptyControlFlowVisitor implements ExpressionVi
     }
 
     private Selectorset getSelectorSetAllBladesNegativeAndAssigned(GAPPMultivector mv) {
-        BooleanArr arr = assigned.get(mv);
+        BooleanArr arr = getBooleanArr(mv);
         Selectorset result = new Selectorset();
         for (int blade = 0; blade < usedAlgebra.getBladeCount(); blade++) {
             if (arr.getComponent(blade)) {
@@ -171,7 +187,7 @@ public class CFGImporter extends EmptyControlFlowVisitor implements ExpressionVi
         if (type != DFGNodeType.Variable) {
             MvExpressions mv = expressions.get(expression);
             // build the multivector
-            GAPPMultivector newMv = new GAPPMultivector(createNewName());
+            GAPPMultivector newMv = new GAPPMultivector(createNewName(true));
 
             assignVectorFromMvExpressions(newMv, mv);
 
@@ -186,8 +202,7 @@ public class CFGImporter extends EmptyControlFlowVisitor implements ExpressionVi
         Variableset val = new Variableset();
 
 
-        BooleanArr arr = new BooleanArr(usedAlgebra.getBladeCount());
-        assigned.put(mv, arr);
+        BooleanArr arr = getBooleanArr(mv);
 
         //assign Values from mv
         for (int blade = 0; blade < usedAlgebra.getBladeCount(); blade++) {
@@ -203,7 +218,12 @@ public class CFGImporter extends EmptyControlFlowVisitor implements ExpressionVi
                 if (typeBlade == DFGNodeType.FloatConstant) {
                     val.add(new GAPPScalarVariable(((FloatConstant) mvExpr.bladeExpressions[blade]).getValue()));
                 } else {
-                    System.err.println(typeBlade + "isn't known in getGappmultivector()");
+
+                    if (typeBlade == DFGNodeType.Variable) {
+                        val.add(new GAPPScalarVariable(((Variable) mvExpr.bladeExpressions[blade]).getName()));
+                    } else {
+                         System.err.println(typeBlade + "isn't known in getGappmultivector()");
+                    }
                 }
 
 
@@ -226,6 +246,10 @@ public class CFGImporter extends EmptyControlFlowVisitor implements ExpressionVi
         curGAPP.addInstruction(new GAPPResetMv(destination));
         curGAPP.addInstruction(new GAPPSetMv(destination, mvLeft, selSetL, selSetL));
         curGAPP.addInstruction(new GAPPAddMv(destination, mvRight, selSetRp, selSetRn));
+
+        BooleanArr boolArrDest = getBooleanArr(destination);
+        boolArrDest.or(getBooleanArr(mvLeft));
+        boolArrDest.or(getBooleanArr(mvRight));
     }
 
     @Override
@@ -239,12 +263,16 @@ public class CFGImporter extends EmptyControlFlowVisitor implements ExpressionVi
         curGAPP.addInstruction(new GAPPResetMv(destination));
         curGAPP.addInstruction(new GAPPSetMv(destination, mvLeft, selSetL, selSetL));
         curGAPP.addInstruction(new GAPPAddMv(destination, mvRight, selSetR, selSetR));
+
+        BooleanArr boolArrDest = getBooleanArr(destination);
+        boolArrDest.or(getBooleanArr(mvLeft));
+        boolArrDest.or(getBooleanArr(mvRight));
     }
 
     @Override
     public void visit(Division node) {
-        System.err.println("Not supported yet.");
-        //throw new UnsupportedOperationException("Not supported yet.");
+        //TODO chs only implement division of scalars
+        System.err.println("Division isn't implemented yet");
     }
 
     /**
@@ -275,6 +303,7 @@ public class CFGImporter extends EmptyControlFlowVisitor implements ExpressionVi
                 }
 
                 createCommandSeriesDotProd(destination, blade, mvL, mvR, sel1, sel2);
+                getBooleanArr(destination).setComponent(blade, true);
             }
     }
 
@@ -348,8 +377,8 @@ public class CFGImporter extends EmptyControlFlowVisitor implements ExpressionVi
      * @param sel2 The selector for second source multivector
      */
     private void createCommandSeriesDotProd(GAPPMultivector destMv, int destSel, GAPPMultivector src1, GAPPMultivector src2, Selectorset sel1, Selectorset sel2) {
-        GAPPVector v1 = new GAPPVector(createNewName());
-        GAPPVector v2 = new GAPPVector(createNewName());
+        GAPPVector v1 = new GAPPVector(createNewName(false));
+        GAPPVector v2 = new GAPPVector(createNewName(false));
         curGAPP.addInstruction(new GAPPSetVector(v1, src1, sel1));
         curGAPP.addInstruction(new GAPPSetVector(v2, src2, sel2));
         curGAPP.addInstruction(new GAPPDotVectors(destMv, destSel, v1, v2));
@@ -372,89 +401,76 @@ public class CFGImporter extends EmptyControlFlowVisitor implements ExpressionVi
 
     @Override
     public void visit(MathFunctionCall node) {
-        System.err.println("Not supported yet.");
+        System.err.println("MathFunctionCall Not supported yet.");
         //throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public void visit(Variable node) {
-        createGAPPMvFromVariable(node);
-
-
-        
-
-
-
-        // System.err.println("Not supported yet. (Variable)");
-        //throw new UnsupportedOperationException("Not supported yet.");
+        if (!mapVariableGAPPMv.containsKey(node))
+            createGAPPMvFromVariable(node,true,true);
     }
 
     @Override
     public void visit(MultivectorComponent node) {
-        System.err.println("Not supported yet.");
-        //throw new UnsupportedOperationException("Not supported yet.");
+        throw new IllegalStateException("MultivectorComponent aren't permitted in GAPP");
     }
 
     @Override
     public void visit(Exponentiation node) {
-        System.err.println("Not supported yet.");
+        System.err.println("Exponentiation Not supported yet.");
         //throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public void visit(FloatConstant node) {
+        //System.err.println("FloatConstant Not supported yet.");
+        //throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public void visit(BaseVector node) {
+        //System.err.println("BaseVector Not supported yet.");
     }
 
     @Override
     public void visit(Negation node) {
-        System.err.println("Not supported yet.");
-        //throw new UnsupportedOperationException("Not supported yet.");
+        System.err.println("Negation Not supported yet.");
     }
 
     @Override
     public void visit(Reverse node) {
-        System.err.println("Not supported yet.");
-        //throw new UnsupportedOperationException("Not supported yet.");
+        System.err.println("Reverse Not supported yet.");
     }
 
     @Override
     public void visit(LogicalOr node) {
-        System.err.println("Not supported yet.");
-        //throw new UnsupportedOperationException("Not supported yet.");
+        System.err.println("LogicalOr Not supported yet.");
     }
 
     @Override
     public void visit(LogicalAnd node) {
-        System.err.println("Not supported yet.");
-        //throw new UnsupportedOperationException("Not supported yet.");
+        System.err.println("LogicalAnd Not supported yet.");
     }
 
     @Override
     public void visit(LogicalNegation node) {
-        System.err.println("Not supported yet.");
-        //throw new UnsupportedOperationException("Not supported yet.");
+        System.err.println("LogicalNegation Not supported yet.");
     }
 
     @Override
     public void visit(Equality node) {
-        System.err.println("Not supported yet.");
-        //throw new UnsupportedOperationException("Not supported yet.");
+        System.err.println("Equality Not supported yet.");
     }
 
     @Override
     public void visit(Inequality node) {
-        System.err.println("Not supported yet.");
-        //throw new UnsupportedOperationException("Not supported yet.");
+        System.err.println("Inequality Not supported yet.");
     }
 
     @Override
     public void visit(Relation relation) {
-        System.err.println("Not supported yet.");
-        //throw new UnsupportedOperationException("Not supported yet.");
+        System.err.println("Relation Not supported yet.");
     }
 
     @Override
