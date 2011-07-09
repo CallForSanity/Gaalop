@@ -39,12 +39,14 @@ public class CFGImporter {
         
         optimizations = new LinkedList<OptimizationStrategyWithModifyFlag>();
 
+        if (!getOnlyMvExpressions) { //TODO chs why to do this when GAPP performing?
+            optimizations.add(new OptConstantPropagation());
 
-        optimizations.add(new OptConstantPropagation());
+            if (!gcd) {
 
-        if (!gcd) {
-            optimizations.add(new OptUnusedAssignmentsRemoval());
-            optimizations.add(new OptOneExpressionsRemoval());
+                optimizations.add(new OptUnusedAssignmentsRemoval());
+                optimizations.add(new OptOneExpressionsRemoval());
+            }
         }
         
     }

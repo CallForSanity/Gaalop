@@ -188,8 +188,7 @@ public class DFGVisitorImport extends EmptyExpressionVisitor {
              MvExpressions length = calculateUsingMultTable(GEO, mv, revR);
 
              MvExpressions result = createNewMvExpressions();
-
-             //TODO chs What if mv.bladeExpressions[0] == 0, a priori not decidable, if there are variables
+             
              for (int blade=0;blade<bladeCount;blade++)
                  if (mv.bladeExpressions[blade] != null)
                     result.bladeExpressions[blade] = new Division(mv.bladeExpressions[blade],length.bladeExpressions[0]);

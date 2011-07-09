@@ -41,6 +41,16 @@ public class GAPPImportingMain {
             importer.importGraph(graph);
             DFGVisitorImport vDFG = importer.getvDFG();
 
+          CodeGenerator generator = (new de.gaalop.clucalc.output.Plugin()).createCodeGenerator();
+            Set<OutputFile> outputFiles;
+        try {
+            outputFiles = generator.generate(graph);
+                        for (OutputFile outputFile: outputFiles)
+                writeFile(outputFile);
+        } catch (CodeGeneratorException ex) {
+            Logger.getLogger(GAPPImportingMain.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
             GAPPImporter vCFG = new GAPPImporter(importer.getUsedAlgebra(),vDFG.expressions);
             graph.accept(vCFG);
             return graph;
@@ -56,12 +66,13 @@ public class GAPPImportingMain {
             importer.importGraph(graph);
 
            // CodeGenerator generator = (new de.gaalop.clucalc.output.Plugin()).createCodeGenerator();
-            CodeGenerator generator = (new de.gaalop.clucalc.output.Plugin()).createCodeGenerator();
-            Set<OutputFile> outputFiles = generator.generate(graph);
+            
 
             CodeGenerator generator2 = (new GAPPCodeGeneratorPlugin()).createCodeGenerator();
             Set<OutputFile> outputFiles2 = generator2.generate(graph);
 
+            CodeGenerator generator = (new de.gaalop.clucalc.output.Plugin()).createCodeGenerator();
+            Set<OutputFile> outputFiles = generator.generate(graph);
             for (OutputFile outputFile: outputFiles)
                 writeFile(outputFile);
 
@@ -108,15 +119,15 @@ public class GAPPImportingMain {
             "v2 = x2*e1+y2*e2;"+"\n"+
             "v3 = x3*e1+y3*e2;"+"\n"+
 
-    //        "p1 = v1 + 0.5*v1*v1*einf + e0;"+"\n"+
-    //        "p2 = v2 + 0.5*v2*v2*einf + e0;"+"\n"+
-    //        "p3 = v3 + 0.5*v3*v3*einf + e0;"+"\n"+
+            "p1 = v1 + 0.5*v1*v1*einf + e0;"+"\n"+
+            "p2 = v2 + 0.5*v2*v2*einf + e0;"+"\n"+
+            "p3 = v3 + 0.5*v3*v3*einf + e0;"+"\n"+
 
-//            "c = *(p1^p2^p3);"+"\n"+
+            "c = *(p1^p2^p3);"+"\n"+
 
-      //      "ma = c*einf*c;"+"\n"+
-     //       "?m = -ma/(ma.einf);"+"\n"+
-     //       "?r = sqrt(abs(c.c/((einf.c)*(einf.c))));"+"\n"
+            "ma = c*einf*c;"+"\n"+
+            "?m = -ma/(ma.einf);"+"\n"+
+            "?r = sqrt(abs(c.c/((einf.c)*(einf.c))));"+"\n"+
                     "?v1;"
             ;
         }

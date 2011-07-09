@@ -32,8 +32,10 @@ import de.gaalop.dfg.Variable;
 import de.gaalop.gapp.GAPP;
 import de.gaalop.gapp.Selectorset;
 import de.gaalop.gapp.Variableset;
+import de.gaalop.gapp.instructionSet.CalculationType;
 import de.gaalop.gapp.instructionSet.GAPPAddMv;
 import de.gaalop.gapp.instructionSet.GAPPAssignMv;
+import de.gaalop.gapp.instructionSet.GAPPCalculate;
 import de.gaalop.gapp.instructionSet.GAPPDotVectors;
 import de.gaalop.gapp.instructionSet.GAPPResetMv;
 import de.gaalop.gapp.instructionSet.GAPPSetMv;
@@ -167,6 +169,13 @@ public class GAPPImporter extends EmptyControlFlowVisitor implements ExpressionV
         DFGNodeType type = DFGNodeTypeGetter.getTypeOfDFGNode(expression);
         if (type != DFGNodeType.Variable) {
             MvExpressions mv = expressions.get(expression);
+
+            if (mv == null) {
+                System.err.println("hm");
+                
+            }
+
+
             // build the multivector
             GAPPMultivector newMv = new GAPPMultivector(createNewName(true));
 
@@ -191,8 +200,8 @@ public class GAPPImporter extends EmptyControlFlowVisitor implements ExpressionV
                 arr.setComponent(blade, true);
                 sel.add(blade);
 
-                ConstantFolding folding = new ConstantFolding();
-                mvExpr.bladeExpressions[blade].accept(folding);
+                //ConstantFolding folding = new ConstantFolding();
+               // mvExpr.bladeExpressions[blade].accept(folding);
 
                 DFGNodeType typeBlade = DFGNodeTypeGetter.getTypeOfDFGNode(mvExpr.bladeExpressions[blade]);
 
@@ -217,6 +226,9 @@ public class GAPPImporter extends EmptyControlFlowVisitor implements ExpressionV
 
     @Override
     public void visit(Subtraction node) {
+        node.getLeft().accept(this);
+        node.getRight().accept(this);
+
         GAPPMultivector mvLeft = getGAPPMultivectorFromExpression(node.getLeft());
         GAPPMultivector mvRight = getGAPPMultivectorFromExpression(node.getRight());
 
@@ -235,6 +247,10 @@ public class GAPPImporter extends EmptyControlFlowVisitor implements ExpressionV
 
     @Override
     public void visit(Addition node) {
+        node.getLeft().accept(this);
+        node.getRight().accept(this);
+
+
         GAPPMultivector mvLeft = getGAPPMultivectorFromExpression(node.getLeft());
         GAPPMultivector mvRight = getGAPPMultivectorFromExpression(node.getRight());
 
@@ -252,8 +268,27 @@ public class GAPPImporter extends EmptyControlFlowVisitor implements ExpressionV
 
     @Override
     public void visit(Division node) {
-        //TODO chs only implement division of scalars
-        System.err.println("Division isn't implemented yet");
+
+        node.getLeft().accept(this);
+        node.getRight().accept(this);
+
+        GAPPMultivector mvL = getGAPPMultivectorFromExpression(node.getLeft());
+        GAPPMultivector mvR = getGAPPMultivectorFromExpression(node.getRight());
+
+        BooleanArr b1 = getBooleanArr(mvL);
+
+        Selectorset sel1 = new Selectorset();
+        Selectorset sel2 = new Selectorset();
+
+        for (int blade=0;blade<usedAlgebra.getBladeCount();blade++)
+            if (b1.getComponent(blade))
+            {
+                sel1.add(blade);
+                sel2.add(0);
+                getBooleanArr(destination).setComponent(blade, true);
+            }
+        
+        curGAPP.addInstruction(new GAPPCalculate(CalculationType.EXPONENTIATION, destination, mvL, mvR, sel1,sel2));
     }
 
     /**
@@ -382,8 +417,18 @@ public class GAPPImporter extends EmptyControlFlowVisitor implements ExpressionV
 
     @Override
     public void visit(MathFunctionCall node) {
-        System.err.println("MathFunctionCall Not supported yet.");
-        //throw new UnsupportedOperationException("Not supported yet.");
+        node.getOperand().accept(this);
+
+        GAPPMultivector mvOp = getGAPPMultivectorFromExpression(node.getOperand());
+
+        if (getBooleanArr(mvOp).getComponent(0)) {
+
+            Selectorset sel = new Selectorset();
+            sel.add(0);
+            getBooleanArr(destination).setComponent(0, true);
+            curGAPP.addInstruction(new GAPPCalculate(CalculationType.valueOf(node.getFunction().name()), destination, mvOp, null, sel, null));
+            
+        }
     }
 
     @Override
@@ -399,33 +444,73 @@ public class GAPPImporter extends EmptyControlFlowVisitor implements ExpressionV
 
     @Override
     public void visit(Exponentiation node) {
-        System.err.println("Exponentiation Not supported yet.");
-        //throw new UnsupportedOperationException("Not supported yet.");
+        node.getLeft().accept(this);
+        node.getRight().accept(this);
+
+        GAPPMultivector mvL = getGAPPMultivectorFromExpression(node.getLeft());
+        GAPPMultivector mvR = getGAPPMultivectorFromExpression(node.getRight());
+
+        Selectorset sel = new Selectorset();
+        sel.add(0);
+        getBooleanArr(destination).setComponent(0, true);
+        curGAPP.addInstruction(new GAPPCalculate(CalculationType.EXPONENTIATION, destination, mvL, mvR, sel, sel));
+        System.err.println("Warning: Exponentiation is only implemented for scalars!");
     }
 
     @Override
     public void visit(FloatConstant node) {
-        //System.err.println("FloatConstant Not supported yet.");
-        //throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public void visit(BaseVector node) {
-        //System.err.println("BaseVector Not supported yet.");
     }
 
     @Override
     public void visit(Negation node) {
-        System.err.println("Negation Not supported yet.");
+        node.getOperand().accept(this);
+
+        GAPPMultivector mvRight = getGAPPMultivectorFromExpression(node.getOperand());
+
+        Selectorset selSetRp = getSelectorSetAllBladesPositiveAndAssigned(mvRight);
+        Selectorset selSetRn = getSelectorSetAllBladesNegativeAndAssigned(mvRight);
+        curGAPP.addInstruction(new GAPPResetMv(destination));
+        curGAPP.addInstruction(new GAPPAddMv(destination, mvRight, selSetRp, selSetRn));
+
+        BooleanArr boolArrDest = getBooleanArr(destination);
+        boolArrDest.or(getBooleanArr(mvRight));
     }
 
     @Override
     public void visit(Reverse node) {
-        System.err.println("Reverse Not supported yet.");
+        node.getOperand().accept(this);
+
+        GAPPMultivector mvOp = getGAPPMultivectorFromExpression(node.getOperand());
+
+        Selectorset selOp = new Selectorset();
+        Selectorset selDest = new Selectorset();
+
+        BooleanArr booleanArr = getBooleanArr(mvOp);
+
+        for (int blade = 0;blade<usedAlgebra.getBladeCount();blade++)
+            if (booleanArr.getComponent(blade))
+            {
+                selDest.add(blade);
+                int k = usedAlgebra.getGrade(blade);
+                if (((k*(k-1))/2) % 2 == 0)
+                        selOp.add(blade);
+                else
+                        selOp.add(-blade);
+            }
+
+        getBooleanArr(destination).or(booleanArr);
+
+        curGAPP.addInstruction(new GAPPResetMv(destination));
+        curGAPP.addInstruction(new GAPPSetMv(destination,mvOp,selDest,selOp));
     }
 
     @Override
     public void visit(LogicalOr node) {
+        //TODO chs implement GAPP Importing Logical functions
         System.err.println("LogicalOr Not supported yet.");
     }
 
@@ -441,6 +526,7 @@ public class GAPPImporter extends EmptyControlFlowVisitor implements ExpressionV
 
     @Override
     public void visit(Equality node) {
+        //TODO chs implement GAPP Importing Equalities
         System.err.println("Equality Not supported yet.");
     }
 

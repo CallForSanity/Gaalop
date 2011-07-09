@@ -1,10 +1,11 @@
 package de.gaalop.gapp.instructionSet;
 
+import de.gaalop.gapp.Selectorset;
 import de.gaalop.gapp.variables.GAPPMultivector;
 import de.gaalop.gapp.visitor.GAPPVisitor;
 
 /**
- * Performs a calculation on a scalar part of a multivector
+ * Performs calculations on multivector parts, defined by a selectorset
  * @author christian
  */
 public class GAPPCalculate extends GAPPBaseInstruction {
@@ -13,12 +14,16 @@ public class GAPPCalculate extends GAPPBaseInstruction {
     private GAPPMultivector target;
     private GAPPMultivector operand1;
     private GAPPMultivector operand2;
+    private Selectorset used1;
+    private Selectorset used2;
 
-    public GAPPCalculate(GAPPMultivector target, GAPPMultivector operand1, CalculationType type, GAPPMultivector operand2) {
+    public GAPPCalculate(CalculationType type, GAPPMultivector target, GAPPMultivector operand1, GAPPMultivector operand2, Selectorset used1, Selectorset used2) {
         this.type = type;
+        this.target = target;
         this.operand1 = operand1;
         this.operand2 = operand2;
-        this.target = target;
+        this.used1 = used1;
+        this.used2 = used2;
     }
     
     @Override
@@ -42,6 +47,22 @@ public class GAPPCalculate extends GAPPBaseInstruction {
         return target;
     }
 
+    public Selectorset getUsed1() {
+        return used1;
+    }
+
+    public Selectorset getUsed2() {
+        return used2;
+    }
+
+    public void setUsed1(Selectorset affected) {
+        this.used1 = affected;
+    }
+
+    public void setUsed2(Selectorset used2) {
+        this.used2 = used2;
+    }
+    
     public void setOperand1(GAPPMultivector operand1) {
         this.operand1 = operand1;
     }

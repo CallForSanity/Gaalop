@@ -69,8 +69,13 @@ public class Executer extends CFGGAPPVisitor {
         Selectorset selDest = gappAddMv.getSelectorsDest();
 
         int selCount = gappAddMv.getSelectorsSrc().size();
-        for (int sel=0;sel<selCount;sel++) 
-            destination.getEntries()[selDest.get(sel)] += source.getEntries()[selSrc.get(sel)];
+        for (int sel=0;sel<selCount;sel++) {
+            int curSel = selSrc.get(sel);
+            if (curSel<0)
+                destination.getEntries()[selDest.get(sel)] += -source.getEntries()[-curSel];
+            else
+                destination.getEntries()[selDest.get(sel)] += source.getEntries()[curSel];
+        }
 
         return null;
     }
@@ -90,8 +95,13 @@ public class Executer extends CFGGAPPVisitor {
         Selectorset selDest = gappSetMv.getSelectorsDest();
 
         int selCount = gappSetMv.getSelectorsSrc().size();
-        for (int sel=0;sel<selCount;sel++)
-            destination.getEntries()[selDest.get(sel)] = source.getEntries()[selSrc.get(sel)];
+        for (int sel=0;sel<selCount;sel++) {
+            int curSel = selSrc.get(sel);
+            if (curSel<0)
+                destination.getEntries()[selDest.get(sel)] = -source.getEntries()[-curSel];
+            else
+                destination.getEntries()[selDest.get(sel)] = source.getEntries()[curSel];
+        }
 
         return null;
     }
@@ -123,8 +133,13 @@ public class Executer extends CFGGAPPVisitor {
 
         int selCount = gappSetVector.getSelectorsSrc().size();
         destination.setEntries(new float[selCount]);
-        for (int sel=0;sel<selCount;sel++)
-            destination.setEntry(sel, source.getEntries()[selSrc.get(sel)]);
+        for (int sel=0;sel<selCount;sel++) {
+            int curSel = selSrc.get(sel);
+            if (curSel<0)
+                destination.setEntry(sel,-source.getEntries()[-curSel]);
+            else
+                destination.setEntry(sel,source.getEntries()[curSel]);
+        }
 
         return null;
     }
@@ -149,82 +164,95 @@ public class Executer extends CFGGAPPVisitor {
     @Override
     public Object visitCalculate(GAPPCalculate gappCalculate, Object arg) {
 
-        float op1 = getMultivector(gappCalculate.getOperand1().getName()).getEntry(0);
-        
-        float op2 = 0;
-        if (gappCalculate.getOperand2() != null)
-            op2 = getMultivector(gappCalculate.getOperand2().getName()).getEntry(0);
-        
-        MultivectorWithValues target = getMultivector(gappCalculate.getTarget().getName());
+        MultivectorWithValues mv1 = getMultivector(gappCalculate.getOperand1().getName());
+        MultivectorWithValues mv2 = getMultivector(gappCalculate.getOperand2().getName());
 
-        float result;
+        Selectorset sel = gappCalculate.getUsed1();
 
-        switch (gappCalculate.getType()) {
-            case ABS:
-                result = Math.abs(op1);
-                break;
-            case ACOS:
-                result = (float) Math.acos(op1);
-                break;
-            case ADDITION:
-                result = op1 + op2;
-                break;
-            case ASIN:
-                result = (float) Math.asin(op1);
-                break;
-            case ATAN:
-                result = (float) Math.atan(op1);
-                break;
-            case CEIL:
-                result = (float) Math.ceil(op1);
-                break;
-            case COS:
-                result = (float) Math.cos(op1);
-                break;
-            case DIVISION:
-                result = op1 / op2;
-                break;
-            case EXP:
-                result = (float) Math.exp(op1);
-                break;
-            case EXPONENTIATION:
-                result = (float) Math.pow(op1,op2);
-                break;
-            case FACT:
-                result = 1;
-                for (int i=2;i<=(int) op1;i++)
-                    result *= i;
-                break;
-            case FLOOR:
-                result = (float) Math.floor(op1);
-                break;
-            case LOG:
-                result = (float) Math.log(op1);
-                break;
-            case MULTIPLICATION:
-                result = op1 * op2;
-                break;
-            case NEGATION:
-                result = -op1;
-                break;
-            case SIN:
-                result = (float) Math.sin(op1);
-                break;
-            case SQRT:
-                result = (float) Math.sqrt(op1);
-                break;
-            case SUBTRACTION:
-                result = op1 - op2;
-                break;
-            case TAN:
-                result = (float) Math.tan(op1);
-                break;
-            default:
-                throw new UnsupportedOperationException("Not supported yet.");
+        for (int j = 0;j<sel.size();j++) {
+            int component = Math.abs(sel.get(j));
+            float op1 = mv1.getEntry(component);
+
+            float op2 = 0;
+            if (gappCalculate.getOperand2() != null)
+                op2 = mv2.getEntry(component);
+
+            MultivectorWithValues target = getMultivector(gappCalculate.getTarget().getName());
+
+            float result;
+
+            switch (gappCalculate.getType()) {
+                case ABS:
+                    result = Math.abs(op1);
+                    break;
+                case ACOS:
+                    result = (float) Math.acos(op1);
+                    break;
+                case ADDITION:
+                    result = op1 + op2;
+                    break;
+                case ASIN:
+                    result = (float) Math.asin(op1);
+                    break;
+                case ATAN:
+                    result = (float) Math.atan(op1);
+                    break;
+                case CEIL:
+                    result = (float) Math.ceil(op1);
+                    break;
+                case COS:
+                    result = (float) Math.cos(op1);
+                    break;
+                case DIVISION:
+                    result = op1 / op2;
+                    break;
+                case EXP:
+                    result = (float) Math.exp(op1);
+                    break;
+                case EXPONENTIATION:
+                    result = (float) Math.pow(op1,op2);
+                    break;
+                case FACT:
+                    result = 1;
+                    for (int i=2;i<=(int) op1;i++)
+                        result *= i;
+                    break;
+                case FLOOR:
+                    result = (float) Math.floor(op1);
+                    break;
+                case LOG:
+                    result = (float) Math.log(op1);
+                    break;
+                case MULTIPLICATION:
+                    result = op1 * op2;
+                    break;
+                case NEGATION:
+                    result = -op1;
+                    break;
+                case SIN:
+                    result = (float) Math.sin(op1);
+                    break;
+                case SQRT:
+                    result = (float) Math.sqrt(op1);
+                    break;
+                case SUBTRACTION:
+                    result = op1 - op2;
+                    break;
+                case TAN:
+                    result = (float) Math.tan(op1);
+                    break;
+                default:
+                    throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            target.setEntry(component, result);
+
+
         }
 
-        target.setEntry(0, result);
         return null;
+
+
     }
 
 }
