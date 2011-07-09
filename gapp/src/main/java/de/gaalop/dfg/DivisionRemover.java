@@ -1,12 +1,7 @@
 package de.gaalop.dfg;
 
-import de.gaalop.dfg.ExpressionRemover;
 import de.gaalop.api.dfg.DFGNodeType;
 import de.gaalop.api.dfg.DFGNodeTypeGetter;
-import de.gaalop.dfg.Division;
-import de.gaalop.dfg.InnerProduct;
-import de.gaalop.dfg.Multiplication;
-import de.gaalop.dfg.Reverse;
 
 /**
  * Replaces all divisions of a expression and a no-floatconstant

@@ -1,14 +1,9 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package de.gaalop.gapp.executer;
 
 import java.util.Arrays;
 
 /**
- *
+ * Stores the values of a multivector
  * @author christian
  */
 public class MultivectorWithValues {
@@ -41,6 +36,9 @@ public class MultivectorWithValues {
         return Arrays.toString(entries);
     }
 
+    /**
+     * Clears all components
+     */
     public void clear() {
         Arrays.fill(entries,0.0f);
     }

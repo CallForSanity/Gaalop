@@ -16,10 +16,10 @@ import de.gaalop.gapp.variables.GAPPVector;
 
 /**
  * Implements a visitor,
- * that returns a pretty-formed string of the visited GAPPInstruction instance
+ * that returns a pretty-formed string of all GAPP members in a ControlFlowGraph
  * @author christian
  */
-public class PrettyPrint implements GAPPVisitor {
+public class PrettyPrint extends CFGGAPPVisitor {
 
     private StringBuilder result;
 

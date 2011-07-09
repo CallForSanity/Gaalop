@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package de.gaalop.gapp.codegen;
 
 import de.gaalop.CodeGenerator;
@@ -10,7 +5,7 @@ import de.gaalop.CodeGeneratorPlugin;
 import java.awt.Image;
 
 /**
- *
+ * Implements a CodegeneratorPlugin, which lists all GAPP members in a graph in a pretty print format
  * @author christian
  */
 public class GAPPCodeGeneratorPlugin implements CodeGeneratorPlugin {
