@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package de.gaalop.gapp;
+package de.gaalop.gapp.executer;
 
 import java.util.Arrays;
 
@@ -11,9 +11,14 @@ import java.util.Arrays;
  *
  * @author christian
  */
-public class VectorWithValues {
+public class MultivectorWithValues {
 
     private float[] entries;
+
+    public MultivectorWithValues(int bladeCount) {
+        entries = new float[bladeCount];
+        clear();
+    }
 
     public float[] getEntries() {
         return entries;
@@ -26,7 +31,7 @@ public class VectorWithValues {
     public float getEntry(int blade) {
         return entries[blade];
     }
-
+    
     public void setEntry(int blade, float value) {
         entries[blade] = value;
     }
@@ -39,5 +44,7 @@ public class VectorWithValues {
     public void clear() {
         Arrays.fill(entries,0.0f);
     }
+
+
 
 }

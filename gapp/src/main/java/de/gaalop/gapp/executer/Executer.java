@@ -1,5 +1,6 @@
-package de.gaalop.gapp;
+package de.gaalop.gapp.executer;
 
+import de.gaalop.gapp.Selectorset;
 import de.gaalop.gapp.instructionSet.GAPPAddMv;
 import de.gaalop.gapp.instructionSet.GAPPAssignMv;
 import de.gaalop.gapp.instructionSet.GAPPCalculate;
