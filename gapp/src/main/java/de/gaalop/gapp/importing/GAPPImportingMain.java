@@ -37,7 +37,7 @@ public class GAPPImportingMain {
             graph.accept(splitter);
 
             // do a full tba visit on graph to calculate MvExpressions
-            de.gaalop.tba.cfgImport.CFGImporter importer = new de.gaalop.tba.cfgImport.CFGImporter(true,true);
+            de.gaalop.tba.cfgImport.CFGImporter importer = new de.gaalop.tba.cfgImport.CFGImporter(true,true,false);
             importer.importGraph(graph);
             DFGVisitorImport vDFG = importer.getvDFG();
 
@@ -80,7 +80,7 @@ public class GAPPImportingMain {
                 writeFile(outputFile);
 
             //Evaluate!
-            de.gaalop.tba.cfgImport.CFGImporter importer2 = new de.gaalop.tba.cfgImport.CFGImporter(true,true);
+            de.gaalop.tba.cfgImport.CFGImporter importer2 = new de.gaalop.tba.cfgImport.CFGImporter(true,true,false);
 
             HashMap<String, Float> inputValues = new HashMap<String, Float>();
             inputValues.put("x1", 2.0f);
