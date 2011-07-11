@@ -20,7 +20,6 @@
         <module>codegen-gaalet</module>
         <module>codegen-compressed</module>
         <module>gcd</module>
-        <module>starter</module>
     </modules>
 
     <!--

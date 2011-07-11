@@ -19,7 +19,7 @@
 struct MvComponent {
 	std::string bladeHandle;
 	std::string bladeName;
-	int bladeArrayIndex;
+	size_t bladeArrayIndex;
 };
 
 void readFile(std::stringstream& resultStream, const char* filePath);
@@ -65,7 +65,7 @@ int body(std::string& intermediateFilePath, std::string& outputFilePath,
 
 	// try to find temp file path and remove trailing extension
 	std::string tempFilePath(inputFilePath + outputFileExtension);
-	for (unsigned int counter = argc - 2; counter > 0; --counter) {
+	for (size_t counter = argc - 2; counter > 0; --counter) {
 		std::string arg(argv[counter]);
 		if (arg.rfind(outputFileExtension) != std::string::npos) {
 			const size_t pos = arg.find_last_of('.');
@@ -148,7 +148,7 @@ int body(std::string& intermediateFilePath, std::string& outputFilePath,
 	gaalopPath = "../gaalop_settings.sh";
 #endif
 	std::stringstream variables;
-	for (unsigned int gaalopFileCount = 0; gaalopFileCount < gaalopInFileVector.size(); ++gaalopFileCount) {
+	for (size_t gaalopFileCount = 0; gaalopFileCount < gaalopInFileVector.size(); ++gaalopFileCount) {
 		// retrieve multivectors from previous sections
 		if (gaalopFileCount > 0) {
 			std::vector<std::string> mvNames;
@@ -198,6 +198,7 @@ int body(std::string& intermediateFilePath, std::string& outputFilePath,
 				}
 			}
 
+			// generate import declarations
 			for (std::vector<std::string>::const_iterator mvNamesIter =
 					mvNames.begin(); mvNamesIter != mvNames.end(); ++mvNamesIter) {
 				const std::string& mvName = *mvNamesIter;
@@ -259,8 +260,8 @@ int body(std::string& intermediateFilePath, std::string& outputFilePath,
 		intermediateFilePath = tempFilePath + intermediateFileExtension;
 		std::ofstream intermediateFile(intermediateFilePath.c_str());
 		std::ifstream inputFile(inputFilePath.c_str());
-		unsigned int gaalopFileCount = 0;
-		unsigned int lineCount = 1; // think one line ahead
+		size_t gaalopFileCount = 0;
+		size_t lineCount = 1; // think one line ahead
 		while (inputFile.good()) {
 			// read line
 			getline(inputFile, line);
