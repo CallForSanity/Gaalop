@@ -10,6 +10,30 @@
     <name>Gaalop TBA Plugin</name>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>tba</artifactId>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.antlr</groupId>
+                <artifactId>antlr3-maven-plugin</artifactId>
+                <version>3.1.1.2</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>antlr</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <!--
+                      This configuration is required to use the tokenVocab directive in ANTLR.
+                      Otherwise the .token files will not be found.
+                      See http://mojo.codehaus.org/antlr3-maven-plugin/examples/tokenVocab.html
+                    -->
+                    <libDirectory>target/generated-sources/antlr/de/gaalop/tba/cfgImport/optimization/maxima/parser</libDirectory>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
     <dependencies>
         <dependency>
             <groupId>de.gaalop</groupId>
@@ -30,6 +54,12 @@
             <groupId>de.gaalop</groupId>
             <artifactId>codegen-java</artifactId>
             <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.antlr</groupId>
+            <artifactId>antlr-runtime</artifactId>
+            <version>3.1.1</version>
+            <type>jar</type>
         </dependency>
     </dependencies>
 </project>
