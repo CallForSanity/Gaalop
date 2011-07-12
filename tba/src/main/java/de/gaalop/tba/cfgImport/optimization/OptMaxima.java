@@ -33,7 +33,7 @@ public class OptMaxima implements OptimizationStrategyWithModifyFlag {
             Logger.getLogger(OptMaxima.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-       return false; //TODO chs rückgabe wert ändern
+       return false; // don't do a second step, if it was not necessary for other optimizations
     }
 
 }
