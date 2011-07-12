@@ -36,16 +36,17 @@ additive_expression
 
 multiplicative_expression
 	: outer_product_expression ( (STAR^ | SLASH^) outer_product_expression )*
-  	| negation
+  | negation
 	;
 
 outer_product_expression
-	: modulo_expression
+	: modulo_expression ( WEDGE^ modulo_expression )*
 	;
-	
+
 modulo_expression
 	: unary_expression ( MODULO^ unary_expression )*
 	;
+
 
 negation
 	: (unary_operator value=multiplicative_expression) -> ^(NEGATION $value)

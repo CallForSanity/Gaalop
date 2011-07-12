@@ -10,6 +10,7 @@ import de.gaalop.tba.cfgImport.optimization.maxima.parser.MaximaParser;
 import de.gaalop.tba.cfgImport.optimization.maxima.parser.MaximaTransformer;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.ListIterator;
 import org.antlr.runtime.ANTLRStringStream;
 import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.RecognitionException;
@@ -47,9 +48,11 @@ public class MaximaOptimizer {
         connected.removeLast(); // remove quit()
 
         //TODO chs use output
+
+        ListIterator<AssignmentNode> listIterator = assignmentNodeCollector.getAssignmentNodes().listIterator();
         for (MaximaInOut io: connected) {
             Expression exp = getExpressionFromMaximaOutput(io.getOutput());
-            System.out.println(exp);
+            listIterator.next().setValue(exp);
         }
 
     }
@@ -68,27 +71,40 @@ public class MaximaOptimizer {
     }
 
     private void groupMaximaInAndOutputs(LinkedList<MaximaInOut> connected, MaximaOutput output) {
+
+        MaximaInOut curIO = new MaximaInOut(null, null);
+
+        boolean lastWasInput = false;
+
         int curInput = -1;
         READIN:
         for (String o: output) {
              if (o.startsWith("(%i")) {
                  int indexRBracket = o.indexOf(')');
-                 connected.add(new MaximaInOut(o.substring(indexRBracket+1).trim(),null));
+                 curIO = new MaximaInOut(o.substring(indexRBracket+1).trim(),null);
+                 connected.add(curIO);
                  curInput = Integer.parseInt(o.substring(3, indexRBracket));
-            }
-
-             if (o.startsWith("(%o")) {
-                 int indexRBracket = o.indexOf(')');
-                 if (curInput == Integer.parseInt(o.substring(3, indexRBracket)))
-                    connected.getLast().setOutput(o.substring(indexRBracket+1).trim());
-                 else {
-                     //ups.
-                     if (Integer.parseInt(o.substring(3, indexRBracket)) < curInput) {
-                         System.err.println("Error in associating maxima input to output: "+o+" expected: "+curInput+" actual: "+Integer.parseInt(o.substring(3, indexRBracket)));
+                 lastWasInput = true;
+            } else
+                 if (o.startsWith("(%o")) {
+                     int indexRBracket = o.indexOf(')');
+                     if (curInput == Integer.parseInt(o.substring(3, indexRBracket)))
+                        connected.getLast().setOutput(o.substring(indexRBracket+1).trim());
+                     else {
+                         //ups.
+                         if (Integer.parseInt(o.substring(3, indexRBracket)) < curInput) {
+                             System.err.println("Error in associating maxima input to output: "+o+" expected: "+curInput+" actual: "+Integer.parseInt(o.substring(3, indexRBracket)));
+                         }
+                         break READIN;
                      }
-                     break READIN;
-                 }
-            }
+                     lastWasInput = false;
+                } else {
+                    if (lastWasInput) {
+                        curIO.setInput(curIO.getInput()+o.trim());
+                    } else {
+                        curIO.setOutput(curIO.getOutput()+o.trim());
+                    }
+                }
         }
     }
 
@@ -112,8 +128,6 @@ public class MaximaOptimizer {
 
             input.add(variable+value);
         }
-
-
 
     }
 

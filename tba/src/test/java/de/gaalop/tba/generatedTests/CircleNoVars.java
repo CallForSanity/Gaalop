@@ -35,6 +35,6 @@ public class CircleNoVars implements GAProgram {
 	public void calculate() {
 		m_1 = 1.7727273f;
 		m_2 = 4.863636f;
-		r_0 = (float) Math.sqrt((float) Math.sqrt(Math.abs(346.54434f)));
+		r_0 = 4.314592f;
 	}
 }

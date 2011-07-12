@@ -26,7 +26,9 @@ DECIMAL_LITERAL
 	;
 
 FLOATING_POINT_LITERAL
-    :   ('0'..'9') '.' ('0'..'9')+
+    :   ('0'..'9')+ '.' ('0'..'9')* EXPONENT?
+    |   '.' ('0'..'9')+ EXPONENT?
+    |   ('0'..'9')+ EXPONENT
     ;
 
 fragment
@@ -58,6 +60,9 @@ STAR
 
 SLASH
 	:	'/'
+	;
+
+WEDGE	:	'^'
 	;
 	
 

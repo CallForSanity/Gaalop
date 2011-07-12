@@ -33,10 +33,18 @@ public class Maxima {
 
     @Test
     public void testFloatConstant() {
-        System.out.print("FloatConstant ");
+        System.out.println(" ---- FloatConstant ----");
         test("5.0");
         test("-5.056");
         test("5e-10");
+    }
+
+    @Test
+    public void testDeepOne() {
+        System.out.println(" ---- DeepOne ----");
+        test("x+3");
+        test("5-x");
+        test("3+x*4");
     }
   
 
