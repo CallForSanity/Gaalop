@@ -4,20 +4,21 @@ import de.gaalop.api.cfg.AssignmentNodeCollector;
 import de.gaalop.cfg.AssignmentNode;
 import de.gaalop.cfg.ControlFlowGraph;
 import de.gaalop.cfg.EmptyControlFlowVisitor;
+import de.gaalop.cfg.FindStoreOutputNodes;
+import de.gaalop.cfg.StoreResultNode;
 import de.gaalop.dfg.Expression;
 import de.gaalop.tba.cfgImport.optimization.maxima.parser.MaximaLexer;
 import de.gaalop.tba.cfgImport.optimization.maxima.parser.MaximaParser;
 import de.gaalop.tba.cfgImport.optimization.maxima.parser.MaximaTransformer;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.ListIterator;
 import org.antlr.runtime.ANTLRStringStream;
 import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.RecognitionException;
 import org.antlr.runtime.tree.CommonTreeNodeStream;
-import org.antlr.runtime.tree.TreeAdaptor;
-import org.antlr.runtime.tree.TreeNodeStream;
-import org.antlr.runtime.tree.UnBufferedTreeNodeStream;
 
 /**
  * Defines a facade class for transforming a graph with maxima
@@ -46,8 +47,6 @@ public class MaximaOptimizer {
         connected.removeFirst(); // remove batch
         connected.removeFirst(); // remove display2d
         connected.removeLast(); // remove quit()
-
-        //TODO chs use output
 
         ListIterator<AssignmentNode> listIterator = assignmentNodeCollector.getAssignmentNodes().listIterator();
         for (MaximaInOut io: connected) {
@@ -113,12 +112,23 @@ public class MaximaOptimizer {
     private void fillMaximaInput(ControlFlowGraph graph, MaximaInput input) {
         assignmentNodeCollector = new AssignmentNodeCollector();
         graph.accept(assignmentNodeCollector);
+
+        FindStoreOutputNodes f = new FindStoreOutputNodes();
+
+        HashSet<String> storeNodeVariables = new HashSet<String>();
+
+        for (StoreResultNode curNode: f.getNodes())
+            storeNodeVariables.add(curNode.getValue().getName());
         
         for (AssignmentNode node: assignmentNodeCollector.getAssignmentNodes()) {
-        //TODO chs nutze store result nodes für auswerten an einer stelle!
+            //use store result nodes for marking to evaluate immediately
             DFGToMaximaCode dfg = new DFGToMaximaCode();
             node.getVariable().accept(dfg);
-            String variable = dfg.getResultString()+"::";
+            String variable = "";
+            
+            if (!storeNodeVariables.contains(node.getVariable().getName())) {
+                variable = dfg.getResultString()+"::";
+            }
 
             dfg = new DFGToMaximaCode();
             node.getValue().accept(dfg);

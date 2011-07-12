@@ -67,7 +67,7 @@ expression returns [Expression result]
 	// Floating Point Value (Constant)
 	| value=FLOATING_POINT_LITERAL { $result = new FloatConstant(java.lang.Float.parseFloat($value.text));}
 	// Reference to another multivector component (MV_SUBSCRIPT)
-	| ^(MV_SUBSCRIPT name=IDENTIFIER index=DECIMAL_LITERAL) { $result = new MultivectorComponent($name.text, Integer.valueOf($index.text) - 1); }
+	| ^(MV_SUBSCRIPT name=IDENTIFIER index=DECIMAL_LITERAL) { $result = new MultivectorComponent($name.text, Integer.valueOf($index.text)); }
 	;
 
 arguments returns [ArrayList<Expression> args]

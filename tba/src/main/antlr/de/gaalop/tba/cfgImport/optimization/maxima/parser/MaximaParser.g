@@ -75,7 +75,7 @@ primary_expression
 	;
 
 mv_coefficient
-	: name=IDENTIFIER LSBRACKET index=DECIMAL_LITERAL RSBRACKET -> ^(MV_SUBSCRIPT $name $index)
+	: name=IDENTIFIER UNDERLINE index=DECIMAL_LITERAL -> ^(MV_SUBSCRIPT $name $index)
 	;
 	
 variable: name=IDENTIFIER -> ^(VARIABLE $name)

@@ -14,7 +14,6 @@ fragment
 LETTER
 	:	'A'..'Z'
 	|	'a'..'z'
-	|	'_'
 	;
 
 fragment
@@ -62,7 +61,12 @@ SLASH
 	:	'/'
 	;
 
-WEDGE	:	'^'
+WEDGE
+        :	'^'
+	;
+
+UNDERLINE
+        :	'_'
 	;
 	
 
