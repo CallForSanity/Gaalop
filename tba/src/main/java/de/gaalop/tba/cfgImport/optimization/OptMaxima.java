@@ -7,8 +7,11 @@ package de.gaalop.tba.cfgImport.optimization;
 
 import de.gaalop.cfg.ControlFlowGraph;
 import de.gaalop.tba.UseAlgebra;
-import de.gaalop.tba.cfgImport.optimization.maxima.MaximaTransformer;
+import de.gaalop.tba.cfgImport.optimization.maxima.MaximaOptimizer;
 import de.gaalop.tba.cfgImport.optimization.maxima.ProcessBuilderMaximaConnection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.antlr.runtime.RecognitionException;
 
 /**
  *
@@ -16,15 +19,20 @@ import de.gaalop.tba.cfgImport.optimization.maxima.ProcessBuilderMaximaConnectio
  */
 public class OptMaxima implements OptimizationStrategyWithModifyFlag {
 
-    private MaximaTransformer transformer;
+    private MaximaOptimizer transformer;
 
     public OptMaxima() {
-        transformer = new MaximaTransformer(new ProcessBuilderMaximaConnection(ProcessBuilderMaximaConnection.CMD_MAXIMA_LINUX));
+        transformer = new MaximaOptimizer(new ProcessBuilderMaximaConnection(ProcessBuilderMaximaConnection.CMD_MAXIMA_LINUX));
     }
 
     @Override
     public boolean transform(ControlFlowGraph graph, UseAlgebra usedAlgebra) {
-       transformer.transformGraph(graph);
+        try {
+          transformer.transformGraph(graph);
+        } catch (RecognitionException ex) {
+            Logger.getLogger(OptMaxima.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
        return false; //TODO chs rückgabe wert ändern
     }
 

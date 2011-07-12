@@ -5,21 +5,32 @@ import de.gaalop.cfg.AssignmentNode;
 import de.gaalop.cfg.ControlFlowGraph;
 import de.gaalop.cfg.EmptyControlFlowVisitor;
 import de.gaalop.dfg.Expression;
+import de.gaalop.tba.cfgImport.optimization.maxima.parser.MaximaLexer;
+import de.gaalop.tba.cfgImport.optimization.maxima.parser.MaximaParser;
+import de.gaalop.tba.cfgImport.optimization.maxima.parser.MaximaTransformer;
+import java.util.HashMap;
 import java.util.LinkedList;
+import org.antlr.runtime.ANTLRStringStream;
+import org.antlr.runtime.CommonTokenStream;
+import org.antlr.runtime.RecognitionException;
+import org.antlr.runtime.tree.CommonTreeNodeStream;
+import org.antlr.runtime.tree.TreeAdaptor;
+import org.antlr.runtime.tree.TreeNodeStream;
+import org.antlr.runtime.tree.UnBufferedTreeNodeStream;
 
 /**
  * Defines a facade class for transforming a graph with maxima
  * @author christian
  */
-public class MaximaTransformer {
+public class MaximaOptimizer {
 
     private MaximaConnection connection;
 
-    public MaximaTransformer(MaximaConnection connection) {
+    public MaximaOptimizer(MaximaConnection connection) {
         this.connection = connection;
     }
 
-    public void transformGraph(ControlFlowGraph graph) {
+    public void transformGraph(ControlFlowGraph graph) throws RecognitionException {
         MaximaInput input = new MaximaInput();
         input.add("display2d:false;"); // very important!
         fillMaximaInput(graph,input);
@@ -36,9 +47,24 @@ public class MaximaTransformer {
         connected.removeLast(); // remove quit()
 
         //TODO chs use output
-        for (MaximaInOut io: connected)
-            System.out.println(io);
+        for (MaximaInOut io: connected) {
+            Expression exp = getExpressionFromMaximaOutput(io.getOutput());
+            System.out.println(exp);
+        }
 
+    }
+
+    public static Expression getExpressionFromMaximaOutput(String maximaOut) throws RecognitionException {
+        ANTLRStringStream inputStream = new ANTLRStringStream(maximaOut);
+        MaximaLexer lexer = new MaximaLexer(inputStream);
+        CommonTokenStream tokenStream = new CommonTokenStream(lexer);
+        MaximaParser parser = new MaximaParser(tokenStream);
+        MaximaParser.program_return parserResult = parser.program();
+
+        CommonTreeNodeStream treeNodeStream = new CommonTreeNodeStream(parserResult.getTree());
+        MaximaTransformer transformer = new MaximaTransformer(treeNodeStream);
+
+        return transformer.expression();
     }
 
     private void groupMaximaInAndOutputs(LinkedList<MaximaInOut> connected, MaximaOutput output) {

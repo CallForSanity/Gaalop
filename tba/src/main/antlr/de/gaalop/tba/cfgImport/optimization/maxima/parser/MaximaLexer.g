@@ -5,10 +5,6 @@ lexer grammar MaximaLexer;
 	package de.gaalop.tba.cfgImport.optimization.maxima.parser;
 }
 
-// Special keywords:
-GAALOPARRAY
-	:	'gaaloparray'
-	;
 
 IDENTIFIER
 	:	LETTER (LETTER|DIGIT)*
@@ -30,22 +26,12 @@ DECIMAL_LITERAL
 	;
 
 FLOATING_POINT_LITERAL
-    :   ('0'..'9')+ '.' ('0'..'9')* EXPONENT?
-    |   '.' ('0'..'9')+ EXPONENT?
-    |   ('0'..'9')+ EXPONENT
+    :   ('0'..'9') '.' ('0'..'9')+
     ;
 
 fragment
 EXPONENT 
 	: 'e' MINUS? ('0'..'9')+
-	;
-
-LSBRACKET
-	:	'['
-	;
-
-RSBRACKET
-	:	']'
 	;
 
 LBRACKET
@@ -56,18 +42,6 @@ RBRACKET
 	:	')'
 	;
 
-ASSIGNMENT
-	:	':=';
-	
-
-EQUALS
-	:	'='
-	;
-
-
-COMMA
-	:	','
-	;
 
 PLUS
 	:	'+'
@@ -85,18 +59,7 @@ STAR
 SLASH
 	:	'/'
 	;
-
-MODULO
-	:	'%'
-	;
 	
-
-SEMICOLON
-	:	';'
-	;
-
-WEDGE	:	'^'
-	;
 
 WS  :  (' '|'\r'|'\t'|'\u000C'|'\n') {$channel=HIDDEN;}
     ;

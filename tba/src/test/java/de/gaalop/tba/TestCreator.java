@@ -97,7 +97,10 @@ public class TestCreator {
             CodeParser parser = (new de.gaalop.clucalc.input.Plugin()).createCodeParser();
             ControlFlowGraph graph = parser.parseFile(new InputFile(cluName, testable.getCLUScript()));
 
-            OptimizationStrategy tba = (new de.gaalop.tba.Plugin()).createOptimizationStrategy();
+            de.gaalop.tba.Plugin tbaPlugin = new de.gaalop.tba.Plugin();
+            OptimizationStrategy tba = (tbaPlugin).createOptimizationStrategy();
+            tbaPlugin.maxima = true;
+
             tba.transform(graph);
 
             CodeGenerator generator = (new de.gaalop.java.Plugin()).createCodeGenerator();

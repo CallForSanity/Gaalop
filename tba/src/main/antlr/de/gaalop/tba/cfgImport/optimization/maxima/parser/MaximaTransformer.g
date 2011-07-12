@@ -18,23 +18,11 @@ options {
 
 @members {	
 	// Creates an expression from an identifier and takes constants into account
-	private Variable processIdentifier(String name, HashMap<String, String> minVal, HashMap<String, String> maxVal) {
-    Variable v = new Variable(name);
-    if (minVal.containsKey(name)) {
-      v.setMinValue(minVal.get(name));
-    }
-		if (maxVal.containsKey(name)) {
-      v.setMaxValue(maxVal.get(name));
-    }
-		return v;
+	private Variable processIdentifier(String name) {
+            return new Variable(name);
 	}
 	
 	private Expression processFunction(String name, ArrayList<Expression> args) {
-//		System.out.println("FUNCTION: " + name);
-//		for (Object obj : args) {
-//			System.out.println("ARG: " + args);
-//			System.out.println("ARG-Class: " + args.getClass());
-//		}
     if (name.equals("abs")) {
       return new MathFunctionCall(args.get(0), MathFunction.ABS);
     } else {
@@ -53,51 +41,27 @@ options {
 	}
 }
 
-script[ControlFlowGraph graph, HashMap<String, String> minVal, HashMap<String, String> maxVal]	returns [List<AssignmentNode> nodes]
-	@init { $nodes = new ArrayList<AssignmentNode>(); }
- 	: statement[graph, minVal, maxVal, nodes]*;
+script returns [Expression result]
+        : expression
+        ;
 
-statement[ControlFlowGraph graph, HashMap<String, String> minVal, HashMap<String, String> maxVal, List<AssignmentNode> nodes]
-	: declareArray[graph]
-	| assignment[graph, minVal, maxVal] { $nodes.add($assignment.result);}
-	| coefficient[graph, minVal, maxVal] { $nodes.add($coefficient.result); }
-	;
-	
-assignment[ControlFlowGraph graph, HashMap<String, String> minVal, HashMap<String, String> maxVal] returns [AssignmentNode result]
-  : ^(ASSIGN var=IDENTIFIER value=expression[minVal, maxVal]) {
-    Variable variable = processIdentifier($var.text, minVal, maxVal);
-    $result = new AssignmentNode(graph, variable, $value.result);
-  }
-  ;
-	
-declareArray[ControlFlowGraph graph]
-	: ^(DECLAREARRAY name=IDENTIFIER) { /* What to do with declarations? Is it really needed? */ }
-	;
-	
-coefficient[ControlFlowGraph graph, HashMap<String, String> minVal, HashMap<String, String> maxVal] returns [AssignmentNode result]
-	: ^(COEFFICIENT mvName=IDENTIFIER index=DECIMAL_LITERAL value=expression[minVal, maxVal]) {
-		MultivectorComponent component = new MultivectorComponent($mvName.text, Integer.valueOf($index.text) - 1);
-		$result = new AssignmentNode(graph, component, $value.result);
-	 }
-	;
-
-expression[HashMap<String, String> minVal, HashMap<String, String> maxVal] returns [Expression result]
+expression returns [Expression result]
 	// Addition
-	: ^(PLUS l=expression[minVal, maxVal] r=expression[minVal, maxVal]) { $result = new Addition($l.result, $r.result); }
+	: ^(PLUS l=expression r=expression) { $result = new Addition($l.result, $r.result); }
 	// Subtraction
-	| ^(MINUS l=expression[minVal, maxVal] r=expression[minVal, maxVal]) { $result = new Subtraction($l.result, $r.result); }
+	| ^(MINUS l=expression r=expression) { $result = new Subtraction($l.result, $r.result); }
 	// Multiplication
-	| ^(STAR l=expression[minVal, maxVal] r=expression[minVal, maxVal]) { $result = new Multiplication($l.result, $r.result); }
+	| ^(STAR l=expression r=expression) { $result = new Multiplication($l.result, $r.result); }
 	// Division
-	| ^(SLASH l=expression[minVal, maxVal] r=expression[minVal, maxVal]) { $result = new Division($l.result, $r.result); }
+	| ^(SLASH l=expression r=expression) { $result = new Division($l.result, $r.result); }
 	// Exponentiation
-	| ^(WEDGE l=expression[minVal, maxVal] r=expression[minVal, maxVal]) { $result = new Exponentiation($l.result, $r.result); }
+	| ^(WEDGE l=expression r=expression) { $result = new Exponentiation($l.result, $r.result); }
 	// Negation
-	| ^(NEGATION v=expression[minVal, maxVal]) { $result = new Negation($v.result); }
+	| ^(NEGATION v=expression) { $result = new Negation($v.result); }
 	// Function Call
-	| ^(FUNCTION name=IDENTIFIER arguments[minVal, maxVal]) { $result = processFunction($name.text, $arguments.args); }
+	| ^(FUNCTION name=IDENTIFIER arguments) { $result = processFunction($name.text, $arguments.args); }
 	// Variable Reference
-	| ^(VARIABLE name=IDENTIFIER) { $result = processIdentifier($name.text, minVal, maxVal); }
+	| ^(VARIABLE name=IDENTIFIER) { $result = processIdentifier($name.text); }
 	// Integral Value (Constant)
 	| value=DECIMAL_LITERAL { $result = new FloatConstant($value.text); }
 	// Floating Point Value (Constant)
@@ -106,7 +70,7 @@ expression[HashMap<String, String> minVal, HashMap<String, String> maxVal] retur
 	| ^(MV_SUBSCRIPT name=IDENTIFIER index=DECIMAL_LITERAL) { $result = new MultivectorComponent($name.text, Integer.valueOf($index.text) - 1); }
 	;
 
-arguments[HashMap<String, String> minVal, HashMap<String, String> maxVal] returns [ArrayList<Expression> args]
+arguments returns [ArrayList<Expression> args]
 	@init { $args = new ArrayList<Expression>(); }
-	: (arg=expression[minVal, maxVal] { $args.add($arg.result); })*
+	: (arg=expression { $args.add($arg.result); })*
 	;

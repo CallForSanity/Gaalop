@@ -9,13 +9,9 @@ options {
 }
 
 tokens {
-	DECLAREARRAY;
-	COEFFICIENT;
 	FUNCTION;
 	MV_SUBSCRIPT; // Accessing one MV component
 	VARIABLE;
-	ASSIGN;
-	ASSIGNBLADE; // Assigns a blade to a MV component
 	NEGATION; // Unary Negation
 
 }
@@ -30,36 +26,8 @@ tokens {
 /*
 	Grammar Rules
 */
-program	: 
-	statement+
-	;
-
-statement
-	: ( declareArray | assignCoefficient | assignment ) SEMICOLON!
-	; 
-
-// Declare a new multivector (we know how many coefficients)
-declareArray 
-	: (GAALOPARRAY LBRACKET var=IDENTIFIER RBRACKET) -> ^(DECLAREARRAY $var)
-	;
-
-assignCoefficient
-	: (mvName=IDENTIFIER LSBRACKET bladeIndex=DECIMAL_LITERAL RSBRACKET ASSIGNMENT value=additive_expression) -> ^(COEFFICIENT $mvName $bladeIndex $value)
-	;
-	
-assignment
-  : var=IDENTIFIER ASSIGNMENT value=additive_expression -> ^(ASSIGN $var $value)
-  ;
-
-coefficientExpression
-	: coefficientBlade ( PLUS! coefficientBlade )*
-	;
-	
-coefficientBlade
-	:  mvName=IDENTIFIER LSBRACKET index=DECIMAL_LITERAL RSBRACKET STAR assignedBlade=blade -> ^(ASSIGNBLADE $index $assignedBlade)
-	;
-	
-blade	: primary_expression
+program
+	: additive_expression
 	;
 
 additive_expression
@@ -68,11 +36,11 @@ additive_expression
 
 multiplicative_expression
 	: outer_product_expression ( (STAR^ | SLASH^) outer_product_expression )*
-  | negation
+  	| negation
 	;
 
 outer_product_expression
-	: modulo_expression ( WEDGE^ modulo_expression )*
+	: modulo_expression
 	;
 	
 modulo_expression
@@ -81,25 +49,17 @@ modulo_expression
 
 negation
 	: (unary_operator value=multiplicative_expression) -> ^(NEGATION $value)
-;
+	;
 
 //negation must have lower priority than wedge
 unary_expression
-	: postfix_expression
-	;
-	
-postfix_expression
 	: primary_expression
 	| function_call
 	;
 
 function_call
-	: (name=IDENTIFIER LBRACKET args=argument_expression_list RBRACKET)
+	: (name=IDENTIFIER LBRACKET args=additive_expression RBRACKET)
 	-> ^(FUNCTION $name $args)
-	;
-	
-argument_expression_list
-	:   additive_expression ( COMMA! additive_expression )*
 	;
 
 unary_operator
