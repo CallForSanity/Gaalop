@@ -7,10 +7,10 @@ package de.gaalop.gapp.variables;
  */
 public class GAPPMultivectorComponent extends GAPPVariableBase {
 
-    protected GAPPVariableBase parent;
+    protected GAPPMultivector parent;
     protected int bladeIndex;
 
-    public GAPPMultivectorComponent(GAPPVariableBase parent, int bladeIndex) {
+    public GAPPMultivectorComponent(GAPPMultivector parent, int bladeIndex) {
         super(parent.getName());
         this.parent = parent;
         this.bladeIndex = bladeIndex;
@@ -21,11 +21,11 @@ public class GAPPMultivectorComponent extends GAPPVariableBase {
         return parent.getName() + "{" + bladeIndex + "}";
     }
 
-    public GAPPVariableBase getParent() {
+    public GAPPMultivector getParent() {
         return parent;
     }
 
-    public void setParent(GAPPVariableBase parent) {
+    public void setParent(GAPPMultivector parent) {
         this.parent = parent;
     }
 

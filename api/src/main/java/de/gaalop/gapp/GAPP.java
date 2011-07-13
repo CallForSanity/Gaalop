@@ -1,6 +1,7 @@
 package de.gaalop.gapp;
 
 import de.gaalop.gapp.instructionSet.GAPPBaseInstruction;
+import de.gaalop.gapp.visitor.GAPPCopier;
 import de.gaalop.gapp.visitor.GAPPVisitor;
 import java.util.LinkedList;
 
@@ -22,8 +23,13 @@ public class GAPP {
      * @return The copy
      */
     public GAPP getCopy() {
-        //TODO chs GAPP.getCopy();
-        return null;
+        GAPP copy = new GAPP();
+
+        GAPPCopier copier = new GAPPCopier();
+        for (GAPPBaseInstruction curInstr: instructions)
+            copy.instructions.add((GAPPBaseInstruction) curInstr.accept(copier, null));
+
+        return copy;
     }
 
     /**
