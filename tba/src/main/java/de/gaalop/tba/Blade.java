@@ -27,14 +27,18 @@ public class Blade {
 
 	public static Blade parseStr(String toParse, Algebra algebra) {
 		 Blade result = new Blade(algebra);
+
+                 result.coefficient = 1;
+                 result.setSign((byte) 1);
+
 		 if (toParse.equals("0")) {
 			 result.addBasis("1");
 			 result.coefficient = 0;
 			 return result;
 		 }
-		 
+
 		  String[] parts = toParse.split("\\^");
-		  //TODO chs Attention maybe switching to correct coefficent
+
 		  if (parts[0].startsWith("-1")) {
 		    result.setSign((byte) -1);
 		    parts[0] = parts[0].substring(2);
@@ -44,7 +48,30 @@ public class Blade {
 		       if (!parts[0].equals("1")) {
 		    	   parts[0] = parts[0].substring(1);
 		       }
-		    }
+		    } else 
+                        if (parts[0].startsWith("e")) {
+                            //implicit 1
+                            result.setSign((byte) 1);
+                        } else if (parts[0].startsWith("-e")) {
+                            //implicit -1
+                            result.setSign((byte) -1);
+                            parts[0] = parts[0].substring(1);
+                        } else {
+                            String floatStr = parts[0].split("e")[0];
+                            float value = Float.parseFloat(floatStr);
+
+                            if (value<0)
+                                result.setSign((byte) -1);
+                            else
+                                result.setSign((byte) 1);
+
+                            result.coefficient = Math.abs(value);
+                            if (parts[0].contains("e")) {
+                                parts[0] = parts[0].substring(parts[0].indexOf("e"));
+                            } else {
+                                parts[0] = "";
+                            }
+                        }
 		  }
 		  
 		  for (String part: parts) {

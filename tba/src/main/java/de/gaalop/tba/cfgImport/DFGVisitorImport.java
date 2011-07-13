@@ -307,7 +307,7 @@ public class DFGVisitorImport extends EmptyExpressionVisitor {
 		super.visit(node);
 	
 		MvExpressions result = createNewMvExpressions(); 
-		result.bladeExpressions[node.getOrder()] = new FloatConstant(1); //TODO chs ? change for other algebras
+		result.bladeExpressions[node.getOrder()] = new FloatConstant(1);
 		expressions.put(node,result);
 	}
 

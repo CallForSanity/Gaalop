@@ -54,7 +54,7 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
                 for (StoreResultNode s: storeOutputNodesVisitor.getNodes()) {
                     String name = s.getValue().getName();
 
-                    // TODO chs And MultivectorComponents?
+                    // Remind that only variables can be outputted, no MultivectorComponents!
                     if (!known.contains(name)) {
                         known.add(name);
                         int bladeCount = (int) Math.pow(2,graph.getSignature().getDimension());

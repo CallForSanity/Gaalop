@@ -127,7 +127,6 @@ public final class MultivectorComponent extends Variable {
                             }
                     } else
                         super.replaceExpression(old, newExpression);
-                    //TODO chs is this sufficient???
     }
 
 
