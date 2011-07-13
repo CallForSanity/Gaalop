@@ -31,5 +31,10 @@ public class GAPPSignedMultivectorComponent extends GAPPMultivectorComponent {
     public void setSign(byte sign) {
         this.sign = sign;
     }
+
+    @Override
+    public Object accept(GAPPVariableVisitor visitor, Object arg) {
+        return visitor.visitSignedMultivectorComponent(this, arg);
+    }
     
 }

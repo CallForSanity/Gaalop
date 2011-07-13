@@ -5,7 +5,7 @@ package de.gaalop.gapp.variables;
  *
  * @author christian
  */
-public class GAPPMultivectorComponent extends GAPPVariableBase {
+public class GAPPMultivectorComponent extends GAPPVariable {
 
     protected GAPPMultivector parent;
     protected int bladeIndex;
@@ -35,6 +35,11 @@ public class GAPPMultivectorComponent extends GAPPVariableBase {
 
     public void setBladeIndex(int bladeIndex) {
         this.bladeIndex = bladeIndex;
+    }
+
+    @Override
+    public Object accept(GAPPVariableVisitor visitor, Object arg) {
+        return visitor.visitMultivectorComponent(this, arg);
     }
     
 }

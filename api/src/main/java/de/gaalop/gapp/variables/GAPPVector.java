@@ -9,7 +9,7 @@ import java.util.Vector;
  *
  * @author christian
  */
-public class GAPPVector extends GAPPVariableBase {
+public class GAPPVector extends GAPPVariable {
 
     public Vector<GAPPSignedMultivectorComponent> slots;
 
@@ -41,6 +41,11 @@ public class GAPPVector extends GAPPVariableBase {
 
     public void setSize(int size) {
         slots.setSize(size);
+    }
+
+    @Override
+    public Object accept(GAPPVariableVisitor visitor, Object arg) {
+        return visitor.visitVector(this, arg);
     }
 
 

@@ -8,7 +8,9 @@ import de.gaalop.gapp.instructionSet.GAPPDotVectors;
 import de.gaalop.gapp.instructionSet.GAPPResetMv;
 import de.gaalop.gapp.instructionSet.GAPPSetMv;
 import de.gaalop.gapp.instructionSet.GAPPSetVector;
-import de.gaalop.gapp.variables.GAPPScalarVariable;
+import de.gaalop.gapp.variables.GAPPConstant;
+import de.gaalop.gapp.variables.GAPPValueHolder;
+import de.gaalop.gapp.variables.GAPPVariable;
 import de.gaalop.gapp.visitor.CFGGAPPVisitor;
 import de.gaalop.tba.UseAlgebra;
 import java.util.HashMap;
@@ -151,11 +153,11 @@ public class Executer extends CFGGAPPVisitor {
         Selectorset selector = gappAssignMv.getSelectors();
         int selCount = selector.size();
         for (int sel=0;sel<selCount;sel++) {
-            GAPPScalarVariable scalarVar = gappAssignMv.getValues().get(sel);
-            if (scalarVar.isConstant()) 
-                destination.getEntries()[selector.get(sel)] = scalarVar.getValue();
+            GAPPValueHolder scalarVar = gappAssignMv.getValues().get(sel);
+            if (scalarVar.isVariable())
+                destination.getEntries()[selector.get(sel)] = getVariableValue(((GAPPVariable) scalarVar).getName());
             else
-                destination.getEntries()[selector.get(sel)] = getVariableValue(scalarVar.getName());
+                destination.getEntries()[selector.get(sel)] = ((GAPPConstant) scalarVar).getValue();
         }
 
         return null;

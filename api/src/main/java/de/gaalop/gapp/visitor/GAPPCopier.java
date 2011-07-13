@@ -10,8 +10,9 @@ import de.gaalop.gapp.instructionSet.GAPPResetMv;
 import de.gaalop.gapp.instructionSet.GAPPSetMv;
 import de.gaalop.gapp.instructionSet.GAPPSetVector;
 import de.gaalop.gapp.variables.GAPPMultivector;
-import de.gaalop.gapp.variables.GAPPScalarVariable;
 import de.gaalop.gapp.variables.GAPPSignedMultivectorComponent;
+import de.gaalop.gapp.variables.GAPPValueHolder;
+import de.gaalop.gapp.variables.GAPPVariableCopier;
 import de.gaalop.gapp.variables.GAPPVector;
 import java.util.Vector;
 
@@ -49,11 +50,11 @@ public class GAPPCopier implements GAPPVisitor {
      */
     private Variableset copyVariableset(Variableset var) {
         Variableset copy = new Variableset();
-        for (GAPPScalarVariable cur: var)
-            copy.add((cur.isConstant())
-                ? new GAPPScalarVariable(cur.getValue())
-                : new GAPPScalarVariable(cur.getName()) // Strings are immutable!
-                );
+
+        GAPPVariableCopier copier = new GAPPVariableCopier();
+        for (GAPPValueHolder cur: var)
+            copy.add((GAPPValueHolder) cur.accept(copier, null));
+  
         return copy;
     }
 

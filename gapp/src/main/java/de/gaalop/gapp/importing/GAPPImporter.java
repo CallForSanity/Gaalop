@@ -41,6 +41,7 @@ import de.gaalop.gapp.instructionSet.GAPPDotVectors;
 import de.gaalop.gapp.instructionSet.GAPPResetMv;
 import de.gaalop.gapp.instructionSet.GAPPSetMv;
 import de.gaalop.gapp.instructionSet.GAPPSetVector;
+import de.gaalop.gapp.variables.GAPPConstant;
 import de.gaalop.gapp.variables.GAPPMultivector;
 import de.gaalop.gapp.variables.GAPPScalarVariable;
 import de.gaalop.gapp.variables.GAPPVector;
@@ -207,7 +208,7 @@ public class GAPPImporter extends EmptyControlFlowVisitor implements ExpressionV
                 DFGNodeType typeBlade = DFGNodeTypeGetter.getTypeOfDFGNode(mvExpr.bladeExpressions[blade]);
 
                 if (typeBlade == DFGNodeType.FloatConstant) {
-                    val.add(new GAPPScalarVariable(((FloatConstant) mvExpr.bladeExpressions[blade]).getValue()));
+                    val.add(new GAPPConstant(((FloatConstant) mvExpr.bladeExpressions[blade]).getValue()));
                 } else {
 
                     if (typeBlade == DFGNodeType.Variable) {

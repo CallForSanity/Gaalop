@@ -12,6 +12,7 @@ import de.gaalop.gapp.instructionSet.GAPPSetVector;
 
 import de.gaalop.gapp.variables.GAPPMultivector;
 import de.gaalop.gapp.variables.GAPPScalarVariable;
+import de.gaalop.gapp.variables.GAPPValueHolder;
 import de.gaalop.gapp.variables.GAPPVector;
 
 /**
@@ -71,7 +72,7 @@ public class PrettyPrint extends CFGGAPPVisitor {
      */
     private void printVariableSet(Variableset variableset) {
         result.append("[");
-        for (GAPPScalarVariable cur: variableset) {
+        for (GAPPValueHolder cur: variableset) {
             result.append(cur.prettyPrint());
             result.append(",");
         }

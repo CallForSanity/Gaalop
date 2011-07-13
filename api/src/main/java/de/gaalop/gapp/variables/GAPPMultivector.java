@@ -9,10 +9,15 @@ import java.util.Vector;
  *
  * @author christian
  */
-public class GAPPMultivector extends GAPPVariableBase {
+public class GAPPMultivector extends GAPPVariable {
 
     public GAPPMultivector(String name) {
         super(name);
+    }
+
+    @Override
+    public Object accept(GAPPVariableVisitor visitor, Object arg) {
+        return visitor.visitMultivector(this, arg);
     }
 
 

@@ -1,15 +1,15 @@
 package de.gaalop.gapp.variables;
 
 /**
- * Represents a basic variable in GAPP IR.
+ * Represents a basic variable with a name in GAPP IR.
  *
  * @author christian
  */
-public class GAPPVariableBase {
+public abstract class GAPPVariable extends GAPPValueHolder {
 
     protected String name;
 
-    public GAPPVariableBase(String name) {
+    public GAPPVariable(String name) {
         this.name = name;
     }
 
@@ -18,10 +18,7 @@ public class GAPPVariableBase {
         return name.hashCode();
     }
 
-    /**
-     * Returns a pretty-formed string, which short outlines the contents
-     * @return The pretty-formed string
-     */
+    @Override
     public String prettyPrint() {
         return name;
     }
@@ -36,8 +33,13 @@ public class GAPPVariableBase {
 
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof GAPPVariableBase)) return false;
-        return name.equals(((GAPPVariableBase) obj).name);
+        if (!(obj instanceof GAPPVariable)) return false;
+        return name.equals(((GAPPVariable) obj).name);
+    }
+
+    @Override
+    public boolean isVariable() {
+        return true;
     }
 
 

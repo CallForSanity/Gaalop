@@ -1,6 +1,6 @@
 package de.gaalop.gapp;
 
-import de.gaalop.gapp.variables.GAPPScalarVariable;
+import de.gaalop.gapp.variables.GAPPValueHolder;
 import java.util.Vector;
 
 /**
@@ -8,6 +8,6 @@ import java.util.Vector;
  * A variable is represented by an GAPPVariable
  * @author christian
  */
-public class Variableset extends Vector<GAPPScalarVariable> {
+public class Variableset extends Vector<GAPPValueHolder> {
 
 }

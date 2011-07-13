@@ -258,7 +258,7 @@ public class ConstantFolding implements ExpressionVisitor, ControlFlowVisitor {
                 resultExpr = operandExpr;
                 setGraphModified();
             }
-        } //TODO chs why results this in a endless loop, when uncommenting?
+        } // this results in a endless loop, when uncommenting!
         /*  else if ((node.getFunction() == MathFunction.SQRT)
                 && ((DFGNodeTypeGetter.getTypeOfDFGNode(operandExpr) == DFGNodeType.MathFunctionCall)
                 && (((MathFunctionCall) operandExpr).getFunction() != MathFunction.ABS))) {
