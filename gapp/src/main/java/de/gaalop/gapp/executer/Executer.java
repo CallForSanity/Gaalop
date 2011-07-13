@@ -188,9 +188,6 @@ public class Executer extends CFGGAPPVisitor {
                 case ACOS:
                     result = (float) Math.acos(op1);
                     break;
-                case ADDITION:
-                    result = op1 + op2;
-                    break;
                 case ASIN:
                     result = (float) Math.asin(op1);
                     break;
@@ -223,20 +220,11 @@ public class Executer extends CFGGAPPVisitor {
                 case LOG:
                     result = (float) Math.log(op1);
                     break;
-                case MULTIPLICATION:
-                    result = op1 * op2;
-                    break;
-                case NEGATION:
-                    result = -op1;
-                    break;
                 case SIN:
                     result = (float) Math.sin(op1);
                     break;
                 case SQRT:
                     result = (float) Math.sqrt(op1);
-                    break;
-                case SUBTRACTION:
-                    result = op1 - op2;
                     break;
                 case TAN:
                     result = (float) Math.tan(op1);
