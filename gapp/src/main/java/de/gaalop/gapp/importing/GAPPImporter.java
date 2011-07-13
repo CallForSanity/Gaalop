@@ -28,6 +28,7 @@ import de.gaalop.dfg.OuterProduct;
 import de.gaalop.dfg.Relation;
 import de.gaalop.dfg.Reverse;
 import de.gaalop.dfg.Subtraction;
+import de.gaalop.dfg.UnaryOperation;
 import de.gaalop.dfg.Variable;
 import de.gaalop.gapp.GAPP;
 import de.gaalop.gapp.Selectorset;
@@ -508,36 +509,101 @@ public class GAPPImporter extends EmptyControlFlowVisitor implements ExpressionV
         curGAPP.addInstruction(new GAPPSetMv(destination,mvOp,selDest,selOp));
     }
 
+    private void doUnaryCalculation(CalculationType type, UnaryOperation node) {
+        Expression operand = node.getOperand();
+
+        operand.accept(this);
+
+        GAPPMultivector mvO = getGAPPMultivectorFromExpression(operand);
+
+        BooleanArr b1 = getBooleanArr(mvO);
+
+        Selectorset sel = new Selectorset();
+
+        for (int blade=0;blade<usedAlgebra.getBladeCount();blade++)
+            if (b1.getComponent(blade))
+            {
+                sel.add(blade);
+                getBooleanArr(destination).setComponent(blade, true);
+            }
+
+        curGAPP.addInstruction(new GAPPCalculate(type, destination, mvO, null, sel, null));
+
+    }
+
+    private void doBinaryCalculation(CalculationType type, BinaryOperation node) {
+        Expression left = node.getLeft();
+        Expression right = node.getRight();
+
+        left.accept(this);
+        right.accept(this);
+
+        GAPPMultivector mvL = getGAPPMultivectorFromExpression(left);
+        GAPPMultivector mvR = getGAPPMultivectorFromExpression(right);
+
+        BooleanArr b1 = getBooleanArr(mvL);
+        BooleanArr b2 = getBooleanArr(mvR);
+
+        Selectorset sel = new Selectorset();
+
+        for (int blade=0;blade<usedAlgebra.getBladeCount();blade++)
+            if (b1.getComponent(blade) || b2.getComponent(blade))
+            {
+                sel.add(blade);
+                getBooleanArr(destination).setComponent(blade, true);
+            }
+
+        curGAPP.addInstruction(new GAPPCalculate(type, destination, mvL, mvR, sel, sel));
+
+    }
+
     @Override
     public void visit(LogicalOr node) {
-        //TODO chs implement GAPP Importing Logical functions
-        System.err.println("LogicalOr Not supported yet.");
+        doBinaryCalculation(CalculationType.LOG_OR, node);
     }
 
     @Override
     public void visit(LogicalAnd node) {
-        System.err.println("LogicalAnd Not supported yet.");
+        doBinaryCalculation(CalculationType.LOG_AND, node);
     }
 
     @Override
     public void visit(LogicalNegation node) {
-        System.err.println("LogicalNegation Not supported yet.");
+        doUnaryCalculation(CalculationType.LOG_INV, node);
     }
 
     @Override
     public void visit(Equality node) {
-        //TODO chs implement GAPP Importing Equalities
-        System.err.println("Equality Not supported yet.");
+        doBinaryCalculation(CalculationType.EQUAL, node);
     }
 
     @Override
     public void visit(Inequality node) {
-        System.err.println("Inequality Not supported yet.");
+        doBinaryCalculation(CalculationType.INEQUAL, node);
     }
 
     @Override
     public void visit(Relation relation) {
-        System.err.println("Relation Not supported yet.");
+
+        CalculationType type = null;
+        switch (relation.getType()) {
+            case GREATER:
+                type = CalculationType.REL_GR;
+                break;
+            case GREATER_OR_EQUAL:
+                type = CalculationType.REL_GREQ;
+                break;
+            case LESS:
+                type = CalculationType.REL_LE;
+                break;
+            case LESS_OR_EQUAL:
+                type = CalculationType.REL_LEEQ;
+                break;
+            default:
+                System.err.println("Unknown equivalent GAPP Calculation to "+relation.getType().name());
+        }
+
+        doBinaryCalculation(type, relation);
     }
 
     @Override
