@@ -8,6 +8,7 @@ import de.gaalop.gapp.variables.GAPPMultivector;
 import de.gaalop.tba.cfgImport.DFGVisitorImport;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.SortedSet;
 
 
@@ -34,7 +35,16 @@ public class GAPPImportingMain {
             GAPPImporter vCFG = new GAPPImporter(importer.getUsedAlgebra(),vDFG.expressions);
             graph.accept(vCFG);
 
-            GAPPMultivector[] arr = vCFG.assigned.keySet().toArray(new GAPPMultivector[0]);
+            //outputAssignedArray(vCFG.assigned);
+
+
+            return graph;
+
+
+	}
+
+        private void outputAssignedArray(HashMap<GAPPMultivector, BooleanArr> assigned) {
+             GAPPMultivector[] arr = assigned.keySet().toArray(new GAPPMultivector[0]);
 
             Arrays.sort(arr,new Comparator<GAPPMultivector>() {
 
@@ -42,12 +52,12 @@ public class GAPPImportingMain {
             public int compare(GAPPMultivector o1, GAPPMultivector o2) {
                 return o1.getName().compareTo(o2.getName());
             }
-                
+
             });
 
 
             for (GAPPMultivector cur: arr) {
-                BooleanArr val = vCFG.assigned.get(cur);
+                BooleanArr val = assigned.get(cur);
 
                 System.out.print(cur.getName()+":");
                 for (boolean cur1: val.getComponents()) {
@@ -56,11 +66,6 @@ public class GAPPImportingMain {
                 System.out.println();
 
             }
-
-
-            return graph;
-
-
-	}
+        }
 
 }

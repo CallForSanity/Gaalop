@@ -36,7 +36,7 @@ public class Circle implements GAPPTestable {
 
             "ma = c*einf*c;"+"\n"+
             "?m = -ma/(ma.einf);"+"\n"+
-            "?r = sqrt(abs(c.c/((einf.c)*(einf.c))));"+"\n"+
+            "?r = sqrt(abs((c.c)/((einf.c)*(einf.c))));"+"\n"+
                     "?v1;"
             ;
     }
@@ -66,7 +66,7 @@ public class Circle implements GAPPTestable {
         MultivectorWithValues valR = executer.getValue("r");
 
         assertNotNull(valM);
-        //assertNotNull(valR);
+        assertNotNull(valR);
 
         Point2D.Float m = new Point2D.Float(valM.getEntry(1),valM.getEntry(2));
         float r = valR.getEntry(0);

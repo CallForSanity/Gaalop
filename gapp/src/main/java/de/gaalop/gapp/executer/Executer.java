@@ -167,7 +167,10 @@ public class Executer extends CFGGAPPVisitor {
     public Object visitCalculate(GAPPCalculate gappCalculate, Object arg) {
 
         MultivectorWithValues mv1 = getMultivector(gappCalculate.getOperand1().getName());
-        MultivectorWithValues mv2 = getMultivector(gappCalculate.getOperand2().getName());
+
+        MultivectorWithValues mv2 = null;
+        if (gappCalculate.getOperand2() != null)
+            mv2 = getMultivector(gappCalculate.getOperand2().getName());
 
         Selectorset sel = gappCalculate.getUsed1();
 

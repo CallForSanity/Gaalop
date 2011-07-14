@@ -17,7 +17,7 @@ public class DivisionRemover extends ExpressionRemover {
     @Override
     public void visit(Division node) {
         if (DFGNodeTypeGetter.getTypeOfDFGNode(node.getRight()) != DFGNodeType.FloatConstant) 
-            resultExpr = new Multiplication(node.getLeft(), new Division(node.getRight(), new InnerProduct(node.getRight(), new Reverse(node.getRight()))));
+            resultExpr = new Multiplication(node.getLeft(), new Division(node.getRight(), new Multiplication(node.getRight(), new Reverse(node.getRight()))));
     }
 
 }
