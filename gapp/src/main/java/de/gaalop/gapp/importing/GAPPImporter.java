@@ -66,7 +66,7 @@ public class GAPPImporter extends EmptyControlFlowVisitor implements ExpressionV
     private HashMap<Expression, MvExpressions> expressions; // from TBA
 
     private HashMap<Variable, GAPPMultivector> mapVariableGAPPMv = new HashMap<Variable, GAPPMultivector>();
-    private HashMap<GAPPMultivector, BooleanArr> assigned = new HashMap<GAPPMultivector, BooleanArr>();
+    public HashMap<GAPPMultivector, BooleanArr> assigned = new HashMap<GAPPMultivector, BooleanArr>();
 
     private BooleanArr getBooleanArr(GAPPMultivector mv) {
         if (assigned.containsKey(mv))
@@ -290,7 +290,7 @@ public class GAPPImporter extends EmptyControlFlowVisitor implements ExpressionV
                 getBooleanArr(destination).setComponent(blade, true);
             }
         
-        curGAPP.addInstruction(new GAPPCalculate(CalculationType.EXPONENTIATION, destination, mvL, mvR, sel1,sel2));
+        curGAPP.addInstruction(new GAPPCalculate(CalculationType.DIVISION, destination, mvL, mvR, sel1,sel2));
     }
 
     /**
@@ -429,7 +429,9 @@ public class GAPPImporter extends EmptyControlFlowVisitor implements ExpressionV
             sel.add(0);
             getBooleanArr(destination).setComponent(0, true);
             curGAPP.addInstruction(new GAPPCalculate(CalculationType.valueOf(node.getFunction().name()), destination, mvOp, null, sel, null));
-            
+
+        } else {
+            System.out.println(node.getFunction()+":"+node.getOperand());
         }
     }
 
