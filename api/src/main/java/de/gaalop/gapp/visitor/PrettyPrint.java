@@ -172,6 +172,13 @@ public class PrettyPrint extends CFGGAPPVisitor {
             result.append(",");
             printMultivector(gappCalculate.getOperand2());
         }
+        result.append(",");
+        printSelectors(gappCalculate.getUsed1());
+        result.append(",");
+        if (gappCalculate.getUsed2()==null)
+            result.append("null"); 
+        else
+            printSelectors(gappCalculate.getUsed2());
         result.append(");\n");
         return null;
     }

@@ -1,5 +1,6 @@
 package de.gaalop.gapp;
 
+import java.util.Arrays;
 import de.gaalop.gapp.executer.Executer;
 import de.gaalop.gapp.executer.MultivectorWithValues;
 import java.awt.Point;
@@ -78,8 +79,13 @@ public class Circle implements GAPPTestable {
         for (int i=1;i<32;i++)
             assertEquals(0, valR.getEntry(i),10E-04);
 
-        assertEquals(0, valM.getEntry(0),10E-04);
-        for (int i=3;i<32;i++)
+        // m is a (normalized) point!
+        assertEquals(0, valM.getEntry(0),10E-04); //1
+        assertEquals(0, valM.getEntry(3),10E-04); //e3
+        assertEquals(0.5*m.distanceSq(new Point2D.Float(0,0)), valM.getEntry(4),10E-04); //einf
+        assertEquals(1, valM.getEntry(5),10E-04); //e0
+
+        for (int i=6;i<32;i++)
             assertEquals(0, valM.getEntry(i),10E-04);
         
     }

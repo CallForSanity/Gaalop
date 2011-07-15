@@ -13,6 +13,7 @@ import de.gaalop.gapp.variables.GAPPValueHolder;
 import de.gaalop.gapp.variables.GAPPVariable;
 import de.gaalop.gapp.visitor.CFGGAPPVisitor;
 import de.gaalop.tba.UseAlgebra;
+import java.util.Arrays;
 import java.util.HashMap;
 
 /**
@@ -31,6 +32,12 @@ public class Executer extends CFGGAPPVisitor {
     public MultivectorWithValues getValue(String name) {
         return values.get(name);
     }
+
+    public HashMap<String, MultivectorWithValues> getValues() {
+        return values;
+    }
+
+    
 
     public Executer(UseAlgebra usedAlgebra, HashMap<String,Float> inputValues) {
         this.inputValues = inputValues;
@@ -173,6 +180,7 @@ public class Executer extends CFGGAPPVisitor {
             mv2 = getMultivector(gappCalculate.getOperand2().getName());
 
         Selectorset sel = gappCalculate.getUsed1();
+        Selectorset sel2 = gappCalculate.getUsed2();
 
         for (int j = 0;j<sel.size();j++) {
             int component = Math.abs(sel.get(j));
@@ -180,7 +188,7 @@ public class Executer extends CFGGAPPVisitor {
 
             float op2 = 0;
             if (gappCalculate.getOperand2() != null)
-                op2 = mv2.getEntry(component);
+                op2 = mv2.getEntry(Math.abs(sel2.get(j)));
 
             MultivectorWithValues target = getMultivector(gappCalculate.getTarget().getName());
 
@@ -246,6 +254,23 @@ public class Executer extends CFGGAPPVisitor {
         return null;
 
 
+    }
+
+    /**
+     * Prints all values and vectors
+     */
+    public void printAllValues() {
+        String[] keys = values.keySet().toArray(new String[0]);
+        Arrays.sort(keys);
+        for (String m: keys) {
+            System.out.println(m+" = "+Arrays.toString(values.get(m).getEntries()));
+        }
+
+        keys = vectors.keySet().toArray(new String[0]);
+        Arrays.sort(keys);
+        for (String m: keys) {
+            System.out.println(m+" = "+Arrays.toString(vectors.get(m).getEntries()));
+        }
     }
 
 }

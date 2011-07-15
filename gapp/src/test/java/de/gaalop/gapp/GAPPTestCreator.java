@@ -54,7 +54,6 @@ public class GAPPTestCreator {
             out.println("import static org.junit.Assert.*;");
             out.println("import org.junit.Ignore;");
             out.println();
-            out.println("@Ignore"); //TODO chs remove this is error is detected in executer
             out.println("public class GAPPTest extends Base {");
 
         } catch (FileNotFoundException ex) {
