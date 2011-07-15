@@ -1,23 +1,10 @@
 package de.gaalop.gapp;
 
-import de.gaalop.gapp.codegen.GAPPCodeGeneratorPlugin;
-import de.gaalop.CodeGenerator;
-import de.gaalop.CodeGeneratorException;
-import de.gaalop.CodeGeneratorPlugin;
-import de.gaalop.CodeParser;
-import de.gaalop.CodeParserException;
-import de.gaalop.InputFile;
-import de.gaalop.OutputFile;
-import de.gaalop.gapp.executer.Executer;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
-import java.util.HashMap;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import de.gaalop.OptimizationException;
-import de.gaalop.cfg.ControlFlowGraph;
-import de.gaalop.gapp.importing.GAPPImportingMain;
 
 /**
  *

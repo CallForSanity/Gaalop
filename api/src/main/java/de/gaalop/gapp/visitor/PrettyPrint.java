@@ -1,5 +1,6 @@
 package de.gaalop.gapp.visitor;
 
+import de.gaalop.cfg.AssignmentNode;
 import de.gaalop.gapp.Selectorset;
 import de.gaalop.gapp.Variableset;
 import de.gaalop.gapp.instructionSet.GAPPAddMv;
@@ -27,6 +28,22 @@ public class PrettyPrint extends CFGGAPPVisitor {
     public PrettyPrint() {
         result = new StringBuilder();
     }
+
+    @Override
+    public void visit(AssignmentNode node) {
+        result.append("//");
+        result.append(node.getVariable().toString());
+        result.append(" = ");
+        result.append(node.getValue().toString());
+        result.append('\n');
+
+        if (node.getGAPP() != null)
+            node.getGAPP().accept(this, null);
+        
+        result.append('\n');
+        node.getSuccessor().accept(this);
+    }
+
 
     public void clear() {
         result.setLength(0);
