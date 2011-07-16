@@ -1,7 +1,7 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 
 # required packages
-FIND_PACKAGE(GCD)
+FIND_PACKAGE(GCD REQUIRED)
 
 # options
 OPTION(BUILD_WITH_CUDA "build with CUDA tests")

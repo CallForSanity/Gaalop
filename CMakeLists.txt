@@ -15,9 +15,6 @@ if( WIN32 AND NOT UNIX )
 endif()
 INCLUDE(CPack)
 
-# build body
-ADD_SUBDIRECTORY(gcd-body)
-
 # use packages
 FIND_PACKAGE(Maven REQUIRED)
 INCLUDE(share/cmake-2.8/Modules/CopyFiles.cmake)
@@ -30,8 +27,6 @@ if(BUILD_WITH_OPENMP)
 endif(BUILD_WITH_OPENMP)
 
 # build and install
-ADD_SUBDIRECTORY(bin)
-ADD_SUBDIRECTORY(gcd-config)
 ADD_SUBDIRECTORY(share)
 
 # build
@@ -41,8 +36,8 @@ add_custom_command(TARGET gaalop COMMAND ${MVN_BINARY} -DupdateOnly=true package
 #add_custom_command(TARGET mvn_clean COMMAND ${MVN_BINARY} clean WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 # copy
 COPY_DIRECTORY(include-copy include include)
-COPY_DIRECTORY(gaalop-copy "target/gaalop*" "share/gcd/gaalop")
-COPY_DIRECTORY(dependencies-copy dependencies "share/gcd/gaalop/plugins")
+COPY_DIRECTORY(gaalop-copy "target/gaalop*" "share/gcd")
+COPY_DIRECTORY(dependencies-copy dependencies "share/gcd/plugins")
 # install
 FILE(GLOB GAALOP_BUILD_TARGET_DIR "${CMAKE_CURRENT_SOURCE_DIR}/target/gaalop*")
 INSTALL(DIRECTORY "${GAALOP_BUILD_TARGET_DIR}/." DESTINATION share/gcd/gaalop PATTERN ".svn" EXCLUDE)

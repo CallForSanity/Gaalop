@@ -32,18 +32,21 @@ public class Main {
         int bladeArrayIndex;
     };
     private Log log = LogFactory.getLog(Main.class);
+
     @Option(name = "-i", required = true, usage = "The input file.")
-    private String inputFile;
-    @Option(name = "-o", required = false, usage = "Sets the directory where the output files are created.")
-    private String outputDirectory = "";
+    private String inputFilePath;
+    @Option(name = "-o", required = false, usage = "The output file.")
+    private String outputFilePath;
+
     @Option(name = "-m", required = false, usage = "Sets the Maple binary path.")
     private String mapleBinaryPath = "";
     @Option(name = "-parser", required = false, usage = "Sets the class name of the code parser plugin that should be used.")
     private String codeParserPlugin = "de.gaalop.clucalc.input.Plugin";
     @Option(name = "-generator", required = false, usage = "Sets the class name of the code generator plugin that should be used.")
-    private String codeGeneratorPlugin = "de.gaalop.cpp.Plugin";
+    private String codeGeneratorPlugin = "de.gaalop.compressed.Plugin";
     @Option(name = "-optimizer", required = false, usage = "Sets the class name of the optimization strategy plugin that should be used.")
     private String optimizationStrategyPlugin = "de.gaalop.maple.Plugin";
+
     private static String PATH_SEP = "/";
     private static char LINE_END = '\n';
 
@@ -59,7 +62,7 @@ public class Main {
         CmdLineParser parser = new CmdLineParser(main);
         try {
             parser.parseArgument(args);
-            main.run();
+            main.runGCD();
         } catch (CmdLineException e) {
             System.err.println(e.getMessage());
             parser.printUsage(System.err);
@@ -95,57 +98,12 @@ public class Main {
         }
     }
 
-    public void runGCD(String[] args) throws Exception {
-        // !!
-        String outputFileExtension = ".cpp";
-        String outputFilePath = "";
-        String intermediateFileExtension = ".i.cpp";
-        String outputOption = "-o";
+    public void runGCD() throws Exception {
 
-        // parse command line
-        String inputFilePath = args[args.length - 1];
-        if (inputFilePath.indexOf('\\') > 0 && inputFilePath.indexOf('/') > 0) {
-            StringBuffer inputFilePathStream = new StringBuffer();
-//            inputFilePathStream.append(runPath);
-//            inputFilePathStream.append(PATH_SEP);
-            inputFilePathStream.append(inputFilePath);
-            inputFilePath = inputFilePathStream.toString();
-        }
-
-        // try to find temp file path and remove trailing extension
-        String tempFilePath = inputFilePath + outputFileExtension;
-        for (int counter = args.length - 2; counter > 0; --counter) {
-            String arg = args[counter];
-            if (arg.lastIndexOf(outputFileExtension) > 0) {
-                int pos = arg.lastIndexOf('.');
-                tempFilePath = arg.substring(0, pos);
-                outputFilePath = arg;
-                break;
-            } else if (arg.lastIndexOf("-o") > 0
-                    || arg.lastIndexOf(outputOption) > 0) {
-                arg = args[++counter];
-                int pos = arg.lastIndexOf('.');
-                tempFilePath = arg.substring(0, pos);
-                outputFilePath = arg;
-                break;
-            }
-        }
-
-        // convert to absolute paths
-        if (tempFilePath.indexOf('\\') > 0 && tempFilePath.indexOf('/') > 0) {
-            // gaalop output file
-            StringBuffer tempFilePathStream = new StringBuffer();
-//            tempFilePathStream.append(runPath);
-//            tempFilePathStream.append(PATH_SEP);
-            tempFilePathStream.append(tempFilePath);
-            tempFilePath = tempFilePathStream.toString();
-
-            // output file
-            StringBuffer outputFilePathStream = new StringBuffer();
-//            outputFilePathStream.append(runPath);
-//            outputFilePathStream.append(PATH_SEP);
-            outputFilePathStream.append(outputFilePath);
-            outputFilePath = outputFilePathStream.toString();
+        String runPath;
+        {
+            File directory = new File (".");
+            runPath = directory.getCanonicalPath();
         }
 
         // process input file
@@ -156,16 +114,16 @@ public class Main {
             BufferedReader inputFile = createFileInputStringStream(inputFilePath);
             while ((line = inputFile.readLine()) != null) {
                 // found gaalop line
-                if (line.indexOf("#pragma gcd begin") > 0) {
+                if (line.indexOf("#pragma gcd begin") >= 0) {
                     StringBuffer gaalopInFileStream = new StringBuffer();
 
                     // read until end of optimized file
                     while ((line = inputFile.readLine()) != null) {
-                        if (line.indexOf("#pragma gcd end") > 0) {
+                        if (line.indexOf("#pragma gcd end") >= 0) {
                             break;
                         } else {
                             gaalopInFileStream.append(line);
-                            gaalopInFileStream.append('\n');
+                            gaalopInFileStream.append(LINE_END);
                         }
                     }
 
@@ -175,7 +133,7 @@ public class Main {
             }
         }
 
-        // process gaalop intermediate files - call gaalop
+        // process gaalop files - call gaalop
         List<String> gaalopOutFileVector = new ArrayList<String>();
         StringBuffer variables = new StringBuffer();
         for (int gaalopFileCount = 0; gaalopFileCount < gaalopInFileVector.size(); ++gaalopFileCount) {
@@ -191,7 +149,7 @@ public class Main {
                     {
                         String mvSearchString = "#pragma gcd multivector ";
                         int statementPos = line.indexOf(mvSearchString);
-                        if (statementPos > 0) {
+                        if (statementPos >= 0) {
                             mvNames.add(line.substring(statementPos
                                     + mvSearchString.length()));
                         }
@@ -202,7 +160,7 @@ public class Main {
                         String mvCompSearchString =
                                 "#pragma gcd multivector_component ";
                         int statementPos = line.indexOf(mvCompSearchString);
-                        if (statementPos > 0) {
+                        if (statementPos >= 0) {
                             Scanner lineStream = new Scanner(line.substring(statementPos
                                     + mvCompSearchString.length()));
 
@@ -258,7 +216,7 @@ public class Main {
             }
         }
 
-        // compose intermediate file
+        // compose output file
         {
             // retrieve input file directory
             String inputFileDir;
@@ -270,108 +228,73 @@ public class Main {
                 inputFileDir = inputFilePath.substring(0, pos + 1);
             }
 
-            final String intermediateFilePath = tempFilePath + intermediateFileExtension;
-            BufferedWriter intermediateFile = createFileOutputStringStream(intermediateFilePath);
+            BufferedWriter outputFile = createFileOutputStringStream(outputFilePath);
             BufferedReader inputFile = createFileInputStringStream(inputFilePath);
             Integer gaalopFileCount = 0;
             Integer lineCount = 1; // think one line ahead
+
             while ((line = inputFile.readLine()) != null) {
                 ++lineCount;
 
-                if (line.indexOf("#include") > 0 && line.indexOf('\"') > 0) {
+                if (line.indexOf("#include") >= 0 && line.indexOf('\"') >= 0) {
                     int pos = line.indexOf('\"') + 1;
-                    intermediateFile.append(line.substring(0, pos)).append(inputFileDir);
-                    intermediateFile.append(line.substring(pos)).append('\n');
+                    outputFile.write(line.substring(0, pos));
+                    outputFile.write(inputFileDir);
+                    outputFile.write(line.substring(pos));
+                    outputFile.write(LINE_END);
                 } // found gaalop line - insert intermediate gaalop file
-                else if (line.indexOf("#pragma gcd begin") > 0) {
+                else if (line.indexOf("#pragma gcd begin") >= 0) {
                     // line pragma for compile errors
-                    intermediateFile.append("#line ").append(lineCount.toString()).append(" \"");
-                    intermediateFile.append(inputFilePath).append("\"\n");
+                    outputFile.write("#line ");
+                    outputFile.write(lineCount.toString());
+                    outputFile.write(" \"");
+                    outputFile.write(inputFilePath);
+                    outputFile.write("\"\n");
 
                     // merge optimized code
-                    BufferedReader gaalopOutFile = createFileInputStringStream(gaalopOutFileVector.get(gaalopFileCount));
-                    if ((line = gaalopOutFile.readLine()) == null) {
-                        System.out.println("fatal error: Gaalop-generated file not found. Check your Java installation. "
-                                + "Also check your Maple directory and Cliffordlib using the Configuration Tool.");
-                    }
-                    while ((line = gaalopOutFile.readLine()) != null) {
-                        intermediateFile.append(line).append('\n');
-                    }
+                    outputFile.write(gaalopOutFileVector.get(gaalopFileCount));
 
                     // skip original code
                     while ((line = inputFile.readLine()) != null) {
                         ++lineCount;
-                        if (line.indexOf("#pragma gcd end") > 0) {
+                        if (line.indexOf("#pragma gcd end") >= 0) {
                             break;
                         }
                     }
 
                     // line pragma for compile errors
-                    intermediateFile.append("#line ").append(lineCount.toString()).append(" \"").
-                            append(inputFilePath).append("\"\n");
+                    outputFile.write("#line ");
+                    outputFile.write(lineCount.toString());
+                    outputFile.write(" \"");
+                    outputFile.write(inputFilePath);
+                    outputFile.write("\"\n");
                 } else {
-                    intermediateFile.append(line).append('\n');
+                    outputFile.write(line);
+                    outputFile.write(LINE_END);
                 }
             }
-        }
-    }
 
-    public static void invokeCompiler(String compilerPath,
-            final String args[], final String outputFilePath,
-            final String intermediateFilePath, final String outputOption) throws Exception {
-        // compose compiler command
-        StringBuffer compilerCommandStream = new StringBuffer();
-        compilerCommandStream.append(compilerPath);
-        for (int counter = 1; counter < args.length - 1; ++counter) {
-            String arg = args[counter];
-            if (arg.indexOf(outputOption) > 0) {
-                compilerCommandStream.append(' ').append(arg).append(" \"").append(outputFilePath).append('\"');
-                ++counter;
-            } else {
-                compilerCommandStream.append(" \"").append(arg).append('\"');
-            }
-        }
-        compilerCommandStream.append(" \"").append(intermediateFilePath).append('\"');
-
-        // invoke regular C++ compiler
-        System.out.println(compilerCommandStream.toString());
-        Process p = Runtime.getRuntime().exec(compilerCommandStream.toString());
-    }
-
-    /**
-     * Runs the command line interface. Should be invoked after setup.
-     */
-    public void run() throws Exception {
-        log.debug("Starting up compilation process.");
-
-        // Configure the compiler
-        CompilerFacade compiler = createCompiler();
-
-        // Perform compilation
-        InputFile inputFile = getInputFile();
-        Set<OutputFile> outputFiles = compiler.compile(inputFile);
-        for (OutputFile output : outputFiles) {
-            writeFile(output);
+            outputFile.close();
         }
     }
 
     private void writeFile(OutputFile output) throws FileNotFoundException,
             UnsupportedEncodingException {
-        if (outputDirectory.equals("-")) {
-            printFileToConsole(output);
-        } else {
-            File outFile;
-            if (outputDirectory.length() == 0) {
-                outFile = new File(output.getName());
-            } else {
-                // NOTE: output file does not return actual name, but the full path of the file
-                File tempFile = new File(output.getName());
-                outFile = new File(outputDirectory, tempFile.getName());
-            }
-            PrintWriter writer = new PrintWriter(outFile, output.getEncoding().name());
-            writer.print(output.getContent());
-            writer.close();
-        }
+//        if (outputDirectory.equals("-")) {
+//            printFileToConsole(output);
+//        } else {
+//            File outFile;
+//            if (outputDirectory.length() == 0) {
+//                outFile = new File(output.getName());
+//            } else {
+//                // NOTE: output file does not return actual name, but the full path of the file
+//                File tempFile = new File(output.getName());
+//                outFile = new File(outputDirectory, tempFile.getName());
+//            }
+//            PrintWriter writer = new PrintWriter(outFile, output.getEncoding().name());
+//            writer.print(output.getContent());
+//            writer.close();
+//        }
     }
 
     private void printFileToConsole(OutputFile output) {
@@ -432,32 +355,5 @@ public class Main {
         System.err.println("Unknown code generator plugin: " + codeGeneratorPlugin);
         System.exit(-4);
         return null;
-    }
-
-    public InputFile getInputFile() throws Exception {
-        final Reader reader;
-        final String filename;
-
-        if (inputFile.equals("-")) {
-            reader = new InputStreamReader(System.in);
-            filename = "stdin";
-        } else {
-            reader = new FileReader(inputFile);
-            filename = inputFile;
-        }
-
-        try {
-            BufferedReader bufReader = new BufferedReader(reader);
-            String line;
-            StringBuilder result = new StringBuilder();
-            while ((line = bufReader.readLine()) != null) {
-                result.append(line);
-                result.append(LINE_END);
-            }
-
-            return new InputFile(filename, result.toString());
-        } finally {
-            reader.close();
-        }
     }
 }

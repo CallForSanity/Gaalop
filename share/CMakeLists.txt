@@ -1,7 +1,5 @@
 # copy
-COPY_DIRECTORY(cmake-copy cmake-2.8 "share/cmake-2.8")
-
-ADD_SUBDIRECTORY(gcd)
+COPY_DIRECTORY(cmake-copy cmake-2.8 cmake-2.8)
 
 # install
 INSTALL(DIRECTORY cmake-2.8 DESTINATION share PATTERN ".svn" EXCLUDE)

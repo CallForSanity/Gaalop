@@ -14,7 +14,7 @@ public class Main {
 
     public static final String LIB_FOLDER = "plugins";
 
-    public static final String MAIN_CLASS = "de.gaalop.cli.Main";
+    public static final String MAIN_CLASS = "de.gaalop.gcd.Main";
 
     /**
      * Starts Gaalop.
