@@ -32,12 +32,10 @@ public class Main {
         int bladeArrayIndex;
     };
     private Log log = LogFactory.getLog(Main.class);
-
     @Option(name = "-i", required = true, usage = "The input file.")
     private String inputFilePath;
     @Option(name = "-o", required = false, usage = "The output file.")
     private String outputFilePath;
-
     @Option(name = "-m", required = false, usage = "Sets the Maple binary path.")
     private String mapleBinaryPath = "";
     @Option(name = "-parser", required = false, usage = "Sets the class name of the code parser plugin that should be used.")
@@ -46,7 +44,6 @@ public class Main {
     private String codeGeneratorPlugin = "de.gaalop.compressed.Plugin";
     @Option(name = "-optimizer", required = false, usage = "Sets the class name of the optimization strategy plugin that should be used.")
     private String optimizationStrategyPlugin = "de.gaalop.maple.Plugin";
-
     private static String PATH_SEP = "/";
     private static char LINE_END = '\n';
 
@@ -102,7 +99,7 @@ public class Main {
 
         String runPath;
         {
-            File directory = new File (".");
+            File directory = new File(".");
             runPath = directory.getCanonicalPath();
         }
 
@@ -135,12 +132,13 @@ public class Main {
 
         // process gaalop files - call gaalop
         Vector<String> gaalopOutFileVector = new Vector<String>();
-        StringBuffer variables = new StringBuffer();
         for (int gaalopFileCount = 0; gaalopFileCount < gaalopInFileVector.size(); ++gaalopFileCount) {
+
+            // import declarations
+            StringBuffer variables = new StringBuffer();
 
             // retrieve multivectors from previous sections
             if (gaalopFileCount > 0) {
-                Vector<String> mvNames = new Vector<String>();
                 Map<String, List<MvComponent>> mvComponents = new HashMap<String, List<MvComponent>>();
                 BufferedReader gaalopOutFile = new BufferedReader(new StringReader(gaalopOutFileVector.get(gaalopFileCount - 1)));
 
@@ -150,8 +148,9 @@ public class Main {
                         final String mvSearchString = "#pragma gcd multivector ";
                         int statementPos = line.indexOf(mvSearchString);
                         if (statementPos >= 0) {
-                            mvNames.add(line.substring(statementPos
-                                    + mvSearchString.length()));
+                            final String mvName = line.substring(statementPos
+                                    + mvSearchString.length());
+                            mvComponents.put(mvName, new ArrayList<MvComponent>());
                         }
                     }
 
@@ -159,7 +158,8 @@ public class Main {
                     {
                         final String mvCompSearchString =
                                 "#pragma gcd multivector_component ";
-                        int statementPos = line.indexOf(mvCompSearchString);
+                        final int statementPos = line.indexOf(mvCompSearchString);
+                        
                         if (statementPos >= 0) {
                             Scanner lineStream = new Scanner(line.substring(statementPos
                                     + mvCompSearchString.length()));
@@ -170,26 +170,20 @@ public class Main {
                             mvComp.bladeName = lineStream.next();
                             mvComp.bladeArrayIndex = lineStream.nextInt();
 
-                            List<MvComponent> list = mvComponents.get(mvName);
-                            if (list == null) {
-                                list = new ArrayList<MvComponent>();
-                                mvComponents.put(mvName, list);
-                            }
-                            list.add(mvComp);
+                            mvComponents.get(mvName).add(mvComp);
                         }
                     }
                 }
 
                 // generate import declarations
-                for (String mvName : mvNames) {
+                for (String mvName : mvComponents.keySet()) {
                     variables.append(mvName).append(" = 0");
 
-                    if(mvComponents.get(mvName) != null)
-                        for (MvComponent mvComp : mvComponents.get(mvName)) {
-                            variables.append(" +").append(mvComp.bladeName);
-                            variables.append('*').append(mvName).append('_');
-                            variables.append(mvComp.bladeHandle);
-                        }
+                    for (MvComponent mvComp : mvComponents.get(mvName)) {
+                        variables.append(" +").append(mvComp.bladeName);
+                        variables.append('*').append(mvName).append('_');
+                        variables.append(mvComp.bladeHandle);
+                    }
 
                     variables.append(";\n");
                 }
@@ -212,9 +206,10 @@ public class Main {
                 Set<OutputFile> outputFiles = compiler.compile(inputFile);
 
                 StringBuffer gaalopOutFileStream = new StringBuffer();
-                for (OutputFile output : outputFiles)
+                for (OutputFile output : outputFiles) {
                     gaalopOutFileStream.append(output.getContent()).append(LINE_END);
-                
+                }
+
                 gaalopOutFileVector.add(gaalopOutFileStream.toString());
             }
         }
@@ -228,8 +223,9 @@ public class Main {
             String inputFileDir;
             {
                 int pos = inputFilePath.lastIndexOf('/');
-                if (pos <= 0)
+                if (pos <= 0) {
                     pos = inputFilePath.lastIndexOf('\\');
+                }
                 assert (pos > 0);
                 inputFileDir = inputFilePath.substring(0, pos + 1);
             }
@@ -339,9 +335,10 @@ public class Main {
         Set<OptimizationStrategyPlugin> plugins = Plugins.getOptimizationStrategyPlugins();
         for (OptimizationStrategyPlugin plugin : plugins) {
             if (plugin.getClass().getName().equals(optimizationStrategyPlugin)) {
-                if (mapleBinaryPath.length() != 0 && plugin instanceof de.gaalop.maple.Plugin)
-                    ((de.gaalop.maple.Plugin)plugin).setMaplePathsByMapleBinaryPath(mapleBinaryPath);
-                
+                if (mapleBinaryPath.length() != 0 && plugin instanceof de.gaalop.maple.Plugin) {
+                    ((de.gaalop.maple.Plugin) plugin).setMaplePathsByMapleBinaryPath(mapleBinaryPath);
+                }
+
                 return plugin.createOptimizationStrategy();
             }
         }

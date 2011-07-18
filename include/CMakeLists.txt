@@ -1,3 +1,2 @@
 FILE(GLOB src "*.h")
 INSTALL(FILES ${src} DESTINATION include)
-INSTALL(DIRECTORY cpp cpp0x DESTINATION include PATTERN ".svn" EXCLUDE)
