@@ -12,10 +12,12 @@
                 <include>de.gaalop:api</include>
                 <include>de.gaalop:cli</include>
                 <include>de.gaalop:clucalc</include>
+                <include>de.gaalop:codegen-java</include>
                 <include>de.gaalop:codegen-cpp</include>
 		<include>de.gaalop:codegen-compressed</include>
 		<include>de.gaalop:codegen-gaalet</include>
                 <include>de.gaalop:maple</include>
+                <include>de.gaalop:tba</include>
                 <include>de.gaalop:gcd</include>
             </includes>
             <binaries>

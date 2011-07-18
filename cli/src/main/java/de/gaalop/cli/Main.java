@@ -135,8 +135,9 @@ public class Main {
     Set<OptimizationStrategyPlugin> plugins = Plugins.getOptimizationStrategyPlugins();
     for (OptimizationStrategyPlugin plugin : plugins) {
       if (plugin.getClass().getName().equals(optimizationStrategyPlugin)) {
-        if(mapleBinaryPath.length() != 0)
-          plugin.setMaplePathsByMapleBinaryPath(mapleBinaryPath);
+        if (mapleBinaryPath.length() != 0 && plugin instanceof de.gaalop.maple.Plugin)
+          ((de.gaalop.maple.Plugin)plugin).setMaplePathsByMapleBinaryPath(mapleBinaryPath);
+        
         return plugin.createOptimizationStrategy();
       }
     }

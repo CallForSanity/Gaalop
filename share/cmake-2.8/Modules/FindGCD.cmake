@@ -1,20 +1,33 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 
+# options
+OPTION(WITH_MAPLE "wether to use the maple plugin or not." ON)
+
 # find java
 FIND_PACKAGE(Java COMPONENTS Runtime REQUIRED)
 
 # find
+IF(WITH_MAPLE)
 FIND_PATH(MAPLE_BIN_DIR HINTS "C:/Program Files (x86)/Maple 12/bin.win" "/opt/maple13/bin" CACHE PATH "Maple Binary Dir")
+ENDIF(WITH_MAPLE)
 FIND_PATH(GCD_ROOT_DIR share
           DOC "Gaalop Compiler Driver root directory")
-FIND_FILE(GCD_JAR starter-1.0.0.jar "${GCD_ROOT_DIR}/share/gcd" DOC "Gaalop GCD")
+FIND_FILE(GCD_JAR starter-1.0.0.jar "${GCD_ROOT_DIR}/share/gcd/gaalop" DOC "Gaalop GCD")
 FIND_LIBRARY(GCD_LIBRARY gcd HINTS "${GCD_ROOT_DIR}/lib" DOC "GCD helper library")
 get_filename_component(GCD_JAR_DIR ${GCD_JAR} PATH)
 
-SET(GCD_CXX_ARGS "-m" "${MAPLE_BIN_DIR}" "-generator" "de.gaalop.compressed.Plugin")
-SET(GCD_CUDA_ARGS "-m" "${MAPLE_BIN_DIR}" "-generator" "de.gaalop.compressed.Plugin")
-SET(GCD_OPENCL_ARGS "-m" "${MAPLE_BIN_DIR}" "-generator" "de.gaalop.cpp.Plugin")
-SET(GCD_JAVA_ARGS "-m" "${MAPLE_BIN_DIR}" "-generator" "de.gaalop.cpp.Plugin")
+# define common args
+IF(WITH_MAPLE)
+SET(GCD_COMMON_ARGS -optimizer "de.gaalop.maple.Plugin" -m "${MAPLE_BIN_DIR}")
+ELSE(WITH_MAPLE)
+SET(GCD_COMMON_ARGS -optimizer "de.gaalop.tba.Plugin")
+ENDIF(WITH_MAPLE)
+
+# define specific args
+SET(GCD_CXX_ARGS ${GCD_COMMON_ARGS} -generator "de.gaalop.compressed.Plugin")
+SET(GCD_CUDA_ARGS ${GCD_COMMON_ARGS} -generator "de.gaalop.compressed.Plugin")
+SET(GCD_OPENCL_ARGS ${GCD_COMMON_ARGS} -generator "de.gaalop.cpp.Plugin")
+SET(GCD_JAVA_ARGS ${GCD_COMMON_ARGS} -generator "de.gaalop.cpp.Plugin")
 
 # configure compile script
 SET(GCD_COMPILE_SCRIPT "${CMAKE_CURRENT_BINARY_DIR}/run_gcd.sh")
@@ -104,6 +117,7 @@ MACRO(GCD_OPENCL_ADD_LIBRARY target)
     FILE(GLOB src ${ARGN})
     GCD_WRAP_SRCS(generated_files ${src})
     ADD_LIBRARY(${target} ${generated_files})
+    SET_TARGET_PROPERTIES(${target} PROPERTIES LINKER_LANGUAGE CXX)
     TARGET_LINK_LIBRARIES(${target} ${OPENCL_LIBRARIES} ${GCD_LIBRARY})
 ENDMACRO(GCD_OPENCL_ADD_LIBRARY)
 
@@ -111,6 +125,7 @@ MACRO(GCD_OPENCL_ADD_EXECUTABLE target)
     FILE(GLOB src ${ARGN})
     GCD_WRAP_SRCS(generated_files ${src})
     ADD_EXECUTABLE(${target} ${generated_files})
+    SET_TARGET_PROPERTIES(${target} PROPERTIES LINKER_LANGUAGE CXX)
     TARGET_LINK_LIBRARIES(${target} ${OPENCL_LIBRARIES} ${GCD_LIBRARY})
 ENDMACRO(GCD_OPENCL_ADD_EXECUTABLE)
 

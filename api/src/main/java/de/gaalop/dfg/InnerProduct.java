@@ -29,7 +29,7 @@ public final class InnerProduct extends BinaryOperation {
 
     @Override
     public Expression copy() {
-        return new InnerProduct(getLeft().copy(), getRight().copy());
+    	return new InnerProduct(getLeft().copy(), getRight().copy());
     }
 
     /**

@@ -55,11 +55,11 @@ public class Main {
         } catch (InvocationTargetException e) {
             System.err.println("Main method threw an exception in " + MAIN_CLASS);
             e.printStackTrace();
-        } /*catch(Throwable e) {
+        } catch(Throwable e) {
         	while(e.getCause() != null)
         		e = e.getCause();
         	System.err.println(e.getMessage());
-        }*/
+        }
     }
 
     /**

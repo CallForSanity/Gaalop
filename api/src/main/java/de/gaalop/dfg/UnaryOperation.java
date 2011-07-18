@@ -67,4 +67,10 @@ public abstract class UnaryOperation extends Expression {
     public int hashCode() {
         return operand.hashCode();
     }
+
+    public void setOperand(Expression operand) {
+        this.operand = operand;
+    }
+
+    
 }

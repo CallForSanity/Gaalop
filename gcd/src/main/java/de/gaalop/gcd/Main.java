@@ -134,20 +134,20 @@ public class Main {
         }
 
         // process gaalop files - call gaalop
-        List<String> gaalopOutFileVector = new ArrayList<String>();
+        Vector<String> gaalopOutFileVector = new Vector<String>();
         StringBuffer variables = new StringBuffer();
         for (int gaalopFileCount = 0; gaalopFileCount < gaalopInFileVector.size(); ++gaalopFileCount) {
+
             // retrieve multivectors from previous sections
             if (gaalopFileCount > 0) {
-
                 Vector<String> mvNames = new Vector<String>();
                 Map<String, List<MvComponent>> mvComponents = new HashMap<String, List<MvComponent>>();
-                BufferedReader gaalopOutFile = new BufferedReader(new StringReader(gaalopOutFileVector.get(gaalopFileCount)));
+                BufferedReader gaalopOutFile = new BufferedReader(new StringReader(gaalopOutFileVector.get(gaalopFileCount - 1)));
 
                 while ((line = gaalopOutFile.readLine()) != null) {
                     // retrieve multivector declarations
                     {
-                        String mvSearchString = "#pragma gcd multivector ";
+                        final String mvSearchString = "#pragma gcd multivector ";
                         int statementPos = line.indexOf(mvSearchString);
                         if (statementPos >= 0) {
                             mvNames.add(line.substring(statementPos
@@ -157,7 +157,7 @@ public class Main {
 
                     // retrieve multivector component declarations
                     {
-                        String mvCompSearchString =
+                        final String mvCompSearchString =
                                 "#pragma gcd multivector_component ";
                         int statementPos = line.indexOf(mvCompSearchString);
                         if (statementPos >= 0) {
@@ -184,11 +184,12 @@ public class Main {
                 for (String mvName : mvNames) {
                     variables.append(mvName).append(" = 0");
 
-                    for (MvComponent mvComp : mvComponents.get(mvName)) {
-                        variables.append(" +").append(mvComp.bladeName);
-                        variables.append('*').append(mvName).append('_');
-                        variables.append(mvComp.bladeHandle);
-                    }
+                    if(mvComponents.get(mvName) != null)
+                        for (MvComponent mvComp : mvComponents.get(mvName)) {
+                            variables.append(" +").append(mvComp.bladeName);
+                            variables.append('*').append(mvName).append('_');
+                            variables.append(mvComp.bladeHandle);
+                        }
 
                     variables.append(";\n");
                 }
@@ -200,6 +201,8 @@ public class Main {
                 StringBuffer inputFileStream = new StringBuffer();
                 inputFileStream.append(variables.toString()).append(LINE_END);
                 inputFileStream.append(gaalopInFileVector.get(gaalopFileCount));
+
+                System.out.println("compiling");
 
                 // Configure the compiler
                 CompilerFacade compiler = createCompiler();
@@ -218,6 +221,9 @@ public class Main {
 
         // compose output file
         {
+            // log
+            System.out.println("writing");
+
             // retrieve input file directory
             String inputFileDir;
             {
@@ -252,7 +258,7 @@ public class Main {
                     outputFile.write("\"\n");
 
                     // merge optimized code
-                    outputFile.write(gaalopOutFileVector.get(gaalopFileCount));
+                    outputFile.write(gaalopOutFileVector.get(gaalopFileCount++));
 
                     // skip original code
                     while ((line = inputFile.readLine()) != null) {
@@ -274,6 +280,7 @@ public class Main {
                 }
             }
 
+            // close output file
             outputFile.close();
         }
     }
@@ -332,9 +339,9 @@ public class Main {
         Set<OptimizationStrategyPlugin> plugins = Plugins.getOptimizationStrategyPlugins();
         for (OptimizationStrategyPlugin plugin : plugins) {
             if (plugin.getClass().getName().equals(optimizationStrategyPlugin)) {
-                if (mapleBinaryPath.length() != 0) {
-                    plugin.setMaplePathsByMapleBinaryPath(mapleBinaryPath);
-                }
+                if (mapleBinaryPath.length() != 0 && plugin instanceof de.gaalop.maple.Plugin)
+                    ((de.gaalop.maple.Plugin)plugin).setMaplePathsByMapleBinaryPath(mapleBinaryPath);
+                
                 return plugin.createOptimizationStrategy();
             }
         }

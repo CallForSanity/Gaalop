@@ -33,3 +33,6 @@ INCLUDE("../share/cmake-2.8/Modules/FindOpenCL.cmake")
 GCD_OPENCL_ADD_EXECUTABLE(test6 "Test6_OpenCL_Horizon.cpp" "Test6_OpenCL_Horizon.gcl")
 ADD_TEST(NAME "Test6_OpenCL_Horizon" COMMAND test6)
 ENDIF(BUILD_WITH_OPENCL)
+
+GCD_CXX_ADD_EXECUTABLE(test7 "Test7_CXX_Multiblock.gcp")
+ADD_TEST(NAME "Test7_CXX_Multiblock" COMMAND test7)

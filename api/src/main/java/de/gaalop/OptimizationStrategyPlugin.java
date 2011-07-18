@@ -24,6 +24,4 @@ public interface OptimizationStrategyPlugin extends Plugin {
 	 * @param observer observer to be registered for this plugin
 	 */
 	void addObserver(Observer observer);
-
-	void setMaplePathsByMapleBinaryPath(String mapleBinaryPath_);
 }

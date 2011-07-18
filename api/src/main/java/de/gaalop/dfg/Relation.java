@@ -82,7 +82,7 @@ public final class Relation extends BinaryOperation {
 
   @Override
   public Expression copy() {
-    return new Relation(getLeft().copy(), getRight().copy(), type);
+	return new Relation(getLeft().copy(), getRight().copy(), type);
   }
 
   /**

@@ -14,9 +14,10 @@
     <modules>
         <module>api</module>
         <module>maple</module>
+        <module>tba</module>
         <module>clucalc</module>
-        <module>cli</module>
         <module>codegen-cpp</module>
+        <module>codegen-java</module>
         <module>codegen-gaalet</module>
         <module>codegen-compressed</module>
         <module>gcd</module>

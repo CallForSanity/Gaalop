@@ -294,7 +294,7 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 	@Override
 	public void visit(MultivectorComponent component) {
 		// GCD definition
-		component.gcdDefinition(code,assigned,suffix,gcdMetaInfo);
+		//component.gcdDefinition(code,assigned,suffix,gcdMetaInfo);
 
 		// standard definition
 		code.append(component.getName().replace(suffix, ""));

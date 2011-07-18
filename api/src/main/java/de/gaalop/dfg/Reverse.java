@@ -16,7 +16,7 @@ public class Reverse extends UnaryOperation {
 
     @Override
     public Expression copy() {
-        return new Reverse(getOperand().copy());
+    	return new Reverse(getOperand().copy());
     }
 
     /**

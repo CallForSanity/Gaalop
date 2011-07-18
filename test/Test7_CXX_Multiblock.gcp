@@ -1,0 +1,16 @@
+#include <iostream>
+#include <gcd.h>
+
+int main()
+{
+#pragma gcd begin
+  ?a = 5;
+#pragma gcd end
+
+{
+#pragma gcd begin
+  ?b = a + 5;
+#pragma gcd end
+  return !(b_SCALAR == 10.0f);
+}
+}

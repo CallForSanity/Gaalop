@@ -1,6 +1,6 @@
 package de.gaalop.dfg;
 
-import java.util.*;
+import java.util.Set;
 
 /**
  * This class represents a single multivector component. A multivector component is identified
@@ -91,6 +91,44 @@ public final class MultivectorComponent extends Variable {
         int result = super.hashCode();
         result = 31 * result + bladeIndex;
         return result;
+    }
+
+    @Override
+    public void replaceExpression(Expression old, Expression newExpression) {
+
+                if (old instanceof MultivectorComponent && newExpression instanceof MultivectorComponent) {
+                        MultivectorComponent oldVar = (MultivectorComponent) old;
+			MultivectorComponent newVar = (MultivectorComponent) newExpression;
+
+                        if (
+                                oldVar.getName() == name &&
+                                oldVar.getMinValue() == minValue &&
+                                oldVar.getMaxValue() == maxValue &&
+                                oldVar.getBladeIndex() == bladeIndex
+                                ) {
+				name = newVar.getName();
+				minValue = newVar.getMinValue();
+				maxValue = newVar.getMaxValue();
+                                bladeIndex = newVar.getBladeIndex();
+			}
+                } else
+                    if (old instanceof MultivectorComponent && newExpression instanceof Variable) {
+                            MultivectorComponent oldVar = (MultivectorComponent) old;
+                            Variable newVar = (Variable) newExpression;
+
+                            if (
+                                    oldVar.getName() == name &&
+                                    oldVar.getMinValue() == minValue &&
+                                    oldVar.getMaxValue() == maxValue &&
+                                    oldVar.getBladeIndex() == bladeIndex
+                                    ) {
+                                    name = newVar.getName();
+                                    minValue = newVar.getMinValue();
+                                    maxValue = newVar.getMaxValue();
+                                    bladeIndex = 0;
+                            }
+                    } else
+                        super.replaceExpression(old, newExpression);
     }
 
     public String getBladeName()
@@ -271,3 +309,4 @@ public final class MultivectorComponent extends Variable {
 	}
    }
 }
+

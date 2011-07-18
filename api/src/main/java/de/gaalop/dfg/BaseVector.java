@@ -66,7 +66,7 @@ public final class BaseVector extends Expression {
 
 	@Override
 	public Expression copy() {
-		return new BaseVector(this.index);
+            return new BaseVector(this.index);
 	}
 
 	/**

@@ -8,7 +8,7 @@
 
 // Name of the file with the source code for the computation kernel
 // *********************************************************************
-const char* cSourceFile = "Test3_OpenCL_PointTriangle.gcl";
+const char* cSourceFile = "Test3_OpenCL_PointTriangle.gcl.cl";
 
 // OpenCL Vars
 cl_context cxGPUContext;        // OpenCL context

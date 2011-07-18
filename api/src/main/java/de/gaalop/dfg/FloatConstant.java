@@ -53,7 +53,7 @@ public final class FloatConstant extends Expression {
 
 	@Override
 	public Expression copy() {
-		return new FloatConstant(value, valueString); // FIXME: improve by returning this (immutable)?
+            return new FloatConstant(value, valueString); // FIXME: improve by returning this (immutable)?
 	}
 
 	/**

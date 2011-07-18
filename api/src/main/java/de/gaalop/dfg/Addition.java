@@ -29,7 +29,7 @@ public final class Addition extends BinaryOperation {
 
     @Override
     public Expression copy() {
-        return new Addition(getLeft().copy(), getRight().copy());
+    	return new Addition(getLeft().copy(), getRight().copy());
     }
 
     /**
