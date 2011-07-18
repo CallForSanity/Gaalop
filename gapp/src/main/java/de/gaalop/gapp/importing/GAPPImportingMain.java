@@ -27,7 +27,7 @@ public class GAPPImportingMain {
             graph.accept(splitter);
 
             // do a full tba visit on graph to calculate MvExpressions
-            de.gaalop.tba.cfgImport.CFGImporter importer = new de.gaalop.tba.cfgImport.CFGImporter(true,true,false);
+            de.gaalop.tba.cfgImport.CFGImporter importer = new de.gaalop.tba.cfgImport.CFGImporter(true,false);
             importer.importGraph(graph);
             DFGVisitorImport vDFG = importer.getvDFG();
 

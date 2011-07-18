@@ -37,7 +37,7 @@ public class Base {
 
         //Evaluate!
         HashMap<String, Float> inputValues = testable.getInputs();
-        de.gaalop.tba.cfgImport.CFGImporter importer2 = new de.gaalop.tba.cfgImport.CFGImporter(true,true,false);
+        de.gaalop.tba.cfgImport.CFGImporter importer2 = new de.gaalop.tba.cfgImport.CFGImporter(true,false);
         
         outputPlugin(new GAPPCodeGeneratorPlugin(), graph);
         outputPlugin(new de.gaalop.clucalc.output.Plugin(), graph);

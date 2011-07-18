@@ -31,7 +31,7 @@ public class CFGImporter {
 
     
 
-    public CFGImporter(boolean gcd,boolean getOnlyMvExpressions, boolean useMaxima) {
+    public CFGImporter(boolean getOnlyMvExpressions, boolean useMaxima) {
         this.getOnlyMvExpressions = getOnlyMvExpressions;
 
         //load 5d conformal algebra
@@ -42,14 +42,10 @@ public class CFGImporter {
 
         if (!getOnlyMvExpressions) { //TODO chs why to do this when GAPP performing?
             optimizations.add(new OptConstantPropagation());
-            
 
-            if (!gcd) {
-
-                optimizations.add(new OptUnusedAssignmentsRemoval());
-                optimizations.add(new OptOneExpressionsRemoval());
-            }
-
+            optimizations.add(new OptUnusedAssignmentsRemoval());
+            optimizations.add(new OptOneExpressionsRemoval());
+  
            if (useMaxima) optimizations.add(new OptMaxima());
         }
         

@@ -10,20 +10,11 @@ import de.gaalop.OptimizationStrategyPlugin;
 public class Plugin extends Observable implements OptimizationStrategyPlugin {
 
         @ConfigurationProperty(type = Type.BOOLEAN)
-        public boolean gcd = false;
-
-        @ConfigurationProperty(type = Type.BOOLEAN)
         public boolean maxima = false;
-
-        public boolean isGcd() {
-            return gcd;
-        }
 
         public boolean isMaxima() {
             return maxima;
         }
-
-        
 
 	@Override
 	public String getDescription() {
