@@ -49,42 +49,31 @@ public abstract class GenericGPSTest implements GenericTestable {
 
             constantDefinition() +
 
-            // group the scalars to 3d-Points
-            "sat1 = VecN3(sat1x,sat1y,sat1z);\n"+
-            "sat2 = VecN3(sat2x,sat2y,sat2z);\n"+
-            "sat3 = VecN3(sat3x,sat3y,sat3z);\n"+
-
-            "// create the three spheres\n"+
-            "sph1 = sat1 - 0.5*d1*d1*einf;\n"+
-            "sph2 = sat2 - 0.5*d2*d2*einf;\n"+
-            "sph3 = sat3 - 0.5*d3*d3*einf;\n"+
-
-            "// calculate the intersection point pair of three spheres\n"+
-            "rcPp = sph1^sph2^sph3;\n"+
-
-            "len = sqrt(abs(rcPp.rcPp));\n"+
-
-            "rcPpDual = *rcPp;\n"+
-
-            "nen = einf.rcPpDual;\n"+
-
-            "// get first point\n"+
-            "rc1 = (rcPpDual + len) / nen;\n"+
-            "?rc1N = - rc1/(rc1.einf);\n"+
-
-            "// get second point\n"+
-            "rc2 = (rcPpDual - len) / nen;\n"+
-            "?rc2N = - rc2/(rc2.einf);\n"+
-
-            "// the following mv must be zero\n"+
-            "?z11 = (sqrt(-2*rc1N.sat1))-d1;\n"+
-            "?z12 = (sqrt(-2*rc2N.sat1))-d1;\n"+
-
-            "?z21 = (sqrt(-2*rc1N.sat2))-d2;\n"+
-            "?z22 = (sqrt(-2*rc2N.sat2))-d2;\n"+
-
-            "?z31 = (sqrt(-2*rc1N.sat3))-d3;\n"+
-            "?z32 = (sqrt(-2*rc2N.sat3))-d3;\n";
+"sat1 = VecN3(sat1x,sat1y,sat1z);\n"+
+"sat2 = VecN3(sat2x,sat2y,sat2z);\n"+
+"sat3 = VecN3(sat3x,sat3y,sat3z);\n"+
+"// create the three spheres\n"+
+"sph1 = sat1 - 0.5*d1*d1*einf;\n"+
+"sph2 = sat2 - 0.5*d2*d2*einf;\n"+
+"sph3 = sat3 - 0.5*d3*d3*einf;\n"+
+"// calculate the intersection point pair of three spheres\n"+
+"rcPp = sph1^sph2^sph3;\n"+
+"len = sqrt(abs(rcPp.rcPp));\n"+
+"rcPpDual = *rcPp;\n"+
+"nen = einf.rcPpDual;\n"+
+"// get first point\n"+
+"rc1 = (rcPpDual + len) / nen;\n"+
+"?rc1N = - rc1/(rc1.einf);\n"+
+"// get second point\n"+
+"rc2 = (rcPpDual - len) / nen;\n"+
+"?rc2N = - rc2/(rc2.einf);\n"+
+"// the following mv must be zero\n"+
+"?z11 = (sqrt(-2*rc1N.sat1))-d1;\n"+
+"?z12 = (sqrt(-2*rc2N.sat1))-d1;\n"+
+"?z21 = (sqrt(-2*rc1N.sat2))-d2;\n"+
+"?z22 = (sqrt(-2*rc2N.sat2))-d2;\n"+
+"?z31 = (sqrt(-2*rc1N.sat3))-d3;\n"+
+"?z32 = (sqrt(-2*rc2N.sat3))-d3;\n";
     }
 
     /**
@@ -139,14 +128,14 @@ public abstract class GenericGPSTest implements GenericTestable {
                 "assertEquals(0,z31,"+EPSILON+");\n" +
                 "assertEquals(0,z32,"+EPSILON+");\n" +
 
-                "assertEquals("+getDistance("rc1Nx", "rc1Ny","rc1Nz", sat1.x+"",sat1.y+"",sat1.z+"")+","+d1+","+EPSILON+");\n"+
-                "assertEquals("+getDistance("rc2Nx", "rc2Ny","rc2Nz", sat1.x+"",sat1.y+"",sat1.z+"")+","+d1+","+EPSILON+");\n"+
-
-                "assertEquals("+getDistance("rc1Nx", "rc1Ny","rc1Nz", sat2.x+"",sat2.y+"",sat2.z+"")+","+d2+","+EPSILON+");\n"+
-                "assertEquals("+getDistance("rc2Nx", "rc2Ny","rc2Nz", sat2.x+"",sat2.y+"",sat2.z+"")+","+d2+","+EPSILON+");\n"+
-
-                "assertEquals("+getDistance("rc1Nx", "rc1Ny","rc1Nz", sat3.x+"",sat3.y+"",sat3.z+"")+","+d3+","+EPSILON+");\n"+
-                "assertEquals("+getDistance("rc2Nx", "rc2Ny","rc2Nz", sat3.x+"",sat3.y+"",sat3.z+"")+","+d3+","+EPSILON+");\n"+
+//                "assertEquals("+getDistance("rc1Nx", "rc1Ny","rc1Nz", sat1.x+"",sat1.y+"",sat1.z+"")+","+d1+","+EPSILON+");\n"+
+//                "assertEquals("+getDistance("rc2Nx", "rc2Ny","rc2Nz", sat1.x+"",sat1.y+"",sat1.z+"")+","+d1+","+EPSILON+");\n"+
+//
+//                "assertEquals("+getDistance("rc1Nx", "rc1Ny","rc1Nz", sat2.x+"",sat2.y+"",sat2.z+"")+","+d2+","+EPSILON+");\n"+
+//                "assertEquals("+getDistance("rc2Nx", "rc2Ny","rc2Nz", sat2.x+"",sat2.y+"",sat2.z+"")+","+d2+","+EPSILON+");\n"+
+//
+//                "assertEquals("+getDistance("rc1Nx", "rc1Ny","rc1Nz", sat3.x+"",sat3.y+"",sat3.z+"")+","+d3+","+EPSILON+");\n"+
+//                "assertEquals("+getDistance("rc2Nx", "rc2Ny","rc2Nz", sat3.x+"",sat3.y+"",sat3.z+"")+","+d3+","+EPSILON+");\n"+
 
                 "// check number of outputs\n"+
                 "assertEquals(12, outputs.size());\n"

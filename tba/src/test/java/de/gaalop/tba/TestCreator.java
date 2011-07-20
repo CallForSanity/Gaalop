@@ -18,6 +18,7 @@ import de.gaalop.tba.gps.Point3D;
 import java.awt.Point;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.nio.charset.Charset;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -65,7 +66,7 @@ public class TestCreator {
 
         //positive tests - tests that should be compiled
         try {
-           // test(new CircleOneVarTest(new Point(5,2),new Point(3,9),new Point(6,4),new boolean[]{true,false,false,false,false,false},1),"CircleOneVar");
+            // test(new CircleOneVarTest(new Point(5,2),new Point(3,9),new Point(6,4),new boolean[]{true,false,false,false,false,false},1),"CircleOneVar");
             testCircleNoVars();
             testCircleOneVar();
             testCircleOnlyVars();
@@ -105,10 +106,12 @@ public class TestCreator {
         try {
             CodeParser parser = (new de.gaalop.clucalc.input.Plugin()).createCodeParser();
             ControlFlowGraph graph = parser.parseFile(new InputFile(cluName, testable.getCLUScript()));
+            //writeFile(new OutputFile("test",testable.getCLUScript(), Charset.forName("UTF-8")));
 
             de.gaalop.tba.Plugin tbaPlugin = new de.gaalop.tba.Plugin();
             OptimizationStrategy tba = (tbaPlugin).createOptimizationStrategy();
-            tbaPlugin.maxima = true;
+            tbaPlugin.maxima = false;
+            
 
             tba.transform(graph);
 

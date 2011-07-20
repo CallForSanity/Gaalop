@@ -42,7 +42,6 @@ public class CFGImporter {
 
         if (!getOnlyMvExpressions) { //TODO chs why to do this when GAPP performing?
             optimizations.add(new OptConstantPropagation());
-
             optimizations.add(new OptUnusedAssignmentsRemoval());
             optimizations.add(new OptOneExpressionsRemoval());
   
