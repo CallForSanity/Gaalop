@@ -1,5 +1,6 @@
 package de.gaalop.gapp.executer;
 
+import de.gaalop.gapp.Selector;
 import de.gaalop.gapp.Selectorset;
 import de.gaalop.gapp.instructionSet.GAPPAddMv;
 import de.gaalop.gapp.instructionSet.GAPPAssignMv;
@@ -36,8 +37,6 @@ public class Executer extends CFGGAPPVisitor {
     public HashMap<String, MultivectorWithValues> getValues() {
         return values;
     }
-
-    
 
     public Executer(UseAlgebra usedAlgebra, HashMap<String,Float> inputValues) {
         this.inputValues = inputValues;
@@ -79,11 +78,10 @@ public class Executer extends CFGGAPPVisitor {
 
         int selCount = gappAddMv.getSelectorsSrc().size();
         for (int sel=0;sel<selCount;sel++) {
-            int curSel = selSrc.get(sel);
-            if (curSel<0)
-                destination.getEntries()[selDest.get(sel)] += -source.getEntries()[-curSel];
-            else
-                destination.getEntries()[selDest.get(sel)] += source.getEntries()[curSel];
+            Selector sDest = selDest.get(sel);
+            Selector sSrc = selSrc.get(sel);
+
+            destination.getEntries()[sDest.getIndex()] += sDest.getSign()*sSrc.getSign()*source.getEntries()[sSrc.getIndex()];
         }
 
         return null;
@@ -105,11 +103,10 @@ public class Executer extends CFGGAPPVisitor {
 
         int selCount = gappSetMv.getSelectorsSrc().size();
         for (int sel=0;sel<selCount;sel++) {
-            int curSel = selSrc.get(sel);
-            if (curSel<0)
-                destination.getEntries()[selDest.get(sel)] = -source.getEntries()[-curSel];
-            else
-                destination.getEntries()[selDest.get(sel)] = source.getEntries()[curSel];
+           Selector sDest = selDest.get(sel);
+            Selector sSrc = selSrc.get(sel);
+
+            destination.getEntries()[sDest.getIndex()] = sDest.getSign()*sSrc.getSign()*source.getEntries()[sSrc.getIndex()];
         }
 
         return null;
@@ -127,9 +124,10 @@ public class Executer extends CFGGAPPVisitor {
         int size = vector1.getEntries().length;
         for (int slot = 0;slot<size;slot++) 
             sum += vector1.getEntry(slot) * vector2.getEntry(slot);
-        
 
-        destination.setEntry(gappDotVectors.getDestSelector(), sum);
+        Selector sDest = gappDotVectors.getDestSelector();
+
+        destination.setEntry(sDest.getIndex(), sDest.getSign()*sum);
         return null;
     }
 
@@ -143,11 +141,9 @@ public class Executer extends CFGGAPPVisitor {
         int selCount = gappSetVector.getSelectorsSrc().size();
         destination.setEntries(new float[selCount]);
         for (int sel=0;sel<selCount;sel++) {
-            int curSel = selSrc.get(sel);
-            if (curSel<0)
-                destination.setEntry(sel,-source.getEntries()[-curSel]);
-            else
-                destination.setEntry(sel,source.getEntries()[curSel]);
+            Selector sSrc = selSrc.get(sel);
+
+            destination.setEntry(sel,sSrc.getSign()*source.getEntries()[sSrc.getIndex()]);
         }
 
         return null;
@@ -161,10 +157,10 @@ public class Executer extends CFGGAPPVisitor {
         int selCount = selector.size();
         for (int sel=0;sel<selCount;sel++) {
             GAPPValueHolder scalarVar = gappAssignMv.getValues().get(sel);
-            if (scalarVar.isVariable())
-                destination.getEntries()[selector.get(sel)] = getVariableValue(((GAPPVariable) scalarVar).getName());
-            else
-                destination.getEntries()[selector.get(sel)] = ((GAPPConstant) scalarVar).getValue();
+            float value = (scalarVar.isVariable())
+                    ? getVariableValue(((GAPPVariable) scalarVar).getName())
+                    : ((GAPPConstant) scalarVar).getValue();
+            destination.getEntries()[selector.get(sel).getIndex()] = selector.get(sel).getSign()*value;
         }
 
         return null;
@@ -183,12 +179,12 @@ public class Executer extends CFGGAPPVisitor {
         Selectorset sel2 = gappCalculate.getUsed2();
 
         for (int j = 0;j<sel.size();j++) {
-            int component = Math.abs(sel.get(j));
-            float op1 = mv1.getEntry(component);
+            int component = Math.abs(sel.get(j).getIndex());
+            float op1 = mv1.getEntry(component)*sel.get(j).getSign();
 
             float op2 = 0;
             if (gappCalculate.getOperand2() != null)
-                op2 = mv2.getEntry(Math.abs(sel2.get(j)));
+                op2 = mv2.getEntry(Math.abs(sel2.get(j).getIndex()))*sel2.get(j).getSign();
 
             MultivectorWithValues target = getMultivector(gappCalculate.getTarget().getName());
 

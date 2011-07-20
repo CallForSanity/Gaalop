@@ -1,6 +1,7 @@
 package de.gaalop.gapp.visitor;
 
 import de.gaalop.cfg.AssignmentNode;
+import de.gaalop.gapp.Selector;
 import de.gaalop.gapp.Selectorset;
 import de.gaalop.gapp.Variableset;
 import de.gaalop.gapp.instructionSet.GAPPAddMv;
@@ -69,14 +70,19 @@ public class PrettyPrint extends CFGGAPPVisitor {
         result.append(multiVector.prettyPrint());
     }
 
+    private void printSelector(Selector selector) {
+        if (selector.getSign() == (byte) -1) result.append('-');
+        result.append(selector.getIndex());
+    }
+
     /**
      * Pretty prints a selectorset at the end of result
      * @param selectorset The selectorset
      */
     private void printSelectors(Selectorset selectorset) {
         result.append("[");
-        for (Integer cur: selectorset) {
-            result.append(cur);
+        for (Selector cur: selectorset) {
+            printSelector(cur);
             result.append(",");
         }
         result.deleteCharAt(result.length()-1);
@@ -138,7 +144,7 @@ public class PrettyPrint extends CFGGAPPVisitor {
         result.append("dotVectors ");
         printMultivector(gappDotVectors.getDestination());
         result.append("[");
-        result.append(Integer.toString(gappDotVectors.getDestSelector()));
+        printSelector(gappDotVectors.getDestSelector());
         result.append("]");
         result.append(" = ");
         printDotProduct(gappDotVectors.getPart1(), gappDotVectors.getPart2());

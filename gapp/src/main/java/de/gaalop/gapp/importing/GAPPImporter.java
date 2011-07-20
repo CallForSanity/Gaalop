@@ -31,6 +31,7 @@ import de.gaalop.dfg.Subtraction;
 import de.gaalop.dfg.UnaryOperation;
 import de.gaalop.dfg.Variable;
 import de.gaalop.gapp.GAPP;
+import de.gaalop.gapp.Selector;
 import de.gaalop.gapp.Selectorset;
 import de.gaalop.gapp.Variableset;
 import de.gaalop.gapp.instructionSet.CalculationType;
@@ -129,7 +130,15 @@ public class GAPPImporter extends EmptyControlFlowVisitor implements ExpressionV
     private Selectorset getSelectorSetAllBladesPositive() {
         Selectorset result = new Selectorset();
         for (int blade = 0; blade < usedAlgebra.getBladeCount(); blade++) {
-            result.add(new Integer(blade));
+            result.add(new Selector(new Integer(blade),(byte) 1));
+        }
+        return result;
+    }
+
+    private Selectorset getSelectorSetAllBladesNegative() {
+        Selectorset result = new Selectorset();
+        for (int blade = 0; blade < usedAlgebra.getBladeCount(); blade++) {
+            result.add(new Selector(new Integer(blade),(byte) -1));
         }
         return result;
     }
@@ -139,18 +148,10 @@ public class GAPPImporter extends EmptyControlFlowVisitor implements ExpressionV
         Selectorset result = new Selectorset();
         for (int blade = 0; blade < usedAlgebra.getBladeCount(); blade++) {
             if (arr.getComponent(blade)) {
-                result.add(new Integer(blade));
+                result.add(new Selector(new Integer(blade),(byte) 1));
             }
         }
 
-        return result;
-    }
-
-    private Selectorset getSelectorSetAllBladesNegative() {
-        Selectorset result = new Selectorset();
-        for (int blade = 0; blade < usedAlgebra.getBladeCount(); blade++) {
-            result.add(new Integer(-blade));
-        }
         return result;
     }
 
@@ -159,7 +160,7 @@ public class GAPPImporter extends EmptyControlFlowVisitor implements ExpressionV
         Selectorset result = new Selectorset();
         for (int blade = 0; blade < usedAlgebra.getBladeCount(); blade++) {
             if (arr.getComponent(blade)) {
-                result.add(new Integer(-blade));
+                result.add(new Selector(new Integer(blade),(byte) -1));
             }
         }
 
@@ -200,7 +201,7 @@ public class GAPPImporter extends EmptyControlFlowVisitor implements ExpressionV
         for (int blade = 0; blade < usedAlgebra.getBladeCount(); blade++) {
             if (mvExpr.bladeExpressions[blade] != null) {
                 arr.setComponent(blade, true);
-                sel.add(blade);
+                sel.add(new Selector(blade,(byte) 1));
 
                 //ConstantFolding folding = new ConstantFolding();
                // mvExpr.bladeExpressions[blade].accept(folding);
@@ -285,8 +286,8 @@ public class GAPPImporter extends EmptyControlFlowVisitor implements ExpressionV
         for (int blade=0;blade<usedAlgebra.getBladeCount();blade++)
             if (b1.getComponent(blade))
             {
-                sel1.add(blade);
-                sel2.add(0);
+                sel1.add(new Selector(blade,(byte) 1));
+                sel2.add(new Selector(0,(byte) 1));
                 getBooleanArr(destination).setComponent(blade, true);
             }
         
@@ -316,11 +317,11 @@ public class GAPPImporter extends EmptyControlFlowVisitor implements ExpressionV
                 Selectorset sel2 = new Selectorset();
 
                 for (Triple curTriple : triplesArr[blade]) {
-                    sel1.add(curTriple.getLeftBlade());
-                    sel2.add(curTriple.getRightBlade() * ((int) curTriple.getSign()));
+                    sel1.add(new Selector(curTriple.getLeftBlade(),(byte) 1));
+                    sel2.add(new Selector(curTriple.getRightBlade(),curTriple.getSign()));
                 }
 
-                createCommandSeriesDotProd(destination, blade, mvL, mvR, sel1, sel2);
+                createCommandSeriesDotProd(destination, new Selector(blade,(byte) 1), mvL, mvR, sel1, sel2);
                 getBooleanArr(destination).setComponent(blade, true);
             }
     }
@@ -394,7 +395,7 @@ public class GAPPImporter extends EmptyControlFlowVisitor implements ExpressionV
      * @param sel1 The selector for first source multivector
      * @param sel2 The selector for second source multivector
      */
-    private void createCommandSeriesDotProd(GAPPMultivector destMv, int destSel, GAPPMultivector src1, GAPPMultivector src2, Selectorset sel1, Selectorset sel2) {
+    private void createCommandSeriesDotProd(GAPPMultivector destMv, Selector destSel, GAPPMultivector src1, GAPPMultivector src2, Selectorset sel1, Selectorset sel2) {
         GAPPVector v1 = new GAPPVector(createNewName(false));
         GAPPVector v2 = new GAPPVector(createNewName(false));
         curGAPP.addInstruction(new GAPPSetVector(v1, src1, sel1));
@@ -426,7 +427,7 @@ public class GAPPImporter extends EmptyControlFlowVisitor implements ExpressionV
         if (getBooleanArr(mvOp).getComponent(0)) {
 
             Selectorset sel = new Selectorset();
-            sel.add(0);
+            sel.add(new Selector(0, (byte) 1));
             getBooleanArr(destination).setComponent(0, true);
             curGAPP.addInstruction(new GAPPCalculate(CalculationType.valueOf(node.getFunction().name()), destination, mvOp, null, sel, null));
 
@@ -455,7 +456,7 @@ public class GAPPImporter extends EmptyControlFlowVisitor implements ExpressionV
         GAPPMultivector mvR = getGAPPMultivectorFromExpression(node.getRight());
 
         Selectorset sel = new Selectorset();
-        sel.add(0);
+        sel.add(new Selector(0, (byte) 1));
         getBooleanArr(destination).setComponent(0, true);
         curGAPP.addInstruction(new GAPPCalculate(CalculationType.EXPONENTIATION, destination, mvL, mvR, sel, sel));
         System.err.println("Warning: Exponentiation is only implemented for scalars!");
@@ -498,12 +499,12 @@ public class GAPPImporter extends EmptyControlFlowVisitor implements ExpressionV
         for (int blade = 0;blade<usedAlgebra.getBladeCount();blade++)
             if (booleanArr.getComponent(blade))
             {
-                selDest.add(blade);
+                selDest.add(new Selector(blade, (byte) 1));
                 int k = usedAlgebra.getGrade(blade);
                 if (((k*(k-1))/2) % 2 == 0)
-                        selOp.add(blade);
+                        selOp.add(new Selector(blade, (byte) 1));
                 else
-                        selOp.add(-blade);
+                        selOp.add(new Selector(blade, (byte) -1));
             }
 
         getBooleanArr(destination).or(booleanArr);
@@ -526,7 +527,7 @@ public class GAPPImporter extends EmptyControlFlowVisitor implements ExpressionV
         for (int blade=0;blade<usedAlgebra.getBladeCount();blade++)
             if (b1.getComponent(blade))
             {
-                sel.add(blade);
+                sel.add(new Selector(blade, (byte) 1));
                 getBooleanArr(destination).setComponent(blade, true);
             }
 
@@ -552,7 +553,7 @@ public class GAPPImporter extends EmptyControlFlowVisitor implements ExpressionV
         for (int blade=0;blade<usedAlgebra.getBladeCount();blade++)
             if (b1.getComponent(blade) || b2.getComponent(blade))
             {
-                sel.add(blade);
+                sel.add(new Selector(blade, (byte) 1));
                 getBooleanArr(destination).setComponent(blade, true);
             }
 

@@ -1,0 +1,1763 @@
+//sTmp0 = sat1x * e1
+resetMv mTmp0;
+assignMv mTmp0[0] = [sat1x];
+resetMv sTmp0;
+resetMv mTmp1;
+assignMv mTmp1[1] = [1.0];
+setVector vTmp2 = mTmp0[0];
+setVector vTmp3 = mTmp1[1];
+dotVectors sTmp0[1] = <vTmp2,vTmp3>;
+
+//sTmp1 = sat1y * e2
+resetMv mTmp4;
+assignMv mTmp4[0] = [sat1y];
+resetMv sTmp1;
+resetMv mTmp5;
+assignMv mTmp5[2] = [1.0];
+setVector vTmp6 = mTmp4[0];
+setVector vTmp7 = mTmp5[2];
+dotVectors sTmp1[2] = <vTmp6,vTmp7>;
+
+//sTmp2 = sat1z * e3
+resetMv mTmp8;
+assignMv mTmp8[0] = [sat1z];
+resetMv sTmp2;
+resetMv mTmp9;
+assignMv mTmp9[3] = [1.0];
+setVector vTmp10 = mTmp8[0];
+setVector vTmp11 = mTmp9[3];
+dotVectors sTmp2[3] = <vTmp10,vTmp11>;
+
+//sTmp3 = sat1x * sat1x
+resetMv sTmp3;
+setVector vTmp12 = mTmp0[0];
+setVector vTmp13 = mTmp0[0];
+dotVectors sTmp3[0] = <vTmp12,vTmp13>;
+
+//sTmp4 = sat1y * sat1y
+resetMv sTmp4;
+setVector vTmp14 = mTmp4[0];
+setVector vTmp15 = mTmp4[0];
+dotVectors sTmp4[0] = <vTmp14,vTmp15>;
+
+//sTmp5 = sat1z * sat1z
+resetMv sTmp5;
+setVector vTmp16 = mTmp8[0];
+setVector vTmp17 = mTmp8[0];
+dotVectors sTmp5[0] = <vTmp16,vTmp17>;
+
+//sTmp6 = sTmp4 + sTmp5
+resetMv sTmp6;
+setMv sTmp6[0] = sTmp4[0];
+addMv sTmp6[0] = sTmp5[0];
+
+//sTmp7 = sTmp3 + sTmp6
+resetMv sTmp7;
+setMv sTmp7[0] = sTmp3[0];
+addMv sTmp7[0] = sTmp6[0];
+
+//sTmp8 = sTmp7 * einf
+resetMv sTmp8;
+resetMv mTmp18;
+assignMv mTmp18[4] = [1.0];
+setVector vTmp19 = sTmp7[0];
+setVector vTmp20 = mTmp18[4];
+dotVectors sTmp8[4] = <vTmp19,vTmp20>;
+
+//sTmp9 = 0.5 * sTmp8
+resetMv sTmp9;
+resetMv mTmp21;
+assignMv mTmp21[0] = [0.5];
+setVector vTmp22 = mTmp21[0];
+setVector vTmp23 = sTmp8[4];
+dotVectors sTmp9[4] = <vTmp22,vTmp23>;
+
+//sTmp10 = sTmp9 + e0
+resetMv mTmp24;
+assignMv mTmp24[5] = [1.0];
+resetMv sTmp10;
+setMv sTmp10[4] = sTmp9[4];
+addMv sTmp10[5] = mTmp24[5];
+
+//sTmp11 = sTmp2 + sTmp10
+resetMv sTmp11;
+setMv sTmp11[3] = sTmp2[3];
+addMv sTmp11[4,5] = sTmp10[4,5];
+
+//sTmp12 = sTmp1 + sTmp11
+resetMv sTmp12;
+setMv sTmp12[2] = sTmp1[2];
+addMv sTmp12[3,4,5] = sTmp11[3,4,5];
+
+//sat1 = sTmp0 + sTmp12
+resetMv sat1;
+setMv sat1[1] = sTmp0[1];
+addMv sat1[2,3,4,5] = sTmp12[2,3,4,5];
+
+//sTmp13 = sat2x * e1
+resetMv mTmp25;
+assignMv mTmp25[0] = [sat2x];
+resetMv sTmp13;
+resetMv mTmp26;
+assignMv mTmp26[1] = [1.0];
+setVector vTmp27 = mTmp25[0];
+setVector vTmp28 = mTmp26[1];
+dotVectors sTmp13[1] = <vTmp27,vTmp28>;
+
+//sTmp14 = sat2y * e2
+resetMv mTmp29;
+assignMv mTmp29[0] = [sat2y];
+resetMv sTmp14;
+resetMv mTmp30;
+assignMv mTmp30[2] = [1.0];
+setVector vTmp31 = mTmp29[0];
+setVector vTmp32 = mTmp30[2];
+dotVectors sTmp14[2] = <vTmp31,vTmp32>;
+
+//sTmp15 = sat2z * e3
+resetMv mTmp33;
+assignMv mTmp33[0] = [sat2z];
+resetMv sTmp15;
+resetMv mTmp34;
+assignMv mTmp34[3] = [1.0];
+setVector vTmp35 = mTmp33[0];
+setVector vTmp36 = mTmp34[3];
+dotVectors sTmp15[3] = <vTmp35,vTmp36>;
+
+//sTmp16 = sat2x * sat2x
+resetMv sTmp16;
+setVector vTmp37 = mTmp25[0];
+setVector vTmp38 = mTmp25[0];
+dotVectors sTmp16[0] = <vTmp37,vTmp38>;
+
+//sTmp17 = sat2y * sat2y
+resetMv sTmp17;
+setVector vTmp39 = mTmp29[0];
+setVector vTmp40 = mTmp29[0];
+dotVectors sTmp17[0] = <vTmp39,vTmp40>;
+
+//sTmp18 = sat2z * sat2z
+resetMv sTmp18;
+setVector vTmp41 = mTmp33[0];
+setVector vTmp42 = mTmp33[0];
+dotVectors sTmp18[0] = <vTmp41,vTmp42>;
+
+//sTmp19 = sTmp17 + sTmp18
+resetMv sTmp19;
+setMv sTmp19[0] = sTmp17[0];
+addMv sTmp19[0] = sTmp18[0];
+
+//sTmp20 = sTmp16 + sTmp19
+resetMv sTmp20;
+setMv sTmp20[0] = sTmp16[0];
+addMv sTmp20[0] = sTmp19[0];
+
+//sTmp21 = sTmp20 * einf
+resetMv sTmp21;
+resetMv mTmp43;
+assignMv mTmp43[4] = [1.0];
+setVector vTmp44 = sTmp20[0];
+setVector vTmp45 = mTmp43[4];
+dotVectors sTmp21[4] = <vTmp44,vTmp45>;
+
+//sTmp22 = 0.5 * sTmp21
+resetMv sTmp22;
+resetMv mTmp46;
+assignMv mTmp46[0] = [0.5];
+setVector vTmp47 = mTmp46[0];
+setVector vTmp48 = sTmp21[4];
+dotVectors sTmp22[4] = <vTmp47,vTmp48>;
+
+//sTmp23 = sTmp22 + e0
+resetMv mTmp49;
+assignMv mTmp49[5] = [1.0];
+resetMv sTmp23;
+setMv sTmp23[4] = sTmp22[4];
+addMv sTmp23[5] = mTmp49[5];
+
+//sTmp24 = sTmp15 + sTmp23
+resetMv sTmp24;
+setMv sTmp24[3] = sTmp15[3];
+addMv sTmp24[4,5] = sTmp23[4,5];
+
+//sTmp25 = sTmp14 + sTmp24
+resetMv sTmp25;
+setMv sTmp25[2] = sTmp14[2];
+addMv sTmp25[3,4,5] = sTmp24[3,4,5];
+
+//sat2 = sTmp13 + sTmp25
+resetMv sat2;
+setMv sat2[1] = sTmp13[1];
+addMv sat2[2,3,4,5] = sTmp25[2,3,4,5];
+
+//sTmp26 = sat3x * e1
+resetMv mTmp50;
+assignMv mTmp50[0] = [sat3x];
+resetMv sTmp26;
+resetMv mTmp51;
+assignMv mTmp51[1] = [1.0];
+setVector vTmp52 = mTmp50[0];
+setVector vTmp53 = mTmp51[1];
+dotVectors sTmp26[1] = <vTmp52,vTmp53>;
+
+//sTmp27 = sat3y * e2
+resetMv mTmp54;
+assignMv mTmp54[0] = [sat3y];
+resetMv sTmp27;
+resetMv mTmp55;
+assignMv mTmp55[2] = [1.0];
+setVector vTmp56 = mTmp54[0];
+setVector vTmp57 = mTmp55[2];
+dotVectors sTmp27[2] = <vTmp56,vTmp57>;
+
+//sTmp28 = sat3z * e3
+resetMv mTmp58;
+assignMv mTmp58[0] = [sat3z];
+resetMv sTmp28;
+resetMv mTmp59;
+assignMv mTmp59[3] = [1.0];
+setVector vTmp60 = mTmp58[0];
+setVector vTmp61 = mTmp59[3];
+dotVectors sTmp28[3] = <vTmp60,vTmp61>;
+
+//sTmp29 = sat3x * sat3x
+resetMv sTmp29;
+setVector vTmp62 = mTmp50[0];
+setVector vTmp63 = mTmp50[0];
+dotVectors sTmp29[0] = <vTmp62,vTmp63>;
+
+//sTmp30 = sat3y * sat3y
+resetMv sTmp30;
+setVector vTmp64 = mTmp54[0];
+setVector vTmp65 = mTmp54[0];
+dotVectors sTmp30[0] = <vTmp64,vTmp65>;
+
+//sTmp31 = sat3z * sat3z
+resetMv sTmp31;
+setVector vTmp66 = mTmp58[0];
+setVector vTmp67 = mTmp58[0];
+dotVectors sTmp31[0] = <vTmp66,vTmp67>;
+
+//sTmp32 = sTmp30 + sTmp31
+resetMv sTmp32;
+setMv sTmp32[0] = sTmp30[0];
+addMv sTmp32[0] = sTmp31[0];
+
+//sTmp33 = sTmp29 + sTmp32
+resetMv sTmp33;
+setMv sTmp33[0] = sTmp29[0];
+addMv sTmp33[0] = sTmp32[0];
+
+//sTmp34 = sTmp33 * einf
+resetMv sTmp34;
+resetMv mTmp68;
+assignMv mTmp68[4] = [1.0];
+setVector vTmp69 = sTmp33[0];
+setVector vTmp70 = mTmp68[4];
+dotVectors sTmp34[4] = <vTmp69,vTmp70>;
+
+//sTmp35 = 0.5 * sTmp34
+resetMv sTmp35;
+resetMv mTmp71;
+assignMv mTmp71[0] = [0.5];
+setVector vTmp72 = mTmp71[0];
+setVector vTmp73 = sTmp34[4];
+dotVectors sTmp35[4] = <vTmp72,vTmp73>;
+
+//sTmp36 = sTmp35 + e0
+resetMv mTmp74;
+assignMv mTmp74[5] = [1.0];
+resetMv sTmp36;
+setMv sTmp36[4] = sTmp35[4];
+addMv sTmp36[5] = mTmp74[5];
+
+//sTmp37 = sTmp28 + sTmp36
+resetMv sTmp37;
+setMv sTmp37[3] = sTmp28[3];
+addMv sTmp37[4,5] = sTmp36[4,5];
+
+//sTmp38 = sTmp27 + sTmp37
+resetMv sTmp38;
+setMv sTmp38[2] = sTmp27[2];
+addMv sTmp38[3,4,5] = sTmp37[3,4,5];
+
+//sat3 = sTmp26 + sTmp38
+resetMv sat3;
+setMv sat3[1] = sTmp26[1];
+addMv sat3[2,3,4,5] = sTmp38[2,3,4,5];
+
+//sTmp39 = 0.5 * d1
+resetMv mTmp75;
+assignMv mTmp75[0] = [d1];
+resetMv sTmp39;
+resetMv mTmp76;
+assignMv mTmp76[0] = [0.5];
+setVector vTmp77 = mTmp76[0];
+setVector vTmp78 = mTmp75[0];
+dotVectors sTmp39[0] = <vTmp77,vTmp78>;
+
+//sTmp40 = sTmp39 * d1
+resetMv sTmp40;
+setVector vTmp79 = sTmp39[0];
+setVector vTmp80 = mTmp75[0];
+dotVectors sTmp40[0] = <vTmp79,vTmp80>;
+
+//sTmp41 = sTmp40 * einf
+resetMv sTmp41;
+resetMv mTmp81;
+assignMv mTmp81[4] = [1.0];
+setVector vTmp82 = sTmp40[0];
+setVector vTmp83 = mTmp81[4];
+dotVectors sTmp41[4] = <vTmp82,vTmp83>;
+
+//sph1 = sat1 - sTmp41
+resetMv sph1;
+setMv sph1[1,2,3,4,5] = sat1[1,2,3,4,5];
+addMv sph1[4] = sTmp41[-4];
+
+//sTmp42 = 0.5 * d2
+resetMv mTmp84;
+assignMv mTmp84[0] = [d2];
+resetMv sTmp42;
+resetMv mTmp85;
+assignMv mTmp85[0] = [0.5];
+setVector vTmp86 = mTmp85[0];
+setVector vTmp87 = mTmp84[0];
+dotVectors sTmp42[0] = <vTmp86,vTmp87>;
+
+//sTmp43 = sTmp42 * d2
+resetMv sTmp43;
+setVector vTmp88 = sTmp42[0];
+setVector vTmp89 = mTmp84[0];
+dotVectors sTmp43[0] = <vTmp88,vTmp89>;
+
+//sTmp44 = sTmp43 * einf
+resetMv sTmp44;
+resetMv mTmp90;
+assignMv mTmp90[4] = [1.0];
+setVector vTmp91 = sTmp43[0];
+setVector vTmp92 = mTmp90[4];
+dotVectors sTmp44[4] = <vTmp91,vTmp92>;
+
+//sph2 = sat2 - sTmp44
+resetMv sph2;
+setMv sph2[1,2,3,4,5] = sat2[1,2,3,4,5];
+addMv sph2[4] = sTmp44[-4];
+
+//sTmp45 = 0.5 * d3
+resetMv mTmp93;
+assignMv mTmp93[0] = [d3];
+resetMv sTmp45;
+resetMv mTmp94;
+assignMv mTmp94[0] = [0.5];
+setVector vTmp95 = mTmp94[0];
+setVector vTmp96 = mTmp93[0];
+dotVectors sTmp45[0] = <vTmp95,vTmp96>;
+
+//sTmp46 = sTmp45 * d3
+resetMv sTmp46;
+setVector vTmp97 = sTmp45[0];
+setVector vTmp98 = mTmp93[0];
+dotVectors sTmp46[0] = <vTmp97,vTmp98>;
+
+//sTmp47 = sTmp46 * einf
+resetMv sTmp47;
+resetMv mTmp99;
+assignMv mTmp99[4] = [1.0];
+setVector vTmp100 = sTmp46[0];
+setVector vTmp101 = mTmp99[4];
+dotVectors sTmp47[4] = <vTmp100,vTmp101>;
+
+//sph3 = sat3 - sTmp47
+resetMv sph3;
+setMv sph3[1,2,3,4,5] = sat3[1,2,3,4,5];
+addMv sph3[4] = sTmp47[-4];
+
+//sTmp48 = sph1 ^ sph2
+resetMv sTmp48;
+setVector vTmp102 = sph1[1,2];
+setVector vTmp103 = sph2[2,-1];
+dotVectors sTmp48[6] = <vTmp102,vTmp103>;
+setVector vTmp104 = sph1[1,3];
+setVector vTmp105 = sph2[3,-1];
+dotVectors sTmp48[7] = <vTmp104,vTmp105>;
+setVector vTmp106 = sph1[1,4];
+setVector vTmp107 = sph2[4,-1];
+dotVectors sTmp48[8] = <vTmp106,vTmp107>;
+setVector vTmp108 = sph1[1,5];
+setVector vTmp109 = sph2[5,-1];
+dotVectors sTmp48[9] = <vTmp108,vTmp109>;
+setVector vTmp110 = sph1[2,3];
+setVector vTmp111 = sph2[3,-2];
+dotVectors sTmp48[10] = <vTmp110,vTmp111>;
+setVector vTmp112 = sph1[2,4];
+setVector vTmp113 = sph2[4,-2];
+dotVectors sTmp48[11] = <vTmp112,vTmp113>;
+setVector vTmp114 = sph1[2,5];
+setVector vTmp115 = sph2[5,-2];
+dotVectors sTmp48[12] = <vTmp114,vTmp115>;
+setVector vTmp116 = sph1[3,4];
+setVector vTmp117 = sph2[4,-3];
+dotVectors sTmp48[13] = <vTmp116,vTmp117>;
+setVector vTmp118 = sph1[3,5];
+setVector vTmp119 = sph2[5,-3];
+dotVectors sTmp48[14] = <vTmp118,vTmp119>;
+setVector vTmp120 = sph1[4,5];
+setVector vTmp121 = sph2[5,-4];
+dotVectors sTmp48[15] = <vTmp120,vTmp121>;
+
+//rcPp = sTmp48 ^ sph3
+resetMv rcPp;
+setVector vTmp122 = sTmp48[6,7,10];
+setVector vTmp123 = sph3[3,-2,1];
+dotVectors rcPp[16] = <vTmp122,vTmp123>;
+setVector vTmp124 = sTmp48[6,8,11];
+setVector vTmp125 = sph3[4,-2,1];
+dotVectors rcPp[17] = <vTmp124,vTmp125>;
+setVector vTmp126 = sTmp48[6,9,12];
+setVector vTmp127 = sph3[5,-2,1];
+dotVectors rcPp[18] = <vTmp126,vTmp127>;
+setVector vTmp128 = sTmp48[7,8,13];
+setVector vTmp129 = sph3[4,-3,1];
+dotVectors rcPp[19] = <vTmp128,vTmp129>;
+setVector vTmp130 = sTmp48[7,9,14];
+setVector vTmp131 = sph3[5,-3,1];
+dotVectors rcPp[20] = <vTmp130,vTmp131>;
+setVector vTmp132 = sTmp48[8,9,15];
+setVector vTmp133 = sph3[5,-4,1];
+dotVectors rcPp[21] = <vTmp132,vTmp133>;
+setVector vTmp134 = sTmp48[10,11,13];
+setVector vTmp135 = sph3[4,-3,2];
+dotVectors rcPp[22] = <vTmp134,vTmp135>;
+setVector vTmp136 = sTmp48[10,12,14];
+setVector vTmp137 = sph3[5,-3,2];
+dotVectors rcPp[23] = <vTmp136,vTmp137>;
+setVector vTmp138 = sTmp48[11,12,15];
+setVector vTmp139 = sph3[5,-4,2];
+dotVectors rcPp[24] = <vTmp138,vTmp139>;
+setVector vTmp140 = sTmp48[13,14,15];
+setVector vTmp141 = sph3[5,-4,3];
+dotVectors rcPp[25] = <vTmp140,vTmp141>;
+
+//sTmp49 = rcPp . rcPp
+resetMv sTmp49;
+setVector vTmp142 = rcPp[16,17,18,19,20,21,22,23,24,25];
+setVector vTmp143 = rcPp[-16,18,17,20,19,21,23,22,24,25];
+dotVectors sTmp49[0] = <vTmp142,vTmp143>;
+
+//sTmp50 = abs(sTmp49)
+calculate sTmp50 = ABS(sTmp49,[0],null);
+
+//len = sqrt(sTmp50)
+calculate len = SQRT(sTmp50,[0],null);
+
+//sTmp51 = -(rcPp)
+resetMv sTmp51;
+addMv sTmp51[16,17,18,19,20,21,22,23,24,25] = rcPp[-16,-17,-18,-19,-20,-21,-22,-23,-24,-25];
+
+//sTmp52 = e4 ^ e5
+resetMv sTmp52;
+resetMv mTmp144;
+assignMv mTmp144[4] = [1.0];
+resetMv mTmp145;
+assignMv mTmp145[5] = [1.0];
+setVector vTmp146 = mTmp144[4];
+setVector vTmp147 = mTmp145[5];
+dotVectors sTmp52[15] = <vTmp146,vTmp147>;
+
+//sTmp53 = e3 ^ sTmp52
+resetMv sTmp53;
+resetMv mTmp148;
+assignMv mTmp148[3] = [1.0];
+setVector vTmp149 = mTmp148[3];
+setVector vTmp150 = sTmp52[15];
+dotVectors sTmp53[25] = <vTmp149,vTmp150>;
+
+//sTmp54 = e2 ^ sTmp53
+resetMv sTmp54;
+resetMv mTmp151;
+assignMv mTmp151[2] = [1.0];
+setVector vTmp152 = mTmp151[2];
+setVector vTmp153 = sTmp53[25];
+dotVectors sTmp54[30] = <vTmp152,vTmp153>;
+
+//sTmp55 = e1 ^ sTmp54
+resetMv sTmp55;
+resetMv mTmp154;
+assignMv mTmp154[1] = [1.0];
+setVector vTmp155 = mTmp154[1];
+setVector vTmp156 = sTmp54[30];
+dotVectors sTmp55[31] = <vTmp155,vTmp156>;
+
+//rcPpDual = sTmp51 * sTmp55
+resetMv rcPpDual;
+setVector vTmp157 = sTmp51[25];
+setVector vTmp158 = sTmp55[31];
+dotVectors rcPpDual[6] = <vTmp157,vTmp158>;
+setVector vTmp159 = sTmp51[24];
+setVector vTmp160 = sTmp55[-31];
+dotVectors rcPpDual[7] = <vTmp159,vTmp160>;
+setVector vTmp161 = sTmp51[22];
+setVector vTmp162 = sTmp55[31];
+dotVectors rcPpDual[8] = <vTmp161,vTmp162>;
+setVector vTmp163 = sTmp51[23];
+setVector vTmp164 = sTmp55[-31];
+dotVectors rcPpDual[9] = <vTmp163,vTmp164>;
+setVector vTmp165 = sTmp51[21];
+setVector vTmp166 = sTmp55[31];
+dotVectors rcPpDual[10] = <vTmp165,vTmp166>;
+setVector vTmp167 = sTmp51[19];
+setVector vTmp168 = sTmp55[-31];
+dotVectors rcPpDual[11] = <vTmp167,vTmp168>;
+setVector vTmp169 = sTmp51[20];
+setVector vTmp170 = sTmp55[31];
+dotVectors rcPpDual[12] = <vTmp169,vTmp170>;
+setVector vTmp171 = sTmp51[17];
+setVector vTmp172 = sTmp55[31];
+dotVectors rcPpDual[13] = <vTmp171,vTmp172>;
+setVector vTmp173 = sTmp51[18];
+setVector vTmp174 = sTmp55[-31];
+dotVectors rcPpDual[14] = <vTmp173,vTmp174>;
+setVector vTmp175 = sTmp51[16];
+setVector vTmp176 = sTmp55[-31];
+dotVectors rcPpDual[15] = <vTmp175,vTmp176>;
+
+//nen = einf . rcPpDual
+resetMv nen;
+resetMv mTmp177;
+assignMv mTmp177[4] = [1.0];
+setVector vTmp178 = mTmp177[4];
+setVector vTmp179 = rcPpDual[9];
+dotVectors nen[1] = <vTmp178,vTmp179>;
+setVector vTmp180 = mTmp177[4];
+setVector vTmp181 = rcPpDual[12];
+dotVectors nen[2] = <vTmp180,vTmp181>;
+setVector vTmp182 = mTmp177[4];
+setVector vTmp183 = rcPpDual[14];
+dotVectors nen[3] = <vTmp182,vTmp183>;
+setVector vTmp184 = mTmp177[4];
+setVector vTmp185 = rcPpDual[15];
+dotVectors nen[4] = <vTmp184,vTmp185>;
+
+//sTmp56 = rcPpDual + len
+resetMv sTmp56;
+setMv sTmp56[6,7,8,9,10,11,12,13,14,15] = rcPpDual[6,7,8,9,10,11,12,13,14,15];
+addMv sTmp56[0] = len[0];
+
+//sTmp57 = ~(nen)
+resetMv sTmp57;
+setMv sTmp57[1,2,3,4] = nen[1,2,3,4];
+
+//sTmp58 = nen * sTmp57
+resetMv sTmp58;
+setVector vTmp186 = nen[1,2,3];
+setVector vTmp187 = sTmp57[1,2,3];
+dotVectors sTmp58[0] = <vTmp186,vTmp187>;
+setVector vTmp188 = nen[1,2];
+setVector vTmp189 = sTmp57[2,-1];
+dotVectors sTmp58[6] = <vTmp188,vTmp189>;
+setVector vTmp190 = nen[1,3];
+setVector vTmp191 = sTmp57[3,-1];
+dotVectors sTmp58[7] = <vTmp190,vTmp191>;
+setVector vTmp192 = nen[1,4];
+setVector vTmp193 = sTmp57[4,-1];
+dotVectors sTmp58[8] = <vTmp192,vTmp193>;
+setVector vTmp194 = nen[2,3];
+setVector vTmp195 = sTmp57[3,-2];
+dotVectors sTmp58[10] = <vTmp194,vTmp195>;
+setVector vTmp196 = nen[2,4];
+setVector vTmp197 = sTmp57[4,-2];
+dotVectors sTmp58[11] = <vTmp196,vTmp197>;
+setVector vTmp198 = nen[3,4];
+setVector vTmp199 = sTmp57[4,-3];
+dotVectors sTmp58[13] = <vTmp198,vTmp199>;
+
+//sTmp59 = nen / sTmp58
+calculate sTmp59 = DIVISION(nen,sTmp58,[1,2,3,4],[0,0,0,0]);
+
+//rc1 = sTmp56 * sTmp59
+resetMv rc1;
+setVector vTmp200 = sTmp56[0,6,7,9,10,12,14];
+setVector vTmp201 = sTmp59[1,2,3,-4,-16,17,19];
+dotVectors rc1[1] = <vTmp200,vTmp201>;
+setVector vTmp202 = sTmp56[0,6,7,9,10,12,14];
+setVector vTmp203 = sTmp59[2,-1,16,-17,3,-4,22];
+dotVectors rc1[2] = <vTmp202,vTmp203>;
+setVector vTmp204 = sTmp56[0,6,7,9,10,12,14];
+setVector vTmp205 = sTmp59[3,-16,-1,-19,-2,-22,-4];
+dotVectors rc1[3] = <vTmp204,vTmp205>;
+setVector vTmp206 = sTmp56[0,6,7,8,10,11,13,15];
+setVector vTmp207 = sTmp59[4,-17,-19,-1,-22,-2,-3,-4];
+dotVectors rc1[4] = <vTmp206,vTmp207>;
+setVector vTmp208 = sTmp56[9,12,14];
+setVector vTmp209 = sTmp59[-1,-2,-3];
+dotVectors rc1[5] = <vTmp208,vTmp209>;
+setVector vTmp210 = sTmp56[0,6,7,9,10,12,14];
+setVector vTmp211 = sTmp59[16,3,-2,-22,1,19,-17];
+dotVectors rc1[16] = <vTmp210,vTmp211>;
+setVector vTmp212 = sTmp56[0,6,7,8,10,11,13,15];
+setVector vTmp213 = sTmp59[17,4,-22,-2,19,1,-16,-17];
+dotVectors rc1[17] = <vTmp212,vTmp213>;
+setVector vTmp214 = sTmp56[9,12,14];
+setVector vTmp215 = sTmp59[-2,1,-16];
+dotVectors rc1[18] = <vTmp214,vTmp215>;
+setVector vTmp216 = sTmp56[0,6,7,8,10,11,13,15];
+setVector vTmp217 = sTmp59[19,22,4,-3,-17,16,1,-19];
+dotVectors rc1[19] = <vTmp216,vTmp217>;
+setVector vTmp218 = sTmp56[9,12,14];
+setVector vTmp219 = sTmp59[-3,16,1];
+dotVectors rc1[20] = <vTmp218,vTmp219>;
+setVector vTmp220 = sTmp56[9,12,14,15];
+setVector vTmp221 = sTmp59[-4,17,19,1];
+dotVectors rc1[21] = <vTmp220,vTmp221>;
+setVector vTmp222 = sTmp56[0,6,7,8,10,11,13,15];
+setVector vTmp223 = sTmp59[22,-19,17,-16,4,-3,2,-22];
+dotVectors rc1[22] = <vTmp222,vTmp223>;
+setVector vTmp224 = sTmp56[9,12,14];
+setVector vTmp225 = sTmp59[-16,-3,2];
+dotVectors rc1[23] = <vTmp224,vTmp225>;
+setVector vTmp226 = sTmp56[9,12,14,15];
+setVector vTmp227 = sTmp59[-17,-4,22,2];
+dotVectors rc1[24] = <vTmp226,vTmp227>;
+setVector vTmp228 = sTmp56[9,12,14,15];
+setVector vTmp229 = sTmp59[-19,-22,-4,3];
+dotVectors rc1[25] = <vTmp228,vTmp229>;
+setVector vTmp230 = sTmp56[9,12,14,15];
+setVector vTmp231 = sTmp59[-22,19,-17,16];
+dotVectors rc1[31] = <vTmp230,vTmp231>;
+
+//sTmp60 = -(rc1)
+resetMv sTmp60;
+addMv sTmp60[1,2,3,4,5,16,17,18,19,20,21,22,23,24,25,31] = rc1[-1,-2,-3,-4,-5,-16,-17,-18,-19,-20,-21,-22,-23,-24,-25,-31];
+
+//sTmp61 = rc1 . einf
+resetMv sTmp61;
+resetMv mTmp232;
+assignMv mTmp232[4] = [1.0];
+setVector vTmp233 = rc1[5];
+setVector vTmp234 = mTmp232[-4];
+dotVectors sTmp61[0] = <vTmp233,vTmp234>;
+setVector vTmp235 = rc1[18];
+setVector vTmp236 = mTmp232[-4];
+dotVectors sTmp61[6] = <vTmp235,vTmp236>;
+setVector vTmp237 = rc1[20];
+setVector vTmp238 = mTmp232[-4];
+dotVectors sTmp61[7] = <vTmp237,vTmp238>;
+setVector vTmp239 = rc1[21];
+setVector vTmp240 = mTmp232[-4];
+dotVectors sTmp61[8] = <vTmp239,vTmp240>;
+setVector vTmp241 = rc1[23];
+setVector vTmp242 = mTmp232[-4];
+dotVectors sTmp61[10] = <vTmp241,vTmp242>;
+setVector vTmp243 = rc1[24];
+setVector vTmp244 = mTmp232[-4];
+dotVectors sTmp61[11] = <vTmp243,vTmp244>;
+setVector vTmp245 = rc1[25];
+setVector vTmp246 = mTmp232[-4];
+dotVectors sTmp61[13] = <vTmp245,vTmp246>;
+setVector vTmp247 = rc1[31];
+setVector vTmp248 = mTmp232[-4];
+dotVectors sTmp61[26] = <vTmp247,vTmp248>;
+
+//sTmp62 = rc1 . einf
+resetMv sTmp62;
+resetMv mTmp249;
+assignMv mTmp249[4] = [1.0];
+setVector vTmp250 = rc1[5];
+setVector vTmp251 = mTmp249[-4];
+dotVectors sTmp62[0] = <vTmp250,vTmp251>;
+setVector vTmp252 = rc1[18];
+setVector vTmp253 = mTmp249[-4];
+dotVectors sTmp62[6] = <vTmp252,vTmp253>;
+setVector vTmp254 = rc1[20];
+setVector vTmp255 = mTmp249[-4];
+dotVectors sTmp62[7] = <vTmp254,vTmp255>;
+setVector vTmp256 = rc1[21];
+setVector vTmp257 = mTmp249[-4];
+dotVectors sTmp62[8] = <vTmp256,vTmp257>;
+setVector vTmp258 = rc1[23];
+setVector vTmp259 = mTmp249[-4];
+dotVectors sTmp62[10] = <vTmp258,vTmp259>;
+setVector vTmp260 = rc1[24];
+setVector vTmp261 = mTmp249[-4];
+dotVectors sTmp62[11] = <vTmp260,vTmp261>;
+setVector vTmp262 = rc1[25];
+setVector vTmp263 = mTmp249[-4];
+dotVectors sTmp62[13] = <vTmp262,vTmp263>;
+setVector vTmp264 = rc1[31];
+setVector vTmp265 = mTmp249[-4];
+dotVectors sTmp62[26] = <vTmp264,vTmp265>;
+
+//sTmp63 = rc1 . einf
+resetMv sTmp63;
+resetMv mTmp266;
+assignMv mTmp266[4] = [1.0];
+setVector vTmp267 = rc1[5];
+setVector vTmp268 = mTmp266[-4];
+dotVectors sTmp63[0] = <vTmp267,vTmp268>;
+setVector vTmp269 = rc1[18];
+setVector vTmp270 = mTmp266[-4];
+dotVectors sTmp63[6] = <vTmp269,vTmp270>;
+setVector vTmp271 = rc1[20];
+setVector vTmp272 = mTmp266[-4];
+dotVectors sTmp63[7] = <vTmp271,vTmp272>;
+setVector vTmp273 = rc1[21];
+setVector vTmp274 = mTmp266[-4];
+dotVectors sTmp63[8] = <vTmp273,vTmp274>;
+setVector vTmp275 = rc1[23];
+setVector vTmp276 = mTmp266[-4];
+dotVectors sTmp63[10] = <vTmp275,vTmp276>;
+setVector vTmp277 = rc1[24];
+setVector vTmp278 = mTmp266[-4];
+dotVectors sTmp63[11] = <vTmp277,vTmp278>;
+setVector vTmp279 = rc1[25];
+setVector vTmp280 = mTmp266[-4];
+dotVectors sTmp63[13] = <vTmp279,vTmp280>;
+setVector vTmp281 = rc1[31];
+setVector vTmp282 = mTmp266[-4];
+dotVectors sTmp63[26] = <vTmp281,vTmp282>;
+
+//sTmp64 = ~(sTmp63)
+resetMv sTmp64;
+setMv sTmp64[0,6,7,8,10,11,13,26] = sTmp63[0,-6,-7,-8,-10,-11,-13,26];
+
+//sTmp65 = sTmp62 * sTmp64
+resetMv sTmp65;
+setVector vTmp283 = sTmp62[0,6,7,10];
+setVector vTmp284 = sTmp64[0,-6,-7,-10];
+dotVectors sTmp65[0] = <vTmp283,vTmp284>;
+setVector vTmp285 = sTmp62[0,6,7,10];
+setVector vTmp286 = sTmp64[6,0,-10,7];
+dotVectors sTmp65[6] = <vTmp285,vTmp286>;
+setVector vTmp287 = sTmp62[0,6,7,10];
+setVector vTmp288 = sTmp64[7,10,0,-6];
+dotVectors sTmp65[7] = <vTmp287,vTmp288>;
+setVector vTmp289 = sTmp62[0,6,7,8,10,11,13,26];
+setVector vTmp290 = sTmp64[8,11,13,0,-26,-6,-7,-10];
+dotVectors sTmp65[8] = <vTmp289,vTmp290>;
+setVector vTmp291 = sTmp62[0,6,7,10];
+setVector vTmp292 = sTmp64[10,-7,6,0];
+dotVectors sTmp65[10] = <vTmp291,vTmp292>;
+setVector vTmp293 = sTmp62[0,6,7,8,10,11,13,26];
+setVector vTmp294 = sTmp64[11,-8,26,6,13,0,-10,7];
+dotVectors sTmp65[11] = <vTmp293,vTmp294>;
+setVector vTmp295 = sTmp62[0,6,7,8,10,11,13,26];
+setVector vTmp296 = sTmp64[13,-26,-8,7,-11,10,0,-6];
+dotVectors sTmp65[13] = <vTmp295,vTmp296>;
+setVector vTmp297 = sTmp62[0,6,7,8,10,11,13,26];
+setVector vTmp298 = sTmp64[26,13,-11,10,8,-7,6,0];
+dotVectors sTmp65[26] = <vTmp297,vTmp298>;
+
+//sTmp66 = sTmp61 / sTmp65
+calculate sTmp66 = DIVISION(sTmp61,sTmp65,[0,6,7,8,10,11,13,26],[0,0,0,0,0,0,0,0]);
+
+//rc1N = sTmp60 * sTmp66
+resetMv rc1N;
+setVector vTmp299 = sTmp60[1,2,3,5,16,18,20,23];
+setVector vTmp300 = sTmp66[0,-6,-7,8,-10,11,13,-26];
+dotVectors rc1N[1] = <vTmp299,vTmp300>;
+setVector vTmp301 = sTmp60[1,2,3,5,16,18,20,23];
+setVector vTmp302 = sTmp66[6,0,-10,11,7,-8,26,13];
+dotVectors rc1N[2] = <vTmp301,vTmp302>;
+setVector vTmp303 = sTmp60[1,2,3,5,16,18,20,23];
+setVector vTmp304 = sTmp66[7,10,0,13,-6,-26,-8,-11];
+dotVectors rc1N[3] = <vTmp303,vTmp304>;
+setVector vTmp305 = sTmp60[1,2,3,4,16,17,19,21,22,24,25,31];
+setVector vTmp306 = sTmp66[8,11,13,0,-26,-6,-7,-8,-10,-11,-13,26];
+dotVectors rc1N[4] = <vTmp305,vTmp306>;
+setVector vTmp307 = sTmp60[5,18,20,23];
+setVector vTmp308 = sTmp66[0,-6,-7,-10];
+dotVectors rc1N[5] = <vTmp307,vTmp308>;
+setVector vTmp309 = sTmp60[1,2,3,5,16,18,20,23];
+setVector vTmp310 = sTmp66[10,-7,6,26,0,13,-11,8];
+dotVectors rc1N[16] = <vTmp309,vTmp310>;
+setVector vTmp311 = sTmp60[1,2,3,4,16,17,19,21,22,24,25,31];
+setVector vTmp312 = sTmp66[11,-8,26,6,13,0,-10,-11,7,8,-26,-13];
+dotVectors rc1N[17] = <vTmp311,vTmp312>;
+setVector vTmp313 = sTmp60[5,18,20,23];
+setVector vTmp314 = sTmp66[6,0,-10,7];
+dotVectors rc1N[18] = <vTmp313,vTmp314>;
+setVector vTmp315 = sTmp60[1,2,3,4,16,17,19,21,22,24,25,31];
+setVector vTmp316 = sTmp66[13,-26,-8,7,-11,10,0,-13,-6,26,8,11];
+dotVectors rc1N[19] = <vTmp315,vTmp316>;
+setVector vTmp317 = sTmp60[5,18,20,23];
+setVector vTmp318 = sTmp66[7,10,0,-6];
+dotVectors rc1N[20] = <vTmp317,vTmp318>;
+setVector vTmp319 = sTmp60[5,18,20,21,23,24,25,31];
+setVector vTmp320 = sTmp66[8,11,13,0,-26,-6,-7,-10];
+dotVectors rc1N[21] = <vTmp319,vTmp320>;
+setVector vTmp321 = sTmp60[1,2,3,4,16,17,19,21,22,24,25,31];
+setVector vTmp322 = sTmp66[26,13,-11,10,8,-7,6,-26,0,-13,11,-8];
+dotVectors rc1N[22] = <vTmp321,vTmp322>;
+setVector vTmp323 = sTmp60[5,18,20,23];
+setVector vTmp324 = sTmp66[10,-7,6,0];
+dotVectors rc1N[23] = <vTmp323,vTmp324>;
+setVector vTmp325 = sTmp60[5,18,20,21,23,24,25,31];
+setVector vTmp326 = sTmp66[11,-8,26,6,13,0,-10,7];
+dotVectors rc1N[24] = <vTmp325,vTmp326>;
+setVector vTmp327 = sTmp60[5,18,20,21,23,24,25,31];
+setVector vTmp328 = sTmp66[13,-26,-8,7,-11,10,0,-6];
+dotVectors rc1N[25] = <vTmp327,vTmp328>;
+setVector vTmp329 = sTmp60[5,18,20,21,23,24,25,31];
+setVector vTmp330 = sTmp66[26,13,-11,10,8,-7,6,0];
+dotVectors rc1N[31] = <vTmp329,vTmp330>;
+
+//sTmp67 = rcPpDual - len
+resetMv sTmp67;
+setMv sTmp67[6,7,8,9,10,11,12,13,14,15] = rcPpDual[6,7,8,9,10,11,12,13,14,15];
+addMv sTmp67[0] = len[-0];
+
+//sTmp68 = ~(nen)
+resetMv sTmp68;
+setMv sTmp68[1,2,3,4] = nen[1,2,3,4];
+
+//sTmp69 = nen * sTmp68
+resetMv sTmp69;
+setVector vTmp331 = nen[1,2,3];
+setVector vTmp332 = sTmp68[1,2,3];
+dotVectors sTmp69[0] = <vTmp331,vTmp332>;
+setVector vTmp333 = nen[1,2];
+setVector vTmp334 = sTmp68[2,-1];
+dotVectors sTmp69[6] = <vTmp333,vTmp334>;
+setVector vTmp335 = nen[1,3];
+setVector vTmp336 = sTmp68[3,-1];
+dotVectors sTmp69[7] = <vTmp335,vTmp336>;
+setVector vTmp337 = nen[1,4];
+setVector vTmp338 = sTmp68[4,-1];
+dotVectors sTmp69[8] = <vTmp337,vTmp338>;
+setVector vTmp339 = nen[2,3];
+setVector vTmp340 = sTmp68[3,-2];
+dotVectors sTmp69[10] = <vTmp339,vTmp340>;
+setVector vTmp341 = nen[2,4];
+setVector vTmp342 = sTmp68[4,-2];
+dotVectors sTmp69[11] = <vTmp341,vTmp342>;
+setVector vTmp343 = nen[3,4];
+setVector vTmp344 = sTmp68[4,-3];
+dotVectors sTmp69[13] = <vTmp343,vTmp344>;
+
+//sTmp70 = nen / sTmp69
+calculate sTmp70 = DIVISION(nen,sTmp69,[1,2,3,4],[0,0,0,0]);
+
+//rc2 = sTmp67 * sTmp70
+resetMv rc2;
+setVector vTmp345 = sTmp67[0,6,7,9,10,12,14];
+setVector vTmp346 = sTmp70[1,2,3,-4,-16,17,19];
+dotVectors rc2[1] = <vTmp345,vTmp346>;
+setVector vTmp347 = sTmp67[0,6,7,9,10,12,14];
+setVector vTmp348 = sTmp70[2,-1,16,-17,3,-4,22];
+dotVectors rc2[2] = <vTmp347,vTmp348>;
+setVector vTmp349 = sTmp67[0,6,7,9,10,12,14];
+setVector vTmp350 = sTmp70[3,-16,-1,-19,-2,-22,-4];
+dotVectors rc2[3] = <vTmp349,vTmp350>;
+setVector vTmp351 = sTmp67[0,6,7,8,10,11,13,15];
+setVector vTmp352 = sTmp70[4,-17,-19,-1,-22,-2,-3,-4];
+dotVectors rc2[4] = <vTmp351,vTmp352>;
+setVector vTmp353 = sTmp67[9,12,14];
+setVector vTmp354 = sTmp70[-1,-2,-3];
+dotVectors rc2[5] = <vTmp353,vTmp354>;
+setVector vTmp355 = sTmp67[0,6,7,9,10,12,14];
+setVector vTmp356 = sTmp70[16,3,-2,-22,1,19,-17];
+dotVectors rc2[16] = <vTmp355,vTmp356>;
+setVector vTmp357 = sTmp67[0,6,7,8,10,11,13,15];
+setVector vTmp358 = sTmp70[17,4,-22,-2,19,1,-16,-17];
+dotVectors rc2[17] = <vTmp357,vTmp358>;
+setVector vTmp359 = sTmp67[9,12,14];
+setVector vTmp360 = sTmp70[-2,1,-16];
+dotVectors rc2[18] = <vTmp359,vTmp360>;
+setVector vTmp361 = sTmp67[0,6,7,8,10,11,13,15];
+setVector vTmp362 = sTmp70[19,22,4,-3,-17,16,1,-19];
+dotVectors rc2[19] = <vTmp361,vTmp362>;
+setVector vTmp363 = sTmp67[9,12,14];
+setVector vTmp364 = sTmp70[-3,16,1];
+dotVectors rc2[20] = <vTmp363,vTmp364>;
+setVector vTmp365 = sTmp67[9,12,14,15];
+setVector vTmp366 = sTmp70[-4,17,19,1];
+dotVectors rc2[21] = <vTmp365,vTmp366>;
+setVector vTmp367 = sTmp67[0,6,7,8,10,11,13,15];
+setVector vTmp368 = sTmp70[22,-19,17,-16,4,-3,2,-22];
+dotVectors rc2[22] = <vTmp367,vTmp368>;
+setVector vTmp369 = sTmp67[9,12,14];
+setVector vTmp370 = sTmp70[-16,-3,2];
+dotVectors rc2[23] = <vTmp369,vTmp370>;
+setVector vTmp371 = sTmp67[9,12,14,15];
+setVector vTmp372 = sTmp70[-17,-4,22,2];
+dotVectors rc2[24] = <vTmp371,vTmp372>;
+setVector vTmp373 = sTmp67[9,12,14,15];
+setVector vTmp374 = sTmp70[-19,-22,-4,3];
+dotVectors rc2[25] = <vTmp373,vTmp374>;
+setVector vTmp375 = sTmp67[9,12,14,15];
+setVector vTmp376 = sTmp70[-22,19,-17,16];
+dotVectors rc2[31] = <vTmp375,vTmp376>;
+
+//sTmp71 = -(rc2)
+resetMv sTmp71;
+addMv sTmp71[1,2,3,4,5,16,17,18,19,20,21,22,23,24,25,31] = rc2[-1,-2,-3,-4,-5,-16,-17,-18,-19,-20,-21,-22,-23,-24,-25,-31];
+
+//sTmp72 = rc2 . einf
+resetMv sTmp72;
+resetMv mTmp377;
+assignMv mTmp377[4] = [1.0];
+setVector vTmp378 = rc2[5];
+setVector vTmp379 = mTmp377[-4];
+dotVectors sTmp72[0] = <vTmp378,vTmp379>;
+setVector vTmp380 = rc2[18];
+setVector vTmp381 = mTmp377[-4];
+dotVectors sTmp72[6] = <vTmp380,vTmp381>;
+setVector vTmp382 = rc2[20];
+setVector vTmp383 = mTmp377[-4];
+dotVectors sTmp72[7] = <vTmp382,vTmp383>;
+setVector vTmp384 = rc2[21];
+setVector vTmp385 = mTmp377[-4];
+dotVectors sTmp72[8] = <vTmp384,vTmp385>;
+setVector vTmp386 = rc2[23];
+setVector vTmp387 = mTmp377[-4];
+dotVectors sTmp72[10] = <vTmp386,vTmp387>;
+setVector vTmp388 = rc2[24];
+setVector vTmp389 = mTmp377[-4];
+dotVectors sTmp72[11] = <vTmp388,vTmp389>;
+setVector vTmp390 = rc2[25];
+setVector vTmp391 = mTmp377[-4];
+dotVectors sTmp72[13] = <vTmp390,vTmp391>;
+setVector vTmp392 = rc2[31];
+setVector vTmp393 = mTmp377[-4];
+dotVectors sTmp72[26] = <vTmp392,vTmp393>;
+
+//sTmp73 = rc2 . einf
+resetMv sTmp73;
+resetMv mTmp394;
+assignMv mTmp394[4] = [1.0];
+setVector vTmp395 = rc2[5];
+setVector vTmp396 = mTmp394[-4];
+dotVectors sTmp73[0] = <vTmp395,vTmp396>;
+setVector vTmp397 = rc2[18];
+setVector vTmp398 = mTmp394[-4];
+dotVectors sTmp73[6] = <vTmp397,vTmp398>;
+setVector vTmp399 = rc2[20];
+setVector vTmp400 = mTmp394[-4];
+dotVectors sTmp73[7] = <vTmp399,vTmp400>;
+setVector vTmp401 = rc2[21];
+setVector vTmp402 = mTmp394[-4];
+dotVectors sTmp73[8] = <vTmp401,vTmp402>;
+setVector vTmp403 = rc2[23];
+setVector vTmp404 = mTmp394[-4];
+dotVectors sTmp73[10] = <vTmp403,vTmp404>;
+setVector vTmp405 = rc2[24];
+setVector vTmp406 = mTmp394[-4];
+dotVectors sTmp73[11] = <vTmp405,vTmp406>;
+setVector vTmp407 = rc2[25];
+setVector vTmp408 = mTmp394[-4];
+dotVectors sTmp73[13] = <vTmp407,vTmp408>;
+setVector vTmp409 = rc2[31];
+setVector vTmp410 = mTmp394[-4];
+dotVectors sTmp73[26] = <vTmp409,vTmp410>;
+
+//sTmp74 = rc2 . einf
+resetMv sTmp74;
+resetMv mTmp411;
+assignMv mTmp411[4] = [1.0];
+setVector vTmp412 = rc2[5];
+setVector vTmp413 = mTmp411[-4];
+dotVectors sTmp74[0] = <vTmp412,vTmp413>;
+setVector vTmp414 = rc2[18];
+setVector vTmp415 = mTmp411[-4];
+dotVectors sTmp74[6] = <vTmp414,vTmp415>;
+setVector vTmp416 = rc2[20];
+setVector vTmp417 = mTmp411[-4];
+dotVectors sTmp74[7] = <vTmp416,vTmp417>;
+setVector vTmp418 = rc2[21];
+setVector vTmp419 = mTmp411[-4];
+dotVectors sTmp74[8] = <vTmp418,vTmp419>;
+setVector vTmp420 = rc2[23];
+setVector vTmp421 = mTmp411[-4];
+dotVectors sTmp74[10] = <vTmp420,vTmp421>;
+setVector vTmp422 = rc2[24];
+setVector vTmp423 = mTmp411[-4];
+dotVectors sTmp74[11] = <vTmp422,vTmp423>;
+setVector vTmp424 = rc2[25];
+setVector vTmp425 = mTmp411[-4];
+dotVectors sTmp74[13] = <vTmp424,vTmp425>;
+setVector vTmp426 = rc2[31];
+setVector vTmp427 = mTmp411[-4];
+dotVectors sTmp74[26] = <vTmp426,vTmp427>;
+
+//sTmp75 = ~(sTmp74)
+resetMv sTmp75;
+setMv sTmp75[0,6,7,8,10,11,13,26] = sTmp74[0,-6,-7,-8,-10,-11,-13,26];
+
+//sTmp76 = sTmp73 * sTmp75
+resetMv sTmp76;
+setVector vTmp428 = sTmp73[0,6,7,10];
+setVector vTmp429 = sTmp75[0,-6,-7,-10];
+dotVectors sTmp76[0] = <vTmp428,vTmp429>;
+setVector vTmp430 = sTmp73[0,6,7,10];
+setVector vTmp431 = sTmp75[6,0,-10,7];
+dotVectors sTmp76[6] = <vTmp430,vTmp431>;
+setVector vTmp432 = sTmp73[0,6,7,10];
+setVector vTmp433 = sTmp75[7,10,0,-6];
+dotVectors sTmp76[7] = <vTmp432,vTmp433>;
+setVector vTmp434 = sTmp73[0,6,7,8,10,11,13,26];
+setVector vTmp435 = sTmp75[8,11,13,0,-26,-6,-7,-10];
+dotVectors sTmp76[8] = <vTmp434,vTmp435>;
+setVector vTmp436 = sTmp73[0,6,7,10];
+setVector vTmp437 = sTmp75[10,-7,6,0];
+dotVectors sTmp76[10] = <vTmp436,vTmp437>;
+setVector vTmp438 = sTmp73[0,6,7,8,10,11,13,26];
+setVector vTmp439 = sTmp75[11,-8,26,6,13,0,-10,7];
+dotVectors sTmp76[11] = <vTmp438,vTmp439>;
+setVector vTmp440 = sTmp73[0,6,7,8,10,11,13,26];
+setVector vTmp441 = sTmp75[13,-26,-8,7,-11,10,0,-6];
+dotVectors sTmp76[13] = <vTmp440,vTmp441>;
+setVector vTmp442 = sTmp73[0,6,7,8,10,11,13,26];
+setVector vTmp443 = sTmp75[26,13,-11,10,8,-7,6,0];
+dotVectors sTmp76[26] = <vTmp442,vTmp443>;
+
+//sTmp77 = sTmp72 / sTmp76
+calculate sTmp77 = DIVISION(sTmp72,sTmp76,[0,6,7,8,10,11,13,26],[0,0,0,0,0,0,0,0]);
+
+//rc2N = sTmp71 * sTmp77
+resetMv rc2N;
+setVector vTmp444 = sTmp71[1,2,3,5,16,18,20,23];
+setVector vTmp445 = sTmp77[0,-6,-7,8,-10,11,13,-26];
+dotVectors rc2N[1] = <vTmp444,vTmp445>;
+setVector vTmp446 = sTmp71[1,2,3,5,16,18,20,23];
+setVector vTmp447 = sTmp77[6,0,-10,11,7,-8,26,13];
+dotVectors rc2N[2] = <vTmp446,vTmp447>;
+setVector vTmp448 = sTmp71[1,2,3,5,16,18,20,23];
+setVector vTmp449 = sTmp77[7,10,0,13,-6,-26,-8,-11];
+dotVectors rc2N[3] = <vTmp448,vTmp449>;
+setVector vTmp450 = sTmp71[1,2,3,4,16,17,19,21,22,24,25,31];
+setVector vTmp451 = sTmp77[8,11,13,0,-26,-6,-7,-8,-10,-11,-13,26];
+dotVectors rc2N[4] = <vTmp450,vTmp451>;
+setVector vTmp452 = sTmp71[5,18,20,23];
+setVector vTmp453 = sTmp77[0,-6,-7,-10];
+dotVectors rc2N[5] = <vTmp452,vTmp453>;
+setVector vTmp454 = sTmp71[1,2,3,5,16,18,20,23];
+setVector vTmp455 = sTmp77[10,-7,6,26,0,13,-11,8];
+dotVectors rc2N[16] = <vTmp454,vTmp455>;
+setVector vTmp456 = sTmp71[1,2,3,4,16,17,19,21,22,24,25,31];
+setVector vTmp457 = sTmp77[11,-8,26,6,13,0,-10,-11,7,8,-26,-13];
+dotVectors rc2N[17] = <vTmp456,vTmp457>;
+setVector vTmp458 = sTmp71[5,18,20,23];
+setVector vTmp459 = sTmp77[6,0,-10,7];
+dotVectors rc2N[18] = <vTmp458,vTmp459>;
+setVector vTmp460 = sTmp71[1,2,3,4,16,17,19,21,22,24,25,31];
+setVector vTmp461 = sTmp77[13,-26,-8,7,-11,10,0,-13,-6,26,8,11];
+dotVectors rc2N[19] = <vTmp460,vTmp461>;
+setVector vTmp462 = sTmp71[5,18,20,23];
+setVector vTmp463 = sTmp77[7,10,0,-6];
+dotVectors rc2N[20] = <vTmp462,vTmp463>;
+setVector vTmp464 = sTmp71[5,18,20,21,23,24,25,31];
+setVector vTmp465 = sTmp77[8,11,13,0,-26,-6,-7,-10];
+dotVectors rc2N[21] = <vTmp464,vTmp465>;
+setVector vTmp466 = sTmp71[1,2,3,4,16,17,19,21,22,24,25,31];
+setVector vTmp467 = sTmp77[26,13,-11,10,8,-7,6,-26,0,-13,11,-8];
+dotVectors rc2N[22] = <vTmp466,vTmp467>;
+setVector vTmp468 = sTmp71[5,18,20,23];
+setVector vTmp469 = sTmp77[10,-7,6,0];
+dotVectors rc2N[23] = <vTmp468,vTmp469>;
+setVector vTmp470 = sTmp71[5,18,20,21,23,24,25,31];
+setVector vTmp471 = sTmp77[11,-8,26,6,13,0,-10,7];
+dotVectors rc2N[24] = <vTmp470,vTmp471>;
+setVector vTmp472 = sTmp71[5,18,20,21,23,24,25,31];
+setVector vTmp473 = sTmp77[13,-26,-8,7,-11,10,0,-6];
+dotVectors rc2N[25] = <vTmp472,vTmp473>;
+setVector vTmp474 = sTmp71[5,18,20,21,23,24,25,31];
+setVector vTmp475 = sTmp77[26,13,-11,10,8,-7,6,0];
+dotVectors rc2N[31] = <vTmp474,vTmp475>;
+
+//sTmp78 = -(2)
+resetMv mTmp476;
+assignMv mTmp476[0] = [2.0];
+resetMv sTmp78;
+addMv sTmp78[0] = mTmp476[-0];
+
+//sTmp79 = rc1N . sat1
+resetMv sTmp79;
+setVector vTmp477 = rc1N[1,2,3,4,5];
+setVector vTmp478 = sat1[1,2,3,-5,-4];
+dotVectors sTmp79[0] = <vTmp477,vTmp478>;
+setVector vTmp479 = rc1N[16,17,18];
+setVector vTmp480 = sat1[3,-5,-4];
+dotVectors sTmp79[6] = <vTmp479,vTmp480>;
+setVector vTmp481 = rc1N[16,19,20];
+setVector vTmp482 = sat1[-2,-5,-4];
+dotVectors sTmp79[7] = <vTmp481,vTmp482>;
+setVector vTmp483 = rc1N[17,19,21];
+setVector vTmp484 = sat1[-2,-3,-4];
+dotVectors sTmp79[8] = <vTmp483,vTmp484>;
+setVector vTmp485 = rc1N[18,20,21];
+setVector vTmp486 = sat1[-2,-3,5];
+dotVectors sTmp79[9] = <vTmp485,vTmp486>;
+setVector vTmp487 = rc1N[16,22,23];
+setVector vTmp488 = sat1[1,-5,-4];
+dotVectors sTmp79[10] = <vTmp487,vTmp488>;
+setVector vTmp489 = rc1N[17,22,24];
+setVector vTmp490 = sat1[1,-3,-4];
+dotVectors sTmp79[11] = <vTmp489,vTmp490>;
+setVector vTmp491 = rc1N[18,23,24];
+setVector vTmp492 = sat1[1,-3,5];
+dotVectors sTmp79[12] = <vTmp491,vTmp492>;
+setVector vTmp493 = rc1N[19,22,25];
+setVector vTmp494 = sat1[1,2,-4];
+dotVectors sTmp79[13] = <vTmp493,vTmp494>;
+setVector vTmp495 = rc1N[20,23,25];
+setVector vTmp496 = sat1[1,2,5];
+dotVectors sTmp79[14] = <vTmp495,vTmp496>;
+setVector vTmp497 = rc1N[21,24,25];
+setVector vTmp498 = sat1[1,2,3];
+dotVectors sTmp79[15] = <vTmp497,vTmp498>;
+setVector vTmp499 = rc1N[31];
+setVector vTmp500 = sat1[-4];
+dotVectors sTmp79[26] = <vTmp499,vTmp500>;
+setVector vTmp501 = rc1N[31];
+setVector vTmp502 = sat1[5];
+dotVectors sTmp79[27] = <vTmp501,vTmp502>;
+setVector vTmp503 = rc1N[31];
+setVector vTmp504 = sat1[3];
+dotVectors sTmp79[28] = <vTmp503,vTmp504>;
+setVector vTmp505 = rc1N[31];
+setVector vTmp506 = sat1[-2];
+dotVectors sTmp79[29] = <vTmp505,vTmp506>;
+setVector vTmp507 = rc1N[31];
+setVector vTmp508 = sat1[1];
+dotVectors sTmp79[30] = <vTmp507,vTmp508>;
+
+//sTmp80 = sTmp78 * sTmp79
+resetMv sTmp80;
+setVector vTmp509 = sTmp78[0];
+setVector vTmp510 = sTmp79[0];
+dotVectors sTmp80[0] = <vTmp509,vTmp510>;
+setVector vTmp511 = sTmp78[0];
+setVector vTmp512 = sTmp79[6];
+dotVectors sTmp80[6] = <vTmp511,vTmp512>;
+setVector vTmp513 = sTmp78[0];
+setVector vTmp514 = sTmp79[7];
+dotVectors sTmp80[7] = <vTmp513,vTmp514>;
+setVector vTmp515 = sTmp78[0];
+setVector vTmp516 = sTmp79[8];
+dotVectors sTmp80[8] = <vTmp515,vTmp516>;
+setVector vTmp517 = sTmp78[0];
+setVector vTmp518 = sTmp79[9];
+dotVectors sTmp80[9] = <vTmp517,vTmp518>;
+setVector vTmp519 = sTmp78[0];
+setVector vTmp520 = sTmp79[10];
+dotVectors sTmp80[10] = <vTmp519,vTmp520>;
+setVector vTmp521 = sTmp78[0];
+setVector vTmp522 = sTmp79[11];
+dotVectors sTmp80[11] = <vTmp521,vTmp522>;
+setVector vTmp523 = sTmp78[0];
+setVector vTmp524 = sTmp79[12];
+dotVectors sTmp80[12] = <vTmp523,vTmp524>;
+setVector vTmp525 = sTmp78[0];
+setVector vTmp526 = sTmp79[13];
+dotVectors sTmp80[13] = <vTmp525,vTmp526>;
+setVector vTmp527 = sTmp78[0];
+setVector vTmp528 = sTmp79[14];
+dotVectors sTmp80[14] = <vTmp527,vTmp528>;
+setVector vTmp529 = sTmp78[0];
+setVector vTmp530 = sTmp79[15];
+dotVectors sTmp80[15] = <vTmp529,vTmp530>;
+setVector vTmp531 = sTmp78[0];
+setVector vTmp532 = sTmp79[26];
+dotVectors sTmp80[26] = <vTmp531,vTmp532>;
+setVector vTmp533 = sTmp78[0];
+setVector vTmp534 = sTmp79[27];
+dotVectors sTmp80[27] = <vTmp533,vTmp534>;
+setVector vTmp535 = sTmp78[0];
+setVector vTmp536 = sTmp79[28];
+dotVectors sTmp80[28] = <vTmp535,vTmp536>;
+setVector vTmp537 = sTmp78[0];
+setVector vTmp538 = sTmp79[29];
+dotVectors sTmp80[29] = <vTmp537,vTmp538>;
+setVector vTmp539 = sTmp78[0];
+setVector vTmp540 = sTmp79[30];
+dotVectors sTmp80[30] = <vTmp539,vTmp540>;
+
+//sTmp81 = sqrt(sTmp80)
+calculate sTmp81 = SQRT(sTmp80,[0],null);
+
+//z11 = sTmp81 - d1
+resetMv z11;
+setMv z11[0] = sTmp81[0];
+addMv z11[0] = mTmp75[-0];
+
+//sTmp82 = -(2)
+resetMv mTmp541;
+assignMv mTmp541[0] = [2.0];
+resetMv sTmp82;
+addMv sTmp82[0] = mTmp541[-0];
+
+//sTmp83 = rc2N . sat1
+resetMv sTmp83;
+setVector vTmp542 = rc2N[1,2,3,4,5];
+setVector vTmp543 = sat1[1,2,3,-5,-4];
+dotVectors sTmp83[0] = <vTmp542,vTmp543>;
+setVector vTmp544 = rc2N[16,17,18];
+setVector vTmp545 = sat1[3,-5,-4];
+dotVectors sTmp83[6] = <vTmp544,vTmp545>;
+setVector vTmp546 = rc2N[16,19,20];
+setVector vTmp547 = sat1[-2,-5,-4];
+dotVectors sTmp83[7] = <vTmp546,vTmp547>;
+setVector vTmp548 = rc2N[17,19,21];
+setVector vTmp549 = sat1[-2,-3,-4];
+dotVectors sTmp83[8] = <vTmp548,vTmp549>;
+setVector vTmp550 = rc2N[18,20,21];
+setVector vTmp551 = sat1[-2,-3,5];
+dotVectors sTmp83[9] = <vTmp550,vTmp551>;
+setVector vTmp552 = rc2N[16,22,23];
+setVector vTmp553 = sat1[1,-5,-4];
+dotVectors sTmp83[10] = <vTmp552,vTmp553>;
+setVector vTmp554 = rc2N[17,22,24];
+setVector vTmp555 = sat1[1,-3,-4];
+dotVectors sTmp83[11] = <vTmp554,vTmp555>;
+setVector vTmp556 = rc2N[18,23,24];
+setVector vTmp557 = sat1[1,-3,5];
+dotVectors sTmp83[12] = <vTmp556,vTmp557>;
+setVector vTmp558 = rc2N[19,22,25];
+setVector vTmp559 = sat1[1,2,-4];
+dotVectors sTmp83[13] = <vTmp558,vTmp559>;
+setVector vTmp560 = rc2N[20,23,25];
+setVector vTmp561 = sat1[1,2,5];
+dotVectors sTmp83[14] = <vTmp560,vTmp561>;
+setVector vTmp562 = rc2N[21,24,25];
+setVector vTmp563 = sat1[1,2,3];
+dotVectors sTmp83[15] = <vTmp562,vTmp563>;
+setVector vTmp564 = rc2N[31];
+setVector vTmp565 = sat1[-4];
+dotVectors sTmp83[26] = <vTmp564,vTmp565>;
+setVector vTmp566 = rc2N[31];
+setVector vTmp567 = sat1[5];
+dotVectors sTmp83[27] = <vTmp566,vTmp567>;
+setVector vTmp568 = rc2N[31];
+setVector vTmp569 = sat1[3];
+dotVectors sTmp83[28] = <vTmp568,vTmp569>;
+setVector vTmp570 = rc2N[31];
+setVector vTmp571 = sat1[-2];
+dotVectors sTmp83[29] = <vTmp570,vTmp571>;
+setVector vTmp572 = rc2N[31];
+setVector vTmp573 = sat1[1];
+dotVectors sTmp83[30] = <vTmp572,vTmp573>;
+
+//sTmp84 = sTmp82 * sTmp83
+resetMv sTmp84;
+setVector vTmp574 = sTmp82[0];
+setVector vTmp575 = sTmp83[0];
+dotVectors sTmp84[0] = <vTmp574,vTmp575>;
+setVector vTmp576 = sTmp82[0];
+setVector vTmp577 = sTmp83[6];
+dotVectors sTmp84[6] = <vTmp576,vTmp577>;
+setVector vTmp578 = sTmp82[0];
+setVector vTmp579 = sTmp83[7];
+dotVectors sTmp84[7] = <vTmp578,vTmp579>;
+setVector vTmp580 = sTmp82[0];
+setVector vTmp581 = sTmp83[8];
+dotVectors sTmp84[8] = <vTmp580,vTmp581>;
+setVector vTmp582 = sTmp82[0];
+setVector vTmp583 = sTmp83[9];
+dotVectors sTmp84[9] = <vTmp582,vTmp583>;
+setVector vTmp584 = sTmp82[0];
+setVector vTmp585 = sTmp83[10];
+dotVectors sTmp84[10] = <vTmp584,vTmp585>;
+setVector vTmp586 = sTmp82[0];
+setVector vTmp587 = sTmp83[11];
+dotVectors sTmp84[11] = <vTmp586,vTmp587>;
+setVector vTmp588 = sTmp82[0];
+setVector vTmp589 = sTmp83[12];
+dotVectors sTmp84[12] = <vTmp588,vTmp589>;
+setVector vTmp590 = sTmp82[0];
+setVector vTmp591 = sTmp83[13];
+dotVectors sTmp84[13] = <vTmp590,vTmp591>;
+setVector vTmp592 = sTmp82[0];
+setVector vTmp593 = sTmp83[14];
+dotVectors sTmp84[14] = <vTmp592,vTmp593>;
+setVector vTmp594 = sTmp82[0];
+setVector vTmp595 = sTmp83[15];
+dotVectors sTmp84[15] = <vTmp594,vTmp595>;
+setVector vTmp596 = sTmp82[0];
+setVector vTmp597 = sTmp83[26];
+dotVectors sTmp84[26] = <vTmp596,vTmp597>;
+setVector vTmp598 = sTmp82[0];
+setVector vTmp599 = sTmp83[27];
+dotVectors sTmp84[27] = <vTmp598,vTmp599>;
+setVector vTmp600 = sTmp82[0];
+setVector vTmp601 = sTmp83[28];
+dotVectors sTmp84[28] = <vTmp600,vTmp601>;
+setVector vTmp602 = sTmp82[0];
+setVector vTmp603 = sTmp83[29];
+dotVectors sTmp84[29] = <vTmp602,vTmp603>;
+setVector vTmp604 = sTmp82[0];
+setVector vTmp605 = sTmp83[30];
+dotVectors sTmp84[30] = <vTmp604,vTmp605>;
+
+//sTmp85 = sqrt(sTmp84)
+calculate sTmp85 = SQRT(sTmp84,[0],null);
+
+//z12 = sTmp85 - d1
+resetMv z12;
+setMv z12[0] = sTmp85[0];
+addMv z12[0] = mTmp75[-0];
+
+//sTmp86 = -(2)
+resetMv mTmp606;
+assignMv mTmp606[0] = [2.0];
+resetMv sTmp86;
+addMv sTmp86[0] = mTmp606[-0];
+
+//sTmp87 = rc1N . sat2
+resetMv sTmp87;
+setVector vTmp607 = rc1N[1,2,3,4,5];
+setVector vTmp608 = sat2[1,2,3,-5,-4];
+dotVectors sTmp87[0] = <vTmp607,vTmp608>;
+setVector vTmp609 = rc1N[16,17,18];
+setVector vTmp610 = sat2[3,-5,-4];
+dotVectors sTmp87[6] = <vTmp609,vTmp610>;
+setVector vTmp611 = rc1N[16,19,20];
+setVector vTmp612 = sat2[-2,-5,-4];
+dotVectors sTmp87[7] = <vTmp611,vTmp612>;
+setVector vTmp613 = rc1N[17,19,21];
+setVector vTmp614 = sat2[-2,-3,-4];
+dotVectors sTmp87[8] = <vTmp613,vTmp614>;
+setVector vTmp615 = rc1N[18,20,21];
+setVector vTmp616 = sat2[-2,-3,5];
+dotVectors sTmp87[9] = <vTmp615,vTmp616>;
+setVector vTmp617 = rc1N[16,22,23];
+setVector vTmp618 = sat2[1,-5,-4];
+dotVectors sTmp87[10] = <vTmp617,vTmp618>;
+setVector vTmp619 = rc1N[17,22,24];
+setVector vTmp620 = sat2[1,-3,-4];
+dotVectors sTmp87[11] = <vTmp619,vTmp620>;
+setVector vTmp621 = rc1N[18,23,24];
+setVector vTmp622 = sat2[1,-3,5];
+dotVectors sTmp87[12] = <vTmp621,vTmp622>;
+setVector vTmp623 = rc1N[19,22,25];
+setVector vTmp624 = sat2[1,2,-4];
+dotVectors sTmp87[13] = <vTmp623,vTmp624>;
+setVector vTmp625 = rc1N[20,23,25];
+setVector vTmp626 = sat2[1,2,5];
+dotVectors sTmp87[14] = <vTmp625,vTmp626>;
+setVector vTmp627 = rc1N[21,24,25];
+setVector vTmp628 = sat2[1,2,3];
+dotVectors sTmp87[15] = <vTmp627,vTmp628>;
+setVector vTmp629 = rc1N[31];
+setVector vTmp630 = sat2[-4];
+dotVectors sTmp87[26] = <vTmp629,vTmp630>;
+setVector vTmp631 = rc1N[31];
+setVector vTmp632 = sat2[5];
+dotVectors sTmp87[27] = <vTmp631,vTmp632>;
+setVector vTmp633 = rc1N[31];
+setVector vTmp634 = sat2[3];
+dotVectors sTmp87[28] = <vTmp633,vTmp634>;
+setVector vTmp635 = rc1N[31];
+setVector vTmp636 = sat2[-2];
+dotVectors sTmp87[29] = <vTmp635,vTmp636>;
+setVector vTmp637 = rc1N[31];
+setVector vTmp638 = sat2[1];
+dotVectors sTmp87[30] = <vTmp637,vTmp638>;
+
+//sTmp88 = sTmp86 * sTmp87
+resetMv sTmp88;
+setVector vTmp639 = sTmp86[0];
+setVector vTmp640 = sTmp87[0];
+dotVectors sTmp88[0] = <vTmp639,vTmp640>;
+setVector vTmp641 = sTmp86[0];
+setVector vTmp642 = sTmp87[6];
+dotVectors sTmp88[6] = <vTmp641,vTmp642>;
+setVector vTmp643 = sTmp86[0];
+setVector vTmp644 = sTmp87[7];
+dotVectors sTmp88[7] = <vTmp643,vTmp644>;
+setVector vTmp645 = sTmp86[0];
+setVector vTmp646 = sTmp87[8];
+dotVectors sTmp88[8] = <vTmp645,vTmp646>;
+setVector vTmp647 = sTmp86[0];
+setVector vTmp648 = sTmp87[9];
+dotVectors sTmp88[9] = <vTmp647,vTmp648>;
+setVector vTmp649 = sTmp86[0];
+setVector vTmp650 = sTmp87[10];
+dotVectors sTmp88[10] = <vTmp649,vTmp650>;
+setVector vTmp651 = sTmp86[0];
+setVector vTmp652 = sTmp87[11];
+dotVectors sTmp88[11] = <vTmp651,vTmp652>;
+setVector vTmp653 = sTmp86[0];
+setVector vTmp654 = sTmp87[12];
+dotVectors sTmp88[12] = <vTmp653,vTmp654>;
+setVector vTmp655 = sTmp86[0];
+setVector vTmp656 = sTmp87[13];
+dotVectors sTmp88[13] = <vTmp655,vTmp656>;
+setVector vTmp657 = sTmp86[0];
+setVector vTmp658 = sTmp87[14];
+dotVectors sTmp88[14] = <vTmp657,vTmp658>;
+setVector vTmp659 = sTmp86[0];
+setVector vTmp660 = sTmp87[15];
+dotVectors sTmp88[15] = <vTmp659,vTmp660>;
+setVector vTmp661 = sTmp86[0];
+setVector vTmp662 = sTmp87[26];
+dotVectors sTmp88[26] = <vTmp661,vTmp662>;
+setVector vTmp663 = sTmp86[0];
+setVector vTmp664 = sTmp87[27];
+dotVectors sTmp88[27] = <vTmp663,vTmp664>;
+setVector vTmp665 = sTmp86[0];
+setVector vTmp666 = sTmp87[28];
+dotVectors sTmp88[28] = <vTmp665,vTmp666>;
+setVector vTmp667 = sTmp86[0];
+setVector vTmp668 = sTmp87[29];
+dotVectors sTmp88[29] = <vTmp667,vTmp668>;
+setVector vTmp669 = sTmp86[0];
+setVector vTmp670 = sTmp87[30];
+dotVectors sTmp88[30] = <vTmp669,vTmp670>;
+
+//sTmp89 = sqrt(sTmp88)
+calculate sTmp89 = SQRT(sTmp88,[0],null);
+
+//z21 = sTmp89 - d2
+resetMv z21;
+setMv z21[0] = sTmp89[0];
+addMv z21[0] = mTmp84[-0];
+
+//sTmp90 = -(2)
+resetMv mTmp671;
+assignMv mTmp671[0] = [2.0];
+resetMv sTmp90;
+addMv sTmp90[0] = mTmp671[-0];
+
+//sTmp91 = rc2N . sat2
+resetMv sTmp91;
+setVector vTmp672 = rc2N[1,2,3,4,5];
+setVector vTmp673 = sat2[1,2,3,-5,-4];
+dotVectors sTmp91[0] = <vTmp672,vTmp673>;
+setVector vTmp674 = rc2N[16,17,18];
+setVector vTmp675 = sat2[3,-5,-4];
+dotVectors sTmp91[6] = <vTmp674,vTmp675>;
+setVector vTmp676 = rc2N[16,19,20];
+setVector vTmp677 = sat2[-2,-5,-4];
+dotVectors sTmp91[7] = <vTmp676,vTmp677>;
+setVector vTmp678 = rc2N[17,19,21];
+setVector vTmp679 = sat2[-2,-3,-4];
+dotVectors sTmp91[8] = <vTmp678,vTmp679>;
+setVector vTmp680 = rc2N[18,20,21];
+setVector vTmp681 = sat2[-2,-3,5];
+dotVectors sTmp91[9] = <vTmp680,vTmp681>;
+setVector vTmp682 = rc2N[16,22,23];
+setVector vTmp683 = sat2[1,-5,-4];
+dotVectors sTmp91[10] = <vTmp682,vTmp683>;
+setVector vTmp684 = rc2N[17,22,24];
+setVector vTmp685 = sat2[1,-3,-4];
+dotVectors sTmp91[11] = <vTmp684,vTmp685>;
+setVector vTmp686 = rc2N[18,23,24];
+setVector vTmp687 = sat2[1,-3,5];
+dotVectors sTmp91[12] = <vTmp686,vTmp687>;
+setVector vTmp688 = rc2N[19,22,25];
+setVector vTmp689 = sat2[1,2,-4];
+dotVectors sTmp91[13] = <vTmp688,vTmp689>;
+setVector vTmp690 = rc2N[20,23,25];
+setVector vTmp691 = sat2[1,2,5];
+dotVectors sTmp91[14] = <vTmp690,vTmp691>;
+setVector vTmp692 = rc2N[21,24,25];
+setVector vTmp693 = sat2[1,2,3];
+dotVectors sTmp91[15] = <vTmp692,vTmp693>;
+setVector vTmp694 = rc2N[31];
+setVector vTmp695 = sat2[-4];
+dotVectors sTmp91[26] = <vTmp694,vTmp695>;
+setVector vTmp696 = rc2N[31];
+setVector vTmp697 = sat2[5];
+dotVectors sTmp91[27] = <vTmp696,vTmp697>;
+setVector vTmp698 = rc2N[31];
+setVector vTmp699 = sat2[3];
+dotVectors sTmp91[28] = <vTmp698,vTmp699>;
+setVector vTmp700 = rc2N[31];
+setVector vTmp701 = sat2[-2];
+dotVectors sTmp91[29] = <vTmp700,vTmp701>;
+setVector vTmp702 = rc2N[31];
+setVector vTmp703 = sat2[1];
+dotVectors sTmp91[30] = <vTmp702,vTmp703>;
+
+//sTmp92 = sTmp90 * sTmp91
+resetMv sTmp92;
+setVector vTmp704 = sTmp90[0];
+setVector vTmp705 = sTmp91[0];
+dotVectors sTmp92[0] = <vTmp704,vTmp705>;
+setVector vTmp706 = sTmp90[0];
+setVector vTmp707 = sTmp91[6];
+dotVectors sTmp92[6] = <vTmp706,vTmp707>;
+setVector vTmp708 = sTmp90[0];
+setVector vTmp709 = sTmp91[7];
+dotVectors sTmp92[7] = <vTmp708,vTmp709>;
+setVector vTmp710 = sTmp90[0];
+setVector vTmp711 = sTmp91[8];
+dotVectors sTmp92[8] = <vTmp710,vTmp711>;
+setVector vTmp712 = sTmp90[0];
+setVector vTmp713 = sTmp91[9];
+dotVectors sTmp92[9] = <vTmp712,vTmp713>;
+setVector vTmp714 = sTmp90[0];
+setVector vTmp715 = sTmp91[10];
+dotVectors sTmp92[10] = <vTmp714,vTmp715>;
+setVector vTmp716 = sTmp90[0];
+setVector vTmp717 = sTmp91[11];
+dotVectors sTmp92[11] = <vTmp716,vTmp717>;
+setVector vTmp718 = sTmp90[0];
+setVector vTmp719 = sTmp91[12];
+dotVectors sTmp92[12] = <vTmp718,vTmp719>;
+setVector vTmp720 = sTmp90[0];
+setVector vTmp721 = sTmp91[13];
+dotVectors sTmp92[13] = <vTmp720,vTmp721>;
+setVector vTmp722 = sTmp90[0];
+setVector vTmp723 = sTmp91[14];
+dotVectors sTmp92[14] = <vTmp722,vTmp723>;
+setVector vTmp724 = sTmp90[0];
+setVector vTmp725 = sTmp91[15];
+dotVectors sTmp92[15] = <vTmp724,vTmp725>;
+setVector vTmp726 = sTmp90[0];
+setVector vTmp727 = sTmp91[26];
+dotVectors sTmp92[26] = <vTmp726,vTmp727>;
+setVector vTmp728 = sTmp90[0];
+setVector vTmp729 = sTmp91[27];
+dotVectors sTmp92[27] = <vTmp728,vTmp729>;
+setVector vTmp730 = sTmp90[0];
+setVector vTmp731 = sTmp91[28];
+dotVectors sTmp92[28] = <vTmp730,vTmp731>;
+setVector vTmp732 = sTmp90[0];
+setVector vTmp733 = sTmp91[29];
+dotVectors sTmp92[29] = <vTmp732,vTmp733>;
+setVector vTmp734 = sTmp90[0];
+setVector vTmp735 = sTmp91[30];
+dotVectors sTmp92[30] = <vTmp734,vTmp735>;
+
+//sTmp93 = sqrt(sTmp92)
+calculate sTmp93 = SQRT(sTmp92,[0],null);
+
+//z22 = sTmp93 - d2
+resetMv z22;
+setMv z22[0] = sTmp93[0];
+addMv z22[0] = mTmp84[-0];
+
+//sTmp94 = -(2)
+resetMv mTmp736;
+assignMv mTmp736[0] = [2.0];
+resetMv sTmp94;
+addMv sTmp94[0] = mTmp736[-0];
+
+//sTmp95 = rc1N . sat3
+resetMv sTmp95;
+setVector vTmp737 = rc1N[1,2,3,4,5];
+setVector vTmp738 = sat3[1,2,3,-5,-4];
+dotVectors sTmp95[0] = <vTmp737,vTmp738>;
+setVector vTmp739 = rc1N[16,17,18];
+setVector vTmp740 = sat3[3,-5,-4];
+dotVectors sTmp95[6] = <vTmp739,vTmp740>;
+setVector vTmp741 = rc1N[16,19,20];
+setVector vTmp742 = sat3[-2,-5,-4];
+dotVectors sTmp95[7] = <vTmp741,vTmp742>;
+setVector vTmp743 = rc1N[17,19,21];
+setVector vTmp744 = sat3[-2,-3,-4];
+dotVectors sTmp95[8] = <vTmp743,vTmp744>;
+setVector vTmp745 = rc1N[18,20,21];
+setVector vTmp746 = sat3[-2,-3,5];
+dotVectors sTmp95[9] = <vTmp745,vTmp746>;
+setVector vTmp747 = rc1N[16,22,23];
+setVector vTmp748 = sat3[1,-5,-4];
+dotVectors sTmp95[10] = <vTmp747,vTmp748>;
+setVector vTmp749 = rc1N[17,22,24];
+setVector vTmp750 = sat3[1,-3,-4];
+dotVectors sTmp95[11] = <vTmp749,vTmp750>;
+setVector vTmp751 = rc1N[18,23,24];
+setVector vTmp752 = sat3[1,-3,5];
+dotVectors sTmp95[12] = <vTmp751,vTmp752>;
+setVector vTmp753 = rc1N[19,22,25];
+setVector vTmp754 = sat3[1,2,-4];
+dotVectors sTmp95[13] = <vTmp753,vTmp754>;
+setVector vTmp755 = rc1N[20,23,25];
+setVector vTmp756 = sat3[1,2,5];
+dotVectors sTmp95[14] = <vTmp755,vTmp756>;
+setVector vTmp757 = rc1N[21,24,25];
+setVector vTmp758 = sat3[1,2,3];
+dotVectors sTmp95[15] = <vTmp757,vTmp758>;
+setVector vTmp759 = rc1N[31];
+setVector vTmp760 = sat3[-4];
+dotVectors sTmp95[26] = <vTmp759,vTmp760>;
+setVector vTmp761 = rc1N[31];
+setVector vTmp762 = sat3[5];
+dotVectors sTmp95[27] = <vTmp761,vTmp762>;
+setVector vTmp763 = rc1N[31];
+setVector vTmp764 = sat3[3];
+dotVectors sTmp95[28] = <vTmp763,vTmp764>;
+setVector vTmp765 = rc1N[31];
+setVector vTmp766 = sat3[-2];
+dotVectors sTmp95[29] = <vTmp765,vTmp766>;
+setVector vTmp767 = rc1N[31];
+setVector vTmp768 = sat3[1];
+dotVectors sTmp95[30] = <vTmp767,vTmp768>;
+
+//sTmp96 = sTmp94 * sTmp95
+resetMv sTmp96;
+setVector vTmp769 = sTmp94[0];
+setVector vTmp770 = sTmp95[0];
+dotVectors sTmp96[0] = <vTmp769,vTmp770>;
+setVector vTmp771 = sTmp94[0];
+setVector vTmp772 = sTmp95[6];
+dotVectors sTmp96[6] = <vTmp771,vTmp772>;
+setVector vTmp773 = sTmp94[0];
+setVector vTmp774 = sTmp95[7];
+dotVectors sTmp96[7] = <vTmp773,vTmp774>;
+setVector vTmp775 = sTmp94[0];
+setVector vTmp776 = sTmp95[8];
+dotVectors sTmp96[8] = <vTmp775,vTmp776>;
+setVector vTmp777 = sTmp94[0];
+setVector vTmp778 = sTmp95[9];
+dotVectors sTmp96[9] = <vTmp777,vTmp778>;
+setVector vTmp779 = sTmp94[0];
+setVector vTmp780 = sTmp95[10];
+dotVectors sTmp96[10] = <vTmp779,vTmp780>;
+setVector vTmp781 = sTmp94[0];
+setVector vTmp782 = sTmp95[11];
+dotVectors sTmp96[11] = <vTmp781,vTmp782>;
+setVector vTmp783 = sTmp94[0];
+setVector vTmp784 = sTmp95[12];
+dotVectors sTmp96[12] = <vTmp783,vTmp784>;
+setVector vTmp785 = sTmp94[0];
+setVector vTmp786 = sTmp95[13];
+dotVectors sTmp96[13] = <vTmp785,vTmp786>;
+setVector vTmp787 = sTmp94[0];
+setVector vTmp788 = sTmp95[14];
+dotVectors sTmp96[14] = <vTmp787,vTmp788>;
+setVector vTmp789 = sTmp94[0];
+setVector vTmp790 = sTmp95[15];
+dotVectors sTmp96[15] = <vTmp789,vTmp790>;
+setVector vTmp791 = sTmp94[0];
+setVector vTmp792 = sTmp95[26];
+dotVectors sTmp96[26] = <vTmp791,vTmp792>;
+setVector vTmp793 = sTmp94[0];
+setVector vTmp794 = sTmp95[27];
+dotVectors sTmp96[27] = <vTmp793,vTmp794>;
+setVector vTmp795 = sTmp94[0];
+setVector vTmp796 = sTmp95[28];
+dotVectors sTmp96[28] = <vTmp795,vTmp796>;
+setVector vTmp797 = sTmp94[0];
+setVector vTmp798 = sTmp95[29];
+dotVectors sTmp96[29] = <vTmp797,vTmp798>;
+setVector vTmp799 = sTmp94[0];
+setVector vTmp800 = sTmp95[30];
+dotVectors sTmp96[30] = <vTmp799,vTmp800>;
+
+//sTmp97 = sqrt(sTmp96)
+calculate sTmp97 = SQRT(sTmp96,[0],null);
+
+//z31 = sTmp97 - d3
+resetMv z31;
+setMv z31[0] = sTmp97[0];
+addMv z31[0] = mTmp93[-0];
+
+//sTmp98 = -(2)
+resetMv mTmp801;
+assignMv mTmp801[0] = [2.0];
+resetMv sTmp98;
+addMv sTmp98[0] = mTmp801[-0];
+
+//sTmp99 = rc2N . sat3
+resetMv sTmp99;
+setVector vTmp802 = rc2N[1,2,3,4,5];
+setVector vTmp803 = sat3[1,2,3,-5,-4];
+dotVectors sTmp99[0] = <vTmp802,vTmp803>;
+setVector vTmp804 = rc2N[16,17,18];
+setVector vTmp805 = sat3[3,-5,-4];
+dotVectors sTmp99[6] = <vTmp804,vTmp805>;
+setVector vTmp806 = rc2N[16,19,20];
+setVector vTmp807 = sat3[-2,-5,-4];
+dotVectors sTmp99[7] = <vTmp806,vTmp807>;
+setVector vTmp808 = rc2N[17,19,21];
+setVector vTmp809 = sat3[-2,-3,-4];
+dotVectors sTmp99[8] = <vTmp808,vTmp809>;
+setVector vTmp810 = rc2N[18,20,21];
+setVector vTmp811 = sat3[-2,-3,5];
+dotVectors sTmp99[9] = <vTmp810,vTmp811>;
+setVector vTmp812 = rc2N[16,22,23];
+setVector vTmp813 = sat3[1,-5,-4];
+dotVectors sTmp99[10] = <vTmp812,vTmp813>;
+setVector vTmp814 = rc2N[17,22,24];
+setVector vTmp815 = sat3[1,-3,-4];
+dotVectors sTmp99[11] = <vTmp814,vTmp815>;
+setVector vTmp816 = rc2N[18,23,24];
+setVector vTmp817 = sat3[1,-3,5];
+dotVectors sTmp99[12] = <vTmp816,vTmp817>;
+setVector vTmp818 = rc2N[19,22,25];
+setVector vTmp819 = sat3[1,2,-4];
+dotVectors sTmp99[13] = <vTmp818,vTmp819>;
+setVector vTmp820 = rc2N[20,23,25];
+setVector vTmp821 = sat3[1,2,5];
+dotVectors sTmp99[14] = <vTmp820,vTmp821>;
+setVector vTmp822 = rc2N[21,24,25];
+setVector vTmp823 = sat3[1,2,3];
+dotVectors sTmp99[15] = <vTmp822,vTmp823>;
+setVector vTmp824 = rc2N[31];
+setVector vTmp825 = sat3[-4];
+dotVectors sTmp99[26] = <vTmp824,vTmp825>;
+setVector vTmp826 = rc2N[31];
+setVector vTmp827 = sat3[5];
+dotVectors sTmp99[27] = <vTmp826,vTmp827>;
+setVector vTmp828 = rc2N[31];
+setVector vTmp829 = sat3[3];
+dotVectors sTmp99[28] = <vTmp828,vTmp829>;
+setVector vTmp830 = rc2N[31];
+setVector vTmp831 = sat3[-2];
+dotVectors sTmp99[29] = <vTmp830,vTmp831>;
+setVector vTmp832 = rc2N[31];
+setVector vTmp833 = sat3[1];
+dotVectors sTmp99[30] = <vTmp832,vTmp833>;
+
+//sTmp100 = sTmp98 * sTmp99
+resetMv sTmp100;
+setVector vTmp834 = sTmp98[0];
+setVector vTmp835 = sTmp99[0];
+dotVectors sTmp100[0] = <vTmp834,vTmp835>;
+setVector vTmp836 = sTmp98[0];
+setVector vTmp837 = sTmp99[6];
+dotVectors sTmp100[6] = <vTmp836,vTmp837>;
+setVector vTmp838 = sTmp98[0];
+setVector vTmp839 = sTmp99[7];
+dotVectors sTmp100[7] = <vTmp838,vTmp839>;
+setVector vTmp840 = sTmp98[0];
+setVector vTmp841 = sTmp99[8];
+dotVectors sTmp100[8] = <vTmp840,vTmp841>;
+setVector vTmp842 = sTmp98[0];
+setVector vTmp843 = sTmp99[9];
+dotVectors sTmp100[9] = <vTmp842,vTmp843>;
+setVector vTmp844 = sTmp98[0];
+setVector vTmp845 = sTmp99[10];
+dotVectors sTmp100[10] = <vTmp844,vTmp845>;
+setVector vTmp846 = sTmp98[0];
+setVector vTmp847 = sTmp99[11];
+dotVectors sTmp100[11] = <vTmp846,vTmp847>;
+setVector vTmp848 = sTmp98[0];
+setVector vTmp849 = sTmp99[12];
+dotVectors sTmp100[12] = <vTmp848,vTmp849>;
+setVector vTmp850 = sTmp98[0];
+setVector vTmp851 = sTmp99[13];
+dotVectors sTmp100[13] = <vTmp850,vTmp851>;
+setVector vTmp852 = sTmp98[0];
+setVector vTmp853 = sTmp99[14];
+dotVectors sTmp100[14] = <vTmp852,vTmp853>;
+setVector vTmp854 = sTmp98[0];
+setVector vTmp855 = sTmp99[15];
+dotVectors sTmp100[15] = <vTmp854,vTmp855>;
+setVector vTmp856 = sTmp98[0];
+setVector vTmp857 = sTmp99[26];
+dotVectors sTmp100[26] = <vTmp856,vTmp857>;
+setVector vTmp858 = sTmp98[0];
+setVector vTmp859 = sTmp99[27];
+dotVectors sTmp100[27] = <vTmp858,vTmp859>;
+setVector vTmp860 = sTmp98[0];
+setVector vTmp861 = sTmp99[28];
+dotVectors sTmp100[28] = <vTmp860,vTmp861>;
+setVector vTmp862 = sTmp98[0];
+setVector vTmp863 = sTmp99[29];
+dotVectors sTmp100[29] = <vTmp862,vTmp863>;
+setVector vTmp864 = sTmp98[0];
+setVector vTmp865 = sTmp99[30];
+dotVectors sTmp100[30] = <vTmp864,vTmp865>;
+
+//sTmp101 = sqrt(sTmp100)
+calculate sTmp101 = SQRT(sTmp100,[0],null);
+
+//z32 = sTmp101 - d3
+resetMv z32;
+setMv z32[0] = sTmp101[0];
+addMv z32[0] = mTmp93[-0];
+

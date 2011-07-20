@@ -1,5 +1,6 @@
 package de.gaalop.gapp.visitor;
 
+import de.gaalop.gapp.Selector;
 import de.gaalop.gapp.instructionSet.GAPPCalculate;
 import de.gaalop.gapp.variables.GAPPMultivector;
 import de.gaalop.gapp.Selectorset;
@@ -166,12 +167,19 @@ public class Parser implements GAPPVisitor {
 
         String parseSelectors = string.substring(indexOfBracket + 1, string.length() - 1);
         String[] partsSelectors = parseSelectors.split(",");
-        for (String curPart : partsSelectors) {
-            returnSelectors.add(Integer.parseInt(curPart.trim()));
-        }
+        for (String curPart : partsSelectors) 
+            returnSelectors.add(parseSelector(curPart));
 
         return mv;
     }
+
+    protected Selector parseSelector(String string) {
+        String trimmed = string.trim();
+        if (trimmed.startsWith("-")) 
+            return new Selector(Integer.parseInt(trimmed.substring(1)), (byte) -1);
+        return new Selector(Integer.parseInt(trimmed),(byte) 1);
+    }
+
 
     /**
      * Parses a string which contains selectors

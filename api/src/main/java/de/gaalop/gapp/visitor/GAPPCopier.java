@@ -1,5 +1,6 @@
 package de.gaalop.gapp.visitor;
 
+import de.gaalop.gapp.Selector;
 import de.gaalop.gapp.Selectorset;
 import de.gaalop.gapp.Variableset;
 import de.gaalop.gapp.instructionSet.GAPPAddMv;
@@ -36,11 +37,15 @@ public class GAPPCopier implements GAPPVisitor {
      * @param sel The selectorset to be copied
      * @return The copy
      */
-    private Selectorset copySelector(Selectorset sel) {
+    private Selectorset copySelectorset(Selectorset sel) {
         Selectorset copy = new Selectorset();
-        for (Integer cur: sel)
-            copy.add(new Integer(cur));
+        for (Selector cur: sel)
+            copy.add(new Selector(cur.getIndex(),cur.getSign()));
         return copy;
+    }
+
+    private Selector copySelector(Selector sel) {
+        return new Selector(sel.getIndex(),sel.getSign());
     }
 
      /**
@@ -77,8 +82,8 @@ public class GAPPCopier implements GAPPVisitor {
         return new GAPPAddMv(
                 copyMultivector(gappAddMv.getDestinationMv()),
                 copyMultivector(gappAddMv.getSourceMv()),
-                copySelector(gappAddMv.getSelectorsDest()),
-                copySelector(gappAddMv.getSelectorsSrc())
+                copySelectorset(gappAddMv.getSelectorsDest()),
+                copySelectorset(gappAddMv.getSelectorsSrc())
                 );
     }
 
@@ -86,7 +91,7 @@ public class GAPPCopier implements GAPPVisitor {
     public Object visitAssignMv(GAPPAssignMv gappAssignMv, Object arg) {
         return new GAPPAssignMv(
                 copyMultivector(gappAssignMv.getDestinationMv()),
-                copySelector(gappAssignMv.getSelectors()),
+                copySelectorset(gappAssignMv.getSelectors()),
                 copyVariableset(gappAssignMv.getValues())
                 );
     }
@@ -95,7 +100,7 @@ public class GAPPCopier implements GAPPVisitor {
     public Object visitDotVectors(GAPPDotVectors gappDotVectors, Object arg) {
         return new GAPPDotVectors(
                 copyMultivector(gappDotVectors.getDestination()),
-                new Integer(gappDotVectors.getDestSelector()),
+                copySelector(gappDotVectors.getDestSelector()),
                 copyVector(gappDotVectors.getPart1()),
                 copyVector(gappDotVectors.getPart2())
                 );
@@ -113,8 +118,8 @@ public class GAPPCopier implements GAPPVisitor {
         return new GAPPSetMv(
                 copyMultivector(gappSetMv.getDestinationMv()),
                 copyMultivector(gappSetMv.getSourceMv()),
-                copySelector(gappSetMv.getSelectorsDest()),
-                copySelector(gappSetMv.getSelectorsSrc())
+                copySelectorset(gappSetMv.getSelectorsDest()),
+                copySelectorset(gappSetMv.getSelectorsSrc())
                 );
     }
 
@@ -123,7 +128,7 @@ public class GAPPCopier implements GAPPVisitor {
         return new GAPPSetVector(
                 copyVector(gappSetVector.getDestination()),
                 copyMultivector(gappSetVector.getSourceMv()),
-                copySelector(gappSetVector.getSelectorsSrc())
+                copySelectorset(gappSetVector.getSelectorsSrc())
                 );
     }
 
@@ -133,8 +138,8 @@ public class GAPPCopier implements GAPPVisitor {
                 copyMultivector(gappCalculate.getTarget()),
                 copyMultivector(gappCalculate.getOperand1()),
                 copyMultivector(gappCalculate.getOperand2()),
-                copySelector(gappCalculate.getUsed1()),
-                copySelector(gappCalculate.getUsed2())
+                copySelectorset(gappCalculate.getUsed1()),
+                copySelectorset(gappCalculate.getUsed2())
                 );
     }
 

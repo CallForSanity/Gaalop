@@ -1,5 +1,6 @@
 package de.gaalop.gapp.instructionSet;
 
+import de.gaalop.gapp.Selector;
 import de.gaalop.gapp.Selectorset;
 import de.gaalop.gapp.Variableset;
 import de.gaalop.gapp.variables.GAPPMultivector;
@@ -37,7 +38,7 @@ public class GAPPAssignMv extends GAPPBaseInstruction {
         this.values = new Variableset();
     }
 
-    public void add(int selector, GAPPScalarVariable toAdd) {
+    public void add(Selector selector, GAPPScalarVariable toAdd) {
         selectors.add(selector);
         values.add(toAdd);
     }

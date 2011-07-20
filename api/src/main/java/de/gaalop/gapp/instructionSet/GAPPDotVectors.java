@@ -1,5 +1,6 @@
 package de.gaalop.gapp.instructionSet;
 
+import de.gaalop.gapp.Selector;
 import de.gaalop.gapp.visitor.GAPPVisitor;
 import de.gaalop.gapp.variables.GAPPMultivector;
 import de.gaalop.gapp.variables.GAPPVector;
@@ -16,14 +17,14 @@ import de.gaalop.gapp.variables.GAPPVector;
 public class GAPPDotVectors extends GAPPBaseInstruction {
 
     private GAPPMultivector destination;
-    private Integer destSelector;
+    private Selector destSelector;
     private GAPPVector part1;
     private GAPPVector part2;
 
     public GAPPDotVectors() {
     }
 
-    public GAPPDotVectors(GAPPMultivector destination, Integer destSelector,
+    public GAPPDotVectors(GAPPMultivector destination, Selector destSelector,
             GAPPVector part1, GAPPVector part2) {
         this.destination = destination;
         this.destSelector = destSelector;
@@ -36,7 +37,7 @@ public class GAPPDotVectors extends GAPPBaseInstruction {
         return visitor.visitDotVectors(this, arg);
     }
 
-    public Integer getDestSelector() {
+    public Selector getDestSelector() {
         return destSelector;
     }
 
@@ -52,7 +53,7 @@ public class GAPPDotVectors extends GAPPBaseInstruction {
         return part2;
     }
 
-    public void setDestSelector(Integer destSelector) {
+    public void setDestSelector(Selector destSelector) {
         this.destSelector = destSelector;
     }
 

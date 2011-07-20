@@ -7,6 +7,6 @@ import java.util.Vector;
  * A selector is represented by an Integer
  * @author christian
  */
-public class Selectorset extends Vector<Integer> {
+public class Selectorset extends Vector<Selector> {
 
 }

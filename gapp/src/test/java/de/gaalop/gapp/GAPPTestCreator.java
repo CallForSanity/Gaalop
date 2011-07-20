@@ -20,7 +20,8 @@ public class GAPPTestCreator {
         beginTestCase();
 
         // =============== insert new tests here ======================
-        testCircle();
+        //testCircle();
+        testGPS();
 
         endTestCase();
     }
@@ -56,6 +57,10 @@ public class GAPPTestCreator {
 
     private void testCircle() throws OptimizationException {
         test("Circle");
+    }
+
+    private void testGPS() throws OptimizationException {
+        test("GPS");
     }
 
     private void test(String className) {

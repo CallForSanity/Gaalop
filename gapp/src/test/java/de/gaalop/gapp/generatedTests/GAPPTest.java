@@ -10,10 +10,10 @@ import org.junit.Ignore;
 
 public class GAPPTest extends Base {
 @Test
-public void testCircle() {
+public void testGPS() {
         try {
-            Circle c = new Circle();
-            Executer executer = executeProgramm(c, "Circle");
+            GPS c = new GPS();
+            Executer executer = executeProgramm(c, "GPS");
             c.testOutput(executer);
         } catch (OptimizationException ex) {
             assertTrue("Optimization Error", false);
