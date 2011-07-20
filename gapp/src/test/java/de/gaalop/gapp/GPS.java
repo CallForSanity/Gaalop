@@ -103,7 +103,6 @@ public class GPS implements GAPPTestable {
 
     @Override
     public void testOutput(Executer executer) {
-        executer.printAllValues();
         MultivectorWithValues valrc1N = executer.getValue("rc1N");
         MultivectorWithValues valrc2N = executer.getValue("rc2N");
         MultivectorWithValues valz11  = executer.getValue("z11");

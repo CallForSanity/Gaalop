@@ -20,7 +20,7 @@ public class GAPPTestCreator {
         beginTestCase();
 
         // =============== insert new tests here ======================
-        //testCircle();
+        testCircle();
         testGPS();
 
         endTestCase();

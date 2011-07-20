@@ -48,7 +48,4 @@ public class Triple {
         return leftBlade+" mult "+rightBlade+" -> "+sign;
     }
 
-
-    
-
 }

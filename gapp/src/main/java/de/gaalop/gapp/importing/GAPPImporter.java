@@ -50,7 +50,6 @@ import de.gaalop.tba.Multivector;
 import de.gaalop.tba.UseAlgebra;
 import de.gaalop.tba.cfgImport.DFGVisitorImport;
 import de.gaalop.tba.cfgImport.MvExpressions;
-import de.gaalop.tba.cfgImport.optimization.ConstantFolding;
 import java.util.HashMap;
 
 /**
@@ -59,16 +58,56 @@ import java.util.HashMap;
  */
 public class GAPPImporter extends EmptyControlFlowVisitor implements ExpressionVisitor {
 
-    
+    private static final double EPSILON = 10E-07;
+
+    /**
+     * The current gapp object to insert new GAPP instructions
+     */
     private GAPP curGAPP;
+
+    /**
+     * The used algebra
+     */
     private UseAlgebra usedAlgebra;
-    private final double EPSILON = 10E-07;
 
-    private HashMap<Expression, MvExpressions> expressions; // from TBA
+    /**
+     * The map from expressions to their mvExpressions,
+     * calculated from the TBA plugin
+     */
+    private HashMap<Expression, MvExpressions> expressions;
 
+    /**
+     * Maps a variable to it's congruous GAPPMultivector
+     */
     private HashMap<Variable, GAPPMultivector> mapVariableGAPPMv = new HashMap<Variable, GAPPMultivector>();
+
+    /**
+     * Stores the assigned components of a GAPPMultivector,
+     * by using a map from GAPPMultivector to a boolean arr,
+     * which components are true, when the component is assigned,
+     * and false otherwise
+     */
     public HashMap<GAPPMultivector, BooleanArr> assigned = new HashMap<GAPPMultivector, BooleanArr>();
 
+    /**
+     * The current destination GAPPMultivector
+     */
+    private GAPPMultivector destination;
+
+    /**
+     * The current counter for creating unique variable names
+     */
+    private int tmpCounter = 0;
+
+    /**
+     * Returns the accordingly array to a given GAPPMultivector in the assigned map.
+     *
+     * If such a assigned key don't exists, this methods creates a new boolean array,
+     * stores it in the map, and returns it.
+     *
+     * @param mv The multivector which boolean arr should be returned
+     * @return The accordingly boolean arr to the given multivector
+     */
     private BooleanArr getBooleanArr(GAPPMultivector mv) {
         if (assigned.containsKey(mv))
             return assigned.get(mv);
@@ -77,15 +116,26 @@ public class GAPPImporter extends EmptyControlFlowVisitor implements ExpressionV
             assigned.put(mv, arr);
             return arr;
         }
-
     }
 
+    /**
+     * Creates a new GAPPImporter instance
+     * @param usedAlgebra The algebra which should be used
+     * @param expressions The expressions map from the TBA pass
+     */
     public GAPPImporter(UseAlgebra usedAlgebra, HashMap<Expression, MvExpressions> expressions) {
         this.expressions = expressions;
         this.usedAlgebra = usedAlgebra;
     }
 
-    private GAPPMultivector createGAPPMvFromVariable(Variable variable, boolean scalar,boolean assign) {
+    /**
+     * Creates a new GAPPMultivector from a variable
+     * @param variable The variable
+     * @param scalar Sets the scalar component of the accordingly "assigned" boolean arr to true, if true
+     * @param assign Assigns the values to the components of the multivector, if true
+     * @return The new GAPPMultivector which is equivalent the given variable
+     */
+    private GAPPMultivector createGAPPMvFromVariable(Variable variable, boolean scalar, boolean assign) {
 
         GAPPMultivector mv = new GAPPMultivector(createNewName(true));
 
@@ -93,7 +143,7 @@ public class GAPPImporter extends EmptyControlFlowVisitor implements ExpressionV
         expr.bladeExpressions[0] = variable;
 
         if (assign)
-            assignVectorFromMvExpressions(mv, expr);
+            assignMvFromMvExpressions(mv, expr);
         mapVariableGAPPMv.put(variable, mv);
         if (scalar)
             getBooleanArr(mv).setComponent(0, true);
@@ -101,25 +151,17 @@ public class GAPPImporter extends EmptyControlFlowVisitor implements ExpressionV
         return mv;
     }
 
-    @Override
-    public void visit(AssignmentNode node) {
-        curGAPP = new GAPP();
-        destination = new GAPPMultivector(node.getVariable().getName());
-        mapVariableGAPPMv.put(node.getVariable(), destination);
-
-        node.setGAPP(curGAPP);
-        node.getValue().accept(this);
-        super.visit(node);
-    }
-    
-    private GAPPMultivector destination;
-    private int tmpCounter = 0;
-
+    /**
+     * Creates a new unique name for a multivector or vector variable
+     * @param mv <value>true</value> if the new name refers to a multivector variable,
+     *           <value>false</value> if it refers to a vector variable
+     * @return The new unique name
+     */
     private String createNewName(boolean mv) {
 
         String prefix = (mv) ? "mTmp" : "vTmp";
 
-        while (mapVariableGAPPMv.containsKey(new Variable((prefix + tmpCounter)))) 
+        while (mapVariableGAPPMv.containsKey(new Variable((prefix + tmpCounter))))
             tmpCounter++;
 
         tmpCounter++;
@@ -127,62 +169,57 @@ public class GAPPImporter extends EmptyControlFlowVisitor implements ExpressionV
         return prefix + (tmpCounter - 1);
     }
 
-    private Selectorset getSelectorSetAllBladesPositive() {
-        Selectorset result = new Selectorset();
-        for (int blade = 0; blade < usedAlgebra.getBladeCount(); blade++) {
-            result.add(new Selector(new Integer(blade),(byte) 1));
-        }
-        return result;
-    }
-
-    private Selectorset getSelectorSetAllBladesNegative() {
-        Selectorset result = new Selectorset();
-        for (int blade = 0; blade < usedAlgebra.getBladeCount(); blade++) {
-            result.add(new Selector(new Integer(blade),(byte) -1));
-        }
-        return result;
-    }
-
-    private Selectorset getSelectorSetAllBladesPositiveAndAssigned(GAPPMultivector mv) {
+    /**
+     * Returns a new positive selectorset which contains all blades of a given multivector,
+     * which are assigned.
+     * @param mv The multivector
+     * @return The selectorset that contains only the positive selectors where the assigned flag is set.
+     */
+    private Selectorset getSelectorsetAllBladesPositiveAndAssigned(GAPPMultivector mv) {
         BooleanArr arr = getBooleanArr(mv);
         Selectorset result = new Selectorset();
-        for (int blade = 0; blade < usedAlgebra.getBladeCount(); blade++) {
-            if (arr.getComponent(blade)) {
+        for (int blade = 0; blade < usedAlgebra.getBladeCount(); blade++)
+            if (arr.getComponent(blade)) 
                 result.add(new Selector(new Integer(blade),(byte) 1));
-            }
-        }
 
         return result;
     }
 
-    private Selectorset getSelectorSetAllBladesNegativeAndAssigned(GAPPMultivector mv) {
+    /**
+     * Returns a new negative selectorset which contains all blades of a given multivector,
+     * which are assigned.
+     * @param mv The multivector
+     * @return The selectorset that contains only the negative selectors where the assigned flag is set.
+     */
+    private Selectorset getSelectorsetAllBladesNegativeAndAssigned(GAPPMultivector mv) {
         BooleanArr arr = getBooleanArr(mv);
         Selectorset result = new Selectorset();
-        for (int blade = 0; blade < usedAlgebra.getBladeCount(); blade++) {
-            if (arr.getComponent(blade)) {
+        for (int blade = 0; blade < usedAlgebra.getBladeCount(); blade++)
+            if (arr.getComponent(blade))
                 result.add(new Selector(new Integer(blade),(byte) -1));
-            }
-        }
 
         return result;
     }
 
+    /**
+     * Returns a new GAPPMultivector assigned with the values of a given expression.
+     * Inserts new congruous GAPPInstructions in the current GAPP member.
+     *
+     * The assigned flags will be also modified by this method while transforming.
+     *
+     * @param expression The expression which should be transformed into an equivalent GAPPMultivector
+     * @return The new GAPPMUltivector
+     */
     private GAPPMultivector getGAPPMultivectorFromExpression(Expression expression) {
 
         DFGNodeType type = DFGNodeTypeGetter.getTypeOfDFGNode(expression);
         if (type != DFGNodeType.Variable) {
             MvExpressions mv = expressions.get(expression);
 
-            if (mv == null) {
-                System.err.println("hm");
-                
-            }
-
-
             // build the multivector
             GAPPMultivector newMv = new GAPPMultivector(createNewName(true));
 
-            assignVectorFromMvExpressions(newMv, mv);
+            assignMvFromMvExpressions(newMv, mv);
 
             return newMv;
         }
@@ -190,10 +227,18 @@ public class GAPPImporter extends EmptyControlFlowVisitor implements ExpressionV
         return mapVariableGAPPMv.get((Variable) expression);
     }
 
-    private void assignVectorFromMvExpressions(GAPPMultivector mv, MvExpressions mvExpr) {
+    /**
+     * Assigns a mvExpressions object to a desination multivector.
+     * Inserts new congruous GAPPInstructions in the current GAPP member.
+     *
+     * The assigned flags will be also modified by this method while transforming.
+     *
+     * @param mv The multivector which should be the destionation for the new GAPPInstructions
+     * @param mvExpr The mvExpressions object
+     */
+    private void assignMvFromMvExpressions(GAPPMultivector mv, MvExpressions mvExpr) {
         Selectorset sel = new Selectorset();
         Variableset val = new Variableset();
-
 
         BooleanArr arr = getBooleanArr(mv);
 
@@ -202,9 +247,6 @@ public class GAPPImporter extends EmptyControlFlowVisitor implements ExpressionV
             if (mvExpr.bladeExpressions[blade] != null) {
                 arr.setComponent(blade, true);
                 sel.add(new Selector(blade,(byte) 1));
-
-                //ConstantFolding folding = new ConstantFolding();
-               // mvExpr.bladeExpressions[blade].accept(folding);
 
                 DFGNodeType typeBlade = DFGNodeTypeGetter.getTypeOfDFGNode(mvExpr.bladeExpressions[blade]);
 
@@ -227,73 +269,6 @@ public class GAPPImporter extends EmptyControlFlowVisitor implements ExpressionV
         curGAPP.addInstruction(new GAPPAssignMv(mv, sel, val));
     }
 
-    @Override
-    public void visit(Subtraction node) {
-        node.getLeft().accept(this);
-        node.getRight().accept(this);
-
-        GAPPMultivector mvLeft = getGAPPMultivectorFromExpression(node.getLeft());
-        GAPPMultivector mvRight = getGAPPMultivectorFromExpression(node.getRight());
-
-        Selectorset selSetL = getSelectorSetAllBladesPositiveAndAssigned(mvLeft);
-
-        Selectorset selSetRp = getSelectorSetAllBladesPositiveAndAssigned(mvRight);
-        Selectorset selSetRn = getSelectorSetAllBladesNegativeAndAssigned(mvRight);
-        curGAPP.addInstruction(new GAPPResetMv(destination));
-        curGAPP.addInstruction(new GAPPSetMv(destination, mvLeft, selSetL, selSetL));
-        curGAPP.addInstruction(new GAPPAddMv(destination, mvRight, selSetRp, selSetRn));
-
-        BooleanArr boolArrDest = getBooleanArr(destination);
-        boolArrDest.or(getBooleanArr(mvLeft));
-        boolArrDest.or(getBooleanArr(mvRight));
-    }
-
-    @Override
-    public void visit(Addition node) {
-        node.getLeft().accept(this);
-        node.getRight().accept(this);
-
-
-        GAPPMultivector mvLeft = getGAPPMultivectorFromExpression(node.getLeft());
-        GAPPMultivector mvRight = getGAPPMultivectorFromExpression(node.getRight());
-
-        Selectorset selSetL = getSelectorSetAllBladesPositiveAndAssigned(mvLeft);
-        Selectorset selSetR = getSelectorSetAllBladesPositiveAndAssigned(mvRight);
-
-        curGAPP.addInstruction(new GAPPResetMv(destination));
-        curGAPP.addInstruction(new GAPPSetMv(destination, mvLeft, selSetL, selSetL));
-        curGAPP.addInstruction(new GAPPAddMv(destination, mvRight, selSetR, selSetR));
-
-        BooleanArr boolArrDest = getBooleanArr(destination);
-        boolArrDest.or(getBooleanArr(mvLeft));
-        boolArrDest.or(getBooleanArr(mvRight));
-    }
-
-    @Override
-    public void visit(Division node) {
-
-        node.getLeft().accept(this);
-        node.getRight().accept(this);
-
-        GAPPMultivector mvL = getGAPPMultivectorFromExpression(node.getLeft());
-        GAPPMultivector mvR = getGAPPMultivectorFromExpression(node.getRight());
-
-        BooleanArr b1 = getBooleanArr(mvL);
-
-        Selectorset sel1 = new Selectorset();
-        Selectorset sel2 = new Selectorset();
-
-        for (int blade=0;blade<usedAlgebra.getBladeCount();blade++)
-            if (b1.getComponent(blade))
-            {
-                sel1.add(new Selector(blade,(byte) 1));
-                sel2.add(new Selector(0,(byte) 1));
-                getBooleanArr(destination).setComponent(blade, true);
-            }
-        
-        curGAPP.addInstruction(new GAPPCalculate(CalculationType.DIVISION, destination, mvL, mvR, sel1,sel2));
-    }
-
     /**
      * Handles a Geometric Algebra Product and produces code to represent it in curGAPP
      * @param typeProduct The type of the Geometric Algebra Product, defined in de.gaalop.tba.cfgImport.DVGVisitorImport
@@ -310,7 +285,7 @@ public class GAPPImporter extends EmptyControlFlowVisitor implements ExpressionV
         GAPPMultivector mvL = getGAPPMultivectorFromExpression(node.getLeft());
         GAPPMultivector mvR = getGAPPMultivectorFromExpression(node.getRight());
 
-        for (int blade = 0; blade < usedAlgebra.getBladeCount(); blade++) 
+        for (int blade = 0; blade < usedAlgebra.getBladeCount(); blade++)
             if (triplesArr[blade] != null && triplesArr[blade].size() > 0) {
 
                 Selectorset sel1 = new Selectorset();
@@ -403,6 +378,144 @@ public class GAPPImporter extends EmptyControlFlowVisitor implements ExpressionV
         curGAPP.addInstruction(new GAPPDotVectors(destMv, destSel, v1, v2));
     }
 
+    /**
+     * Creates a new GAPPCalculate instruction in GAPP member,
+     * which represent the given UnaryCalculation
+     * @param type The type of the GAPPCalculate
+     * @param unaryExpr The UnaryOperation expression
+     */
+    private void doUnaryCalculation(CalculationType type, UnaryOperation unaryExpr) {
+        Expression operand = unaryExpr.getOperand();
+
+        operand.accept(this);
+
+        GAPPMultivector mvO = getGAPPMultivectorFromExpression(operand);
+
+        BooleanArr b1 = getBooleanArr(mvO);
+
+        Selectorset sel = new Selectorset();
+
+        for (int blade=0;blade<usedAlgebra.getBladeCount();blade++)
+            if (b1.getComponent(blade))
+            {
+                sel.add(new Selector(blade, (byte) 1));
+                getBooleanArr(destination).setComponent(blade, true);
+            }
+
+        curGAPP.addInstruction(new GAPPCalculate(type, destination, mvO, null, sel, null));
+
+    }
+
+    /**
+     * Creates a new GAPPCalculate instruction in GAPP member,
+     * which represent the given BinaryCalculation
+     * @param type The type of the GAPPCalculate
+     * @param binaryExpr The BinaryOperation expression
+     */
+    private void doBinaryCalculation(CalculationType type, BinaryOperation binaryExpr) {
+        Expression left = binaryExpr.getLeft();
+        Expression right = binaryExpr.getRight();
+
+        left.accept(this);
+        right.accept(this);
+
+        GAPPMultivector mvL = getGAPPMultivectorFromExpression(left);
+        GAPPMultivector mvR = getGAPPMultivectorFromExpression(right);
+
+        BooleanArr b1 = getBooleanArr(mvL);
+        BooleanArr b2 = getBooleanArr(mvR);
+
+        Selectorset sel = new Selectorset();
+
+        for (int blade=0;blade<usedAlgebra.getBladeCount();blade++)
+            if (b1.getComponent(blade) || b2.getComponent(blade))
+            {
+                sel.add(new Selector(blade, (byte) 1));
+                getBooleanArr(destination).setComponent(blade, true);
+            }
+
+        curGAPP.addInstruction(new GAPPCalculate(type, destination, mvL, mvR, sel, sel));
+
+    }
+
+    @Override
+    public void visit(AssignmentNode node) {
+        curGAPP = new GAPP();
+        destination = new GAPPMultivector(node.getVariable().getName());
+        mapVariableGAPPMv.put(node.getVariable(), destination);
+
+        node.setGAPP(curGAPP);
+        node.getValue().accept(this);
+        super.visit(node);
+    }
+    
+    @Override
+    public void visit(Subtraction node) {
+        node.getLeft().accept(this);
+        node.getRight().accept(this);
+
+        GAPPMultivector mvLeft = getGAPPMultivectorFromExpression(node.getLeft());
+        GAPPMultivector mvRight = getGAPPMultivectorFromExpression(node.getRight());
+
+        Selectorset selSetL = getSelectorsetAllBladesPositiveAndAssigned(mvLeft);
+
+        Selectorset selSetRp = getSelectorsetAllBladesPositiveAndAssigned(mvRight);
+        Selectorset selSetRn = getSelectorsetAllBladesNegativeAndAssigned(mvRight);
+        curGAPP.addInstruction(new GAPPResetMv(destination));
+        curGAPP.addInstruction(new GAPPSetMv(destination, mvLeft, selSetL, selSetL));
+        curGAPP.addInstruction(new GAPPAddMv(destination, mvRight, selSetRp, selSetRn));
+
+        BooleanArr boolArrDest = getBooleanArr(destination);
+        boolArrDest.or(getBooleanArr(mvLeft));
+        boolArrDest.or(getBooleanArr(mvRight));
+    }
+
+    @Override
+    public void visit(Addition node) {
+        node.getLeft().accept(this);
+        node.getRight().accept(this);
+
+
+        GAPPMultivector mvLeft = getGAPPMultivectorFromExpression(node.getLeft());
+        GAPPMultivector mvRight = getGAPPMultivectorFromExpression(node.getRight());
+
+        Selectorset selSetL = getSelectorsetAllBladesPositiveAndAssigned(mvLeft);
+        Selectorset selSetR = getSelectorsetAllBladesPositiveAndAssigned(mvRight);
+
+        curGAPP.addInstruction(new GAPPResetMv(destination));
+        curGAPP.addInstruction(new GAPPSetMv(destination, mvLeft, selSetL, selSetL));
+        curGAPP.addInstruction(new GAPPAddMv(destination, mvRight, selSetR, selSetR));
+
+        BooleanArr boolArrDest = getBooleanArr(destination);
+        boolArrDest.or(getBooleanArr(mvLeft));
+        boolArrDest.or(getBooleanArr(mvRight));
+    }
+
+    @Override
+    public void visit(Division node) {
+
+        node.getLeft().accept(this);
+        node.getRight().accept(this);
+
+        GAPPMultivector mvL = getGAPPMultivectorFromExpression(node.getLeft());
+        GAPPMultivector mvR = getGAPPMultivectorFromExpression(node.getRight());
+
+        BooleanArr b1 = getBooleanArr(mvL);
+
+        Selectorset sel1 = new Selectorset();
+        Selectorset sel2 = new Selectorset();
+
+        for (int blade=0;blade<usedAlgebra.getBladeCount();blade++)
+            if (b1.getComponent(blade))
+            {
+                sel1.add(new Selector(blade,(byte) 1));
+                sel2.add(new Selector(0,(byte) 1));
+                getBooleanArr(destination).setComponent(blade, true);
+            }
+        
+        curGAPP.addInstruction(new GAPPCalculate(CalculationType.DIVISION, destination, mvL, mvR, sel1,sel2));
+    }
+
     @Override
     public void visit(InnerProduct node) {
         handleGAProduct(DFGVisitorImport.INNER, node);
@@ -476,8 +589,8 @@ public class GAPPImporter extends EmptyControlFlowVisitor implements ExpressionV
 
         GAPPMultivector mvRight = getGAPPMultivectorFromExpression(node.getOperand());
 
-        Selectorset selSetRp = getSelectorSetAllBladesPositiveAndAssigned(mvRight);
-        Selectorset selSetRn = getSelectorSetAllBladesNegativeAndAssigned(mvRight);
+        Selectorset selSetRp = getSelectorsetAllBladesPositiveAndAssigned(mvRight);
+        Selectorset selSetRn = getSelectorsetAllBladesNegativeAndAssigned(mvRight);
         curGAPP.addInstruction(new GAPPResetMv(destination));
         curGAPP.addInstruction(new GAPPAddMv(destination, mvRight, selSetRp, selSetRn));
 
@@ -513,53 +626,7 @@ public class GAPPImporter extends EmptyControlFlowVisitor implements ExpressionV
         curGAPP.addInstruction(new GAPPSetMv(destination,mvOp,selDest,selOp));
     }
 
-    private void doUnaryCalculation(CalculationType type, UnaryOperation node) {
-        Expression operand = node.getOperand();
-
-        operand.accept(this);
-
-        GAPPMultivector mvO = getGAPPMultivectorFromExpression(operand);
-
-        BooleanArr b1 = getBooleanArr(mvO);
-
-        Selectorset sel = new Selectorset();
-
-        for (int blade=0;blade<usedAlgebra.getBladeCount();blade++)
-            if (b1.getComponent(blade))
-            {
-                sel.add(new Selector(blade, (byte) 1));
-                getBooleanArr(destination).setComponent(blade, true);
-            }
-
-        curGAPP.addInstruction(new GAPPCalculate(type, destination, mvO, null, sel, null));
-
-    }
-
-    private void doBinaryCalculation(CalculationType type, BinaryOperation node) {
-        Expression left = node.getLeft();
-        Expression right = node.getRight();
-
-        left.accept(this);
-        right.accept(this);
-
-        GAPPMultivector mvL = getGAPPMultivectorFromExpression(left);
-        GAPPMultivector mvR = getGAPPMultivectorFromExpression(right);
-
-        BooleanArr b1 = getBooleanArr(mvL);
-        BooleanArr b2 = getBooleanArr(mvR);
-
-        Selectorset sel = new Selectorset();
-
-        for (int blade=0;blade<usedAlgebra.getBladeCount();blade++)
-            if (b1.getComponent(blade) || b2.getComponent(blade))
-            {
-                sel.add(new Selector(blade, (byte) 1));
-                getBooleanArr(destination).setComponent(blade, true);
-            }
-
-        curGAPP.addInstruction(new GAPPCalculate(type, destination, mvL, mvR, sel, sel));
-
-    }
+    
 
     @Override
     public void visit(LogicalOr node) {

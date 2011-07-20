@@ -9,7 +9,7 @@ import java.util.Collections;
 import java.util.Set;
 
 /**
- * Implemnets a code generator for gapp members
+ * Implements a code generator for gapp members, which lists all GAPP members in a graph in a pretty print format
  * @author christian
  */
 class GAPPCodeGenerator implements CodeGenerator {
@@ -43,8 +43,8 @@ class GAPPCodeGenerator implements CodeGenerator {
     /**
      * Generates source code for a control dataflow graph.
      *
-     * @param in
-     * @return
+     * @param in The graph that should be used for code generation
+     * @return The genereated code
      */
     private String generateCode(ControlFlowGraph in) {
         PrettyPrint printer = new PrettyPrint();

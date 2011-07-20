@@ -3,32 +3,6 @@ package de.gaalop.dfg;
 import de.gaalop.cfg.AssignmentNode;
 import de.gaalop.cfg.ColorNode;
 import de.gaalop.cfg.EmptyControlFlowVisitor;
-import de.gaalop.dfg.Addition;
-import de.gaalop.dfg.BaseVector;
-import de.gaalop.dfg.BinaryOperation;
-import de.gaalop.dfg.Division;
-import de.gaalop.dfg.Equality;
-import de.gaalop.dfg.Exponentiation;
-import de.gaalop.dfg.Expression;
-import de.gaalop.dfg.ExpressionVisitor;
-import de.gaalop.dfg.FloatConstant;
-import de.gaalop.dfg.FunctionArgument;
-import de.gaalop.dfg.Inequality;
-import de.gaalop.dfg.InnerProduct;
-import de.gaalop.dfg.LogicalAnd;
-import de.gaalop.dfg.LogicalNegation;
-import de.gaalop.dfg.LogicalOr;
-import de.gaalop.dfg.MacroCall;
-import de.gaalop.dfg.MathFunctionCall;
-import de.gaalop.dfg.Multiplication;
-import de.gaalop.dfg.MultivectorComponent;
-import de.gaalop.dfg.Negation;
-import de.gaalop.dfg.OuterProduct;
-import de.gaalop.dfg.Relation;
-import de.gaalop.dfg.Reverse;
-import de.gaalop.dfg.Subtraction;
-import de.gaalop.dfg.UnaryOperation;
-import de.gaalop.dfg.Variable;
 
 /**
  * Implements a base class for a remover for an Expression.

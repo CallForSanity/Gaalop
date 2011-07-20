@@ -41,12 +41,29 @@ import java.util.Set;
  */
 public class Splitter extends EmptyControlFlowVisitor implements ExpressionVisitor {
 
+    /**
+     * The counter for new unique variable names
+     */
     private int tmpVariablesCounter = 0;
 
+    /**
+     * The graph to operate on
+     */
     private ControlFlowGraph graph;
 
+    /**
+     * The current sequential node
+     */
     private SequentialNode curNode;
+    
+    /**
+     * The current expression
+     */
     private Expression curExpression;
+
+    /**
+     * The current resultExpression
+     */
     private Expression resultExpression;
 
     public Splitter(ControlFlowGraph graph) {
@@ -54,7 +71,7 @@ public class Splitter extends EmptyControlFlowVisitor implements ExpressionVisit
     }
 
     /**
-     * Creates a new temp variable that don't exists in the graph
+     * Creates a new temp variable that don't exists (is unique) in the graph
      * @return The new temp Variable
      */
     private Variable createNewTempVariable() {
@@ -88,6 +105,55 @@ public class Splitter extends EmptyControlFlowVisitor implements ExpressionVisit
     }
 
 
+    /**
+     * Splits a UnaryOperation
+     * @param unaryOperation The UnaryOperation to split
+     */
+    private void handleUnaryOperation(UnaryOperation unaryOperation) {
+
+        unaryOperation.getOperand().accept(this);
+        if (resultExpression != null)
+            unaryOperation.setOperand(resultExpression);
+
+        if (curExpression == unaryOperation) {
+            // terminate without variable creation
+            resultExpression = null;
+            return;
+        }
+
+        Variable targetVariable = createNewTempVariable();
+        curNode.insertBefore(new AssignmentNode(graph,targetVariable,unaryOperation));
+
+        resultExpression = targetVariable;
+    }
+
+    /**
+     * Splits a BinaryOperation
+     * @param binaryOperation The BinaryOperation to split
+     */
+    private void handleBinaryOperation(BinaryOperation binaryOperation) {
+
+        binaryOperation.getLeft().accept(this);
+        if (resultExpression != null)
+            binaryOperation.setLeft(resultExpression);
+
+        binaryOperation.getRight().accept(this);
+        if (resultExpression != null)
+            binaryOperation.setRight(resultExpression);
+
+
+        if (curExpression == binaryOperation) {
+            // terminate without variable creation
+            resultExpression = null;
+            return;
+        }
+
+        Variable targetVariable = createNewTempVariable();
+        curNode.insertBefore(new AssignmentNode(graph,targetVariable,binaryOperation));
+
+        resultExpression = targetVariable;
+    }
+
     @Override
     public void visit(AssignmentNode node) {
         node.setValue(splitExpression(node.getValue(), node));
@@ -108,51 +174,7 @@ public class Splitter extends EmptyControlFlowVisitor implements ExpressionVisit
         node.setAlpha(splitExpression(node.getAlpha(), node));
         super.visit(node);
     }
-
-    private void handleUnaryOperation(UnaryOperation unaryOperation) {
-
-        unaryOperation.getOperand().accept(this);
-        if (resultExpression != null)
-            unaryOperation.setOperand(resultExpression);
-
-        if (curExpression == unaryOperation) {
-            // terminate without variable creation
-            resultExpression = null;
-            return;
-        }
-
-        Variable targetVariable = createNewTempVariable();
-        curNode.insertBefore(new AssignmentNode(graph,targetVariable,unaryOperation));
-
-        resultExpression = targetVariable;
-    }
-
-    private void handleBinaryOperation(BinaryOperation binaryOperation) {
-
-        binaryOperation.getLeft().accept(this);
-        if (resultExpression != null)
-            binaryOperation.setLeft(resultExpression);
-
-        binaryOperation.getRight().accept(this);
-        if (resultExpression != null)
-            binaryOperation.setRight(resultExpression);
-
-        
-        if (curExpression == binaryOperation) {
-            // terminate without variable creation
-            resultExpression = null;
-            return;
-        }
-         
-         
-
-        Variable targetVariable = createNewTempVariable();
-        curNode.insertBefore(new AssignmentNode(graph,targetVariable,binaryOperation));
-
-        resultExpression = targetVariable;
-    }
-
-
+    
     @Override
     public void visit(Subtraction node) {
         handleBinaryOperation(node);

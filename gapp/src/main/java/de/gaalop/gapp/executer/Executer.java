@@ -23,13 +23,32 @@ import java.util.HashMap;
  */
 public class Executer extends CFGGAPPVisitor {
 
+    /**
+     * Maps names of multivectors to their values
+     */
     private HashMap<String,MultivectorWithValues> values = new HashMap<String,MultivectorWithValues>();
+
+    /**
+     * Maps names of vectors to their values
+     */
     private HashMap<String,VectorWithValues> vectors = new HashMap<String,VectorWithValues>();
 
+    /**
+     * The currently used algebra
+     */
     private UseAlgebra usedAlgebra;
 
+    /**
+     * Maps the scalar inputs to their values
+     */
     private HashMap<String,Float> inputValues;
 
+    /**
+     * Returns the MultivectorWithValues object which stores the current values
+     * of the multivector with a specific name
+     * @param name The name of the multivector whose values were returned
+     * @return The values of the multivector with the given name
+     */
     public MultivectorWithValues getValue(String name) {
         return values.get(name);
     }
@@ -43,6 +62,19 @@ public class Executer extends CFGGAPPVisitor {
         this.usedAlgebra = usedAlgebra;
     }
 
+
+    /**
+     * Returns the MultivectorWithValues object which stores the current values
+     * of the multivector with a specific name, if it exits in values map, or create a new values object otherwise.
+     *
+     * The possible new values object will be putted in the values map
+     *
+     * The difference to the public method getValue is that this method creates a new values object,
+     * if the multivector with the given name is not in values map
+     *
+     * @param name The name of the multivector whose values were returned
+     * @return The values of the multlivector with the given name
+     */
     private MultivectorWithValues getMultivector(String name) {
         if (values.containsKey(name))
             return values.get(name);
@@ -53,6 +85,15 @@ public class Executer extends CFGGAPPVisitor {
         }
     }
 
+    /**
+     * Returns the VectorWithValues object which stores the current values
+     * of the vector with a specific name, if it exits in vectors map, or create a new values object otherwise.
+     *
+     * The possible new values object will be putted in the vectors map
+     *
+     * @param name The name of the vector whose values were returned
+     * @return The values of the vector with the given name
+     */
     private VectorWithValues getVector(String name) {
         if (vectors.containsKey(name))
             return vectors.get(name);
@@ -63,6 +104,11 @@ public class Executer extends CFGGAPPVisitor {
         }
     }
 
+    /**
+     * Returns the value of the scalar input variable with a specific name
+     * @param name The name of the scalar input variable
+     * @return The value of the calar input variable with the given name
+     */
     private float getVariableValue(String name) {
         return inputValues.get(name);
     }
@@ -253,7 +299,9 @@ public class Executer extends CFGGAPPVisitor {
     }
 
     /**
-     * Prints all values and vectors
+     * Prints all values, vectors and their contents.
+     * 
+     * This is used commonly for debug purposes.
      */
     public void printAllValues() {
         String[] keys = values.keySet().toArray(new String[0]);
