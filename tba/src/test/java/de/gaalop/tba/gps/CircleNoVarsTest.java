@@ -1,5 +1,7 @@
-package de.gaalop.tba;
+package de.gaalop.tba.circle;
 
+import de.gaalop.tba.InputOutput;
+import de.gaalop.tba.VariableValue;
 import org.junit.Ignore;
 import java.awt.Point;
 import java.util.LinkedList;

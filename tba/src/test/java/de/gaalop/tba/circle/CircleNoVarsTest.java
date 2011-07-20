@@ -1,23 +1,34 @@
-package de.gaalop.tba;
+package de.gaalop.tba.circle;
 
+import de.gaalop.tba.InputOutput;
+import de.gaalop.tba.VariableValue;
+import org.junit.Ignore;
 import java.awt.Point;
 import java.util.LinkedList;
-import org.junit.Ignore;
 
 /**
- *
+ * Implements a circle of three points test with no variables
  * @author christian
  */
 @Ignore
-public class CircleOnlyVarsTest extends GenericCircleTest {
+public class CircleNoVarsTest extends GenericCircleTest {
 
-    public CircleOnlyVarsTest(Point p1, Point p2, Point p3) {
+    public CircleNoVarsTest(Point p1, Point p2, Point p3) {
         super(p1, p2, p3);
     }
 
     @Override
     protected String constantDefinition() {
-        return "\n";
+        return
+            "x1 = "+p1.x+";"+"\n"+
+            "y1 = "+p1.y+";"+"\n"+
+
+            "x2 = "+p2.x+";"+"\n"+
+            "y2 = "+p2.y+";"+"\n"+
+
+            "x3 = "+p3.x+";"+"\n"+
+            "y3 = "+p3.y+";"+"\n"
+            ;
     }
 
     @Override
@@ -28,14 +39,7 @@ public class CircleOnlyVarsTest extends GenericCircleTest {
 
             @Override
             public LinkedList<VariableValue> getInputs() {
-                LinkedList<VariableValue> result = new LinkedList<VariableValue>();
-                result.add(new VariableValue("x1_0",p1.x));
-                result.add(new VariableValue("y1_0",p1.y));
-                result.add(new VariableValue("x2_0",p2.x));
-                result.add(new VariableValue("y2_0",p2.y));
-                result.add(new VariableValue("x3_0",p3.x));
-                result.add(new VariableValue("y3_0",p3.y));
-                return result;
+                return new LinkedList<VariableValue>(); //no inputs
             }
 
             @Override
@@ -50,7 +54,7 @@ public class CircleOnlyVarsTest extends GenericCircleTest {
                 "float r_0 = outputs.get(\"r_0\");\n"+
                 "float m_x = outputs.get(\"m_1\");\n"+
                 "float m_y = outputs.get(\"m_2\");\n"+
-
+                
 
                 "// check radius (should be equal to distance from m to p1,p2,p3)\n"+
                 "assertEquals("+getDistance("m_x", "m_y",p1.x+"",p1.y+"")+",r_0,"+EPSILON+");\n"+
@@ -69,9 +73,13 @@ public class CircleOnlyVarsTest extends GenericCircleTest {
             public int getNo() {
                 return 0;
             }
+
         });
+
 
         return result;
     }
+
+
 
 }

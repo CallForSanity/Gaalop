@@ -1,5 +1,6 @@
-package de.gaalop.tba;
+package de.gaalop.tba.circle;
 
+import de.gaalop.tba.GenericTestable;
 import java.awt.Point;
 
 /**
@@ -61,5 +62,7 @@ public abstract class GenericCircleTest implements GenericTestable {
     protected String getDistance(String p1x, String p1y, String p2x, String p2y) {
         return "(float) Math.sqrt(("+p2x+"-"+p1x+")*("+p2x+"-"+p1x+") + ("+p2y+"-"+p1y+")*("+p2y+"-"+p1y+"))";
     }
+
+   
 
 }

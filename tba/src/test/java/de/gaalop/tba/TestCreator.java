@@ -1,5 +1,8 @@
 package de.gaalop.tba;
 
+import de.gaalop.tba.circle.CircleNoVarsTest;
+import de.gaalop.tba.circle.CircleOneVarTest;
+import de.gaalop.tba.circle.CircleOnlyVarsTest;
 import de.gaalop.CodeGenerator;
 import de.gaalop.CodeGeneratorException;
 import de.gaalop.CodeParser;
@@ -9,6 +12,9 @@ import de.gaalop.OptimizationException;
 import de.gaalop.OptimizationStrategy;
 import de.gaalop.OutputFile;
 import de.gaalop.cfg.ControlFlowGraph;
+import de.gaalop.tba.gps.GPSNoVarsTest;
+import de.gaalop.tba.gps.GPSOnlyVarsTest;
+import de.gaalop.tba.gps.Point3D;
 import java.awt.Point;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
@@ -59,11 +65,14 @@ public class TestCreator {
 
         //positive tests - tests that should be compiled
         try {
-            //test(new CircleOneVarTest(new Point(5,2),new Point(3,9),new Point(6,4),new boolean[]{true,false,false,false,false,false},1),"CircleOneVar");
+           // test(new CircleOneVarTest(new Point(5,2),new Point(3,9),new Point(6,4),new boolean[]{true,false,false,false,false,false},1),"CircleOneVar");
             testCircleNoVars();
             testCircleOneVar();
             testCircleOnlyVars();
             testOutputCount();
+
+            testGPSNoVars();
+            testGPSOnlyVars();
         } catch (OptimizationException e) {
                 throw new Exception("CompileError in positive tests: "+e);
         }
@@ -158,6 +167,19 @@ public class TestCreator {
     
     private void testCircleOnlyVars() throws OptimizationException {
         test(new CircleOnlyVarsTest(new Point(5,2),new Point(3,9),new Point(6,4)),"CircleOnlyVars");
+
+        //TODO more tests
+    }
+
+    private void testGPSNoVars() throws OptimizationException {
+        test(new GPSNoVarsTest(new Point3D(1,1,1), new Point3D(0,0,1), new Point3D(0,1,0), 0.6f, 0.7f, 0.5f),"GPSNoVars");
+
+        //TODO more tests
+    }
+
+
+    private void testGPSOnlyVars() throws OptimizationException {
+        test(new GPSOnlyVarsTest(new Point3D(1,1,1), new Point3D(0,0,1), new Point3D(0,1,0), 0.6f, 0.7f, 0.9f),"GPSOnlyVars");
 
         //TODO more tests
     }

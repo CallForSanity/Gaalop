@@ -27,6 +27,11 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
 	
 	protected Set<String> declared = new HashSet<String>();
 
+        //TODO chs JAVA plugin: Calc method code can be exceeded about 65535 chars,
+        //catch this hard limit by splitting up the calc method,
+        //if necessary and make all previous local variable to private class members
+        //Think about making all local variables to private class members.
+
 	public String getCode() {
 		return code.toString();
 	}

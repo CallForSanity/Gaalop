@@ -114,21 +114,27 @@ public class MaximaOptimizer {
         graph.accept(assignmentNodeCollector);
 
         FindStoreOutputNodes f = new FindStoreOutputNodes();
-
+        graph.accept(f);
         HashSet<String> storeNodeVariables = new HashSet<String>();
 
         for (StoreResultNode curNode: f.getNodes())
             storeNodeVariables.add(curNode.getValue().getName());
         
         for (AssignmentNode node: assignmentNodeCollector.getAssignmentNodes()) {
-            //use store result nodes for marking to evaluate immediately
+            
             DFGToMaximaCode dfg = new DFGToMaximaCode();
             node.getVariable().accept(dfg);
             String variable = "";
-            
-            if (!storeNodeVariables.contains(node.getVariable().getName())) {
-                variable = dfg.getResultString()+"::";
-            }
+
+            //using the store result nodes for marking to evaluate immediately is not possible in all cases,
+            //reason: consider a large cluscript with only one StoreResultNode add the end
+            //all non-marked assignments were inserted in the assignment with the StoreResultNode.getValue() as desitination variable
+            //this expression can be very long. Possible too long for the java code limit per method (65535 bytes)
+            //Splitting isn't trivial except of splitting the methods between two assignments, so the using of store result nodes can be expensive to compile time.
+
+           // if (!storeNodeVariables.contains(node.getVariable().getName())) { // see comment above
+           //    variable = dfg.getResultString()+"::";
+           // }
 
             dfg = new DFGToMaximaCode();
             node.getValue().accept(dfg);
