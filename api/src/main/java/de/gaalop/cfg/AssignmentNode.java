@@ -109,39 +109,40 @@ public final class AssignmentNode extends SequentialNode {
     }
 
     /**
-	 * This method copy the gapp instance
-	 * @return The gapp instance
-	 *
-	 * @author Christian Steinmetz
-	 */
-	protected GAPP copyGAPP() {
-            if (gapp != null)
-		return gapp.getCopy();
-            else
-                return null;
-	}
+     * This method copies the gapp instance, if it isn't null,
+     * otherwise it returns null
+     * @return The gapp instance if not null, otherwise null
+     *
+     * @author Christian Steinmetz
+     */
+    protected GAPP copyGAPP() {
+        if (gapp != null)
+            return gapp.getCopy();
+        else
+            return null;
+    }
 
-	/**
-	 * The GAPP instance. (GAPP = Geometric Algebra Algorithm Parallelism Program)
-	 *
-	 * @author Christian Steinmetz
-	 */
-	private GAPP gapp;
+    /**
+     * The GAPP instance. (GAPP = Geometric Algebra Algorithm Parallelism Program)
+     *
+     * @author Christian Steinmetz
+     */
+    private GAPP gapp;
 
-	/**
-	 * Getter for the GAPP instance
-	 * @return The GAPP instance
-	 */
-	public GAPP getGAPP() {
-            return gapp;
-	}
+    /**
+     * Getter for the GAPP instance
+     * @return The GAPP instance
+     */
+    public GAPP getGAPP() {
+        return gapp;
+    }
 
-	/**
-	 * Setter for the GAPP instance
-	 * @param gapp The GAPP instance to set
-	 */
-	public void setGAPP(GAPP gapp) {
-            this.gapp = gapp;
-	}
+    /**
+     * Setter for the GAPP instance
+     * @param gapp The GAPP instance to set
+     */
+    public void setGAPP(GAPP gapp) {
+        this.gapp = gapp;
+    }
 
 }

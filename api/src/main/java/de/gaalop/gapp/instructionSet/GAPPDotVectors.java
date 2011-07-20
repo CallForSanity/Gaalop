@@ -69,7 +69,4 @@ public class GAPPDotVectors extends GAPPBaseInstruction {
         this.part2 = part2;
     }
 
-    
-
-
 }

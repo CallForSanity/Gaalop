@@ -71,7 +71,7 @@ public class GAPPCopier implements GAPPVisitor {
     private GAPPVector copyVector(GAPPVector vec) {
         Vector<GAPPSignedMultivectorComponent> slots = new Vector<GAPPSignedMultivectorComponent>();
         
-        for (GAPPSignedMultivectorComponent cur: vec.slots)
+        for (GAPPSignedMultivectorComponent cur: vec.getSlots())
             slots.add(new GAPPSignedMultivectorComponent(copyMultivector(cur.getParent()), cur.getBladeIndex(), cur.getSign()));
 
         return new GAPPVector(vec.getName(), slots);

@@ -30,4 +30,5 @@ public interface VariableGetter {
      * @return The parsed GAPPVariable instance
      */
     public GAPPScalarVariable parseVariable(String string);
+    
 }

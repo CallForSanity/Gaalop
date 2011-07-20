@@ -1,12 +1,7 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package de.gaalop.gapp.variables;
 
 /**
- * Class to store a contant with a float value
+ * Class to store a constant with a float value
  * @author christian
  */
 public class GAPPConstant extends GAPPValueHolder {

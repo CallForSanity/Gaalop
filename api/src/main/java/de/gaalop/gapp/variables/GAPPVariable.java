@@ -42,7 +42,4 @@ public abstract class GAPPVariable extends GAPPValueHolder {
         return true;
     }
 
-
-
-
 }

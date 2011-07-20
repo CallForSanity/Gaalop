@@ -80,8 +80,7 @@ public final class MultivectorComponent extends Variable {
     
     @Override
     public MultivectorComponent copy() {
-    	MultivectorComponent copy = new MultivectorComponent(getName(), bladeIndex);
-    	return copy;
+    	return new MultivectorComponent(getName(), bladeIndex);
     }
 
     @Override
@@ -94,39 +93,39 @@ public final class MultivectorComponent extends Variable {
     @Override
     public void replaceExpression(Expression old, Expression newExpression) {
 
-                if (old instanceof MultivectorComponent && newExpression instanceof MultivectorComponent) {
-                        MultivectorComponent oldVar = (MultivectorComponent) old;
-			MultivectorComponent newVar = (MultivectorComponent) newExpression;
+        if (old instanceof MultivectorComponent && newExpression instanceof MultivectorComponent) {
+            MultivectorComponent oldVar = (MultivectorComponent) old;
+            MultivectorComponent newVar = (MultivectorComponent) newExpression;
 
-                        if (
-                                oldVar.getName() == name &&
-                                oldVar.getMinValue() == minValue &&
-                                oldVar.getMaxValue() == maxValue &&
-                                oldVar.getBladeIndex() == bladeIndex
-                                ) {
-				name = newVar.getName();
-				minValue = newVar.getMinValue();
-				maxValue = newVar.getMaxValue();
-                                bladeIndex = newVar.getBladeIndex();
-			}
-                } else
-                    if (old instanceof MultivectorComponent && newExpression instanceof Variable) {
-                            MultivectorComponent oldVar = (MultivectorComponent) old;
-                            Variable newVar = (Variable) newExpression;
+            if (
+                oldVar.getName() == name &&
+                oldVar.getMinValue() == minValue &&
+                oldVar.getMaxValue() == maxValue &&
+                oldVar.getBladeIndex() == bladeIndex
+               ) {
+                    name = newVar.getName();
+                    minValue = newVar.getMinValue();
+                    maxValue = newVar.getMaxValue();
+                    bladeIndex = newVar.getBladeIndex();
+            }
+        } else
+            if (old instanceof MultivectorComponent && newExpression instanceof Variable) {
+                MultivectorComponent oldVar = (MultivectorComponent) old;
+                Variable newVar = (Variable) newExpression;
 
-                            if (
-                                    oldVar.getName() == name &&
-                                    oldVar.getMinValue() == minValue &&
-                                    oldVar.getMaxValue() == maxValue &&
-                                    oldVar.getBladeIndex() == bladeIndex
-                                    ) {
-                                    name = newVar.getName();
-                                    minValue = newVar.getMinValue();
-                                    maxValue = newVar.getMaxValue();
-                                    bladeIndex = 0;
-                            }
-                    } else
-                        super.replaceExpression(old, newExpression);
+                if (
+                    oldVar.getName() == name &&
+                    oldVar.getMinValue() == minValue &&
+                    oldVar.getMaxValue() == maxValue &&
+                    oldVar.getBladeIndex() == bladeIndex
+                   ) {
+                        name = newVar.getName();
+                        minValue = newVar.getMinValue();
+                        maxValue = newVar.getMaxValue();
+                        bladeIndex = 0;
+                }
+            } else
+                super.replaceExpression(old, newExpression);
     }
 
 

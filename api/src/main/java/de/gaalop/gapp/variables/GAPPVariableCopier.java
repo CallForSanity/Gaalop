@@ -3,7 +3,10 @@ package de.gaalop.gapp.variables;
 import java.util.Vector;
 
 /**
- *
+ * Implements a visitor which copies GAPPVariable.
+ * Simply call the accept method of the GAPPVariable with an instance of this vistor,
+ * and returned is a (deep) copy of the variable.
+ * 
  * @author christian
  */
 public class GAPPVariableCopier implements GAPPVariableVisitor {
@@ -43,7 +46,7 @@ public class GAPPVariableCopier implements GAPPVariableVisitor {
     public Object visitVector(GAPPVector gappVector, Object arg) {
         Vector<GAPPSignedMultivectorComponent> slots = new Vector<GAPPSignedMultivectorComponent>();
 
-        for (GAPPSignedMultivectorComponent cur: gappVector.slots)
+        for (GAPPSignedMultivectorComponent cur: gappVector.getSlots())
             slots.add((GAPPSignedMultivectorComponent) cur.accept(this, null));
 
         return new GAPPVector(gappVector.getName(),slots);

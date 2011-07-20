@@ -11,7 +11,7 @@ import java.util.Vector;
  */
 public class GAPPVector extends GAPPVariable {
 
-    public Vector<GAPPSignedMultivectorComponent> slots;
+    private Vector<GAPPSignedMultivectorComponent> slots;
 
     public GAPPVector(String name, Vector<GAPPSignedMultivectorComponent> slots) {
         super(name);
@@ -48,8 +48,12 @@ public class GAPPVector extends GAPPVariable {
         return visitor.visitVector(this, arg);
     }
 
+    public Vector<GAPPSignedMultivectorComponent> getSlots() {
+        return slots;
+    }
 
+    public void setSlots(Vector<GAPPSignedMultivectorComponent> slots) {
+        this.slots = slots;
+    }
 
-
-    
 }

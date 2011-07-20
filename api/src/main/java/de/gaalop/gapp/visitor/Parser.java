@@ -16,7 +16,7 @@ import de.gaalop.gapp.instructionSet.GAPPSetVector;
 import de.gaalop.gapp.variables.GAPPVector;
 
 /**
- * Implements a visitor that parses string representations of pre-created GAPPInstructions
+ * Implements a visitor that parses string representations into pre-created GAPPInstructions
  * @author christian
  */
 public class Parser implements GAPPVisitor {
@@ -173,6 +173,11 @@ public class Parser implements GAPPVisitor {
         return mv;
     }
 
+    /**
+     * Parses a string which contains a selector
+     * @param string The string, representing a selector
+     * @return The congruous selector
+     */
     protected Selector parseSelector(String string) {
         String trimmed = string.trim();
         if (trimmed.startsWith("-")) 
@@ -205,9 +210,5 @@ public class Parser implements GAPPVisitor {
     protected GAPPVector parseVector(String string, VariableGetter getter) {
         return getter.parseVector(string);
     }
-
-
-
-    
 
 }

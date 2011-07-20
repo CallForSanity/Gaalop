@@ -5,7 +5,7 @@ import de.gaalop.gapp.variables.GAPPMultivector;
 import de.gaalop.gapp.visitor.GAPPVisitor;
 
 /**
- * Performs calculations on multivector parts, defined by a selectorset
+ * Performs calculations on multivector parts, defined by two selectorsets
  * @author christian
  */
 public class GAPPCalculate extends GAPPBaseInstruction {
@@ -16,6 +16,9 @@ public class GAPPCalculate extends GAPPBaseInstruction {
     private GAPPMultivector operand2;
     private Selectorset used1;
     private Selectorset used2;
+
+    public GAPPCalculate() {
+    }
 
     public GAPPCalculate(CalculationType type, GAPPMultivector target, GAPPMultivector operand1, GAPPMultivector operand2, Selectorset used1, Selectorset used2) {
         this.type = type;

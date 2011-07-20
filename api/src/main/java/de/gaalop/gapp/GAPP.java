@@ -14,6 +14,9 @@ public class GAPP {
 
     private LinkedList<GAPPBaseInstruction> instructions;
 
+    /**
+     * Creates a new GAPP instance with an empty instruction list
+     */
     public GAPP() {
         instructions = new LinkedList<GAPPBaseInstruction>();
     }

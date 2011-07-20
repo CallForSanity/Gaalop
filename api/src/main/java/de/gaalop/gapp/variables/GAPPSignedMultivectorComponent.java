@@ -11,12 +11,12 @@ public class GAPPSignedMultivectorComponent extends GAPPMultivectorComponent {
 
     public GAPPSignedMultivectorComponent(GAPPMultivector parentMultivector, int bladeIndex, byte sign) {
         super(parentMultivector, bladeIndex);
-        this.sign = sign;
+        setSign(sign);
     }
 
     public GAPPSignedMultivectorComponent(GAPPMultivector parentMultivector, int bladeIndex) {
         super(parentMultivector, bladeIndex);
-        sign = 1;
+        setSign((byte) 1);
     }
 
     @Override
@@ -29,7 +29,12 @@ public class GAPPSignedMultivectorComponent extends GAPPMultivectorComponent {
     }
 
     public void setSign(byte sign) {
-        this.sign = sign;
+        //ensure that the sign is either +1 or -1
+        if (sign == 1 || sign == -1) {
+            this.sign = sign;
+        } else {
+            System.err.println("sign is neither -1 nor +1");
+        }
     }
 
     @Override

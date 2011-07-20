@@ -13,7 +13,6 @@ import de.gaalop.gapp.instructionSet.GAPPSetMv;
 import de.gaalop.gapp.instructionSet.GAPPSetVector;
 
 import de.gaalop.gapp.variables.GAPPMultivector;
-import de.gaalop.gapp.variables.GAPPScalarVariable;
 import de.gaalop.gapp.variables.GAPPValueHolder;
 import de.gaalop.gapp.variables.GAPPVector;
 
@@ -45,11 +44,17 @@ public class PrettyPrint extends CFGGAPPVisitor {
         node.getSuccessor().accept(this);
     }
 
-
+    /**
+     * Clears the result code
+     */
     public void clear() {
         result.setLength(0);
     }
 
+    /**
+     * Return the result of pretty printing instructions
+     * @return The pretty printed string of instructions
+     */
     public String getResultString() {
         return result.toString();
     }
@@ -70,6 +75,10 @@ public class PrettyPrint extends CFGGAPPVisitor {
         result.append(multiVector.prettyPrint());
     }
 
+    /**
+     * Pretty prints a selector at the end of result
+     * @param selector The selector
+     */
     private void printSelector(Selector selector) {
         if (selector.getSign() == (byte) -1) result.append('-');
         result.append(selector.getIndex());

@@ -5,7 +5,6 @@ import de.gaalop.gapp.variables.GAPPMultivector;
 import de.gaalop.gapp.variables.GAPPSignedMultivectorComponent;
 import de.gaalop.gapp.variables.GAPPVector;
 import de.gaalop.gapp.visitor.GAPPVisitor;
-import java.util.Vector;
 
 /**
  * Represents the addMv command in the GAPP IR.
@@ -25,8 +24,6 @@ public class GAPPSetVector extends GAPPBaseInstruction {
     public GAPPSetVector() {
     }
 
-    
-
     public GAPPSetVector(GAPPVector destination, GAPPMultivector sourceMv, Selectorset selectorsSrc) {
         this.destination = destination;
         this.sourceMv = sourceMv;
@@ -34,7 +31,7 @@ public class GAPPSetVector extends GAPPBaseInstruction {
     }
 
     public void add(GAPPSignedMultivectorComponent toAdd) {
-        destination.slots.add(toAdd);
+        destination.getSlots().add(toAdd);
     }
 
     @Override
