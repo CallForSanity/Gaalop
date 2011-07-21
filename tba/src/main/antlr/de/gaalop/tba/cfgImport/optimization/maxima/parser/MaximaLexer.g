@@ -32,7 +32,7 @@ FLOATING_POINT_LITERAL
 
 fragment
 EXPONENT 
-	: 'e' MINUS? ('0'..'9')+
+	: 'E' MINUS? ('0'..'9')+
 	;
 
 LBRACKET

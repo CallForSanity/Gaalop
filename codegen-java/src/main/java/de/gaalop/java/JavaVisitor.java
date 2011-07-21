@@ -225,8 +225,18 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
                 node.getVariable().accept(this);
 		code.append(" = ");
 		node.getValue().accept(this);
-		code.append(";\n");
+		code.append(';');
+                if (node.getVariable() instanceof MultivectorComponent) {
+			code.append(" // ");
 
+			MultivectorComponent component = (MultivectorComponent) node.getVariable();
+			Expression[] bladeList = node.getGraph().getBladeList();
+
+			BladePrinter bladeVisitor = new BladePrinter();
+			bladeList[component.getBladeIndex()].accept(bladeVisitor);
+			code.append(bladeVisitor.getCode());
+		}
+                code.append(";\n");
 		node.getSuccessor().accept(this);
 	}
 

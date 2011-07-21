@@ -57,6 +57,8 @@ public class CFGVisitorImport extends EmptyControlFlowVisitor {
 		}
 
                 // zero all null expressions
+                // isn't necessary, because MultipleAssignments aren't allowed
+                /*
                 for (int i=0;i<cfgExpressionVisitor.bladeCount;i++)
 		{
 
@@ -71,7 +73,7 @@ public class CFGVisitorImport extends EmptyControlFlowVisitor {
                         }
 
 		}
-
+                */
 		
 		node.getGraph().removeNode(node);
             }
