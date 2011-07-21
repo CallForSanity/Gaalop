@@ -61,8 +61,8 @@ public class TestCreator {
 
     public TestCreator() throws Exception {
         beginTestCase();
-        testGPSNoVars();
-/*
+        
+
         // create all tests
 
         //positive tests - tests that should be compiled
@@ -99,7 +99,7 @@ public class TestCreator {
         if (valid)
             throw new Exception("No CompileError in negative test ControlFlowTest");
 
-*/
+
         endTestCase();
     }
 

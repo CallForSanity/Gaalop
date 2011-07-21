@@ -33,8 +33,10 @@ public class CircleNoVars implements GAProgram {
 	
 	@Override
 	public void calculate() {
-		m_1 = 1.7727273f;
-		m_2 = 4.863636f;
-		r_0 = 4.314592f;
+		m_1 = 1.7727273f; // e1;
+		m_2 = 4.863636f; // e2;
+		r_0 = 4.314592f; // 1.0;
 	}
+
+
 }

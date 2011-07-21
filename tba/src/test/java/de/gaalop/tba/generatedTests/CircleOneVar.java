@@ -35,18 +35,34 @@ public class CircleOneVar implements GAProgram {
 	
 	@Override
 	public void calculate() {
-		float p1_4 = ((0.5f * (x1_0 * x1_0)) + 2.0f);
-		float c_7 = (((-((9.0f * p1_4))) + (4.0f * ((p1_4 - 45.0f)))) + 272.0f);
-		float c_10 = ((((-((45.0f * x1_0))) + (26.0f * ((x1_0 - 3.0f)))) + (3.0f * p1_4)) - (6.0f * ((p1_4 - 45.0f))));
-		float c_13 = (((4.0f * (((45.0f * x1_0) - (3.0f * p1_4)))) - (26.0f * (((9.0f * x1_0) - 6.0f)))) - (6.0f * ((90.0f - (9.0f * p1_4)))));
-		float c_14 = (((9.0f * x1_0) - (4.0f * ((x1_0 - 3.0f)))) - 48.0f);
-		float mtmp_1 = ((2.0f * c_14) * c_7);
-		float mtmp_2 = ((2.0f * c_10) * c_14);
-		float mtmp_5 = (-((2.0f * (c_14 * c_14))));
-		float mtmp_21 = 0.0f;
-		float mtmp_24 = 0.0f;
-		m_1 = ((mtmp_21 / mtmp_5) + (mtmp_1 / mtmp_5));
-		m_2 = ((mtmp_24 / mtmp_5) + (mtmp_2 / mtmp_5));
-		r_0 = ((float) Math.sqrt(Math.abs((((c_7 * c_7) - ((2.0f * c_13) * c_14)) + (c_10 * c_10)))) / Math.abs(c_14));
+		p1_4 = ((0.5f * (x1_0 * x1_0)) + 2.0f); // einf;
+		c_7 = (((-((9.0f * p1_4))) + (4.0f * ((p1_4 - 45.0f)))) + 272.0f); // e1^e3;
+		c_10 = ((((-((45.0f * x1_0))) + (26.0f * ((x1_0 - 3.0f)))) + (3.0f * p1_4)) - (6.0f * ((p1_4 - 45.0f)))); // e2^e3;
+		c_13 = (((4.0f * (((45.0f * x1_0) - (3.0f * p1_4)))) - (26.0f * (((9.0f * x1_0) - 6.0f)))) - (6.0f * ((90.0f - (9.0f * p1_4))))); // e3^einf;
+		c_14 = (((9.0f * x1_0) - (4.0f * ((x1_0 - 3.0f)))) - 48.0f); // e3^e0;
+		calculate1();
 	}
+
+	public void calculate1() {
+		mtmp_1 = ((2.0f * c_14) * c_7); // e1;
+		mtmp_2 = ((2.0f * c_10) * c_14); // e2;
+		mtmp_5 = (-((2.0f * (c_14 * c_14)))); // e0;
+		mtmp_21 = 0.0f; // e1^einf^e0;
+		mtmp_24 = 0.0f; // e2^einf^e0;
+		m_1 = ((mtmp_21 / mtmp_5) + (mtmp_1 / mtmp_5)); // e1;
+		m_2 = ((mtmp_24 / mtmp_5) + (mtmp_2 / mtmp_5)); // e2;
+		r_0 = ((float) Math.sqrt(Math.abs((((c_7 * c_7) - ((2.0f * c_13) * c_14)) + (c_10 * c_10)))) / Math.abs(c_14)); // 1.0;
+	}
+
+	private float c_13;
+	private float c_14;
+	private float p1_4;
+	private float mtmp_5;
+	private float c_10;
+	private float c_7;
+	private float mtmp_24;
+	private float mtmp_21;
+	private float mtmp_1;
+	private float mtmp_2;
+
 }

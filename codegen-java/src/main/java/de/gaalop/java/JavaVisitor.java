@@ -17,7 +17,11 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
 
 	protected final String suffix = "_opt";
 
-	protected StringBuilder code = new StringBuilder();
+        protected StringBuilder codePre = new StringBuilder();
+
+	protected StringBuilder codeCalc = new StringBuilder();
+
+        protected StringBuilder codePost = new StringBuilder();
 
 	protected ControlFlowGraph graph;
 
@@ -26,19 +30,50 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
 	protected Set<String> assigned = new HashSet<String>();
 	
 	protected Set<String> declared = new HashSet<String>();
+        protected Set<String> toDeclare = new HashSet<String>();
 
-        //TODO chs JAVA plugin: Calc method code can be exceeded about 65535 chars,
-        //catch this hard limit by splitting up the calc method,
-        //if necessary and make all previous local variable to private class members
-        //Think about making all local variables to private class members.
+        private final int JAVALIMIT = 65500; // let space for indentation!
+
+        private byte curSection = 0;
+
+        private int storedIndentation;
+
+        private void append(char character) {
+            append(character+"");
+        }
+
+        private void append(String string) {
+            switch (curSection) {
+                case 0:
+                    codePre.append(string);
+                    break;
+                case 1:
+                    codeCalc.append(string);
+                    break;
+                case 2:
+                    codePost.append(string);
+                    break;
+            }
+        }
+
+
 
 	public String getCode() {
-		return code.toString();
+            StringBuilder result = new StringBuilder();
+            result.append(codePre);
+
+            if (codeCalc.length()>JAVALIMIT) {
+                result.append(splitUpCalcMethods());
+            } else
+                result.append(codeCalc);
+            
+            result.append(codePost);
+            return result.toString();
 	}
 
 	protected void appendIndentation() {
 		for (int i = 0; i < indentation; ++i) {
-			code.append('\t');
+			append('\t');
 		}
 	}
 
@@ -82,105 +117,106 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
 
                 FindStoreOutputNodes stores = new FindStoreOutputNodes();
                 graph.accept(stores);
+                curSection = 0;
 
+                append("import java.util.HashMap;\n\n");
 
-                code.append("import java.util.HashMap;\n\n");
-
-                code.append("public class "+graph.getSource().getName()+" implements GAProgram {\n");
+                append("public class "+graph.getSource().getName()+" implements GAProgram {\n");
                 indentation++;
 
 
                 appendIndentation();
-                code.append("// input variables\n");
+                append("// input variables\n");
                 for (Variable inputVar: graph.getInputVariables()) {
 
                     String variableName = getVarName(inputVar);
                     declared.add(variableName);
                     appendIndentation();
-                    code.append("private float "+variableName+";\n");
+                    append("private float "+variableName+";\n");
                 }
-                code.append("\n");
+                append("\n");
         
                 LinkedList<String> outputs = getOutputs();
 
                 appendIndentation();
-                code.append("// output variables\n");
+                append("// output variables\n");
                 for (String curOutput: outputs) {
                     appendIndentation();
-                    code.append("private float "+curOutput+";\n");
+                    append("private float "+curOutput+";\n");
                 }
-                code.append("\n");
+                append("\n");
 
                 // getValue for output variables
                 appendIndentation();
-                code.append("@Override\n");
+                append("@Override\n");
                 appendIndentation();
-                code.append("public float getValue(String varName) {\n");
+                append("public float getValue(String varName) {\n");
                 indentation++;
 
                 for (String curOutput: outputs) {
                     appendIndentation();
-                    code.append("if (varName.equals(\""+curOutput+"\")) return "+curOutput+";\n");
+                    append("if (varName.equals(\""+curOutput+"\")) return "+curOutput+";\n");
                 }
 
                 appendIndentation();
-                code.append("return 0.0f;\n");
+                append("return 0.0f;\n");
 
                 indentation--;
                 appendIndentation();
-                code.append("}\n"); // close procedure getValue
-                code.append("\n");
+                append("}\n"); // close procedure getValue
+                append("\n");
 
                  //TODO getValues for output variables
                 appendIndentation();
-                code.append("@Override\n");
+                append("@Override\n");
                 appendIndentation();
-                code.append("public HashMap<String,Float> getValues() {\n");
+                append("public HashMap<String,Float> getValues() {\n");
                 indentation++;
 
                 appendIndentation();
-                    code.append("HashMap<String,Float> result = new HashMap<String,Float>();\n");
+                    append("HashMap<String,Float> result = new HashMap<String,Float>();\n");
 
                 for (String curOutput: outputs) {
                     appendIndentation();
-                    code.append("result.put(\""+curOutput+"\","+curOutput+");\n");
+                    append("result.put(\""+curOutput+"\","+curOutput+");\n");
                 }
 
                 appendIndentation();
-                code.append("return result;\n");
+                append("return result;\n");
 
                 indentation--;
                 appendIndentation();
-                code.append("}\n"); // close procedure getValues
+                append("}\n"); // close procedure getValues
 
 
                 // setValue for input variables
                 appendIndentation();
-                code.append("@Override\n");
+                append("@Override\n");
                 appendIndentation();
-                code.append("public boolean setValue(String varName, float value) {\n");
+                append("public boolean setValue(String varName, float value) {\n");
                 indentation++;
 
                 for (Variable inputVar: graph.getInputVariables()) {
                     appendIndentation();
-                    code.append("if (varName.equals(\""+getVarName(inputVar)+"\")) { "+getVarName(inputVar)+" = value; return true; }\n");
+                    append("if (varName.equals(\""+getVarName(inputVar)+"\")) { "+getVarName(inputVar)+" = value; return true; }\n");
                 }
                 appendIndentation();
-                code.append("return false;\n");
+                append("return false;\n");
 
                 indentation--;
                 appendIndentation();
-                code.append("}\n"); // close procedure setValue
+                append("}\n"); // close procedure setValue
 
                 appendIndentation();
-                code.append("\n");
+                append("\n");
 
                 appendIndentation();
-                code.append("@Override\n");
+                append("@Override\n");
                 appendIndentation();
-                code.append("public void calculate() {\n");
+                append("public void calculate() {\n");
                 indentation++;
-
+                storedIndentation = indentation;
+                curSection = 1;
 		node.getSuccessor().accept(this);
 	}
 
@@ -217,26 +253,25 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
 		String varName = getVarName(node.getVariable());
 		
                 appendIndentation();
-		if (!declared.contains(varName)) {
-			declared.add(varName);
-			code.append("float ");
+		if (!(declared.contains(varName) || toDeclare.contains(varName))) {
+			toDeclare.add(varName);
 		} 
 
                 node.getVariable().accept(this);
-		code.append(" = ");
+		append(" = ");
 		node.getValue().accept(this);
-		code.append(';');
+		append(';');
                 if (node.getVariable() instanceof MultivectorComponent) {
-			code.append(" // ");
+			append(" // ");
 
 			MultivectorComponent component = (MultivectorComponent) node.getVariable();
 			Expression[] bladeList = node.getGraph().getBladeList();
 
 			BladePrinter bladeVisitor = new BladePrinter();
 			bladeList[component.getBladeIndex()].accept(bladeVisitor);
-			code.append(bladeVisitor.getCode());
+			append(bladeVisitor.getCode());
 		}
-                code.append(";\n");
+                append(";\n");
 		node.getSuccessor().accept(this);
 	}
 
@@ -244,7 +279,7 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
 	public void visit(ExpressionStatement node) {
 		appendIndentation();
 		node.getExpression().accept(this);
-		code.append(";\n");
+		append(";\n");
 
 		node.getSuccessor().accept(this);
 	}
@@ -260,21 +295,21 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
 		Expression condition = node.getCondition();
 
 		appendIndentation();
-		code.append("if (");
+		append("if (");
 		condition.accept(this);
-		code.append(") {\n");
+		append(") {\n");
 
 		indentation++;
 		node.getPositive().accept(this);
 		indentation--;
 
 		appendIndentation();
-		code.append("}");
+		append("}");
 
 		if (node.getNegative() instanceof BlockEndNode) {
-			code.append("\n");
+			append("\n");
 		} else {
-			code.append(" else ");
+			append(" else ");
 
 			boolean isElseIf = false;
 			if (node.getNegative() instanceof IfThenElseNode) {
@@ -282,7 +317,7 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
 				isElseIf = ifthenelse.isElseIf();
 			}
 			if (!isElseIf) {
-				code.append("{\n");
+				append("{\n");
 				indentation++;
 			}
 
@@ -291,7 +326,7 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
 			if (!isElseIf) {
 				indentation--;
 				appendIndentation();
-				code.append("}\n");
+				append("}\n");
 			}
 		}
 
@@ -301,14 +336,14 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
 	@Override
 	public void visit(LoopNode node) {
 		appendIndentation();
-		code.append("while(true) {\n");
+		append("while(true) {\n");
 
 		indentation++;
 		node.getBody().accept(this);
 		indentation--;
 
 		appendIndentation();
-		code.append("}\n");
+		append("}\n");
 
 		node.getSuccessor().accept(this);
 	}
@@ -316,7 +351,7 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
 	@Override
 	public void visit(BreakNode breakNode) {
 		appendIndentation();
-		code.append("break;\n");
+		append("break;\n");
 	}
 
 	@Override
@@ -328,10 +363,18 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
 	public void visit(EndNode node) {
             indentation--;
             appendIndentation();
-            code.append("}\n"); // close procedure calculate
+            append("}\n\n"); // close procedure calculate
+            curSection = 2;
+            // print all members that are used for calculating
+            for (String decl: toDeclare) {
+                appendIndentation();
+                append("private float "+decl+";\n");
+            }
+
+            append("\n");
             indentation--;
             appendIndentation();
-            code.append("}\n"); // close class
+            append("}\n"); // close class
 	}
 
 	@Override
@@ -340,18 +383,18 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
 	}
 
 	protected void addBinaryInfix(BinaryOperation op, String operator) {
-		code.append("(");
+		append("(");
 		addChild(op, op.getLeft());
-		code.append(operator);
+		append(operator);
 		addChild(op, op.getRight());
-		code.append(")");
+		append(")");
 	}
 
 	protected void addChild(Expression parent, Expression child) {
 		if (OperatorPriority.hasLowerPriority(parent, child)) {
-			code.append('(');
+			append('(');
 			child.accept(this);
-			code.append(')');
+			append(')');
 		} else {
 			child.accept(this);
 		}
@@ -395,20 +438,20 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
 		default:
 			funcName = mathFunctionCall.getFunction().toString().toLowerCase();
 		}
-		code.append(funcName);
-		code.append('(');
+		append(funcName);
+		append('(');
 		mathFunctionCall.getOperand().accept(this);
-		code.append(')');
+		append(')');
 	}
 
 	@Override
 	public void visit(Variable variable) {
-           code.append(getVarName(variable));
+           append(getVarName(variable));
 	}
 
 	@Override
 	public void visit(MultivectorComponent component) {
-		code.append(getVarName(component));
+		append(getVarName(component));
 	}
 
 	@Override
@@ -417,11 +460,11 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
 			Multiplication m = new Multiplication(exponentiation.getLeft(), exponentiation.getLeft());
 			m.accept(this);
 		} else {
-			code.append("Math.pow(");
+			append("Math.pow(");
 			exponentiation.getLeft().accept(this);
-			code.append(',');
+			append(',');
 			exponentiation.getRight().accept(this);
-			code.append(')');
+			append(')');
 		}
 	}
 
@@ -432,8 +475,8 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
 
 	@Override
 	public void visit(FloatConstant floatConstant) {
-		code.append(Float.toString(floatConstant.getValue()));
-		code.append('f');
+		append(Float.toString(floatConstant.getValue()));
+		append('f');
 	}
 
 	@Override
@@ -448,9 +491,9 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
 
 	@Override
 	public void visit(Negation negation) {
-		code.append("(-");
+		append("(-");
 		addChild(negation, negation.getOperand());
-		code.append(")");
+		append(")");
 	}
 
 	@Override
@@ -470,7 +513,7 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
 
 	@Override
 	public void visit(LogicalNegation node) {
-		code.append('!');
+		append('!');
 		addChild(node, node.getOperand());
 	}
 
@@ -503,6 +546,65 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
 	public void visit(MacroCall node) {
 		throw new IllegalStateException("Macros should have been inlined and no macro calls should be in the graph.");
 	}
+
+
+
+    //Calc method code can be exceeded about 65535 chars,
+    //catch this hard limit by splitting up the calc method
+    private String splitUpCalcMethods() {
+        StringBuilder result = new StringBuilder();
+
+        int backupIndentation = indentation;
+        indentation = storedIndentation;
+
+        int length = codeCalc.length();
+        int curPosition = 0;
+        int curProcCounter = 1;
+
+        LOOP:
+        while (length-curPosition > JAVALIMIT) {
+            // Divide in two parts:
+
+            String part = codeCalc.substring(curPosition, curPosition+JAVALIMIT);
+            int lastSemicolon = part.lastIndexOf('\n');
+
+            if (lastSemicolon > 0) {
+                curPosition += lastSemicolon+1;
+                result.append(part.substring(0, lastSemicolon+1));
+                for (int i = 0; i < indentation; ++i) {
+			result.append('\t');
+		}
+                result.append("calculate"+curProcCounter+"();\n");
+
+                //end procedure and begin new procedure
+                indentation--;
+                for (int i = 0; i < indentation; ++i) {
+			result.append('\t');
+		}
+                result.append("}\n\n");
+                
+                for (int i = 0; i < indentation; ++i) {
+			result.append('\t');
+		}
+                result.append("public void calculate"+curProcCounter+"() {\n");
+                indentation++;
+
+
+                curProcCounter++;
+            } else {
+                System.err.println("Expression is more than "+JAVALIMIT+" chars long. The outputted file is not compilable with code limit of java! Try to split the calculate method manually!");
+                break LOOP; // catch endless loop
+            }
+
+
+        }
+
+        result.append(codeCalc.substring(curPosition));
+
+
+        indentation = backupIndentation;
+        return result.toString();
+    }
 
 
 

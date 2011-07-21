@@ -73,4 +73,6 @@ public class GPSNoVars implements GAProgram {
 		z31_0 = 0.0f; // 1.0;
 		z32_0 = 0.0f; // 1.0;
 	}
+
+
 }

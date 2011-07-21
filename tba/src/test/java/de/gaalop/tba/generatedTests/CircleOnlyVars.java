@@ -45,20 +45,42 @@ public class CircleOnlyVars implements GAProgram {
 	
 	@Override
 	public void calculate() {
-		float p1_4 = ((0.5f * (y1_0 * y1_0)) + (0.5f * (x1_0 * x1_0)));
-		float p2_4 = ((0.5f * (y2_0 * y2_0)) + (0.5f * (x2_0 * x2_0)));
-		float p3_4 = ((0.5f * (y3_0 * y3_0)) + (0.5f * (x3_0 * x3_0)));
-		float c_7 = ((((((p1_4 - p2_4)) * y3_0) - (p1_4 * y2_0)) - (p3_4 * ((y1_0 - y2_0)))) + (p2_4 * y1_0));
-		float c_10 = ((((-((((p1_4 - p2_4)) * x3_0))) + (p1_4 * x2_0)) + (p3_4 * ((x1_0 - x2_0)))) - (p2_4 * x1_0));
-		float c_13 = ((((((p2_4 * x1_0) - (p1_4 * x2_0))) * y3_0) - (p3_4 * (((x1_0 * y2_0) - (x2_0 * y1_0))))) - (x3_0 * (((p2_4 * y1_0) - (p1_4 * y2_0)))));
-		float c_14 = ((((-((((x1_0 - x2_0)) * y3_0))) + (x1_0 * y2_0)) + (x3_0 * ((y1_0 - y2_0)))) - (x2_0 * y1_0));
-		float mtmp_1 = ((2.0f * c_14) * c_7);
-		float mtmp_2 = ((2.0f * c_10) * c_14);
-		float mtmp_5 = (-((2.0f * (c_14 * c_14))));
-		float mtmp_21 = 0.0f;
-		float mtmp_24 = 0.0f;
-		m_1 = ((mtmp_21 / mtmp_5) + (mtmp_1 / mtmp_5));
-		m_2 = ((mtmp_24 / mtmp_5) + (mtmp_2 / mtmp_5));
-		r_0 = ((float) Math.sqrt(Math.abs((((c_7 * c_7) - ((2.0f * c_13) * c_14)) + (c_10 * c_10)))) / Math.abs(c_14));
+		p1_4 = ((0.5f * (y1_0 * y1_0)) + (0.5f * (x1_0 * x1_0))); // einf;
+		p2_4 = ((0.5f * (y2_0 * y2_0)) + (0.5f * (x2_0 * x2_0))); // einf;
+		p3_4 = ((0.5f * (y3_0 * y3_0)) + (0.5f * (x3_0 * x3_0))); // einf;
+		c_7 = ((((((p1_4 - p2_4)) * y3_0) - (p1_4 * y2_0)) - (p3_4 * ((y1_0 - y2_0)))) + (p2_4 * y1_0)); // e1^e3;
+		c_10 = ((((-((((p1_4 - p2_4)) * x3_0))) + (p1_4 * x2_0)) + (p3_4 * ((x1_0 - x2_0)))) - (p2_4 * x1_0)); // e2^e3;
+		calculate1();
 	}
+
+	public void calculate1() {
+		c_13 = ((((((p2_4 * x1_0) - (p1_4 * x2_0))) * y3_0) - (p3_4 * (((x1_0 * y2_0) - (x2_0 * y1_0))))) - (x3_0 * (((p2_4 * y1_0) - (p1_4 * y2_0))))); // e3^einf;
+		c_14 = ((((-((((x1_0 - x2_0)) * y3_0))) + (x1_0 * y2_0)) + (x3_0 * ((y1_0 - y2_0)))) - (x2_0 * y1_0)); // e3^e0;
+		mtmp_1 = ((2.0f * c_14) * c_7); // e1;
+		mtmp_2 = ((2.0f * c_10) * c_14); // e2;
+		mtmp_5 = (-((2.0f * (c_14 * c_14)))); // e0;
+		mtmp_21 = 0.0f; // e1^einf^e0;
+		mtmp_24 = 0.0f; // e2^einf^e0;
+		calculate2();
+	}
+
+	public void calculate2() {
+		m_1 = ((mtmp_21 / mtmp_5) + (mtmp_1 / mtmp_5)); // e1;
+		m_2 = ((mtmp_24 / mtmp_5) + (mtmp_2 / mtmp_5)); // e2;
+		r_0 = ((float) Math.sqrt(Math.abs((((c_7 * c_7) - ((2.0f * c_13) * c_14)) + (c_10 * c_10)))) / Math.abs(c_14)); // 1.0;
+	}
+
+	private float c_13;
+	private float c_14;
+	private float p1_4;
+	private float p2_4;
+	private float mtmp_5;
+	private float c_10;
+	private float c_7;
+	private float p3_4;
+	private float mtmp_24;
+	private float mtmp_21;
+	private float mtmp_1;
+	private float mtmp_2;
+
 }
