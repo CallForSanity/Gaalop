@@ -4,13 +4,14 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import de.gaalop.OptimizationException;
 
 /**
- *
+ * Creates a set of java test files
  * @author christian
  */
 public class GAPPTestCreator {
+
+    private PrintWriter out;
 
     public static void main(String[] args) throws Exception {
         new GAPPTestCreator();
@@ -20,14 +21,15 @@ public class GAPPTestCreator {
         beginTestCase();
 
         // =============== insert new tests here ======================
-        testCircle();
-        testGPS();
+        test("Circle");
+        test("GPS");
 
         endTestCase();
     }
 
-    private PrintWriter out;
-
+    /**
+     * Starts a testcase, e.g writes the preamble to the java file
+     */
     private void beginTestCase() {
         try {
             out = new PrintWriter("src/test/java/de/gaalop/gapp/generatedTests/GAPPTest.java");
@@ -40,7 +42,7 @@ public class GAPPTestCreator {
             out.println("import org.junit.Test;");
             out.println("import de.gaalop.gapp.*;");
             out.println("import static org.junit.Assert.*;");
-            out.println("import org.junit.Ignore;");
+           // out.println("import org.junit.Ignore;");
             out.println();
             out.println("public class GAPPTest extends Base {");
 
@@ -49,20 +51,21 @@ public class GAPPTestCreator {
         }
     }
 
+    /**
+     * Terminates a testcase, e.g. writes the closing to the java file
+     */
     private void endTestCase() {
             out.println("}");
 
             out.close();
     }
 
-    private void testCircle() throws OptimizationException {
-        test("Circle");
-    }
-
-    private void testGPS() throws OptimizationException {
-        test("GPS");
-    }
-
+    /**
+     * Creates a new test method in the generated java file,
+     * which tests a class given by its short name
+     *
+     * @param className The short name of the class to be tested
+     */
     private void test(String className) {
         out.println("@Test");
         out.println("public void test"+className+"() {");

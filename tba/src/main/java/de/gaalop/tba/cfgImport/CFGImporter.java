@@ -3,6 +3,7 @@ package de.gaalop.tba.cfgImport;
 import de.gaalop.OptimizationException;
 import de.gaalop.cfg.ControlFlowGraph;
 import de.gaalop.cfg.ControlFlowVisitor;
+import de.gaalop.tba.Plugin;
 import de.gaalop.tba.UseAlgebra;
 import de.gaalop.tba.cfgImport.optimization.OptConstantPropagation;
 import de.gaalop.tba.cfgImport.optimization.OptMaxima;
@@ -29,9 +30,7 @@ public class CFGImporter {
         return usedAlgebra;
     }
 
-    
-
-    public CFGImporter(boolean getOnlyMvExpressions, boolean useMaxima) {
+    public CFGImporter(boolean getOnlyMvExpressions, Plugin plugin) {
         this.getOnlyMvExpressions = getOnlyMvExpressions;
 
         //load 5d conformal algebra
@@ -41,11 +40,11 @@ public class CFGImporter {
         optimizations = new LinkedList<OptimizationStrategyWithModifyFlag>();
 
         if (!getOnlyMvExpressions) { //TODO chs why to do this when GAPP performing?
-            optimizations.add(new OptConstantPropagation());
-            optimizations.add(new OptUnusedAssignmentsRemoval());
-            optimizations.add(new OptOneExpressionsRemoval());
+            if (plugin.isOptConstantPropagation()) optimizations.add(new OptConstantPropagation());
+            if (plugin.isOptUnusedAssignments()) optimizations.add(new OptUnusedAssignmentsRemoval());
+            if (plugin.isOptOneExpressionRemoval()) optimizations.add(new OptOneExpressionsRemoval());
   
-           if (useMaxima) optimizations.add(new OptMaxima());
+            if (plugin.isOptMaxima())  optimizations.add(new OptMaxima(plugin.getMaximaCommand()));
         }
         
     }

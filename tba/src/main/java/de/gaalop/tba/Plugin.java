@@ -6,14 +6,44 @@ import java.awt.Image;
 import java.util.Observable;
 import de.gaalop.OptimizationStrategy;
 import de.gaalop.OptimizationStrategyPlugin;
+import de.gaalop.tba.cfgImport.optimization.maxima.ProcessBuilderMaximaConnection;
+
 
 public class Plugin extends Observable implements OptimizationStrategyPlugin {
 
         @ConfigurationProperty(type = Type.BOOLEAN)
-        public boolean maxima = false;
+        public boolean optMaxima = true;
 
-        public boolean isMaxima() {
-            return maxima;
+        @ConfigurationProperty(type = Type.BOOLEAN)
+        public boolean optOneExpressionRemoval = true;
+
+        @ConfigurationProperty(type = Type.BOOLEAN)
+        public boolean optConstantPropagation = true;
+
+        @ConfigurationProperty(type = Type.BOOLEAN)
+        public boolean optUnusedAssignments = true;
+
+        @ConfigurationProperty(type = Type.TEXT)
+        public String maximaCommand = ProcessBuilderMaximaConnection.CMD_MAXIMA_LINUX;
+
+        public boolean isOptMaxima() {
+            return optMaxima;
+        }
+
+        public boolean isOptConstantPropagation() {
+            return optConstantPropagation;
+        }
+
+        public boolean isOptOneExpressionRemoval() {
+            return optOneExpressionRemoval;
+        }
+
+        public boolean isOptUnusedAssignments() {
+            return optUnusedAssignments;
+        }
+
+        public String getMaximaCommand() {
+            return maximaCommand;
         }
 
 	@Override
@@ -33,7 +63,7 @@ public class Plugin extends Observable implements OptimizationStrategyPlugin {
 
 	@Override
 	public OptimizationStrategy createOptimizationStrategy() {
-        return new TBAOptStat(this);
+            return new TBAOptStat(this);
 	}
 
 }

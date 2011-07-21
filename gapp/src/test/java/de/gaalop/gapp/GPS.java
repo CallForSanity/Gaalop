@@ -1,23 +1,25 @@
 package de.gaalop.gapp;
 
-import java.util.Arrays;
 import de.gaalop.gapp.executer.Executer;
 import de.gaalop.gapp.executer.MultivectorWithValues;
-import java.awt.Point;
-import java.awt.geom.Point2D;
 import java.util.HashMap;
 import static org.junit.Assert.*;
 
 /**
- *
+ * Defines a test program for calculating the mathematical positions of a GPS receiver,
+ * given the positions of the tree satellites and the distances from each satellite to the
+ * GPS receiver.
+ * 
  * @author christian
  */
 public class GPS implements GAPPTestable {
 
+    //The position of the three satellites
     protected Point3D sat1;
     protected Point3D sat2;
     protected Point3D sat3;
 
+    //The three distances from each satellite to the GPS receiver
     protected float d1;
     protected float d2;
     protected float d3;
@@ -25,8 +27,6 @@ public class GPS implements GAPPTestable {
     public GPS() {
         this(new Point3D(1,1,1), new Point3D(0,0,1), new Point3D(0,1,0), 0.6f, 0.7f, 0.5f);
     }
-
-
 
     public GPS(Point3D sat1, Point3D sat2, Point3D sat3, float d1, float d2, float d3) {
         this.sat1 = sat1;

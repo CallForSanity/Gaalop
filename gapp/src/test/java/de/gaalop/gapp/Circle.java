@@ -1,6 +1,5 @@
 package de.gaalop.gapp;
 
-import java.util.Arrays;
 import de.gaalop.gapp.executer.Executer;
 import de.gaalop.gapp.executer.MultivectorWithValues;
 import java.awt.Point;
@@ -9,10 +8,16 @@ import java.util.HashMap;
 import static org.junit.Assert.*;
 
 /**
- *
+ * Defines a test program for calculating the radius and center point of a circle,
+ * which is described by three 2d points
  * @author christian
  */
 public class Circle implements GAPPTestable {
+
+    // The three points which deschribes the circle
+    private Point p1 = new Point(2,3);
+    private Point p2 = new Point(5,6);
+    private Point p3 = new Point(8,12);
 
     @Override
     public String getSource() {
@@ -41,10 +46,6 @@ public class Circle implements GAPPTestable {
                     "?v1;"
             ;
     }
-
-    private Point p1 = new Point(2,3);
-    private Point p2 = new Point(5,6);
-    private Point p3 = new Point(8,12);
 
     @Override
     public HashMap<String, Float> getInputs() {

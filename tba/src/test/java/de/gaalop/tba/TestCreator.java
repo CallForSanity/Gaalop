@@ -110,7 +110,7 @@ public class TestCreator {
 
             de.gaalop.tba.Plugin tbaPlugin = new de.gaalop.tba.Plugin();
             OptimizationStrategy tba = (tbaPlugin).createOptimizationStrategy();
-            tbaPlugin.maxima = false;
+            tbaPlugin.optMaxima = false; //TODO chs why comment
             
 
             tba.transform(graph);

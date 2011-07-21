@@ -7,15 +7,13 @@ import de.gaalop.CodeParser;
 import de.gaalop.CodeParserException;
 import de.gaalop.InputFile;
 import de.gaalop.gapp.executer.Executer;
+import de.gaalop.tba.Plugin;
 import java.util.HashMap;
 import de.gaalop.OptimizationException;
 import de.gaalop.OutputFile;
 import de.gaalop.cfg.ControlFlowGraph;
-import de.gaalop.dfg.DivisionRemover;
-import de.gaalop.dfg.ExpressionRemover;
 import de.gaalop.gapp.codegen.GAPPCodeGeneratorPlugin;
 import de.gaalop.gapp.importing.GAPPImportingMain;
-import de.gaalop.gapp.importing.Splitter;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.Set;
@@ -23,11 +21,19 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * Provides methods for testing the GAPP importing pass with a GAPPTestable object
  * @author christian
  */
 public class Base {
 
+    /**
+     * Compiles and execute the GAPP code in a program, defined in a given GAPPTestable object
+     * @param testable The GAPPTestable object which defines the program to be tested
+     * @param cluName The name of the clucalc script to be tested
+     * @return The executer object which was used for executing
+     * @throws OptimizationException
+     * @throws CodeParserException
+     */
      protected Executer executeProgramm(GAPPTestable testable, String cluName) throws OptimizationException, CodeParserException {
         CodeParser parser = (new de.gaalop.clucalc.input.Plugin()).createCodeParser();
         ControlFlowGraph graph = parser.parseFile(new InputFile(cluName, testable.getSource()));
@@ -37,7 +43,8 @@ public class Base {
 
         //Evaluate!
         HashMap<String, Float> inputValues = testable.getInputs();
-        de.gaalop.tba.cfgImport.CFGImporter importer2 = new de.gaalop.tba.cfgImport.CFGImporter(true,false);
+        Plugin plugin = new Plugin();
+        de.gaalop.tba.cfgImport.CFGImporter importer2 = new de.gaalop.tba.cfgImport.CFGImporter(true,plugin);
         
         outputPlugin(new GAPPCodeGeneratorPlugin(), graph);
         outputPlugin(new de.gaalop.clucalc.output.Plugin(), graph);
@@ -47,7 +54,12 @@ public class Base {
         return executer;
     }
 
-     public static void outputPlugin(CodeGeneratorPlugin plugin, ControlFlowGraph graph) {
+    /**
+     * Writes the output of a plugin, called for a given graph, into files
+     * @param plugin The plugin to be used
+     * @param graph The underlying graph
+     */
+    public static void outputPlugin(CodeGeneratorPlugin plugin, ControlFlowGraph graph) {
         CodeGenerator generator = plugin.createCodeGenerator();
         Set<OutputFile> outputFiles;
         try {
@@ -59,6 +71,10 @@ public class Base {
         }
     }
 
+    /**
+     * Writes an output file in the generatedTests directory
+     * @param outputFile The file to be outputted
+     */
     protected static void writeFile(OutputFile outputFile) {
         try {
             PrintWriter out = new PrintWriter("src/test/java/de/gaalop/gapp/generatedTests/"+outputFile.getName());

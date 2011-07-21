@@ -6,7 +6,6 @@ import de.gaalop.gapp.executer.Executer;
 import org.junit.Test;
 import de.gaalop.gapp.*;
 import static org.junit.Assert.*;
-import org.junit.Ignore;
 
 public class GAPPTest extends Base {
 @Test

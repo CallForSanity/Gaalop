@@ -21,8 +21,8 @@ public class OptMaxima implements OptimizationStrategyWithModifyFlag {
 
     private MaximaOptimizer transformer;
 
-    public OptMaxima() {
-        transformer = new MaximaOptimizer(new ProcessBuilderMaximaConnection(ProcessBuilderMaximaConnection.CMD_MAXIMA_LINUX));
+    public OptMaxima(String commandMaxima) {
+        transformer = new MaximaOptimizer(new ProcessBuilderMaximaConnection(commandMaxima));
     }
 
     @Override
