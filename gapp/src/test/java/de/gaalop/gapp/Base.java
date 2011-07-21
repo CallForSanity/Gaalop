@@ -12,7 +12,7 @@ import java.util.HashMap;
 import de.gaalop.OptimizationException;
 import de.gaalop.OutputFile;
 import de.gaalop.cfg.ControlFlowGraph;
-import de.gaalop.gapp.codegen.GAPPCodeGeneratorPlugin;
+import de.gaalop.codegenGapp.GAPPCodeGeneratorPlugin;
 import de.gaalop.gapp.importing.GAPPImportingMain;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;

@@ -28,6 +28,8 @@
         <module>setup</module>
         <module>tba</module>
         <module>codegen-java</module>
+        <module>gapp</module>
+        <module>codegen-gapp</module>
        <!--   <module>gapp</module> -->
     </modules>
 

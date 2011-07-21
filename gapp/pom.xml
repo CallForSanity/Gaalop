@@ -11,7 +11,11 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>gapp</artifactId>
     <dependencies>
-
+         <dependency>
+            <groupId>de.gaalop</groupId>
+            <artifactId>codegen-gapp</artifactId>
+            <version>1.0.0</version>
+        </dependency>
          <dependency>
             <groupId>de.gaalop</groupId>
             <artifactId>codegen-cpp</artifactId>
@@ -40,11 +44,6 @@
                 <dependency>
             <groupId>de.gaalop</groupId>
             <artifactId>api</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>de.gaalop</groupId>
-            <artifactId>codegen-gappdot</artifactId>
             <version>1.0.0</version>
         </dependency>
     </dependencies>
