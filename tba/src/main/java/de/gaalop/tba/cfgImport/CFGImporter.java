@@ -39,7 +39,10 @@ public class CFGImporter {
         
         optimizations = new LinkedList<OptimizationStrategyWithModifyFlag>();
 
-        if (!getOnlyMvExpressions) { //TODO chs why to do this when GAPP performing?
+        // when GAPP performing, only the MvExpressions are needed,
+        // the graph itself mustn't changed, espescially nodes won't be inserted.
+        // for this reason, optimization are prohibited too
+        if (!getOnlyMvExpressions) { 
             if (plugin.isOptConstantPropagation()) optimizations.add(new OptConstantPropagation());
             if (plugin.isOptUnusedAssignments()) optimizations.add(new OptUnusedAssignmentsRemoval());
             if (plugin.isOptOneExpressionRemoval()) optimizations.add(new OptOneExpressionsRemoval());

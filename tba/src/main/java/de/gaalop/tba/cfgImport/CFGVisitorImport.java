@@ -38,6 +38,8 @@ public class CFGVisitorImport extends EmptyControlFlowVisitor {
 		
 		AssignmentNode lastNode = node;
 
+                // when GAPP performing, only the MvExpressions are needed,
+                // the graph itself mustn't changed, espescially nodes won't be inserted.
                 if (!getOnlyMvExpressions) {
 		
 	
