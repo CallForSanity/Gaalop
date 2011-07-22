@@ -50,10 +50,6 @@ public class CircleOnlyVars implements GAProgram {
 		p3_4 = ((0.5f * (y3_0 * y3_0)) + (0.5f * (x3_0 * x3_0))); // einf;
 		c_7 = ((((((p1_4 - p2_4)) * y3_0) - (p1_4 * y2_0)) - (p3_4 * ((y1_0 - y2_0)))) + (p2_4 * y1_0)); // e1^e3;
 		c_10 = ((((-((((p1_4 - p2_4)) * x3_0))) + (p1_4 * x2_0)) + (p3_4 * ((x1_0 - x2_0)))) - (p2_4 * x1_0)); // e2^e3;
-		calculate1();
-	}
-
-	public void calculate1() {
 		c_13 = ((((((p2_4 * x1_0) - (p1_4 * x2_0))) * y3_0) - (p3_4 * (((x1_0 * y2_0) - (x2_0 * y1_0))))) - (x3_0 * (((p2_4 * y1_0) - (p1_4 * y2_0))))); // e3^einf;
 		c_14 = ((((-((((x1_0 - x2_0)) * y3_0))) + (x1_0 * y2_0)) + (x3_0 * ((y1_0 - y2_0)))) - (x2_0 * y1_0)); // e3^e0;
 		mtmp_1 = ((2.0f * c_14) * c_7); // e1;
@@ -61,10 +57,6 @@ public class CircleOnlyVars implements GAProgram {
 		mtmp_5 = (-((2.0f * (c_14 * c_14)))); // e0;
 		mtmp_21 = 0.0f; // e1^einf^e0;
 		mtmp_24 = 0.0f; // e2^einf^e0;
-		calculate2();
-	}
-
-	public void calculate2() {
 		m_1 = ((mtmp_21 / mtmp_5) + (mtmp_1 / mtmp_5)); // e1;
 		m_2 = ((mtmp_24 / mtmp_5) + (mtmp_2 / mtmp_5)); // e2;
 		r_0 = ((float) Math.sqrt(Math.abs((((c_7 * c_7) - ((2.0f * c_13) * c_14)) + (c_10 * c_10)))) / Math.abs(c_14)); // 1.0;

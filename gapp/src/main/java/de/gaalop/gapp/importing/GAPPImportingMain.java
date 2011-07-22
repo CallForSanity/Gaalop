@@ -5,8 +5,8 @@ import de.gaalop.dfg.ExpressionRemover;
 import de.gaalop.OptimizationException;
 import de.gaalop.cfg.ControlFlowGraph;
 import de.gaalop.gapp.variables.GAPPMultivector;
+import de.gaalop.tba.cfgImport.MvExpressionsBuilder;
 import de.gaalop.tba.Plugin;
-import de.gaalop.tba.cfgImport.DFGVisitorImport;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -32,13 +32,19 @@ public class GAPPImportingMain {
         graph.accept(splitter);
 
         // do a full tba visit on graph to calculate MvExpressions
-        Plugin plugin = new Plugin();
+   /*     Plugin plugin = new Plugin();
         de.gaalop.tba.cfgImport.CFGImporter importer = new de.gaalop.tba.cfgImport.CFGImporter(true,plugin);
         importer.importGraph(graph);
-        DFGVisitorImport vDFG = importer.getvDFG();
+        DFGVisitorImport vDFG = importer.getvDFG();*/
+
+        Plugin plugin = new Plugin();
+        de.gaalop.tba.cfgImport.CFGImporter importer2 = new de.gaalop.tba.cfgImport.CFGImporter(true,plugin);
+
+        MvExpressionsBuilder builder = new MvExpressionsBuilder(true, importer2.getUsedAlgebra());
+        graph.accept(builder);
 
         // import now the graph in GAPP
-        GAPPImporter vCFG = new GAPPImporter(importer.getUsedAlgebra(),vDFG.expressions);
+        GAPPImporter vCFG = new GAPPImporter(importer2.getUsedAlgebra(),builder.expressions);
         graph.accept(vCFG);
 
         return graph;

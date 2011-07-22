@@ -1,15 +1,18 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
 package de.gaalop.tba.cfgImport;
 
-import de.gaalop.tba.UseAlgebra;
+import de.gaalop.dfg.ExpressionVisitor;
+import de.gaalop.cfg.AssignmentNode;
+import de.gaalop.cfg.EmptyControlFlowVisitor;
 import java.util.HashMap;
-
-import de.gaalop.tba.Multivector;
-
 import de.gaalop.dfg.Addition;
 import de.gaalop.dfg.BaseVector;
 import de.gaalop.dfg.BinaryOperation;
 import de.gaalop.dfg.Division;
-import de.gaalop.dfg.EmptyExpressionVisitor;
 import de.gaalop.dfg.Equality;
 import de.gaalop.dfg.Exponentiation;
 import de.gaalop.dfg.Expression;
@@ -30,33 +33,102 @@ import de.gaalop.dfg.OuterProduct;
 import de.gaalop.dfg.Relation;
 import de.gaalop.dfg.Reverse;
 import de.gaalop.dfg.Subtraction;
+import de.gaalop.dfg.UnaryOperation;
 import de.gaalop.dfg.Variable;
+import de.gaalop.tba.Multivector;
+import de.gaalop.tba.UseAlgebra;
 
-public class DFGVisitorImport extends EmptyExpressionVisitor {
-//implements ExpressionVisitor {
-	
-	public HashMap<Expression,MvExpressions> expressions;
+/**
+ * Build the mvExpressions for every variable and expression
+ * @author christian
+ */
+public class MvExpressionsBuilder extends EmptyControlFlowVisitor implements ExpressionVisitor {
+
+
 	public HashMap<String,MvExpressions> variables;
-	
+
+        private boolean getOnlyMvExpressions;
+
+        public HashMap<Expression,MvExpressions> expressions;
+
 	private int counterMv;
 	public int bladeCount;
 
 
         private UseAlgebra usedAlgebra;
-	
+
 	private final double EPSILON = 10E-07;
-	
+
 	public static final byte INNER = 0;
 	public static final byte OUTER = 1;
 	public static final byte GEO = 2;
-	
-	public DFGVisitorImport(UseAlgebra usedAlgebra) {
+
+	public MvExpressionsBuilder(boolean getOnlyMvExpressions, UseAlgebra usedAlgebra) {
+		variables = new HashMap<String, MvExpressions>();
+                this.getOnlyMvExpressions = getOnlyMvExpressions;
                 this.usedAlgebra = usedAlgebra;
 		counterMv = 0;
 
 		bladeCount = usedAlgebra.getBladeCount();
-		
+
 		expressions = new HashMap<Expression, MvExpressions>();
+	}
+
+	@Override
+	public void visit(AssignmentNode node) {
+		Variable variable = node.getVariable();
+		Expression value = node.getValue();
+
+		value.accept(this);
+
+		MvExpressions mvExpr = expressions.get(value);
+		variables.put(variable.toString(), mvExpr);
+
+		AssignmentNode lastNode = node;
+
+                // when GAPP performing, only the MvExpressions are needed,
+                // the graph itself mustn't changed, espescially nodes won't be inserted.
+                if (!getOnlyMvExpressions) {
+
+
+		// At first, output all assignments
+		for (int i=0;i<bladeCount;i++)
+		{
+
+			Expression e = mvExpr.bladeExpressions[i];
+
+			if (e!=null) {
+				AssignmentNode insNode = new AssignmentNode(node.getGraph(), new MultivectorComponent(variable.getName(),i),e);
+
+				lastNode.insertAfter(insNode);
+				lastNode = insNode;
+			}
+
+		}
+
+                // zero all null expressions
+                // isn't necessary, because MultipleAssignments aren't allowed
+                /*
+                for (int i=0;i<cfgExpressionVisitor.bladeCount;i++)
+		{
+
+			Expression e = mvExpr.bladeExpressions[i];
+
+			if (e==null)
+                        {
+                            AssignmentNode insNode = new AssignmentNode(node.getGraph(), new MultivectorComponent(variable.getName(),i),new FloatConstant(0.0f));
+
+				lastNode.insertAfter(insNode);
+				lastNode = insNode;
+                        }
+
+		}
+                */
+
+		node.getGraph().removeNode(node);
+            }
+
+		lastNode.getSuccessor().accept(this);
 	}
 
 	private MvExpressions createNewMvExpressions() {
@@ -105,63 +177,72 @@ public class DFGVisitorImport extends EmptyExpressionVisitor {
 			}
             return result;
         }
-	
+
 	private void calculateUsingMultTable(byte typeProduct, BinaryOperation node) {
 		MvExpressions left = expressions.get(node.getLeft());
 		MvExpressions right = expressions.get(node.getRight());
-		
+
 		MvExpressions result = calculateUsingMultTable(typeProduct, left, right);
-		
+
 		expressions.put(node, result);
 	}
-	
+
+        private void traverseBinary(BinaryOperation node) {
+                node.getLeft().accept(this);
+		node.getRight().accept(this);
+        }
+
+        private void traverseUnary(UnaryOperation node) {
+                node.getOperand().accept(this);
+        }
+
 	@Override
 	public void visit(Subtraction node) {
-		super.visit(node);
+		traverseBinary(node);
 		MvExpressions left = expressions.get(node.getLeft());
 		MvExpressions right = expressions.get(node.getRight());
-		
+
 		MvExpressions result = createNewMvExpressions();
 		for (int blade=0;blade<bladeCount;blade++) {
-			
+
 			if (left.bladeExpressions[blade] != null) {
-				if (right.bladeExpressions[blade] != null) 
+				if (right.bladeExpressions[blade] != null)
 					result.bladeExpressions[blade] = new Subtraction(left.bladeExpressions[blade],right.bladeExpressions[blade]);
-				else 
+				else
 					result.bladeExpressions[blade] = left.bladeExpressions[blade];
-				
-			} else 
-				if (right.bladeExpressions[blade] != null) 
+
+			} else
+				if (right.bladeExpressions[blade] != null)
 					result.bladeExpressions[blade] = new Negation(right.bladeExpressions[blade]);
 
 		}
-		
+
 		expressions.put(node, result);
 	}
 
 	@Override
 	public void visit(Addition node) {
-		super.visit(node);
+		traverseBinary(node);
 		MvExpressions left = expressions.get(node.getLeft());
 		MvExpressions right = expressions.get(node.getRight());
-		
+
 		MvExpressions result = createNewMvExpressions();
 		for (int blade=0;blade<bladeCount;blade++) {
-			
+
 			if (left.bladeExpressions[blade] != null) {
-				if (right.bladeExpressions[blade] != null) 
+				if (right.bladeExpressions[blade] != null)
 					result.bladeExpressions[blade] = new Addition(left.bladeExpressions[blade],right.bladeExpressions[blade]);
-				else 
+				else
 					result.bladeExpressions[blade] = left.bladeExpressions[blade];
-				
-			} else 
-				if (right.bladeExpressions[blade] != null) 
+
+			} else
+				if (right.bladeExpressions[blade] != null)
 					result.bladeExpressions[blade] = right.bladeExpressions[blade];
 
 		}
-		
+
 		expressions.put(node, result);
-		
+
 	}
 
         private MvExpressions getReverse(MvExpressions mv) {
@@ -188,7 +269,7 @@ public class DFGVisitorImport extends EmptyExpressionVisitor {
              MvExpressions length = calculateUsingMultTable(GEO, mv, revR);
 
              MvExpressions result = createNewMvExpressions();
-             
+
              for (int blade=0;blade<bladeCount;blade++)
                  if (mv.bladeExpressions[blade] != null)
                     result.bladeExpressions[blade] = new Division(mv.bladeExpressions[blade],length.bladeExpressions[0]);
@@ -198,7 +279,7 @@ public class DFGVisitorImport extends EmptyExpressionVisitor {
 
 	@Override
 	public void visit(Division node) {
-		super.visit(node);
+		traverseBinary(node);
 
 		MvExpressions l = expressions.get(node.getLeft());
                 MvExpressions r = expressions.get(node.getRight());
@@ -208,42 +289,42 @@ public class DFGVisitorImport extends EmptyExpressionVisitor {
                 MvExpressions result = calculateUsingMultTable(GEO, l, inverse);
 
 		expressions.put(node, result);
-		
+
 	}
-	
+
 	@Override
 	public void visit(InnerProduct node) {
-		super.visit(node);
+		traverseBinary(node);
 		calculateUsingMultTable(INNER, node);
 	}
 
 	@Override
 	public void visit(Multiplication node) {
-		super.visit(node);
+		traverseBinary(node);
 		calculateUsingMultTable(GEO, node);
 	}
 
 	@Override
 	public void visit(MathFunctionCall node) {
-		super.visit(node);
-		
+		traverseUnary(node);
 
-		
+
+
 		MvExpressions result = createNewMvExpressions();
 		switch (node.getFunction()) {
 		case ABS:
 			//sqrt(abs(op*op))
-                    
+
                         MvExpressions op = expressions.get(node.getOperand());
                         MvExpressions opR = getReverse(op);
                         MvExpressions prod = calculateUsingMultTable(GEO, op, opR);
 
 			Expression i0 = prod.bladeExpressions[0];
-			
+
 			if (i0 == null) i0 = new FloatConstant(0);
-			
+
 			result.bladeExpressions[0] = new MathFunctionCall(new MathFunctionCall(i0,MathFunction.ABS),MathFunction.SQRT);
-			
+
 			break;
 		case SQRT:
 			//sqrt(scalar)
@@ -254,20 +335,19 @@ public class DFGVisitorImport extends EmptyExpressionVisitor {
                         System.err.println("Warning: "+node.getFunction().toString()+" is only implemented for scalar inputs!");
 			return;
 		}
-		
+
 		expressions.put(node,result);
 	}
 
 	@Override
 	public void visit(Variable node) {
-		super.visit(node);
-		
+
 		MvExpressions v = null;
 		String key = node.toString();
 		if (variables.containsKey(key)) {
 			v = createNewMvExpressions();
-			
-			for (int i=0;i<bladeCount;i++) 
+
+			for (int i=0;i<bladeCount;i++)
 				if (variables.get(key).bladeExpressions[i] != null)
 					v.bladeExpressions[i] = new MultivectorComponent(node.getName(),i);
 
@@ -276,13 +356,12 @@ public class DFGVisitorImport extends EmptyExpressionVisitor {
 			v = createNewMvExpressions();
 			v.bladeExpressions[0] = node; // TODO Varibale removal
 		}
-		
+
 		expressions.put(node,v);
 	}
 
 	@Override
 	public void visit(MultivectorComponent node) {
-		super.visit(node);
 		expressions.put(node,variables.get(node.toString()));
 	}
 
@@ -290,7 +369,6 @@ public class DFGVisitorImport extends EmptyExpressionVisitor {
 
 	@Override
 	public void visit(FloatConstant node) {
-		super.visit(node);
 		MvExpressions result = createNewMvExpressions();
 		result.bladeExpressions[0] = node;
 		expressions.put(node, result);
@@ -298,58 +376,56 @@ public class DFGVisitorImport extends EmptyExpressionVisitor {
 
 	@Override
 	public void visit(OuterProduct node) {
-		super.visit(node);
+		traverseBinary(node);
 		calculateUsingMultTable(OUTER, node);
 	}
 
 	@Override
 	public void visit(BaseVector node) {
-		super.visit(node);
-	
-		MvExpressions result = createNewMvExpressions(); 
+		MvExpressions result = createNewMvExpressions();
 		result.bladeExpressions[node.getOrder()] = new FloatConstant(1);
 		expressions.put(node,result);
 	}
 
 	@Override
 	public void visit(Negation node) {
-		super.visit(node);
+		traverseUnary(node);
 		MvExpressions op = expressions.get(node.getOperand());
-		
+
 		MvExpressions result = createNewMvExpressions();
-		
-		for (int blade=0;blade<bladeCount;blade++) 
-			if (op.bladeExpressions[blade] != null) 
+
+		for (int blade=0;blade<bladeCount;blade++)
+			if (op.bladeExpressions[blade] != null)
 				result.bladeExpressions[blade] = new Negation(op.bladeExpressions[blade]);
 
-		
+
 		expressions.put(node, result);
 	}
 
 	@Override
 	public void visit(Reverse node) {
-		super.visit(node);
-		
+		traverseUnary(node);
+
 		MvExpressions op = expressions.get(node.getOperand());
-		
+
 		MvExpressions result = getReverse(op);
-		
+
 		expressions.put(node, result);
-		
+
 	}
 
 
 
 	@Override
 	public void visit(LogicalOr node) {
-		super.visit(node);
+		traverseBinary(node);
 		MvExpressions l = expressions.get(node.getLeft());
                 MvExpressions r = expressions.get(node.getRight());
 
                 MvExpressions result = createNewMvExpressions();
 
                 result.bladeExpressions[0] = new LogicalOr(l.bladeExpressions[0], r.bladeExpressions[0]);
-                
+
 		expressions.put(node, result);
 
 		System.err.println("Warning: LogicalOr is only implemented for scalars!");
@@ -357,7 +433,7 @@ public class DFGVisitorImport extends EmptyExpressionVisitor {
 
 	@Override
 	public void visit(LogicalAnd node) {
-		super.visit(node);
+		traverseBinary(node);
 		MvExpressions l = expressions.get(node.getLeft());
                 MvExpressions r = expressions.get(node.getRight());
 
@@ -372,7 +448,7 @@ public class DFGVisitorImport extends EmptyExpressionVisitor {
 
 	@Override
 	public void visit(LogicalNegation node) {
-                super.visit(node);
+                traverseUnary(node);
 		MvExpressions op = expressions.get(node.getOperand());
 
                 MvExpressions result = createNewMvExpressions();
@@ -386,7 +462,7 @@ public class DFGVisitorImport extends EmptyExpressionVisitor {
 
 	@Override
 	public void visit(Equality node) {
-		super.visit(node);
+		traverseBinary(node);
 		MvExpressions l = expressions.get(node.getLeft());
                 MvExpressions r = expressions.get(node.getRight());
 
@@ -401,7 +477,7 @@ public class DFGVisitorImport extends EmptyExpressionVisitor {
 
 	@Override
 	public void visit(Inequality node) {
-		super.visit(node);
+		traverseBinary(node);
 		MvExpressions l = expressions.get(node.getLeft());
                 MvExpressions r = expressions.get(node.getRight());
 
@@ -416,7 +492,7 @@ public class DFGVisitorImport extends EmptyExpressionVisitor {
 
 	@Override
 	public void visit(Relation node) {
-		super.visit(node);
+		traverseBinary(node);
 		MvExpressions l = expressions.get(node.getLeft());
                 MvExpressions r = expressions.get(node.getRight());
 
@@ -431,7 +507,7 @@ public class DFGVisitorImport extends EmptyExpressionVisitor {
 
         @Override
 	public void visit(Exponentiation node) {
-		super.visit(node);
+		traverseBinary(node);
 		MvExpressions l = expressions.get(node.getLeft());
                 MvExpressions r = expressions.get(node.getRight());
 
@@ -454,5 +530,4 @@ public class DFGVisitorImport extends EmptyExpressionVisitor {
             throw new IllegalStateException("Macros should have been inlined and no macro calls should be in the graph.");
 	}
 
-	
 }

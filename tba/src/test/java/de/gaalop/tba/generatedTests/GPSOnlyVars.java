@@ -90,65 +90,25 @@ public class GPSOnlyVars implements GAProgram {
 		sph1_4 = (sat1_4 - (0.5f * (d1_0 * d1_0))); // einf;
 		sph2_4 = (sat2_4 - (0.5f * (d2_0 * d2_0))); // einf;
 		sph3_4 = (sat3_4 - (0.5f * (d3_0 * d3_0))); // einf;
-		calculate1();
-	}
-
-	public void calculate1() {
 		rcPp_16 = ((((((sat1x_0 * sat2y_0) - (sat1y_0 * sat2x_0))) * sat3z_0) - ((((sat1x_0 * sat2z_0) - (sat1z_0 * sat2x_0))) * sat3y_0)) + ((((sat1y_0 * sat2z_0) - (sat1z_0 * sat2y_0))) * sat3x_0)); // e1^e2^e3;
 		rcPp_17 = ((((((sat1x_0 * sat2y_0) - (sat1y_0 * sat2x_0))) * sph3_4) + (sat3x_0 * (((sat1y_0 * sph2_4) - (sat2y_0 * sph1_4))))) - (sat3y_0 * (((sat1x_0 * sph2_4) - (sat2x_0 * sph1_4))))); // e1^e2^einf;
-		calculate2();
-	}
-
-	public void calculate2() {
 		rcPp_18 = ((((-((((sat1x_0 - sat2x_0)) * sat3y_0))) + (((sat1y_0 - sat2y_0)) * sat3x_0)) + (sat1x_0 * sat2y_0)) - (sat1y_0 * sat2x_0)); // e1^e2^e0;
 		rcPp_19 = ((((((sat1x_0 * sat2z_0) - (sat1z_0 * sat2x_0))) * sph3_4) + (sat3x_0 * (((sat1z_0 * sph2_4) - (sat2z_0 * sph1_4))))) - (sat3z_0 * (((sat1x_0 * sph2_4) - (sat2x_0 * sph1_4))))); // e1^e3^einf;
-		calculate3();
-	}
-
-	public void calculate3() {
 		rcPp_20 = ((((-((((sat1x_0 - sat2x_0)) * sat3z_0))) + (((sat1z_0 - sat2z_0)) * sat3x_0)) + (sat1x_0 * sat2z_0)) - (sat1z_0 * sat2x_0)); // e1^e3^e0;
 		rcPp_21 = ((((-((((sat1x_0 - sat2x_0)) * sph3_4))) + (sat1x_0 * sph2_4)) + (sat3x_0 * ((sph1_4 - sph2_4)))) - (sat2x_0 * sph1_4)); // e1^einf^e0;
-		calculate4();
-	}
-
-	public void calculate4() {
 		rcPp_22 = ((((((sat1y_0 * sat2z_0) - (sat1z_0 * sat2y_0))) * sph3_4) + (sat3y_0 * (((sat1z_0 * sph2_4) - (sat2z_0 * sph1_4))))) - (sat3z_0 * (((sat1y_0 * sph2_4) - (sat2y_0 * sph1_4))))); // e2^e3^einf;
 		rcPp_23 = ((((-((((sat1y_0 - sat2y_0)) * sat3z_0))) + (((sat1z_0 - sat2z_0)) * sat3y_0)) + (sat1y_0 * sat2z_0)) - (sat1z_0 * sat2y_0)); // e2^e3^e0;
-		calculate5();
-	}
-
-	public void calculate5() {
 		rcPp_24 = ((((-((((sat1y_0 - sat2y_0)) * sph3_4))) + (sat1y_0 * sph2_4)) + (sat3y_0 * ((sph1_4 - sph2_4)))) - (sat2y_0 * sph1_4)); // e2^einf^e0;
 		rcPp_25 = ((((-((((sat1z_0 - sat2z_0)) * sph3_4))) + (sat1z_0 * sph2_4)) + (sat3z_0 * ((sph1_4 - sph2_4)))) - (sat2z_0 * sph1_4)); // e3^einf^e0;
-		calculate6();
-	}
-
-	public void calculate6() {
 		len_0 = (float) Math.sqrt(Math.abs((((((((rcPp_25 * rcPp_25) + (rcPp_24 * rcPp_24)) + ((2.0f * rcPp_22) * rcPp_23)) + (rcPp_21 * rcPp_21)) + ((2.0f * rcPp_19) * rcPp_20)) + ((2.0f * rcPp_17) * rcPp_18)) - (rcPp_16 * rcPp_16)))); // 1.0;
 		rcPpDual_6 = (-rcPp_25); // e1^e2;
 		rcPpDual_8 = (-rcPp_22); // e1^einf;
 		rcPpDual_10 = (-rcPp_21); // e2^e3;
 		rcPpDual_12 = (-rcPp_20); // e2^e0;
 		rcPpDual_13 = (-rcPp_17); // e3^einf;
-		calculate7();
-	}
-
-	public void calculate7() {
 		rc1_1 = (((((rcPp_18 * rcPp_24) / ((((rcPp_23 * rcPp_23) + (rcPp_18 * rcPp_18)) + (rcPpDual_12 * rcPpDual_12)))) - ((rcPp_16 * rcPp_23) / ((((rcPp_23 * rcPp_23) + (rcPp_18 * rcPp_18)) + (rcPpDual_12 * rcPpDual_12))))) + ((len_0 * rcPp_23) / ((((rcPp_23 * rcPp_23) + (rcPp_18 * rcPp_18)) + (rcPpDual_12 * rcPpDual_12))))) + ((rcPpDual_12 * rcPpDual_6) / ((((rcPp_23 * rcPp_23) + (rcPp_18 * rcPp_18)) + (rcPpDual_12 * rcPpDual_12))))); // e1;
-		calculate8();
-	}
-
-	public void calculate8() {
 		rc1_2 = ((((-(((rcPpDual_6 * rcPp_23) / ((((rcPp_23 * rcPp_23) + (rcPp_18 * rcPp_18)) + (rcPpDual_12 * rcPpDual_12)))))) + ((rcPpDual_10 * rcPp_18) / ((((rcPp_23 * rcPp_23) + (rcPp_18 * rcPp_18)) + (rcPpDual_12 * rcPpDual_12))))) - ((rcPpDual_12 * rcPp_16) / ((((rcPp_23 * rcPp_23) + (rcPp_18 * rcPp_18)) + (rcPpDual_12 * rcPpDual_12))))) + ((len_0 * rcPpDual_12) / ((((rcPp_23 * rcPp_23) + (rcPp_18 * rcPp_18)) + (rcPpDual_12 * rcPpDual_12))))); // e2;
-		calculate9();
-	}
-
-	public void calculate9() {
 		rc1_3 = ((((-(((rcPp_23 * rcPp_24) / ((((rcPp_23 * rcPp_23) + (rcPp_18 * rcPp_18)) + (rcPpDual_12 * rcPpDual_12)))))) - ((rcPp_16 * rcPp_18) / ((((rcPp_23 * rcPp_23) + (rcPp_18 * rcPp_18)) + (rcPpDual_12 * rcPpDual_12))))) + ((len_0 * rcPp_18) / ((((rcPp_23 * rcPp_23) + (rcPp_18 * rcPp_18)) + (rcPpDual_12 * rcPpDual_12))))) - ((rcPpDual_10 * rcPpDual_12) / ((((rcPp_23 * rcPp_23) + (rcPp_18 * rcPp_18)) + (rcPpDual_12 * rcPpDual_12))))); // e3;
-		calculate10();
-	}
-
-	public void calculate10() {
 		rc1_4 = (((((-(((rcPpDual_8 * rcPp_23) / ((((rcPp_23 * rcPp_23) + (rcPp_18 * rcPp_18)) + (rcPpDual_12 * rcPpDual_12)))))) - ((rcPpDual_12 * rcPp_19) / ((((rcPp_23 * rcPp_23) + (rcPp_18 * rcPp_18)) + (rcPpDual_12 * rcPpDual_12))))) - ((rcPpDual_13 * rcPp_18) / ((((rcPp_23 * rcPp_23) + (rcPp_18 * rcPp_18)) + (rcPpDual_12 * rcPpDual_12))))) - ((rcPp_16 * rcPp_16) / ((((rcPp_23 * rcPp_23) + (rcPp_18 * rcPp_18)) + (rcPpDual_12 * rcPpDual_12))))) + ((len_0 * rcPp_16) / ((((rcPp_23 * rcPp_23) + (rcPp_18 * rcPp_18)) + (rcPpDual_12 * rcPpDual_12))))); // einf;
 		rc1_5 = (((-(((rcPp_23 * rcPp_23) / ((((rcPp_23 * rcPp_23) + (rcPp_18 * rcPp_18)) + (rcPpDual_12 * rcPpDual_12)))))) - ((rcPp_18 * rcPp_18) / ((((rcPp_23 * rcPp_23) + (rcPp_18 * rcPp_18)) + (rcPpDual_12 * rcPpDual_12))))) - ((rcPpDual_12 * rcPpDual_12) / ((((rcPp_23 * rcPp_23) + (rcPp_18 * rcPp_18)) + (rcPpDual_12 * rcPpDual_12))))); // e0;
 		rc1_16 = (((-(((rcPpDual_12 * rcPp_24) / ((((rcPp_23 * rcPp_23) + (rcPp_18 * rcPp_18)) + (rcPpDual_12 * rcPpDual_12)))))) + ((rcPpDual_10 * rcPp_23) / ((((rcPp_23 * rcPp_23) + (rcPp_18 * rcPp_18)) + (rcPpDual_12 * rcPpDual_12))))) + ((rcPpDual_6 * rcPp_18) / ((((rcPp_23 * rcPp_23) + (rcPp_18 * rcPp_18)) + (rcPpDual_12 * rcPpDual_12))))); // e1^e2^e3;

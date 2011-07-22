@@ -47,8 +47,8 @@ import de.gaalop.gapp.variables.GAPPMultivector;
 import de.gaalop.gapp.variables.GAPPScalarVariable;
 import de.gaalop.gapp.variables.GAPPVector;
 import de.gaalop.tba.Multivector;
+import de.gaalop.tba.Products;
 import de.gaalop.tba.UseAlgebra;
-import de.gaalop.tba.cfgImport.DFGVisitorImport;
 import de.gaalop.tba.cfgImport.MvExpressions;
 import java.util.HashMap;
 
@@ -274,7 +274,7 @@ public class GAPPImporter extends EmptyControlFlowVisitor implements ExpressionV
      * @param typeProduct The type of the Geometric Algebra Product, defined in de.gaalop.tba.cfgImport.DVGVisitorImport
      * @param node The node, which represents the product in DFG
      */
-    private void handleGAProduct(byte typeProduct, BinaryOperation node) {
+    private void handleGAProduct(Products typeProduct, BinaryOperation node) {
         node.getLeft().accept(this);
         node.getRight().accept(this);
 
@@ -311,7 +311,7 @@ public class GAPPImporter extends EmptyControlFlowVisitor implements ExpressionV
      * @param node The node that stores the multiplication
      * @return The array of Triples
      */
-    private Triples[] getTriplesArr(byte typeProduct, BinaryOperation node) {
+    private Triples[] getTriplesArr(Products typeProduct, BinaryOperation node) {
 
         MvExpressions mvExprL = expressions.get(node.getLeft());
         MvExpressions mvExprR = expressions.get(node.getRight());
@@ -325,13 +325,13 @@ public class GAPPImporter extends EmptyControlFlowVisitor implements ExpressionV
 
                         Multivector out;
                         switch (typeProduct) {
-                            case DFGVisitorImport.INNER:
+                            case INNER:
                                 out = usedAlgebra.inner(bladeL, bladeR);
                                 break;
-                            case DFGVisitorImport.OUTER:
+                            case OUTER:
                                 out = usedAlgebra.outer(bladeL, bladeR);
                                 break;
-                            case DFGVisitorImport.GEO:
+                            case GEO:
                                 out = usedAlgebra.geo(bladeL, bladeR);
                                 break;
                             default:
@@ -518,17 +518,17 @@ public class GAPPImporter extends EmptyControlFlowVisitor implements ExpressionV
 
     @Override
     public void visit(InnerProduct node) {
-        handleGAProduct(DFGVisitorImport.INNER, node);
+        handleGAProduct(Products.INNER, node);
     }
 
     @Override
     public void visit(OuterProduct node) {
-        handleGAProduct(DFGVisitorImport.OUTER, node);
+        handleGAProduct(Products.OUTER, node);
     }
 
     @Override
     public void visit(Multiplication node) {
-        handleGAProduct(DFGVisitorImport.GEO, node);
+        handleGAProduct(Products.GEO, node);
     }
 
     @Override
