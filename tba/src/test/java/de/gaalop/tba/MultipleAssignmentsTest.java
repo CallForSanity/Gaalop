@@ -99,4 +99,9 @@ public class MultipleAssignmentsTest implements GenericTestable {
         return result.toString();
     }
 
+    @Override
+    public UseAlgebra getUsedAlgebra() {
+        return UseAlgebra.get5dConformalGA();
+    }
+
 }

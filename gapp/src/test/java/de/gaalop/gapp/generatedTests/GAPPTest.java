@@ -12,7 +12,7 @@ public class GAPPTest extends Base {
 public void testCircle() {
         try {
             Circle c = new Circle();
-            Executer executer = executeProgramm(c, "Circle");
+            Executer executer = executeProgram(c, "Circle");
             c.testOutput(executer);
         } catch (OptimizationException ex) {
             assertTrue("Optimization Error", false);
@@ -25,7 +25,7 @@ public void testCircle() {
 public void testGPS() {
         try {
             GPS c = new GPS();
-            Executer executer = executeProgramm(c, "GPS");
+            Executer executer = executeProgram(c, "GPS");
             c.testOutput(executer);
         } catch (OptimizationException ex) {
             assertTrue("Optimization Error", false);

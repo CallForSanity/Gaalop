@@ -26,6 +26,13 @@ public class Plugin extends Observable implements OptimizationStrategyPlugin {
         @ConfigurationProperty(type = Type.TEXT)
         public String maximaCommand = ProcessBuilderMaximaConnection.CMD_MAXIMA_LINUX;
 
+        @ConfigurationProperty(type = Type.TEXT)
+        public String algebra = "conf5d"; //make conformal 5d to the standard algebra
+
+        public String getAlgebra() {
+            return algebra;
+        }
+
         public boolean isOptMaxima() {
             return optMaxima;
         }

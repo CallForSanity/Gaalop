@@ -1,6 +1,7 @@
 package de.gaalop.gapp;
 
 import de.gaalop.gapp.executer.Executer;
+import de.gaalop.tba.UseAlgebra;
 import java.util.HashMap;
 
 /**
@@ -31,5 +32,12 @@ public interface GAPPTestable {
      * which shoult be tested
      */
     public void testOutput(Executer executer);
+
+    /**
+     * Returns the used algebra in test program
+     * @return The used algebra
+     */
+    public UseAlgebra getUsedAlgebra();
+
 
 }

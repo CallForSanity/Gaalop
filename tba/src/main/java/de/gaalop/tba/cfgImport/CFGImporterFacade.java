@@ -17,18 +17,12 @@ public class CFGImporterFacade {
     private UseAlgebra usedAlgebra;
 
     private LinkedList<OptimizationStrategyWithModifyFlag> optimizations;
-    
-
-    public UseAlgebra getUsedAlgebra() {
-        return usedAlgebra;
-    }
 
     public CFGImporterFacade(Plugin plugin) {
 
-        //load 5d conformal algebra
-        usedAlgebra = new UseAlgebra();
-        usedAlgebra.load5dAlgebra();
-        
+        //load desired algebra
+        usedAlgebra = new UseAlgebra(plugin.getAlgebra());
+ 
         optimizations = new LinkedList<OptimizationStrategyWithModifyFlag>();
 
         if (plugin.isOptConstantPropagation()) optimizations.add(new OptConstantPropagation());

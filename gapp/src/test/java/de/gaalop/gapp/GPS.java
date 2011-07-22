@@ -1,5 +1,6 @@
 package de.gaalop.gapp;
 
+import de.gaalop.tba.UseAlgebra;
 import de.gaalop.gapp.executer.Executer;
 import de.gaalop.gapp.executer.MultivectorWithValues;
 import java.util.HashMap;
@@ -140,6 +141,9 @@ public class GPS implements GAPPTestable {
         
     }
 
-
+    @Override
+    public UseAlgebra getUsedAlgebra() {
+        return UseAlgebra.get5dConformalGA();
+    }
 
 }

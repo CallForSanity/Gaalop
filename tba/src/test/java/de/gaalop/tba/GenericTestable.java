@@ -12,4 +12,10 @@ public interface GenericTestable {
 
     public LinkedList<InputOutput> getInputOutputs();
 
+    /**
+     * Returns the used algebra in test program
+     * @return The used algebra
+     */
+    public UseAlgebra getUsedAlgebra();
+
 }

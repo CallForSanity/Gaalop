@@ -7,12 +7,10 @@ import de.gaalop.CodeParser;
 import de.gaalop.CodeParserException;
 import de.gaalop.InputFile;
 import de.gaalop.gapp.executer.Executer;
-import de.gaalop.tba.Plugin;
 import java.util.HashMap;
 import de.gaalop.OptimizationException;
 import de.gaalop.OutputFile;
 import de.gaalop.cfg.ControlFlowGraph;
-import de.gaalop.codegenGapp.GAPPCodeGeneratorPlugin;
 import de.gaalop.gapp.importing.GAPPImportingMain;
 import de.gaalop.gapp.statistics.CalculationsCounter;
 import java.io.FileNotFoundException;
@@ -35,27 +33,21 @@ public class Base {
      * @throws OptimizationException
      * @throws CodeParserException
      */
-     protected Executer executeProgramm(GAPPTestable testable, String cluName) throws OptimizationException, CodeParserException {
+     protected Executer executeProgram(GAPPTestable testable, String cluName) throws OptimizationException, CodeParserException {
         CodeParser parser = (new de.gaalop.clucalc.input.Plugin()).createCodeParser();
         ControlFlowGraph graph = parser.parseFile(new InputFile(cluName, testable.getSource()));
 
         GAPPImportingMain importer = new GAPPImportingMain();
-        importer.importGraph(graph);
+        importer.importGraph(testable.getUsedAlgebra(),graph);
 
-
-        outputPlugin(new GAPPCodeGeneratorPlugin(), graph);
+        outputPlugin(new de.gaalop.codegenGapp.Plugin(), graph);
         outputPlugin(new de.gaalop.clucalc.output.Plugin(), graph);
 
         //printStatistics(graph);
 
-
-        //Only needed for getting the usedAlgebra
-        Plugin plugin = new Plugin();
-        de.gaalop.tba.cfgImport.CFGImporterFacade importer2 = new de.gaalop.tba.cfgImport.CFGImporterFacade(plugin);
-
         //Evaluate!
         HashMap<String, Float> inputValues = testable.getInputs();
-        Executer executer = new Executer(importer2.getUsedAlgebra(),inputValues);
+        Executer executer = new Executer(testable.getUsedAlgebra(),inputValues);
         graph.accept(executer);
         return executer;
     }

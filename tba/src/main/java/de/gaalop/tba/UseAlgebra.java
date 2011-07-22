@@ -6,25 +6,26 @@ import java.util.logging.Logger;
 
 public class UseAlgebra {
 
-    private Algebra algebra;
-    private IMultTable tableInner;
-    private IMultTable tableOuter;
-    private IMultTable tableGeo;
-
-    public void load5dAlgebra() {
-
-        algebra = new Algebra("bladesGA5d.csv");
+    public UseAlgebra(String algebraDirName) {
+        algebra = new Algebra("algebra/"+algebraDirName+"/blades.csv");
 
         tableInner = new MultTableImpl();
         tableOuter = new MultTableImpl();
         tableGeo = new MultTableImpl();
         MultTableLoader loader = new MultTableLoader();
         try {
-            loader.load(this, "productsGA5d.csv", "replacesGA5d.csv");
+            loader.load(this, "algebra/"+algebraDirName+"/products.csv", "algebra/"+algebraDirName+"/replaces.csv");
         } catch (IOException ex) {
             Logger.getLogger(UseAlgebra.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
+
+
+    private Algebra algebra;
+    private IMultTable tableInner;
+    private IMultTable tableOuter;
+    private IMultTable tableGeo;
 
     public Multivector inner(Integer factor1, Integer factor2) {
         return tableInner.getProduct(factor1, factor2);
@@ -61,4 +62,14 @@ public class UseAlgebra {
     public IMultTable getTableGeo() {
         return tableGeo;
     }
+
+    /**
+     * Returns the useAlgebra which represents the calculations in 5d conformal geometric algebra
+     * @return The useAlgerba instance
+     */
+    public static UseAlgebra get5dConformalGA() {
+        //load 5d conformal algebra
+        return new UseAlgebra("conf5d");
+    }
+
 }

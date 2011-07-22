@@ -88,4 +88,11 @@ public class ControlFlowTest implements GenericTestable {
        return result;
     }
 
+    @Override
+    public UseAlgebra getUsedAlgebra() {
+        return UseAlgebra.get5dConformalGA();
+    }
+
+
+
 }

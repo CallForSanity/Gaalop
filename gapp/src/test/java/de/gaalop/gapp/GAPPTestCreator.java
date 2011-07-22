@@ -71,7 +71,7 @@ public class GAPPTestCreator {
         out.println("public void test"+className+"() {");
         out.println("        try {");
         out.println("            "+className+" c = new "+className+"();");
-        out.println("            Executer executer = executeProgramm(c, \""+className+"\");");
+        out.println("            Executer executer = executeProgram(c, \""+className+"\");");
         out.println("            c.testOutput(executer);");
         out.println("        } catch (OptimizationException ex) {");
         out.println("            assertTrue(\"Optimization Error\", false);");
@@ -81,12 +81,5 @@ public class GAPPTestCreator {
         out.println("}");
         out.println();
     }
-   
-
-
-
-    
-
-
 
 }

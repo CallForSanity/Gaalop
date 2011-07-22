@@ -8,7 +8,7 @@ import java.awt.Image;
  * Implements a CodegeneratorPlugin, which lists all GAPP members in a graph in a pretty print format
  * @author christian
  */
-public class GAPPCodeGeneratorPlugin implements CodeGeneratorPlugin {
+public class Plugin implements CodeGeneratorPlugin {
 
     @Override
     public CodeGenerator createCodeGenerator() {

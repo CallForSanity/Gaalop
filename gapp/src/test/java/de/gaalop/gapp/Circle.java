@@ -2,6 +2,7 @@ package de.gaalop.gapp;
 
 import de.gaalop.gapp.executer.Executer;
 import de.gaalop.gapp.executer.MultivectorWithValues;
+import de.gaalop.tba.UseAlgebra;
 import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.util.HashMap;
@@ -89,6 +90,11 @@ public class Circle implements GAPPTestable {
         for (int i=6;i<32;i++)
             assertEquals(0, valM.getEntry(i),10E-04);
         
+    }
+
+    @Override
+    public UseAlgebra getUsedAlgebra() {
+        return UseAlgebra.get5dConformalGA();
     }
 
 

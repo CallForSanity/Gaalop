@@ -1,6 +1,7 @@
 package de.gaalop.tba.circle;
 
 import de.gaalop.tba.GenericTestable;
+import de.gaalop.tba.UseAlgebra;
 import java.awt.Point;
 
 /**
@@ -63,6 +64,9 @@ public abstract class GenericCircleTest implements GenericTestable {
         return "(float) Math.sqrt(("+p2x+"-"+p1x+")*("+p2x+"-"+p1x+") + ("+p2y+"-"+p1y+")*("+p2y+"-"+p1y+"))";
     }
 
-   
+    @Override
+    public UseAlgebra getUsedAlgebra() {
+        return UseAlgebra.get5dConformalGA();
+    }
 
 }
