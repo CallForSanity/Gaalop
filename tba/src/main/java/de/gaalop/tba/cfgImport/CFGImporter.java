@@ -1,70 +1,60 @@
 package de.gaalop.tba.cfgImport;
 
-import de.gaalop.OptimizationException;
-import de.gaalop.cfg.ControlFlowGraph;
-import de.gaalop.cfg.ControlFlowVisitor;
-import de.gaalop.tba.Plugin;
+import de.gaalop.cfg.AssignmentNode;
+import de.gaalop.dfg.Expression;
+import de.gaalop.dfg.MultivectorComponent;
+import de.gaalop.dfg.Variable;
 import de.gaalop.tba.UseAlgebra;
-import de.gaalop.tba.cfgImport.optimization.OptConstantPropagation;
-import de.gaalop.tba.cfgImport.optimization.OptMaxima;
-import de.gaalop.tba.cfgImport.optimization.OptOneExpressionsRemoval;
-import de.gaalop.tba.cfgImport.optimization.OptimizationStrategyWithModifyFlag;
-import de.gaalop.tba.cfgImport.optimization.OptUnusedAssignmentsRemoval;
-import java.util.LinkedList;
 
-public class CFGImporter {
-    
-    private UseAlgebra usedAlgebra;
+/**
+ *
+ * @author christian
+ */
+public class CFGImporter extends MvExpressionsBuilder {
 
-    private LinkedList<OptimizationStrategyWithModifyFlag> optimizations;
-    
-    private boolean getOnlyMvExpressions;
-
-    public UseAlgebra getUsedAlgebra() {
-        return usedAlgebra;
+    public CFGImporter(UseAlgebra usedAlgebra) {
+        super(usedAlgebra);
     }
 
-    public CFGImporter(boolean getOnlyMvExpressions, Plugin plugin) {
-        this.getOnlyMvExpressions = getOnlyMvExpressions;
+    @Override
+    protected AssignmentNode changeGraph(AssignmentNode node, MvExpressions mvExpr, Variable variable) {
+        AssignmentNode lastNode = node;
 
-        //load 5d conformal algebra
-        usedAlgebra = new UseAlgebra();
-        usedAlgebra.load5dAlgebra();
-        
-        optimizations = new LinkedList<OptimizationStrategyWithModifyFlag>();
+        // At first, output all assignments
+        for (int i = 0; i < bladeCount; i++) {
 
-        // when GAPP performing, only the MvExpressions are needed,
-        // the graph itself mustn't changed, espescially nodes won't be inserted.
-        // for this reason, optimization are prohibited too
-        if (!getOnlyMvExpressions) { 
-            if (plugin.isOptConstantPropagation()) optimizations.add(new OptConstantPropagation());
-            if (plugin.isOptUnusedAssignments()) optimizations.add(new OptUnusedAssignmentsRemoval());
-            if (plugin.isOptOneExpressionRemoval()) optimizations.add(new OptOneExpressionsRemoval());
-  
-            if (plugin.isOptMaxima())  optimizations.add(new OptMaxima(plugin.getMaximaCommand()));
+            Expression e = mvExpr.bladeExpressions[i];
+
+            if (e != null) {
+                AssignmentNode insNode = new AssignmentNode(node.getGraph(), new MultivectorComponent(variable.getName(), i), e);
+
+                lastNode.insertAfter(insNode);
+                lastNode = insNode;
+            }
+
         }
-        
+
+        // zero all null expressions
+        // isn't necessary, because MultipleAssignments aren't allowed
+                /*
+        for (int i=0;i<cfgExpressionVisitor.bladeCount;i++)
+        {
+
+        Expression e = mvExpr.bladeExpressions[i];
+
+        if (e==null)
+        {
+        AssignmentNode insNode = new AssignmentNode(node.getGraph(), new MultivectorComponent(variable.getName(),i),new FloatConstant(0.0f));
+
+        lastNode.insertAfter(insNode);
+        lastNode = insNode;
+        }
+
+        }
+         */
+
+        node.getGraph().removeNode(node);
+
+        return lastNode;
     }
-
-    public ControlFlowGraph importGraph(ControlFlowGraph graph) throws OptimizationException {
-        
-        if (ContainsControlFlow.containsControlFlow(graph)) 
-            throw new OptimizationException("Due to Control Flow Existence in Source, TBA isn't assigned on graph!", graph);
-
-        if (ContainsMulipleAssignments.containsMulipleAssignments(graph))
-            throw new OptimizationException("Due to Existence of MultipleAssignments in Source, TBA isn't assigned on graph!", graph);
-
-        MvExpressionsBuilder builder = new MvExpressionsBuilder(getOnlyMvExpressions, usedAlgebra);
-        graph.accept(builder);
-
-        boolean repeat;
-        do {
-            repeat = false;
-            for (OptimizationStrategyWithModifyFlag curOpt: optimizations)
-                repeat = repeat || curOpt.transform(graph, usedAlgebra);
-        } while (repeat);
-
-        return graph;
-    }
-
 }

@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package de.gaalop.tba.cfgImport;
 
 import de.gaalop.dfg.ExpressionVisitor;
@@ -47,7 +42,7 @@ public class MvExpressionsBuilder extends EmptyControlFlowVisitor implements Exp
 
 	public HashMap<String,MvExpressions> variables;
 
-        private boolean getOnlyMvExpressions;
+        
 
         public HashMap<Expression,MvExpressions> expressions;
 
@@ -63,9 +58,8 @@ public class MvExpressionsBuilder extends EmptyControlFlowVisitor implements Exp
 	public static final byte OUTER = 1;
 	public static final byte GEO = 2;
 
-	public MvExpressionsBuilder(boolean getOnlyMvExpressions, UseAlgebra usedAlgebra) {
+	public MvExpressionsBuilder(UseAlgebra usedAlgebra) {
 		variables = new HashMap<String, MvExpressions>();
-                this.getOnlyMvExpressions = getOnlyMvExpressions;
                 this.usedAlgebra = usedAlgebra;
 		counterMv = 0;
 
@@ -73,6 +67,10 @@ public class MvExpressionsBuilder extends EmptyControlFlowVisitor implements Exp
 
 		expressions = new HashMap<Expression, MvExpressions>();
 	}
+        
+        protected AssignmentNode changeGraph(AssignmentNode node,MvExpressions mvExpr,Variable variable) {
+            return node;
+        }
 
 	@Override
 	public void visit(AssignmentNode node) {
@@ -84,50 +82,13 @@ public class MvExpressionsBuilder extends EmptyControlFlowVisitor implements Exp
 		MvExpressions mvExpr = expressions.get(value);
 		variables.put(variable.toString(), mvExpr);
 
-		AssignmentNode lastNode = node;
+		
 
                 // when GAPP performing, only the MvExpressions are needed,
                 // the graph itself mustn't changed, espescially nodes won't be inserted.
-                if (!getOnlyMvExpressions) {
+                AssignmentNode lastNode = changeGraph(node,mvExpr,variable);
 
-
-		// At first, output all assignments
-		for (int i=0;i<bladeCount;i++)
-		{
-
-			Expression e = mvExpr.bladeExpressions[i];
-
-			if (e!=null) {
-				AssignmentNode insNode = new AssignmentNode(node.getGraph(), new MultivectorComponent(variable.getName(),i),e);
-
-				lastNode.insertAfter(insNode);
-				lastNode = insNode;
-			}
-
-		}
-
-                // zero all null expressions
-                // isn't necessary, because MultipleAssignments aren't allowed
-                /*
-                for (int i=0;i<cfgExpressionVisitor.bladeCount;i++)
-		{
-
-			Expression e = mvExpr.bladeExpressions[i];
-
-			if (e==null)
-                        {
-                            AssignmentNode insNode = new AssignmentNode(node.getGraph(), new MultivectorComponent(variable.getName(),i),new FloatConstant(0.0f));
-
-				lastNode.insertAfter(insNode);
-				lastNode = insNode;
-                        }
-
-		}
-                */
-
-		node.getGraph().removeNode(node);
-            }
-
+                
 		lastNode.getSuccessor().accept(this);
 	}
 

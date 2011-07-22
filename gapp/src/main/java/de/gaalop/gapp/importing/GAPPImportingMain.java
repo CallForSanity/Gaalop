@@ -37,10 +37,11 @@ public class GAPPImportingMain {
         importer.importGraph(graph);
         DFGVisitorImport vDFG = importer.getvDFG();*/
 
+        // only get the usedAlgebra
         Plugin plugin = new Plugin();
-        de.gaalop.tba.cfgImport.CFGImporter importer2 = new de.gaalop.tba.cfgImport.CFGImporter(true,plugin);
+        de.gaalop.tba.cfgImport.CFGImporterFacade importer2 = new de.gaalop.tba.cfgImport.CFGImporterFacade(plugin);
 
-        MvExpressionsBuilder builder = new MvExpressionsBuilder(true, importer2.getUsedAlgebra());
+        MvExpressionsBuilder builder = new MvExpressionsBuilder(importer2.getUsedAlgebra());
         graph.accept(builder);
 
         // import now the graph in GAPP

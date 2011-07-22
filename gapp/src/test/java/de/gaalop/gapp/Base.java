@@ -42,14 +42,16 @@ public class Base {
         GAPPImportingMain importer = new GAPPImportingMain();
         importer.importGraph(graph);
 
-        //Only needed for getting the usedAlgebra
-        Plugin plugin = new Plugin();
-        de.gaalop.tba.cfgImport.CFGImporter importer2 = new de.gaalop.tba.cfgImport.CFGImporter(true,plugin);
-        
+
         outputPlugin(new GAPPCodeGeneratorPlugin(), graph);
         outputPlugin(new de.gaalop.clucalc.output.Plugin(), graph);
 
         //printStatistics(graph);
+
+
+        //Only needed for getting the usedAlgebra
+        Plugin plugin = new Plugin();
+        de.gaalop.tba.cfgImport.CFGImporterFacade importer2 = new de.gaalop.tba.cfgImport.CFGImporterFacade(plugin);
 
         //Evaluate!
         HashMap<String, Float> inputValues = testable.getInputs();
