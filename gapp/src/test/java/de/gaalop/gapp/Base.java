@@ -14,6 +14,7 @@ import de.gaalop.OutputFile;
 import de.gaalop.cfg.ControlFlowGraph;
 import de.gaalop.codegenGapp.GAPPCodeGeneratorPlugin;
 import de.gaalop.gapp.importing.GAPPImportingMain;
+import de.gaalop.gapp.statistics.CalculationsCounter;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.Set;
@@ -48,11 +49,20 @@ public class Base {
         outputPlugin(new GAPPCodeGeneratorPlugin(), graph);
         outputPlugin(new de.gaalop.clucalc.output.Plugin(), graph);
 
+        //printStatistics(graph);
+
         //Evaluate!
         HashMap<String, Float> inputValues = testable.getInputs();
         Executer executer = new Executer(importer2.getUsedAlgebra(),inputValues);
         graph.accept(executer);
         return executer;
+    }
+
+    private void printStatistics(ControlFlowGraph graph) {
+        // print some statistics
+        CalculationsCounter counter = new CalculationsCounter();
+        graph.accept(counter);
+        counter.printStatistics(System.out);
     }
 
     /**

@@ -44,12 +44,7 @@ public class GAPPVariableCopier implements GAPPVariableVisitor {
 
     @Override
     public Object visitVector(GAPPVector gappVector, Object arg) {
-        Vector<GAPPSignedMultivectorComponent> slots = new Vector<GAPPSignedMultivectorComponent>();
-
-        for (GAPPSignedMultivectorComponent cur: gappVector.getSlots())
-            slots.add((GAPPSignedMultivectorComponent) cur.accept(this, null));
-
-        return new GAPPVector(gappVector.getName(),slots);
+        return new GAPPVector(gappVector.getName());
     }
 
 }

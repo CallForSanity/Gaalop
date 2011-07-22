@@ -30,10 +30,6 @@ public class GAPPSetVector extends GAPPBaseInstruction {
         this.selectorsSrc = selectorsSrc;
     }
 
-    public void add(GAPPSignedMultivectorComponent toAdd) {
-        destination.getSlots().add(toAdd);
-    }
-
     @Override
     public Object accept(GAPPVisitor visitor, Object arg) {
         return visitor.visitSetVector(this, arg);
