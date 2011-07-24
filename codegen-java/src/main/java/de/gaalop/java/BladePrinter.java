@@ -180,8 +180,6 @@ public class BladePrinter implements ExpressionVisitor {
 
 	@Override
 	public void visit(MacroCall node) {
-		// TODO Auto-generated method stub
-		
 	}
 
 }

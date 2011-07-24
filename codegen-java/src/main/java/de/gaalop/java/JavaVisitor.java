@@ -38,10 +38,19 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
 
         private int storedIndentation;
 
+        /**
+         * Appends a character to the result string
+         * @param character The character to append
+         */
         private void append(char character) {
             append(character+"");
         }
 
+        /**
+         * Appends a string to the current code section
+         * The code section is definied by the curSection member
+         * @param string The string to append to the code section
+         */
         private void append(String string) {
             switch (curSection) {
                 case 0:
@@ -57,7 +66,10 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
         }
 
 
-
+        /**
+         * Returns the code, created by this code generator
+         * @return The generated code
+         */
 	public String getCode() {
             StringBuilder result = new StringBuilder();
             result.append(codePre);
@@ -71,12 +83,19 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
             return result.toString();
 	}
 
+        /**
+         * Appends the indentation to the result string
+         */
 	protected void appendIndentation() {
 		for (int i = 0; i < indentation; ++i) {
 			append('\t');
 		}
 	}
 
+        /**
+         * Returns all outputs components of the graph
+         * @return The output components
+         */
         private LinkedList<String> getOutputs() {
             LinkedList<String> outputs = new LinkedList<String>();
 
@@ -547,10 +566,14 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
 		throw new IllegalStateException("Macros should have been inlined and no macro calls should be in the graph.");
 	}
 
-
-
     //Calc method code can be exceeded about 65535 chars,
     //catch this hard limit by splitting up the calc method
+
+    /**
+     * Splits the calculation method in parts, so that each one don't exceeds the java code hard limit of
+     * 65535 chars
+     * @return The splitted methods
+     */
     private String splitUpCalcMethods() {
         StringBuilder result = new StringBuilder();
 
