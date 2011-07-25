@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package de.gaalop.tba;
+package de.gaalop.common;
 
 import java.util.LinkedList;
 

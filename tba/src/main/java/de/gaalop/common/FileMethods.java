@@ -1,4 +1,4 @@
-package de.gaalop.tba;
+package de.gaalop.common;
 
 import java.io.BufferedReader;
 import java.io.File;

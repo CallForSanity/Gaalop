@@ -1,5 +1,6 @@
 package de.gaalop.tba;
 
+import de.gaalop.common.StringMethods;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;

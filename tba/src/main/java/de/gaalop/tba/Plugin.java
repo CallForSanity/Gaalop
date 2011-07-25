@@ -70,7 +70,7 @@ public class Plugin extends Observable implements OptimizationStrategyPlugin {
 
 	@Override
 	public OptimizationStrategy createOptimizationStrategy() {
-            return new TBAOptStat(this);
+            return new TBAOptStrategy(this);
 	}
 
 }
