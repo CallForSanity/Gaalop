@@ -10,6 +10,6 @@ public enum DFGNodeType {
     MathFunctionCall, Variable, MultivectorComponent,
     Exponentiation, FloatConstant, OuterProduct, BaseVector, 
     Negation, Reverse, LogicalOr, LogicalAnd, LogicalNegation,
-    Equality, Inequality, Relation,FunctionArgument,MacroCall
+    Equality, Inequality, Relation, FunctionArgument, MacroCall
 
 }

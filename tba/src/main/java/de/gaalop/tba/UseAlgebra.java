@@ -4,7 +4,16 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Stores an algebra and the according multiplication tables
+ * @author christian
+ */
 public class UseAlgebra {
+
+    private Algebra algebra;
+    private IMultTable tableInner;
+    private IMultTable tableOuter;
+    private IMultTable tableGeo;
 
     public UseAlgebra(String algebraDirName) {
         algebra = new Algebra("algebra/"+algebraDirName+"/blades.csv");
@@ -20,21 +29,32 @@ public class UseAlgebra {
         }
     }
 
-
-
-    private Algebra algebra;
-    private IMultTable tableInner;
-    private IMultTable tableOuter;
-    private IMultTable tableGeo;
-
+    /**
+     * Returns the inner product of two blades
+     * @param factor1 The index of the blade of the first factor
+     * @param factor2 The index of the blade of the second factor
+     * @return The inner product
+     */
     public Multivector inner(Integer factor1, Integer factor2) {
         return tableInner.getProduct(factor1, factor2);
     }
 
+    /**
+     * Returns the outer product of two blades
+     * @param factor1 The index of the blade of the first factor
+     * @param factor2 The index of the blade of the second factor
+     * @return The outer product
+     */
     public Multivector outer(Integer factor1, Integer factor2) {
         return tableOuter.getProduct(factor1, factor2);
     }
 
+    /**
+     * Returns the geometric product of two blades
+     * @param factor1 The index of the blade of the first factor
+     * @param factor2 The index of the blade of the second factor
+     * @return The geometric product
+     */
     public Multivector geo(Integer factor1, Integer factor2) {
         return tableGeo.getProduct(factor1, factor2);
     }

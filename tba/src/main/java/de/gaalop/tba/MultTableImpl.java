@@ -1,5 +1,12 @@
 package de.gaalop.tba;
 
+/**
+ * Implements the IMultTable interface.
+ *
+ * Stores the product table as an two dimensional array.
+ *
+ * @author christian
+ */
 public class MultTableImpl implements IMultTable {
 
 	private Multivector[][] products;

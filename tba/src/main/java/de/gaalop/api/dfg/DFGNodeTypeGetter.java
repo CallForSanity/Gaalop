@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package de.gaalop.api.dfg;
 
 import de.gaalop.dfg.Addition;
@@ -31,7 +26,7 @@ import de.gaalop.dfg.Subtraction;
 import de.gaalop.dfg.Variable;
 
 /**
- * Returns the type of a Expression
+ * Returns the type of an Expression
  * @author christian
  */
 public class DFGNodeTypeGetter implements ExpressionVisitor {

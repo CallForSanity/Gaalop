@@ -6,8 +6,8 @@ package de.gaalop.api.cfg;
  */
 public enum CFGNodeType {
 
-    StartNode,AssignmentNode,StoreResultNode,
-    IfThenElseNode,BlockEndNode, LoopNode,BreakNode,
-    Macro,ExpressionStatement,EndNode,ColorNode
+    StartNode, AssignmentNode, StoreResultNode,
+    IfThenElseNode, BlockEndNode, LoopNode, BreakNode,
+    Macro, ExpressionStatement, EndNode, ColorNode
 
 }

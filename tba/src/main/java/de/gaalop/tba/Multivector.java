@@ -3,6 +3,10 @@ package de.gaalop.tba;
 import java.util.Arrays;
 import java.util.Vector;
 
+/**
+ * Represents a multivector, e.g. a vector of blades
+ * @author christian
+ */
 public class Multivector {
 	
 	private Algebra algebra;
@@ -17,7 +21,13 @@ public class Multivector {
 		blades.add(blade);
 	}
 
-	public static Multivector parse(String toParse, String[] base, Algebra algebra) {
+        /**
+         * Parses a string that contains a multivector
+         * @param toParse The string to be parsed
+         * @param algebra The algebra to use
+         * @return The parsed multivector
+         */
+	public static Multivector parse(String toParse, Algebra algebra) {
 		  Multivector result = new Multivector(algebra);
 
 		  String[] parts = toParse.split("\\+");
@@ -32,7 +42,12 @@ public class Multivector {
 	private void setBlade(Blade blade) {
 		blades.add(blade);
 	}
-	
+
+        /**
+         * Returns the sum of this with another multivector
+         * @param mvWith The multivector to sum with this
+         * @return The sum
+         */
 	public Multivector getSum(Multivector mvWith) {
 		Multivector result = new Multivector(algebra);
 		
@@ -46,7 +61,11 @@ public class Multivector {
 		result.fromValueArr(arrmv);
 		return result;
 	}
-	
+
+        /**
+         * Returns the values of all blades in this multivector
+         * @return The values of all blades
+         */
 	public double[] getValueArr() {
 		int size = algebra.getBlades().size();
 		double[] result = new double[size];
@@ -57,7 +76,11 @@ public class Multivector {
 		
 		return result;
 	}
-	
+
+        /**
+         * Fills this multivector with values from an array
+         * @param arr The array
+         */
 	public void fromValueArr(double[] arr) {
 		blades.clear();
 		

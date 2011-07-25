@@ -8,7 +8,12 @@ import de.gaalop.OptimizationStrategy;
 import de.gaalop.OptimizationStrategyPlugin;
 import de.gaalop.tba.cfgImport.optimization.maxima.ProcessBuilderMaximaConnection;
 
-
+/**
+ * Implements the Table Based Approach as an OptimizationStrategyPlugin,
+ * for using in Gaalop
+ * 
+ * @author christian
+ */
 public class Plugin extends Observable implements OptimizationStrategyPlugin {
 
         @ConfigurationProperty(type = Type.BOOLEAN)

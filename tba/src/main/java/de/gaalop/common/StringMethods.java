@@ -1,14 +1,9 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package de.gaalop.common;
 
 import java.util.LinkedList;
 
 /**
- *
+ * Provides methods for advanced string handling
  * @author christian
  */
 public class StringMethods {

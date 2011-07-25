@@ -1,9 +1,14 @@
 package de.gaalop.common;
 
+/**
+ * Implements the BubbleSort algorithm
+ * @author christian
+ */
 public class BubbleSort {
 
 	/**
-	 * BubbleSort Algorithm - from 
+	 * Performs the BubbleSort algorithm.
+         * Taken from
 	 * http://de.wikipedia.org/wiki/Bubblesort#Formaler%20Algorithmus
 	 * @param arr The array to sort in place
 	 * @return The count of exchanges
@@ -25,7 +30,6 @@ public class BubbleSort {
 	        }
 	    }
 	    return count;
-
 	}
 	
 }

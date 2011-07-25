@@ -1,11 +1,33 @@
 package de.gaalop.tba;
 
-import de.gaalop.tba.Multivector;
-
+/**
+ * Defines an interface for a multiplication table
+ * @author christian
+ */
 public interface IMultTable {
 
-	public void createTable(int dimension);
-	public Multivector getProduct(Integer factor1, Integer factor2);
-	public void setProduct(Integer factor1, Integer factor2, Multivector product );
+    /**
+     * Creates a new table with a given dimension.
+     * The dimension equals to the number of blades in the algebra
+     *
+     * @param dimension The dimension of the table
+     */
+    public void createTable(int dimension);
+
+    /**
+     * Returns the product of two blades with specified indices in the algebra
+     * @param factor1 The index of the blade of the first factor
+     * @param factor2 The index of the blade of the second factor
+     * @return
+     */
+    public Multivector getProduct(Integer factor1, Integer factor2);
+
+    /**
+     * Sets the product of two blades with specified indices in the algebra
+     * @param factor1 The index of the blade of the first factor
+     * @param factor2 The index of the blade of the second factor
+     * @param product The product
+     */
+    public void setProduct(Integer factor1, Integer factor2, Multivector product );
 	
 }

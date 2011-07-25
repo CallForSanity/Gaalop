@@ -4,6 +4,10 @@ import de.gaalop.common.BubbleSort;
 import java.util.Arrays;
 import java.util.Vector;
 
+/**
+ * Defines a blade with a sign and a coefficient
+ * @author christian
+ */
 public class Blade {
 
 	private Algebra algebra;
@@ -26,6 +30,12 @@ public class Blade {
 		coefficient = coeff;
 	}
 
+        /**
+         * Parses a string and returns the parsed blade
+         * @param toParse The string to parse
+         * @param algebra The Algebra to use
+         * @return The parsed blade
+         */
 	public static Blade parseStr(String toParse, Algebra algebra) {
 		 Blade result = new Blade(algebra);
 
@@ -82,7 +92,7 @@ public class Blade {
 				result.addBasis((part.equals("e")) ? "einf" : part);
 		  }
 		  
-		  result.makeCanoncial();
+		  result.makeCanonicial();
 		  
 		  return result;
 
@@ -113,8 +123,12 @@ public class Blade {
 	private void setSign(byte sign) {
 		this.sign = sign;		
 	}
-	
-	private int[] getBasisArr() {
+
+        /**
+         * Returns the indices of the base elements in this blade
+         * @return The indices
+         */
+	private int[] getIndicesArray() {
 		String[] base = algebra.getBase();
 		
 		//determine to each contained base the basis index
@@ -137,11 +151,14 @@ public class Blade {
 		
 		return basesInt;
 	}
-	
-	private void makeCanoncial() {
+
+        /**
+         * Makes this blade canonical
+         */
+	private void makeCanonicial() {
 		String[] base = algebra.getBase();
 		
-		int[] basesInt = getBasisArr();
+		int[] basesInt = getIndicesArray();
 		
 		//doBubbleSort on basesInt and count the exchanges
 		int numOfChanges = BubbleSort.doBubbleSort(basesInt);
@@ -160,11 +177,11 @@ public class Blade {
 
 	@Override
 	public boolean equals(Object obj) {
-		makeCanoncial();
+		makeCanonicial();
 		if (obj instanceof Blade) {
 			Blade comp = (Blade) obj;
-			comp.makeCanoncial();
-			return Arrays.equals(comp.getBasisArr(), getBasisArr());
+			comp.makeCanonicial();
+			return Arrays.equals(comp.getIndicesArray(), getIndicesArray());
 		}
 		return false;
 	}

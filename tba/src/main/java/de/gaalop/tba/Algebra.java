@@ -1,7 +1,6 @@
 package de.gaalop.tba;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -9,6 +8,10 @@ import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Defines an algebra by storing the base elements and the blades
+ * @author christian
+ */
 public class Algebra {
 
 	private String[] base;
@@ -39,7 +42,12 @@ public class Algebra {
 		if (index>blades.size()-1) blades.setSize(index+1);
 		blades.set(index, bladeExpr);
 	}
-	
+
+        /**
+         * Returns the index to a given blade
+         * @param bladeExpr The blade to be searched
+         * @return The index of the blade
+         */
 	public int getIndex(Blade bladeExpr) {
 		if (bladeExpr.getBases().isEmpty()) return 0;
 		for (int i=0;i<blades.size();i++)
@@ -56,6 +64,11 @@ public class Algebra {
 		this.base = base;
 	}
 
+        /**
+         * Loads products from a file, which is a ressource
+         * @param filename_products The filename of the file
+         * @throws IOException
+         */
 	public void load(String filename_products) throws IOException {
             InputStream resourceAsStream = getClass().getResourceAsStream(filename_products);
 

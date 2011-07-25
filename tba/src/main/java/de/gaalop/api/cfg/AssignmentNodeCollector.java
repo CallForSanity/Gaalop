@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package de.gaalop.api.cfg;
 
 import de.gaalop.cfg.AssignmentNode;
@@ -22,14 +17,9 @@ public class AssignmentNodeCollector extends EmptyControlFlowVisitor {
         return assignmentNodes;
     }
 
-    
-
     @Override
     public void visit(AssignmentNode node) {
         assignmentNodes.add(node);
         super.visit(node);
     }
-
-
-
 }
