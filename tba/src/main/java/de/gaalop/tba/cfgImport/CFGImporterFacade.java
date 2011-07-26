@@ -2,7 +2,6 @@ package de.gaalop.tba.cfgImport;
 
 import de.gaalop.OptimizationException;
 import de.gaalop.cfg.ControlFlowGraph;
-import de.gaalop.cfg.ControlFlowVisitor;
 import de.gaalop.tba.Plugin;
 import de.gaalop.tba.UseAlgebra;
 import de.gaalop.tba.cfgImport.optimization.OptConstantPropagation;
@@ -12,6 +11,12 @@ import de.gaalop.tba.cfgImport.optimization.OptimizationStrategyWithModifyFlag;
 import de.gaalop.tba.cfgImport.optimization.OptUnusedAssignmentsRemoval;
 import java.util.LinkedList;
 
+/**
+ * This class provides a simple facade to transform the graph
+ * with the table based approach
+ *
+ * @author christian
+ */
 public class CFGImporterFacade {
     
     private UseAlgebra usedAlgebra;
@@ -33,6 +38,14 @@ public class CFGImporterFacade {
 
     }
 
+    /**
+     * Transforms the graph and apply optionally optimizations.
+     * Note, that the graph is changed in place.
+     *
+     * @param graph The graph to be transformed
+     * @return The transformed graph
+     * @throws OptimizationException
+     */
     public ControlFlowGraph importGraph(ControlFlowGraph graph) throws OptimizationException {
         
         if (ContainsControlFlow.containsControlFlow(graph)) 

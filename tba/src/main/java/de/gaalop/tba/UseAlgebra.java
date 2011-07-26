@@ -92,4 +92,32 @@ public class UseAlgebra {
         return new UseAlgebra("conf5d");
     }
 
+    /**
+     * Returns the product of two blades
+     * @param typeProduct The type of the product
+     * @param bladeL The index of the blade of the first factor
+     * @param bladeR The index of the blade of the sectond factor
+     * @return The product
+     */
+    public Multivector getProduct(Products typeProduct, int bladeL, int bladeR) {
+        Multivector prodMv = null;
+
+        switch (typeProduct) {
+        case INNER:
+                prodMv = inner(bladeL, bladeR);
+                break;
+        case OUTER:
+                prodMv = outer(bladeL, bladeR);
+                break;
+        case GEO:
+                prodMv = geo(bladeL, bladeR);
+                break;
+        default:
+                System.err.println("Product type is unknown!");
+                break;
+        }
+        return prodMv;
+
+    }
+
 }

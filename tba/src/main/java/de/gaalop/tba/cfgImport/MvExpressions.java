@@ -2,6 +2,10 @@ package de.gaalop.tba.cfgImport;
 
 import de.gaalop.dfg.Expression;
 
+/**
+ * Stores blade expressions
+ * @author christian
+ */
 public class MvExpressions {
 
 	public String nameMv;

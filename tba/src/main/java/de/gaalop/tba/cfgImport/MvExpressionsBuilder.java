@@ -31,6 +31,7 @@ import de.gaalop.dfg.Subtraction;
 import de.gaalop.dfg.UnaryOperation;
 import de.gaalop.dfg.Variable;
 import de.gaalop.tba.Multivector;
+import de.gaalop.tba.Products;
 import de.gaalop.tba.UseAlgebra;
 
 /**
@@ -39,24 +40,19 @@ import de.gaalop.tba.UseAlgebra;
  */
 public class MvExpressionsBuilder extends EmptyControlFlowVisitor implements ExpressionVisitor {
 
-
 	public HashMap<String,MvExpressions> variables;
-
-        
-
         public HashMap<Expression,MvExpressions> expressions;
 
 	private int counterMv;
 	public int bladeCount;
 
-
         private UseAlgebra usedAlgebra;
 
 	private final double EPSILON = 10E-07;
 
-	public static final byte INNER = 0;
-	public static final byte OUTER = 1;
-	public static final byte GEO = 2;
+//	public static final byte INNER = 0;
+//	public static final byte OUTER = 1;
+//	public static final byte GEO = 2;
 
 	public MvExpressionsBuilder(UseAlgebra usedAlgebra) {
 		variables = new HashMap<String, MvExpressions>();
@@ -67,7 +63,19 @@ public class MvExpressionsBuilder extends EmptyControlFlowVisitor implements Exp
 
 		expressions = new HashMap<Expression, MvExpressions>();
 	}
-        
+
+        /**
+         * This method is called in Assignment node visit.
+         * Here is the place to change the graph.
+         *
+         * In the MvExpresseionsBuilder class, the graph isn't changed.
+         *
+         *
+         * @param node The current assignment node
+         * @param mvExpr The MvExpressions for the value
+         * @param variable The destination variable
+         * @return The node to proceed on with the visit
+         */
         protected AssignmentNode changeGraph(AssignmentNode node,MvExpressions mvExpr,Variable variable) {
             return node;
         }
@@ -82,22 +90,32 @@ public class MvExpressionsBuilder extends EmptyControlFlowVisitor implements Exp
 		MvExpressions mvExpr = expressions.get(value);
 		variables.put(variable.toString(), mvExpr);
 
-		
-
                 // when GAPP performing, only the MvExpressions are needed,
                 // the graph itself mustn't changed, espescially nodes won't be inserted.
+                // That's why we use a method for changing graph
                 AssignmentNode lastNode = changeGraph(node,mvExpr,variable);
 
                 
 		lastNode.getSuccessor().accept(this);
 	}
 
+        /**
+         * Creates a new MvExpressions instance
+         * @return The new MvExpressions
+         */
 	private MvExpressions createNewMvExpressions() {
 		counterMv++;
 		return new MvExpressions(counterMv+"",bladeCount);
 	}
 
-        private MvExpressions calculateUsingMultTable(byte typeProduct, MvExpressions left, MvExpressions right) {
+        /**
+         * Calculates the product of two MvExpressions
+         * @param typeProduct The type of the product
+         * @param left The first factor
+         * @param right The second factor
+         * @return The product
+         */
+        private MvExpressions calculateUsingMultTable(Products typeProduct, MvExpressions left, MvExpressions right) {
             MvExpressions result = createNewMvExpressions();
 
 		for (int bladeL = 0;bladeL<bladeCount;bladeL++)
@@ -107,22 +125,7 @@ public class MvExpressionsBuilder extends EmptyControlFlowVisitor implements Exp
 					if (right.bladeExpressions[bladeR] != null)
 					{
 						Expression prodExpr = new Multiplication(left.bladeExpressions[bladeL],right.bladeExpressions[bladeR]);
-
-						Multivector prodMv = null;
-						switch (typeProduct) {
-						case INNER:
-							prodMv = usedAlgebra.inner(bladeL, bladeR);
-							break;
-						case OUTER:
-							prodMv = usedAlgebra.outer(bladeL, bladeR);
-							break;
-						case GEO:
-							prodMv = usedAlgebra.geo(bladeL, bladeR);
-							break;
-						default:
-							System.err.println("Product type is unknown!");
-							break;
-						}
+						Multivector prodMv = usedAlgebra.getProduct(typeProduct,bladeL,bladeR);
 
 						double[] prod = prodMv.getValueArr();
 
@@ -139,7 +142,12 @@ public class MvExpressionsBuilder extends EmptyControlFlowVisitor implements Exp
             return result;
         }
 
-	private void calculateUsingMultTable(byte typeProduct, BinaryOperation node) {
+        /**
+         * Dummy method for calculating a product
+         * @param typeProduct The type of the product
+         * @param node The node which represents the product to be calculated
+         */
+	private void calculateUsingMultTable(Products typeProduct, BinaryOperation node) {
 		MvExpressions left = expressions.get(node.getLeft());
 		MvExpressions right = expressions.get(node.getRight());
 
@@ -148,11 +156,19 @@ public class MvExpressionsBuilder extends EmptyControlFlowVisitor implements Exp
 		expressions.put(node, result);
 	}
 
+        /**
+         * Dummy method for traversing a binary operation node
+         * @param node The binary operation node
+         */
         private void traverseBinary(BinaryOperation node) {
                 node.getLeft().accept(this);
 		node.getRight().accept(this);
         }
 
+        /**
+         * Dummy method for traversing a unary operation node
+         * @param node The unary operation node
+         */
         private void traverseUnary(UnaryOperation node) {
                 node.getOperand().accept(this);
         }
@@ -206,6 +222,11 @@ public class MvExpressionsBuilder extends EmptyControlFlowVisitor implements Exp
 
 	}
 
+        /**
+         * Returns the reverse of a MvExpressions instance
+         * @param mv The MvExpressions instance to be reversed
+         * @return The reverse
+         */
         private MvExpressions getReverse(MvExpressions mv) {
                 MvExpressions result = createNewMvExpressions();
 
@@ -227,7 +248,7 @@ public class MvExpressionsBuilder extends EmptyControlFlowVisitor implements Exp
          */
         private MvExpressions getInverse(MvExpressions mv) {
              MvExpressions revR = getReverse(mv);
-             MvExpressions length = calculateUsingMultTable(GEO, mv, revR);
+             MvExpressions length = calculateUsingMultTable(Products.GEO, mv, revR);
 
              MvExpressions result = createNewMvExpressions();
 
@@ -247,7 +268,7 @@ public class MvExpressionsBuilder extends EmptyControlFlowVisitor implements Exp
 
                 MvExpressions inverse = getInverse(r);
 
-                MvExpressions result = calculateUsingMultTable(GEO, l, inverse);
+                MvExpressions result = calculateUsingMultTable(Products.GEO, l, inverse);
 
 		expressions.put(node, result);
 
@@ -256,13 +277,13 @@ public class MvExpressionsBuilder extends EmptyControlFlowVisitor implements Exp
 	@Override
 	public void visit(InnerProduct node) {
 		traverseBinary(node);
-		calculateUsingMultTable(INNER, node);
+		calculateUsingMultTable(Products.INNER, node);
 	}
 
 	@Override
 	public void visit(Multiplication node) {
 		traverseBinary(node);
-		calculateUsingMultTable(GEO, node);
+		calculateUsingMultTable(Products.GEO, node);
 	}
 
 	@Override
@@ -278,7 +299,7 @@ public class MvExpressionsBuilder extends EmptyControlFlowVisitor implements Exp
 
                         MvExpressions op = expressions.get(node.getOperand());
                         MvExpressions opR = getReverse(op);
-                        MvExpressions prod = calculateUsingMultTable(GEO, op, opR);
+                        MvExpressions prod = calculateUsingMultTable(Products.GEO, op, opR);
 
 			Expression i0 = prod.bladeExpressions[0];
 
@@ -338,7 +359,7 @@ public class MvExpressionsBuilder extends EmptyControlFlowVisitor implements Exp
 	@Override
 	public void visit(OuterProduct node) {
 		traverseBinary(node);
-		calculateUsingMultTable(OUTER, node);
+		calculateUsingMultTable(Products.OUTER, node);
 	}
 
 	@Override
