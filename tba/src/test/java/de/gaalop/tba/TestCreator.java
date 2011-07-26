@@ -18,7 +18,6 @@ import de.gaalop.tba.gps.Point3D;
 import java.awt.Point;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
-import java.nio.charset.Charset;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -26,7 +25,7 @@ import java.util.logging.Logger;
 import org.junit.Ignore;
 
 /**
- *
+ * Produces test classes for automatic testing
  * @author christian
  */
 @Ignore

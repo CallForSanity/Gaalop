@@ -3,8 +3,6 @@ package de.gaalop.tba.gps;
 import de.gaalop.tba.InputOutput;
 import de.gaalop.tba.VariableValue;
 import org.junit.Ignore;
-import java.awt.Point;
-import java.awt.geom.Point2D;
 import java.util.LinkedList;
 
 /**
@@ -12,7 +10,6 @@ import java.util.LinkedList;
  * @author christian
  */
 @Ignore
-
 public class GPSNoVarsTest extends GenericGPSTest {
 
     public GPSNoVarsTest(Point3D sat1, Point3D sat2, Point3D sat3, float d1, float d2, float d3) {

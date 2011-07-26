@@ -13,7 +13,7 @@ import java.util.LinkedList;
 @Ignore
 public class CircleOneVarTest extends GenericCircleTest {
 
-    boolean[] commented;
+    private boolean[] commented;
 
     private int n;
 

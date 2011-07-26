@@ -8,8 +8,16 @@ import java.util.LinkedList;
  */
 public interface GenericTestable {
 
+    /**
+     * Returns the CLUScript to be used for testing
+     * @return The CLUScript
+     */
     public String getCLUScript();
 
+   /**
+    * Returns the InputOutputs for testing
+    * @return The InputOutputs
+    */
     public LinkedList<InputOutput> getInputOutputs();
 
     /**

@@ -1,15 +1,10 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package de.gaalop.tba;
 
 import java.util.LinkedList;
 import org.junit.Ignore;
 
 /**
- *
+ * Checks the test for multiple assignments
  * @author christian
  */
 @Ignore

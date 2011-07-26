@@ -2,7 +2,6 @@ package de.gaalop.tba.gps;
 
 import de.gaalop.tba.GenericTestable;
 import de.gaalop.tba.UseAlgebra;
-import java.awt.geom.Point2D;
 
 /**
  * Implements a generic gps test

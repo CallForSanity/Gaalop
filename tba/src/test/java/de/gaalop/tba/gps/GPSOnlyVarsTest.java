@@ -2,12 +2,11 @@ package de.gaalop.tba.gps;
 
 import de.gaalop.tba.InputOutput;
 import de.gaalop.tba.VariableValue;
-import java.awt.Point;
 import java.util.LinkedList;
 import org.junit.Ignore;
 
 /**
- *
+ * Implements a GPS test with only variables
  * @author christian
  */
 @Ignore

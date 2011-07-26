@@ -6,10 +6,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.antlr.runtime.RecognitionException;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
- *
+ * Class for manually testing the maxima connection and translation
  * @author christian
  */
 public class Maxima {
