@@ -2,14 +2,10 @@ package de.gaalop.tba.cfgImport.optimization;
 
 import de.gaalop.dfg.MultivectorComponent;
 import de.gaalop.dfg.Variable;
-import de.gaalop.tba.cfgImport.optimization.DFGTraversalVisitor;
-import de.gaalop.tba.cfgImport.optimization.VariableComponent;
 import java.util.LinkedList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
- *
+ * Visitor for DFG tree to get all variables in an expression
  * @author christian
  */
 public class DFGVisitorUsedVariables extends DFGTraversalVisitor {

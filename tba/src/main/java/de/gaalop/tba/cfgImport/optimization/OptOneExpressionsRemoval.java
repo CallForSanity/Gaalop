@@ -5,7 +5,7 @@ import de.gaalop.cfg.SequentialNode;
 import de.gaalop.tba.UseAlgebra;
 
 /**
- *
+ * Facade class for the one expression removal optimization
  * @author christian
  */
 public class OptOneExpressionsRemoval implements OptimizationStrategyWithModifyFlag {

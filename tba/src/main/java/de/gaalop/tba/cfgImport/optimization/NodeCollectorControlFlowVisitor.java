@@ -16,12 +16,7 @@ import de.gaalop.cfg.StoreResultNode;
 import java.util.LinkedList;
 
 /**
- * This class provides "empty" implementations of the {@link ControlFlowVisitor} interface. Classes which need only a
- * subset of methods defined in {@link ControlFlowVisitor} can extend this class in order to override them accordingly.
- * Empty implementations mean that no transformations are applied to visited nodes. For each node type, the successor is
- * visited by default.
- * 
- * @author Christian Schwinn
+ * This class collects all nodes in a control flow graph
  * 
  */
 public class NodeCollectorControlFlowVisitor implements ControlFlowVisitor {

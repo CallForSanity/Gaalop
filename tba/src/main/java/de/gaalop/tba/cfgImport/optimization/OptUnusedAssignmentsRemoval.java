@@ -9,7 +9,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 /**
- *
+ * Facade class for the unused assignments optimization
  * @author christian
  */
 public class OptUnusedAssignmentsRemoval implements OptimizationStrategyWithModifyFlag {

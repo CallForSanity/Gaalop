@@ -4,7 +4,7 @@ import de.gaalop.cfg.ControlFlowGraph;
 import de.gaalop.tba.UseAlgebra;
 
 /**
- *
+ * Facade class for the constant propagation optimization
  * @author christian
  */
 public class OptConstantPropagation implements OptimizationStrategyWithModifyFlag {

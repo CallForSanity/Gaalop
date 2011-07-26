@@ -3,17 +3,14 @@ package de.gaalop.tba.cfgImport.optimization.maxima;
 import de.gaalop.api.cfg.AssignmentNodeCollector;
 import de.gaalop.cfg.AssignmentNode;
 import de.gaalop.cfg.ControlFlowGraph;
-import de.gaalop.cfg.EmptyControlFlowVisitor;
 import de.gaalop.cfg.FindStoreOutputNodes;
 import de.gaalop.cfg.StoreResultNode;
 import de.gaalop.dfg.Expression;
 import de.gaalop.tba.cfgImport.optimization.maxima.parser.MaximaLexer;
 import de.gaalop.tba.cfgImport.optimization.maxima.parser.MaximaParser;
 import de.gaalop.tba.cfgImport.optimization.maxima.parser.MaximaTransformer;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.ListIterator;
 import org.antlr.runtime.ANTLRStringStream;
 import org.antlr.runtime.CommonTokenStream;
@@ -28,10 +25,17 @@ public class MaximaOptimizer {
 
     private MaximaConnection connection;
 
+    private AssignmentNodeCollector assignmentNodeCollector;
+
     public MaximaOptimizer(MaximaConnection connection) {
         this.connection = connection;
     }
 
+    /**
+     * Transforms a given ControlFlowGraph using the maxima optimization
+     * @param graph The ControlFlowGraph to be transformed
+     * @throws RecognitionException
+     */
     public void transformGraph(ControlFlowGraph graph) throws RecognitionException {
         MaximaInput input = new MaximaInput();
         input.add("display2d:false;"); // very important!
@@ -56,6 +60,12 @@ public class MaximaOptimizer {
 
     }
 
+    /**
+     * Returns an expression from a maxima output string.
+     * @param maximaOut The maxima output string
+     * @return The according expression
+     * @throws RecognitionException
+     */
     public static Expression getExpressionFromMaximaOutput(String maximaOut) throws RecognitionException {
         ANTLRStringStream inputStream = new ANTLRStringStream(maximaOut);
         MaximaLexer lexer = new MaximaLexer(inputStream);
@@ -69,6 +79,11 @@ public class MaximaOptimizer {
         return transformer.expression();
     }
 
+    /**
+     * Fills a given list of MaximaInOut from an output of maxima
+     * @param connected The list of MaximaInOut to be filled
+     * @param output The output of maxima
+     */
     private void groupMaximaInAndOutputs(LinkedList<MaximaInOut> connected, MaximaOutput output) {
 
         MaximaInOut curIO = new MaximaInOut(null, null);
@@ -107,8 +122,12 @@ public class MaximaOptimizer {
         }
     }
 
-    private AssignmentNodeCollector assignmentNodeCollector;
-
+    
+    /**
+     * Fills a given MaximaInput instance with input for maxima, determined from a given graph
+     * @param graph The graph to be transformed in MaximaInput
+     * @param input The MaximaInput instance to be filled
+     */
     private void fillMaximaInput(ControlFlowGraph graph, MaximaInput input) {
         assignmentNodeCollector = new AssignmentNodeCollector();
         graph.accept(assignmentNodeCollector);

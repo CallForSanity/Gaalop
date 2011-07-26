@@ -1,7 +1,7 @@
 package de.gaalop.tba.cfgImport.optimization.maxima;
 
 /**
- *
+ * Stores the maxima input and it's according output
  * @author christian
  */
 public class MaximaInOut {
