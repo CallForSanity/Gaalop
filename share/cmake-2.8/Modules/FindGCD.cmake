@@ -31,6 +31,7 @@ SET(GCD_JAVA_ARGS ${GCD_COMMON_ARGS} -generator "de.gaalop.cpp.Plugin")
 
 # configure compile script
 SET(GCD_COMPILE_SCRIPT "${CMAKE_CURRENT_BINARY_DIR}/run_gcd.sh")
+get_filename_component(CMAKE_CURRENT_LIST_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
 CONFIGURE_FILE("${CMAKE_CURRENT_LIST_DIR}/run_gcd.sh.in" ${GCD_COMPILE_SCRIPT})
 
 # custom command to compile gcd source files
