@@ -1,8 +1,6 @@
 #ifndef GCD_H_INCLUDED
 #define GCD_H_INCLUDED
 
-#include "gaalet.h"
-
 #ifdef GCD_OLD_GAALET_MV_IDX
 enum MV_BLADE_INDEX
 {

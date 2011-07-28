@@ -16,6 +16,7 @@
         <module>maple</module>
         <module>tba</module>
         <module>clucalc</module>
+        <module>codegen-dot</module>
         <module>codegen-cpp</module>
         <module>codegen-java</module>
         <module>codegen-gaalet</module>
