@@ -12,7 +12,7 @@ public class OptOneExpressionsRemoval implements OptimizationStrategyWithModifyF
 
     @Override
     public boolean transform(ControlFlowGraph graph, UseAlgebra usedAlgebra) {
-        OneExpressionRemoval oneExpressionRemoval = new OneExpressionRemoval();
+        OneExpressionRemoval oneExpressionRemoval = new OneExpressionRemoval(usedAlgebra);
         graph.accept(oneExpressionRemoval);
 
         // remove all nodes that are marked for removal

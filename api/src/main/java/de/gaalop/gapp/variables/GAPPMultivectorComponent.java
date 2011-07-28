@@ -20,7 +20,7 @@ public class GAPPMultivectorComponent extends GAPPVariable {
     public String prettyPrint() {
         return parent.getName() + "{" + bladeIndex + "}";
     }
-
+/*
     public GAPPMultivector getParent() {
         return parent;
     }
@@ -28,7 +28,7 @@ public class GAPPMultivectorComponent extends GAPPVariable {
     public void setParent(GAPPMultivector parent) {
         this.parent = parent;
     }
-
+*/
     public int getBladeIndex() {
         return bladeIndex;
     }

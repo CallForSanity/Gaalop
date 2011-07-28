@@ -23,8 +23,8 @@ public class GAPPVariableCopier implements GAPPVariableVisitor {
 
     @Override
     public Object visitMultivectorComponent(GAPPMultivectorComponent gappMultivectorComponent, Object arg) {
-        GAPPMultivector mvCopy = (GAPPMultivector) gappMultivectorComponent.getParent().accept(this, null);
-        return new GAPPMultivectorComponent(mvCopy, gappMultivectorComponent.getBladeIndex());
+    //    GAPPMultivector mvCopy = (GAPPMultivector) gappMultivectorComponent.getParent().accept(this, null);
+    return null;//    return new GAPPMultivectorComponent(mvCopy, gappMultivectorComponent.getBladeIndex());
     }
 
     @Override
@@ -34,12 +34,15 @@ public class GAPPVariableCopier implements GAPPVariableVisitor {
 
     @Override
     public Object visitSignedMultivectorComponent(GAPPSignedMultivectorComponent gappSignedMultivectorComponent, Object arg) {
+        return null;
+        /*
         GAPPMultivector mvCopy = (GAPPMultivector) gappSignedMultivectorComponent.getParent().accept(this, null);
         return new GAPPSignedMultivectorComponent(
                 mvCopy,
                 gappSignedMultivectorComponent.getBladeIndex(),
                 gappSignedMultivectorComponent.getSign()
                 );
+         */
     }
 
     @Override

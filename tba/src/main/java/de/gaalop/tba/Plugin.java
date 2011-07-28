@@ -17,16 +17,16 @@ import de.gaalop.tba.cfgImport.optimization.maxima.ProcessBuilderMaximaConnectio
 public class Plugin extends Observable implements OptimizationStrategyPlugin {
 
         @ConfigurationProperty(type = Type.BOOLEAN)
-        public boolean optMaxima = true;
+        public boolean optMaxima = true;//true;
 
         @ConfigurationProperty(type = Type.BOOLEAN)
-        public boolean optOneExpressionRemoval = true;
+        public boolean optOneExpressionRemoval = true;//true;
 
         @ConfigurationProperty(type = Type.BOOLEAN)
-        public boolean optConstantPropagation = true;
+        public boolean optConstantPropagation = true;//true;
 
         @ConfigurationProperty(type = Type.BOOLEAN)
-        public boolean optUnusedAssignments = true;
+        public boolean optUnusedAssignments = true;//true;
 
         @ConfigurationProperty(type = Type.TEXT)
         public String maximaCommand = ProcessBuilderMaximaConnection.CMD_MAXIMA_LINUX;

@@ -71,6 +71,7 @@ public class TestCreator {
             testCircleOneVar();
             testCircleOnlyVars();
             testOutputCount();
+            testUnusedTest();
 
             testGPSNoVars();
             testGPSOnlyVars();
@@ -196,6 +197,11 @@ public class TestCreator {
     private void testOutputCount() throws OptimizationException {
         test(new OutputCountTest(),"OutputCount");
     }
+
+    private void testUnusedTest() throws OptimizationException {
+        test(new Unused(),"Unused");
+    }
+
 
     private void writeFile(OutputFile outputFile) {
         try {

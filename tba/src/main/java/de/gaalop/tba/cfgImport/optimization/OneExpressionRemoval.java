@@ -1,17 +1,20 @@
 package de.gaalop.tba.cfgImport.optimization;
 
+import de.gaalop.api.cfg.GetAllOutputBlades;
 import de.gaalop.api.dfg.DFGNodeType;
 import de.gaalop.api.dfg.DFGNodeTypeGetter;
 import de.gaalop.cfg.AssignmentNode;
 import de.gaalop.cfg.ColorNode;
 import de.gaalop.cfg.EmptyControlFlowVisitor;
 import de.gaalop.cfg.ExpressionStatement;
+import de.gaalop.cfg.FindStoreOutputNodes;
 import de.gaalop.cfg.SequentialNode;
 import de.gaalop.cfg.StartNode;
 import de.gaalop.cfg.StoreResultNode;
 import de.gaalop.dfg.Expression;
 import de.gaalop.dfg.MultivectorComponent;
 import de.gaalop.dfg.Variable;
+import de.gaalop.tba.UseAlgebra;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -30,6 +33,12 @@ public class OneExpressionRemoval extends EmptyControlFlowVisitor {
     private DFGVisitorUsedVariables dfgVisitorusedVariables = new DFGVisitorUsedVariables();
     private LinkedList<SequentialNode> nodeRemovals = new LinkedList<SequentialNode>();
 
+    private UseAlgebra usedAlgebra;
+
+    public OneExpressionRemoval(UseAlgebra usedAlgebra) {
+        this.usedAlgebra = usedAlgebra;
+    }
+
     public LinkedList<SequentialNode> getNodeRemovals() {
         return nodeRemovals;
     }
@@ -44,13 +53,8 @@ public class OneExpressionRemoval extends EmptyControlFlowVisitor {
 
     @Override
     public void visit(StartNode node) {
-
         // mark output vars as tabu
-        for (String output: node.getGraph().getPragmaOutputVariables()) {
-            String[] parts = output.split("_");
-            tabuVariables.add(new VariableComponent(parts[0],Integer.parseInt(parts[1]), null));
-        }
-        
+        tabuVariables.addAll(GetAllOutputBlades.getAllOutputBlades(node.getGraph(), usedAlgebra));
         super.visit(node);
     }
 

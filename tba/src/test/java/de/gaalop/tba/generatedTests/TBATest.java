@@ -1239,6 +1239,17 @@ assertEquals(3, outputs.size());
 assertEquals(32,outputs.size());
   }
   @Test
+  public void testUnused0() {
+    Unused inst = new Unused();
+    inst.calculate();
+    // collect outputs
+    HashMap<String,Float> outputs = inst.getValues();
+    // check outputs
+// check number of outputs
+assertEquals(32, outputs.size());
+
+  }
+  @Test
   public void testGPSNoVars0() {
     GPSNoVars inst = new GPSNoVars();
     inst.calculate();
