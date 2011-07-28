@@ -15,6 +15,8 @@ FIND_PATH(GCD_ROOT_DIR share
 FIND_FILE(GCD_JAR starter-1.0.0.jar "${GCD_ROOT_DIR}/share/gcd/gaalop" DOC "Gaalop GCD")
 FIND_LIBRARY(GCD_LIBRARY gcd HINTS "${GCD_ROOT_DIR}/lib" DOC "GCD helper library")
 get_filename_component(GCD_JAR_DIR ${GCD_JAR} PATH)
+FIND_PATH(GCD_INCLUDE_DIR NAMES gcd.h HINTS "${GCD_ROOT_DIR}/include")
+INCLUDE_DIRECTORIES(${GCD_INCLUDE_DIR})
 
 # define common args
 IF(WITH_MAPLE)
