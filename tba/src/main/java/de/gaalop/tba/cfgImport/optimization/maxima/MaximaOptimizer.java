@@ -131,13 +131,6 @@ public class MaximaOptimizer {
     private void fillMaximaInput(ControlFlowGraph graph, MaximaInput input) {
         assignmentNodeCollector = new AssignmentNodeCollector();
         graph.accept(assignmentNodeCollector);
-
-        FindStoreOutputNodes f = new FindStoreOutputNodes();
-        graph.accept(f);
-        HashSet<String> storeNodeVariables = new HashSet<String>();
-
-        for (StoreResultNode curNode: f.getNodes())
-            storeNodeVariables.add(curNode.getValue().getName());
         
         for (AssignmentNode node: assignmentNodeCollector.getAssignmentNodes()) {
             

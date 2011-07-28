@@ -7,7 +7,6 @@ import de.gaalop.cfg.AssignmentNode;
 import de.gaalop.cfg.ColorNode;
 import de.gaalop.cfg.EmptyControlFlowVisitor;
 import de.gaalop.cfg.ExpressionStatement;
-import de.gaalop.cfg.FindStoreOutputNodes;
 import de.gaalop.cfg.SequentialNode;
 import de.gaalop.cfg.StartNode;
 import de.gaalop.cfg.StoreResultNode;

@@ -133,9 +133,6 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
 		graph = node.getGraph();
 
                 //process all members
-
-                FindStoreOutputNodes stores = new FindStoreOutputNodes();
-                graph.accept(stores);
                 curSection = 0;
 
                 append("import java.util.HashMap;\n\n");
@@ -185,7 +182,7 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
                 append("}\n"); // close procedure getValue
                 append("\n");
 
-                 //TODO getValues for output variables
+                 //getValues for output variables
                 appendIndentation();
                 append("@Override\n");
                 appendIndentation();
