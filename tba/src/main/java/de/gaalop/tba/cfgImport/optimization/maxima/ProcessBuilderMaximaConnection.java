@@ -16,6 +16,7 @@ public class ProcessBuilderMaximaConnection implements MaximaConnection {
 
     public String commandMaxima;
 
+    public static final String CMD_MAXIMA_WINDOWS = "C:\\Program Files (x86)\\Maxima-5.24.0\\bin\\maxima.bat";
     public static final String CMD_MAXIMA_LINUX = "/usr/bin/maxima";
 
     public ProcessBuilderMaximaConnection(String commandMaxima) {
@@ -34,8 +35,12 @@ public class ProcessBuilderMaximaConnection implements MaximaConnection {
 
             MaximaOutput output = new MaximaOutput();
 
+            String path = tmpFile.getAbsolutePath();
+            if (File.separatorChar == '\\') {
+                path = path.replaceAll("\\\\","\\\\\\\\");
+            }
 
-            ProcessBuilder builder = new ProcessBuilder(commandMaxima, "-b", tmpFile.getAbsolutePath());
+            ProcessBuilder builder = new ProcessBuilder(commandMaxima, "-b",path);
             Process p = builder.start();
 
             BufferedReader b = new BufferedReader(new InputStreamReader(p.getInputStream()));
