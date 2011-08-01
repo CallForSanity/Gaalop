@@ -1,5 +1,7 @@
 package de.gaalop.dfg;
 
+import java.util.Set;
+
 /**
  * This class represents a single multivector component. A multivector component is identified
  * by the variable that represents the multivector itself and the index of the component.
