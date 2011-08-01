@@ -8,7 +8,6 @@ import java.util.Set;
 import de.gaalop.cfg.*;
 import de.gaalop.dfg.*;
 import de.gaalop.gaalet.*;
-import de.gaalop.gealg.*;
 
 /**
  *  This Visitors job is it to traverse the ControlFlowGraph to find appearances of 

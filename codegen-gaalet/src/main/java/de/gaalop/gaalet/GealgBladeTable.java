@@ -1,4 +1,4 @@
-package de.gaalop.gealg;
+package de.gaalop.gaalet;
 
 import java.lang.reflect.Array;
 import java.util.List;

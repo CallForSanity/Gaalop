@@ -1,4 +1,4 @@
-package de.gaalop.gealg;
+package de.gaalop.gaalet;
 
 public class GaalopIndex extends BladeIndex{
 

@@ -3,7 +3,7 @@ package de.gaalop.gaalet.output;
 import de.gaalop.Notifications;
 import de.gaalop.cfg.*;
 import de.gaalop.dfg.*;
-import de.gaalop.gealg.*;
+import de.gaalop.gaalet.*;
 
 import java.util.*;
 

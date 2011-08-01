@@ -1,4 +1,4 @@
-package de.gaalop.gealg;
+package de.gaalop.gaalet;
 
 import java.util.HashMap;
 import java.util.Map;

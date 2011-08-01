@@ -3,7 +3,7 @@ package de.gaalop.compressed;
 import de.gaalop.Notifications;
 import de.gaalop.cfg.*;
 import de.gaalop.dfg.*;
-import de.gaalop.gealg.*;
+import de.gaalop.gaalet.*;
 import de.gaalop.gaalet.output.*;
 
 import java.util.*;
@@ -86,24 +86,24 @@ public class CompressedVisitor extends de.gaalop.gaalet.output.CppVisitor {
 			graph.accept(fieldVisitor);
 			int size = fieldVisitor.getMultiVector().getGaalopBlades().size();		
 			code.append(variableType + ' ' + fieldVisitor.getMultiVector().getName());
-			if(size > 0)
-			{
+			if(size > 0) {
 			    	code.append('[');
 				code.append(size);
 				code.append(']');
 			}
 			code.append(";\n");
 
-			// blade usage definition
-			Iterator<Integer> it = fieldVisitor.getMultiVector().getGaalopBlades().keySet().iterator();
-			code.append("const unsigned int ");
-			code.append(var);
-			code.append("_usage = 0");
-			while (it.hasNext()) {
-				code.append(" | (1 << ");
-				code.append(it.next());
-				code.append(')');
-			}
+			// GCD blade usage definition
+			if(gcdMetaInfo) {
+                            Iterator<Integer> it = fieldVisitor.getMultiVector().getGaalopBlades().keySet().iterator();
+                            code.append("const unsigned int ");
+                            code.append(var);
+                            code.append("_usage = 0");
+                            while (it.hasNext()) {
+    				code.append(" | (1 << ");
+    				code.append(it.next());
+    				code.append(')');
+    			}
 
 			code.append(";\n");
 		}

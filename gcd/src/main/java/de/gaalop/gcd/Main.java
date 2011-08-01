@@ -25,6 +25,15 @@ import java.util.Vector;
  */
 public class Main {
 
+    private void writeLinePragma(BufferedWriter outputFile, Integer lineCount) throws IOException {
+        // line pragma for compile errors
+        outputFile.write("#line ");
+        outputFile.write(lineCount.toString());
+        outputFile.write(" \"");
+        outputFile.write(inputFilePath);
+        outputFile.write("\"\n");
+    }
+
     class MvComponent {
 
         String bladeHandle;
@@ -72,13 +81,11 @@ public class Main {
         }
     }
 
-    public static BufferedReader createFileInputStringStream(String fileName) {
+    public static final BufferedReader createFileInputStringStream(String fileName) {
         try {
-            FileInputStream fstream = new FileInputStream(fileName);
-            DataInputStream in = new DataInputStream(fstream);
-            BufferedReader br = new BufferedReader(new InputStreamReader(in));
-
-            return br;
+            final FileInputStream fstream = new FileInputStream(fileName);
+            final DataInputStream in = new DataInputStream(fstream);
+            return new BufferedReader(new InputStreamReader(in));
         } catch (Exception e) {
             return null;
         }
@@ -86,10 +93,8 @@ public class Main {
 
     public static BufferedWriter createFileOutputStringStream(String fileName) {
         try {
-            FileWriter fstream = new FileWriter(fileName);
-            BufferedWriter bw = new BufferedWriter(fstream);
-
-            return bw;
+            final FileWriter fstream = new FileWriter(fileName);
+            return new BufferedWriter(fstream);
         } catch (Exception e) {
             return null;
         }
@@ -99,7 +104,7 @@ public class Main {
 
         String runPath;
         {
-            File directory = new File(".");
+            final File directory = new File(".");
             runPath = directory.getCanonicalPath();
         }
 
@@ -108,7 +113,7 @@ public class Main {
         List<String> gaalopInFileVector = new ArrayList<String>();
         String line;
         {
-            BufferedReader inputFile = createFileInputStringStream(inputFilePath);
+            final BufferedReader inputFile = createFileInputStringStream(inputFilePath);
             while ((line = inputFile.readLine()) != null) {
                 // found gaalop line
                 if (line.indexOf("#pragma gcd begin") >= 0) {
@@ -146,7 +151,7 @@ public class Main {
                     // retrieve multivector declarations
                     {
                         final String mvSearchString = "#pragma gcd multivector ";
-                        int statementPos = line.indexOf(mvSearchString);
+                        final int statementPos = line.indexOf(mvSearchString);
                         if (statementPos >= 0) {
                             final String mvName = line.substring(statementPos
                                     + mvSearchString.length());
@@ -161,10 +166,10 @@ public class Main {
                         final int statementPos = line.indexOf(mvCompSearchString);
                         
                         if (statementPos >= 0) {
-                            Scanner lineStream = new Scanner(line.substring(statementPos
+                            final Scanner lineStream = new Scanner(line.substring(statementPos
                                     + mvCompSearchString.length()));
 
-                            String mvName = lineStream.next();
+                            final String mvName = lineStream.next();
                             MvComponent mvComp = new MvComponent();
                             mvComp.bladeHandle = lineStream.next();
                             mvComp.bladeName = lineStream.next();
@@ -176,10 +181,10 @@ public class Main {
                 }
 
                 // generate import declarations
-                for (String mvName : mvComponents.keySet()) {
+                for (final String mvName : mvComponents.keySet()) {
                     variables.append(mvName).append(" = 0");
 
-                    for (MvComponent mvComp : mvComponents.get(mvName)) {
+                    for(final MvComponent mvComp : mvComponents.get(mvName)) {
                         variables.append(" +").append(mvComp.bladeName);
                         variables.append('*').append(mvName).append('_');
                         variables.append(mvComp.bladeHandle);
@@ -202,7 +207,7 @@ public class Main {
                 CompilerFacade compiler = createCompiler();
 
                 // Perform compilation
-                InputFile inputFile = new InputFile("inputFile", inputFileStream.toString());
+                final InputFile inputFile = new InputFile("inputFile", inputFileStream.toString());
                 Set<OutputFile> outputFiles = compiler.compile(inputFile);
 
                 StringBuffer gaalopOutFileStream = new StringBuffer();
@@ -231,15 +236,16 @@ public class Main {
             }
 
             BufferedWriter outputFile = createFileOutputStringStream(outputFilePath);
-            BufferedReader inputFile = createFileInputStringStream(inputFilePath);
+            final BufferedReader inputFile = createFileInputStringStream(inputFilePath);
             Integer gaalopFileCount = 0;
             Integer lineCount = 1; // think one line ahead
 
+            writeLinePragma(outputFile, lineCount++);
             while ((line = inputFile.readLine()) != null) {
                 ++lineCount;
 
                 if (line.indexOf("#include") >= 0 && line.indexOf('\"') >= 0) {
-                    int pos = line.indexOf('\"') + 1;
+                    final int pos = line.indexOf('\"') + 1;
                     outputFile.write(line.substring(0, pos));
                     outputFile.write(inputFileDir);
                     outputFile.write(line.substring(pos));
@@ -263,13 +269,7 @@ public class Main {
                             break;
                         }
                     }
-
-                    // line pragma for compile errors
-                    outputFile.write("#line ");
-                    outputFile.write(lineCount.toString());
-                    outputFile.write(" \"");
-                    outputFile.write(inputFilePath);
-                    outputFile.write("\"\n");
+                    writeLinePragma(outputFile, lineCount);
                 } else {
                     outputFile.write(line);
                     outputFile.write(LINE_END);
