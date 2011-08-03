@@ -16,100 +16,101 @@ import org.apache.commons.logging.LogFactory;
  */
 public class CompressedVisitor extends de.gaalop.gaalet.output.CppVisitor {
 
-	public CompressedVisitor(boolean standalone) {
-		super(standalone);
-	}
+    public CompressedVisitor(boolean standalone) {
+        super(standalone);
+    }
 
-	@Override
-	public void visit(StartNode node) {
-		graph = node.getGraph();
+    @Override
+    public void visit(StartNode node) {
+        graph = node.getGraph();
 
-		FindStoreOutputNodes findOutput = new FindStoreOutputNodes();
-		graph.accept(findOutput);
-		for (StoreResultNode var : findOutput.getNodes()) {
-			String outputName = var.getValue().getName() + "_out";
-		
-			outputNamesMap.put(var, outputName);
-		}
-		if (standalone) {
-			code.append("void calculate(");
+        FindStoreOutputNodes findOutput = new FindStoreOutputNodes();
+        graph.accept(findOutput);
+        for (StoreResultNode var : findOutput.getNodes()) {
+            String outputName = var.getValue().getName() + "_out";
 
-			// Input Parameters
-			List<Variable> inputParameters = sortVariables(graph.getInputVariables());
-			for (Variable var : inputParameters) {
-				code.append("float "); // The assumption here is that they all are normal scalars
-				printVarName(var.getName());
-				code.append(", ");
-			}
+            outputNamesMap.put(var, outputName);
+        }
+        if (standalone) {
+            code.append("void calculate(");
 
-			for (StoreResultNode var : findOutput.getNodes()) {
-				code.append("float **");
-				printVarName(outputNamesMap.get(var));
-				code.append(", ");
-			}
+            // Input Parameters
+            List<Variable> inputParameters = sortVariables(graph.getInputVariables());
+            for (Variable var : inputParameters) {
+                code.append("float "); // The assumption here is that they all are normal scalars
+                printVarName(var.getName());
+                code.append(", ");
+            }
 
-			if (!graph.getInputVariables().isEmpty() || !findOutput.getNodes().isEmpty()) {
-				code.setLength(code.length() - 2);
-			}
+            for (StoreResultNode var : findOutput.getNodes()) {
+                code.append("float **");
+                printVarName(outputNamesMap.get(var));
+                code.append(", ");
+            }
 
-			code.append(") {\n");
-			indentation++;
-		}
+            if (!graph.getInputVariables().isEmpty() || !findOutput.getNodes().isEmpty()) {
+                code.setLength(code.length() - 2);
+            }
 
-		handleLocalVariables();
-		createVectorSet(findOutput);
-		node.getSuccessor().accept(this);
-	}
-	
-	/**	
-	* Declare local variables
-	*	 but first local variables in a set, so we reduce redundancy
-	*/
-	@Override
-	protected void handleLocalVariables() {
-		Set <String> varNames = new HashSet<String> ();
-		for (Variable var : graph.getLocalVariables()) {
-			varNames.add(var.getName());			
-		}		
-		for (String var : varNames) {
-			appendIndentation();
-			FieldsUsedVisitor fieldVisitor = new FieldsUsedVisitor(var);
+            code.append(") {\n");
+            indentation++;
+        }
 
-			// GCD definition
-			if(gcdMetaInfo) {
-				code.append("#pragma gcd multivector ");
-				code.append(var);
-				code.append('\n');
-			}
+        handleLocalVariables();
+        createVectorSet(findOutput);
+        node.getSuccessor().accept(this);
+    }
 
-			// standard definition
-			graph.accept(fieldVisitor);
-			int size = fieldVisitor.getMultiVector().getGaalopBlades().size();		
-			code.append(variableType + ' ' + fieldVisitor.getMultiVector().getName());
-			if(size > 0) {
-			    	code.append('[');
-				code.append(size);
-				code.append(']');
-			}
-			code.append(";\n");
+    /**
+     * Declare local variables
+     *	 but first local variables in a set, so we reduce redundancy
+     */
+    @Override
+    protected void handleLocalVariables() {
+        Set<String> varNames = new HashSet<String>();
+        for (Variable var : graph.getLocalVariables()) {
+            varNames.add(var.getName());
+        }
+        for (String var : varNames) {
+            appendIndentation();
+            FieldsUsedVisitor fieldVisitor = new FieldsUsedVisitor(var);
 
-			// GCD blade usage definition
-			if(gcdMetaInfo) {
-                            Iterator<Integer> it = fieldVisitor.getMultiVector().getGaalopBlades().keySet().iterator();
-                            code.append("const unsigned int ");
-                            code.append(var);
-                            code.append("_usage = 0");
-                            while (it.hasNext()) {
-    				code.append(" | (1 << ");
-    				code.append(it.next());
-    				code.append(')');
-    			}
+            // GCD definition
+            if (gcdMetaInfo) {
+                code.append("#pragma gcd multivector ");
+                code.append(var);
+                code.append('\n');
+            }
 
-			code.append(";\n");
-		}
+            // standard definition
+            graph.accept(fieldVisitor);
+            int size = fieldVisitor.getMultiVector().getGaalopBlades().size();
+            code.append(variableType + ' ' + fieldVisitor.getMultiVector().getName());
+            if (size > 0) {
+                code.append('[');
+                code.append(size);
+                code.append(']');
+            }
+            code.append(";\n");
 
-		if (!graph.getLocalVariables().isEmpty()) {
-			code.append("\n");
-		}				
-	}
+            // GCD blade usage definition
+            if (gcdMetaInfo) {
+                Iterator<Integer> it = fieldVisitor.getMultiVector().getGaalopBlades().keySet().iterator();
+                code.append("const unsigned int ");
+                code.append(var);
+                code.append("_usage = 0");
+                while (it.hasNext()) {
+                    code.append(" | (1 << ");
+                    code.append(it.next());
+                    code.append(')');
+                }
+
+                code.append(";\n");
+            }
+
+            if (!graph.getLocalVariables().isEmpty()) {
+                code.append("\n");
+            }
+        }
+    }
 }
