@@ -22,12 +22,15 @@ public class CFGImporter extends MvExpressionsBuilder {
     protected AssignmentNode changeGraph(AssignmentNode node, MvExpressions mvExpr, Variable variable) {
         AssignmentNode lastNode = node;
 
+        boolean inserted = false;
+
         // At first, output all assignments
         for (int i = 0; i < bladeCount; i++) {
 
             Expression e = mvExpr.bladeExpressions[i];
 
             if (e != null) {
+                inserted = true;
                 AssignmentNode insNode = new AssignmentNode(node.getGraph(), new MultivectorComponent(variable.getName(), i), e);
 
                 lastNode.insertAfter(insNode);
@@ -56,6 +59,13 @@ public class CFGImporter extends MvExpressionsBuilder {
          */
 
         node.getGraph().removeNode(node);
+
+        if (!inserted) {
+            //Remove local variable (for gcd),
+            //since there are no non-empty multivector components
+            node.getGraph().removeLocalVariable(node.getVariable());
+
+        }
 
         return lastNode;
     }
