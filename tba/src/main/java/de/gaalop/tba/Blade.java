@@ -13,23 +13,23 @@ public class Blade {
 	private Algebra algebra;
 	
 	private Vector<String> bases;
-	private byte sign;
+	private byte prefactor;
 	
 	public Blade(Algebra algebra) {
 		this.algebra = algebra;
-		sign = 1;
+		prefactor = 1;
 		bases = new Vector<String>();
 	}
 	
 	public Blade(Algebra algebra, byte sign) {
 		this.algebra = algebra;
-		this.sign = sign;
+		this.prefactor = sign;
 		bases = new Vector<String>();
 	}
 
         public Blade(Algebra algebra, Vector<String> bases, byte sign) {
 		this.algebra = algebra;
-		this.sign = sign;
+		this.prefactor = sign;
 		this.bases = bases;
 	}
 
@@ -42,11 +42,11 @@ public class Blade {
 	public static Blade parseStr(String toParse, Algebra algebra) {
 		 Blade result = new Blade(algebra);
 
-                 result.setSign((byte) 1);
+                 result.setPrefactor((byte) 1);
 
 		 if (toParse.equals("0")) {
 			 result.addBasis("1");
-			 result.sign = 0;
+			 result.prefactor = 0;
 			 return result;
 		 }
 
@@ -54,25 +54,25 @@ public class Blade {
 
                   // parse only prefactor
 		  if (parts[0].startsWith("-1")) {
-		    result.setSign((byte) -1);
+		    result.setPrefactor((byte) -1);
 		    parts[0] = parts[0].substring(2);
 		  } else {
 		    if (parts[0].startsWith("1")) {
-		       result.setSign((byte) 1);
+		       result.setPrefactor((byte) 1);
 		       if (!parts[0].equals("1")) {
 		    	   parts[0] = parts[0].substring(1);
 		       }
 		    } else 
                         if (parts[0].startsWith("e")) {
                             //implicit 1
-                            result.setSign((byte) 1);
+                            result.setPrefactor((byte) 1);
                         } else if (parts[0].startsWith("-e")) {
                             //implicit -1
-                            result.setSign((byte) -1);
+                            result.setPrefactor((byte) -1);
                             parts[0] = parts[0].substring(1);
                         } else {
                             String intStr = parts[0].split("e")[0];
-                            result.sign = (byte) Integer.parseInt(intStr);
+                            result.prefactor = (byte) Integer.parseInt(intStr);
                             if (parts[0].contains("e")) {
                                 parts[0] = parts[0].substring(parts[0].indexOf("e"));
                             } else {
@@ -97,13 +97,13 @@ public class Blade {
 	}
 	
 	public double getValue() {
-		return sign;
+		return prefactor;
 	}
 	
 	@Override
 	public String toString() {
-		if (sign == 0) return "0";
-		String t = (Math.abs(sign) == 1) ?((sign==1) ? "" : "-") : getValue()+"*";
+		if (prefactor == 0) return "0";
+		String t = (Math.abs(prefactor) == 1) ?((prefactor==1) ? "" : "-") : getValue()+"*";
 		
 		StringBuilder sb = new StringBuilder();
 		for (String b: bases) 
@@ -118,8 +118,8 @@ public class Blade {
 		bases.add(toAdd);
 	}
 
-	private void setSign(byte sign) {
-		this.sign = sign;		
+	private void setPrefactor(byte prefactor) {
+		this.prefactor = prefactor;
 	}
 
         /**
@@ -168,7 +168,7 @@ public class Blade {
 			bases.add(base[basesInt[i]]);
 		
 		if (numOfChanges % 2 != 0) {
-			sign *= -1; //invert sign
+			prefactor *= -1; //invert sign
 		}
 		
 	}
