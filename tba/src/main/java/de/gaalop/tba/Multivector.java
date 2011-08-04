@@ -1,6 +1,7 @@
 package de.gaalop.tba;
 
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.Vector;
 
 /**
@@ -31,9 +32,36 @@ public class Multivector {
 		  Multivector result = new Multivector(algebra);
 
 		  String[] parts = toParse.split("\\+");
+
+                  LinkedList<String> partsList = new LinkedList<String>();
+                  for (String part: parts) {
+
+                      if (part.contains("-")) {
+                        String[] parts2 = (" "+part).split("-");
+                        boolean first = true;
+                        for (String part2: parts2) {
+                            String trimmed2 = part2.trim();
+                            if (first) {
+                                if (!trimmed2.isEmpty()) {
+                                    partsList.add(trimmed2);
+                                }
+                            } else {
+                                partsList.add("-"+trimmed2);
+                            }
+                            
+                            first = false;
+                        }
+
+
+                      } else
+                          partsList.add(part.trim());
+
+                  }
+
 		  
-		  for (String part: parts) 
+		  for (String part: partsList) 
 		      result.setBlade(Blade.parseStr(part,algebra));
+    
 		  
 		  
 		  return result;
@@ -86,9 +114,7 @@ public class Multivector {
 		
 		for (int i=0;i<arr.length;i++) {
 			if (Math.abs(arr[i])>=10E-7) {
-				Blade b = (arr[i]<0) ? 
-						new Blade(algebra,(byte) -1,-arr[i]) :
-							new Blade(algebra,(byte) 1,arr[i]);
+				Blade b = new Blade(algebra,(byte) arr[i]);
 				for (String curBase : algebra.getBlade(i).getBases())
 					b.addBasis(curBase);
 				blades.add(b);
