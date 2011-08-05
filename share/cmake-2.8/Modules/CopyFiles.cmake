@@ -8,8 +8,8 @@ macro(copy_files TARGET_NAME GLOBPAT DESTINATION)
     COMMENT "Copying files ${GLOBPAT}.")
 
   foreach(FILENAME ${COPY_FILES})
-    set(SRC "${CMAKE_CURRENT_SOURCE_DIR}/${FILENAME}")
-    set(DST "${CMAKE_CURRENT_BINARY_DIR}/${DESTINATION}/${FILENAME}")
+    SET(SRC "${CMAKE_CURRENT_SOURCE_DIR}/${FILENAME}")
+    SET(DST "${CMAKE_CURRENT_BINARY_DIR}/${DESTINATION}/${FILENAME}")
 
     add_custom_command(
       TARGET ${TARGET_NAME}
@@ -19,8 +19,11 @@ macro(copy_files TARGET_NAME GLOBPAT DESTINATION)
 endmacro(copy_files)
 
 macro(copy_directory TARGET_NAME SOURCE DESTINATION)
-    set(SRC "${CMAKE_CURRENT_SOURCE_DIR}/${SOURCE}")
-    set(DST "${CMAKE_CURRENT_BINARY_DIR}/${DESTINATION}")
+    # In case of multiple results, take first one
+    FILE(GLOB SRC_LIST "${CMAKE_CURRENT_SOURCE_DIR}/${SOURCE}")
+    LIST(GET SRC_LIST 0 SRC)
+    
+    SET(DST "${CMAKE_CURRENT_BINARY_DIR}/${DESTINATION}")
 
   add_custom_target(${TARGET_NAME} ALL
     COMMENT "Copying directory ${SOURCE} to ${DESTINATION}.")

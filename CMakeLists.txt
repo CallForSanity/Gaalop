@@ -8,6 +8,7 @@ ENABLE_TESTING()
 SET(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/share/cmake-2.8/Modules")
 
 # setup CPack
+INCLUDE(InstallRequiredSystemLibraries)
 SET(CPACK_PACKAGE_CONTACT "Patrick Charrier <patrick.charrier@stud.tu-darmstadt.de>")
 SET(CPACK_PACKAGE_DESCRIPTION "Gaalop Compiler Driver (GCD) compiles source files containing Geometric Algebra expressions expressed in CLUCalc into C++-compatible object files.")
 if( WIN32 AND NOT UNIX )
@@ -38,8 +39,12 @@ add_custom_command(TARGET gaalop COMMAND ${MVN_BINARY} -DupdateOnly=true package
 COPY_DIRECTORY(include-copy include include)
 COPY_DIRECTORY(gaalop-copy "target/gaalop*" "share/gcd/gaalop")
 COPY_DIRECTORY(dependencies-copy dependencies "share/gcd/gaalop/plugins")
+
+# find paths
+FILE(GLOB GAALOP_BUILD_TARGET_DIR_LIST "${CMAKE_CURRENT_SOURCE_DIR}/target/gaalop*")
+LIST(GET GAALOP_BUILD_TARGET_DIR_LIST 0 GAALOP_BUILD_TARGET_DIR)
+
 # install
-FILE(GLOB GAALOP_BUILD_TARGET_DIR "${CMAKE_CURRENT_SOURCE_DIR}/target/gaalop*")
 INSTALL(DIRECTORY "${GAALOP_BUILD_TARGET_DIR}/." DESTINATION share/gcd/gaalop PATTERN ".svn" EXCLUDE)
 INSTALL(DIRECTORY "dependencies/." DESTINATION share/gcd/gaalop/plugins PATTERN ".svn" EXCLUDE)
 

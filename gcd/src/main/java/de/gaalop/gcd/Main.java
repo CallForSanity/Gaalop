@@ -40,10 +40,12 @@ public class Main {
         String bladeName;
         int bladeArrayIndex;
     };
+    
     private Log log = LogFactory.getLog(Main.class);
+    
     @Option(name = "-i", required = true, usage = "The input file.")
     private String inputFilePath;
-    @Option(name = "-o", required = false, usage = "The output file.")
+    @Option(name = "-o", required = true, usage = "The output file.")
     private String outputFilePath;
     @Option(name = "-m", required = false, usage = "Sets the Maple binary path.")
     private String mapleBinaryPath = "";
@@ -53,6 +55,7 @@ public class Main {
     private String codeGeneratorPlugin = "de.gaalop.compressed.Plugin";
     @Option(name = "-optimizer", required = false, usage = "Sets the class name of the optimization strategy plugin that should be used.")
     private String optimizationStrategyPlugin = "de.gaalop.maple.Plugin";
+
     private static String PATH_SEP = "/";
     private static char LINE_END = '\n';
 
@@ -73,11 +76,12 @@ public class Main {
             System.err.println(e.getMessage());
             parser.printUsage(System.err);
         } catch (Throwable t) {
-            while (t.getCause() != null) {
-                t = t.getCause();
-            }
+//            while (t.getCause() != null) {
+//                t = t.getCause();
+//            }
 
-            System.err.println(t.getMessage());
+//            System.err.println(t.getMessage());
+            t.printStackTrace();
         }
     }
 
@@ -116,12 +120,12 @@ public class Main {
             final BufferedReader inputFile = createFileInputStringStream(inputFilePath);
             while ((line = inputFile.readLine()) != null) {
                 // found gaalop line
-                if (line.indexOf("#pragma gcd begin") >= 0) {
+                if (line.contains("#pragma gcd begin")) {
                     StringBuffer gaalopInFileStream = new StringBuffer();
 
                     // read until end of optimized file
                     while ((line = inputFile.readLine()) != null) {
-                        if (line.indexOf("#pragma gcd end") >= 0) {
+                        if (line.contains("#pragma gcd end")) {
                             break;
                         } else {
                             gaalopInFileStream.append(line);
@@ -140,11 +144,12 @@ public class Main {
         for (int gaalopFileCount = 0; gaalopFileCount < gaalopInFileVector.size(); ++gaalopFileCount) {
 
             // import declarations
-            StringBuffer variables = new StringBuffer();
+            StringBuffer variableDeclarations = new StringBuffer();
+            // imported multivector components
+            Map<String, List<MvComponent>> mvComponents = new HashMap<String, List<MvComponent>>();
 
             // retrieve multivectors from previous sections
             if (gaalopFileCount > 0) {
-                Map<String, List<MvComponent>> mvComponents = new HashMap<String, List<MvComponent>>();
                 BufferedReader gaalopOutFile = new BufferedReader(new StringReader(gaalopOutFileVector.get(gaalopFileCount - 1)));
 
                 while ((line = gaalopOutFile.readLine()) != null) {
@@ -164,7 +169,7 @@ public class Main {
                         final String mvCompSearchString =
                                 "#pragma gcd multivector_component ";
                         final int statementPos = line.indexOf(mvCompSearchString);
-                        
+
                         if (statementPos >= 0) {
                             final Scanner lineStream = new Scanner(line.substring(statementPos
                                     + mvCompSearchString.length()));
@@ -182,15 +187,15 @@ public class Main {
 
                 // generate import declarations
                 for (final String mvName : mvComponents.keySet()) {
-                    variables.append(mvName).append(" = 0");
+                    variableDeclarations.append(mvName).append(" = 0");
 
-                    for(final MvComponent mvComp : mvComponents.get(mvName)) {
-                        variables.append(" +").append(mvComp.bladeName);
-                        variables.append('*').append(mvName).append('_');
-                        variables.append(mvComp.bladeHandle);
+                    for (final MvComponent mvComp : mvComponents.get(mvName)) {
+                        variableDeclarations.append(" +").append(mvComp.bladeName);
+                        variableDeclarations.append('*').append(mvName).append('_');
+                        variableDeclarations.append(mvComp.bladeHandle);
                     }
 
-                    variables.append(";\n");
+                    variableDeclarations.append(";\n");
                 }
             }
 
@@ -198,7 +203,7 @@ public class Main {
             {
                 // compose file
                 StringBuffer inputFileStream = new StringBuffer();
-                inputFileStream.append(variables.toString()).append(LINE_END);
+                inputFileStream.append(variableDeclarations.toString()).append(LINE_END);
                 inputFileStream.append(gaalopInFileVector.get(gaalopFileCount));
 
                 System.out.println("compiling");
@@ -212,7 +217,7 @@ public class Main {
 
                 StringBuffer gaalopOutFileStream = new StringBuffer();
                 for (OutputFile output : outputFiles) {
-                    gaalopOutFileStream.append(output.getContent()).append(LINE_END);
+                    gaalopOutFileStream.append(filterImportedMultivectorsFromExport(output.getContent(), mvComponents.keySet())).append(LINE_END);
                 }
 
                 gaalopOutFileVector.add(gaalopOutFileStream.toString());
@@ -265,7 +270,7 @@ public class Main {
                     // skip original code
                     while ((line = inputFile.readLine()) != null) {
                         ++lineCount;
-                        if (line.indexOf("#pragma gcd end") >= 0) {
+                        if (line.contains("#pragma gcd end")) {
                             break;
                         }
                     }
@@ -281,23 +286,37 @@ public class Main {
         }
     }
 
-    private void writeFile(OutputFile output) throws FileNotFoundException,
-            UnsupportedEncodingException {
-//        if (outputDirectory.equals("-")) {
-//            printFileToConsole(output);
-//        } else {
-//            File outFile;
-//            if (outputDirectory.length() == 0) {
-//                outFile = new File(output.getName());
-//            } else {
-//                // NOTE: output file does not return actual name, but the full path of the file
-//                File tempFile = new File(output.getName());
-//                outFile = new File(outputDirectory, tempFile.getName());
-//            }
-//            PrintWriter writer = new PrintWriter(outFile, output.getEncoding().name());
-//            writer.print(output.getContent());
-//            writer.close();
-//        }
+    private String filterImportedMultivectorsFromExport(final String content, final Set<String> importedMVs) throws Exception {
+        final BufferedReader inStream = new BufferedReader(new StringReader(content));
+        StringBuffer outStream = new StringBuffer();
+
+        boolean skip = false;
+        String line;
+        while ((line = inStream.readLine()) != null) {
+
+            // find multivector meta-statement
+            if (line.contains("#pragma gcd multivector")) {
+                // extract exported multivector
+                final String exportedMV = line.split(" ")[3];
+
+                // determine if this MV was previously imported
+                skip = false;
+                for (final String importedMV : importedMVs) {
+                    if (exportedMV.equals(importedMV)) {
+                        skip = true;
+                        break;
+                    }
+                }
+            }
+            
+            // if yes, then skip until next multivector meta-statement
+            if (!skip) {
+                outStream.append(line);
+                outStream.append(LINE_END);
+            }
+        }
+
+        return outStream.toString();
     }
 
     private void printFileToConsole(OutputFile output) {

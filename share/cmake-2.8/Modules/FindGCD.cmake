@@ -1,7 +1,8 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 
 # options
-OPTION(WITH_MAPLE "wether to use the maple plugin or not." ON)
+OPTION(GCD_WITH_MAPLE "wether to use the maple plugin or not." OFF)
+OPTION(GCD_WITH_MAXIMA "wether to use the maxima in tba plugin or not." OFF)
 
 # find java
 FIND_PACKAGE(Java COMPONENTS Runtime REQUIRED)
@@ -32,9 +33,21 @@ SET(GCD_OPENCL_ARGS ${GCD_COMMON_ARGS} -generator "de.gaalop.cpp.Plugin")
 SET(GCD_JAVA_ARGS ${GCD_COMMON_ARGS} -generator "de.gaalop.cpp.Plugin")
 
 # configure compile script
-SET(GCD_COMPILE_SCRIPT "${CMAKE_CURRENT_BINARY_DIR}/run_gcd.sh")
 get_filename_component(CMAKE_CURRENT_LIST_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
-CONFIGURE_FILE("${CMAKE_CURRENT_LIST_DIR}/run_gcd.sh.in" ${GCD_COMPILE_SCRIPT})
+IF(WIN32 AND NOT UNIX)
+    IF(MAPLE_BIN_DIR)
+        FILE(TO_NATIVE_PATH ${MAPLE_BIN_DIR} MAPLE_BIN_DIR_NATIVE)
+    ELSE(MAPLE_BIN_DIR)
+        SET(MAPLE_BIN_DIR_NATIVE .)
+    ENDIF(MAPLE_BIN_DIR)
+    FILE(TO_NATIVE_PATH ${GCD_JAR_DIR} GCD_JAR_DIR_NATIVE)
+    FILE(TO_NATIVE_PATH ${Java_JAVA_EXECUTABLE} Java_JAVA_EXECUTABLE_NATIVE)
+    SET(GCD_COMPILE_SCRIPT "${CMAKE_CURRENT_BINARY_DIR}/run_gcd.bat")
+    CONFIGURE_FILE("${CMAKE_CURRENT_LIST_DIR}/run_gcd.bat.in" ${GCD_COMPILE_SCRIPT})
+ELSE(WIN32 AND NOT UNIX)
+    SET(GCD_COMPILE_SCRIPT "${CMAKE_CURRENT_BINARY_DIR}/run_gcd.sh")
+    CONFIGURE_FILE("${CMAKE_CURRENT_LIST_DIR}/run_gcd.sh.in" ${GCD_COMPILE_SCRIPT})
+ENDIF(WIN32 AND NOT UNIX)
 
 # custom command to compile gcd source files
 MACRO(GCD_WRAP_SRCS generated_files)
@@ -141,3 +154,8 @@ MACRO(GCD_JAVA_ADD_EXECUTABLE target)
     FILE(GLOB src ${ARGN})
     GCD_WRAP_SRCS(generated_files ${src})
 ENDMACRO(GCD_JAVA_ADD_EXECUTABLE)
+
+SET( GCD_FOUND "NO" )
+IF(GCD_JAR)
+    SET( GCD_FOUND "YES" )
+ENDIF(GCD_JAR)
