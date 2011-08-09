@@ -11,9 +11,6 @@ SET(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/share/cmake-2.8/Modules")
 INCLUDE(InstallRequiredSystemLibraries)
 SET(CPACK_PACKAGE_CONTACT "Patrick Charrier <patrick.charrier@stud.tu-darmstadt.de>")
 SET(CPACK_PACKAGE_DESCRIPTION "Gaalop Compiler Driver (GCD) compiles source files containing Geometric Algebra expressions expressed in CLUCalc into C++-compatible object files.")
-if( WIN32 AND NOT UNIX )
-    SET(CPACK_PACKAGE_EXECUTABLES config "Configuration Tool")
-endif()
 INCLUDE(CPack)
 
 # use packages
