@@ -8,9 +8,9 @@ OPTION(GCD_WITH_MAXIMA "wether to use the maxima in tba plugin or not." OFF)
 FIND_PACKAGE(Java COMPONENTS Runtime REQUIRED)
 
 # find
-IF(WITH_MAPLE)
+IF(GCD_WITH_MAPLE)
 FIND_PATH(MAPLE_BIN_DIR HINTS "C:/Program Files (x86)/Maple 12/bin.win" "/opt/maple13/bin" CACHE PATH "Maple Binary Dir")
-ENDIF(WITH_MAPLE)
+ENDIF(GCD_WITH_MAPLE)
 FIND_PATH(GCD_ROOT_DIR share
           DOC "Gaalop Compiler Driver root directory")
 FIND_FILE(GCD_JAR starter-1.0.0.jar "${GCD_ROOT_DIR}/share/gcd/gaalop" DOC "Gaalop GCD")
@@ -20,11 +20,11 @@ FIND_PATH(GCD_INCLUDE_DIR NAMES gcd.h HINTS "${GCD_ROOT_DIR}/include")
 INCLUDE_DIRECTORIES(${GCD_INCLUDE_DIR})
 
 # define common args
-IF(WITH_MAPLE)
+IF(GCD_WITH_MAPLE)
 SET(GCD_COMMON_ARGS -optimizer "de.gaalop.maple.Plugin" -m "${MAPLE_BIN_DIR}")
-ELSE(WITH_MAPLE)
+ELSE(GCD_WITH_MAPLE)
 SET(GCD_COMMON_ARGS -optimizer "de.gaalop.tba.Plugin")
-ENDIF(WITH_MAPLE)
+ENDIF(GCD_WITH_MAPLE)
 
 # define specific args
 SET(GCD_CXX_ARGS ${GCD_COMMON_ARGS} -generator "de.gaalop.compressed.Plugin")
