@@ -15,6 +15,7 @@ import de.gaalop.cfg.ControlFlowGraph;
 import de.gaalop.tba.gps.GPSNoVarsTest;
 import de.gaalop.tba.gps.GPSOnlyVarsTest;
 import de.gaalop.tba.gps.Point3D;
+import de.gaalop.tba.trigonFuncTest.TrigonometricFunctions;
 import java.awt.Point;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
@@ -67,6 +68,9 @@ public class TestCreator {
         //positive tests - tests that should be compiled
         try {
             // test(new CircleOneVarTest(new Point(5,2),new Point(3,9),new Point(6,4),new boolean[]{true,false,false,false,false,false},1),"CircleOneVar");
+
+            testTrigonometric();
+
             testCircleNoVars();
             testCircleOneVar();
             testCircleOnlyVars();
@@ -150,6 +154,12 @@ public class TestCreator {
             }
 
 
+    }
+
+    private void testTrigonometric() throws OptimizationException {
+        test(new TrigonometricFunctions(),"TrigonometricFunctions");
+
+        //TODO more tests
     }
 
     

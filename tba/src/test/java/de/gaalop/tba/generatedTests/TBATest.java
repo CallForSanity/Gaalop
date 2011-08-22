@@ -7,6 +7,17 @@ import static org.junit.Assert.*;
 
 public class TBATest {
   @Test
+  public void testTrigonometricFunctions0() {
+    TrigonometricFunctions inst = new TrigonometricFunctions();
+    inst.calculate();
+    // collect outputs
+    HashMap<String,Float> outputs = inst.getValues();
+    // check outputs
+assertTrue(outputs.containsKey("r_0"));
+float r_0 = outputs.get("r_0");
+assertEquals(1,r_0,0.01);
+  }
+  @Test
   public void testCircleNoVars0() {
     CircleNoVars inst = new CircleNoVars();
     inst.calculate();

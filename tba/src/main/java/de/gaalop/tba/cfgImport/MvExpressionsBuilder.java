@@ -315,7 +315,7 @@ public class MvExpressionsBuilder extends EmptyControlFlowVisitor implements Exp
 		default:
 			result.bladeExpressions[0] = new MathFunctionCall(expressions.get(node.getOperand()).bladeExpressions[0],node.getFunction());
                         System.err.println("Warning: "+node.getFunction().toString()+" is only implemented for scalar inputs!");
-			return;
+			break;
 		}
 
 		expressions.put(node,result);
