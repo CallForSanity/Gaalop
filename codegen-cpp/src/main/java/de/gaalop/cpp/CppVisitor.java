@@ -149,6 +149,9 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 			assigned.remove(node.getVariable().getName());
 		}
 
+                // TODO something is not right here
+                System.out.println(node.getValue().toString());
+
 		appendIndentation();
 		node.getVariable().accept(this);
 		code.append(" = ");

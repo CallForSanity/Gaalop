@@ -47,8 +47,8 @@ public class Main {
     private String inputFilePath;
     @Option(name = "-o", required = true, usage = "The output file.")
     private String outputFilePath;
-    @Option(name = "-m", required = false, usage = "Sets the Maple binary path.")
-    private String mapleBinaryPath = "";
+    @Option(name = "-m", required = false, usage = "Sets an external optimzer path. This can be either Maple Binary Path or Maxima Path")
+    private String externalOptimizerPath = "";
     @Option(name = "-parser", required = false, usage = "Sets the class name of the code parser plugin that should be used.")
     private String codeParserPlugin = "de.gaalop.clucalc.input.Plugin";
     @Option(name = "-generator", required = false, usage = "Sets the class name of the code generator plugin that should be used.")
@@ -354,8 +354,14 @@ public class Main {
         Set<OptimizationStrategyPlugin> plugins = Plugins.getOptimizationStrategyPlugins();
         for (OptimizationStrategyPlugin plugin : plugins) {
             if (plugin.getClass().getName().equals(optimizationStrategyPlugin)) {
-                if (mapleBinaryPath.length() != 0 && plugin instanceof de.gaalop.maple.Plugin) {
-                    ((de.gaalop.maple.Plugin) plugin).setMaplePathsByMapleBinaryPath(mapleBinaryPath);
+                if (externalOptimizerPath.length() != 0) {
+                    if(plugin instanceof de.gaalop.maple.Plugin) {
+                        ((de.gaalop.maple.Plugin) plugin).setMaplePathsByMapleBinaryPath(externalOptimizerPath);
+                    }
+                    else if(plugin instanceof de.gaalop.tba.Plugin) {
+                        ((de.gaalop.tba.Plugin) plugin).optMaxima = true;
+                        ((de.gaalop.tba.Plugin) plugin).maximaCommand = externalOptimizerPath;
+                    }
                 }
 
                 return plugin.createOptimizationStrategy();

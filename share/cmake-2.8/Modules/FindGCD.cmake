@@ -2,7 +2,6 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 
 # options
 OPTION(GCD_WITH_MAPLE "wether to use the maple plugin or not." OFF)
-OPTION(GCD_WITH_MAXIMA "wether to use the maxima in tba plugin or not." OFF)
 
 # find java
 FIND_PACKAGE(Java COMPONENTS Runtime REQUIRED)
@@ -10,7 +9,13 @@ FIND_PACKAGE(Java COMPONENTS Runtime REQUIRED)
 # find
 IF(GCD_WITH_MAPLE)
 FIND_PATH(MAPLE_BIN_DIR HINTS "C:/Program Files (x86)/Maple 12/bin.win" "/opt/maple13/bin" CACHE PATH "Maple Binary Dir")
+ELSE(GCD_WITH_MAPLE)
+OPTION(GCD_WITH_MAXIMA "whether to use the maxima in tba plugin or not." OFF)
+IF(GCD_WITH_MAXIMA)
+FIND_PROGRAM(MAXIMA_BIN HINTS NAMES "maxima" "maxima.sh" "maxima.bat" HINTS "C:/Program Files/Maxima" CACHE PATH "Maxima binary path")
+ENDIF(GCD_WITH_MAXIMA)
 ENDIF(GCD_WITH_MAPLE)
+
 FIND_PATH(GCD_ROOT_DIR share
           DOC "Gaalop Compiler Driver root directory")
 FIND_FILE(GCD_JAR starter-1.0.0.jar "${GCD_ROOT_DIR}/share/gcd/gaalop" DOC "Gaalop GCD")
@@ -22,6 +27,8 @@ INCLUDE_DIRECTORIES(${GCD_INCLUDE_DIR})
 # define common args
 IF(GCD_WITH_MAPLE)
 SET(GCD_COMMON_ARGS -optimizer "de.gaalop.maple.Plugin" -m "${MAPLE_BIN_DIR}")
+ELSEIF(GCD_WITH_MAXIMA)
+SET(GCD_COMMON_ARGS -optimizer "de.gaalop.tba.Plugin" -m "${MAXIMA_BIN}")
 ELSE(GCD_WITH_MAPLE)
 SET(GCD_COMMON_ARGS -optimizer "de.gaalop.tba.Plugin")
 ENDIF(GCD_WITH_MAPLE)

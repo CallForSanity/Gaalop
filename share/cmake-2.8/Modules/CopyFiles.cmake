@@ -21,6 +21,8 @@ endmacro(copy_files)
 macro(copy_directory TARGET_NAME SOURCE DESTINATION)
     # In case of multiple results, take first one
     FILE(GLOB SRC_LIST "${CMAKE_CURRENT_SOURCE_DIR}/${SOURCE}")
+    LIST(LENGTH SRC_LIST SRC_LIST_LEN)
+    IF(SRC_LIST_LEN GREATER 0)
     LIST(GET SRC_LIST 0 SRC)
     
     SET(DST "${CMAKE_CURRENT_BINARY_DIR}/${DESTINATION}")
@@ -31,4 +33,5 @@ macro(copy_directory TARGET_NAME SOURCE DESTINATION)
     add_custom_command(
       TARGET ${TARGET_NAME}
       COMMAND ${CMAKE_COMMAND} -E copy_directory ${SRC} ${DST})
+  ENDIF(SRC_LIST_LEN GREATER 0)
 endmacro(copy_directory)
