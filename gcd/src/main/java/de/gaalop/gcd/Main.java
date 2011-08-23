@@ -295,25 +295,22 @@ public class Main {
         while ((line = inStream.readLine()) != null) {
 
             // find multivector meta-statement
-            if (line.contains("#pragma gcd multivector")) {
+            int index = line.indexOf("#pragma gcd multivector");
+            if (index >= 0) {
                 // extract exported multivector
-                final String exportedMV = line.split(" ")[3];
+                final String exportedMV = line.substring(index).split(" ")[3];
 
                 // determine if this MV was previously imported
-                skip = false;
-                for (final String importedMV : importedMVs) {
-                    if (exportedMV.equals(importedMV)) {
-                        skip = true;
-                        break;
-                    }
-                }
+                skip = importedMVs.contains(exportedMV);
             }
             
-            // if yes, then skip until next multivector meta-statement
+            // skip until next multivector meta-statement
             if (!skip) {
                 outStream.append(line);
                 outStream.append(LINE_END);
             }
+            else
+                System.out.println("Fehler");
         }
 
         return outStream.toString();
