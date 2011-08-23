@@ -140,7 +140,7 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
                 append("public class "+graph.getSource().getName()+" implements GAProgram {\n");
                 indentation++;
 
-
+                
                 appendIndentation();
                 append("// input variables\n");
                 for (Variable inputVar: graph.getInputVariables()) {
@@ -443,17 +443,7 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
 
 	@Override
 	public void visit(MathFunctionCall mathFunctionCall) {
-		String funcName;
-		switch (mathFunctionCall.getFunction()) {
-		case ABS:
-			funcName = "Math.abs";
-			break;
-		case SQRT:
-			funcName = "(float) Math.sqrt";
-			break;
-		default:
-			funcName = mathFunctionCall.getFunction().toString().toLowerCase();
-		}
+		String funcName = "(float) Math."+mathFunctionCall.getFunction().toString().toLowerCase();
 		append(funcName);
 		append('(');
 		mathFunctionCall.getOperand().accept(this);

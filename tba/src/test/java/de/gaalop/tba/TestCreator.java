@@ -15,6 +15,7 @@ import de.gaalop.cfg.ControlFlowGraph;
 import de.gaalop.tba.gps.GPSNoVarsTest;
 import de.gaalop.tba.gps.GPSOnlyVarsTest;
 import de.gaalop.tba.gps.Point3D;
+import de.gaalop.tba.linePointDistance.LinePointDistance;
 import de.gaalop.tba.trigonFuncTest.TrigonometricFunctions;
 import java.awt.Point;
 import java.io.FileNotFoundException;
@@ -44,6 +45,8 @@ public class TestCreator {
 
             out.println("package de.gaalop.tba.generatedTests;\n");
             out.println("import java.util.HashMap;");
+            out.println("import de.gaalop.tba.gps.Point3D;\n");
+            out.println("import de.gaalop.tba.linePointDistance.Vec3D;\n");
             out.println("import org.junit.Test;\n");
             out.println("import static org.junit.Assert.*;\n");
             out.println("public class TBATest {");
@@ -79,6 +82,8 @@ public class TestCreator {
 
             testGPSNoVars();
             testGPSOnlyVars();
+
+            testLinePointDistance();
         } catch (OptimizationException e) {
                 throw new Exception("CompileError in positive tests: "+e);
         }
@@ -158,6 +163,16 @@ public class TestCreator {
 
     private void testTrigonometric() throws OptimizationException {
         test(new TrigonometricFunctions(),"TrigonometricFunctions");
+
+        //TODO more tests
+    }
+
+    private void testLinePointDistance() throws OptimizationException {
+        test(new LinePointDistance(
+                new Point3D(3,4,5),
+                new Point3D(7,8,10),
+                new Point3D(3,8,10)
+                ),"LinePointDistance");
 
         //TODO more tests
     }

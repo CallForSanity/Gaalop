@@ -1,6 +1,10 @@
 package de.gaalop.tba.generatedTests;
 
 import java.util.HashMap;
+import de.gaalop.tba.gps.Point3D;
+
+import de.gaalop.tba.linePointDistance.Vec3D;
+
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -1354,6 +1358,58 @@ assertEquals(0,z31,0.001);
 assertEquals(0,z32,0.001);
 // check number of outputs
 assertEquals(12, outputs.size());
+
+  }
+  @Test
+  public void testLinePointDistance0() {
+    LinePointDistance inst = new LinePointDistance();
+    assertTrue(inst.setValue("p1_x_0",3.0f));
+    assertTrue(inst.setValue("p1_y_0",4.0f));
+    assertTrue(inst.setValue("p1_z_0",5.0f));
+    assertTrue(inst.setValue("p2_x_0",7.0f));
+    assertTrue(inst.setValue("p2_y_0",8.0f));
+    assertTrue(inst.setValue("p2_z_0",10.0f));
+    assertTrue(inst.setValue("pTst_x_0",3.0f));
+    assertTrue(inst.setValue("pTst_y_0",8.0f));
+    assertTrue(inst.setValue("pTst_z_0",10.0f));
+    inst.calculate();
+    // collect outputs
+    HashMap<String,Float> outputs = inst.getValues();
+    // check outputs
+assertTrue(outputs.containsKey("abstand_0"));
+assertTrue(outputs.containsKey("nor_1"));
+assertTrue(outputs.containsKey("nor_2"));
+assertTrue(outputs.containsKey("nor_3"));
+float abstand = outputs.get("abstand_0");
+Vec3D nor = new Vec3D(outputs.get("nor_1"), outputs.get("nor_2"), outputs.get("nor_3"));
+nor.normalize();
+nor.scalarMultiplication(abstand);
+Point3D pBase = nor.applyToPoint(new Point3D(3.0f,8.0f,10.0f));
+//pBase must lie on plane and on line
+//test if on line, assume that dx,dy,dz not zero
+double tx = (pBase.x-3.0)/(4.0);
+double ty = (pBase.y-4.0)/(4.0);
+double tz = (pBase.z-5.0)/(5.0);
+// since the normal is unique except of a sign:
+if (Math.abs(tx-ty)>0.001 || Math.abs(tz-ty)>0.001) {
+nor = new Vec3D(outputs.get("nor_1"), outputs.get("nor_2"), outputs.get("nor_3"));
+nor.normalize();
+nor.scalarMultiplication(-abstand);
+pBase = nor.applyToPoint(new Point3D(3.0f,8.0f,10.0f));
+//pBase must lie on plane and on line
+//test if on line, assume that dx,dy,dz not zero
+tx = (pBase.x-3.0)/(4.0);
+ty = (pBase.y-4.0)/(4.0);
+tz = (pBase.z-5.0)/(5.0);
+}
+assertEquals(tx,ty,0.001);
+assertEquals(ty,tz,0.001);
+//test if on plane
+Vec3D r = new Vec3D(4.0f,4.0f,5.0f);
+r.normalize();
+Vec3D xmpTest = new Vec3D(pBase.x-3.0f,pBase.y-8.0f,pBase.z-10.0f);
+float dp = xmpTest.dotProduct(r);
+assertEquals(0,dp,0.001);
 
   }
 }

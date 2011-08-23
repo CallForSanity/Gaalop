@@ -120,7 +120,7 @@ public class TrigonometricFunctions implements GAProgram {
 	
 	@Override
 	public void calculate() {
-		r_0 = 1.0f; // 1.0;
+		r_0 = (float) Math.cos(0.0f); // 1.0;
 	}
 
 
