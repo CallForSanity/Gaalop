@@ -38,6 +38,8 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
 
         private int storedIndentation;
 
+        private boolean implementFactorial = false;
+
         /**
          * Appends a character to the result string
          * @param character The character to append
@@ -131,9 +133,10 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
 	@Override
 	public void visit(StartNode node) {
 		graph = node.getGraph();
-
+                
                 //process all members
                 curSection = 0;
+                implementFactorial = false;
 
                 append("import java.util.HashMap;\n\n");
 
@@ -381,6 +384,26 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
             appendIndentation();
             append("}\n\n"); // close procedure calculate
             curSection = 2;
+
+            if (implementFactorial) {
+                appendIndentation();
+                append("private float fact(int n) {\n");
+                indentation++;
+                appendIndentation();
+                append("float result = 1;\n");
+                appendIndentation();
+                append("for (int i=2;i<=n;i++)\n");
+                indentation++;
+                appendIndentation();
+                append("result *= i;\n");
+                indentation--;
+                appendIndentation();
+                append("return result;\n");
+                indentation--;
+                appendIndentation();
+                append("}\n");
+            }
+
             // print all members that are used for calculating
             for (String decl: toDeclare) {
                 appendIndentation();
@@ -389,6 +412,7 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
 
             append("\n");
             indentation--;
+
             appendIndentation();
             append("}\n"); // close class
 	}
@@ -444,6 +468,10 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
 	@Override
 	public void visit(MathFunctionCall mathFunctionCall) {
 		String funcName = "(float) Math."+mathFunctionCall.getFunction().toString().toLowerCase();
+                if (mathFunctionCall.getFunction() == MathFunction.FACT) {
+                    funcName = "fact";
+                    implementFactorial = true;
+                }
 		append(funcName);
 		append('(');
 		mathFunctionCall.getOperand().accept(this);
