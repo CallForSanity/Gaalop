@@ -106,7 +106,7 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
             for (String outputVarStr: graph.getPragmaOutputVariables()) {
                 declared.add(outputVarStr);
                 outputs.add(outputVarStr);
-                known.add(outputVarStr.split("_")[0]);
+                known.add(outputVarStr.split("\\$")[0]);
             }
 
                 //get StoreResultNodes in graph
@@ -120,7 +120,7 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
                         known.add(name);
                         int bladeCount = (int) Math.pow(2,graph.getSignature().getDimension());
                         for (int blade=0;blade<bladeCount;blade++) {
-                            String bladeName = name+"_"+blade;
+                            String bladeName = name+"$"+blade;
                             outputs.add(bladeName);
                             declared.add(bladeName);
                         }
@@ -228,7 +228,6 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
 
                 appendIndentation();
                 append("\n");
-
                 appendIndentation();
                 append("@Override\n");
                 appendIndentation();
@@ -261,9 +260,9 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
 
         private String getVarName(Variable var) {
             if (!(var instanceof MultivectorComponent)) {
-                return var.getName() + "_0";
+                return var.getName() + "$0";
             } else
-                return var.getName() + "_" +((MultivectorComponent) var).getBladeIndex();
+                return var.getName() + "$" +((MultivectorComponent) var).getBladeIndex();
 
         }
 

@@ -60,18 +60,18 @@ public class MultipleAssignmentsTest implements GenericTestable {
 
     private void outputOfCompleteMv(LinkedList<String> outputs, String mvName) {
         for (int blade=0;blade<32;blade++) 
-            outputs.add(mvName+"_"+blade);
+            outputs.add(mvName+"$"+blade);
     }
 
     private void compareTwoCompleteMv(StringBuilder result, String mvName1, String mvName2) {
         for (int blade=0;blade<32;blade++) {
                     result.append("assertEquals(outputs.get(\"");
                     result.append(mvName1);
-                    result.append("_");
+                    result.append("$");
                     result.append(Integer.toString(blade));
                     result.append("\"),outputs.get(\"");
                     result.append(mvName2);
-                    result.append('_');
+                    result.append('$');
                     result.append(Integer.toString(blade));
                     result.append("\"),");
                     result.append(Double.toString(EPSILON));
@@ -86,7 +86,7 @@ public class MultipleAssignmentsTest implements GenericTestable {
         for (int blade=0;blade<32;blade++) {
             result.append("//#pragma output ");
             result.append(mvName);
-            result.append("_");
+            result.append("$");
             result.append(Integer.toString(blade));
             result.append("\n");
         }

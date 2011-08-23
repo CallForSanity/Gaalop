@@ -34,18 +34,18 @@ public abstract class GenericGPSTest implements GenericTestable {
     public String getCLUScript() {
         return
 
-            "//#pragma output rc1N_1"+"\n"+
-            "//#pragma output rc1N_2"+"\n"+
-            "//#pragma output rc1N_3"+"\n"+
-            "//#pragma output rc2N_1"+"\n"+
-            "//#pragma output rc2N_2"+"\n"+
-            "//#pragma output rc2N_3"+"\n"+
-            "//#pragma output z11_0"+"\n"+
-            "//#pragma output z12_0"+"\n"+
-            "//#pragma output z21_0"+"\n"+
-            "//#pragma output z22_0"+"\n"+
-            "//#pragma output z31_0"+"\n"+
-            "//#pragma output z32_0"+"\n"+
+            "//#pragma output rc1N$1"+"\n"+
+            "//#pragma output rc1N$2"+"\n"+
+            "//#pragma output rc1N$3"+"\n"+
+            "//#pragma output rc2N$1"+"\n"+
+            "//#pragma output rc2N$2"+"\n"+
+            "//#pragma output rc2N$3"+"\n"+
+            "//#pragma output z11$0"+"\n"+
+            "//#pragma output z12$0"+"\n"+
+            "//#pragma output z21$0"+"\n"+
+            "//#pragma output z22$0"+"\n"+
+            "//#pragma output z31$0"+"\n"+
+            "//#pragma output z32$0"+"\n"+
 
             constantDefinition() +
 
@@ -91,33 +91,33 @@ public abstract class GenericGPSTest implements GenericTestable {
      protected String getChecksForAllInstances() {
         return
                 "// check containing all outputs\n"+
-                "assertTrue(outputs.containsKey(\"rc1N_1\"));\n"+
-                "assertTrue(outputs.containsKey(\"rc1N_2\"));\n"+
-                "assertTrue(outputs.containsKey(\"rc1N_3\"));\n"+
-                "assertTrue(outputs.containsKey(\"rc2N_1\"));\n"+
-                "assertTrue(outputs.containsKey(\"rc2N_2\"));\n"+
-                "assertTrue(outputs.containsKey(\"rc2N_3\"));\n"+
-                "assertTrue(outputs.containsKey(\"z11_0\"));\n"+
-                "assertTrue(outputs.containsKey(\"z12_0\"));\n"+
-                "assertTrue(outputs.containsKey(\"z21_0\"));\n"+
-                "assertTrue(outputs.containsKey(\"z22_0\"));\n"+
-                "assertTrue(outputs.containsKey(\"z31_0\"));\n"+
-                "assertTrue(outputs.containsKey(\"z32_0\"));\n"+
+                "assertTrue(outputs.containsKey(\"rc1N$1\"));\n"+
+                "assertTrue(outputs.containsKey(\"rc1N$2\"));\n"+
+                "assertTrue(outputs.containsKey(\"rc1N$3\"));\n"+
+                "assertTrue(outputs.containsKey(\"rc2N$1\"));\n"+
+                "assertTrue(outputs.containsKey(\"rc2N$2\"));\n"+
+                "assertTrue(outputs.containsKey(\"rc2N$3\"));\n"+
+                "assertTrue(outputs.containsKey(\"z11$0\"));\n"+
+                "assertTrue(outputs.containsKey(\"z12$0\"));\n"+
+                "assertTrue(outputs.containsKey(\"z21$0\"));\n"+
+                "assertTrue(outputs.containsKey(\"z22$0\"));\n"+
+                "assertTrue(outputs.containsKey(\"z31$0\"));\n"+
+                "assertTrue(outputs.containsKey(\"z32$0\"));\n"+
 
-                "float rc1Nx = outputs.get(\"rc1N_1\");\n"+
-                "float rc1Ny = outputs.get(\"rc1N_2\");\n"+
-                "float rc1Nz = outputs.get(\"rc1N_3\");\n"+
+                "float rc1Nx = outputs.get(\"rc1N$1\");\n"+
+                "float rc1Ny = outputs.get(\"rc1N$2\");\n"+
+                "float rc1Nz = outputs.get(\"rc1N$3\");\n"+
 
-                "float rc2Nx = outputs.get(\"rc2N_1\");\n"+
-                "float rc2Ny = outputs.get(\"rc2N_2\");\n"+
-                "float rc2Nz = outputs.get(\"rc2N_3\");\n"+
+                "float rc2Nx = outputs.get(\"rc2N$1\");\n"+
+                "float rc2Ny = outputs.get(\"rc2N$2\");\n"+
+                "float rc2Nz = outputs.get(\"rc2N$3\");\n"+
 
-                "float z11 = outputs.get(\"z11_0\");\n"+
-                "float z12 = outputs.get(\"z12_0\");\n"+
-                "float z21 = outputs.get(\"z21_0\");\n"+
-                "float z22 = outputs.get(\"z22_0\");\n"+
-                "float z31 = outputs.get(\"z31_0\");\n"+
-                "float z32 = outputs.get(\"z32_0\");\n"+
+                "float z11 = outputs.get(\"z11$0\");\n"+
+                "float z12 = outputs.get(\"z12$0\");\n"+
+                "float z21 = outputs.get(\"z21$0\");\n"+
+                "float z22 = outputs.get(\"z22$0\");\n"+
+                "float z31 = outputs.get(\"z31$0\");\n"+
+                "float z32 = outputs.get(\"z32$0\");\n"+
 
                 "assertEquals(0,z11,"+EPSILON+");\n" +
                 "assertEquals(0,z12,"+EPSILON+");\n" +

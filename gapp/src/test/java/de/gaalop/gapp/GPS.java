@@ -42,18 +42,18 @@ public class GPS implements GAPPTestable {
     public String getSource() {
          return
 
-            "//#pragma output rc1N_1"+"\n"+
-            "//#pragma output rc1N_2"+"\n"+
-            "//#pragma output rc1N_3"+"\n"+
-            "//#pragma output rc2N_1"+"\n"+
-            "//#pragma output rc2N_2"+"\n"+
-            "//#pragma output rc2N_3"+"\n"+
-            "//#pragma output z11_0"+"\n"+
-            "//#pragma output z12_0"+"\n"+
-            "//#pragma output z21_0"+"\n"+
-            "//#pragma output z22_0"+"\n"+
-            "//#pragma output z31_0"+"\n"+
-            "//#pragma output z32_0"+"\n"+
+            "//#pragma output rc1N$1"+"\n"+
+            "//#pragma output rc1N$2"+"\n"+
+            "//#pragma output rc1N$3"+"\n"+
+            "//#pragma output rc2N$1"+"\n"+
+            "//#pragma output rc2N$2"+"\n"+
+            "//#pragma output rc2N$3"+"\n"+
+            "//#pragma output z11$0"+"\n"+
+            "//#pragma output z12$0"+"\n"+
+            "//#pragma output z21$0"+"\n"+
+            "//#pragma output z22$0"+"\n"+
+            "//#pragma output z31$0"+"\n"+
+            "//#pragma output z32$0"+"\n"+
 
             "sat1 = VecN3(sat1x,sat1y,sat1z);\n"+
             "sat2 = VecN3(sat2x,sat2y,sat2z);\n"+

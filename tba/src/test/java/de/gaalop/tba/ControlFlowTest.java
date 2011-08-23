@@ -15,9 +15,9 @@ public class ControlFlowTest implements GenericTestable {
     @Override
     public String getCLUScript() {
         return
-            "//#pragma output a_0\n" +
-            "//#pragma output b_0\n" +
-            "//#pragma output c_0\n" +
+            "//#pragma output a$0\n" +
+            "//#pragma output b$0\n" +
+            "//#pragma output c$0\n" +
             "\n" +
             "a = 1\n;" +
             "c = 4\n;" +
@@ -42,7 +42,7 @@ public class ControlFlowTest implements GenericTestable {
             @Override
             public LinkedList<VariableValue> getInputs() {
                 LinkedList<VariableValue> result = new LinkedList<VariableValue>();
-                result.add(new VariableValue("t_0",1));
+                result.add(new VariableValue("t$0",1));
                 return result;
             }
 
@@ -66,7 +66,7 @@ public class ControlFlowTest implements GenericTestable {
             @Override
             public LinkedList<VariableValue> getInputs() {
                 LinkedList<VariableValue> result = new LinkedList<VariableValue>();
-                result.add(new VariableValue("t_0",2));
+                result.add(new VariableValue("t$0",2));
                 return result;
             }
 

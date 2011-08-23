@@ -30,18 +30,18 @@ public class GPSOnlyVarsTest extends GenericGPSTest {
             @Override
             public LinkedList<VariableValue> getInputs() {
                 LinkedList<VariableValue> result = new LinkedList<VariableValue>();
-                result.add(new VariableValue("sat1x_0",sat1.x));
-                result.add(new VariableValue("sat1y_0",sat1.y));
-                result.add(new VariableValue("sat1z_0",sat1.z));
-                result.add(new VariableValue("sat2x_0",sat2.x));
-                result.add(new VariableValue("sat2y_0",sat2.y));
-                result.add(new VariableValue("sat2z_0",sat2.z));
-                result.add(new VariableValue("sat3x_0",sat3.x));
-                result.add(new VariableValue("sat3y_0",sat3.y));
-                result.add(new VariableValue("sat3z_0",sat3.z));
-                result.add(new VariableValue("d1_0",d1));
-                result.add(new VariableValue("d2_0",d2));
-                result.add(new VariableValue("d3_0",d3));
+                result.add(new VariableValue("sat1x$0",sat1.x));
+                result.add(new VariableValue("sat1y$0",sat1.y));
+                result.add(new VariableValue("sat1z$0",sat1.z));
+                result.add(new VariableValue("sat2x$0",sat2.x));
+                result.add(new VariableValue("sat2y$0",sat2.y));
+                result.add(new VariableValue("sat2z$0",sat2.z));
+                result.add(new VariableValue("sat3x$0",sat3.x));
+                result.add(new VariableValue("sat3y$0",sat3.y));
+                result.add(new VariableValue("sat3z$0",sat3.z));
+                result.add(new VariableValue("d1$0",d1));
+                result.add(new VariableValue("d2$0",d2));
+                result.add(new VariableValue("d3$0",d3));
                 return result;
             }
 

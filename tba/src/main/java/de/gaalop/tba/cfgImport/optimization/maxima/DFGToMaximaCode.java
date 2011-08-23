@@ -105,7 +105,7 @@ public class DFGToMaximaCode implements ExpressionVisitor {
     @Override
     public void visit(MultivectorComponent node) {
         result.append(node.getName());
-        result.append("_");
+        result.append("$"); //TODO maybe here an another character
         result.append(node.getBladeIndex());
     }
 

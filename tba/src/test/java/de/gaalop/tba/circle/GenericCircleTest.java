@@ -30,9 +30,9 @@ public abstract class GenericCircleTest implements GenericTestable {
             "DefVarsN3();"+"\n"+
             ":IPNS;"+"\n"+
 
-            "//#pragma output m_1"+"\n"+
-            "//#pragma output m_2"+"\n"+
-            "//#pragma output r_0"+"\n"+
+            "//#pragma output m$1"+"\n"+
+            "//#pragma output m$2"+"\n"+
+            "//#pragma output r$0"+"\n"+
 
             constantDefinition() +"\n"+
 

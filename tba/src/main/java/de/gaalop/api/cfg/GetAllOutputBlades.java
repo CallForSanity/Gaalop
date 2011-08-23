@@ -25,7 +25,7 @@ public class GetAllOutputBlades {
 
          // mark output vars as tabu
         for (String output: graph.getPragmaOutputVariables()) {
-            String[] parts = output.split("_");
+            String[] parts = output.split("\\$");
             result.add(new VariableComponent(parts[0],Integer.parseInt(parts[1]), null));
         }
 

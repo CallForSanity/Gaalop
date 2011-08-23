@@ -32,9 +32,9 @@ public class TrigonometricFunctions implements GenericTestable {
             @Override
             public String getCheckOutputsCode() {
                 return
-                   "assertTrue(outputs.containsKey(\"r_0\"));\n"+
-                   "float r_0 = outputs.get(\"r_0\");\n"+
-                   "assertEquals(1,r_0,0.01);"
+                   "assertTrue(outputs.containsKey(\"r$0\"));\n"+
+                   "float r$0 = outputs.get(\"r$0\");\n"+
+                   "assertEquals(1,r$0,0.01);"
                    ;
             }
 

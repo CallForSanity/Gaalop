@@ -46,20 +46,20 @@ public class CircleNoVarsTest extends GenericCircleTest {
             public String getCheckOutputsCode() {
                 return
 
-                "// check containing r_0,m_1,m_2\n"+
-                "assertTrue(outputs.containsKey(\"r_0\"));\n"+
-                "assertTrue(outputs.containsKey(\"m_1\"));\n"+
-                "assertTrue(outputs.containsKey(\"m_2\"));\n"+
+                "// check containing r$0,m$1,m$2\n"+
+                "assertTrue(outputs.containsKey(\"r$0\"));\n"+
+                "assertTrue(outputs.containsKey(\"m$1\"));\n"+
+                "assertTrue(outputs.containsKey(\"m$2\"));\n"+
 
-                "float r_0 = outputs.get(\"r_0\");\n"+
-                "float m_x = outputs.get(\"m_1\");\n"+
-                "float m_y = outputs.get(\"m_2\");\n"+
+                "float r$0 = outputs.get(\"r$0\");\n"+
+                "float m$x = outputs.get(\"m$1\");\n"+
+                "float m$y = outputs.get(\"m$2\");\n"+
                 
 
                 "// check radius (should be equal to distance from m to p1,p2,p3)\n"+
-                "assertEquals("+getDistance("m_x", "m_y",p1.x+"",p1.y+"")+",r_0,"+EPSILON+");\n"+
-                "assertEquals("+getDistance("m_x", "m_y",p2.x+"",p2.y+"")+",r_0,"+EPSILON+");\n"+
-                "assertEquals("+getDistance("m_x", "m_y",p3.x+"",p3.y+"")+",r_0,"+EPSILON+");\n"+
+                "assertEquals("+getDistance("m$x", "m$y",p1.x+"",p1.y+"")+",r$0,"+EPSILON+");\n"+
+                "assertEquals("+getDistance("m$x", "m$y",p2.x+"",p2.y+"")+",r$0,"+EPSILON+");\n"+
+                "assertEquals("+getDistance("m$x", "m$y",p3.x+"",p3.y+"")+",r$0,"+EPSILON+");\n"+
 
                 "// check number of outputs\n"+
                 "assertEquals(3, outputs.size());\n"

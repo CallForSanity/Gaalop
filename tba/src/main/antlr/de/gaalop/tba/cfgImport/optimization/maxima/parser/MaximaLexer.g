@@ -14,6 +14,7 @@ fragment
 LETTER
 	:	'A'..'Z'
 	|	'a'..'z'
+        |       '_'
 	;
 
 fragment
@@ -66,7 +67,7 @@ WEDGE
 	;
 
 UNDERLINE
-        :	'_'
+        :	'$'
 	;
 	
 

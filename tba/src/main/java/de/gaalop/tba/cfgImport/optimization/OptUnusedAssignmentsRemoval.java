@@ -26,7 +26,7 @@ public class OptUnusedAssignmentsRemoval implements OptimizationStrategyWithModi
         HashMap<String,LinkedList<Integer>> outputBlades = new HashMap<String,LinkedList<Integer>>();
 
         for (String output: graph.getPragmaOutputVariables()) {
-            String[] parts = output.split("_");
+            String[] parts = output.split("\\$");
             LinkedList<Integer> list;
             if (outputBlades.containsKey(parts[0])) {
                 list = outputBlades.get(parts[0]);

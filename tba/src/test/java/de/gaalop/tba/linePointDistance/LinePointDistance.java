@@ -27,9 +27,9 @@ public class LinePointDistance implements GenericTestable {
     @Override
     public String getCLUScript() {
         return
-                "v1 = VecN3(p1_x,p1_y,p1_z);\n"+
-                "v2 = VecN3(p2_x,p2_y,p2_z);\n"+
-                "vTst = VecN3(pTst_x,pTst_y,pTst_z);\n"+
+                "v1 = VecN3(p1$x,p1$y,p1$z);\n"+
+                "v2 = VecN3(p2$x,p2$y,p2$z);\n"+
+                "vTst = VecN3(pTst$x,pTst$y,pTst$z);\n"+
                 "pi = 3.141592;\n"+
                 "L = *(v1^v2^einf);\n"+
                 "La = L/abs(L);\n"+
@@ -50,29 +50,29 @@ public class LinePointDistance implements GenericTestable {
             @Override
             public LinkedList<VariableValue> getInputs() {
                 LinkedList<VariableValue> result = new LinkedList<VariableValue>();
-                result.add(new VariableValue("p1_x_0",p1.x));
-                result.add(new VariableValue("p1_y_0",p1.y));
-                result.add(new VariableValue("p1_z_0",p1.z));
-                result.add(new VariableValue("p2_x_0",p2.x));
-                result.add(new VariableValue("p2_y_0",p2.y));
-                result.add(new VariableValue("p2_z_0",p2.z));
-                result.add(new VariableValue("pTst_x_0",pTest.x));
-                result.add(new VariableValue("pTst_y_0",pTest.y));
-                result.add(new VariableValue("pTst_z_0",pTest.z));
+                result.add(new VariableValue("p1$x$0",p1.x));
+                result.add(new VariableValue("p1$y$0",p1.y));
+                result.add(new VariableValue("p1$z$0",p1.z));
+                result.add(new VariableValue("p2$x$0",p2.x));
+                result.add(new VariableValue("p2$y$0",p2.y));
+                result.add(new VariableValue("p2$z$0",p2.z));
+                result.add(new VariableValue("pTst$x$0",pTest.x));
+                result.add(new VariableValue("pTst$y$0",pTest.y));
+                result.add(new VariableValue("pTst$z$0",pTest.z));
                 return result;
             }
 
             @Override
             public String getCheckOutputsCode() {
                 return 
-                    "assertTrue(outputs.containsKey(\"abstand_0\"));\n"+
-                    "assertTrue(outputs.containsKey(\"nor_1\"));\n"+
-                    "assertTrue(outputs.containsKey(\"nor_2\"));\n"+
-                    "assertTrue(outputs.containsKey(\"nor_3\"));\n"+
+                    "assertTrue(outputs.containsKey(\"abstand$0\"));\n"+
+                    "assertTrue(outputs.containsKey(\"nor$1\"));\n"+
+                    "assertTrue(outputs.containsKey(\"nor$2\"));\n"+
+                    "assertTrue(outputs.containsKey(\"nor$3\"));\n"+
 
-                    "float abstand = outputs.get(\"abstand_0\");\n"+
+                    "float abstand = outputs.get(\"abstand$0\");\n"+
 
-                    "Vec3D nor = new Vec3D(outputs.get(\"nor_1\"), outputs.get(\"nor_2\"), outputs.get(\"nor_3\"));\n"+
+                    "Vec3D nor = new Vec3D(outputs.get(\"nor$1\"), outputs.get(\"nor$2\"), outputs.get(\"nor$3\"));\n"+
                     "nor.normalize();\n"+
                     "nor.scalarMultiplication(abstand);\n"+
                     "Point3D pBase = nor.applyToPoint(new Point3D("+pTest.x+"f,"+pTest.y+"f,"+pTest.z+"f));\n"+
@@ -86,7 +86,7 @@ public class LinePointDistance implements GenericTestable {
                     "// since the normal is unique except of a sign:\n"+
                     "if (Math.abs(tx-ty)>0.001 || Math.abs(tz-ty)>0.001) {\n"+
 
-                        "nor = new Vec3D(outputs.get(\"nor_1\"), outputs.get(\"nor_2\"), outputs.get(\"nor_3\"));\n"+
+                        "nor = new Vec3D(outputs.get(\"nor$1\"), outputs.get(\"nor$2\"), outputs.get(\"nor$3\"));\n"+
                         "nor.normalize();\n"+
                         "nor.scalarMultiplication(-abstand);\n"+
                         "pBase = nor.applyToPoint(new Point3D("+pTest.x+"f,"+pTest.y+"f,"+pTest.z+"f));\n"+

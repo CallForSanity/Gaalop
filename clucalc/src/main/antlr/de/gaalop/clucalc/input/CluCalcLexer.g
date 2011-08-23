@@ -95,6 +95,7 @@ LETTER
 	:	'A'..'Z'
 	|	'a'..'z'
 	|	'_'
+        |       '$'
 	;
 
 fragment
@@ -117,7 +118,6 @@ PRAGMA
 LINE_COMMENT
     : '//'~'#'  ~('\n'|'\r')* '\r'? '\n' {$channel=HIDDEN;}
     ;
-
 
 EQUALS
 	:	'='

@@ -26,9 +26,9 @@ public class Circle implements GAPPTestable {
             "DefVarsN3();"+"\n"+
             ":IPNS;"+"\n"+
 
-            "//#pragma output m_1"+"\n"+
-            "//#pragma output m_2"+"\n"+
-            "//#pragma output r_0"+"\n"+
+            "//#pragma output m$1"+"\n"+
+            "//#pragma output m$2"+"\n"+
+            "//#pragma output r$0"+"\n"+
 
             "\n"+
             "v1 = x1*e1+y1*e2;"+"\n"+

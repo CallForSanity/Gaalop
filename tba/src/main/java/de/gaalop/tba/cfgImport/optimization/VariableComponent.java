@@ -60,7 +60,7 @@ public class VariableComponent {
 
     @Override
     public String toString() {
-        return name+"_"+bladeIndex;
+        return name+"$"+bladeIndex;
     }
 
 

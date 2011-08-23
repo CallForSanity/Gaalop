@@ -61,7 +61,7 @@ public class CircleOneVarTest extends GenericCircleTest {
                     for (int i=0;i<6;i++)
                         if (commented[i])
                         {
-                            String varName = ((i%2==0) ? "x" : "y" ) + (i/2+1)+"_0";
+                            String varName = ((i%2==0) ? "x" : "y" ) + (i/2+1)+"$0";
                             result.add(new VariableValue(varName, currentValues));
                         }
 
@@ -75,20 +75,20 @@ public class CircleOneVarTest extends GenericCircleTest {
                     // TODO check if points aren't collinear
 
                     return 
-                    "// check containing r_0,m_1,m_2\n"+
-                    "assertTrue(outputs.containsKey(\"r_0\"));\n"+
-                    "assertTrue(outputs.containsKey(\"m_1\"));\n"+
-                    "assertTrue(outputs.containsKey(\"m_2\"));\n"+
+                    "// check containing r$0,m$1,m$2\n"+
+                    "assertTrue(outputs.containsKey(\"r$0\"));\n"+
+                    "assertTrue(outputs.containsKey(\"m$1\"));\n"+
+                    "assertTrue(outputs.containsKey(\"m$2\"));\n"+
 
-                    "float r_0 = outputs.get(\"r_0\");\n"+
-                    "float m_x = outputs.get(\"m_1\");\n"+
-                    "float m_y = outputs.get(\"m_2\");\n"+
+                    "float r$0 = outputs.get(\"r$0\");\n"+
+                    "float m$x = outputs.get(\"m$1\");\n"+
+                    "float m$y = outputs.get(\"m$2\");\n"+
 
 
                     "// check radius (should be equal to distance from m to p1,p2,p3)\n"+
-                    "assertEquals("+getDistance("m_x","m_y", getCoordinate(0, currentValues)+"", getCoordinate(1, currentValues)+"")+",r_0,"+EPSILON+");\n"+
-                    "assertEquals("+getDistance("m_x", "m_y",getCoordinate(2, currentValues)+"", getCoordinate(3, currentValues)+"")+",r_0,"+EPSILON+");\n"+
-                    "assertEquals("+getDistance("m_x", "m_y",getCoordinate(4, currentValues)+"", getCoordinate(5, currentValues)+"")+",r_0,"+EPSILON+");\n"+
+                    "assertEquals("+getDistance("m$x","m$y", getCoordinate(0, currentValues)+"", getCoordinate(1, currentValues)+"")+",r$0,"+EPSILON+");\n"+
+                    "assertEquals("+getDistance("m$x","m$y",getCoordinate(2, currentValues)+"", getCoordinate(3, currentValues)+"")+",r$0,"+EPSILON+");\n"+
+                    "assertEquals("+getDistance("m$x","m$y",getCoordinate(4, currentValues)+"", getCoordinate(5, currentValues)+"")+",r$0,"+EPSILON+");\n"+
 
                     "// check number of outputs\n"+
                     "assertEquals(3, outputs.size());\n"
