@@ -67,7 +67,7 @@ WEDGE
 	;
 
 UNDERLINE
-        :	'$'
+        :	'\\$'
 	;
 	
 

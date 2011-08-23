@@ -80,7 +80,7 @@ public class TestCreator {
             testOutputCount();
             testUnusedTest();
 
-            testGPSNoVars();
+           testGPSNoVars();
             testGPSOnlyVars();
 
             testLinePointDistance();

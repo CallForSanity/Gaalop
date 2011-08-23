@@ -27,9 +27,9 @@ public class LinePointDistance implements GenericTestable {
     @Override
     public String getCLUScript() {
         return
-                "v1 = VecN3(p1$x,p1$y,p1$z);\n"+
-                "v2 = VecN3(p2$x,p2$y,p2$z);\n"+
-                "vTst = VecN3(pTst$x,pTst$y,pTst$z);\n"+
+                "v1 = VecN3(p1x,p1y,p1z);\n"+
+                "v2 = VecN3(p2x,p2y,p2z);\n"+
+                "vTst = VecN3(pTstx,pTsty,pTstz);\n"+
                 "pi = 3.141592;\n"+
                 "L = *(v1^v2^einf);\n"+
                 "La = L/abs(L);\n"+
@@ -50,15 +50,15 @@ public class LinePointDistance implements GenericTestable {
             @Override
             public LinkedList<VariableValue> getInputs() {
                 LinkedList<VariableValue> result = new LinkedList<VariableValue>();
-                result.add(new VariableValue("p1$x$0",p1.x));
-                result.add(new VariableValue("p1$y$0",p1.y));
-                result.add(new VariableValue("p1$z$0",p1.z));
-                result.add(new VariableValue("p2$x$0",p2.x));
-                result.add(new VariableValue("p2$y$0",p2.y));
-                result.add(new VariableValue("p2$z$0",p2.z));
-                result.add(new VariableValue("pTst$x$0",pTest.x));
-                result.add(new VariableValue("pTst$y$0",pTest.y));
-                result.add(new VariableValue("pTst$z$0",pTest.z));
+                result.add(new VariableValue("p1x$0",p1.x));
+                result.add(new VariableValue("p1y$0",p1.y));
+                result.add(new VariableValue("p1z$0",p1.z));
+                result.add(new VariableValue("p2x$0",p2.x));
+                result.add(new VariableValue("p2y$0",p2.y));
+                result.add(new VariableValue("p2z$0",p2.z));
+                result.add(new VariableValue("pTstx$0",pTest.x));
+                result.add(new VariableValue("pTsty$0",pTest.y));
+                result.add(new VariableValue("pTstz$0",pTest.z));
                 return result;
             }
 
