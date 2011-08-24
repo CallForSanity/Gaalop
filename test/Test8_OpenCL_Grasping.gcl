@@ -1,0 +1,135 @@
+__kernel void pointTriangleTest(__global float* finalPosition,
+		__global float* targetPosition,
+		__global const float* gripper,
+		__global const float* pointX1,
+		__global const float* pointX2,
+		__global const float* pointX3,
+		__global const float* pointX4) {
+
+	enum BLADES {
+		SCALAR,
+		E1, E2, E3, EINF, E0,
+		E12, E13, E1INF, E10, E23, E2INF, E20, E3INF, E30, EINF0,
+		E123, E12INF, E120, E13INF, E130, E1INF0, E23INF, E230, E2INF0, E3INF0,
+		E123INF, E1230, E12INF0, E13INF0, E23INF0,
+		E123INF0
+	};
+
+	// input variables
+	const float x11 = pointX1[0];
+	const float x12 = pointX1[1];
+	const float x13 = pointX1[2];
+
+	const float x21 = pointX2[0];
+	const float x22 = pointX2[1];
+	const float x23 = pointX2[2];
+
+	const float x31 = pointX3[0];
+	const float x32 = pointX3[1];
+	const float x33 = pointX3[2];
+
+	const float x41 = pointX4[0];
+	const float x42 = pointX4[1];
+	const float x43 = pointX4[2];
+
+	const float g1 = gripper[0];
+	const float g2 = gripper[1];
+	const float g3 = gripper[2];
+	const float g4 = gripper[3];
+
+#pragma gcd begin
+	// base points
+	xb1 = VecN3(x11, x12, x13);
+	xb2 = VecN3(x21, x22, x23);
+	xb3 = VecN3(x31, x32, x33);
+
+	// base circle
+	z_b_d = xb1 ^ xb2 ^ xb3;
+	?z_b = *z_b_d;
+
+	// base plane
+	?Pi_b = *(z_b_d ^ einf);
+
+	// direction vector of base plane
+	// error correction *(-1)
+	?dirvec = (Pi_b * einf) . e0 *(-1);
+	?dirvec_abs = dirvec . (~dirvec);
+#pragma gcd end
+
+	// magnitude of dirvec
+	const float mag = sqrt(fabs(dirvec_abs[SCALAR]));
+
+#pragma gcd begin
+	// apex point
+	xa = VecN3(x41, x42, x43);
+
+	// normalize direction vector of base plane
+	NVector = dirvec_temp / mag;
+
+	// target needed for correct d_a
+	?Plane = (Pi_b_temp / mag);
+	// target needed for correct z_t
+	?d_a=(xa.Plane)*NVector;
+
+	// translate base circle to get target circle
+	T = 1 + 0.25 * d_a * einf;
+	?z_t = T * z_b_temp * ~T;
+
+	// compute gripper circle
+	S_h = VecN3(g1,g2,g3) - 0.5*(g4*g4)*einf;
+	Pi_h = -e2;
+	?z_h = S_h ^ Pi_h;
+	?s_h = -0.5*S_h*einf*S_h;
+	S_t = *z_t / ((*z_t) ^ einf);
+	s_t = -0.5*S_t*einf*S_t;
+
+	// compute final translation axis
+	?l_T = s_h ^ s_t ^ einf;
+	?l_T_abs = l_T . (~l_T);
+#pragma gcd end
+
+	// magnitude of l_T
+	const float d = sqrt(fabs(l_T_abs[SCALAR]));
+
+#pragma gcd begin
+	// normalized translation axis
+	?l_T_n = l_T_temp / d;
+
+	// compute rotation axis
+	l_h = z_h_temp ^ einf;
+	l_t = z_t_temp ^ einf;
+	Pi_th = l_t ^ (l_h*(einf^e0));
+	?l_R_d = s_h_temp ^ (*Pi_th) ^ einf;
+	?l_h_abs = l_h . (~l_h);
+	?l_t_abs = l_t . (~l_t);
+	?l_R_d_abs = l_R_d . (~l_R_d);
+	?inner_lt_lh = l_t . l_h;
+#pragma gcd end
+
+	const float abs_lh = sqrt(fabs(l_h_abs[SCALAR]));
+	const float abs_lt = sqrt(fabs(l_t_abs[SCALAR]));
+	const float abs_lRd = sqrt(fabs(l_R_d_abs[SCALAR]));
+
+	const float phi = acos(inner_lt_lh[SCALAR] / (abs_lh*abs_lt));
+	const float cos_phi = cos(0.5*phi);
+	const float sin_phi = sin(0.5*phi);
+
+#pragma gcd begin
+	// normalize rotation axis
+	l_R = *l_R_d_temp / abs_lRd;
+
+	// compute final rotor and translator
+	// target needed for correct z_h_new
+	?R = cos_phi - l_R*sin_phi;
+	Tr = 1 + 0.5*d*l_T_n_temp*einf;
+
+	// compute final position for gripper
+	?z_h_new = Tr*R*z_h_temp*~R*~Tr;
+#pragma gcd end
+
+	// copy output variables
+	for(unsigned int i = 0; i < 32; ++i) {
+		targetPosition[i] = z_t[i];
+		finalPosition[i] = z_h_new[i];
+	}
+}

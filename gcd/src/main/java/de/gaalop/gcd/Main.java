@@ -308,9 +308,8 @@ public class Main {
             if (!skip) {
                 outStream.append(line);
                 outStream.append(LINE_END);
-            }
-            else
-                System.out.println("Fehler");
+            } else if(importedMVs.isEmpty())
+                System.err.println("Internal Error: GCD Should not remove multivectors if there are none imported!");
         }
 
         return outStream.toString();
