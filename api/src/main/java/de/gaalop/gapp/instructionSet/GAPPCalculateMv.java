@@ -8,7 +8,7 @@ import de.gaalop.gapp.visitor.GAPPVisitor;
  * Performs calculations on multivector parts, defined by two selectorsets
  * @author christian
  */
-public class GAPPCalculate extends GAPPBaseInstruction {
+public class GAPPCalculateMv extends GAPPBaseInstruction {
 
     private CalculationType type;
     private GAPPMultivector target;
@@ -17,10 +17,10 @@ public class GAPPCalculate extends GAPPBaseInstruction {
     private Selectorset used1;
     private Selectorset used2;
 
-    public GAPPCalculate() {
+    public GAPPCalculateMv() {
     }
 
-    public GAPPCalculate(CalculationType type, GAPPMultivector target, GAPPMultivector operand1, GAPPMultivector operand2, Selectorset used1, Selectorset used2) {
+    public GAPPCalculateMv(CalculationType type, GAPPMultivector target, GAPPMultivector operand1, GAPPMultivector operand2, Selectorset used1, Selectorset used2) {
         this.type = type;
         this.target = target;
         this.operand1 = operand1;
@@ -31,7 +31,7 @@ public class GAPPCalculate extends GAPPBaseInstruction {
     
     @Override
     public Object accept(GAPPVisitor visitor, Object arg) {
-        return visitor.visitCalculate(this, arg);
+        return visitor.visitCalculateMv(this, arg);
     }
 
     public GAPPMultivector getOperand1() {

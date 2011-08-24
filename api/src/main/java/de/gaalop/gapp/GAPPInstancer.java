@@ -28,8 +28,8 @@ public class GAPPInstancer {
                     return new GAPPSetVector();
             case dotVectors:
                     return new GAPPDotVectors();
-            case calculate:
-                    return new GAPPCalculate();
+            case calculateMv:
+                    return new GAPPCalculateMv();
             default:
                 System.err.println("GAPPInstancer: Type "+type+" isn't known, so it can't be instanced");
                 return null;

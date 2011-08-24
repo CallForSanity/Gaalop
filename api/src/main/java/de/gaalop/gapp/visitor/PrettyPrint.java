@@ -6,7 +6,7 @@ import de.gaalop.gapp.Selectorset;
 import de.gaalop.gapp.Variableset;
 import de.gaalop.gapp.instructionSet.GAPPAddMv;
 import de.gaalop.gapp.instructionSet.GAPPAssignMv;
-import de.gaalop.gapp.instructionSet.GAPPCalculate;
+import de.gaalop.gapp.instructionSet.GAPPCalculateMv;
 import de.gaalop.gapp.instructionSet.GAPPDotVectors;
 import de.gaalop.gapp.instructionSet.GAPPResetMv;
 import de.gaalop.gapp.instructionSet.GAPPSetMv;
@@ -193,24 +193,24 @@ public class PrettyPrint extends CFGGAPPVisitor {
     }
 
     @Override
-    public Object visitCalculate(GAPPCalculate gappCalculate, Object arg) {
-        result.append("calculate ");
-        printMultivector(gappCalculate.getTarget());
+    public Object visitCalculateMv(GAPPCalculateMv gappCalculateMv, Object arg) {
+        result.append("calculateMv ");
+        printMultivector(gappCalculateMv.getTarget());
         result.append(" = ");
-        result.append(gappCalculate.getType().toString());
+        result.append(gappCalculateMv.getType().toString());
         result.append("(");
-        printMultivector(gappCalculate.getOperand1());
-        if (gappCalculate.getOperand2() != null) {
+        printMultivector(gappCalculateMv.getOperand1());
+        if (gappCalculateMv.getOperand2() != null) {
             result.append(",");
-            printMultivector(gappCalculate.getOperand2());
+            printMultivector(gappCalculateMv.getOperand2());
         }
         result.append(",");
-        printSelectors(gappCalculate.getUsed1());
+        printSelectors(gappCalculateMv.getUsed1());
         result.append(",");
-        if (gappCalculate.getUsed2()==null)
+        if (gappCalculateMv.getUsed2()==null)
             result.append("null"); 
         else
-            printSelectors(gappCalculate.getUsed2());
+            printSelectors(gappCalculateMv.getUsed2());
         result.append(");\n");
         return null;
     }

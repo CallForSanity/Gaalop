@@ -37,7 +37,7 @@ import de.gaalop.gapp.Variableset;
 import de.gaalop.gapp.instructionSet.CalculationType;
 import de.gaalop.gapp.instructionSet.GAPPAddMv;
 import de.gaalop.gapp.instructionSet.GAPPAssignMv;
-import de.gaalop.gapp.instructionSet.GAPPCalculate;
+import de.gaalop.gapp.instructionSet.GAPPCalculateMv;
 import de.gaalop.gapp.instructionSet.GAPPDotVectors;
 import de.gaalop.gapp.instructionSet.GAPPResetMv;
 import de.gaalop.gapp.instructionSet.GAPPSetMv;
@@ -402,7 +402,7 @@ public class GAPPImporter extends EmptyControlFlowVisitor implements ExpressionV
                 getBooleanArr(destination).setComponent(blade, true);
             }
 
-        curGAPP.addInstruction(new GAPPCalculate(type, destination, mvO, null, sel, null));
+        curGAPP.addInstruction(new GAPPCalculateMv(type, destination, mvO, null, sel, null));
 
     }
 
@@ -434,7 +434,7 @@ public class GAPPImporter extends EmptyControlFlowVisitor implements ExpressionV
                 getBooleanArr(destination).setComponent(blade, true);
             }
 
-        curGAPP.addInstruction(new GAPPCalculate(type, destination, mvL, mvR, sel, sel));
+        curGAPP.addInstruction(new GAPPCalculateMv(type, destination, mvL, mvR, sel, sel));
 
     }
 
@@ -513,7 +513,7 @@ public class GAPPImporter extends EmptyControlFlowVisitor implements ExpressionV
                 getBooleanArr(destination).setComponent(blade, true);
             }
         
-        curGAPP.addInstruction(new GAPPCalculate(CalculationType.DIVISION, destination, mvL, mvR, sel1,sel2));
+        curGAPP.addInstruction(new GAPPCalculateMv(CalculationType.DIVISION, destination, mvL, mvR, sel1,sel2));
     }
 
     @Override
@@ -542,7 +542,7 @@ public class GAPPImporter extends EmptyControlFlowVisitor implements ExpressionV
             Selectorset sel = new Selectorset();
             sel.add(new Selector(0, (byte) 1));
             getBooleanArr(destination).setComponent(0, true);
-            curGAPP.addInstruction(new GAPPCalculate(CalculationType.valueOf(node.getFunction().name()), destination, mvOp, null, sel, null));
+            curGAPP.addInstruction(new GAPPCalculateMv(CalculationType.valueOf(node.getFunction().name()), destination, mvOp, null, sel, null));
 
         } else {
             System.out.println(node.getFunction()+":"+node.getOperand());
@@ -571,7 +571,7 @@ public class GAPPImporter extends EmptyControlFlowVisitor implements ExpressionV
         Selectorset sel = new Selectorset();
         sel.add(new Selector(0, (byte) 1));
         getBooleanArr(destination).setComponent(0, true);
-        curGAPP.addInstruction(new GAPPCalculate(CalculationType.EXPONENTIATION, destination, mvL, mvR, sel, sel));
+        curGAPP.addInstruction(new GAPPCalculateMv(CalculationType.EXPONENTIATION, destination, mvL, mvR, sel, sel));
         System.err.println("Warning: Exponentiation is only implemented for scalars!");
     }
 

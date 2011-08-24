@@ -1,7 +1,7 @@
 package de.gaalop.gapp.visitor;
 
 import de.gaalop.gapp.Selector;
-import de.gaalop.gapp.instructionSet.GAPPCalculate;
+import de.gaalop.gapp.instructionSet.GAPPCalculateMv;
 import de.gaalop.gapp.variables.GAPPMultivector;
 import de.gaalop.gapp.Selectorset;
 import de.gaalop.gapp.VariableGetter;
@@ -128,26 +128,26 @@ public class Parser implements GAPPVisitor {
     }
 
     @Override
-    public Object visitCalculate(GAPPCalculate gappCalculate, Object arg) {
+    public Object visitCalculateMv(GAPPCalculateMv gappCalculateMv, Object arg) {
         String[] partsEquation = ((String) arg).split("=");
 
         //Parse left side
-        gappCalculate.setTarget(getter.parseMultivector(partsEquation[0]));
+        gappCalculateMv.setTarget(getter.parseMultivector(partsEquation[0]));
 
         int indexOfBracket = partsEquation[1].indexOf('(');
         String operator = partsEquation[1].substring(0, indexOfBracket);
         String argumentsString = partsEquation[1].substring(indexOfBracket+1,partsEquation[1].indexOf(')'));
         String[] args = argumentsString.split(",");
 
-        gappCalculate.setType(CalculationType.valueOf(operator));
+        gappCalculateMv.setType(CalculationType.valueOf(operator));
         if (args.length == 1) {
-            gappCalculate.setOperand1(getter.parseMultivector(args[0]));
+            gappCalculateMv.setOperand1(getter.parseMultivector(args[0]));
         } else
             if (args.length == 2) {
-                gappCalculate.setOperand1(getter.parseMultivector(args[0]));
-                gappCalculate.setOperand2(getter.parseMultivector(args[1]));
+                gappCalculateMv.setOperand1(getter.parseMultivector(args[0]));
+                gappCalculateMv.setOperand2(getter.parseMultivector(args[1]));
             } else
-                System.err.println("parse error: calculate, not one or two operands specified!");
+                System.err.println("parse error: calculateMv, not one or two operands specified!");
         
         return null;
     }

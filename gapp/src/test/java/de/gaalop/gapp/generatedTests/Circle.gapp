@@ -398,7 +398,7 @@ setVector vTmp161 = sTmp30[11,0];
 dotVectors sTmp31[11] = <vTmp160,vTmp161>;
 
 //sTmp32 = sTmp27 / sTmp31
-calculate sTmp32 = DIVISION(sTmp27,sTmp31,[0,8,11],[0,0,0]);
+calculateMv sTmp32 = DIVISION(sTmp27,sTmp31,[0,8,11],[0,0,0]);
 
 //m = sTmp26 * sTmp32
 resetMv m;
@@ -475,7 +475,7 @@ setVector vTmp191 = sTmp39[0];
 dotVectors sTmp40[0] = <vTmp190,vTmp191>;
 
 //sTmp41 = sTmp36 / sTmp40
-calculate sTmp41 = DIVISION(sTmp36,sTmp40,[0],[0]);
+calculateMv sTmp41 = DIVISION(sTmp36,sTmp40,[0],[0]);
 
 //sTmp42 = sTmp33 * sTmp41
 resetMv sTmp42;
@@ -484,8 +484,8 @@ setVector vTmp193 = sTmp41[0];
 dotVectors sTmp42[0] = <vTmp192,vTmp193>;
 
 //sTmp43 = abs(sTmp42)
-calculate sTmp43 = ABS(sTmp42,[0],null);
+calculateMv sTmp43 = ABS(sTmp42,[0],null);
 
 //r = sqrt(sTmp43)
-calculate r = SQRT(sTmp43,[0],null);
+calculateMv r = SQRT(sTmp43,[0],null);
 

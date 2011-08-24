@@ -446,10 +446,10 @@ setVector vTmp143 = rcPp[-16,18,17,20,19,21,23,22,24,25];
 dotVectors sTmp49[0] = <vTmp142,vTmp143>;
 
 //sTmp50 = abs(sTmp49)
-calculate sTmp50 = ABS(sTmp49,[0],null);
+calculateMv sTmp50 = ABS(sTmp49,[0],null);
 
 //len = sqrt(sTmp50)
-calculate len = SQRT(sTmp50,[0],null);
+calculateMv len = SQRT(sTmp50,[0],null);
 
 //sTmp51 = -(rcPp)
 resetMv sTmp51;
@@ -573,7 +573,7 @@ setVector vTmp199 = sTmp57[4,-3];
 dotVectors sTmp58[13] = <vTmp198,vTmp199>;
 
 //sTmp59 = nen / sTmp58
-calculate sTmp59 = DIVISION(nen,sTmp58,[1,2,3,4],[0,0,0,0]);
+calculateMv sTmp59 = DIVISION(nen,sTmp58,[1,2,3,4],[0,0,0,0]);
 
 //rc1 = sTmp56 * sTmp59
 resetMv rc1;
@@ -749,7 +749,7 @@ setVector vTmp298 = sTmp64[26,13,-11,10,8,-7,6,0];
 dotVectors sTmp65[26] = <vTmp297,vTmp298>;
 
 //sTmp66 = sTmp61 / sTmp65
-calculate sTmp66 = DIVISION(sTmp61,sTmp65,[0,6,7,8,10,11,13,26],[0,0,0,0,0,0,0,0]);
+calculateMv sTmp66 = DIVISION(sTmp61,sTmp65,[0,6,7,8,10,11,13,26],[0,0,0,0,0,0,0,0]);
 
 //rc1N = sTmp60 * sTmp66
 resetMv rc1N;
@@ -836,7 +836,7 @@ setVector vTmp344 = sTmp68[4,-3];
 dotVectors sTmp69[13] = <vTmp343,vTmp344>;
 
 //sTmp70 = nen / sTmp69
-calculate sTmp70 = DIVISION(nen,sTmp69,[1,2,3,4],[0,0,0,0]);
+calculateMv sTmp70 = DIVISION(nen,sTmp69,[1,2,3,4],[0,0,0,0]);
 
 //rc2 = sTmp67 * sTmp70
 resetMv rc2;
@@ -1012,7 +1012,7 @@ setVector vTmp443 = sTmp75[26,13,-11,10,8,-7,6,0];
 dotVectors sTmp76[26] = <vTmp442,vTmp443>;
 
 //sTmp77 = sTmp72 / sTmp76
-calculate sTmp77 = DIVISION(sTmp72,sTmp76,[0,6,7,8,10,11,13,26],[0,0,0,0,0,0,0,0]);
+calculateMv sTmp77 = DIVISION(sTmp72,sTmp76,[0,6,7,8,10,11,13,26],[0,0,0,0,0,0,0,0]);
 
 //rc2N = sTmp71 * sTmp77
 resetMv rc2N;
@@ -1174,7 +1174,7 @@ setVector vTmp540 = sTmp79[30];
 dotVectors sTmp80[30] = <vTmp539,vTmp540>;
 
 //sTmp81 = sqrt(sTmp80)
-calculate sTmp81 = SQRT(sTmp80,[0],null);
+calculateMv sTmp81 = SQRT(sTmp80,[0],null);
 
 //z11 = sTmp81 - d1
 resetMv z11;
@@ -1290,7 +1290,7 @@ setVector vTmp605 = sTmp83[30];
 dotVectors sTmp84[30] = <vTmp604,vTmp605>;
 
 //sTmp85 = sqrt(sTmp84)
-calculate sTmp85 = SQRT(sTmp84,[0],null);
+calculateMv sTmp85 = SQRT(sTmp84,[0],null);
 
 //z12 = sTmp85 - d1
 resetMv z12;
@@ -1406,7 +1406,7 @@ setVector vTmp670 = sTmp87[30];
 dotVectors sTmp88[30] = <vTmp669,vTmp670>;
 
 //sTmp89 = sqrt(sTmp88)
-calculate sTmp89 = SQRT(sTmp88,[0],null);
+calculateMv sTmp89 = SQRT(sTmp88,[0],null);
 
 //z21 = sTmp89 - d2
 resetMv z21;
@@ -1522,7 +1522,7 @@ setVector vTmp735 = sTmp91[30];
 dotVectors sTmp92[30] = <vTmp734,vTmp735>;
 
 //sTmp93 = sqrt(sTmp92)
-calculate sTmp93 = SQRT(sTmp92,[0],null);
+calculateMv sTmp93 = SQRT(sTmp92,[0],null);
 
 //z22 = sTmp93 - d2
 resetMv z22;
@@ -1638,7 +1638,7 @@ setVector vTmp800 = sTmp95[30];
 dotVectors sTmp96[30] = <vTmp799,vTmp800>;
 
 //sTmp97 = sqrt(sTmp96)
-calculate sTmp97 = SQRT(sTmp96,[0],null);
+calculateMv sTmp97 = SQRT(sTmp96,[0],null);
 
 //z31 = sTmp97 - d3
 resetMv z31;
@@ -1754,7 +1754,7 @@ setVector vTmp865 = sTmp99[30];
 dotVectors sTmp100[30] = <vTmp864,vTmp865>;
 
 //sTmp101 = sqrt(sTmp100)
-calculate sTmp101 = SQRT(sTmp100,[0],null);
+calculateMv sTmp101 = SQRT(sTmp100,[0],null);
 
 //z32 = sTmp101 - d3
 resetMv z32;

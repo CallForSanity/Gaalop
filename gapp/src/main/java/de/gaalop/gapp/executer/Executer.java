@@ -4,7 +4,7 @@ import de.gaalop.gapp.Selector;
 import de.gaalop.gapp.Selectorset;
 import de.gaalop.gapp.instructionSet.GAPPAddMv;
 import de.gaalop.gapp.instructionSet.GAPPAssignMv;
-import de.gaalop.gapp.instructionSet.GAPPCalculate;
+import de.gaalop.gapp.instructionSet.GAPPCalculateMv;
 import de.gaalop.gapp.instructionSet.GAPPDotVectors;
 import de.gaalop.gapp.instructionSet.GAPPResetMv;
 import de.gaalop.gapp.instructionSet.GAPPSetMv;
@@ -213,7 +213,7 @@ public class Executer extends CFGGAPPVisitor {
     }
 
     @Override
-    public Object visitCalculate(GAPPCalculate gappCalculate, Object arg) {
+    public Object visitCalculateMv(GAPPCalculateMv gappCalculate, Object arg) {
 
         MultivectorWithValues mv1 = getMultivector(gappCalculate.getOperand1().getName());
 

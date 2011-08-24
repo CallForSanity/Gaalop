@@ -8,7 +8,7 @@ package de.gaalop.gapp.statistics;
 import de.gaalop.gapp.instructionSet.CalculationType;
 import de.gaalop.gapp.instructionSet.GAPPAddMv;
 import de.gaalop.gapp.instructionSet.GAPPAssignMv;
-import de.gaalop.gapp.instructionSet.GAPPCalculate;
+import de.gaalop.gapp.instructionSet.GAPPCalculateMv;
 import de.gaalop.gapp.instructionSet.GAPPDotVectors;
 import de.gaalop.gapp.instructionSet.GAPPResetMv;
 import de.gaalop.gapp.instructionSet.GAPPSetMv;
@@ -85,7 +85,7 @@ public class CalculationsCounter extends CFGGAPPVisitor {
     }
 
     @Override
-    public Object visitCalculate(GAPPCalculate gappCalculate, Object arg) {
+    public Object visitCalculateMv(GAPPCalculateMv gappCalculate, Object arg) {
         long count = (calcCount.containsKey(gappCalculate.getType())) ? calcCount.get(gappCalculate.getType()) : 0;
 
         count += (long) Math.ceil(gappCalculate.getUsed1().size()/4.0); // assuming doing 4 calculations in parallel

@@ -1,7 +1,7 @@
 package de.gaalop.gapp.instructionSet;
 
 /**
- * Collects the calculations that can be performed by a GAPPCalculate operation
+ * Collects the calculations that can be performed by a GAPP calculateMv operation
  * @author christian
  */
 public enum CalculationType {
