@@ -99,7 +99,8 @@ public class DFGToMaximaCode implements ExpressionVisitor {
 
     @Override
     public void visit(Variable node) {
-        StringBuilder sb = new StringBuilder();
+        result.append(node.getName());
+       /* StringBuilder sb = new StringBuilder();
         String name = node.getName();
         for (int i=0;i<name.length();i++)
             if (name.charAt(i) == '$') {
@@ -108,13 +109,13 @@ public class DFGToMaximaCode implements ExpressionVisitor {
             } else
                 sb.append(name.charAt(i));
 
-        result.append(sb.toString());
+        result.append(sb.toString());*/
     }
 
     @Override
     public void visit(MultivectorComponent node) {
         result.append(node.getName());
-        result.append("\\$"); //TODO maybe here an another character
+        result.append("\\$");
         result.append(node.getBladeIndex());
     }
 
