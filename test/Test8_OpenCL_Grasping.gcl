@@ -1,19 +1,10 @@
-__kernel void pointTriangleTest(__global float* finalPosition,
+__kernel void grasping(__global float* finalPosition,
 		__global float* targetPosition,
 		__global const float* gripper,
 		__global const float* pointX1,
 		__global const float* pointX2,
 		__global const float* pointX3,
 		__global const float* pointX4) {
-
-	enum BLADES {
-		SCALAR,
-		E1, E2, E3, EINF, E0,
-		E12, E13, E1INF, E10, E23, E2INF, E20, E3INF, E30, EINF0,
-		E123, E12INF, E120, E13INF, E130, E1INF0, E23INF, E230, E2INF0, E3INF0,
-		E123INF, E1230, E12INF0, E13INF0, E23INF0,
-		E123INF0
-	};
 
 	// input variables
 	const float x11 = pointX1[0];
@@ -128,8 +119,8 @@ __kernel void pointTriangleTest(__global float* finalPosition,
 #pragma gcd end
 
 	// copy output variables
-	for(unsigned int i = 0; i < 32; ++i) {
-		targetPosition[i] = z_t[i];
-		finalPosition[i] = z_h_new[i];
-	}
+//	for(unsigned int i = 0; i < 32; ++i) {
+//		targetPosition[i] = z_t[i];
+//		finalPosition[i] = z_h_new[i];
+//	}
 }

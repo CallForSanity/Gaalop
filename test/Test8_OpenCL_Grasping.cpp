@@ -3,28 +3,8 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include <CL/cl.h>
-#include <CL/cl_platform.h>
-
-// Name of the file with the source code for the computation kernel
-// *********************************************************************
-const char* cSourceFile = "Test8_OpenCL_Grasping.gcl.cl";
-
-// OpenCL Vars
-cl_context cxGPUContext;        // OpenCL context
-cl_command_queue cqCommandQueue;// OpenCL command que
-cl_platform_id cpPlatform;      // OpenCL platform
-cl_device_id cdDevice;          // OpenCL device
-cl_program cpProgram;           // OpenCL program
-cl_kernel ckKernel;             // OpenCL kernel
-cl_mem cmDevFinalPosition;	// Final position of gripper
-cl_mem cmDevTargetPosition;	// Target position for gripper
-cl_mem cmDevGripper;		// Initial position of Gripper and radius
-cl_mem cmDevX1;			// Base Point x1
-cl_mem cmDevX2;			// Base Point x2
-cl_mem cmDevX3;			// Base Point x3
-cl_mem cmDevX4;			// Apex Point
-cl_int ciErr1, ciErr2;		// Error code var
+#include "cl.hpp"
+#include "clDeviceVector.h"
 
 void readFile(std::stringstream& resultStream,std::ifstream& fileStream)
 {
@@ -51,46 +31,12 @@ void readFile(std::string& resultString,const char* filePath)
 
 // Forward Declarations
 // *********************************************************************
-void VectorAddHost(const float* pfData1, const float* pfData2, float* pfResult, size_t iNumElements);
-void Cleanup (int iExitCode);
 void printMultivector(float *v);
 
 // Main function 
 // *********************************************************************
 int main(int argc, char **argv)
 {
-    //Get an OpenCL platform
-    ciErr1 = clGetPlatformIDs(1, &cpPlatform, NULL);
-    if (ciErr1 != CL_SUCCESS){
-    	std::cout << "ERROR: clGetPlatformIDs: " << ciErr1 << std::endl;
-        Cleanup(EXIT_FAILURE);
-	}
-
-    //Get the devices
-    ciErr1 = clGetDeviceIDs(cpPlatform, CL_DEVICE_TYPE_GPU, 1, &cdDevice, NULL);
-    if(ciErr1 != CL_SUCCESS)
-    	ciErr1 = clGetDeviceIDs(cpPlatform, CL_DEVICE_TYPE_CPU, 1, &cdDevice, NULL);
-    if (ciErr1 != CL_SUCCESS)
-        Cleanup(EXIT_FAILURE);
-
-    //Create the context
-    cxGPUContext = clCreateContext(0, 1, &cdDevice, NULL, NULL, &ciErr1);
-    if (ciErr1 != CL_SUCCESS)
-        Cleanup(EXIT_FAILURE);
-
-    // Create a command-queue
-    cqCommandQueue = clCreateCommandQueue(cxGPUContext, cdDevice, 0, &ciErr1);
-    if (ciErr1 != CL_SUCCESS)
-        Cleanup(EXIT_FAILURE);
-
-    // Allocate the OpenCL buffer memory objects for source and result on the device GMEM
-    cmDevFinalPosition = clCreateBuffer(cxGPUContext, CL_MEM_WRITE_ONLY, 32*sizeof(cl_float), NULL, &ciErr1);
-    cmDevTargetPosition = clCreateBuffer(cxGPUContext, CL_MEM_WRITE_ONLY, 32*sizeof(cl_float), NULL, &ciErr1);
-    cmDevGripper = clCreateBuffer(cxGPUContext, CL_MEM_READ_ONLY, 4 * sizeof(cl_float), NULL, &ciErr1);
-    cmDevX1 = clCreateBuffer(cxGPUContext, CL_MEM_READ_ONLY, 3 * sizeof(cl_float), NULL, &ciErr1);
-    cmDevX2 = clCreateBuffer(cxGPUContext, CL_MEM_READ_ONLY, 3 * sizeof(cl_float), NULL, &ciErr1);
-    cmDevX3 = clCreateBuffer(cxGPUContext, CL_MEM_READ_ONLY, 3 * sizeof(cl_float), NULL, &ciErr1);
-    cmDevX4 = clCreateBuffer(cxGPUContext, CL_MEM_READ_ONLY, 3 * sizeof(cl_float), NULL, &ciErr1);
 
     // settings
     cl_float finalPosition[] = {0.0f,0.0f,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
@@ -101,75 +47,72 @@ int main(int argc, char **argv)
     const cl_float pointX3[] = {1.0f,0.15f,1.0f};
     const cl_float pointX4[] = {1.1f,1.9f,0.2f};
     const size_t szGlobalWorkSize = 1;
-    
-    // Read the OpenCL kernel in from source file
-    std::string sourceString;
-    readFile(sourceString,cSourceFile);
-    const char* cSourceCL = sourceString.c_str();
-    const size_t szKernelLength = sourceString.length();
 
-    // Create the program
-    //std::cout << cSourceCL << std::endl;
+    // list platforms
+	std::vector<cl::Platform> platforms;
+	cl::Platform::get(&platforms);
+	std::cout << "listings platforms\n";
+	for (std::vector<cl::Platform>::const_iterator it =
+			platforms.begin(); it != platforms.end(); ++it)
+		std::cout << it->getInfo<CL_PLATFORM_NAME> () << std::endl;
 
-    cpProgram = clCreateProgramWithSource(cxGPUContext, 1, (const char **)&cSourceCL, NULL, &ciErr1);
-    if (ciErr1 != CL_SUCCESS){
-    	std::cout << "ERROR: clCreateProgramWithSource: " << ciErr1 << std::endl;
-        Cleanup(EXIT_FAILURE);
-	}
+	// create context
+	cl_context_properties properties[] = { CL_CONTEXT_PLATFORM,
+			(cl_context_properties)(platforms[0])(), 0 };
+	cl::Context context(CL_DEVICE_TYPE_ALL, properties);
+	std::vector<cl::Device> devices = context.getInfo<
+			CL_CONTEXT_DEVICES> ();
+	cl::Device& device = devices.front();
 
-    // Build the program with 'mad' Optimization option
-    #ifdef MAC
-        const char* flags = "-cl-fast-relaxed-math -DMAC";
-    #else
-        const char* flags = "-cl-fast-relaxed-math";
-    #endif
-    ciErr1 = clBuildProgram(cpProgram, 0, NULL, NULL, NULL, NULL);
-    if (ciErr1 != CL_SUCCESS){
-    	std::cout << "clBuildProgram: " <<ciErr1 << std::endl;
-        Cleanup(EXIT_FAILURE);
-	}
+	// create command queue
+	cl::CommandQueue commandQueue(context, device);
 
-    // Create the kernel
-    ckKernel = clCreateKernel(cpProgram, "pointTriangleTest", &ciErr1);
-    if (ciErr1 != CL_SUCCESS)
-        Cleanup(EXIT_FAILURE);
+	// read the OpenCL program from source file
+	std::string sourceString;
+	readFile(sourceString, "Test8_OpenCL_Grasping.gcl.cl");
+	cl::Program::Sources clsource(1, std::make_pair(
+			sourceString.c_str(), sourceString.length()));
+	cl::Program program(context, clsource);
 
+	// build
+	program.build(devices);
+	std::cout
+			<< program.getBuildInfo<CL_PROGRAM_BUILD_LOG> (device)
+			<< std::endl;
 
-    // Set the Argument values
-    ciErr1 = clSetKernelArg(ckKernel, 0, sizeof(cl_mem), (void*)&cmDevFinalPosition);
-    ciErr1 = clSetKernelArg(ckKernel, 1, sizeof(cl_mem), (void*)&cmDevTargetPosition);
-    ciErr1 |= clSetKernelArg(ckKernel, 2, sizeof(cl_mem), (void*)&cmDevGripper);
-    ciErr1 |= clSetKernelArg(ckKernel, 3, sizeof(cl_mem), (void*)&cmDevX1);
-    ciErr1 |= clSetKernelArg(ckKernel, 4, sizeof(cl_mem), (void*)&cmDevX2);
-    ciErr1 |= clSetKernelArg(ckKernel, 5, sizeof(cl_mem), (void*)&cmDevX3);
-    ciErr1 |= clSetKernelArg(ckKernel, 6, sizeof(cl_mem), (void*)&cmDevX4);
-    if (ciErr1 != CL_SUCCESS)
-        Cleanup(EXIT_FAILURE);
+    // create kernel and functor
+	cl::Kernel graspingKernel(program, "grasping");
+	cl::KernelFunctor grasping = graspingKernel.bind(commandQueue,
+			cl::NDRange(szGlobalWorkSize),cl::NullRange);
+
+    // Allocate the OpenCL buffer memory objects for source and result on the device GMEM
+	clDeviceVector<cl_float> dev_final_position(context,commandQueue,CL_MEM_WRITE_ONLY,32);
+    clDeviceVector<cl_float> dev_target_position(context,commandQueue,CL_MEM_WRITE_ONLY,32);
+    clDeviceVector<cl_float> dev_gripper(context,commandQueue,CL_MEM_READ_ONLY,4);
+    clDeviceVector<cl_float> dev_X1(context,commandQueue,CL_MEM_READ_ONLY,3);
+    clDeviceVector<cl_float> dev_X2(context,commandQueue,CL_MEM_READ_ONLY,3);
+    clDeviceVector<cl_float> dev_X3(context,commandQueue,CL_MEM_READ_ONLY,3);
+    clDeviceVector<cl_float> dev_X4(context,commandQueue,CL_MEM_READ_ONLY,3);
 
     // --------------------------------------------------------
     // Start Core sequence... copy input data to GPU, compute, copy results back
 
     // Asynchronous write of data to GPU device
-    ciErr1 = clEnqueueWriteBuffer(cqCommandQueue, cmDevFinalPosition, CL_FALSE, 0, 32 * sizeof(cl_float), finalPosition, 0, NULL, NULL);
-    ciErr1 = clEnqueueWriteBuffer(cqCommandQueue, cmDevTargetPosition, CL_FALSE, 0, 32 * sizeof(cl_float), targetPosition, 0, NULL, NULL);
-    ciErr1 = clEnqueueWriteBuffer(cqCommandQueue, cmDevGripper, CL_FALSE, 0, 4 * sizeof(cl_float), gripper, 0, NULL, NULL);
-    ciErr1 |= clEnqueueWriteBuffer(cqCommandQueue, cmDevX1, CL_FALSE, 0, 3 * sizeof(cl_float), pointX1, 0, NULL, NULL);
-    ciErr1 |= clEnqueueWriteBuffer(cqCommandQueue, cmDevX2, CL_FALSE, 0, 3 * sizeof(cl_float), pointX2, 0, NULL, NULL);
-    ciErr1 |= clEnqueueWriteBuffer(cqCommandQueue, cmDevX3, CL_FALSE, 0, 3 * sizeof(cl_float), pointX3, 0, NULL, NULL);
-    ciErr1 |= clEnqueueWriteBuffer(cqCommandQueue, cmDevX4, CL_FALSE, 0, 3 * sizeof(cl_float), pointX4, 0, NULL, NULL);
-    if (ciErr1 != CL_SUCCESS)
-        Cleanup(EXIT_FAILURE);
+    dev_final_position = finalPosition;
+    dev_target_position = targetPosition;
+    dev_gripper = gripper;
+    dev_X1 = pointX1;
+    dev_X2 = pointX2;
+    dev_X3 = pointX3;
+    dev_X4 = pointX4;
 
     // Launch kernel
-    ciErr1 = clEnqueueNDRangeKernel(cqCommandQueue, ckKernel, 1, NULL, &szGlobalWorkSize, NULL, 0, NULL, NULL);
-    if (ciErr1 != CL_SUCCESS)
-        Cleanup(EXIT_FAILURE);
+    grasping(dev_final_position,dev_target_position,dev_gripper,
+			 dev_X1,dev_X2,dev_X3,dev_X4);
 
     // Synchronous/blocking read of results, and check accumulated errors
-    ciErr1 = clEnqueueReadBuffer(cqCommandQueue, cmDevFinalPosition, CL_TRUE, 0, 32 * sizeof(cl_float), finalPosition, 0, NULL, NULL);
-    ciErr1 = clEnqueueReadBuffer(cqCommandQueue, cmDevTargetPosition, CL_TRUE, 0, 32 * sizeof(cl_float), targetPosition, 0, NULL, NULL);
-    if (ciErr1 != CL_SUCCESS)
-        Cleanup(EXIT_FAILURE);
+    dev_final_position.copyTo(finalPosition);
+    dev_target_position.copyTo(targetPosition);
 
     //--------------------------------------------------------
 	std::cout << "Target position:" << std::endl;
@@ -177,42 +120,7 @@ int main(int argc, char **argv)
 	std::cout << "Final position:" << std::endl;
 	printMultivector(finalPosition);
 
-    // Cleanup and leave
-    Cleanup(EXIT_SUCCESS);
-}
-
-void Cleanup (int iExitCode)
-{
-    if(iExitCode){
-		// Shows the log
-		char* build_log;
-		size_t log_size;
-		// // First call to know the proper size
-		clGetProgramBuildInfo(cpProgram, cdDevice, CL_PROGRAM_BUILD_LOG, 0, NULL, &log_size);
-		build_log = new char[log_size+1];
-		// // Second call to get the log
-		clGetProgramBuildInfo(cpProgram, cdDevice, CL_PROGRAM_BUILD_LOG, log_size, build_log, NULL);
-		build_log[log_size] = '\0';
-		std::cout << build_log << std::endl;
-		delete[] build_log;
-	}
-
-    // Cleanup allocated objects
-    if(ckKernel)clReleaseKernel(ckKernel);  
-    if(cpProgram)clReleaseProgram(cpProgram);
-    if(cqCommandQueue)clReleaseCommandQueue(cqCommandQueue);
-    if(cxGPUContext)clReleaseContext(cxGPUContext);
-    if(cmDevFinalPosition)clReleaseMemObject(cmDevFinalPosition);
-    if(cmDevTargetPosition)clReleaseMemObject(cmDevTargetPosition);
-    if(cmDevGripper)clReleaseMemObject(cmDevGripper);
-    if(cmDevX1)clReleaseMemObject(cmDevX1);
-    if(cmDevX2)clReleaseMemObject(cmDevX2);
-    if(cmDevX3)clReleaseMemObject(cmDevX3);
-    if(cmDevX4)clReleaseMemObject(cmDevX4);
-
-    std::cout << "Exit: " << iExitCode << std::endl;
-
-    exit (iExitCode);
+	return 0;
 }
 
 void printMultivector(float *v){

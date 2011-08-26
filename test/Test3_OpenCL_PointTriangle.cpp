@@ -3,24 +3,8 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include <CL/cl.h>
-#include <CL/cl_platform.h>
-
-// Name of the file with the source code for the computation kernel
-// *********************************************************************
-const char* cSourceFile = "Test3_OpenCL_PointTriangle.gcl.cl";
-
-// OpenCL Vars
-cl_context cxGPUContext;        // OpenCL context
-cl_command_queue cqCommandQueue;// OpenCL command que
-cl_platform_id cpPlatform;      // OpenCL platform
-cl_device_id cdDevice;          // OpenCL device
-cl_program cpProgram;           // OpenCL program
-cl_kernel ckKernel;             // OpenCL kernel
-cl_mem cmDevCollision;		// Collision
-cl_mem cmDevTriangles;		// Triangles
-cl_mem cmDevPoint;		// Point
-cl_int ciErr1, ciErr2;		// Error code var
+#include "cl.hpp"
+#include "clDeviceVector.h"
 
 void readFile(std::stringstream& resultStream,std::ifstream& fileStream)
 {
@@ -45,123 +29,75 @@ void readFile(std::string& resultString,const char* filePath)
   resultString = resultStream.str();
 }
 
-// Forward Declarations
-// *********************************************************************
-void VectorAddHost(const float* pfData1, const float* pfData2, float* pfResult, int iNumElements);
-void Cleanup (int iExitCode);
-
 // Main function 
 // *********************************************************************
 int main(int argc, char **argv)
 {
-    //Get an OpenCL platform
-    ciErr1 = clGetPlatformIDs(1, &cpPlatform, NULL);
-    if (ciErr1 != CL_SUCCESS)
-        Cleanup(EXIT_FAILURE);
+	// list platforms
+	std::vector<cl::Platform> platforms;
+	cl::Platform::get(&platforms);
+	std::cout << "listings platforms\n";
+	for (std::vector<cl::Platform>::const_iterator it =
+			platforms.begin(); it != platforms.end(); ++it)
+		std::cout << it->getInfo<CL_PLATFORM_NAME> () << std::endl;
 
-    //Get the devices
-    ciErr1 = clGetDeviceIDs(cpPlatform, CL_DEVICE_TYPE_GPU, 1, &cdDevice, NULL);
-    if(ciErr1 != CL_SUCCESS)
-    	ciErr1 = clGetDeviceIDs(cpPlatform, CL_DEVICE_TYPE_CPU, 1, &cdDevice, NULL);
-    if (ciErr1 != CL_SUCCESS)
-        Cleanup(EXIT_FAILURE);
+	// create context
+	cl_context_properties properties[] = { CL_CONTEXT_PLATFORM,
+			(cl_context_properties)(platforms[0])(), 0 };
+	cl::Context context(CL_DEVICE_TYPE_ALL, properties);
+	std::vector<cl::Device> devices = context.getInfo<
+			CL_CONTEXT_DEVICES> ();
+	cl::Device& device = devices.front();
 
-    //Create the context
-    cxGPUContext = clCreateContext(0, 1, &cdDevice, NULL, NULL, &ciErr1);
-    if (ciErr1 != CL_SUCCESS)
-        Cleanup(EXIT_FAILURE);
+	// create command queue
+	cl::CommandQueue commandQueue(context, device);
 
-    // Create a command-queue
-    cqCommandQueue = clCreateCommandQueue(cxGPUContext, cdDevice, 0, &ciErr1);
-    if (ciErr1 != CL_SUCCESS)
-        Cleanup(EXIT_FAILURE);
+	// read the OpenCL program from source file
+	std::string sourceString;
+	readFile(sourceString, "Test3_OpenCL_PointTriangle.gcl.cl");
+	cl::Program::Sources clsource(1, std::make_pair(
+			sourceString.c_str(), sourceString.length()));
+	cl::Program program(context, clsource);
 
-    // Allocate the OpenCL buffer memory objects for source and result on the device GMEM
-    cmDevCollision = clCreateBuffer(cxGPUContext, CL_MEM_WRITE_ONLY, sizeof(cl_bool), NULL, &ciErr1);
-    cmDevTriangles = clCreateBuffer(cxGPUContext, CL_MEM_READ_ONLY, 9 * sizeof(cl_float), NULL, &ciErr1);
-    cmDevPoint = clCreateBuffer(cxGPUContext, CL_MEM_READ_ONLY, 3 * sizeof(cl_float), NULL, &ciErr1);
+	// build
+	program.build(devices);
+	std::cout
+			<< program.getBuildInfo<CL_PROGRAM_BUILD_LOG> (device)
+			<< std::endl;
 
     // settings
-    cl_bool collision[] = {false};
+    cl_bool collisions[] = {false};
     const cl_float triangles[] = {0.0f,0.0f,0.0f,1.0f,0.0f,0.0f,0.0f,1.0f,0.0f};
-    const cl_float point[] = {0.2f,0.2f,0.0f};
+    const cl_float points[] = {0.2f,0.2f,0.0f};
     const cl_float h = 0.1f;
-    const int numTriangles = 1;
-    const size_t szGlobalWorkSize = 1;
-    
-    // Read the OpenCL kernel in from source file
-    std::string sourceString;
-    readFile(sourceString,cSourceFile);
-    const char* cSourceCL = sourceString.c_str();
-    const int szKernelLength = sourceString.length();
+    const size_t numTriangles = 1;
 
-    // Create the program
-    std::cout << cSourceCL << std::endl;
+    // Allocate the OpenCL buffer memory objects for source and result on the device GMEM
+	clDeviceVector<cl_bool> dev_collisions(context,commandQueue,CL_MEM_WRITE_ONLY,numTriangles);
+    clDeviceVector<cl_float> dev_triangles(context,commandQueue,CL_MEM_READ_ONLY,numTriangles * 9);
+    clDeviceVector<cl_float> dev_points(context,commandQueue,CL_MEM_READ_ONLY,numTriangles * 3);
 
-    cpProgram = clCreateProgramWithSource(cxGPUContext, 1, (const char **)&cSourceCL, NULL, &ciErr1);
-    if (ciErr1 != CL_SUCCESS)
-        Cleanup(EXIT_FAILURE);
+    // create kernel and functor
+	cl::Kernel pointTriangleTestKernel(program, "pointTriangleTest");
+	cl::KernelFunctor pointTriangleTest = pointTriangleTestKernel.bind(commandQueue,
+			cl::NDRange(numTriangles),cl::NullRange);
 
-    // Build the program with 'mad' Optimization option
-    #ifdef MAC
-        const char* flags = "-cl-fast-relaxed-math -DMAC";
-    #else
-        const char* flags = "-cl-fast-relaxed-math";
-    #endif
-    ciErr1 = clBuildProgram(cpProgram, 0, NULL, NULL, NULL, NULL);
-    if (ciErr1 != CL_SUCCESS)
-        Cleanup(EXIT_FAILURE);
-
-    // Create the kernel
-    ckKernel = clCreateKernel(cpProgram, "pointTriangleTest", &ciErr1);
-    if (ciErr1 != CL_SUCCESS)
-        Cleanup(EXIT_FAILURE);
-
-    // Set the Argument values
-    ciErr1 = clSetKernelArg(ckKernel, 0, sizeof(cl_mem), (void*)&cmDevCollision);
-    ciErr1 |= clSetKernelArg(ckKernel, 1, sizeof(cl_mem), (void*)&cmDevTriangles);
-    ciErr1 |= clSetKernelArg(ckKernel, 2, sizeof(cl_mem), (void*)&cmDevPoint);
-    ciErr1 |= clSetKernelArg(ckKernel, 3, sizeof(cl_float), (void*)&h);
-    ciErr1 |= clSetKernelArg(ckKernel, 4, sizeof(cl_int), (void*)&numTriangles);
-    if (ciErr1 != CL_SUCCESS)
-        Cleanup(EXIT_FAILURE);
 
     // --------------------------------------------------------
     // Start Core sequence... copy input data to GPU, compute, copy results back
 
     // Asynchronous write of data to GPU device
-    ciErr1 = clEnqueueWriteBuffer(cqCommandQueue, cmDevCollision, CL_FALSE, 0, sizeof(cl_bool), collision, 0, NULL, NULL);
-    ciErr1 = clEnqueueWriteBuffer(cqCommandQueue, cmDevTriangles, CL_FALSE, 0, 9 * sizeof(cl_float), triangles, 0, NULL, NULL);
-    ciErr1 |= clEnqueueWriteBuffer(cqCommandQueue, cmDevPoint, CL_FALSE, 0, 3 * sizeof(cl_float), point, 0, NULL, NULL);
-    if (ciErr1 != CL_SUCCESS)
-        Cleanup(EXIT_FAILURE);
+	dev_triangles = triangles;
+	dev_points = points;
 
     // Launch kernel
-    ciErr1 = clEnqueueNDRangeKernel(cqCommandQueue, ckKernel, 1, NULL, &szGlobalWorkSize, NULL, 0, NULL, NULL);
-    if (ciErr1 != CL_SUCCESS)
-        Cleanup(EXIT_FAILURE);
+	pointTriangleTest(dev_collisions,dev_triangles,dev_points,h,(unsigned int)numTriangles);
 
     // Synchronous/blocking read of results, and check accumulated errors
-    ciErr1 = clEnqueueReadBuffer(cqCommandQueue, cmDevCollision, CL_TRUE, 0, sizeof(cl_bool), collision, 0, NULL, NULL);
-    if (ciErr1 != CL_SUCCESS)
-        Cleanup(EXIT_FAILURE);
+	dev_collisions.copyTo(collisions);
 
     //--------------------------------------------------------
 
     // Cleanup and leave
-    Cleanup (collision[0] == true ? 0 : 1);
-}
-
-void Cleanup (int iExitCode)
-{
-    // Cleanup allocated objects
-    if(ckKernel)clReleaseKernel(ckKernel);  
-    if(cpProgram)clReleaseProgram(cpProgram);
-    if(cqCommandQueue)clReleaseCommandQueue(cqCommandQueue);
-    if(cxGPUContext)clReleaseContext(cxGPUContext);
-    if(cmDevCollision)clReleaseMemObject(cmDevCollision);
-    if(cmDevTriangles)clReleaseMemObject(cmDevTriangles);
-    if(cmDevPoint)clReleaseMemObject(cmDevPoint);
-
-    exit (iExitCode);
+    return collisions[0] ? 0 : 1;
 }

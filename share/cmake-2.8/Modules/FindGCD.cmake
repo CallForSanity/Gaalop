@@ -58,7 +58,7 @@ ENDIF(WIN32 AND NOT UNIX)
 
 # custom command to compile gcd source files
 MACRO(GCD_WRAP_SRCS generated_files)
-	SET(generated_files "")
+	UNSET(${generated_files}) # actually needed
 
 	FOREACH(source_file ${ARGN})
 	    # check for headers
@@ -72,6 +72,7 @@ MACRO(GCD_WRAP_SRCS generated_files)
 			                COMMAND ${GCD_COMPILE_SCRIPT}
 			                ARGS ${GCD_CXX_ARGS} -o "${generated_file}" -i "${source_file}"
 					        MAIN_DEPENDENCY ${source_file})
+			LIST(APPEND ${generated_files} ${generated_file}) # needed here, to exclude non-gcd files
 		ELSEIF(${source_file} MATCHES ".*\\.gcu$" AND NOT is_header)
 			get_filename_component(source_file_name ${source_file} NAME)
 			SET(generated_file "${CMAKE_CURRENT_BINARY_DIR}/${source_file_name}.cu")
@@ -80,6 +81,7 @@ MACRO(GCD_WRAP_SRCS generated_files)
 			                COMMAND ${GCD_COMPILE_SCRIPT}
 			                ARGS ${GCD_CXX_ARGS} -o "${generated_file}" -i "${source_file}"
 					        MAIN_DEPENDENCY ${source_file})
+			LIST(APPEND ${generated_files} ${generated_file}) # needed here, to exclude non-gcd files
 		ELSEIF(${source_file} MATCHES ".*\\.gcl$" AND NOT is_header)
 			get_filename_component(source_file_name ${source_file} NAME)
 			SET(generated_file "${CMAKE_CURRENT_BINARY_DIR}/${source_file_name}.cl")
@@ -91,6 +93,7 @@ MACRO(GCD_WRAP_SRCS generated_files)
 			                COMMAND ${GCD_COMPILE_SCRIPT}
 			                ARGS ${GCD_CXX_ARGS} -o "${generated_file}" -i "${source_file}"
 					        MAIN_DEPENDENCY ${source_file})
+			LIST(APPEND ${generated_files} ${generated_file}) # needed here, to exclude non-gcd files
 		ELSEIF(${source_file} MATCHES ".*\\.gcj$" AND NOT is_header)
 			get_filename_component(source_file_name ${source_file} NAME)
 			SET(generated_file "${CMAKE_CURRENT_BINARY_DIR}/${source_file_name}.java")
@@ -102,52 +105,57 @@ MACRO(GCD_WRAP_SRCS generated_files)
 			                COMMAND ${GCD_COMPILE_SCRIPT}
 			                ARGS ${GCD_CXX_ARGS} -o "${generated_file}" -i "${source_file}"
 					        MAIN_DEPENDENCY ${source_file})
+			LIST(APPEND ${generated_files} ${generated_file}) # needed here, to exclude non-gcd files
 		ENDIF(${source_file} MATCHES ".*\\.gcp$" AND NOT is_header)
-		
-		LIST(APPEND generated_files ${generated_file})
 	ENDFOREACH(source_file)
 ENDMACRO(GCD_WRAP_SRCS)
 
 MACRO(GCD_CXX_ADD_LIBRARY target)
+    #UNSET(src)
     FILE(GLOB src ${ARGN})
     GCD_WRAP_SRCS(generated_files ${src})
-    ADD_LIBRARY(${target} ${generated_files})
+    ADD_LIBRARY(${target} ${generated_files} ${src}) # need to add src, so that normal files get compiled too
     TARGET_LINK_LIBRARIES(${target} ${GCD_LIBRARY})
 ENDMACRO(GCD_CXX_ADD_LIBRARY)
 
 MACRO(GCD_CXX_ADD_EXECUTABLE target)
+    #UNSET(src)
     FILE(GLOB src ${ARGN})
     GCD_WRAP_SRCS(generated_files ${src})
-    ADD_EXECUTABLE(${target} ${generated_files})
+    ADD_EXECUTABLE(${target} ${generated_files} ${src}) # need to add src, so that normal files get compiled too
     TARGET_LINK_LIBRARIES(${target} ${GCD_LIBRARY})
 ENDMACRO(GCD_CXX_ADD_EXECUTABLE)
 
 MACRO(GCD_CUDA_ADD_LIBRARY target)
+    #UNSET(src)
     FILE(GLOB src ${ARGN})
     GCD_WRAP_SRCS(generated_files ${src})
-    CUDA_ADD_LIBRARY(${target} ${generated_files})
+    CUDA_ADD_LIBRARY(${target} ${generated_files} ${src}) # need to add src, so that normal files get compiled too
     TARGET_LINK_LIBRARIES(${target} ${GCD_LIBRARY})
 ENDMACRO(GCD_CUDA_ADD_LIBRARY)
 
 MACRO(GCD_CUDA_ADD_EXECUTABLE target)
+    #UNSET(src)
     FILE(GLOB src ${ARGN})
     GCD_WRAP_SRCS(generated_files ${src})
-    CUDA_ADD_EXECUTABLE(${target} ${generated_files})
+    CUDA_ADD_EXECUTABLE(${target} ${generated_files} ${src}) # need to add src, so that normal files get compiled too
     TARGET_LINK_LIBRARIES(${target} ${GCD_LIBRARY})
 ENDMACRO(GCD_CUDA_ADD_EXECUTABLE)
 
 MACRO(GCD_OPENCL_ADD_LIBRARY target)
+    #UNSET(src)
     FILE(GLOB src ${ARGN})
     GCD_WRAP_SRCS(generated_files ${src})
-    ADD_LIBRARY(${target} ${generated_files})
+    ADD_LIBRARY(${target} ${generated_files} ${src}) # need to add src, so that normal files get compiled too
     SET_TARGET_PROPERTIES(${target} PROPERTIES LINKER_LANGUAGE CXX)
     TARGET_LINK_LIBRARIES(${target} ${OPENCL_LIBRARIES} ${GCD_LIBRARY})
 ENDMACRO(GCD_OPENCL_ADD_LIBRARY)
 
 MACRO(GCD_OPENCL_ADD_EXECUTABLE target)
+    #UNSET(src)
     FILE(GLOB src ${ARGN})
     GCD_WRAP_SRCS(generated_files ${src})
-    ADD_EXECUTABLE(${target} ${generated_files})
+    ADD_EXECUTABLE(${target} ${generated_files} ${src}) # need to add src, so that normal files get compiled too
     SET_TARGET_PROPERTIES(${target} PROPERTIES LINKER_LANGUAGE CXX)
     TARGET_LINK_LIBRARIES(${target} ${OPENCL_LIBRARIES} ${GCD_LIBRARY})
 ENDMACRO(GCD_OPENCL_ADD_EXECUTABLE)
