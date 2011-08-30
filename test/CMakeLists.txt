@@ -18,7 +18,7 @@ ENDIF(BUILD_WITH_CUDA)
 
 IF(BUILD_WITH_OPENCL)
 FIND_PACKAGE(OpenCL REQUIRED)
-GCD_OPENCL_ADD_EXECUTABLE(test3 "Test3_OpenCL_PointTriangle.cpp" "Test3_OpenCL_PointTriangle.gcl")
+GCD_OPENCL_ADD_EXECUTABLE(test3 "Test3_OpenCL_PointTriangle.cpp" "Test3_OpenCL_PointTriangle.gcl" "cl.hpp" "clDeviceVector.h")
 ADD_TEST(NAME "Test3_OpenCL_PointTriangle" COMMAND test3)
 ENDIF(BUILD_WITH_OPENCL)
 
@@ -29,7 +29,7 @@ GCD_CXX_ADD_EXECUTABLE(test5 "Test5_CXX_Horizon.gcp")
 ADD_TEST(NAME "Test5_CXX_Horizon" COMMAND test5)
 
 IF(BUILD_WITH_OPENCL)
-GCD_OPENCL_ADD_EXECUTABLE(test6 "Test6_OpenCL_Horizon.cpp" "Test6_OpenCL_Horizon.gcl")
+GCD_OPENCL_ADD_EXECUTABLE(test6 "Test6_OpenCL_Horizon.cpp" "Test6_OpenCL_Horizon.gcl" "cl.hpp" "clDeviceVector.h")
 ADD_TEST(NAME "Test6_OpenCL_Horizon" COMMAND test6)
 ENDIF(BUILD_WITH_OPENCL)
 
@@ -37,6 +37,6 @@ GCD_CXX_ADD_EXECUTABLE(test7 "Test7_CXX_Multiblock.gcp")
 ADD_TEST(NAME "Test7_CXX_Multiblock" COMMAND test7)
 
 IF(BUILD_WITH_OPENCL)
-GCD_OPENCL_ADD_EXECUTABLE(test8 "Test8_OpenCL_Grasping.cpp" "Test8_OpenCL_Grasping.gcl")
+GCD_OPENCL_ADD_EXECUTABLE(test8 "Test8_OpenCL_Grasping.cpp" "Test8_OpenCL_Grasping.gcl" "cl.hpp" "clDeviceVector.h")
 ADD_TEST(NAME "Test8_OpenCL_Grasping" COMMAND test8)
 ENDIF(BUILD_WITH_OPENCL)

@@ -16,7 +16,7 @@ FIND_PROGRAM(MAXIMA_BIN HINTS NAMES "maxima" "maxima.sh" "maxima.bat" HINTS "C:/
 ENDIF(GCD_WITH_MAXIMA)
 ENDIF(GCD_WITH_MAPLE)
 
-FIND_PATH(GCD_ROOT_DIR share
+FIND_PATH(GCD_ROOT_DIR share PATH_SUFFIXES GaalopCompilerDriver 0.1.1
           DOC "Gaalop Compiler Driver root directory")
 FIND_FILE(GCD_JAR starter-1.0.0.jar "${GCD_ROOT_DIR}/share/gcd/gaalop" DOC "Gaalop GCD")
 FIND_LIBRARY(GCD_LIBRARY gcd HINTS "${GCD_ROOT_DIR}/lib" DOC "GCD helper library")

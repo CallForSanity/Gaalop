@@ -27,6 +27,10 @@ public:
 		resize(size_);
 	}
 
+	operator cl::Buffer& () {
+		return buffer;
+	}
+	
 	clDeviceVector<T>& operator =(const std::vector<T>& in) {
 		if (in.size() > numElements)
 			resize(in.size());
@@ -39,12 +43,8 @@ public:
 	}
 
 	clDeviceVector<T>& operator =(const T* in) {
-		const size_t numElementsIn = sizeof(in) / sizeof(T);
-		if (numElementsIn > numElements)
-			resize(numElementsIn);
-
 		commandQueue.enqueueWriteBuffer(buffer, CL_TRUE, 0,
-										std::min(numElements,numElementsIn) * sizeof(T),
+										numElements * sizeof(T),
 										in );
 
 		return *this;
@@ -64,9 +64,8 @@ public:
 	}
 
 	void copyTo(T* out) {
-		const size_t numElementsOut = sizeof(out) / sizeof(T);
 		commandQueue.enqueueReadBuffer(buffer, CL_TRUE, 0,
-										std::min(numElements,numElementsOut) * sizeof(T),
+										numElements * sizeof(T),
 										out );
 	}
 

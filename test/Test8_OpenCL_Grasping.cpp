@@ -31,16 +31,15 @@ void readFile(std::string& resultString,const char* filePath)
 
 // Forward Declarations
 // *********************************************************************
-void printMultivector(float *v);
+void printMultivector(const float *v);
 
 // Main function 
 // *********************************************************************
 int main(int argc, char **argv)
 {
-
     // settings
-    cl_float finalPosition[] = {0.0f,0.0f,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-    cl_float targetPosition[] = {0.0f,0.0f,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+    cl_float finalPosition[] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+    cl_float targetPosition[] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
     const cl_float gripper[] = {-1.15f,0.0f,0.0f,0.6f};
     const cl_float pointX1[] = {0.6f,0.2f,0.2f};
     const cl_float pointX2[] = {0.7f,0.2f,1.0f};
@@ -54,7 +53,7 @@ int main(int argc, char **argv)
 	std::cout << "listings platforms\n";
 	for (std::vector<cl::Platform>::const_iterator it =
 			platforms.begin(); it != platforms.end(); ++it)
-		std::cout << it->getInfo<CL_PLATFORM_NAME> () << std::endl;
+	std::cout << it->getInfo<CL_PLATFORM_NAME> () << std::endl;
 
 	// create context
 	cl_context_properties properties[] = { CL_CONTEXT_PLATFORM,
@@ -107,8 +106,8 @@ int main(int argc, char **argv)
     dev_X4 = pointX4;
 
     // Launch kernel
-    grasping(dev_final_position,dev_target_position,dev_gripper,
-			 dev_X1,dev_X2,dev_X3,dev_X4);
+	grasping(dev_final_position.getBuffer(),dev_target_position.getBuffer(),dev_gripper.getBuffer(),
+			 dev_X1.getBuffer(),dev_X2.getBuffer(),dev_X3.getBuffer(),dev_X4.getBuffer());
 
     // Synchronous/blocking read of results, and check accumulated errors
     dev_final_position.copyTo(finalPosition);
@@ -120,10 +119,14 @@ int main(int argc, char **argv)
 	std::cout << "Final position:" << std::endl;
 	printMultivector(finalPosition);
 
+	// test
+	for(size_t counter = 0; counter < 32; ++counter)
+		if(targetPosition[counter] != finalPosition[counter])
+			return -1;
 	return 0;
 }
 
-void printMultivector(float *v){
+void printMultivector(const float *v){
     for(size_t i = 0; i < 32; ++i) {
 		if(v[i]) { // check if entry is non-zero
 			switch(i) {
