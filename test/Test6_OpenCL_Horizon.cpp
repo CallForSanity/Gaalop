@@ -3,6 +3,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#define __CL_ENABLE_EXCEPTIONS
 #include "cl.hpp"
 #include "clDeviceVector.h"
 
@@ -36,7 +37,7 @@ int main(int argc, char **argv)
 	// list platforms
 	std::vector<cl::Platform> platforms;
 	cl::Platform::get(&platforms);
-	std::cout << "listings platforms\n";
+	std::cout << "listing platforms\n";
 	for (std::vector<cl::Platform>::const_iterator it =
 			platforms.begin(); it != platforms.end(); ++it)
 		std::cout << it->getInfo<CL_PLATFORM_NAME> () << std::endl;
@@ -56,7 +57,6 @@ int main(int argc, char **argv)
     const size_t numPoints = 10000;
     cl_float circleCenters[3*numPoints];
     cl_float points[3*numPoints];
-    const size_t szGlobalWorkSize = numPoints;
 
     // set first point to example point
     points[0] = 1.0f;
@@ -64,15 +64,19 @@ int main(int argc, char **argv)
     points[2] = 0.0f;
 
     // Allocate the OpenCL buffer memory objects for source and result on the device GMEM
-    clDeviceVector<cl_float> dev_circle_centers(context,commandQueue,CL_MEM_READ_ONLY,numPoints * 3);
-    clDeviceVector<cl_float> dev_points(context,commandQueue,CL_MEM_READ_ONLY,numPoints * 3);
+    clDeviceVector<cl_float> dev_circle_centers(context,commandQueue,numPoints * 3,CL_MEM_READ_ONLY);
+    clDeviceVector<cl_float> dev_points(context,commandQueue,numPoints * 3,CL_MEM_READ_ONLY);
 
 	// read the OpenCL program from source file
 	std::string sourceString;
 	readFile(sourceString, "Test6_OpenCL_Horizon.gcl.cl");
+	if(sourceString.empty())
+		readFile(sourceString, "test/Test6_OpenCL_Horizon.gcl.cl");
 	cl::Program::Sources clsource(1, std::make_pair(
 			sourceString.c_str(), sourceString.length()));
 	cl::Program program(context, clsource);
+
+	std::cout << sourceString;
 
 	// build
 	program.build(devices);
@@ -92,7 +96,7 @@ int main(int argc, char **argv)
 	dev_points = points;
 
     // Launch kernel
-	horizonFunctor(dev_circle_centers,dev_points);
+	horizonFunctor(dev_circle_centers.getBuffer(),dev_points.getBuffer());
 
     // Synchronous/blocking read of results, and check accumulated errors
 	dev_circle_centers.copyTo(circleCenters);
@@ -101,5 +105,5 @@ int main(int argc, char **argv)
     // print first circle center
     std::cout << circleCenters[0] << "," << circleCenters[1] << "," << circleCenters[2] << std::endl;
 
-    return 0;
+    return !(circleCenters[0] == 0.5f && circleCenters[1] == 0.5f && circleCenters[2] == 0.0f);
 }

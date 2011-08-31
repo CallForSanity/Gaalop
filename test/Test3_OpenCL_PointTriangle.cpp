@@ -3,6 +3,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#define __CL_ENABLE_EXCEPTIONS
 #include "cl.hpp"
 #include "clDeviceVector.h"
 
@@ -36,7 +37,7 @@ int main(int argc, char **argv)
 	// list platforms
 	std::vector<cl::Platform> platforms;
 	cl::Platform::get(&platforms);
-	std::cout << "listings platforms\n";
+	std::cout << "listing platforms\n";
 	for (std::vector<cl::Platform>::const_iterator it =
 			platforms.begin(); it != platforms.end(); ++it)
 		std::cout << it->getInfo<CL_PLATFORM_NAME> () << std::endl;
@@ -55,6 +56,8 @@ int main(int argc, char **argv)
 	// read the OpenCL program from source file
 	std::string sourceString;
 	readFile(sourceString, "Test3_OpenCL_PointTriangle.gcl.cl");
+	if(sourceString.empty())
+		readFile(sourceString, "test/Test3_OpenCL_PointTriangle.gcl.cl");
 	cl::Program::Sources clsource(1, std::make_pair(
 			sourceString.c_str(), sourceString.length()));
 	cl::Program program(context, clsource);
@@ -73,9 +76,9 @@ int main(int argc, char **argv)
     const size_t numTriangles = 1;
 
     // Allocate the OpenCL buffer memory objects for source and result on the device GMEM
-	clDeviceVector<cl_bool> dev_collisions(context,commandQueue,CL_MEM_WRITE_ONLY,numTriangles);
-    clDeviceVector<cl_float> dev_triangles(context,commandQueue,CL_MEM_READ_ONLY,numTriangles * 9);
-    clDeviceVector<cl_float> dev_points(context,commandQueue,CL_MEM_READ_ONLY,numTriangles * 3);
+	clDeviceVector<cl_bool> dev_collisions(context,commandQueue,numTriangles,CL_MEM_WRITE_ONLY);
+    clDeviceVector<cl_float> dev_triangles(context,commandQueue,numTriangles * 9,CL_MEM_READ_ONLY);
+    clDeviceVector<cl_float> dev_points(context,commandQueue,numTriangles * 3,CL_MEM_READ_ONLY);
 
     // create kernel and functor
 	cl::Kernel pointTriangleTestKernel(program, "pointTriangleTest");
@@ -91,7 +94,10 @@ int main(int argc, char **argv)
 	dev_points = points;
 
     // Launch kernel
-	pointTriangleTest(dev_collisions,dev_triangles,dev_points,h,(unsigned int)numTriangles);
+	pointTriangleTest(dev_collisions.getBuffer(),
+					  dev_triangles.getBuffer(),
+					  dev_points.getBuffer(),
+					  h,(unsigned int)numTriangles);
 
     // Synchronous/blocking read of results, and check accumulated errors
 	dev_collisions.copyTo(collisions);

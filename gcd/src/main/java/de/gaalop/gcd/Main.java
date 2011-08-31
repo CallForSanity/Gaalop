@@ -357,7 +357,8 @@ public class Main {
                         ((de.gaalop.tba.Plugin) plugin).optMaxima = true;
                         ((de.gaalop.tba.Plugin) plugin).maximaCommand = externalOptimizerPath;
                     }
-                }
+                } else if(plugin instanceof de.gaalop.tba.Plugin)
+                    ((de.gaalop.tba.Plugin) plugin).optMaxima = false;
 
                 return plugin.createOptimizationStrategy();
             }
