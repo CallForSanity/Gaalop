@@ -547,7 +547,7 @@ public class GAPPImporter extends EmptyControlFlowVisitor implements ExpressionV
         } else {
             System.out.println(node.getFunction()+":"+node.getOperand());
         }
-        System.err.println("Warning: MathFunctionCall is only implemented for scalars!");
+        System.err.println("Warning: MathFunctionCall ("+node.getFunction().toString()+") is only implemented for scalars!");
     }
 
     @Override
