@@ -45,6 +45,14 @@ public class AlgebraSignature {
     	this.defaultBladeList = BladeListBuilder.createDefaultBladeList(baseSquares.length);
     }
   }
+
+  public AlgebraSignature(int[] baseSquares, Expression[] bladelist) {
+    this.baseSquares = baseSquares.clone();
+    
+    this.defaultBladeList = bladelist;
+    
+  }
+
   
 	/**
 	 * Special treatment of 5D conformal algebra. The basis blades are assigned

@@ -2,8 +2,13 @@
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
 <comment>Gaalop Configuration File</comment>
+<entry key="de.gaalop.tba.Plugin.algebra">/home/christian/3d</entry>
+<entry key="de.gaalop.tba.Plugin.optConstantPropagation">true</entry>
+<entry key="de.gaalop.cpp.Plugin.standalone">false</entry>
+<entry key="de.gaalop.tba.Plugin.maximaCommand">/usr/bin/maxima</entry>
+<entry key="de.gaalop.tba.Plugin.optMaxima">true</entry>
+<entry key="de.gaalop.tba.Plugin.optOneExpressionRemoval">true</entry>
 <entry key="de.gaalop.clucalc.output.Plugin.suffix">_opt</entry>
-<entry key="de.gaalop.cpp.Plugin.standalone">true</entry>
-<entry key="de.gaalop.gaalet.output.Plugin.useNameTable">true</entry>
-<entry key="de.gaalop.java.Plugin.standalone">true</entry>
+<entry key="de.gaalop.gaalet.output.Plugin.useNameTable">false</entry>
+<entry key="de.gaalop.tba.Plugin.optUnusedAssignments">true</entry>
 </properties>

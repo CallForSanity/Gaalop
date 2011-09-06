@@ -23,11 +23,12 @@
             <artifactId>clucalc</artifactId>
             <version>1.0.0</version>
         </dependency>
-        <dependency>
+
+<!--        <dependency>
             <groupId>de.gaalop</groupId>
             <artifactId>maple</artifactId>
             <version>1.0.0</version>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>net.java.dev.jna</groupId>
             <artifactId>jna</artifactId>
