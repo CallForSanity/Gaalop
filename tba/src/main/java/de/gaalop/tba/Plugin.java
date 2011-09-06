@@ -2,6 +2,7 @@ package de.gaalop.tba;
 
 import de.gaalop.ConfigurationProperty;
 import de.gaalop.ConfigurationProperty.Type;
+import de.gaalop.Notifications;
 import java.awt.Image;
 import java.util.Observable;
 import de.gaalop.OptimizationStrategy;
@@ -17,16 +18,16 @@ import de.gaalop.tba.cfgImport.optimization.maxima.ProcessBuilderMaximaConnectio
 public class Plugin extends Observable implements OptimizationStrategyPlugin {
 
         @ConfigurationProperty(type = Type.BOOLEAN)
-        public boolean optMaxima = false;//true;
+        public boolean optMaxima = true;
 
         @ConfigurationProperty(type = Type.BOOLEAN)
-        public boolean optOneExpressionRemoval = true;//true;
+        public boolean optOneExpressionRemoval = true;
 
         @ConfigurationProperty(type = Type.BOOLEAN)
-        public boolean optConstantPropagation = true;//true;
+        public boolean optConstantPropagation = true;
 
         @ConfigurationProperty(type = Type.BOOLEAN)
-        public boolean optUnusedAssignments = true;//true;
+        public boolean optUnusedAssignments = true;
 
         @ConfigurationProperty(type = Type.TEXT)
         public String maximaCommand = ProcessBuilderMaximaConnection.CMD_MAXIMA_LINUX;
@@ -58,9 +59,33 @@ public class Plugin extends Observable implements OptimizationStrategyPlugin {
             return maximaCommand;
         }
 
+        public void setAlgebra(String algebra) {
+            this.algebra = algebra;
+        }
+
+        public void setMaximaCommand(String maximaCommand) {
+            this.maximaCommand = maximaCommand;
+        }
+
+        public void setOptConstantPropagation(boolean optConstantPropagation) {
+            this.optConstantPropagation = optConstantPropagation;
+        }
+
+        public void setOptMaxima(boolean optMaxima) {
+            this.optMaxima = optMaxima;
+        }
+
+        public void setOptOneExpressionRemoval(boolean optOneExpressionRemoval) {
+            this.optOneExpressionRemoval = optOneExpressionRemoval;
+        }
+
+        public void setOptUnusedAssignments(boolean optUnusedAssignments) {
+            this.optUnusedAssignments = optUnusedAssignments;
+        }
+
 	@Override
 	public String getDescription() {
-		return "This plugin uses a table based approach to break up Geometric Algebra";
+		return "This plugin uses a table based approach to optimize Geometric Algebra";
 	}
 
 	@Override
@@ -77,5 +102,10 @@ public class Plugin extends Observable implements OptimizationStrategyPlugin {
 	public OptimizationStrategy createOptimizationStrategy() {
             return new TBAOptStrategy(this);
 	}
+
+        void notifyError(Throwable error) {
+            setChanged();
+            notifyObservers(new Notifications.Error(error));
+        }
 
 }

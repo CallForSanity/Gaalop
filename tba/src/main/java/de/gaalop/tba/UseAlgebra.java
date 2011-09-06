@@ -1,6 +1,10 @@
 package de.gaalop.tba;
 
+import de.gaalop.cfg.AlgebraSignature;
+import de.gaalop.dfg.Expression;
+import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -16,14 +20,18 @@ public class UseAlgebra {
     private IMultTable tableGeo;
 
     public UseAlgebra(String algebraDirName) {
-        algebra = new Algebra("algebra/"+algebraDirName+"/blades.csv");
+
+        boolean useAsRessource = algebraDirName.equalsIgnoreCase("conf5d");
+        String dirName = (useAsRessource) ? "algebra/conf5d/" : new File(algebraDirName).getAbsolutePath()+File.separatorChar;
+
+        algebra = new Algebra(dirName+"blades.csv",useAsRessource);
 
         tableInner = new MultTableImpl();
         tableOuter = new MultTableImpl();
         tableGeo = new MultTableImpl();
         MultTableLoader loader = new MultTableLoader();
         try {
-            loader.load(this, "algebra/"+algebraDirName+"/products.csv", "algebra/"+algebraDirName+"/replaces.csv");
+            loader.load(this, dirName+"products.csv", dirName+"replaces.csv", useAsRessource);
         } catch (IOException ex) {
             Logger.getLogger(UseAlgebra.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -119,5 +127,21 @@ public class UseAlgebra {
         return prodMv;
 
     }
+
+
+    public AlgebraSignature getAlgebraSignature() {
+
+       Expression[] bladlist = new Expression[algebra.getBlades().size()];
+       for (int blade = 0;blade<bladlist.length;blade++) {
+           bladlist[blade] = algebra.getBlades().get(blade).getExpression();
+       }
+
+       AlgebraSignature sig = new AlgebraSignature(algebra.getBaseSquares(),bladlist);
+
+
+       return sig;
+    }
+
+    
 
 }

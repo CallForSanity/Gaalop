@@ -1,5 +1,6 @@
 package de.gaalop.tba.cfgImport;
 
+import de.gaalop.cfg.StartNode;
 import de.gaalop.dfg.ExpressionVisitor;
 import de.gaalop.cfg.AssignmentNode;
 import de.gaalop.cfg.EmptyControlFlowVisitor;
@@ -511,5 +512,13 @@ public class MvExpressionsBuilder extends EmptyControlFlowVisitor implements Exp
 	public void visit(MacroCall node) {
             throw new IllegalStateException("Macros should have been inlined and no macro calls should be in the graph.");
 	}
+
+        @Override
+        public void visit(StartNode node) {
+            node.getGraph().setSignature(usedAlgebra.getAlgebraSignature());
+            super.visit(node);
+        }
+
+
 
 }

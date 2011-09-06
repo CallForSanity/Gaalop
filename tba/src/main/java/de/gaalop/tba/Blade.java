@@ -1,6 +1,11 @@
 package de.gaalop.tba;
 
 import de.gaalop.common.BubbleSort;
+import de.gaalop.dfg.Addition;
+import de.gaalop.dfg.BaseVector;
+import de.gaalop.dfg.Expression;
+import de.gaalop.dfg.ExpressionFactory;
+import de.gaalop.dfg.FloatConstant;
 import java.util.Arrays;
 import java.util.Vector;
 
@@ -187,5 +192,28 @@ public class Blade {
 	public Vector<String> getBases() {
 		return bases;
 	}
+
+        public Expression getExpression() {
+
+            if (bases.size()>=1) {
+                Expression result = getBaseVector(bases.get(0));
+                for (int i=1;i<bases.size();i++)
+                    result = ExpressionFactory.wedge(result, getBaseVector(bases.get(i)));
+                return result;
+            } else {
+                System.err.println("häh");
+                        return null;
+            }
+
+            
+        }
+
+        private Expression getBaseVector(String baseElement) {
+            if (baseElement.equals("1")) 
+                return new FloatConstant(1);
+            else
+                return new BaseVector(baseElement.substring(1));
+
+        }
 	
 }
