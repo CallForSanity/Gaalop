@@ -139,7 +139,8 @@ public class UseAlgebra {
            bladlist[blade] = algebra.getBlades().get(blade).getExpression();
        }
 
-       AlgebraSignature sig = new AlgebraSignature(algebra.getBaseSquares(),bladlist,N3);
+
+       AlgebraSignature sig = new AlgebraSignature(algebra.getBaseCount(),bladlist,N3);
 
        sig.setBasesFromBladesFile(algebra.getBase());
 

@@ -27,7 +27,7 @@ public class AlgebraSignature {
 
   public static AlgebraSignature curAlgebraSignature;
 
-  private final int[] baseSquares;
+  private int baseCount;
 
   private final Expression[] defaultBladeList;
 
@@ -44,9 +44,10 @@ public class AlgebraSignature {
    * @param N3 whether to use e0, einf in 5D conformal algebra or standard base vectors e<sub>i
    */
   public AlgebraSignature(int[] baseSquares, boolean N3) {
+      baseCount = baseSquares.length;
       curAlgebraSignature = this;
       this.N3 = N3;
-    this.baseSquares = baseSquares.clone();
+   // this.baseSquares = baseSquares.clone();
     if (N3) {
     	this.defaultBladeList = handleN3();
     } else {
@@ -54,10 +55,10 @@ public class AlgebraSignature {
     }
   }
 
-  public AlgebraSignature(int[] baseSquares, Expression[] bladelist, boolean N3) {
+  public AlgebraSignature(int baseCount, Expression[] bladelist, boolean N3) {
       curAlgebraSignature = this;
+      this.baseCount = baseCount;
       this.N3 = N3;
-    this.baseSquares = baseSquares.clone();
     
     this.defaultBladeList = bladelist;
     
@@ -71,7 +72,7 @@ public class AlgebraSignature {
 	 * @return
 	 */
   private Expression[] handleN3() {
-	  Expression[] blades = new Expression[(int) Math.pow(2, baseSquares.length)];
+	  Expression[] blades = new Expression[(int) Math.pow(2, baseCount)];
 	  
 	  blades[0] = new FloatConstant(1.0f);
 	  
@@ -119,9 +120,16 @@ public class AlgebraSignature {
    * 
    * @return An array that equals {(e<sub>1</sub>)<sup>2</sup>, ..., (e<sub>n</sub>)<sup>2</sup>}.
    */
-  public int[] getBaseSquares() {
-    return baseSquares.clone();
-  }
+//  public int[] getBaseSquares() {
+//    return baseSquares.clone();
+//  }
+
+    public int getBaseCount() {
+        return baseCount;
+    }
+
+
+
 
   /**
    * Gets the dimension of this algebra.
@@ -129,7 +137,7 @@ public class AlgebraSignature {
    * @return The number of base vectors in this algebra signature.
    */
   public int getDimension() {
-    return baseSquares.length;
+    return baseCount;
   }
 
   /**

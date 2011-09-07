@@ -18,7 +18,7 @@ public class Algebra {
 
 	private String[] base;
 	private Vector<Blade> blades;
-        private int[] baseSquares;
+        
 	
 	public Algebra() {
 		blades = new Vector<Blade>();
@@ -46,9 +46,6 @@ public class Algebra {
 		blades.set(index, bladeExpr);
 	}
 
-        public int[] getBaseSquares() {
-            return baseSquares;
-        }
 
         /**
          * Returns the index to a given blade
@@ -71,6 +68,8 @@ public class Algebra {
 		this.base = base;
 	}
 
+
+
         /**
          * Loads products from a file, which is a ressource
          * @param filename_products The filename of the file
@@ -89,14 +88,7 @@ public class Algebra {
             String readed = d.readLine();
 
             base = readed.split(";");
-
-            readed = d.readLine();
-
-            String[] baseSquaresStr = readed.split(";");
-            baseSquares = new int[baseSquaresStr.length];
-            for (int i=0;i<baseSquaresStr.length;i++)
-                baseSquares[i] = Integer.parseInt(baseSquaresStr[i].trim());
-
+            
 
             int line = 0;
             while (d.ready()) {
@@ -110,5 +102,9 @@ public class Algebra {
 
             d.close();
 	}
+
+    public int getBaseCount() {
+        return base.length-1;
+    }
 	
 }
