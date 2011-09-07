@@ -1,5 +1,6 @@
 package de.gaalop.java;
 
+import de.gaalop.cfg.AlgebraSignature;
 import de.gaalop.dfg.*;
 
 /**
@@ -8,6 +9,12 @@ import de.gaalop.dfg.*;
 public class BladePrinter implements ExpressionVisitor {
 
 	private StringBuilder code = new StringBuilder();
+
+        private AlgebraSignature signature;
+
+        public BladePrinter(AlgebraSignature signature) {
+            this.signature = signature;
+        }
 
 	public String getCode() {
 		return code.toString();
@@ -103,31 +110,7 @@ public class BladePrinter implements ExpressionVisitor {
 
 	@Override
 	public void visit(BaseVector baseVector) {
-		// TODO Correctly handle the underlying algebra mode here
-		code.append("e");
-		switch (baseVector.getOrder()) {
-		case 1:
-		case 2:
-		case 3:
-			code.append(baseVector.getIndex());
-			break;
-		case 4:
-			if (baseVector.getIndex().equals("inf")) {
-				code.append("inf");
-			} else {
-				code.append('p');
-			}
-			break;
-		case 5:
-			if (baseVector.getIndex().equals("0")) {
-				code.append(0);
-			} else {
-				code.append('m');
-			}
-			break;
-		default:
-			throw new IllegalArgumentException("Invalid base vector index: " + baseVector.getIndex());
-		}
+                code.append(signature.printBaseVector(baseVector));
 	}
 
 	@Override

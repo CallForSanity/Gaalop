@@ -72,7 +72,7 @@ public class CircleOneVarTest extends GenericCircleTest {
                 @Override
                 public String getCheckOutputsCode() {
 
-                    // TODO check if points aren't collinear
+                    // assume that points aren't collinear
 
                     return 
                     "// check containing r$0,m$1,m$2\n"+

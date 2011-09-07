@@ -164,7 +164,6 @@ public class TestCreator {
     private void testTrigonometric() throws OptimizationException {
         test(new TrigonometricFunctions(),"TrigonometricFunctions");
 
-        //TODO more tests
     }
 
     private void testLinePointDistance() throws OptimizationException {
@@ -174,41 +173,35 @@ public class TestCreator {
                 new Point3D(3,8,10)
                 ),"LinePointDistance");
 
-        //TODO more tests
     }
 
     
     private void testCircleNoVars() throws OptimizationException {
         test(new CircleNoVarsTest(new Point(5,2),new Point(3,9),new Point(6,4)),"CircleNoVars");
 
-        //TODO more tests
     }
 
    
     private void testCircleOneVar() throws OptimizationException {
         test(new CircleOneVarTest(new Point(5,2),new Point(3,9),new Point(6,4),new boolean[]{true,false,false,false,false,false},50),"CircleOneVar");
-        
-        //TODO more tests
+
     }
 
     
     private void testCircleOnlyVars() throws OptimizationException {
         test(new CircleOnlyVarsTest(new Point(5,2),new Point(3,9),new Point(6,4)),"CircleOnlyVars");
 
-        //TODO more tests
     }
 
     private void testGPSNoVars() throws OptimizationException {
         test(new GPSNoVarsTest(new Point3D(1,1,1), new Point3D(0,0,1), new Point3D(0,1,0), 0.6f, 0.7f, 0.5f),"GPSNoVars");
 
-        //TODO more tests
     }
 
 
     private void testGPSOnlyVars() throws OptimizationException {
         test(new GPSOnlyVarsTest(new Point3D(1,1,1), new Point3D(0,0,1), new Point3D(0,1,0), 0.6f, 0.7f, 0.9f),"GPSOnlyVars");
 
-        //TODO more tests
     }
 
     private void testMultipleAssignmentsTest() throws OptimizationException {

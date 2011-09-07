@@ -337,7 +337,7 @@ public class MvExpressionsBuilder extends EmptyControlFlowVisitor implements Exp
 		} else {
 			//input variable!
 			v = createNewMvExpressions();
-			v.bladeExpressions[0] = node; // TODO Varibale removal
+			v.bladeExpressions[0] = node;
 		}
 
 		expressions.put(node,v);

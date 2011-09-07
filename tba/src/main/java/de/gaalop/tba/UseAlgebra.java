@@ -19,9 +19,12 @@ public class UseAlgebra {
     private IMultTable tableOuter;
     private IMultTable tableGeo;
 
+    private boolean N3;
+
     public UseAlgebra(String algebraDirName) {
 
         boolean useAsRessource = algebraDirName.equalsIgnoreCase("conf5d");
+        N3 = useAsRessource;
         String dirName = (useAsRessource) ? "algebra/conf5d/" : new File(algebraDirName).getAbsolutePath()+File.separatorChar;
 
         algebra = new Algebra(dirName+"blades.csv",useAsRessource);
@@ -136,8 +139,9 @@ public class UseAlgebra {
            bladlist[blade] = algebra.getBlades().get(blade).getExpression();
        }
 
-       AlgebraSignature sig = new AlgebraSignature(algebra.getBaseSquares(),bladlist);
+       AlgebraSignature sig = new AlgebraSignature(algebra.getBaseSquares(),bladlist,N3);
 
+       sig.setBasesFromBladesFile(algebra.getBase());
 
        return sig;
     }

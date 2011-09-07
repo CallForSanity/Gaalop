@@ -25,9 +25,15 @@ import de.gaalop.dfg.FloatConstant;
  */
 public class AlgebraSignature {
 
+  public static AlgebraSignature curAlgebraSignature;
+
   private final int[] baseSquares;
 
   private final Expression[] defaultBladeList;
+
+  private boolean N3;
+
+  private String[] basesFromBladesFile;
 
   /**
    * Constructs a new algebra signature with a given list of base vector squares.
@@ -38,6 +44,8 @@ public class AlgebraSignature {
    * @param N3 whether to use e0, einf in 5D conformal algebra or standard base vectors e<sub>i
    */
   public AlgebraSignature(int[] baseSquares, boolean N3) {
+      curAlgebraSignature = this;
+      this.N3 = N3;
     this.baseSquares = baseSquares.clone();
     if (N3) {
     	this.defaultBladeList = handleN3();
@@ -46,7 +54,9 @@ public class AlgebraSignature {
     }
   }
 
-  public AlgebraSignature(int[] baseSquares, Expression[] bladelist) {
+  public AlgebraSignature(int[] baseSquares, Expression[] bladelist, boolean N3) {
+      curAlgebraSignature = this;
+      this.N3 = N3;
     this.baseSquares = baseSquares.clone();
     
     this.defaultBladeList = bladelist;
@@ -134,6 +144,88 @@ public class AlgebraSignature {
    */
   public Expression[] getDefaultBladeList() {
     return defaultBladeList.clone();
+  }
+
+    public void setBasesFromBladesFile(String[] basesFromBladesFile) {
+        this.basesFromBladesFile = basesFromBladesFile;
+    }
+
+  
+
+  public int getOrder(BaseVector baseVector) {
+      String index = baseVector.getIndex();
+
+      if (basesFromBladesFile == null)
+          return getOrderOfN3(index);
+
+      if (N3) {
+        return getOrderOfN3(index);
+      } else {
+         
+             //search index
+             index = "e" + index;
+             for (int i=0;i<basesFromBladesFile.length;i++) {
+                 if (index.equalsIgnoreCase(basesFromBladesFile[i])) 
+                     return i;
+             }
+
+             System.err.println(index +" wasn't found in base list");
+             return 0;
+
+      }
+  }
+
+  private int getOrderOfN3(String index) {
+      try {
+                int i = Integer.parseInt(index);
+                if (i == 0) {
+                        return 5;
+                } else {
+                        return i;
+                }
+        } catch (NumberFormatException e) {
+                if ("inf".equals(index)) {
+                        return 4;
+                }
+                throw e;
+        }
+  }
+
+  /**
+   * Prints the base vector to a string with correct handling of underlyin algebra
+   * @param baseVector The base vector to print
+   * @return The string
+   * @author Christian Steinmetz
+   */
+  public String printBaseVector(BaseVector baseVector) {
+        // TODO Correctly handle the underlying algebra mode here
+       if (N3) {
+           //use conformal N3 (e0, einf)
+           switch (baseVector.getOrder()) {
+            case 1:
+            case 2:
+            case 3:
+                    return "e"+baseVector.getIndex();
+            case 4:
+                    if (baseVector.getIndex().equals("inf")) {
+                            return "einf";
+                    } else {
+                            return "ep";
+                    }
+            case 5:
+                    if (baseVector.getIndex().equals("0")) {
+                            return "e0";
+                    } else {
+                            return "em";
+                    }
+            default:
+                    throw new IllegalArgumentException("Invalid base vector index: " + baseVector.getIndex());
+            }
+      } else {
+           // use base vectors which had been readed from blades file
+           int order = getOrder(baseVector);
+           return basesFromBladesFile[order];
+      }
   }
 
   /**
