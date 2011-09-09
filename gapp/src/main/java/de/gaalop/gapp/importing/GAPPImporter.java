@@ -445,6 +445,13 @@ public class GAPPImporter extends EmptyControlFlowVisitor implements ExpressionV
         mapVariableGAPPMv.put(node.getVariable(), destination);
 
         node.setGAPP(curGAPP);
+
+        if (node.getValue() instanceof FloatConstant
+                || node.getValue() instanceof BaseVector) {
+            MvExpressions mv = expressions.get(node.getValue());
+            assignMvFromMvExpressions(destination, mv);
+        }
+
         node.getValue().accept(this);
         super.visit(node);
     }
