@@ -24,10 +24,10 @@ public class Algebra {
 		blades = new Vector<Blade>();
 	}
 	
-	public Algebra(String filename_products, boolean useAsRessource) {
+	public Algebra(String filename_blades, boolean useAsRessource) {
 		blades = new Vector<Blade>();
                 try {
-                    load(filename_products, useAsRessource);
+                    load(filename_blades, useAsRessource);
                 } catch (IOException ex) {
                     Logger.getLogger(Algebra.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -71,17 +71,17 @@ public class Algebra {
 
 
         /**
-         * Loads products from a file, which is a ressource
-         * @param filename_products The filename of the file
+         * Loads blades from a file, which is a ressource
+         * @param filename_blades The filename of the file
          * @param useAsRessource true, if filename_products is a ressource
          * @throws IOException
          */
-	public void load(String filename_products, boolean useAsRessource) throws IOException {
+	public void load(String filename_blades, boolean useAsRessource) throws IOException {
             InputStream resourceAsStream;
             if (useAsRessource)
-                resourceAsStream = getClass().getResourceAsStream(filename_products);
+                resourceAsStream = getClass().getResourceAsStream(filename_blades);
             else
-                resourceAsStream = new FileInputStream(new File(filename_products));
+                resourceAsStream = new FileInputStream(new File(filename_blades));
 
             BufferedReader d = new BufferedReader(new InputStreamReader(resourceAsStream));
 
