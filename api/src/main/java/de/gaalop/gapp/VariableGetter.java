@@ -6,7 +6,7 @@ import de.gaalop.gapp.variables.GAPPVector;
 
 /**
  * Provides an interface for parsing variables
- * @author christian
+ * @author Christian Steinmetz
  */
 public interface VariableGetter {
 

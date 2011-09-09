@@ -7,7 +7,7 @@ import java.util.LinkedList;
 /**
  * Collects all AssignmentNodes in a ControlFlowGraph
  * and stores them in a list.
- * @author christian
+ * @author Christian Steinmetz
  */
 public class AssignmentNodeCollector extends EmptyControlFlowVisitor {
 

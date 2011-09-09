@@ -10,7 +10,7 @@ import java.util.logging.Logger;
 
 /**
  * Implements the Maxima connection using the ProcessBuilder
- * @author christian
+ * @author Christian Steinmetz
  */
 public class ProcessBuilderMaximaConnection implements MaximaConnection {
 

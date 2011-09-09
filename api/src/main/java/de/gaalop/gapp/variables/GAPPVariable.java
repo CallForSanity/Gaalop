@@ -3,7 +3,7 @@ package de.gaalop.gapp.variables;
 /**
  * Represents a basic variable with a name in GAPP IR.
  *
- * @author christian
+ * @author Christian Steinmetz
  */
 public abstract class GAPPVariable extends GAPPValueHolder {
 

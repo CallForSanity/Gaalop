@@ -7,7 +7,7 @@ import java.util.logging.Logger;
 
 /**
  * Creates a set of java test files
- * @author christian
+ * @author Christian Steinmetz
  */
 public class GAPPTestCreator {
 

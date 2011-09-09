@@ -14,7 +14,7 @@ import java.util.HashMap;
 
 /**
  * Facade class to import the ControlFlowGraph in a GAPP ControlFlowGraph
- * @author christian
+ * @author Christian Steinmetz
  */
 public class GAPPImportingMain {
 

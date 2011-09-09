@@ -7,7 +7,7 @@ import java.util.LinkedList;
 
 /**
  * Implements a GPS test with no variables
- * @author christian
+ * @author Christian Steinmetz
  */
 @Ignore
 public class GPSNoVarsTest extends GenericGPSTest {

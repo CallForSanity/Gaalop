@@ -2,7 +2,7 @@ package de.gaalop.gapp.variables;
 
 /**
  * Defines a visitor for GAPP variables
- * @author christian
+ * @author Christian Steinmetz
  */
 public interface GAPPVariableVisitor {
 

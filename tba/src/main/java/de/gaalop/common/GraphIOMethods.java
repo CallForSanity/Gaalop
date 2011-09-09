@@ -17,7 +17,7 @@ import java.util.logging.Logger;
 
 /**
  * Provides IO methods for control-flow graphs
- * @author christian
+ * @author Christian Steinmetz
  */
 public class GraphIOMethods {
 

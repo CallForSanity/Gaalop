@@ -17,7 +17,7 @@ import de.gaalop.gapp.variables.GAPPVector;
 
 /**
  * Implements a visitor that parses string representations into pre-created GAPPInstructions
- * @author christian
+ * @author Christian Steinmetz
  */
 public class Parser implements GAPPVisitor {
 

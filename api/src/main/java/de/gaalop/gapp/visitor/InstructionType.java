@@ -11,7 +11,7 @@ import de.gaalop.gapp.instructionSet.GAPPSetVector;
 /**
  * Declares all commands of the GAPP IR
  * and implements a visitor for determining type of a given GAPPBaseInstruction instance
- * @author christian
+ * @author Christian Steinmetz
  */
 public enum InstructionType implements GAPPVisitor {
 

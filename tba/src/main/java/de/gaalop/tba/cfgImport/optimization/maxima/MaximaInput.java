@@ -4,7 +4,7 @@ import java.util.LinkedList;
 
 /**
  * Stores the input of Maxima
- * @author christian
+ * @author Christian Steinmetz
  */
 public class MaximaInput extends LinkedList<String> {
 

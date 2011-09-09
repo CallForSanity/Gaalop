@@ -19,7 +19,7 @@ import de.gaalop.gapp.variables.GAPPVector;
 /**
  * Implements a visitor,
  * that returns a pretty-formed string of all GAPP members in a ControlFlowGraph
- * @author christian
+ * @author Christian Steinmetz
  */
 public class PrettyPrint extends CFGGAPPVisitor {
 

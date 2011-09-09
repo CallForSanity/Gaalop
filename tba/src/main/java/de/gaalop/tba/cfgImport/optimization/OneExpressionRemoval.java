@@ -21,7 +21,7 @@ import java.util.LinkedList;
 /**
  * Removes assignments that consists only of one Variable as value,
  * and those target variable are not outputted
- * @author christian
+ * @author Christian Steinmetz
  */
 public class OneExpressionRemoval extends EmptyControlFlowVisitor {
 

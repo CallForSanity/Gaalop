@@ -7,7 +7,7 @@ import org.junit.Ignore;
 
 /**
  * Implements a GPS test with only variables
- * @author christian
+ * @author Christian Steinmetz
  */
 @Ignore
 public class GPSOnlyVarsTest extends GenericGPSTest {

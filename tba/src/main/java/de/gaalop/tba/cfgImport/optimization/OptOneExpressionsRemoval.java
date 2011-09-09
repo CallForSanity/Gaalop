@@ -6,7 +6,7 @@ import de.gaalop.tba.UseAlgebra;
 
 /**
  * Facade class for the one expression removal optimization
- * @author christian
+ * @author Christian Steinmetz
  */
 public class OptOneExpressionsRemoval implements OptimizationStrategyWithModifyFlag {
 

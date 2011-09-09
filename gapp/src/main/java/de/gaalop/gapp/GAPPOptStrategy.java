@@ -8,7 +8,7 @@ import de.gaalop.tba.UseAlgebra;
 
 /**
  * Facade class for decorating the Control Flow Graph with GAPP instructions
- * @author christian
+ * @author Christian Steinmetz
  */
 public class GAPPOptStrategy implements OptimizationStrategy {
 

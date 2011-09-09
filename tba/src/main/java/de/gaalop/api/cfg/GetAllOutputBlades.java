@@ -9,7 +9,7 @@ import java.util.HashSet;
 
 /**
  * Implements a class which extracts all output blades
- * @author christian
+ * @author Christian Steinmetz
  */
 public class GetAllOutputBlades {
 

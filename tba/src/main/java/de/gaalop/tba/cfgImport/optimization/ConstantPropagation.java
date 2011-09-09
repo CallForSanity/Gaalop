@@ -14,7 +14,7 @@ import java.util.HashMap;
 /**
  * This class tries to optimize a ControlFlowGraph
  * using the Constant Propagation and Constant Folding
- * @author christian
+ * @author Christian Steinmetz
  */
 public class ConstantPropagation extends EmptyControlFlowVisitor {
 

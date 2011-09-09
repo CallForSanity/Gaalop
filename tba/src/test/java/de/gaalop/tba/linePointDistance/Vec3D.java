@@ -3,8 +3,8 @@ package de.gaalop.tba.linePointDistance;
 import de.gaalop.tba.gps.Point3D;
 
 /**
- *
- * @author christian
+ * Implements a vector in 3d euclidean space
+ * @author Christian Steinmetz
  */
 public class Vec3D {
 

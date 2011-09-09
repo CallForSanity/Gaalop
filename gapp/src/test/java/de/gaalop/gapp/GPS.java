@@ -11,7 +11,7 @@ import static org.junit.Assert.*;
  * given the positions of the tree satellites and the distances from each satellite to the
  * GPS receiver.
  * 
- * @author christian
+ * @author Christian Steinmetz
  */
 public class GPS implements GAPPTestable {
 

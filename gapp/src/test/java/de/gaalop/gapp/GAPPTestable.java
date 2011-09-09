@@ -8,7 +8,7 @@ import java.util.HashMap;
  * Declares an interface for comfortable creation of new tests.
  * All classes to be used by GAPPTestCreator must implement this interface.
  *
- * @author christian
+ * @author Christian Steinmetz
  */
 public interface GAPPTestable {
 

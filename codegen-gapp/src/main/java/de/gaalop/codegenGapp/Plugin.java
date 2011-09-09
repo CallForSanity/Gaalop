@@ -6,7 +6,7 @@ import java.awt.Image;
 
 /**
  * Implements a CodegeneratorPlugin, which lists all GAPP members in a graph in a pretty print format
- * @author christian
+ * @author Christian Steinmetz
  */
 public class Plugin implements CodeGeneratorPlugin {
 

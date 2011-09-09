@@ -8,7 +8,7 @@ import java.util.HashSet;
 
 /**
  * Visitor for checking of multiple assignments on one variable in a ControlFlowGraph
- * @author christian
+ * @author Christian Steinmetz
  */
 public class ContainsMulipleAssignments extends EmptyControlFlowVisitor {
 

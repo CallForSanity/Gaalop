@@ -23,7 +23,7 @@ import java.util.HashMap;
 
 /**
  * Visitor who counts the number of instruction cycles and the number of calculations in a program
- * @author christian
+ * @author Christian Steinmetz
  */
 public class CalculationsCounter extends CFGGAPPVisitor {
 

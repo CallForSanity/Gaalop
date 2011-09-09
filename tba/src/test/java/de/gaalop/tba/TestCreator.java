@@ -28,7 +28,7 @@ import org.junit.Ignore;
 
 /**
  * Produces test classes for automatic testing
- * @author christian
+ * @author Christian Steinmetz
  */
 @Ignore
 public class TestCreator {

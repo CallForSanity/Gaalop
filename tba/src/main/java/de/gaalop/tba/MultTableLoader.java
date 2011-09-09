@@ -11,7 +11,7 @@ import java.util.LinkedList;
 
 /**
  * Loads a Multiplication table from a file
- * @author christian
+ * @author Christian Steinmetz
  */
 public class MultTableLoader {
 

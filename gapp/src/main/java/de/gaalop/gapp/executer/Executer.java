@@ -19,7 +19,7 @@ import java.util.HashMap;
 
 /**
  * GAPP Visitor to execute (simulate) a GAPP Program
- * @author christian
+ * @author Christian Steinmetz
  */
 public class Executer extends CFGGAPPVisitor {
 

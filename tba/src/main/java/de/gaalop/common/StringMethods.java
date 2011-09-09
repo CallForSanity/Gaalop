@@ -4,7 +4,7 @@ import java.util.LinkedList;
 
 /**
  * Provides methods for advanced string handling
- * @author christian
+ * @author Christian Steinmetz
  */
 public class StringMethods {
 

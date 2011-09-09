@@ -54,7 +54,7 @@ import java.util.HashMap;
 
 /**
  * Decorates a ControlFlowGraph with a GAPPProgram
- * @author christian
+ * @author Christian Steinmetz
  */
 public class GAPPImporter extends EmptyControlFlowVisitor implements ExpressionVisitor {
 

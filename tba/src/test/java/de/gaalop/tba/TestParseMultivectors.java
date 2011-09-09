@@ -7,8 +7,8 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
- *
- * @author christian
+ * Implements a test for parsing multivectors correctly
+ * @author Christian Steinmetz
  */
 public class TestParseMultivectors {
     

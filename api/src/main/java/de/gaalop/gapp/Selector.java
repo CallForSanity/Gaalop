@@ -2,7 +2,7 @@ package de.gaalop.gapp;
 
 /**
  * Represents a selector with a index and a sign
- * @author christian
+ * @author Christian Steinmetz
  */
 public class Selector {
 

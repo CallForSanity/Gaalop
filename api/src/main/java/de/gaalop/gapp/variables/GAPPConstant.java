@@ -2,7 +2,7 @@ package de.gaalop.gapp.variables;
 
 /**
  * Class to store a constant with a float value
- * @author christian
+ * @author Christian Steinmetz
  */
 public class GAPPConstant extends GAPPValueHolder {
 

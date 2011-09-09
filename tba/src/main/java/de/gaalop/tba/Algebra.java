@@ -12,7 +12,7 @@ import java.util.logging.Logger;
 
 /**
  * Defines an algebra by storing the base elements and the blades
- * @author christian
+ * @author Christian Steinmetz
  */
 public class Algebra {
 

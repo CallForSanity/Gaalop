@@ -9,7 +9,7 @@ import org.junit.Test;
 
 /**
  * Class for manually testing the maxima connection and translation
- * @author christian
+ * @author Christian Steinmetz
  */
 public class Maxima {
 

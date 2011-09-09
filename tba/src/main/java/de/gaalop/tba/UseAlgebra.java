@@ -10,7 +10,7 @@ import java.util.logging.Logger;
 
 /**
  * Stores an algebra and the according multiplication tables
- * @author christian
+ * @author Christian Steinmetz
  */
 public class UseAlgebra {
 

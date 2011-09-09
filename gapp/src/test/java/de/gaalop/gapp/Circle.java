@@ -11,7 +11,7 @@ import static org.junit.Assert.*;
 /**
  * Defines a test program for calculating the radius and center point of a circle,
  * which is described by three 2d points
- * @author christian
+ * @author Christian Steinmetz
  */
 public class Circle implements GAPPTestable {
 

@@ -8,7 +8,7 @@ import java.util.LinkedList;
 
 /**
  * Implements a circle of three points test with one variable
- * @author christian
+ * @author Christian Steinmetz
  */
 @Ignore
 public class CircleOneVarTest extends GenericCircleTest {

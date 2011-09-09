@@ -9,7 +9,7 @@ import de.gaalop.cfg.EmptyControlFlowVisitor;
  * Subclasses must implement the GAPPVisitor methods,
  * which will be called by the traverse of this class.
  *
- * @author christian
+ * @author Christian Steinmetz
  */
 public abstract class CFGGAPPVisitor extends EmptyControlFlowVisitor implements GAPPVisitor {
 

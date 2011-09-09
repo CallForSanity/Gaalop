@@ -3,7 +3,7 @@ package de.gaalop.gapp.variables;
 /**
  * Represents a multivector component in the GAPP IR.
  *
- * @author christian
+ * @author Christian Steinmetz
  */
 public class GAPPMultivectorComponent extends GAPPVariable {
 

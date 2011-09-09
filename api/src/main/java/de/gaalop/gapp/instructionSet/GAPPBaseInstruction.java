@@ -5,7 +5,7 @@ import de.gaalop.gapp.visitor.PrettyPrint;
 
 /**
  * Represents a base command from the GAPP IR.
- * @author christian
+ * @author Christian Steinmetz
  */
 public abstract class GAPPBaseInstruction {
 

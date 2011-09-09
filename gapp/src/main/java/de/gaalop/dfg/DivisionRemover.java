@@ -10,7 +10,7 @@ import de.gaalop.api.dfg.DFGNodeTypeGetter;
  * If a and b are i.e. multivectors and a/b exists in the DFG,
  * then it will be replaced with a*(b/(a.(a~))), where ~ is the reverse.
  *
- * @author christian
+ * @author Christian Steinmetz
  */
 public class DivisionRemover extends ExpressionRemover {
 

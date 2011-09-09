@@ -2,7 +2,7 @@ package de.gaalop.gapp.instructionSet;
 
 /**
  * Collects the calculations that can be performed by a GAPP calculateMv operation
- * @author christian
+ * @author Christian Steinmetz
  */
 public enum CalculationType {
     DIVISION, EXPONENTIATION,

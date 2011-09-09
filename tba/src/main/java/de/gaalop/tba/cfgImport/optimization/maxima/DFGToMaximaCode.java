@@ -28,7 +28,7 @@ import de.gaalop.dfg.Variable;
 
 /**
  * This visitor generates maxima code from an expression
- * @author christian
+ * @author Christian Steinmetz
  */
 public class DFGToMaximaCode implements ExpressionVisitor {
 

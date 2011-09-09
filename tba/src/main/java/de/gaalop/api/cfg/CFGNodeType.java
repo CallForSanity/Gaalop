@@ -2,7 +2,7 @@ package de.gaalop.api.cfg;
 
 /**
  * Declares all types of nodes in a ControlFlowGraph
- * @author christian
+ * @author Christian Steinmetz
  */
 public enum CFGNodeType {
 

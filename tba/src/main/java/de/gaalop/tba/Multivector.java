@@ -6,7 +6,7 @@ import java.util.Vector;
 
 /**
  * Represents a multivector, e.g. a vector of blades
- * @author christian
+ * @author Christian Steinmetz
  */
 public class Multivector {
 	

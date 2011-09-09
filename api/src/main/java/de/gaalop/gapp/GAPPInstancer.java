@@ -5,7 +5,7 @@ import de.gaalop.gapp.instructionSet.*;
 
 /**
  * This class is used for instancing GAPP instructions
- * @author christian
+ * @author Christian Steinmetz
  */
 public class GAPPInstancer {
 

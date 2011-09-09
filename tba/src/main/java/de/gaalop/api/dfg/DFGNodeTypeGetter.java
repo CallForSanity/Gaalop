@@ -27,7 +27,7 @@ import de.gaalop.dfg.Variable;
 
 /**
  * Returns the type of an Expression
- * @author christian
+ * @author Christian Steinmetz
  */
 public class DFGNodeTypeGetter implements ExpressionVisitor {
 

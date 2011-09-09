@@ -6,7 +6,7 @@ import java.util.LinkedList;
 
 /**
  * Visitor for DFG tree to get all variables in an expression
- * @author christian
+ * @author Christian Steinmetz
  */
 public class DFGVisitorUsedVariables extends DFGTraversalVisitor {
 

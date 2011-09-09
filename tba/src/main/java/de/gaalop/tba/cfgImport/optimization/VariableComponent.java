@@ -4,7 +4,7 @@ import de.gaalop.dfg.Expression;
 
 /**
  * Implements a component of a variable
- * @author christian
+ * @author Christian Steinmetz
  */
 public class VariableComponent {
 

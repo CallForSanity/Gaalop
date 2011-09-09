@@ -11,7 +11,7 @@ import java.util.Vector;
 
 /**
  * Defines a blade with a sign and a coefficient
- * @author christian
+ * @author Christian Steinmetz
  */
 public class Blade {
 

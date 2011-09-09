@@ -15,7 +15,7 @@ import java.util.LinkedList;
  * This class provides a simple facade to transform the graph
  * with the table based approach
  *
- * @author christian
+ * @author Christian Steinmetz
  */
 public class CFGImporterFacade {
     

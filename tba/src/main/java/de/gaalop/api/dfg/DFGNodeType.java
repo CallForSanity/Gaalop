@@ -2,7 +2,7 @@ package de.gaalop.api.dfg;
 
 /**
  * Declares all types of expression
- * @author christian
+ * @author Christian Steinmetz
  */
 public enum DFGNodeType {
 

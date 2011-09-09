@@ -8,7 +8,7 @@ import org.junit.Ignore;
 
 /**
  * Implements a circle of three points test with only variables
- * @author christian
+ * @author Christian Steinmetz
  */
 @Ignore
 public class CircleOnlyVarsTest extends GenericCircleTest {

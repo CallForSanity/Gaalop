@@ -19,7 +19,7 @@ import org.antlr.runtime.tree.CommonTreeNodeStream;
 
 /**
  * Defines a facade class for transforming a graph with maxima
- * @author christian
+ * @author Christian Steinmetz
  */
 public class MaximaOptimizer {
 

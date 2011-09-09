@@ -2,7 +2,7 @@ package de.gaalop.tba;
 
 /**
  * Defines an interface for a multiplication table
- * @author christian
+ * @author Christian Steinmetz
  */
 public interface IMultTable {
 

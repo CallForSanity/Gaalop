@@ -8,7 +8,7 @@ import java.util.LinkedList;
 
 /**
  * Implements a simple test on trigonometric functions
- * @author christian
+ * @author Christian Steinmetz
  */
 public class TrigonometricFunctions implements GenericTestable {
 

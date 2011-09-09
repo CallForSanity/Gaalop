@@ -20,7 +20,7 @@ import java.util.LinkedList;
 /**
  * Visitor to optimize a ControlFlowGraph via variable usage analysis.
  * The graph is not modified here, only information for modifying is collected
- * @author christian
+ * @author Christian Steinmetz
  */
 public class CFGVisitorUsedVariables implements ControlFlowVisitor {
 

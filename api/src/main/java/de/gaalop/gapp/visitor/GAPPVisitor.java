@@ -4,7 +4,7 @@ import de.gaalop.gapp.instructionSet.*;
 
 /**
  * Declares a interface of a visitor for the GAPP data structure
- * @author christian
+ * @author Christian Steinmetz
  */
 public interface GAPPVisitor {
 

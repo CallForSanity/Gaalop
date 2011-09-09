@@ -4,7 +4,7 @@ import de.gaalop.dfg.Expression;
 
 /**
  * Stores blade expressions
- * @author christian
+ * @author Christian Steinmetz
  */
 public class MvExpressions {
 

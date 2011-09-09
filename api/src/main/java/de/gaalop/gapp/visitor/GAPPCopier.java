@@ -19,7 +19,7 @@ import java.util.Vector;
 
 /**
  * Implements a visitor for (deep) copying instructions
- * @author christian
+ * @author Christian Steinmetz
  */
 public class GAPPCopier implements GAPPVisitor {
 

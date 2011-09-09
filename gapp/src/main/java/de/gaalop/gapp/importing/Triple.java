@@ -5,7 +5,7 @@ package de.gaalop.gapp.importing;
  * The left blade index, the right blade index and the sign of the result,
  * when multiplying left blade and right blade.
  *
- * @author christian
+ * @author Christian Steinmetz
  */
 public class Triple {
 

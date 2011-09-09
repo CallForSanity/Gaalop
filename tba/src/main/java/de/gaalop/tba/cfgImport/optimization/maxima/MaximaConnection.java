@@ -2,7 +2,7 @@ package de.gaalop.tba.cfgImport.optimization.maxima;
 
 /**
  * Declares an interface for optimizing with maxima
- * @author christian
+ * @author Christian Steinmetz
  */
 public interface MaximaConnection {
 

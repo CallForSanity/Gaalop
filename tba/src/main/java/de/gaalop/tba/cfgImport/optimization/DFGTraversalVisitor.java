@@ -26,7 +26,7 @@ import de.gaalop.dfg.Variable;
 
 /**
  * Implements an ExpressionVisitor, that traverses all expressions
- * @author christian
+ * @author Christian Steinmetz
  */
 public class DFGTraversalVisitor implements ExpressionVisitor {
 

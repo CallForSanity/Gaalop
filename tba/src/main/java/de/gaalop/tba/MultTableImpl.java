@@ -5,7 +5,7 @@ package de.gaalop.tba;
  *
  * Stores the product table as an two dimensional array.
  *
- * @author christian
+ * @author Christian Steinmetz
  */
 public class MultTableImpl implements IMultTable {
 

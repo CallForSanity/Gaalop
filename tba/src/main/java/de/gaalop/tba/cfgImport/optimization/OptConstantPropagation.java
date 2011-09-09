@@ -5,7 +5,7 @@ import de.gaalop.tba.UseAlgebra;
 
 /**
  * Facade class for the constant propagation optimization
- * @author christian
+ * @author Christian Steinmetz
  */
 public class OptConstantPropagation implements OptimizationStrategyWithModifyFlag {
 

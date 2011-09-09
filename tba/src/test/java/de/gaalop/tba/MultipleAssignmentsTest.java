@@ -5,7 +5,7 @@ import org.junit.Ignore;
 
 /**
  * Checks the test for multiple assignments
- * @author christian
+ * @author Christian Steinmetz
  */
 @Ignore
 public class MultipleAssignmentsTest implements GenericTestable {

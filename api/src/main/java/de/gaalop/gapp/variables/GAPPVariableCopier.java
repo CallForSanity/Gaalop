@@ -7,7 +7,7 @@ import java.util.Vector;
  * Simply call the accept method of the GAPPVariable with an instance of this vistor,
  * and returned is a (deep) copy of the variable.
  * 
- * @author christian
+ * @author Christian Steinmetz
  */
 public class GAPPVariableCopier implements GAPPVariableVisitor {
 

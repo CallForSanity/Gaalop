@@ -9,7 +9,7 @@ import de.gaalop.cfg.LoopNode;
 
 /**
  * Visitor for checking of Control Flow in a ControlFlowGraph
- * @author christian
+ * @author Christian Steinmetz
  */
 public class ContainsControlFlow extends EmptyControlFlowVisitor {
 

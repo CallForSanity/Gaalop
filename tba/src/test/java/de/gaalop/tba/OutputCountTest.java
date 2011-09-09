@@ -5,7 +5,7 @@ import org.junit.Ignore;
 
 /**
  * Produces a test, that counts the outputted blades
- * @author christian
+ * @author Christian Steinmetz
  */
 @Ignore
 public class OutputCountTest implements GenericTestable {

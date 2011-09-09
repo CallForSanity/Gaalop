@@ -37,7 +37,7 @@ import java.util.Set;
 /**
  * Splits the expressions of graph so that at most one operation exists in a node.
  * See [Hildenbrand, Charrier, Koch; Specialized Machine Instruction Set for Geometric Algebra, chapter 3 section Example]
- * @author christian
+ * @author Christian Steinmetz
  */
 public class Splitter extends EmptyControlFlowVisitor implements ExpressionVisitor {
 

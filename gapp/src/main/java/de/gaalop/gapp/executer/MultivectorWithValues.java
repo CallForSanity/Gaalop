@@ -7,7 +7,7 @@ import java.util.Arrays;
  * The number of entries of a multivector is fixed.
  * It depends only of the used algebra.
  * 
- * @author christian
+ * @author Christian Steinmetz
  */
 public class MultivectorWithValues {
 

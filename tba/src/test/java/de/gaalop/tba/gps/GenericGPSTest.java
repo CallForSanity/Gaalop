@@ -5,7 +5,7 @@ import de.gaalop.tba.UseAlgebra;
 
 /**
  * Implements a generic gps test
- * @author christian
+ * @author Christian Steinmetz
  */
 public abstract class GenericGPSTest implements GenericTestable {
 

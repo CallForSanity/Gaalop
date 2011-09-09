@@ -10,7 +10,7 @@ import org.antlr.runtime.RecognitionException;
 
 /**
  * Facade class for the optimization using maxima
- * @author christian
+ * @author Christian Steinmetz
  */
 public class OptMaxima implements OptimizationStrategyWithModifyFlag {
 

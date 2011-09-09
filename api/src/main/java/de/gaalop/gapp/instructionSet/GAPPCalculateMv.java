@@ -6,7 +6,7 @@ import de.gaalop.gapp.visitor.GAPPVisitor;
 
 /**
  * Performs calculations on multivector parts, defined by two selectorsets
- * @author christian
+ * @author Christian Steinmetz
  */
 public class GAPPCalculateMv extends GAPPBaseInstruction {
 

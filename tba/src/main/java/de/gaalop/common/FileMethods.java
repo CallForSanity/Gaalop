@@ -8,7 +8,7 @@ import java.io.PrintWriter;
 
 /**
  * Provides IO methods for strings
- * @author christian
+ * @author Christian Steinmetz
  */
 public class FileMethods {
 

@@ -2,7 +2,7 @@ package de.gaalop.common;
 
 /**
  * Implements the BubbleSort algorithm
- * @author christian
+ * @author Christian Steinmetz
  */
 public class BubbleSort {
 

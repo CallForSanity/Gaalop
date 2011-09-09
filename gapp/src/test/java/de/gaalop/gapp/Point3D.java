@@ -2,7 +2,7 @@ package de.gaalop.gapp;
 
 /**
  * Represents a point in a 3d space in float precision
- * @author christian
+ * @author Christian Steinmetz
  */
 public class Point3D {
 

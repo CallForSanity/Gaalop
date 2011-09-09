@@ -21,7 +21,7 @@ import java.util.logging.Logger;
 
 /**
  * Provides methods for testing the GAPP importing pass with a GAPPTestable object
- * @author christian
+ * @author Christian Steinmetz
  */
 public class Base {
 

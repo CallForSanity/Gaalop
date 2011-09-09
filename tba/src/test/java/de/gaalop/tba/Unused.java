@@ -3,8 +3,8 @@ package de.gaalop.tba;
 import java.util.LinkedList;
 
 /**
- *
- * @author christian
+ * Implements a test for testing if an used variable will be removed in dead-code elimination
+ * @author Christian Steinmetz
  */
 public class Unused implements GenericTestable {
 

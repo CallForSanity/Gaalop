@@ -10,7 +10,7 @@ import de.gaalop.tba.UseAlgebra;
  * Changes the control flow graph by building the mvExpressions.
  * This is the main transformer class for TBA plugin
  *
- * @author christian
+ * @author Christian Steinmetz
  */
 public class CFGImporter extends MvExpressionsBuilder {
 

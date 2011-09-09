@@ -10,7 +10,7 @@ import java.util.Arrays;
  * that the size of a vector is well-known by it's creation,
  * so the setEntries method can be used.
  *
- * @author christian
+ * @author Christian Steinmetz
  */
 public class VectorWithValues {
 

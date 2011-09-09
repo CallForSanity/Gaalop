@@ -4,7 +4,7 @@ import java.util.HashSet;
 
 /**
  * Manages the overview usage and definitions of variable componts
- * @author christian
+ * @author Christian Steinmetz
  */
 public class VariableUsage {
 

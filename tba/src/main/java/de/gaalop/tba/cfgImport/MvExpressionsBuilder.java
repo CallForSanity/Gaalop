@@ -37,7 +37,7 @@ import de.gaalop.tba.UseAlgebra;
 
 /**
  * Build the mvExpressions for every variable and expression
- * @author christian
+ * @author Christian Steinmetz
  */
 public class MvExpressionsBuilder extends EmptyControlFlowVisitor implements ExpressionVisitor {
 

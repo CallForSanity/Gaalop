@@ -7,7 +7,7 @@ import java.util.Vector;
  *
  * A vector contains components, which are not organized in fixed order
  *
- * @author christian
+ * @author Christian Steinmetz
  */
 public class GAPPVector extends GAPPVariable {
 

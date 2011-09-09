@@ -4,7 +4,7 @@ import java.util.LinkedList;
 
 /**
  * Stores the input data for testing and provides code for checking the output of the test
- * @author christian
+ * @author Christian Steinmetz
  */
 public abstract class InputOutput {
 

@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 /**
  * Stores an array of boolean
- * @author christian
+ * @author Christian Steinmetz
  */
 public class BooleanArr {
 

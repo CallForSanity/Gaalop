@@ -3,7 +3,7 @@ package de.gaalop.gapp.variables;
 /**
  * Represents a scalar in the GAPP IR.
  *
- * @author christian
+ * @author Christian Steinmetz
  */
 public class GAPPScalarVariable extends GAPPVariable {
 

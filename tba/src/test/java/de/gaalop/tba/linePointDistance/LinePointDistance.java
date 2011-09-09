@@ -9,8 +9,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 
 /**
- *
- * @author christian
+ * Implements a test for TBA which test the distance between a point and a line in 3d euclidean space
+ * @author Christian Steinmetz
  */
 public class LinePointDistance implements GenericTestable {
 

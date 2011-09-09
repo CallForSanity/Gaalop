@@ -5,7 +5,7 @@ import org.junit.Ignore;
 
 /**
  * Tests the controlflowtest
- * @author christian
+ * @author Christian Steinmetz
  */
 @Ignore
 public class ControlFlowTest implements GenericTestable {

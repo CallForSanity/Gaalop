@@ -8,7 +8,7 @@ import de.gaalop.tba.cfgImport.CFGImporterFacade;
 
 /**
  * Defines a facade class for the table based approach
- * @author christian
+ * @author Christian Steinmetz
  */
 public class TBAOptStrategy implements OptimizationStrategy {
 

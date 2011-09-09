@@ -2,7 +2,7 @@ package de.gaalop.gapp.variables;
 
 /**
  * Very basic abstract class, that declares a value holder class, e.g. Variable or Constant
- * @author christian
+ * @author Christian Steinmetz
  */
 public abstract class GAPPValueHolder {
 

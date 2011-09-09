@@ -4,7 +4,7 @@ import java.util.LinkedList;
 
 /**
  * Defines an interface for a test
- * @author christian
+ * @author Christian Steinmetz
  */
 public interface GenericTestable {
 

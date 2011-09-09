@@ -6,7 +6,7 @@ import java.awt.Point;
 
 /**
  * Implements a generic circle of three points test
- * @author christian
+ * @author Christian Steinmetz
  */
 public abstract class GenericCircleTest implements GenericTestable {
 

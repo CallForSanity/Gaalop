@@ -10,7 +10,7 @@ import java.util.Set;
 
 /**
  * Implements a code generator for gapp members, which lists all GAPP members in a graph in a pretty print format
- * @author christian
+ * @author Christian Steinmetz
  */
 class GAPPCodeGenerator implements CodeGenerator {
 

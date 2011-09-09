@@ -7,7 +7,7 @@ import de.gaalop.cfg.EmptyControlFlowVisitor;
 /**
  * Implements a base class for a remover for an Expression.
  * If the member resultExpr isn't null then the associated subexpression is replaced with the resultExpr.
- * @author christian
+ * @author Christian Steinmetz
  */
 public class ExpressionRemover extends EmptyControlFlowVisitor implements ExpressionVisitor {
 
