@@ -21,11 +21,11 @@ public class ControlFlowTest implements GenericTestable {
             "\n" +
             "a = 1\n;" +
             "c = 4\n;" +
-            "if (a == t) {\n;" +
+            "if (a == t) {\n" +
             "  a = 2\n;" +
-            "} else {\n;" +
+            "} else {\n" +
             "  a = 3\n;" +
-            "}\n;" +
+            "}\n" +
             "b = a + 1\n;" +
             "?a;\n" +
             "?b;\n" +
