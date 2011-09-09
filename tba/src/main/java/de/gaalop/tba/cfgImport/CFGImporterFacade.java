@@ -51,8 +51,13 @@ public class CFGImporterFacade {
         if (ContainsControlFlow.containsControlFlow(graph)) 
             throw new OptimizationException("Due to Control Flow Existence in Source, TBA isn't assigned on graph!", graph);
 
-        if (ContainsMulipleAssignments.containsMulipleAssignments(graph))
+        if (ContainsMultipleAssignments.containsMulipleAssignments(graph))
             throw new OptimizationException("Due to Existence of MultipleAssignments in Source, TBA isn't assigned on graph!", graph);
+
+        if (!usedAlgebra.isN3()) {
+            BaseVectorChecker checker = new BaseVectorChecker(usedAlgebra.getAlgebra().getBase());
+            graph.accept(checker);
+        }
 
         CFGImporter builder = new CFGImporter(usedAlgebra);
         graph.accept(builder);

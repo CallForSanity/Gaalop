@@ -10,7 +10,7 @@ import java.util.HashSet;
  * Visitor for checking of multiple assignments on one variable in a ControlFlowGraph
  * @author Christian Steinmetz
  */
-public class ContainsMulipleAssignments extends EmptyControlFlowVisitor {
+public class ContainsMultipleAssignments extends EmptyControlFlowVisitor {
 
     private boolean containsMultipleAssignments = false;
 
@@ -26,7 +26,7 @@ public class ContainsMulipleAssignments extends EmptyControlFlowVisitor {
      * @return <value>true</value> if the graph contains multiple assignments on one variable, <value>false</value> otherwise
      */
     public static boolean containsMulipleAssignments(ControlFlowGraph graph) {
-        ContainsMulipleAssignments c = new ContainsMulipleAssignments();
+        ContainsMultipleAssignments c = new ContainsMultipleAssignments();
         graph.accept(c);
         return c.isContainsMultipleAssignments();
     }

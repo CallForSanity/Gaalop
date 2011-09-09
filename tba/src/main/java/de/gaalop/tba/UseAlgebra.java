@@ -40,6 +40,10 @@ public class UseAlgebra {
         }
     }
 
+    public boolean isN3() {
+        return N3;
+    }
+
     /**
      * Returns the inner product of two blades
      * @param factor1 The index of the blade of the first factor

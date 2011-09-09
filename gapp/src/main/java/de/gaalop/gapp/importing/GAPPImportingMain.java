@@ -8,6 +8,7 @@ import de.gaalop.gapp.variables.GAPPMultivector;
 import de.gaalop.tba.cfgImport.MvExpressionsBuilder;
 import de.gaalop.tba.Plugin;
 import de.gaalop.tba.UseAlgebra;
+import de.gaalop.tba.cfgImport.BaseVectorChecker;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -25,6 +26,11 @@ public class GAPPImportingMain {
      * @throws OptimizationException
      */
     public ControlFlowGraph importGraph(UseAlgebra usedAlgebra,ControlFlowGraph graph) throws OptimizationException {
+
+        if (!usedAlgebra.isN3()) {
+            BaseVectorChecker checker = new BaseVectorChecker(usedAlgebra.getAlgebra().getBase());
+            graph.accept(checker);
+        }
 
         ExpressionRemover remover = new DivisionRemover();
         graph.accept(remover);
