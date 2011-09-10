@@ -1,5 +1,6 @@
 package de.gaalop.clucalc.algebra;
 
+import de.gaalop.clucalc.input.GraphBuilder;
 import de.gaalop.dfg.BaseVector;
 import de.gaalop.dfg.Expression;
 import de.gaalop.dfg.ExpressionFactory;
@@ -60,7 +61,10 @@ public abstract class AbstractAlgebraMode implements AlgebraMode {
 
     @Override
     public final int getDimension() {
-        return getSignature().length;
+        if (GraphBuilder.algebraDimension == 0)
+            return getSignature().length;
+        else
+            return GraphBuilder.algebraDimension;
     }
 
     @Override

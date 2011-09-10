@@ -11,6 +11,7 @@ import de.gaalop.dfg.MacroCall;
 import de.gaalop.dfg.Variable;
 import de.gaalop.dfg.MathFunction;
 import de.gaalop.dfg.MathFunctionCall;
+import java.awt.Dimension;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -155,6 +156,8 @@ public final class GraphBuilder {
 
 	private VariableScope currentScope = VariableScope.GLOBAL;
 
+        public static int algebraDimension;
+
 	public void beginNewScope() {
 		currentScope = new VariableScope(currentScope);
 	}
@@ -164,6 +167,7 @@ public final class GraphBuilder {
 	}
 
 	public GraphBuilder() {
+                algebraDimension = 0;
 		graph = new ControlFlowGraph();
 		lastNode = graph.getStartNode();
 		functionFactory = new FunctionFactory();
@@ -194,6 +198,26 @@ public final class GraphBuilder {
 	public void addPragmaOutputVariable(String variable) {
 		graph.addPragmaOutputVariable(variable);
 	}
+
+        /**
+         * Sets the dimension of the used algebra
+         * @param dimension The dimension
+         */
+        public void setAlgebraDimension(int dimension) {
+                algebraDimension = dimension;
+                setMode(new AbstractAlgebraMode() {
+
+                @Override
+                public String getDefinitionMethod() {
+                    return "DefVars";
+                }
+
+                @Override
+                public int[] getSignature() {
+                    return new int[algebraDimension];
+                }
+            });
+        }
 
 	/**
 	 * Adds a pragma hint for a variable, which defines value range for it. The pragma must be set before the variable
