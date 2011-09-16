@@ -4,6 +4,7 @@ import de.gaalop.gapp.Selector;
 import de.gaalop.gapp.visitor.GAPPVisitor;
 import de.gaalop.gapp.variables.GAPPMultivector;
 import de.gaalop.gapp.variables.GAPPVector;
+import java.util.LinkedList;
 
 /**
  * Represents the dotVectors command in the GAPP IR.
@@ -18,18 +19,16 @@ public class GAPPDotVectors extends GAPPBaseInstruction {
 
     private GAPPMultivector destination;
     private Selector destSelector;
-    private GAPPVector part1;
-    private GAPPVector part2;
+    private LinkedList<GAPPVector> parts;
 
     public GAPPDotVectors() {
     }
 
     public GAPPDotVectors(GAPPMultivector destination, Selector destSelector,
-            GAPPVector part1, GAPPVector part2) {
+            LinkedList<GAPPVector> parts) {
         this.destination = destination;
         this.destSelector = destSelector;
-        this.part1 = part1;
-        this.part2 = part2;
+        this.parts = parts;
     }
 
     @Override
@@ -45,12 +44,8 @@ public class GAPPDotVectors extends GAPPBaseInstruction {
         return destination;
     }
 
-    public GAPPVector getPart1() {
-        return part1;
-    }
-
-    public GAPPVector getPart2() {
-        return part2;
+    public LinkedList<GAPPVector> getParts() {
+        return parts;
     }
 
     public void setDestSelector(Selector destSelector) {
@@ -61,12 +56,8 @@ public class GAPPDotVectors extends GAPPBaseInstruction {
         this.destination = destination;
     }
 
-    public void setPart1(GAPPVector part1) {
-        this.part1 = part1;
-    }
-
-    public void setPart2(GAPPVector part2) {
-        this.part2 = part2;
+    public void setParts(LinkedList<GAPPVector> parts) {
+        this.parts = parts;
     }
 
 }

@@ -15,6 +15,7 @@ import de.gaalop.gapp.variables.GAPPSignedMultivectorComponent;
 import de.gaalop.gapp.variables.GAPPValueHolder;
 import de.gaalop.gapp.variables.GAPPVariableCopier;
 import de.gaalop.gapp.variables.GAPPVector;
+import java.util.LinkedList;
 import java.util.Vector;
 
 /**
@@ -72,6 +73,18 @@ public class GAPPCopier implements GAPPVisitor {
         return new GAPPVector(vec.getName());
     }
 
+    /**
+     * Copies a list of vectors (deep copy)
+     * @param vectors The list of vectors to be copied
+     * @return The copied list
+     */
+    private LinkedList<GAPPVector> copyVectors(LinkedList<GAPPVector> vectors) {
+        LinkedList<GAPPVector> result = new LinkedList<GAPPVector>();
+        for (GAPPVector part: vectors)
+            result.add(copyVector(part));
+        return result;
+    }
+
     @Override
     public Object visitAddMv(GAPPAddMv gappAddMv, Object arg) {
         return new GAPPAddMv(
@@ -96,8 +109,7 @@ public class GAPPCopier implements GAPPVisitor {
         return new GAPPDotVectors(
                 copyMultivector(gappDotVectors.getDestination()),
                 copySelector(gappDotVectors.getDestSelector()),
-                copyVector(gappDotVectors.getPart1()),
-                copyVector(gappDotVectors.getPart2())
+                copyVectors(gappDotVectors.getParts())
                 );
     }
 
@@ -137,5 +149,7 @@ public class GAPPCopier implements GAPPVisitor {
                 copySelectorset(gappCalculateMv.getUsed2())
                 );
     }
+
+
 
 }

@@ -12,6 +12,7 @@ import de.gaalop.gapp.instructionSet.GAPPSetVector;
 import de.gaalop.gapp.variables.GAPPConstant;
 import de.gaalop.gapp.variables.GAPPValueHolder;
 import de.gaalop.gapp.variables.GAPPVariable;
+import de.gaalop.gapp.variables.GAPPVector;
 import de.gaalop.gapp.visitor.CFGGAPPVisitor;
 import de.gaalop.tba.UseAlgebra;
 import java.util.Arrays;
@@ -160,16 +161,19 @@ public class Executer extends CFGGAPPVisitor {
 
     @Override
     public Object visitDotVectors(GAPPDotVectors gappDotVectors, Object arg) {
-        VectorWithValues vector1 = getVector(gappDotVectors.getPart1().getName());
-        VectorWithValues vector2 = getVector(gappDotVectors.getPart2().getName());
-
         MultivectorWithValues destination = getMultivector(gappDotVectors.getDestination().getName());
 
         // calculate the dot product
         float sum = 0;
-        int size = vector1.getEntries().length;
-        for (int slot = 0;slot<size;slot++) 
-            sum += vector1.getEntry(slot) * vector2.getEntry(slot);
+        int size = getVector(gappDotVectors.getParts().getFirst().getName()).getEntries().length;
+        for (int slot = 0;slot<size;slot++) {
+            int prod = 1;
+
+            for (GAPPVector part: gappDotVectors.getParts())
+                prod *= getVector(part.getName()).getEntry(slot);
+            
+            sum += prod;
+        }
 
         Selector sDest = gappDotVectors.getDestSelector();
 

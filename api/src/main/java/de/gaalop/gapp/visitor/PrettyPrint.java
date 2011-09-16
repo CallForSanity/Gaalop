@@ -15,6 +15,8 @@ import de.gaalop.gapp.instructionSet.GAPPSetVector;
 import de.gaalop.gapp.variables.GAPPMultivector;
 import de.gaalop.gapp.variables.GAPPValueHolder;
 import de.gaalop.gapp.variables.GAPPVector;
+import java.util.LinkedList;
+import java.util.ListIterator;
 
 /**
  * Implements a visitor,
@@ -113,15 +115,19 @@ public class PrettyPrint extends CFGGAPPVisitor {
     }
 
    /**
-     * Pretty prints a dot product of two vectors at the end of result
-     * @param vector1 The first vector of the dot product
-     * @param vector2 The second vector of the dot product
+     * Pretty prints a dot product of vectors at the end of result
+     * @param vectors The vectors of the dot product
      */
-    private void printDotProduct(GAPPVector vector1, GAPPVector vector2) {
+    private void printDotProduct(LinkedList<GAPPVector> vectors) {
         result.append("<");
-        printVector(vector1);
-        result.append(",");
-        printVector(vector2);
+
+        ListIterator<GAPPVector> it = vectors.listIterator();
+        while (it.hasNext()) {
+            printVector(it.next());
+            if (it.hasNext())
+                result.append(",");
+        }
+        
         result.append(">");
     }
 
@@ -156,7 +162,7 @@ public class PrettyPrint extends CFGGAPPVisitor {
         printSelector(gappDotVectors.getDestSelector());
         result.append("]");
         result.append(" = ");
-        printDotProduct(gappDotVectors.getPart1(), gappDotVectors.getPart2());
+        printDotProduct(gappDotVectors.getParts());
         result.append(";\n");
         return null;
     }

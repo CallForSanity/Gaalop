@@ -14,6 +14,7 @@ import de.gaalop.gapp.instructionSet.GAPPResetMv;
 import de.gaalop.gapp.instructionSet.GAPPSetMv;
 import de.gaalop.gapp.instructionSet.GAPPSetVector;
 import de.gaalop.gapp.variables.GAPPVector;
+import java.util.LinkedList;
 
 /**
  * Implements a visitor that parses string representations into pre-created GAPPInstructions
@@ -80,12 +81,17 @@ public class Parser implements GAPPVisitor {
 
         String rightSide = partsEquation[1].trim();
 
+
         if ((rightSide.charAt(0) != '<') || (rightSide.charAt(rightSide.length() - 1)) != '>') {
             System.err.println("Parse error. Wrong syntax in dotVectors instruction:" + (String) arg);
         } else {
             String[] partsDotProduct = rightSide.split(",");
-            gappDotVectors.setPart1(parseVector(partsDotProduct[0], getter));
-            gappDotVectors.setPart2(parseVector(partsDotProduct[1], getter));
+            
+            LinkedList<GAPPVector> vectors = new LinkedList<GAPPVector>();
+            for (String part: partsDotProduct)
+                vectors.add(parseVector(part, getter));
+            gappDotVectors.setParts(vectors);
+
         }
         return null;
     }

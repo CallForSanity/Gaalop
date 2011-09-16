@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package de.gaalop.gapp.statistics;
 
 import de.gaalop.gapp.instructionSet.CalculationType;
@@ -22,7 +17,7 @@ import java.io.PrintWriter;
 import java.util.HashMap;
 
 /**
- * Visitor who counts the number of instruction cycles and the number of calculations in a program
+ * Visitor that counts the number of instruction cycles and the number of calculations in a program
  * @author Christian Steinmetz
  */
 public class CalculationsCounter extends CFGGAPPVisitor {
@@ -57,9 +52,9 @@ public class CalculationsCounter extends CFGGAPPVisitor {
 
     @Override
     public Object visitDotVectors(GAPPDotVectors gappDotVectors, Object arg) {
-        int countOfBlades = vectorEntryCount.get(gappDotVectors.getPart1());
-        // from paper known: n + lg_2 (n)
-        instructionCycleCount += countOfBlades + (int) Math.ceil(Math.log(countOfBlades)/Math.log(2));
+        int countOfBlades = vectorEntryCount.get(gappDotVectors.getParts().getFirst());
+        // from paper known: n*lg_2 (n)
+        instructionCycleCount += (int) Math.ceil((countOfBlades*Math.log(countOfBlades))/Math.log(2));
         return null;
     }
 

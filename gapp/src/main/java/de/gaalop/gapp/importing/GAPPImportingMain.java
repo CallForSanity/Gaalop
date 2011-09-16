@@ -32,17 +32,8 @@ public class GAPPImportingMain {
             graph.accept(checker);
         }
 
-        ExpressionRemover remover = new DivisionRemover();
-        graph.accept(remover);
-
-        Splitter splitter = new Splitter(graph);
-        graph.accept(splitter);
-
-        MvExpressionsBuilder builder = new MvExpressionsBuilder(usedAlgebra);
-        graph.accept(builder);
-
         // import now the graph in GAPP
-        GAPPImporter vCFG = new GAPPImporter(usedAlgebra,builder.expressions);
+        GAPPImporterAlt vCFG = new GAPPImporterAlt(usedAlgebra);
         graph.accept(vCFG);
 
         return graph;
