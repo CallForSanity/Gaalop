@@ -1,7 +1,7 @@
 package de.gaalop.gapp.importing;
 
 import de.gaalop.gapp.importing.parallelObjects.Constant;
-import de.gaalop.gapp.importing.parallelObjects.Factors;
+import de.gaalop.gapp.importing.parallelObjects.Product;
 import de.gaalop.gapp.importing.parallelObjects.SignedSummand;
 import de.gaalop.dfg.Addition;
 import de.gaalop.dfg.BaseVector;
@@ -31,7 +31,7 @@ import de.gaalop.dfg.Variable;
 import de.gaalop.gapp.importing.parallelObjects.ExtCalculation;
 import de.gaalop.gapp.importing.parallelObjects.MvComponent;
 import de.gaalop.gapp.importing.parallelObjects.ParallelObject;
-import de.gaalop.gapp.importing.parallelObjects.Summands;
+import de.gaalop.gapp.importing.parallelObjects.Sum;
 import de.gaalop.gapp.instructionSet.CalculationType;
 
 /**
@@ -143,7 +143,7 @@ public class ExpressionCollector implements ExpressionVisitor {
         resultValue = null;
         node.getOperand().accept(this);
 
-        Summands summands = new Summands();
+        Sum summands = new Sum();
         summands.getSummands().add(new SignedSummand(false, resultValue));
         
         resultValue = summands;

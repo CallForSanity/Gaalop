@@ -35,24 +35,27 @@ public class GAPPDecorator extends EmptyControlFlowVisitor {
         node.setGAPP(gapp);
         gappCreator.setGapp(gapp);
 
-        // remember the current destination multivector component
-        MultivectorComponent curDestMvComp = (MultivectorComponent) node.getVariable();
+        // remember the name of the current destination multivector component
+        String name = ((MultivectorComponent) node.getVariable()).getName();
 
-        if (!createdGAPPVariables.contains(curDestMvComp.getName())) {
-            // create a new GAPPMultivector for destination variable
-            GAPPMultivector mv = createNewMultivector(curDestMvComp.getName());
+        if (!createdGAPPVariables.contains(name)) {
+            // create a new GAPPMultivector for destination variable, if it does not exists
+            GAPPMultivector mv = createNewMultivector(name);
             gapp.addInstruction(new GAPPResetMv(mv));
-            createdGAPPVariables.add(curDestMvComp.getName());
+            createdGAPPVariables.add(name);
         }
 
         // process expression
         ExpressionCollector collector = new ExpressionCollector();
         node.getValue().accept(collector);
-        
-        ParallelObject resultValue = collector.getResultValue();
-        //TODO do sth with returned ParallelObject resultValue
-        
-        resultValue.accept(gappCreator, null);
+        ParallelObject parallelObject = collector.getResultValue();
+
+        // Create creas
+        AssignmentCreator creator = new AssignmentCreator();
+        parallelObject.accept(creator, node.getVariable());
+
+        // Create gapp from creas
+        gappCreator.createGAPPInstructions(creator.getAssignments());
 
         // go on in graph
         super.visit(node);

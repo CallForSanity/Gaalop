@@ -26,7 +26,7 @@ import de.gaalop.dfg.Reverse;
 import de.gaalop.dfg.Subtraction;
 import de.gaalop.dfg.Variable;
 import de.gaalop.gapp.importing.parallelObjects.ParallelObject;
-import de.gaalop.gapp.importing.parallelObjects.Summands;
+import de.gaalop.gapp.importing.parallelObjects.Sum;
 
 /**
  * Returns the direct summands of an expression
@@ -34,7 +34,7 @@ import de.gaalop.gapp.importing.parallelObjects.Summands;
  */
 public class SignedSummandsGetter implements ExpressionVisitor {
 
-    private Summands summands = new Summands();
+    private Sum summands = new Sum();
 
     private boolean curSignPositive = true;
 
@@ -47,7 +47,7 @@ public class SignedSummandsGetter implements ExpressionVisitor {
      * @param expresssion The expression
      * @return The direct summands
      */
-    public static Summands getSignedSummands(Expression expresssion) {
+    public static Sum getSignedSummands(Expression expresssion) {
         SignedSummandsGetter getter = new SignedSummandsGetter();
         expresssion.accept(getter);
         return getter.summands;

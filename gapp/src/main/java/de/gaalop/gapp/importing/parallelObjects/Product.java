@@ -6,15 +6,15 @@ import java.util.LinkedList;
  *
  * @author Christian Steinmetz
  */
-public class Factors extends ParallelObject {
+public class Product extends ParallelObject {
 
     private LinkedList<ParallelObject> factors;
 
-    public Factors() {
+    public Product() {
         factors = new LinkedList<ParallelObject>();
     }
 
-    public Factors(LinkedList<ParallelObject> factors) {
+    public Product(LinkedList<ParallelObject> factors) {
         this.factors = factors;
     }
 
@@ -28,14 +28,14 @@ public class Factors extends ParallelObject {
 
     @Override
     public Object accept(ParallelObjectVisitor visitor, Object arg) {
-        return visitor.visitFactors(this, arg);
+        return visitor.visitProduct(this, arg);
     }
 
     public void add(ParallelObject factor) {
         factors.add(factor);
     }
 
-    public void add(Factors factors) {
+    public void add(Product factors) {
         this.factors.addAll(factors.getFactors());
     }
 

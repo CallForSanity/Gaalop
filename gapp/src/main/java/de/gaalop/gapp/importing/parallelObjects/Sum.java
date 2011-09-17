@@ -6,15 +6,15 @@ import java.util.LinkedList;
  *
  * @author Christian Steinmetz
  */
-public class Summands extends ParallelObject {
+public class Sum extends ParallelObject {
 
     private LinkedList<SignedSummand> summands;
 
-    public Summands() {
+    public Sum() {
         summands = new LinkedList<SignedSummand>();
     }
 
-    public Summands(LinkedList<SignedSummand> summands) {
+    public Sum(LinkedList<SignedSummand> summands) {
         this.summands = summands;
     }
 
@@ -28,7 +28,7 @@ public class Summands extends ParallelObject {
 
     @Override
     public Object accept(ParallelObjectVisitor visitor, Object arg) {
-        return visitor.visitSummands(this, arg);
+        return visitor.visitSum(this, arg);
     }
 
 }

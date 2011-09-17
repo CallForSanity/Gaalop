@@ -24,7 +24,7 @@ import de.gaalop.dfg.Relation;
 import de.gaalop.dfg.Reverse;
 import de.gaalop.dfg.Subtraction;
 import de.gaalop.dfg.Variable;
-import de.gaalop.gapp.importing.parallelObjects.Factors;
+import de.gaalop.gapp.importing.parallelObjects.Product;
 import de.gaalop.gapp.importing.parallelObjects.ParallelObject;
 
 /**
@@ -33,7 +33,7 @@ import de.gaalop.gapp.importing.parallelObjects.ParallelObject;
  */
 public class FactorsGetter implements ExpressionVisitor {
 
-    private Factors factors = new Factors();
+    private Product factors = new Product();
 
     private FactorsGetter() {
     }
@@ -43,7 +43,7 @@ public class FactorsGetter implements ExpressionVisitor {
      * @param expresssion The expression
      * @return The direct summands
      */
-    public static Factors getFactors(Expression expresssion) {
+    public static Product getFactors(Expression expresssion) {
         FactorsGetter getter = new FactorsGetter();
         expresssion.accept(getter);
         return getter.factors;
