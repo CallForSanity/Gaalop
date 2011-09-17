@@ -1,7 +1,8 @@
 package de.gaalop.gapp.importing;
 
-import de.gaalop.gapp.importing.irZwei.Factors;
-import de.gaalop.gapp.importing.irZwei.SignedSummand;
+import de.gaalop.gapp.importing.parallelObjects.Constant;
+import de.gaalop.gapp.importing.parallelObjects.Factors;
+import de.gaalop.gapp.importing.parallelObjects.SignedSummand;
 import de.gaalop.dfg.Addition;
 import de.gaalop.dfg.BaseVector;
 import de.gaalop.dfg.BinaryOperation;
@@ -27,16 +28,16 @@ import de.gaalop.dfg.Relation;
 import de.gaalop.dfg.Reverse;
 import de.gaalop.dfg.Subtraction;
 import de.gaalop.dfg.Variable;
-import de.gaalop.gapp.importing.irZwei.ExtCalculation;
-import de.gaalop.gapp.importing.irZwei.GAPPValueHolderContainer;
-import de.gaalop.gapp.importing.irZwei.ParallelObject;
-import de.gaalop.gapp.importing.irZwei.Summands;
+import de.gaalop.gapp.importing.parallelObjects.ExtCalculation;
+import de.gaalop.gapp.importing.parallelObjects.MvComponent;
+import de.gaalop.gapp.importing.parallelObjects.ParallelObject;
+import de.gaalop.gapp.importing.parallelObjects.Summands;
 import de.gaalop.gapp.instructionSet.CalculationType;
-import de.gaalop.gapp.variables.GAPPConstant;
-import de.gaalop.gapp.variables.GAPPMultivectorComponent;
 
 /**
- *
+ * Finds similar operations in Expression graphs and stores them in a ParallelObjekt instance.
+ * Additions and Substractions are collected and Muliplications are collected.
+ * Other Expression types are transformed in the ParallelObjects data structure
  * @author Christian Steinmetz
  */
 public class ExpressionCollector implements ExpressionVisitor {
@@ -47,45 +48,29 @@ public class ExpressionCollector implements ExpressionVisitor {
         return resultValue;
     }
 
-    private void visitAdditionSubtraction(BinaryOperation node) {
+    @Override
+    public void visit(Subtraction node) {
         resultValue = SignedSummandsGetter.getSignedSummands(node);
     }
 
     @Override
-    public void visit(Subtraction node) {
-        visitAdditionSubtraction(node);
-    }
-
-    @Override
     public void visit(Addition node) {
-        visitAdditionSubtraction(node);
+        resultValue = SignedSummandsGetter.getSignedSummands(node);
     }
 
     @Override
     public void visit(Multiplication node) {
-        resultValue = null;
-        node.getLeft().accept(this);
-        ParallelObject left = resultValue;
-        resultValue = null;
-        node.getRight().accept(this);
-        ParallelObject right = resultValue;
-
-        Factors factors = new Factors();
-        factors.add(left);
-        factors.add(right);
-        resultValue = factors;
+        resultValue = FactorsGetter.getFactors(node);
     }
 
     @Override
     public void visit(FloatConstant node) {
-        resultValue = new GAPPValueHolderContainer(new GAPPConstant(node.getValue()));
+        resultValue = new Constant(node.getValue());
     }
 
     @Override
     public void visit(MultivectorComponent node) {
-        resultValue = new GAPPValueHolderContainer(
-                new GAPPMultivectorComponent(node.getName(), node.getBladeIndex())
-                );
+        resultValue = new MvComponent(node);
     }
 
     @Override

@@ -1,15 +1,16 @@
 package de.gaalop.gapp.importing;
 
 import de.gaalop.gapp.GAPP;
-import de.gaalop.gapp.importing.irZwei.ExtCalculation;
-import de.gaalop.gapp.importing.irZwei.Factors;
-import de.gaalop.gapp.importing.irZwei.GAPPValueHolderContainer;
-import de.gaalop.gapp.importing.irZwei.ParallelObjectVisitor;
-import de.gaalop.gapp.importing.irZwei.Summands;
+import de.gaalop.gapp.importing.parallelObjects.Constant;
+import de.gaalop.gapp.importing.parallelObjects.ExtCalculation;
+import de.gaalop.gapp.importing.parallelObjects.Factors;
+import de.gaalop.gapp.importing.parallelObjects.MvComponent;
+import de.gaalop.gapp.importing.parallelObjects.ParallelObjectVisitor;
+import de.gaalop.gapp.importing.parallelObjects.Summands;
 import de.gaalop.gapp.variables.GAPPVector;
 
 /**
- *
+ * This visitor creates gapp instructions from a parallelObjects data structure
  * @author Christian Steinmetz
  */
 public class GAPPCreator implements ParallelObjectVisitor {
@@ -55,8 +56,14 @@ public class GAPPCreator implements ParallelObjectVisitor {
     }
 
     @Override
-    public Object visitGAPPValueHolderContainer(GAPPValueHolderContainer gAPPValueHolderContainer, Object arg) {
+    public Object visitConstant(Constant constant, Object arg) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
+
+    @Override
+    public Object visitMvComponent(MvComponent mvComponent, Object arg) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
 
 }

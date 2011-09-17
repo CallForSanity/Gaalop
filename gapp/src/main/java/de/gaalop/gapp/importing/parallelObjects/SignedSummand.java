@@ -1,4 +1,4 @@
-package de.gaalop.gapp.importing.irZwei;
+package de.gaalop.gapp.importing.parallelObjects;
 
 /**
  * Represents a container for a signed expression, which is a summand.

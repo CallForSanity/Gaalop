@@ -1,4 +1,4 @@
-package de.gaalop.gapp.importing.irZwei;
+package de.gaalop.gapp.importing.parallelObjects;
 
 import de.gaalop.gapp.instructionSet.CalculationType;
 

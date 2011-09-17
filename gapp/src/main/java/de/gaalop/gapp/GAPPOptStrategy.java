@@ -3,7 +3,7 @@ package de.gaalop.gapp;
 import de.gaalop.OptimizationException;
 import de.gaalop.OptimizationStrategy;
 import de.gaalop.cfg.ControlFlowGraph;
-import de.gaalop.gapp.importing.GAPPImportingMain;
+import de.gaalop.gapp.importing.GAPPDecoratingMain;
 import de.gaalop.tba.UseAlgebra;
 
 /**
@@ -20,8 +20,8 @@ public class GAPPOptStrategy implements OptimizationStrategy {
 
     @Override
     public void transform(ControlFlowGraph graph) throws OptimizationException {
-        GAPPImportingMain importer = new GAPPImportingMain();
-        graph = importer.importGraph(new UseAlgebra(plugin.getAlgebra()),graph);
+        GAPPDecoratingMain importer = new GAPPDecoratingMain();
+        graph = importer.decorateGraph(new UseAlgebra(plugin.getAlgebra()),graph);
     }
 
 }

@@ -1,6 +1,5 @@
 package de.gaalop.gapp.importing;
 
-import de.gaalop.gapp.importing.parallelObjects.SignedSummand;
 import de.gaalop.dfg.Addition;
 import de.gaalop.dfg.BaseVector;
 import de.gaalop.dfg.Division;
@@ -25,21 +24,18 @@ import de.gaalop.dfg.Relation;
 import de.gaalop.dfg.Reverse;
 import de.gaalop.dfg.Subtraction;
 import de.gaalop.dfg.Variable;
+import de.gaalop.gapp.importing.parallelObjects.Factors;
 import de.gaalop.gapp.importing.parallelObjects.ParallelObject;
-import de.gaalop.gapp.importing.parallelObjects.Summands;
 
 /**
- * Returns the direct summands of an expression
+ *
  * @author Christian Steinmetz
  */
-public class SignedSummandsGetter implements ExpressionVisitor {
+public class FactorsGetter implements ExpressionVisitor {
 
-    private Summands summands = new Summands();
+    private Factors factors = new Factors();
 
-    private boolean curSignPositive = true;
-
-    //private constructor to make using of the static facade method mandatory
-    private SignedSummandsGetter() {
+    private FactorsGetter() {
     }
 
     /**
@@ -47,10 +43,10 @@ public class SignedSummandsGetter implements ExpressionVisitor {
      * @param expresssion The expression
      * @return The direct summands
      */
-    public static Summands getSignedSummands(Expression expresssion) {
-        SignedSummandsGetter getter = new SignedSummandsGetter();
+    public static Factors getFactors(Expression expresssion) {
+        FactorsGetter getter = new FactorsGetter();
         expresssion.accept(getter);
-        return getter.summands;
+        return getter.factors;
     }
 
     private ParallelObject callExpressionCollector(Expression expression) {
@@ -61,83 +57,80 @@ public class SignedSummandsGetter implements ExpressionVisitor {
 
     @Override
     public void visit(Subtraction node) {
-        node.getLeft().accept(this);
-        curSignPositive = !curSignPositive;
-        node.getRight().accept(this);
-        curSignPositive = !curSignPositive;
+        factors.getFactors().add(callExpressionCollector(node));
     }
 
     @Override
     public void visit(Addition node) {
+        factors.getFactors().add(callExpressionCollector(node));
+    }
+
+    @Override
+    public void visit(Division node) {
+        factors.getFactors().add(callExpressionCollector(node));
+    }
+
+    @Override
+    public void visit(Multiplication node) {
         node.getLeft().accept(this);
         node.getRight().accept(this);
     }
 
     @Override
-    public void visit(Division node) {
-        summands.getSummands().add(new SignedSummand(curSignPositive, callExpressionCollector(node)));
-    }
-
-    @Override
-    public void visit(Multiplication node) {
-        summands.getSummands().add(new SignedSummand(curSignPositive, callExpressionCollector(node)));
-    }
-
-    @Override
     public void visit(MathFunctionCall node) {
-        summands.getSummands().add(new SignedSummand(curSignPositive, callExpressionCollector(node)));
+        factors.getFactors().add(callExpressionCollector(node));
     }
 
     @Override
     public void visit(MultivectorComponent node) {
-        summands.getSummands().add(new SignedSummand(curSignPositive, callExpressionCollector(node)));
+        factors.getFactors().add(callExpressionCollector(node));
     }
 
     @Override
     public void visit(Exponentiation node) {
-        summands.getSummands().add(new SignedSummand(curSignPositive, callExpressionCollector(node)));
+        factors.getFactors().add(callExpressionCollector(node));
     }
 
     @Override
     public void visit(FloatConstant node) {
-        summands.getSummands().add(new SignedSummand(curSignPositive, callExpressionCollector(node)));
+        factors.getFactors().add(callExpressionCollector(node));
     }
 
     @Override
     public void visit(Negation node) {
-        summands.getSummands().add(new SignedSummand(curSignPositive, callExpressionCollector(node)));
+        factors.getFactors().add(callExpressionCollector(node));
     }
 
     // ============================ Logical methods ============================
 
     @Override
     public void visit(LogicalOr node) {
-        summands.getSummands().add(new SignedSummand(curSignPositive, callExpressionCollector(node)));
+        factors.getFactors().add(callExpressionCollector(node));
     }
 
     @Override
     public void visit(LogicalAnd node) {
-        summands.getSummands().add(new SignedSummand(curSignPositive, callExpressionCollector(node)));
+        factors.getFactors().add(callExpressionCollector(node));
     }
 
     @Override
     public void visit(LogicalNegation node) {
-        summands.getSummands().add(new SignedSummand(curSignPositive, callExpressionCollector(node)));
+        factors.getFactors().add(callExpressionCollector(node));
     }
 
     @Override
     public void visit(Equality node) {
-        summands.getSummands().add(new SignedSummand(curSignPositive, callExpressionCollector(node)));
+        factors.getFactors().add(callExpressionCollector(node));
     }
 
     @Override
     public void visit(Inequality node) {
-        summands.getSummands().add(new SignedSummand(curSignPositive, callExpressionCollector(node)));
+        factors.getFactors().add(callExpressionCollector(node));
     }
 
     @Override
     public void visit(Relation relation) {
-        summands.getSummands().add(new SignedSummand(curSignPositive, callExpressionCollector(relation)));
+        factors.getFactors().add(callExpressionCollector(relation));
     }
 
     // ========================= Illegal visit methods =========================
@@ -176,7 +169,5 @@ public class SignedSummandsGetter implements ExpressionVisitor {
     public void visit(MacroCall node) {
         throw new IllegalStateException("FunctionArguments should have been removed by CLUCalc Parser.");
     }
-
-
 
 }

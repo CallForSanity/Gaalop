@@ -4,23 +4,23 @@ import de.gaalop.cfg.AssignmentNode;
 import de.gaalop.cfg.EmptyControlFlowVisitor;
 import de.gaalop.dfg.MultivectorComponent;
 import de.gaalop.gapp.GAPP;
-import de.gaalop.gapp.importing.irZwei.ParallelObject;
+import de.gaalop.gapp.importing.parallelObjects.ParallelObject;
 import de.gaalop.gapp.instructionSet.GAPPResetMv;
 import de.gaalop.gapp.variables.GAPPMultivector;
 import de.gaalop.gapp.variables.GAPPValueHolder;
 import java.util.HashSet;
 
 /**
- * The new GAPPImporter
+ * Decorates a Control Flow Graph with GAPP instructions
  * @author Christian Steinmetz
  */
-public class GAPPImporter extends EmptyControlFlowVisitor {
+public class GAPPDecorator extends EmptyControlFlowVisitor {
 
     private HashSet<String> createdGAPPVariables = new HashSet<String>();
 
     private GAPPCreator gappCreator;
 
-    public GAPPImporter(int bladecount) {
+    public GAPPDecorator(int bladecount) {
         gappCreator = new GAPPCreator(bladecount);
     }
 

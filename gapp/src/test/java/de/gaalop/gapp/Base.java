@@ -11,7 +11,7 @@ import java.util.HashMap;
 import de.gaalop.OptimizationException;
 import de.gaalop.OutputFile;
 import de.gaalop.cfg.ControlFlowGraph;
-import de.gaalop.gapp.importing.GAPPImportingMain;
+import de.gaalop.gapp.importing.GAPPDecoratingMain;
 import de.gaalop.gapp.statistics.CalculationsCounter;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
@@ -37,8 +37,8 @@ public class Base {
         CodeParser parser = (new de.gaalop.clucalc.input.Plugin()).createCodeParser();
         ControlFlowGraph graph = parser.parseFile(new InputFile(cluName, testable.getSource()));
 
-        GAPPImportingMain importer = new GAPPImportingMain();
-        importer.importGraph(testable.getUsedAlgebra(),graph);
+        GAPPDecoratingMain importer = new GAPPDecoratingMain();
+        importer.decorateGraph(testable.getUsedAlgebra(),graph);
 
         outputPlugin(new de.gaalop.codegenGapp.Plugin(), graph);
         outputPlugin(new de.gaalop.clucalc.output.Plugin(), graph);
@@ -72,7 +72,7 @@ public class Base {
             for (OutputFile outputFile: outputFiles)
                 writeFile(outputFile);
         } catch (CodeGeneratorException ex) {
-            Logger.getLogger(GAPPImportingMain.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(GAPPDecoratingMain.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -86,7 +86,7 @@ public class Base {
             out.print(outputFile.getContent());
             out.close();
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(GAPPImportingMain.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(GAPPDecoratingMain.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
