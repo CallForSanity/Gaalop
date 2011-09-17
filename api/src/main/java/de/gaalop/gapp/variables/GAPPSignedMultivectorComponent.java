@@ -9,13 +9,13 @@ public class GAPPSignedMultivectorComponent extends GAPPMultivectorComponent {
 
     private byte sign;
 
-    public GAPPSignedMultivectorComponent(GAPPMultivector parentMultivector, int bladeIndex, byte sign) {
-        super(parentMultivector, bladeIndex);
+    public GAPPSignedMultivectorComponent(String parentName, int bladeIndex, byte sign) {
+        super(parentName, bladeIndex);
         setSign(sign);
     }
 
-    public GAPPSignedMultivectorComponent(GAPPMultivector parentMultivector, int bladeIndex) {
-        super(parentMultivector, bladeIndex);
+    public GAPPSignedMultivectorComponent(String parentName, int bladeIndex) {
+        super(parentName, bladeIndex);
         setSign((byte) 1);
     }
 

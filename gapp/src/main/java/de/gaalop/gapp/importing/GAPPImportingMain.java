@@ -33,7 +33,7 @@ public class GAPPImportingMain {
         }
 
         // import now the graph in GAPP
-        GAPPImporterAlt vCFG = new GAPPImporterAlt(usedAlgebra);
+        GAPPImporter vCFG = new GAPPImporter(usedAlgebra.getBladeCount());
         graph.accept(vCFG);
 
         return graph;
