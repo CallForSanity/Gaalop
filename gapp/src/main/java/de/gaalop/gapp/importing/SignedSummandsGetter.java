@@ -25,7 +25,7 @@ import de.gaalop.dfg.Relation;
 import de.gaalop.dfg.Reverse;
 import de.gaalop.dfg.Subtraction;
 import de.gaalop.dfg.Variable;
-import de.gaalop.gapp.importing.irZwei.ExpressionContainer;
+import de.gaalop.gapp.importing.irZwei.ParallelObject;
 import de.gaalop.gapp.importing.irZwei.Summands;
 
 /**
@@ -53,6 +53,12 @@ public class SignedSummandsGetter implements ExpressionVisitor {
         return getter.summands;
     }
 
+    private ParallelObject callExpressionCollector(Expression expression) {
+        ExpressionCollector collector = new ExpressionCollector();
+        expression.accept(collector);
+        return collector.getResultValue();
+    }
+
     @Override
     public void visit(Subtraction node) {
         node.getLeft().accept(this);
@@ -69,69 +75,69 @@ public class SignedSummandsGetter implements ExpressionVisitor {
 
     @Override
     public void visit(Division node) {
-        summands.getSummands().add(new SignedSummand(curSignPositive, new ExpressionContainer(node)));
+        summands.getSummands().add(new SignedSummand(curSignPositive, callExpressionCollector(node)));
     }
 
     @Override
     public void visit(Multiplication node) {
-        summands.getSummands().add(new SignedSummand(curSignPositive, new ExpressionContainer(node)));
+        summands.getSummands().add(new SignedSummand(curSignPositive, callExpressionCollector(node)));
     }
 
     @Override
     public void visit(MathFunctionCall node) {
-        summands.getSummands().add(new SignedSummand(curSignPositive, new ExpressionContainer(node)));
+        summands.getSummands().add(new SignedSummand(curSignPositive, callExpressionCollector(node)));
     }
 
     @Override
     public void visit(MultivectorComponent node) {
-        summands.getSummands().add(new SignedSummand(curSignPositive, new ExpressionContainer(node)));
+        summands.getSummands().add(new SignedSummand(curSignPositive, callExpressionCollector(node)));
     }
 
     @Override
     public void visit(Exponentiation node) {
-        summands.getSummands().add(new SignedSummand(curSignPositive, new ExpressionContainer(node)));
+        summands.getSummands().add(new SignedSummand(curSignPositive, callExpressionCollector(node)));
     }
 
     @Override
     public void visit(FloatConstant node) {
-        summands.getSummands().add(new SignedSummand(curSignPositive, new ExpressionContainer(node)));
+        summands.getSummands().add(new SignedSummand(curSignPositive, callExpressionCollector(node)));
     }
 
     @Override
     public void visit(Negation node) {
-        summands.getSummands().add(new SignedSummand(curSignPositive, new ExpressionContainer(node)));
+        summands.getSummands().add(new SignedSummand(curSignPositive, callExpressionCollector(node)));
     }
 
     // ============================ Logical methods ============================
 
     @Override
     public void visit(LogicalOr node) {
-        summands.getSummands().add(new SignedSummand(curSignPositive, new ExpressionContainer(node)));
+        summands.getSummands().add(new SignedSummand(curSignPositive, callExpressionCollector(node)));
     }
 
     @Override
     public void visit(LogicalAnd node) {
-        summands.getSummands().add(new SignedSummand(curSignPositive, new ExpressionContainer(node)));
+        summands.getSummands().add(new SignedSummand(curSignPositive, callExpressionCollector(node)));
     }
 
     @Override
     public void visit(LogicalNegation node) {
-        summands.getSummands().add(new SignedSummand(curSignPositive, new ExpressionContainer(node)));
+        summands.getSummands().add(new SignedSummand(curSignPositive, callExpressionCollector(node)));
     }
 
     @Override
     public void visit(Equality node) {
-        summands.getSummands().add(new SignedSummand(curSignPositive, new ExpressionContainer(node)));
+        summands.getSummands().add(new SignedSummand(curSignPositive, callExpressionCollector(node)));
     }
 
     @Override
     public void visit(Inequality node) {
-        summands.getSummands().add(new SignedSummand(curSignPositive, new ExpressionContainer(node)));
+        summands.getSummands().add(new SignedSummand(curSignPositive, callExpressionCollector(node)));
     }
 
     @Override
     public void visit(Relation relation) {
-        summands.getSummands().add(new SignedSummand(curSignPositive, new ExpressionContainer(relation)));
+        summands.getSummands().add(new SignedSummand(curSignPositive, callExpressionCollector(relation)));
     }
 
     // ========================= Illegal visit methods =========================

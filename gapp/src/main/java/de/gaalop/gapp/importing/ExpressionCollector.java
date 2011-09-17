@@ -27,7 +27,6 @@ import de.gaalop.dfg.Relation;
 import de.gaalop.dfg.Reverse;
 import de.gaalop.dfg.Subtraction;
 import de.gaalop.dfg.Variable;
-import de.gaalop.gapp.importing.irZwei.ExpressionContainer;
 import de.gaalop.gapp.importing.irZwei.ExtCalculation;
 import de.gaalop.gapp.importing.irZwei.GAPPValueHolderContainer;
 import de.gaalop.gapp.importing.irZwei.ParallelObject;
@@ -44,17 +43,12 @@ public class ExpressionCollector implements ExpressionVisitor {
 
     private ParallelObject resultValue;
 
-    private void visitAdditionSubtraction(BinaryOperation node) {
-        Summands summands = SignedSummandsGetter.getSignedSummands(node);
-        for (SignedSummand summand: summands.getSummands()) {
-            // SignedSummandsGetter returns only ExpressionContainer instances as ParallelObject!
-            ExpressionContainer contSummand = (ExpressionContainer) summand.getParallelObject();
-            resultValue = null;
-            contSummand.getExpression().accept(this);
-            summand.setParallelObject(resultValue);
-        }
+    public ParallelObject getResultValue() {
+        return resultValue;
+    }
 
-        resultValue = summands;
+    private void visitAdditionSubtraction(BinaryOperation node) {
+        resultValue = SignedSummandsGetter.getSignedSummands(node);
     }
 
     @Override

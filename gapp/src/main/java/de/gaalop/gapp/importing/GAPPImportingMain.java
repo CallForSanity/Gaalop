@@ -1,12 +1,8 @@
 package de.gaalop.gapp.importing;
 
-import de.gaalop.dfg.DivisionRemover;
-import de.gaalop.dfg.ExpressionRemover;
 import de.gaalop.OptimizationException;
 import de.gaalop.cfg.ControlFlowGraph;
 import de.gaalop.gapp.variables.GAPPMultivector;
-import de.gaalop.tba.cfgImport.MvExpressionsBuilder;
-import de.gaalop.tba.Plugin;
 import de.gaalop.tba.UseAlgebra;
 import de.gaalop.tba.cfgImport.BaseVectorChecker;
 import java.util.Arrays;
