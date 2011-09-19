@@ -10,6 +10,7 @@ import de.gaalop.gapp.importing.parallelObjects.ParallelObject;
 import de.gaalop.gapp.importing.parallelObjects.ParallelObjectVisitor;
 import de.gaalop.gapp.importing.parallelObjects.SignedSummand;
 import de.gaalop.gapp.importing.parallelObjects.Sum;
+import de.gaalop.gapp.variables.GAPPMultivector;
 import de.gaalop.gapp.variables.GAPPScalarVariable;
 import de.gaalop.gapp.variables.GAPPVariable;
 import java.util.HashMap;
@@ -36,15 +37,14 @@ public class AssignmentCreator implements ParallelObjectVisitor {
 
     @Override
     public Object visitSum(Sum sum, Object arg) {
-        //This is the only method, which creates a new temporary variable!
 
         // create the GAPPVariable of the destination variable of sum:
         // if this is the root object, the GAPPMvComponent is created from name = (String) arg.
         // otherwise a new GAPPScalarVariable with a temporary name is created
         MultivectorComponent mvC = (MultivectorComponent) arg;
-        GAPPVariable dest = (arg != null)
+        GAPPMultivectorComponent dest = (arg != null)
                 ? new GAPPMultivectorComponent(mvC.getName(),mvC.getBladeIndex())
-                : new GAPPScalarVariable(createTMP());
+                : new GAPPMultivectorComponent(createTMP(),0);
 
         HashMap<SignedSummand,Scalarproduct> mapSummandScalarproduct = new HashMap<SignedSummand, Scalarproduct>();
 
@@ -56,7 +56,8 @@ public class AssignmentCreator implements ParallelObjectVisitor {
             maxVectors = Math.max(maxVectors,scalarproduct.getVectors().size());
         }
 
-        assignments.add(new Assignment(dest, mapSummandScalarproduct));
+        GAPPMultivector mv = new GAPPMultivector(dest.getName(), null);
+        assignments.add(new Assignment(mv,dest.getBladeIndex(), mapSummandScalarproduct, maxVectors));
         return null;
     }
 
@@ -68,28 +69,42 @@ public class AssignmentCreator implements ParallelObjectVisitor {
             result.getVectors().addAll(scalarproduct.getVectors());
         }
 
-        if (arg != null) return assignScalarproductToMvComponent(result, product, arg);
+        GAPPMultivector mv = new GAPPMultivector(((MultivectorComponent) arg).getName(), null);
+        int index = ((MultivectorComponent) arg).getBladeIndex();
+        if (arg != null) return assignScalarproductToMvComponent(result, product, mv, index);
         return result;
     }
 
     @Override
     public Object visitExtCalculation(ExtCalculation extCalculation, Object arg) {
         Scalarproduct result = createScalarproductFromOneParallelObject(extCalculation);
-        if (arg != null) return assignScalarproductToMvComponent(result, extCalculation, arg);
-        return result;
+
+        if (arg != null) {
+            GAPPMultivector mv = new GAPPMultivector(((MultivectorComponent) arg).getName(), null);
+            int index = ((MultivectorComponent) arg).getBladeIndex();
+            return assignScalarproductToMvComponent(result, extCalculation, mv, index);
+        }
+        else {
+                GAPPMultivector mv = new GAPPMultivector(createTMP(), null);
+                return assignScalarproductToMvComponent(result, extCalculation, mv, 0);
+        }
     }
 
     @Override
     public Object visitConstant(Constant constant, Object arg) {
         Scalarproduct result = createScalarproductFromOneParallelObject(constant);
-        if (arg != null) return assignScalarproductToMvComponent(result, constant, arg);
+        GAPPMultivector mv = new GAPPMultivector(((MultivectorComponent) arg).getName(), null);
+        int index = ((MultivectorComponent) arg).getBladeIndex();
+        if (arg != null) return assignScalarproductToMvComponent(result, constant, mv, index);
         return result;
     }
 
     @Override
     public Object visitMvComponent(MvComponent mvComponent, Object arg) {
         Scalarproduct result = createScalarproductFromOneParallelObject(mvComponent);
-        if (arg != null) return assignScalarproductToMvComponent(result, mvComponent, arg);
+        GAPPMultivector mv = new GAPPMultivector(((MultivectorComponent) arg).getName(), null);
+        int index = ((MultivectorComponent) arg).getBladeIndex();
+        if (arg != null) return assignScalarproductToMvComponent(result, mvComponent, mv, index);
         return result;
     }
 
@@ -106,12 +121,10 @@ public class AssignmentCreator implements ParallelObjectVisitor {
         return new Scalarproduct(vectors);
     }
 
-    private Object assignScalarproductToMvComponent(Scalarproduct scalarproduct, ParallelObject object, Object arg) {
+    private Object assignScalarproductToMvComponent(Scalarproduct scalarproduct, ParallelObject object, GAPPMultivector arg, int index) {
         HashMap<SignedSummand,Scalarproduct> map = new HashMap<SignedSummand, Scalarproduct>();
         map.put(new SignedSummand(true, object),scalarproduct);
-        
-        MultivectorComponent mvC = (MultivectorComponent) arg;
-        assignments.add(new Assignment(new GAPPMultivectorComponent(mvC.getName(),mvC.getBladeIndex()), map));
+        assignments.add(new Assignment(arg, index, map,scalarproduct.getVectors().size()));
         return null;
     }
 

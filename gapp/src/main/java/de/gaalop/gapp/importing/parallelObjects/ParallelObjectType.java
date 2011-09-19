@@ -8,6 +8,12 @@ public enum ParallelObjectType implements ParallelObjectVisitor {
 
     summands, factors, extCalculation, constant, mvComponent;
 
+    public static ParallelObjectType getType(ParallelObject object) {
+        ParallelObjectType visitor = summands;
+        return (ParallelObjectType) object.accept(visitor, null);
+    }
+
+
     @Override
     public Object visitSum(Sum sum, Object arg) {
         return this.summands;

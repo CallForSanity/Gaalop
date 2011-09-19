@@ -18,10 +18,10 @@ public class GAPPDecorator extends EmptyControlFlowVisitor {
 
     private HashSet<String> createdGAPPVariables = new HashSet<String>();
 
-    private GAPPCreator gappCreator;
+    private GAPPBaseCreator gappCreator;
 
     public GAPPDecorator(int bladecount) {
-        gappCreator = new GAPPCreator(bladecount);
+        gappCreator = new GAPPCreatorFull(null, bladecount);
     }
 
     private GAPPMultivector createNewMultivector(String name) {
@@ -55,7 +55,7 @@ public class GAPPDecorator extends EmptyControlFlowVisitor {
         parallelObject.accept(creator, node.getVariable());
 
         // Create gapp from creas
-        gappCreator.createGAPPInstructions(creator.getAssignments());
+        gappCreator.createGAPPInstructionsFromAssignments(creator.getAssignments());
 
         // go on in graph
         super.visit(node);
