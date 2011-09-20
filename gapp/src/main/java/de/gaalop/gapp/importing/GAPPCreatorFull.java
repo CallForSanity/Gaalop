@@ -1,5 +1,6 @@
 package de.gaalop.gapp.importing;
 
+import de.gaalop.dfg.Variable;
 import de.gaalop.gapp.GAPP;
 import de.gaalop.gapp.Selector;
 import de.gaalop.gapp.Selectorset;
@@ -39,8 +40,7 @@ public class GAPPCreatorFull extends GAPPBaseCreator {
 
     @Override
     public void createGAPPInstructionsFromAssignment(Assignment assignment) {
-        GAPPMultivector destination = assignment.getArg();
-        int index = assignment.getIndex();
+
         HashMap<SignedSummand, Scalarproduct> summands = assignment.getSummands();
         int maxNumber = 0;
         for (SignedSummand summand: summands.keySet()) {
@@ -75,7 +75,7 @@ public class GAPPCreatorFull extends GAPPBaseCreator {
             parts.add(createVector(vector));
 
 
-        GAPPDotVectors dotVectors = new GAPPDotVectors(destination, new Selector(index,(byte) 1), parts);
+        GAPPDotVectors dotVectors = new GAPPDotVectors(new GAPPMultivector(assignment.getName(), null), new Selector(assignment.getIndex(),(byte) 1), parts);
         gapp.addInstruction(dotVectors);
         
     }

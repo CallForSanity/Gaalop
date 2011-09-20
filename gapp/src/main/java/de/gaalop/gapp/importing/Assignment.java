@@ -1,7 +1,6 @@
 package de.gaalop.gapp.importing;
 
 import de.gaalop.gapp.importing.parallelObjects.SignedSummand;
-import de.gaalop.gapp.variables.GAPPMultivector;
 import java.util.HashMap;
 
 /**
@@ -10,26 +9,22 @@ import java.util.HashMap;
  */
 public class Assignment {
 
-    private GAPPMultivector arg;
+    private String name;
     private int index;
     private HashMap<SignedSummand, Scalarproduct> summands;
 
-    public Assignment(GAPPMultivector arg, int index, HashMap<SignedSummand, Scalarproduct> summands) {
-        this.arg = arg;
+    public Assignment(String name, int index, HashMap<SignedSummand, Scalarproduct> summands) {
+        this.name = name;
         this.index = index;
         this.summands = summands;
     }
 
-    public GAPPMultivector getArg() {
-        return arg;
+    public String getName() {
+        return name;
     }
 
-    public HashMap<SignedSummand, Scalarproduct> getSummands() {
-        return summands;
-    }
-
-    public void setArg(GAPPMultivector arg) {
-        this.arg = arg;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public int getIndex() {
@@ -38,6 +33,10 @@ public class Assignment {
 
     public void setIndex(int index) {
         this.index = index;
+    }
+
+    public HashMap<SignedSummand, Scalarproduct> getSummands() {
+        return summands;
     }
 
     public void setSummands(HashMap<SignedSummand, Scalarproduct> summands) {

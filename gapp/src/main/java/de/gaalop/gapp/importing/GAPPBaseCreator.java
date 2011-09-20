@@ -1,7 +1,9 @@
 package de.gaalop.gapp.importing;
 
+import de.gaalop.dfg.Variable;
 import de.gaalop.gapp.GAPP;
 import java.util.LinkedList;
+import java.util.Set;
 
 /**
  * Creates GAPP instructions from assignments

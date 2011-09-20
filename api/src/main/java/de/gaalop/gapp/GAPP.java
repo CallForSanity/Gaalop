@@ -54,4 +54,12 @@ public class GAPP {
         for (GAPPBaseInstruction inst : instructions) 
             inst.accept(visitor, null);
     }
+
+    /**
+     * Adds all instructions from an other GAPP instance
+     * @param toAdd The other GAPP instance
+     */
+    public void addGAPP(GAPP toAdd) {
+        instructions.addAll(toAdd.instructions);
+    }
 }
