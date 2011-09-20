@@ -3,9 +3,12 @@ package de.gaalop.tba.cfgImport.optimization.maxima;
 import de.gaalop.api.cfg.AssignmentNodeCollector;
 import de.gaalop.cfg.AssignmentNode;
 import de.gaalop.cfg.ControlFlowGraph;
+import de.gaalop.cfg.ControlFlowVisitor;
+import de.gaalop.cfg.EmptyControlFlowVisitor;
 import de.gaalop.cfg.FindStoreOutputNodes;
 import de.gaalop.cfg.StoreResultNode;
 import de.gaalop.dfg.Expression;
+import de.gaalop.dfg.Variable;
 import de.gaalop.tba.Plugin;
 import de.gaalop.tba.cfgImport.optimization.maxima.parser.MaximaLexer;
 import de.gaalop.tba.cfgImport.optimization.maxima.parser.MaximaParser;
@@ -30,6 +33,8 @@ public class MaximaOptimizer {
 
     private Plugin plugin;
 
+    private StoreResultNodesCollector collector;
+
     public MaximaOptimizer(MaximaConnection connection, Plugin plugin) {
         this.connection = connection;
         this.plugin = plugin;
@@ -41,6 +46,9 @@ public class MaximaOptimizer {
      * @throws RecognitionException
      */
     public void transformGraph(ControlFlowGraph graph) throws RecognitionException {
+        collector = new StoreResultNodesCollector();
+        graph.accept(collector);
+
         MaximaInput input = new MaximaInput();
         input.add("display2d:false;"); // very important!
         fillMaximaInput(graph,input);
@@ -61,6 +69,10 @@ public class MaximaOptimizer {
             Expression exp = getExpressionFromMaximaOutput(io.getOutput());
             listIterator.next().setValue(exp);
         }
+
+        if (plugin.isOptInserting())
+            removeUnusedAssignments(graph, collector.getVariables());
+
 
     }
 
@@ -133,8 +145,7 @@ public class MaximaOptimizer {
      * @param input The MaximaInput instance to be filled
      */
     private void fillMaximaInput(ControlFlowGraph graph, MaximaInput input) {
-        StoreResultNodesCollector collector = new StoreResultNodesCollector();
-        graph.accept(collector);
+        
 
         assignmentNodeCollector = new AssignmentNodeCollector();
         graph.accept(assignmentNodeCollector);
@@ -168,6 +179,16 @@ public class MaximaOptimizer {
             input.add(variable+value);
 
         }
+
+    }
+
+    private void removeUnusedAssignments(ControlFlowGraph graph, LinkedList<Variable> usedVariables) {
+        
+        UnusedCollector collector = new UnusedCollector(usedVariables);
+        graph.accept(collector);
+
+        for (AssignmentNode node: collector.getUnusedNodes())
+            graph.removeNode(node);
 
     }
 

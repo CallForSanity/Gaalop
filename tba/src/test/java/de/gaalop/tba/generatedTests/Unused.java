@@ -134,10 +134,6 @@ public class Unused implements GAProgram {
 	
 	@Override
 	public void calculate() {
-		rotor$7 = (-ary$0); // e1^e3;
-		translator$8 = (-((0.5f * lpx$0))); // e1^einf;
-		translator$11 = (-((0.5f * lpy$0))); // e2^einf;
-		translator$13 = (-((0.5f * lpz$0))); // e3^einf;
 		Din$0 = arw$0; // 1.0;
 		Din$6 = arz$0; // e1^e2;
 		Din$7 = (-ary$0); // e1^e3;
@@ -148,9 +144,5 @@ public class Unused implements GAProgram {
 		Din$26 = (((-(((0.5f * arz$0) * lpz$0))) - ((0.5f * ary$0) * lpy$0)) - ((0.5f * arx$0) * lpx$0)); // e1^e2^e3^einf;
 	}
 
-	private float rotor$7;
-	private float translator$8;
-	private float translator$13;
-	private float translator$11;
 
 }
