@@ -53,7 +53,7 @@ public class Assignment {
                 result.append(summands.get(summand).toString());
                 result.append(")");
             } else {
-                result.append(summands.get(summand).toString());
+                result.append(summands.get(summand).toString()+" ");
             }
 
 

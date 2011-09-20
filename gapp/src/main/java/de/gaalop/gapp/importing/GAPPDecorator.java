@@ -76,6 +76,9 @@ public class GAPPDecorator extends EmptyControlFlowVisitor {
         GAPPMultivectorComponent gMvC = new GAPPMultivectorComponent(mvC.getName(), mvC.getBladeIndex());
         parallelObject.accept(creator, gMvC);
 
+        AssignmentSimplifier simplifier = new AssignmentSimplifier();
+        simplifier.simplify(creator.getAssignments());
+
         writer.println();
         writer.println("//"+node.toString());
         for (Assignment ass: creator.getAssignments()) {
