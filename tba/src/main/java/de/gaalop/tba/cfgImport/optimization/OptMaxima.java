@@ -1,6 +1,7 @@
 package de.gaalop.tba.cfgImport.optimization;
 
 import de.gaalop.cfg.ControlFlowGraph;
+import de.gaalop.tba.Plugin;
 import de.gaalop.tba.UseAlgebra;
 import de.gaalop.tba.cfgImport.optimization.maxima.MaximaOptimizer;
 import de.gaalop.tba.cfgImport.optimization.maxima.ProcessBuilderMaximaConnection;
@@ -16,8 +17,8 @@ public class OptMaxima implements OptimizationStrategyWithModifyFlag {
 
     private MaximaOptimizer transformer;
 
-    public OptMaxima(String commandMaxima) {
-        transformer = new MaximaOptimizer(new ProcessBuilderMaximaConnection(commandMaxima));
+    public OptMaxima(String commandMaxima, Plugin plugin) {
+        transformer = new MaximaOptimizer(new ProcessBuilderMaximaConnection(commandMaxima),plugin);
     }
 
     @Override

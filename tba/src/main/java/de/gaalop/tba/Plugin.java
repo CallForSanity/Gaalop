@@ -35,6 +35,9 @@ public class Plugin extends Observable implements OptimizationStrategyPlugin {
         @ConfigurationProperty(type = Type.TEXT)
         public String algebra = "conf5d"; //make conformal 5d to the standard algebra
 
+        @ConfigurationProperty(type = Type.BOOLEAN)
+        public boolean optInserting = true;
+
         public String getAlgebra() {
             return algebra;
         }
@@ -55,6 +58,10 @@ public class Plugin extends Observable implements OptimizationStrategyPlugin {
             return optUnusedAssignments;
         }
 
+        public boolean isOptInserting() {
+            return optInserting;
+        }
+  
         public String getMaximaCommand() {
             return maximaCommand;
         }
@@ -81,6 +88,10 @@ public class Plugin extends Observable implements OptimizationStrategyPlugin {
 
         public void setOptUnusedAssignments(boolean optUnusedAssignments) {
             this.optUnusedAssignments = optUnusedAssignments;
+        }
+
+        public void setOptInserting(boolean optInserting) {
+            this.optInserting = optInserting;
         }
 
 	@Override

@@ -31,10 +31,10 @@ public class LinePointDistance implements GenericTestable {
                 "v2 = VecN3(p2x,p2y,p2z);\n"+
                 "vTst = VecN3(pTstx,pTsty,pTstz);\n"+
                 "pi = 3.141592;\n"+
-                "L = *(v1^v2^einf);\n"+
+                "?L = *(v1^v2^einf);\n"+
                 "La = L/abs(L);\n"+
                 "R = cos(pi/4) - La*sin(pi/4);\n"+
-                "V = R*vTst*(~R);\n"+
+                "?V = R*vTst*(~R);\n"+
                 "P = *(v1^v2^V^einf);\n"+
                 "Pa = P/abs(P);\n"+
                 "?abstand = abs(Pa.vTst);\n"+

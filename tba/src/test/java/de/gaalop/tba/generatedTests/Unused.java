@@ -140,12 +140,12 @@ public class Unused implements GAProgram {
 		translator$13 = (-((0.5f * lpz$0))); // e3^einf;
 		Din$0 = arw$0; // 1.0;
 		Din$6 = arz$0; // e1^e2;
-		Din$7 = rotor$7; // e1^e3;
-		Din$8 = (((arw$0 * translator$8) - (rotor$7 * translator$13)) - (arz$0 * translator$11)); // e1^einf;
+		Din$7 = (-ary$0); // e1^e3;
+		Din$8 = (((-(((0.5f * ary$0) * lpz$0))) + ((0.5f * arz$0) * lpy$0)) - ((0.5f * arw$0) * lpx$0)); // e1^einf;
 		Din$10 = arx$0; // e2^e3;
-		Din$11 = (((arz$0 * translator$8) - (arx$0 * translator$13)) + (arw$0 * translator$11)); // e2^einf;
-		Din$13 = (((rotor$7 * translator$8) + (arw$0 * translator$13)) + (arx$0 * translator$11)); // e3^einf;
-		Din$26 = (((arx$0 * translator$8) + (arz$0 * translator$13)) - (rotor$7 * translator$11)); // e1^e2^e3^einf;
+		Din$11 = ((((0.5f * arx$0) * lpz$0) - ((0.5f * arw$0) * lpy$0)) - ((0.5f * arz$0) * lpx$0)); // e2^einf;
+		Din$13 = (((-(((0.5f * arw$0) * lpz$0))) - ((0.5f * arx$0) * lpy$0)) + ((0.5f * ary$0) * lpx$0)); // e3^einf;
+		Din$26 = (((-(((0.5f * arz$0) * lpz$0))) - ((0.5f * ary$0) * lpy$0)) - ((0.5f * arx$0) * lpx$0)); // e1^e2^e3^einf;
 	}
 
 	private float rotor$7;

@@ -34,7 +34,7 @@ public class CFGImporterFacade {
         if (plugin.isOptUnusedAssignments()) optimizations.add(new OptUnusedAssignmentsRemoval());
         if (plugin.isOptOneExpressionRemoval()) optimizations.add(new OptOneExpressionsRemoval());
 
-        if (plugin.isOptMaxima())  optimizations.add(new OptMaxima(plugin.getMaximaCommand()));
+        if (plugin.isOptMaxima())  optimizations.add(new OptMaxima(plugin.getMaximaCommand(), plugin));
 
     }
 

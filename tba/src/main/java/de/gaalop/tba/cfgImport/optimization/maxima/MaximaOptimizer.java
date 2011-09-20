@@ -6,6 +6,7 @@ import de.gaalop.cfg.ControlFlowGraph;
 import de.gaalop.cfg.FindStoreOutputNodes;
 import de.gaalop.cfg.StoreResultNode;
 import de.gaalop.dfg.Expression;
+import de.gaalop.tba.Plugin;
 import de.gaalop.tba.cfgImport.optimization.maxima.parser.MaximaLexer;
 import de.gaalop.tba.cfgImport.optimization.maxima.parser.MaximaParser;
 import de.gaalop.tba.cfgImport.optimization.maxima.parser.MaximaTransformer;
@@ -27,8 +28,11 @@ public class MaximaOptimizer {
 
     private AssignmentNodeCollector assignmentNodeCollector;
 
-    public MaximaOptimizer(MaximaConnection connection) {
+    private Plugin plugin;
+
+    public MaximaOptimizer(MaximaConnection connection, Plugin plugin) {
         this.connection = connection;
+        this.plugin = plugin;
     }
 
     /**
@@ -129,6 +133,9 @@ public class MaximaOptimizer {
      * @param input The MaximaInput instance to be filled
      */
     private void fillMaximaInput(ControlFlowGraph graph, MaximaInput input) {
+        StoreResultNodesCollector collector = new StoreResultNodesCollector();
+        graph.accept(collector);
+
         assignmentNodeCollector = new AssignmentNodeCollector();
         graph.accept(assignmentNodeCollector);
         
@@ -138,23 +145,28 @@ public class MaximaOptimizer {
             node.getVariable().accept(dfg);
             String variable = "";
 
+            
+
             //using the store result nodes for marking to evaluate immediately is not possible in all cases,
             //reason: consider a large cluscript with only one StoreResultNode add the end
             //all non-marked assignments were inserted in the assignment with the StoreResultNode.getValue() as desitination variable
             //this expression can be very long. Possible too long for the java code limit per method (65535 bytes)
             //Splitting isn't trivial except of splitting the methods between two assignments, so the using of store result nodes can be expensive to compile time.
 
-           // if (!storeNodeVariables.contains(node.getVariable().getName())) { // see comment above
-           //    variable = dfg.getResultString()+"::";
-           // }
-
             dfg = new DFGToMaximaCode();
             node.getValue().accept(dfg);
             String value = dfg.getResultString()+";";
+            if (plugin.isOptInserting()) {
 
-            
+                if (!collector.containsStoreResultVariableName(node.getVariable().getName())) { // see comment above
+                    dfg = new DFGToMaximaCode();
+                    node.getVariable().accept(dfg);
+                    variable = dfg.getResultString()+"::";
+                }
+            } 
 
             input.add(variable+value);
+
         }
 
     }
