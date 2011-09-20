@@ -74,6 +74,11 @@ public class ExpressionCollector implements ExpressionVisitor {
     }
 
     @Override
+    public void visit(Variable node) {
+        resultValue = new MvComponent(new MultivectorComponent(node.getName(), 0));
+    }
+
+    @Override
     public void visit(Division node) {
         resultValue = null;
         node.getLeft().accept(this);
@@ -186,10 +191,7 @@ public class ExpressionCollector implements ExpressionVisitor {
     // ========================= Illegal visit methods =========================
 
 
-    @Override
-    public void visit(Variable node) {
-        throw new IllegalStateException("Variables should have been removed by TBA.");
-    }
+
 
     @Override
     public void visit(InnerProduct node) {

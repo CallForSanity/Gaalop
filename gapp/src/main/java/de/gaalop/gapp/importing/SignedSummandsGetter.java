@@ -93,6 +93,12 @@ public class SignedSummandsGetter implements ExpressionVisitor {
         summands.getSummands().add(new SignedSummand(curSignPositive, callExpressionCollector(node)));
     }
 
+
+    @Override
+    public void visit(Variable node) {
+        summands.getSummands().add(new SignedSummand(curSignPositive, callExpressionCollector(node)));
+    }
+
     @Override
     public void visit(Exponentiation node) {
         summands.getSummands().add(new SignedSummand(curSignPositive, callExpressionCollector(node)));
@@ -142,10 +148,6 @@ public class SignedSummandsGetter implements ExpressionVisitor {
 
     // ========================= Illegal visit methods =========================
 
-    @Override
-    public void visit(Variable node) {
-        throw new IllegalStateException("Variables should have been removed by TBA.");
-    }
 
     @Override
     public void visit(InnerProduct node) {

@@ -15,9 +15,7 @@ import de.gaalop.gapp.instructionSet.GAPPSetMv;
 import de.gaalop.gapp.instructionSet.GAPPSetVector;
 import de.gaalop.gapp.variables.GAPPConstant;
 import de.gaalop.gapp.variables.GAPPMultivector;
-import de.gaalop.gapp.variables.GAPPMultivectorComponent;
 import de.gaalop.gapp.variables.GAPPValueHolder;
-import de.gaalop.gapp.variables.GAPPVariable;
 import de.gaalop.gapp.variables.GAPPVector;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -47,7 +45,7 @@ public class GAPPCreatorFull extends GAPPBaseCreator {
         int maxNumber = 0;
         for (SignedSummand summand: summands.keySet()) {
             Scalarproduct scalarproduct = summands.get(summand);
-            maxNumber = Math.max(maxNumber, scalarproduct.getVectors().size());
+            maxNumber = Math.max(maxNumber, scalarproduct.getObjects().size());
         }
 
         ParallelVector[] vectors = new ParallelVector[maxNumber+1];
@@ -59,8 +57,7 @@ public class GAPPCreatorFull extends GAPPBaseCreator {
             vectors[0].getSlots().add(new Constant((summand.isPositiveSigned()) ? 1 : -1));
             int v = 1;
             Scalarproduct scalarproduct = summands.get(summand);
-            for (ParallelVector vector: scalarproduct.getVectors()) {
-                ParallelObject object = vector.getSlots().getFirst();
+            for (ParallelObject object: scalarproduct.getObjects()) {
                 vectors[v].getSlots().add(object);
                 v++;
             }

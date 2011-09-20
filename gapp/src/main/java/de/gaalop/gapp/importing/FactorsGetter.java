@@ -101,6 +101,11 @@ public class FactorsGetter implements ExpressionVisitor {
         factors.getFactors().add(callExpressionCollector(node));
     }
 
+    @Override
+    public void visit(Variable node) {
+        factors.getFactors().add(callExpressionCollector(node));
+    }
+
     // ============================ Logical methods ============================
 
     @Override
@@ -135,10 +140,7 @@ public class FactorsGetter implements ExpressionVisitor {
 
     // ========================= Illegal visit methods =========================
 
-    @Override
-    public void visit(Variable node) {
-        throw new IllegalStateException("Variables should have been removed by TBA.");
-    }
+
 
     @Override
     public void visit(InnerProduct node) {

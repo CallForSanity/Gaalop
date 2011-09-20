@@ -9,23 +9,10 @@ import static org.junit.Assert.*;
 
 public class GAPPTest extends Base {
 @Test
-public void testCircle() {
+public void testPaper() {
         try {
-            Circle c = new Circle();
-            Executer executer = executeProgram(c, "Circle");
-            c.testOutput(executer);
-        } catch (OptimizationException ex) {
-            assertTrue("Optimization Error", false);
-        } catch (CodeParserException ex) {
-             assertTrue("Code Parse Error", false);
-        }
-}
-
-@Test
-public void testGPS() {
-        try {
-            GPS c = new GPS();
-            Executer executer = executeProgram(c, "GPS");
+            Paper c = new Paper();
+            Executer executer = executeProgram(c, "Paper");
             c.testOutput(executer);
         } catch (OptimizationException ex) {
             assertTrue("Optimization Error", false);

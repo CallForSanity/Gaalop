@@ -13,13 +13,11 @@ public class Assignment {
     private GAPPMultivector arg;
     private int index;
     private HashMap<SignedSummand, Scalarproduct> summands;
-    private int maxVectors;
 
-    public Assignment(GAPPMultivector arg, int index, HashMap<SignedSummand, Scalarproduct> summands, int maxVectors) {
+    public Assignment(GAPPMultivector arg, int index, HashMap<SignedSummand, Scalarproduct> summands) {
         this.arg = arg;
         this.index = index;
         this.summands = summands;
-        this.maxVectors = maxVectors;
     }
 
     public GAPPMultivector getArg() {
@@ -42,18 +40,9 @@ public class Assignment {
         this.index = index;
     }
 
-    
-
     public void setSummands(HashMap<SignedSummand, Scalarproduct> summands) {
         this.summands = summands;
     }
 
-    public int getMaxVectors() {
-        return maxVectors;
-    }
-
-    public void setMaxVectors(int maxVectors) {
-        this.maxVectors = maxVectors;
-    }
 
 }

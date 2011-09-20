@@ -2,8 +2,10 @@ package de.gaalop.gapp.importing;
 
 import de.gaalop.OptimizationException;
 import de.gaalop.cfg.ControlFlowGraph;
+import de.gaalop.tba.Plugin;
 import de.gaalop.tba.UseAlgebra;
 import de.gaalop.tba.cfgImport.BaseVectorChecker;
+import de.gaalop.tba.cfgImport.CFGImporterFacade;
 
 /**
  * Facade class to decorate the ControlFlowGraph in a GAPP ControlFlowGraph
@@ -23,6 +25,9 @@ public class GAPPDecoratingMain {
             BaseVectorChecker checker = new BaseVectorChecker(usedAlgebra.getAlgebra().getBase());
             graph.accept(checker);
         }
+
+        CFGImporterFacade facade = new CFGImporterFacade(new Plugin());
+        facade.importGraph(graph);
 
         // import now the graph in GAPP
         GAPPDecorator vCFG = new GAPPDecorator(usedAlgebra.getBladeCount());

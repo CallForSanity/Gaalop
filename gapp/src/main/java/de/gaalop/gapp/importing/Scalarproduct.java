@@ -1,29 +1,30 @@
 package de.gaalop.gapp.importing;
 
+import de.gaalop.gapp.importing.parallelObjects.ParallelObject;
 import java.util.LinkedList;
 
 /**
- * Declares a product of ParallelVector instances
+ * Declares a product of ParallelObject instances
  * @author Christian Steinmetz
  */
 public class Scalarproduct {
 
-    private LinkedList<ParallelVector> vectors;
+    private LinkedList<ParallelObject> objects;
 
     public Scalarproduct() {
-        vectors = new LinkedList<ParallelVector>();
+        objects = new LinkedList<ParallelObject>();
     }
 
-    public Scalarproduct(LinkedList<ParallelVector> vectors) {
-        this.vectors = vectors;
+    public Scalarproduct(LinkedList<ParallelObject> vectors) {
+        this.objects = vectors;
     }
 
-    public LinkedList<ParallelVector> getVectors() {
-        return vectors;
+    public LinkedList<ParallelObject> getObjects() {
+        return objects;
     }
 
-    public void setVectors(LinkedList<ParallelVector> vectors) {
-        this.vectors = vectors;
+    public void setObjects(LinkedList<ParallelObject> objects) {
+        this.objects = objects;
     }
 
 
