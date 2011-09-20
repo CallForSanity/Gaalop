@@ -167,7 +167,7 @@ public class Executer extends CFGGAPPVisitor {
         float sum = 0;
         int size = getVector(gappDotVectors.getParts().getFirst().getName()).getEntries().length;
         for (int slot = 0;slot<size;slot++) {
-            int prod = 1;
+            float prod = 1;
 
             for (GAPPVector part: gappDotVectors.getParts())
                 prod *= getVector(part.getName()).getEntry(slot);
@@ -220,86 +220,74 @@ public class Executer extends CFGGAPPVisitor {
     public Object visitCalculateMv(GAPPCalculateMv gappCalculate, Object arg) {
 
         MultivectorWithValues mv1 = getMultivector(gappCalculate.getOperand1().getName());
+        float op1 = mv1.getEntry(0);
 
         MultivectorWithValues mv2 = null;
-        if (gappCalculate.getOperand2() != null)
+        float op2 = 0;
+        if (gappCalculate.getOperand2() != null) {
             mv2 = getMultivector(gappCalculate.getOperand2().getName());
-
-        Selectorset sel = gappCalculate.getUsed1();
-        Selectorset sel2 = gappCalculate.getUsed2();
-
-        for (int j = 0;j<sel.size();j++) {
-            int component = Math.abs(sel.get(j).getIndex());
-            float op1 = mv1.getEntry(component)*sel.get(j).getSign();
-
-            float op2 = 0;
-            if (gappCalculate.getOperand2() != null)
-                op2 = mv2.getEntry(Math.abs(sel2.get(j).getIndex()))*sel2.get(j).getSign();
-
-            MultivectorWithValues target = getMultivector(gappCalculate.getTarget().getName());
-
-            float result;
-
-            switch (gappCalculate.getType()) {
-                case ABS:
-                    result = Math.abs(op1);
-                    break;
-                case ACOS:
-                    result = (float) Math.acos(op1);
-                    break;
-                case ASIN:
-                    result = (float) Math.asin(op1);
-                    break;
-                case ATAN:
-                    result = (float) Math.atan(op1);
-                    break;
-                case CEIL:
-                    result = (float) Math.ceil(op1);
-                    break;
-                case COS:
-                    result = (float) Math.cos(op1);
-                    break;
-                case DIVISION:
-                    result = op1 / op2;
-                    break;
-                case EXP:
-                    result = (float) Math.exp(op1);
-                    break;
-                case EXPONENTIATION:
-                    result = (float) Math.pow(op1,op2);
-                    break;
-                case FACT:
-                    result = 1;
-                    for (int i=2;i<=(int) op1;i++)
-                        result *= i;
-                    break;
-                case FLOOR:
-                    result = (float) Math.floor(op1);
-                    break;
-                case LOG:
-                    result = (float) Math.log(op1);
-                    break;
-                case SIN:
-                    result = (float) Math.sin(op1);
-                    break;
-                case SQRT:
-                    result = (float) Math.sqrt(op1);
-                    break;
-                case TAN:
-                    result = (float) Math.tan(op1);
-                    break;
-                default:
-                    throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            target.setEntry(component, result);
-
-
+            op2 = mv2.getEntry(0);
         }
 
+        MultivectorWithValues target = getMultivector(gappCalculate.getTarget().getName());
+
+        float result;
+
+        switch (gappCalculate.getType()) {
+            case ABS:
+                result = Math.abs(op1);
+                break;
+            case ACOS:
+                result = (float) Math.acos(op1);
+                break;
+            case ASIN:
+                result = (float) Math.asin(op1);
+                break;
+            case ATAN:
+                result = (float) Math.atan(op1);
+                break;
+            case CEIL:
+                result = (float) Math.ceil(op1);
+                break;
+            case COS:
+                result = (float) Math.cos(op1);
+                break;
+            case DIVISION:
+                result = op1 / op2;
+                break;
+            case EXP:
+                result = (float) Math.exp(op1);
+                break;
+            case EXPONENTIATION:
+                result = (float) Math.pow(op1,op2);
+                break;
+            case FACT:
+                result = 1;
+                for (int i=2;i<=(int) op1;i++)
+                    result *= i;
+                break;
+            case FLOOR:
+                result = (float) Math.floor(op1);
+                break;
+            case LOG:
+                result = (float) Math.log(op1);
+                break;
+            case SIN:
+                result = (float) Math.sin(op1);
+                break;
+            case SQRT:
+                result = (float) Math.sqrt(op1);
+                break;
+            case TAN:
+                result = (float) Math.tan(op1);
+                break;
+            default:
+                throw new UnsupportedOperationException("Executer: "+gappCalculate.getType()+" is not supported yet.");
+        }
+
+        target.setEntry(0, result);
+
         return null;
-
-
     }
 
     /**

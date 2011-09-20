@@ -109,7 +109,22 @@ public class AssignmentCreator implements ParallelObjectVisitor {
     public Object visitExtCalculation(ExtCalculation extCalculation, Object arg) {
         GAPPMultivectorComponent dest = castMv(arg);
 
+        //only true for scalar return values form ExtCalculation!
+        
         Scalarproduct result = createScalarproductFromOneParallelObject(extCalculation);
+        Scalarproduct op1 = (Scalarproduct) extCalculation.getOperand1().accept(this, null);
+        GAPPMultivectorComponent mv1 = new GAPPMultivectorComponent(createTMP(), 0);
+        assignScalarproductToMvComponent(op1, extCalculation.getOperand1(), mv1.getName(), mv1.getBladeIndex());
+        extCalculation.setOperand1(new MvComponent(new MultivectorComponent(mv1.getName(), mv1.getBladeIndex())));
+
+        if (extCalculation.getOperand2() != null) {
+            Scalarproduct op2 = (Scalarproduct) extCalculation.getOperand2().accept(this, null);
+            GAPPMultivectorComponent mv2 = new GAPPMultivectorComponent(createTMP(), 0);
+            assignScalarproductToMvComponent(op2, extCalculation.getOperand2(), mv2.getName(), mv2.getBladeIndex());
+            extCalculation.setOperand2(new MvComponent(new MultivectorComponent(mv2.getName(), mv2.getBladeIndex())));
+        }
+        
+        
 
         assignScalarproductToMvComponent(result, extCalculation, dest.getName(), dest.getBladeIndex());
 

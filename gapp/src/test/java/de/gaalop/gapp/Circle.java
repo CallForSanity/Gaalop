@@ -15,7 +15,7 @@ import static org.junit.Assert.*;
  */
 public class Circle implements GAPPTestable {
 
-    // The three points which deschribes the circle
+    // The three points which describes the circle
     private Point p1 = new Point(2,3);
     private Point p2 = new Point(5,6);
     private Point p3 = new Point(8,12);
@@ -28,6 +28,8 @@ public class Circle implements GAPPTestable {
 
             "//#pragma output m$1"+"\n"+
             "//#pragma output m$2"+"\n"+
+            "//#pragma output m$4"+"\n"+
+            "//#pragma output m$5"+"\n"+
             "//#pragma output r$0"+"\n"+
 
             "\n"+
@@ -44,7 +46,7 @@ public class Circle implements GAPPTestable {
             "ma = c*einf*c;"+"\n"+
             "?m = -ma/(ma.einf);"+"\n"+
             "?r = sqrt(abs((c.c)/((einf.c)*(einf.c))));"+"\n"+
-                    "?v1;"
+            "?v1;"
             ;
     }
 

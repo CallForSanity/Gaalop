@@ -1,16 +1,20 @@
 package de.gaalop.gapp.importing;
 
+import de.gaalop.dfg.MultivectorComponent;
 import de.gaalop.dfg.Variable;
 import de.gaalop.gapp.GAPP;
 import de.gaalop.gapp.Selector;
 import de.gaalop.gapp.Selectorset;
 import de.gaalop.gapp.Variableset;
 import de.gaalop.gapp.importing.parallelObjects.Constant;
+import de.gaalop.gapp.importing.parallelObjects.ExtCalculation;
 import de.gaalop.gapp.importing.parallelObjects.MvComponent;
 import de.gaalop.gapp.importing.parallelObjects.ParallelObject;
 import de.gaalop.gapp.importing.parallelObjects.ParallelObjectType;
 import de.gaalop.gapp.importing.parallelObjects.SignedSummand;
+import de.gaalop.gapp.instructionSet.CalculationType;
 import de.gaalop.gapp.instructionSet.GAPPAssignMv;
+import de.gaalop.gapp.instructionSet.GAPPCalculateMv;
 import de.gaalop.gapp.instructionSet.GAPPDotVectors;
 import de.gaalop.gapp.instructionSet.GAPPSetMv;
 import de.gaalop.gapp.instructionSet.GAPPSetVector;
@@ -48,19 +52,22 @@ public class GAPPCreatorFull extends GAPPBaseCreator {
             maxNumber = Math.max(maxNumber, scalarproduct.getObjects().size());
         }
 
-        ParallelVector[] vectors = new ParallelVector[maxNumber+1];
+        ParallelVector[] vectors = new ParallelVector[maxNumber];
         for (int i=0;i<vectors.length;i++)
             vectors[i] = new ParallelVector();
 
         
         for (SignedSummand summand: summands.keySet()) {
-            vectors[0].getSlots().add(new Constant((summand.isPositiveSigned()) ? 1 : -1));
-            int v = 1;
+            int v = 0;
             Scalarproduct scalarproduct = summands.get(summand);
             for (ParallelObject object: scalarproduct.getObjects()) {
+                if (!summand.isPositiveSigned() && v == 0) {
+                    object.setNegatedInSum(true);
+                }
                 vectors[v].getSlots().add(object);
                 v++;
             }
+
 
             while (v < maxNumber) {
                 vectors[v].getSlots().add(new Constant(1));
@@ -88,7 +95,7 @@ public class GAPPCreatorFull extends GAPPBaseCreator {
         GAPPMultivector mvTmp = new GAPPMultivector(createTMP(), new GAPPValueHolder[vector.getSlots().size()]);
         int j = 0;
         for (ParallelObject obj: vector.getSlots()) {
-            Selector sel = new Selector(j,(byte) 1);
+            Selector sel = new Selector(j,(byte) (obj.isNegatedInSum() ? -1 : 1));
             Selectorset selSet = new Selectorset();
             selSet.add(sel);
 
@@ -99,7 +106,24 @@ public class GAPPCreatorFull extends GAPPBaseCreator {
                     gapp.addInstruction(new GAPPAssignMv(mvTmp, selSet, varSet));
                     break;
                 case extCalculation:
-                    //TODO
+                    ExtCalculation extCalc = (ExtCalculation) obj;
+
+                    GAPPMultivector target = obj.isNegatedInSum()
+                            ? new GAPPMultivector(createTMP(), null)
+                            : mvTmp;
+
+                    GAPPMultivector mvC1 = getGAPPMultivector(extCalc.getOperand1());
+
+                    GAPPMultivector mvC2 = (extCalc.getOperand2() != null)
+                            ? getGAPPMultivector(extCalc.getOperand2())
+                            : null;
+
+                    gapp.addInstruction(new GAPPCalculateMv(extCalc.getType(), target, mvC1, mvC2));
+
+                    if (obj.isNegatedInSum())
+                        gapp.addInstruction(new GAPPSetMv(mvTmp, target, selSet, selSet));
+
+                    //TODO ? maybe
                     break;
                 case factors:
                    throw new IllegalStateException("Factors should have been removed");
@@ -131,6 +155,43 @@ public class GAPPCreatorFull extends GAPPBaseCreator {
         GAPPSetVector setVector = new GAPPSetVector(result, mvTmp, sels);
         gapp.addInstruction(setVector);
         return result;
+    }
+
+    private GAPPMultivector getGAPPMultivector(ParallelObject obj) {
+        switch (ParallelObjectType.getType(obj)) {
+                case constant:
+                    Variableset varSet = new Variableset();
+                    varSet.add(new GAPPConstant(((Constant) obj).getValue()));
+                    GAPPMultivector mvTmp = new GAPPMultivector(createTMP(), null);
+                    Selectorset selSet = new Selectorset();
+                    selSet.add(new Selector(0, (byte) 1));
+                    gapp.addInstruction(new GAPPAssignMv(mvTmp, selSet, varSet));
+                    return mvTmp;
+                case extCalculation:
+                    ExtCalculation extCalc = (ExtCalculation) obj;
+
+                    GAPPMultivector target = new GAPPMultivector(createTMP(), null);
+
+                    GAPPMultivector mvC1 = getGAPPMultivector(extCalc.getOperand1());
+
+                    GAPPMultivector mvC2 = (extCalc.getOperand2() != null)
+                            ? getGAPPMultivector(extCalc.getOperand2())
+                            : null;
+
+                    gapp.addInstruction(new GAPPCalculateMv(extCalc.getType(), target, mvC1, mvC2));
+                    return target;
+                case factors:
+                   throw new IllegalStateException("Factors should have been removed");
+                case mvComponent:
+                    Selectorset selSrc = new Selectorset();
+                    MvComponent mvc = (MvComponent) obj;
+
+                    selSrc.add(new Selector(mvc.getMultivectorComponent().getBladeIndex(), (byte) 1));
+                    return new GAPPMultivector(mvc.getMultivectorComponent().getName(), null);
+                case summands:
+                    throw new IllegalStateException("Summands should have been removed");
+            }
+        return null;
     }
 
 }

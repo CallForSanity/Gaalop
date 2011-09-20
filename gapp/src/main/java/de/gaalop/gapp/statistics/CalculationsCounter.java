@@ -83,7 +83,7 @@ public class CalculationsCounter extends CFGGAPPVisitor {
     public Object visitCalculateMv(GAPPCalculateMv gappCalculate, Object arg) {
         long count = (calcCount.containsKey(gappCalculate.getType())) ? calcCount.get(gappCalculate.getType()) : 0;
 
-        count += (long) Math.ceil(gappCalculate.getUsed1().size()/4.0); // assuming doing 4 calculations in parallel
+        count += (long) Math.ceil(0/4.0+1); // assuming doing 4 calculations in parallel
 
         calcCount.put(gappCalculate.getType(),count);
         return null;

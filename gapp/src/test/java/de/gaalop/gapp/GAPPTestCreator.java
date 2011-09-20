@@ -21,8 +21,8 @@ public class GAPPTestCreator {
         beginTestCase();
 
         // =============== insert new tests here ======================
-        //TODO chs include test("Circle");
-        //TODO chs include test("GPS");
+        test("Circle");
+        test("GPS");
         test("Paper");
 
         endTestCase();

@@ -14,19 +14,15 @@ public class GAPPCalculateMv extends GAPPBaseInstruction {
     private GAPPMultivector target;
     private GAPPMultivector operand1;
     private GAPPMultivector operand2;
-    private Selectorset used1;
-    private Selectorset used2;
 
     public GAPPCalculateMv() {
     }
 
-    public GAPPCalculateMv(CalculationType type, GAPPMultivector target, GAPPMultivector operand1, GAPPMultivector operand2, Selectorset used1, Selectorset used2) {
+    public GAPPCalculateMv(CalculationType type, GAPPMultivector target, GAPPMultivector operand1, GAPPMultivector operand2) {
         this.type = type;
         this.target = target;
         this.operand1 = operand1;
         this.operand2 = operand2;
-        this.used1 = used1;
-        this.used2 = used2;
     }
     
     @Override
@@ -48,22 +44,6 @@ public class GAPPCalculateMv extends GAPPBaseInstruction {
 
     public GAPPMultivector getTarget() {
         return target;
-    }
-
-    public Selectorset getUsed1() {
-        return used1;
-    }
-
-    public Selectorset getUsed2() {
-        return used2;
-    }
-
-    public void setUsed1(Selectorset affected) {
-        this.used1 = affected;
-    }
-
-    public void setUsed2(Selectorset used2) {
-        this.used2 = used2;
     }
     
     public void setOperand1(GAPPMultivector operand1) {
