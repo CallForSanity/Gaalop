@@ -30,4 +30,14 @@ public class SignedSummand {
         this.positiveSigned = positiveSigned;
     }
 
+    @Override
+    public String toString() {
+        if (positiveSigned)
+            return parallelObject.toString();
+        else
+            return "(-"+parallelObject.toString()+")";
+    }
+
+
+
 }

@@ -25,6 +25,11 @@ public class Constant extends ParallelObject {
         return visitor.visitConstant(this, arg);
     }
 
+    @Override
+    public String toString() {
+        return Float.toString(value);
+    }
+
     
 
 }

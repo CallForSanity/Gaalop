@@ -39,6 +39,22 @@ public class Product extends ParallelObject {
         this.factors.addAll(factors.getFactors());
     }
 
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("(");
+        for (ParallelObject obj: factors) {
+            sb.append(obj.toString());
+            sb.append(" *");
+        }
+
+        if (factors.size() >= 1)
+            sb.delete(sb.length()-2, sb.length());
+
+        sb.append(")");
+        return sb.toString();
+    }
+
+
     
 
 }

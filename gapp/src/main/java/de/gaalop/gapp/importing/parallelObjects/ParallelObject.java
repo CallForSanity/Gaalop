@@ -18,4 +18,7 @@ public abstract class ParallelObject {
         this.negatedInSum = negatedInSum;
     }
 
+    @Override
+    public abstract String toString();
+
 }

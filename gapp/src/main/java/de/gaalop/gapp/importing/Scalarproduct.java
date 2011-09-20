@@ -27,6 +27,22 @@ public class Scalarproduct {
         this.objects = objects;
     }
 
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("(");
+        for (ParallelObject obj: objects) {
+            sb.append(obj.toString());
+            sb.append(" .");
+        }
+        
+        if (objects.size() >= 1)
+            sb.delete(sb.length()-2, sb.length());
+        
+        sb.append(")");
+        return sb.toString();
+    }
+
+
 
 
 }

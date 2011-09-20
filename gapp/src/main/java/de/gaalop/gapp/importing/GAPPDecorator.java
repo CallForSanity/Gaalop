@@ -2,6 +2,7 @@ package de.gaalop.gapp.importing;
 
 import de.gaalop.cfg.AssignmentNode;
 import de.gaalop.cfg.EmptyControlFlowVisitor;
+import de.gaalop.cfg.EndNode;
 import de.gaalop.cfg.StartNode;
 import de.gaalop.dfg.MultivectorComponent;
 import de.gaalop.dfg.Variable;
@@ -11,8 +12,12 @@ import de.gaalop.gapp.instructionSet.GAPPResetMv;
 import de.gaalop.gapp.variables.GAPPMultivector;
 import de.gaalop.gapp.variables.GAPPMultivectorComponent;
 import de.gaalop.gapp.variables.GAPPValueHolder;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Decorates a Control Flow Graph with GAPP instructions
@@ -26,9 +31,12 @@ public class GAPPDecorator extends EmptyControlFlowVisitor {
 
     private GAPP gappStart;
 
+    private PrintWriter writer;
+
     public GAPPDecorator(int bladecount, GAPP gappStart) {
         gappCreator = new GAPPCreatorFull(null, bladecount);
         this.gappStart = gappStart;
+
     }
 
     private GAPPMultivector createNewMultivector(String name) {
@@ -52,7 +60,7 @@ public class GAPPDecorator extends EmptyControlFlowVisitor {
         String name = mvC.getName();
 
         if (!createdGAPPVariables.contains(name)) {
-            // create a new GAPPMultivector for destination variable, if it does not exists
+            // create a new GAPPMultivector for destination variable, if it does not exist
             GAPPMultivector mv = createNewMultivector(name);
             gapp.addInstruction(new GAPPResetMv(mv));
             createdGAPPVariables.add(name);
@@ -63,17 +71,41 @@ public class GAPPDecorator extends EmptyControlFlowVisitor {
         node.getValue().accept(collector);
         ParallelObject parallelObject = collector.getResultValue();
 
-        // Create creas
+        // Create assignments
         AssignmentCreator creator = new AssignmentCreator();
         GAPPMultivectorComponent gMvC = new GAPPMultivectorComponent(mvC.getName(), mvC.getBladeIndex());
         parallelObject.accept(creator, gMvC);
 
-        // Create gapp from creas
+        writer.println();
+        writer.println("//"+node.toString());
+        for (Assignment ass: creator.getAssignments()) {
+            writer.println(ass.toString());
+        }
+
+        // Create gapp from assignments
         gappCreator.createGAPPInstructionsFromAssignments(creator.getAssignments());
 
         // go on in graph
         super.visit(node);
     }
+
+    @Override
+    public void visit(StartNode node) {
+        try {
+            writer = new PrintWriter("assignments.txt");
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(GAPPDecorator.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        super.visit(node);
+    }
+
+    @Override
+    public void visit(EndNode node) {
+        writer.close();
+        super.visit(node);
+    }
+
+
 
     
 

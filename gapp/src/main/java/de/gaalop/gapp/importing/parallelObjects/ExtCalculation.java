@@ -47,4 +47,9 @@ public class ExtCalculation extends ParallelObject {
         return visitor.visitExtCalculation(this, arg);
     }
 
+    @Override
+    public String toString() {
+        return type+","+operand1+","+operand2;
+    }
+
 }

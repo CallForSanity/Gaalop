@@ -43,5 +43,25 @@ public class Assignment {
         this.summands = summands;
     }
 
+    @Override
+    public String toString() {
+        StringBuilder result = new StringBuilder(name+"["+index+"] = ");
+
+        for (SignedSummand summand: summands.keySet()) {
+            if (!summand.isPositiveSigned()) {
+                result.append("(-");
+                result.append(summands.get(summand).toString());
+                result.append(")");
+            } else {
+                result.append(summands.get(summand).toString());
+            }
+
+
+        }
+
+        return result.toString();
+    }
+
+
 
 }

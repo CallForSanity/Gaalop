@@ -27,4 +27,11 @@ public class MvComponent extends ParallelObject {
         return visitor.visitMvComponent(this, arg);
     }
 
+    @Override
+    public String toString() {
+        return multivectorComponent.toString();
+    }
+
+
+
 }
