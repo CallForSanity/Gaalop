@@ -23,9 +23,11 @@ public class UseAlgebra {
 
     public UseAlgebra(String algebraDirName) {
 
-        boolean useAsRessource = algebraDirName.equalsIgnoreCase("conf5d");
-        N3 = useAsRessource;
-        String dirName = (useAsRessource) ? "algebra/conf5d/" : new File(algebraDirName).getAbsolutePath()+File.separatorChar;
+        boolean useAsRessource = algebraDirName.equalsIgnoreCase("conf5d")
+                || algebraDirName.equalsIgnoreCase("2d")
+                || algebraDirName.equalsIgnoreCase("3d");
+        N3 = algebraDirName.equalsIgnoreCase("conf5d");
+        String dirName = (useAsRessource) ? "algebra/"+algebraDirName+"/" : new File(algebraDirName).getAbsolutePath()+File.separatorChar;
 
         algebra = new Algebra(dirName+"blades.csv",useAsRessource);
 
