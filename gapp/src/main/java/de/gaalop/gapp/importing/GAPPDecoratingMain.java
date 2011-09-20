@@ -40,7 +40,7 @@ public class GAPPDecoratingMain {
 
         GAPP gappStart = new GAPP();
         for (Variable input: graph.getInputVariables()) {
-            GAPPMultivector mv = new GAPPMultivector(input.getName(), null);
+            GAPPMultivector mv = new GAPPMultivector(input.getName());
 
             gappStart.addInstruction(new GAPPResetMv(mv));
 

@@ -7,19 +7,9 @@ package de.gaalop.gapp.variables;
  */
 public class GAPPMultivector extends GAPPVariable {
 
-    private GAPPValueHolder[] blades;
 
-    public GAPPMultivector(String name, GAPPValueHolder[] blades) {
+    public GAPPMultivector(String name) {
         super(name);
-        this.blades = blades;
-    }
-
-    public GAPPValueHolder[] getBlades() {
-        return blades;
-    }
-
-    public void setBlades(GAPPValueHolder[] blades) {
-        this.blades = blades;
     }
 
     @Override

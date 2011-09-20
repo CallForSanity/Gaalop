@@ -40,7 +40,7 @@ public class GAPPDecorator extends EmptyControlFlowVisitor {
     }
 
     private GAPPMultivector createNewMultivector(String name) {
-        return new GAPPMultivector(name, new GAPPValueHolder[gappCreator.getBladeCount()]);
+        return new GAPPMultivector(name);
     }
 
     @Override

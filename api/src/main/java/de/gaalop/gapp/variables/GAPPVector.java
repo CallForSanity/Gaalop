@@ -11,24 +11,8 @@ import java.util.LinkedList;
  */
 public class GAPPVector extends GAPPVariable {
 
-    private LinkedList<GAPPValueHolder> slots;
-
     public GAPPVector(String name) {
         super(name);
-        slots = new LinkedList<GAPPValueHolder>();
-    }
-
-    public GAPPVector(String name, LinkedList<GAPPValueHolder> slots) {
-        super(name);
-        this.slots = slots;
-    }
-
-    public LinkedList<GAPPValueHolder> getSlots() {
-        return slots;
-    }
-
-    public void setSlots(LinkedList<GAPPValueHolder> slots) {
-        this.slots = slots;
     }
 
     @Override

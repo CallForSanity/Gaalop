@@ -82,7 +82,7 @@ public class GAPPCreatorFull extends GAPPBaseCreator {
             parts.add(createVector(vector));
 
 
-        GAPPDotVectors dotVectors = new GAPPDotVectors(new GAPPMultivector(assignment.getName(), null), new Selector(assignment.getIndex(),(byte) 1), parts);
+        GAPPDotVectors dotVectors = new GAPPDotVectors(new GAPPMultivector(assignment.getName()), new Selector(assignment.getIndex(),(byte) 1), parts);
         gapp.addInstruction(dotVectors);
         
     }
@@ -92,7 +92,7 @@ public class GAPPCreatorFull extends GAPPBaseCreator {
         // TODO assumption: restricted to bladeCount <= vector.size
 
         // Parallelvector to Multivector
-        GAPPMultivector mvTmp = new GAPPMultivector(createTMP(), new GAPPValueHolder[vector.getSlots().size()]);
+        GAPPMultivector mvTmp = new GAPPMultivector(createTMP());
         int j = 0;
         for (ParallelObject obj: vector.getSlots()) {
             Selector sel = new Selector(j,(byte) (obj.isNegatedInSum() ? -1 : 1));
@@ -109,7 +109,7 @@ public class GAPPCreatorFull extends GAPPBaseCreator {
                     ExtCalculation extCalc = (ExtCalculation) obj;
 
                     GAPPMultivector target = obj.isNegatedInSum()
-                            ? new GAPPMultivector(createTMP(), null)
+                            ? new GAPPMultivector(createTMP())
                             : mvTmp;
 
                     GAPPMultivector mvC1 = getGAPPMultivector(extCalc.getOperand1());
@@ -132,7 +132,7 @@ public class GAPPCreatorFull extends GAPPBaseCreator {
                     MvComponent mvc = (MvComponent) obj;
 
                     selSrc.add(new Selector(mvc.getMultivectorComponent().getBladeIndex(), (byte) 1));
-                    GAPPMultivector mvSrc = new GAPPMultivector(mvc.getMultivectorComponent().getName(), null);
+                    GAPPMultivector mvSrc = new GAPPMultivector(mvc.getMultivectorComponent().getName());
 
                     gapp.addInstruction(new GAPPSetMv(mvTmp, mvSrc, selSet, selSrc));
                     break;
@@ -147,7 +147,7 @@ public class GAPPCreatorFull extends GAPPBaseCreator {
 
 
         // Multivector to vector
-        GAPPVector result = new GAPPVector(createTMP(), new LinkedList<GAPPValueHolder>());
+        GAPPVector result = new GAPPVector(createTMP());
 
         Selectorset sels = new Selectorset();
         for (int i=0;i<vector.getSlots().size();i++)
@@ -162,7 +162,7 @@ public class GAPPCreatorFull extends GAPPBaseCreator {
                 case constant:
                     Variableset varSet = new Variableset();
                     varSet.add(new GAPPConstant(((Constant) obj).getValue()));
-                    GAPPMultivector mvTmp = new GAPPMultivector(createTMP(), null);
+                    GAPPMultivector mvTmp = new GAPPMultivector(createTMP());
                     Selectorset selSet = new Selectorset();
                     selSet.add(new Selector(0, (byte) 1));
                     gapp.addInstruction(new GAPPAssignMv(mvTmp, selSet, varSet));
@@ -170,7 +170,7 @@ public class GAPPCreatorFull extends GAPPBaseCreator {
                 case extCalculation:
                     ExtCalculation extCalc = (ExtCalculation) obj;
 
-                    GAPPMultivector target = new GAPPMultivector(createTMP(), null);
+                    GAPPMultivector target = new GAPPMultivector(createTMP());
 
                     GAPPMultivector mvC1 = getGAPPMultivector(extCalc.getOperand1());
 
@@ -187,7 +187,7 @@ public class GAPPCreatorFull extends GAPPBaseCreator {
                     MvComponent mvc = (MvComponent) obj;
 
                     selSrc.add(new Selector(mvc.getMultivectorComponent().getBladeIndex(), (byte) 1));
-                    return new GAPPMultivector(mvc.getMultivectorComponent().getName(), null);
+                    return new GAPPMultivector(mvc.getMultivectorComponent().getName());
                 case summands:
                     throw new IllegalStateException("Summands should have been removed");
             }

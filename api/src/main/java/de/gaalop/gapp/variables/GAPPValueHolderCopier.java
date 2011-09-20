@@ -40,7 +40,7 @@ public class GAPPValueHolderCopier implements GAPPVariableVisitor {
 
     @Override
     public Object visitMultivector(GAPPMultivector gappMultivector, Object arg) {
-        return new GAPPMultivector(gappMultivector.getName(), copyBlades(gappMultivector.getBlades())); //Strings are immutable!
+        return new GAPPMultivector(gappMultivector.getName()); //Strings are immutable!
     }
 
     @Override
@@ -81,7 +81,7 @@ public class GAPPValueHolderCopier implements GAPPVariableVisitor {
 
     @Override
     public Object visitVector(GAPPVector gappVector, Object arg) {
-        return new GAPPVector(gappVector.getName(), copySlots(gappVector.getSlots()));
+        return new GAPPVector(gappVector.getName());
     }
 
 }
