@@ -6,19 +6,25 @@ package de.gaalop.gapp.importing.parallelObjects;
  */
 public abstract class ParallelObject {
 
-    private boolean negatedInSum = false;
+    private boolean negated = false;
 
     public abstract Object accept(ParallelObjectVisitor visitor, Object arg);
 
-    public boolean isNegatedInSum() {
-        return negatedInSum;
+    public boolean isNegated() {
+        return negated;
     }
 
-    public void setNegatedInSum(boolean negatedInSum) {
-        this.negatedInSum = negatedInSum;
+    public void setNegated(boolean negated) {
+        this.negated = negated;
+    }
+
+    public void negate() {
+        negated = !negated;
     }
 
     @Override
     public abstract String toString();
+    
+    public abstract boolean isTerminal();
 
 }

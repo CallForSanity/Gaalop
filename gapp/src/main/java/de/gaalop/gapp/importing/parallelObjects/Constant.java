@@ -27,7 +27,12 @@ public class Constant extends ParallelObject {
 
     @Override
     public String toString() {
-        return Float.toString(value);
+        return (isNegated() ? "!" : "") + Float.toString(value);
+    }
+
+    @Override
+    public boolean isTerminal() {
+        return true;
     }
 
     

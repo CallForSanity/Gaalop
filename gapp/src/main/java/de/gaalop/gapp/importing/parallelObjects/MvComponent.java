@@ -29,7 +29,12 @@ public class MvComponent extends ParallelObject {
 
     @Override
     public String toString() {
-        return multivectorComponent.toString();
+        return (isNegated() ? "!" : "") + multivectorComponent.toString();
+    }
+
+    @Override
+    public boolean isTerminal() {
+        return true;
     }
 
 

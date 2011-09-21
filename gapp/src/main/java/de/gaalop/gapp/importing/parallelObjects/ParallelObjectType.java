@@ -6,7 +6,7 @@ package de.gaalop.gapp.importing.parallelObjects;
  */
 public enum ParallelObjectType implements ParallelObjectVisitor {
 
-    summands, factors, extCalculation, constant, mvComponent;
+    summands, factors, extCalculation, constant, mvComponent, dotProduct, inputVariable;
 
     public static ParallelObjectType getType(ParallelObject object) {
         ParallelObjectType visitor = summands;
@@ -38,5 +38,17 @@ public enum ParallelObjectType implements ParallelObjectVisitor {
     public Object visitMvComponent(MvComponent mvComponent, Object arg) {
         return this.mvComponent;
     }
+
+    @Override
+    public Object visitDotProduct(DotProduct dotProduct, Object arg) {
+        return this.dotProduct;
+    }
+
+    @Override
+    public Object visitInputVariable(InputVariable inputVariable, Object arg) {
+        return this.inputVariable;
+    }
+
+
 
 }

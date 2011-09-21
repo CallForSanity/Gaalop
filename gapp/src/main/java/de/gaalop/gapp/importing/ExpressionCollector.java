@@ -1,11 +1,8 @@
 package de.gaalop.gapp.importing;
 
 import de.gaalop.gapp.importing.parallelObjects.Constant;
-import de.gaalop.gapp.importing.parallelObjects.Product;
-import de.gaalop.gapp.importing.parallelObjects.SignedSummand;
 import de.gaalop.dfg.Addition;
 import de.gaalop.dfg.BaseVector;
-import de.gaalop.dfg.BinaryOperation;
 import de.gaalop.dfg.Division;
 import de.gaalop.dfg.Equality;
 import de.gaalop.dfg.Exponentiation;
@@ -29,13 +26,14 @@ import de.gaalop.dfg.Reverse;
 import de.gaalop.dfg.Subtraction;
 import de.gaalop.dfg.Variable;
 import de.gaalop.gapp.importing.parallelObjects.ExtCalculation;
+import de.gaalop.gapp.importing.parallelObjects.InputVariable;
 import de.gaalop.gapp.importing.parallelObjects.MvComponent;
 import de.gaalop.gapp.importing.parallelObjects.ParallelObject;
 import de.gaalop.gapp.importing.parallelObjects.Sum;
 import de.gaalop.gapp.instructionSet.CalculationType;
 
 /**
- * Finds similar operations in Expression graphs and stores them in a ParallelObjekt instance.
+ * Finds similar operations in Expression graphs and stores them in a ParallelObject instance.
  * Additions and Substractions are collected and Muliplications are collected.
  * Other Expression types are transformed in the ParallelObjects data structure
  * @author Christian Steinmetz
@@ -75,7 +73,7 @@ public class ExpressionCollector implements ExpressionVisitor {
 
     @Override
     public void visit(Variable node) {
-        resultValue = new MvComponent(new MultivectorComponent(node.getName(), 0));
+        resultValue = new InputVariable(node);
     }
 
     @Override
@@ -147,11 +145,7 @@ public class ExpressionCollector implements ExpressionVisitor {
     public void visit(Negation node) {
         resultValue = null;
         node.getOperand().accept(this);
-
-        Sum summands = new Sum();
-        summands.getSummands().add(new SignedSummand(false, resultValue));
-        
-        resultValue = summands;
+        resultValue.negate();
     }
 
     // ============================ Logical methods ============================

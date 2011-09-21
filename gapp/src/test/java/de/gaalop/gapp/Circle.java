@@ -33,20 +33,19 @@ public class Circle implements GAPPTestable {
             "//#pragma output r$0"+"\n"+
 
             "\n"+
-            "v1 = x1*e1+y1*e2;"+"\n"+
-            "v2 = x2*e1+y2*e2;"+"\n"+
-            "v3 = x3*e1+y3*e2;"+"\n"+
+            "?v1 = x1*e1+y1*e2;"+"\n"+
+            "?v2 = x2*e1+y2*e2;"+"\n"+
+            "?v3 = x3*e1+y3*e2;"+"\n"+
 
-            "p1 = v1 + 0.5*v1*v1*einf + e0;"+"\n"+
-            "p2 = v2 + 0.5*v2*v2*einf + e0;"+"\n"+
-            "p3 = v3 + 0.5*v3*v3*einf + e0;"+"\n"+
+            "?p1 = v1 + 0.5*v1*v1*einf + e0;"+"\n"+
+            "?p2 = v2 + 0.5*v2*v2*einf + e0;"+"\n"+
+            "?p3 = v3 + 0.5*v3*v3*einf + e0;"+"\n"+
 
-            "c = *(p1^p2^p3);"+"\n"+
+            "?c = *(p1^p2^p3);"+"\n"+
 
-            "ma = c*einf*c;"+"\n"+
+            "?ma = c*einf*c;"+"\n"+
             "?m = -ma/(ma.einf);"+"\n"+
-            "?r = sqrt(abs((c.c)/((einf.c)*(einf.c))));"+"\n"+
-            "?v1;"
+            "?r = sqrt(abs((c.c)/((einf.c)*(einf.c))));"+"\n"
             ;
     }
 

@@ -3,6 +3,7 @@ package de.gaalop.gapp.instructionSet;
 import de.gaalop.gapp.Selector;
 import de.gaalop.gapp.visitor.GAPPVisitor;
 import de.gaalop.gapp.variables.GAPPMultivector;
+import de.gaalop.gapp.variables.GAPPMultivectorComponent;
 import de.gaalop.gapp.variables.GAPPVector;
 import java.util.LinkedList;
 
@@ -28,6 +29,12 @@ public class GAPPDotVectors extends GAPPBaseInstruction {
             LinkedList<GAPPVector> parts) {
         this.destination = destination;
         this.destSelector = destSelector;
+        this.parts = parts;
+    }
+
+    public GAPPDotVectors(GAPPMultivectorComponent destination, LinkedList<GAPPVector> parts) {
+        this.destination = new GAPPMultivector(destination.getName());
+        this.destSelector = new Selector(destination.getBladeIndex(), (byte) 1);
         this.parts = parts;
     }
 

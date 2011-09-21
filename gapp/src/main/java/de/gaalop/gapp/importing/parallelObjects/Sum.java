@@ -8,21 +8,21 @@ import java.util.LinkedList;
  */
 public class Sum extends ParallelObject {
 
-    private LinkedList<SignedSummand> summands;
+    private LinkedList<ParallelObject> summands;
 
     public Sum() {
-        summands = new LinkedList<SignedSummand>();
+        summands = new LinkedList<ParallelObject>();
     }
 
-    public Sum(LinkedList<SignedSummand> summands) {
+    public Sum(LinkedList<ParallelObject> summands) {
         this.summands = summands;
     }
 
-    public LinkedList<SignedSummand> getSummands() {
+    public LinkedList<ParallelObject> getSummands() {
         return summands;
     }
 
-    public void setSummands(LinkedList<SignedSummand> summands) {
+    public void setSummands(LinkedList<ParallelObject> summands) {
         this.summands = summands;
     }
 
@@ -33,8 +33,8 @@ public class Sum extends ParallelObject {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder("(");
-        for (SignedSummand obj: summands) {
+        StringBuilder sb = new StringBuilder((isNegated() ? "!" : "") + "(");
+        for (ParallelObject obj: summands) {
             sb.append(obj.toString());
             sb.append(" +");
         }
@@ -44,6 +44,11 @@ public class Sum extends ParallelObject {
 
         sb.append(")");
         return sb.toString();
+    }
+
+    @Override
+    public boolean isTerminal() {
+        return false;
     }
 
 }

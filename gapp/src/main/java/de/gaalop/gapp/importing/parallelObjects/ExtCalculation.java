@@ -49,7 +49,14 @@ public class ExtCalculation extends ParallelObject {
 
     @Override
     public String toString() {
-        return type+","+operand1+","+operand2;
+        return (isNegated() ? "!" : "") + type+","+operand1+","+operand2;
     }
+
+    @Override
+    public boolean isTerminal() {
+        return false;
+    }
+
+
 
 }

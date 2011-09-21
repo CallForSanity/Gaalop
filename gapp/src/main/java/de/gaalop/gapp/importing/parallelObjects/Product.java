@@ -41,7 +41,7 @@ public class Product extends ParallelObject {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder("(");
+        StringBuilder sb = new StringBuilder((isNegated() ? "!" : "") + "(");
         for (ParallelObject obj: factors) {
             sb.append(obj.toString());
             sb.append(" *");
@@ -52,6 +52,11 @@ public class Product extends ParallelObject {
 
         sb.append(")");
         return sb.toString();
+    }
+
+    @Override
+    public boolean isTerminal() {
+        return false;
     }
 
 
