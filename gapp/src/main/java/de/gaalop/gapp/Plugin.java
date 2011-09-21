@@ -46,4 +46,10 @@ public class Plugin extends Observable implements OptimizationStrategyPlugin {
         return algebra;
     }
 
+    public void setAlgebra(String algebra) {
+        this.algebra = algebra;
+    }
+
+    
+
 }

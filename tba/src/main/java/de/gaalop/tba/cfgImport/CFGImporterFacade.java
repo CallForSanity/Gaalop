@@ -72,4 +72,10 @@ public class CFGImporterFacade {
         return graph;
     }
 
+    public void setUsedAlgebra(UseAlgebra usedAlgebra) {
+        this.usedAlgebra = usedAlgebra;
+    }
+
+    
+
 }

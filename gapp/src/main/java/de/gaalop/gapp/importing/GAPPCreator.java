@@ -160,9 +160,6 @@ public class GAPPCreator implements ParallelObjectVisitor {
         return null;
     }
 
-    //TODO chs optimize with assigning inputvalues at begin of clucalc programm in large multivector
-    //and replace all inputvalues with the mvComponent
-
     @Override
     public Object visitMvComponent(MvComponent mvComponent, Object arg) {
         //arg must be filled!
@@ -198,10 +195,9 @@ public class GAPPCreator implements ParallelObjectVisitor {
                     ParallelObject nonTerminalObj = dotProduct.get(row, col);
                     GAPPMultivector mvTmp = createMv();
                     GAPPMultivectorComponent gMvC = new GAPPMultivectorComponent(mvTmp.getName(),0);
-                    //TODO chs use GAPPSignedMultivectorComponent to reduce number of operations
                     nonTerminalObj.accept(this, gMvC);
                     dotProduct.set(row, col, new MvComponent(new MultivectorComponent(mvTmp.getName(), 0)));
-                    //TODO chs Please be more efficient on memory (use all blades)
+                    //TODO chs Please be more efficient on memory (use all blades) or permitt arbitrary sizes of multivectors
                 }
             }
 
@@ -448,7 +444,7 @@ public class GAPPCreator implements ParallelObjectVisitor {
     }
 
     //TODO chs Think about problem with size of multivectors!
-    //Is it possible to annotate every multivector with a arbitrary size (i.e > bladecount)?
+    //Is it possible to annotate every multivector with an arbitrary size (i.e > bladecount)?
     private HashSet<String> getMultivectors(ParallelVector vector) {
         HashSet<String> mvs = new HashSet<String>();
         for (ParallelObject obj: vector.getSlots())

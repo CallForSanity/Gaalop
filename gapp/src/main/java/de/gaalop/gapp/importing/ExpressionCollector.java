@@ -150,7 +150,7 @@ public class ExpressionCollector implements ExpressionVisitor {
 
     // ============================ Logical methods ============================
 
-    //TODO chs Add support to logical functions
+    //TODO chs ? Add support to logical functions (is this needed? because controlflow isn't permitted)
 
     @Override
     public void visit(LogicalOr node) {
