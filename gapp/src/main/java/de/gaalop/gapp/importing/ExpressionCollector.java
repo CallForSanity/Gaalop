@@ -26,7 +26,6 @@ import de.gaalop.dfg.Reverse;
 import de.gaalop.dfg.Subtraction;
 import de.gaalop.dfg.Variable;
 import de.gaalop.gapp.importing.parallelObjects.ExtCalculation;
-import de.gaalop.gapp.importing.parallelObjects.InputVariable;
 import de.gaalop.gapp.importing.parallelObjects.MvComponent;
 import de.gaalop.gapp.importing.parallelObjects.ParallelObject;
 import de.gaalop.gapp.instructionSet.CalculationType;
@@ -70,10 +69,7 @@ public class ExpressionCollector implements ExpressionVisitor {
         resultValue = new MvComponent(node);
     }
 
-    @Override
-    public void visit(Variable node) {
-        resultValue = new InputVariable(node);
-    }
+
 
     @Override
     public void visit(Division node) {
@@ -189,7 +185,10 @@ public class ExpressionCollector implements ExpressionVisitor {
     // ========================= Illegal visit methods =========================
 
 
-
+    @Override
+    public void visit(Variable node) {
+        throw new IllegalStateException("Variables should have been removed by GAPPDecoratingMain.");
+    }
 
     @Override
     public void visit(InnerProduct node) {

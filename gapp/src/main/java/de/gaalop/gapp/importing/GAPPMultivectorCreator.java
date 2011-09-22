@@ -6,7 +6,6 @@ import de.gaalop.gapp.Variableset;
 import de.gaalop.gapp.importing.parallelObjects.Constant;
 import de.gaalop.gapp.importing.parallelObjects.DotProduct;
 import de.gaalop.gapp.importing.parallelObjects.ExtCalculation;
-import de.gaalop.gapp.importing.parallelObjects.InputVariable;
 import de.gaalop.gapp.importing.parallelObjects.MvComponent;
 import de.gaalop.gapp.importing.parallelObjects.ParallelObjectVisitor;
 import de.gaalop.gapp.importing.parallelObjects.Product;
@@ -64,20 +63,6 @@ public class GAPPMultivectorCreator implements ParallelObjectVisitor {
 
         Variableset varSet = new Variableset();
         varSet.add(new GAPPConstant(constant.getValue()));
-
-        gappCreator.gapp.addInstruction(new GAPPAssignMv(mvTmp,selDestSet,varSet));
-        return mvTmp;
-    }
-
-    @Override
-    public Object visitInputVariable(InputVariable inputVariable, Object arg) {
-        GAPPMultivector mvTmp = gappCreator.createMv();
-
-        Selectorset selDestSet = new Selectorset();
-        selDestSet.add(new Selector(0, inputVariable.isNegated() ? (byte) -1 : (byte) 1));
-
-        Variableset varSet = new Variableset();
-        varSet.add(new GAPPScalarVariable(inputVariable.getVariable().getName()));
 
         gappCreator.gapp.addInstruction(new GAPPAssignMv(mvTmp,selDestSet,varSet));
         return mvTmp;

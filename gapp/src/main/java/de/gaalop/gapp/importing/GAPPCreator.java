@@ -8,7 +8,6 @@ import de.gaalop.gapp.Variableset;
 import de.gaalop.gapp.importing.parallelObjects.Constant;
 import de.gaalop.gapp.importing.parallelObjects.DotProduct;
 import de.gaalop.gapp.importing.parallelObjects.ExtCalculation;
-import de.gaalop.gapp.importing.parallelObjects.InputVariable;
 import de.gaalop.gapp.importing.parallelObjects.MvComponent;
 import de.gaalop.gapp.importing.parallelObjects.ParallelObject;
 import de.gaalop.gapp.importing.parallelObjects.ParallelObjectType;
@@ -268,25 +267,6 @@ public class GAPPCreator implements ParallelObjectVisitor {
         return (arg == null) ? destination: null;
     }
 
-    @Override
-    public Object visitInputVariable(InputVariable inputVariable, Object arg) {
-        //arg must be filled!
-        GAPPMultivectorComponent destination = (GAPPMultivectorComponent) arg;
-
-        Selectorset selSet = new Selectorset();
-        selSet.add(new Selector(
-                destination.getBladeIndex(),
-                (inputVariable.isNegated()) ? (byte) -1 : (byte) 1)
-                );
-        
-        Variableset varSet = new Variableset();
-        varSet.add(new GAPPScalarVariable(inputVariable.getVariable().getName()));
-
-        gapp.addInstruction(new GAPPAssignMv(new GAPPMultivector(destination.getName()), selSet, varSet));
-
-        return null;
-    }
-
     /**
      * Optimizes the order per row in a dot product.
      * The order is optimal if the number of generated GAPP instructions is minimal
@@ -305,13 +285,13 @@ public class GAPPCreator implements ParallelObjectVisitor {
         GAPPVector destination = createVe();
         //It may occour:
         // - MvComponent
-        // - Constant, InputVariable
+        // - Constant
 
         // distinguish four cases:
         //1. only MvComponents from one multivector (using setVector (one operation))
-        //2. only Constants with/or InputVariables (using assignMv and then setVector (three operations))
+        //2. only Constants (using assignMv and then setVector (three operations))
         //3. only MvComponents from more than one multivector (using setMv and then setVector (> three operations))
-        //4. a mix of all three types (using assignMv,setMv and then setVector (> three operations))
+        //4. a mix of all two types (using assignMv,setMv and then setVector (> three operations))
 
         int numberOfMvComponents = countTypeInParallelVector(vector, ParallelObjectType.mvComponent);
         
@@ -319,11 +299,10 @@ public class GAPPCreator implements ParallelObjectVisitor {
             case2(destination, vector);
         else {
             int numberOfConstants = countTypeInParallelVector(vector, ParallelObjectType.constant);
-            int numberOfInputVariables = countTypeInParallelVector(vector, ParallelObjectType.inputVariable);
 
             HashSet<String> multivectors = getMultivectors(vector);
 
-            if (numberOfConstants + numberOfInputVariables == 0) {
+            if (numberOfConstants == 0) {
                 // case 1 or 3
                 
                 if (multivectors.size() == 1) 
@@ -361,7 +340,7 @@ public class GAPPCreator implements ParallelObjectVisitor {
 
     /**
      * Handles case 2 in creation of a GAPPVector from a ParallelVector.
-     * Case 2: Only Constants with/or InputVariables (using assignMv and then setVector (three operations))
+     * Case 2: Only Constants (using assignMv and then setVector (three operations))
      * @param destination The destination GAPPVector
      * @param vector The ParallelVector
      */
@@ -376,9 +355,6 @@ public class GAPPCreator implements ParallelObjectVisitor {
             switch (ParallelObjectType.getType(obj)) {
                 case constant:
                     valueHolder = new GAPPConstant(((Constant) obj).getValue());
-                    break;
-                case inputVariable:
-                    valueHolder = new GAPPScalarVariable(((InputVariable) obj).getVariable().getName());
                     break;
             }
             varMvDestSet.add(valueHolder);
@@ -465,7 +441,7 @@ public class GAPPCreator implements ParallelObjectVisitor {
 
     /**
      * Handles case 4 in creation of a GAPPVector from a ParallelVector.
-     * Case 4: A mix of all three types (using assignMv,setMv and then setVector (> three operations))
+     * Case 4: A mix of all two types (using assignMv,setMv and then setVector (> three operations))
      * #GAPPInstructions: multivectors.size() + 3
      *
      * @param destination The destination GAPPVector
@@ -483,11 +459,6 @@ public class GAPPCreator implements ParallelObjectVisitor {
             switch (ParallelObjectType.getType(obj)) {
                 case constant:
                     valueHolder = new GAPPConstant(((Constant) obj).getValue());
-                    selSet.add(new Selector(slotNo, obj.isNegated() ? (byte) -1 : (byte) 1));
-                    varMvDestSet.add(valueHolder);
-                    break;
-                case inputVariable:
-                    valueHolder = new GAPPScalarVariable(((InputVariable) obj).getVariable().getName());
                     selSet.add(new Selector(slotNo, obj.isNegated() ? (byte) -1 : (byte) 1));
                     varMvDestSet.add(valueHolder);
                     break;

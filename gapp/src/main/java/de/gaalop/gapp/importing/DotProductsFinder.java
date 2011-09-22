@@ -3,7 +3,6 @@ package de.gaalop.gapp.importing;
 import de.gaalop.gapp.importing.parallelObjects.Constant;
 import de.gaalop.gapp.importing.parallelObjects.DotProduct;
 import de.gaalop.gapp.importing.parallelObjects.ExtCalculation;
-import de.gaalop.gapp.importing.parallelObjects.InputVariable;
 import de.gaalop.gapp.importing.parallelObjects.MvComponent;
 import de.gaalop.gapp.importing.parallelObjects.ParallelObject;
 import de.gaalop.gapp.importing.parallelObjects.ParallelObjectVisitor;
@@ -79,11 +78,6 @@ public class DotProductsFinder implements ParallelObjectVisitor {
 
     @Override
     public Object visitMvComponent(MvComponent mvComponent, Object arg) {
-        return null;
-    }
-
-    @Override
-    public Object visitInputVariable(InputVariable inputVariable, Object arg) {
         return null;
     }
 
