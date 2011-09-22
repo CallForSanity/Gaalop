@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package de.gaalop.gapp;
 
 import de.gaalop.gapp.executer.Executer;
@@ -12,7 +7,7 @@ import java.util.HashMap;
 import static org.junit.Assert.*;
 
 /**
- *
+ * Tests with unoptimized calculation from the GAPP Paper
  * @author Christian Steinmetz
  */
 public class Paper implements GAPPTestable {

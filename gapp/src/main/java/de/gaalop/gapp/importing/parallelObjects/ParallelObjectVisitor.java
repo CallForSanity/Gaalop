@@ -1,7 +1,7 @@
 package de.gaalop.gapp.importing.parallelObjects;
 
 /**
- *
+ * Declares an interface of a visitor for ParallelObjects
  * @author Christian Steinmetz
  */
 public interface ParallelObjectVisitor {

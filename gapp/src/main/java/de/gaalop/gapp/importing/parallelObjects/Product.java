@@ -3,7 +3,7 @@ package de.gaalop.gapp.importing.parallelObjects;
 import java.util.LinkedList;
 
 /**
- *
+ * Represents a product of ParallelObjects
  * @author Christian Steinmetz
  */
 public class Product extends ParallelObject {

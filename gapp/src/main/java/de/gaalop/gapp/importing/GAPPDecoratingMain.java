@@ -1,7 +1,13 @@
 package de.gaalop.gapp.importing;
 
 import de.gaalop.OptimizationException;
+import de.gaalop.cfg.AssignmentNode;
 import de.gaalop.cfg.ControlFlowGraph;
+import de.gaalop.cfg.ControlFlowVisitor;
+import de.gaalop.cfg.EmptyControlFlowVisitor;
+import de.gaalop.cfg.StoreResultNode;
+import de.gaalop.dfg.EmptyExpressionVisitor;
+import de.gaalop.dfg.ExpressionVisitor;
 import de.gaalop.dfg.MultivectorComponent;
 import de.gaalop.dfg.Variable;
 import de.gaalop.gapp.GAPP;
@@ -17,16 +23,17 @@ import de.gaalop.tba.UseAlgebra;
 import de.gaalop.tba.cfgImport.BaseVectorChecker;
 import de.gaalop.tba.cfgImport.CFGImporterFacade;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 
 /**
- * Facade class to decorate the ControlFlowGraph in a GAPP ControlFlowGraph
+ * Facade class to decorate the ControlFlowGraph with GAPP instructions
  * @author Christian Steinmetz
  */
 public class GAPPDecoratingMain {
 
     /**
-     * Decorates a given ControlFlowGraph in a GAPP ControlFlowGraph
+     * Decorates a given ControlFlowGraph with GAPP instructions
      * @param graph The ControlFlowGraph
      * @return The same graph object (which is now decorated with GAPP instructions)
      * @throws OptimizationException
@@ -47,13 +54,19 @@ public class GAPPDecoratingMain {
         GAPP gappStart = new GAPP();
         assignInputVariables(graph, gappStart);
 
+        HashSet<String> variables = getAllVariableNames(graph);
         // import now the graph in GAPP
-        GAPPDecorator vCFG = new GAPPDecorator(gappStart);
+        GAPPDecorator vCFG = new GAPPDecorator(gappStart, variables);
         graph.accept(vCFG);
 
         return graph;
     }
 
+    /**
+     * Adds instructions to a GAPP instance which assigns all InputVariables to a GAPPMultivector
+     * @param graph The ControlFlowGraph
+     * @param gappStart The GAPP instance
+     */
     private void assignInputVariables(ControlFlowGraph graph, GAPP gappStart) {
         LinkedList<Variable> toDo = new LinkedList<Variable>(graph.getInputVariables());
 
@@ -82,7 +95,52 @@ public class GAPPDecoratingMain {
         }
     }
 
+    /**
+     * Returns a set of all Variable names in a ControlFlowGraph
+     * @param graph The ControlFlowGraph
+     * @return The set of all Variable names
+     */
+    private HashSet<String> getAllVariableNames(ControlFlowGraph graph) {
+        final HashSet<String> result = new HashSet<String>();
 
+        ControlFlowVisitor visitor = new EmptyControlFlowVisitor() {
+            private ExpressionVisitor visitorExp = new EmptyExpressionVisitor() {
+
+                @Override
+                public void visit(MultivectorComponent node) {
+                    result.add(node.getName());
+                    super.visit(node);
+                }
+
+                @Override
+                public void visit(Variable node) {
+                    result.add(node.getName());
+                    super.visit(node);
+                }
+
+            };
+
+            @Override
+            public void visit(AssignmentNode node) {
+                node.getVariable().accept(visitorExp);
+                node.getValue().accept(visitorExp);
+                super.visit(node);
+            }
+
+            @Override
+            public void visit(StoreResultNode node) {
+                node.getValue().accept(visitorExp);
+                super.visit(node);
+            }
+
+
+
+        };
+
+        graph.accept(visitor);
+
+        return result;
+    }
 
 
 

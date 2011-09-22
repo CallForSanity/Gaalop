@@ -1,7 +1,7 @@
 package de.gaalop.gapp.importing.parallelObjects;
 
 /**
- *
+ * Represents a constant with a value
  * @author Christian Steinmetz
  */
 public class Constant extends ParallelObject {

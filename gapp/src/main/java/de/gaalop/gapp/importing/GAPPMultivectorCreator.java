@@ -18,7 +18,7 @@ import de.gaalop.gapp.variables.GAPPMultivector;
 import de.gaalop.gapp.variables.GAPPScalarVariable;
 
 /**
- *
+ * Creates a GAPPMultivector from ParallelObject, which is a terminal
  * @author Christian Steinmetz
  */
 public class GAPPMultivectorCreator implements ParallelObjectVisitor {

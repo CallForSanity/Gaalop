@@ -58,6 +58,10 @@ public class ReplaceVisitor extends EmptyControlFlowVisitor implements Expressio
         super.visit(node);
     }
 
+    /**
+     * Visits a BinaryOperation instance
+     * @param binaryOperation The BinaryOperation
+     */
     private void visitBinaryOperation(BinaryOperation binaryOperation) {
         binaryOperation.getLeft().accept(this);
         if (replace) {
@@ -71,6 +75,10 @@ public class ReplaceVisitor extends EmptyControlFlowVisitor implements Expressio
         }
     }
 
+    /**
+     * Visits a UnaryOperation instance
+     * @param unaryOperation The UnaryOperation
+     */
     private void visitUnaryOperation(UnaryOperation unaryOperation) {
         unaryOperation.getOperand().accept(this);
         if (replace) {

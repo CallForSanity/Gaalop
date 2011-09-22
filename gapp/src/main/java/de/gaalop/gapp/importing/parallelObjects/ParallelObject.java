@@ -1,7 +1,7 @@
 package de.gaalop.gapp.importing.parallelObjects;
 
 /**
- *
+ * Declares an abstract ParallelObject
  * @author Christian Steinmetz
  */
 public abstract class ParallelObject {
@@ -18,13 +18,21 @@ public abstract class ParallelObject {
         this.negated = negated;
     }
 
+    /**
+     * Inverts the negate attribute
+     */
     public void negate() {
         negated = !negated;
     }
 
     @Override
     public abstract String toString();
-    
+
+    /**
+     * Returns if this ParallelObject is a terminal.
+     * A terminal has no children.
+     * @return
+     */
     public abstract boolean isTerminal();
 
 }

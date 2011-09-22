@@ -2,7 +2,6 @@ package de.gaalop.gapp.importing;
 
 import de.gaalop.cfg.AssignmentNode;
 import de.gaalop.cfg.EmptyControlFlowVisitor;
-import de.gaalop.cfg.StartNode;
 import de.gaalop.dfg.MultivectorComponent;
 import de.gaalop.gapp.GAPP;
 import de.gaalop.gapp.importing.parallelObjects.DotProduct;
@@ -20,15 +19,12 @@ public class GAPPDecorator extends EmptyControlFlowVisitor {
 
     private HashSet<String> createdGAPPVariables = new HashSet<String>();
 
-    private GAPPCreator gappCreator = new GAPPCreator(null);
+    private GAPPCreator  gappCreator;
     private GAPP gappStart;
 
-    public GAPPDecorator(GAPP gappStart) {
+    public GAPPDecorator(GAPP gappStart, HashSet<String> variables) {
         this.gappStart = gappStart;
-    }
-
-    private GAPPMultivector createNewMultivector(String name) {
-        return new GAPPMultivector(name);
+        gappCreator = new GAPPCreator(variables);
     }
 
     @Override
@@ -48,7 +44,7 @@ public class GAPPDecorator extends EmptyControlFlowVisitor {
 
         if (!createdGAPPVariables.contains(name)) {
             // create a new GAPPMultivector for destination variable, if it does not exist
-            GAPPMultivector mv = createNewMultivector(name);
+            GAPPMultivector mv = new GAPPMultivector(name);
             gapp.addInstruction(new GAPPResetMv(mv));
             createdGAPPVariables.add(name);
         }
@@ -66,7 +62,6 @@ public class GAPPDecorator extends EmptyControlFlowVisitor {
 
         //process further: create GAPP from the ParallelObject data structure
         GAPPMultivectorComponent gMvC = new GAPPMultivectorComponent(mvC.getName(), mvC.getBladeIndex());
-        
         parallelObject.accept(gappCreator, gMvC);
 
         // go further in graph

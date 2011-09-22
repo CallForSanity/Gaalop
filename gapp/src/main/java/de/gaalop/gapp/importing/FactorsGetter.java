@@ -28,7 +28,7 @@ import de.gaalop.gapp.importing.parallelObjects.Product;
 import de.gaalop.gapp.importing.parallelObjects.ParallelObject;
 
 /**
- *
+ * Implements a ExpressionVisitor that finds the direct factors of a given expression
  * @author Christian Steinmetz
  */
 public class FactorsGetter implements ExpressionVisitor {
@@ -39,9 +39,9 @@ public class FactorsGetter implements ExpressionVisitor {
     }
 
     /**
-     * Returns the direct summands of a given expression
-     * @param expresssion The expression
-     * @return The direct summands
+     * Returns the direct factors of a given expression
+     * @param expression The expression
+     * @return The direct factors
      */
     public static Product getFactors(Expression expresssion) {
         FactorsGetter getter = new FactorsGetter();
@@ -49,6 +49,11 @@ public class FactorsGetter implements ExpressionVisitor {
         return getter.factors;
     }
 
+    /**
+     * Calls the ExpressionCollector which creates a ParallelObject
+     * @param expression The expression applied on the ExpressionCollector
+     * @return The ParallelObject representation of the expression
+     */
     private ParallelObject callExpressionCollector(Expression expression) {
         ExpressionCollector collector = new ExpressionCollector();
         expression.accept(collector);

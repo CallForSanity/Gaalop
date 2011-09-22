@@ -3,7 +3,7 @@ package de.gaalop.gapp.importing.parallelObjects;
 import de.gaalop.dfg.Variable;
 
 /**
- *
+ * Represents an input variable
  * @author Christian Steinmetz
  */
 public class InputVariable extends ParallelObject {

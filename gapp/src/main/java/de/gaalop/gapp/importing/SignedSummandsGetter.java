@@ -52,6 +52,11 @@ public class SignedSummandsGetter implements ExpressionVisitor {
         return getter.summands;
     }
 
+    /**
+     * Calls the ExpressionCollector which creates a ParallelObject
+     * @param expression The expression applied on the ExpressionCollector
+     * @return The ParallelObject representation of the expression
+     */
     private ParallelObject callExpressionCollector(Expression expression) {
         ExpressionCollector collector = new ExpressionCollector();
         expression.accept(collector);

@@ -3,7 +3,7 @@ package de.gaalop.gapp.importing.parallelObjects;
 import java.util.LinkedList;
 
 /**
- *
+ * Represents a sum of ParallelObjects
  * @author Christian Steinmetz
  */
 public class Sum extends ParallelObject {

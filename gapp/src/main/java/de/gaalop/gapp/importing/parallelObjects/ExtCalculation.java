@@ -3,7 +3,7 @@ package de.gaalop.gapp.importing.parallelObjects;
 import de.gaalop.gapp.instructionSet.CalculationType;
 
 /**
- *
+ * Represents a calculation
  * @author Christian Steinmetz
  */
 public class ExtCalculation extends ParallelObject {

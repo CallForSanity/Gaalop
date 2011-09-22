@@ -29,7 +29,6 @@ import de.gaalop.gapp.importing.parallelObjects.ExtCalculation;
 import de.gaalop.gapp.importing.parallelObjects.InputVariable;
 import de.gaalop.gapp.importing.parallelObjects.MvComponent;
 import de.gaalop.gapp.importing.parallelObjects.ParallelObject;
-import de.gaalop.gapp.importing.parallelObjects.Sum;
 import de.gaalop.gapp.instructionSet.CalculationType;
 
 /**
@@ -88,6 +87,11 @@ public class ExpressionCollector implements ExpressionVisitor {
         resultValue = new ExtCalculation(CalculationType.DIVISION, left, right);
     }
 
+    /**
+     * Transforms a MathFunction into a CalculationType
+     * @param function The MathFunction to transform
+     * @return The CalculationType
+     */
     private CalculationType transformFunction(MathFunction function) {
         switch (function) {
             case ABS:
