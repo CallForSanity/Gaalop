@@ -28,7 +28,7 @@ public class Paper2 implements GAPPTestable {
             "b=b1*e1+b2*e2+b3*e3;"+"\n"+
             //"?f=a^(a+a*b);"+"\n";
             "?c =a*b;"+"\n"+
-            "?d =a+c;"+"\n"+
+            "d =a+c;"+"\n"+
             "?f =a^d;"+"\n";
     }
 

@@ -11,19 +11,11 @@ c(7) = inputsMv(3) * inputsMv(4) - inputsMv(5) * inputsMv(1); // e1^e2
 c(8) = inputsMv(3) * inputsMv(2) - inputsMv(6) * inputsMv(1); // e1^e3
 c(11) = inputsMv(5) * inputsMv(2) - inputsMv(6) * inputsMv(4); // e2^e3
 ?c;
-d(1) = c(1); // 1.0
-d(2) = inputsMv(3); // e1
-d(3) = inputsMv(5); // e2
-d(4) = inputsMv(6); // e3
-d(7) = c(7); // e1^e2
-d(8) = c(8); // e1^e3
-d(11) = c(11); // e2^e3
-?d;
-f(2) = inputsMv(3) * d(1); // e1
-f(3) = inputsMv(5) * d(1); // e2
-f(4) = inputsMv(6) * d(1); // e3
-f(7) = inputsMv(3) * d(3) - inputsMv(5) * d(2); // e1^e2
-f(8) = inputsMv(3) * d(4) - inputsMv(6) * d(2); // e1^e3
-f(11) = inputsMv(5) * d(4) - inputsMv(6) * d(3); // e2^e3
-f(17) = (-(inputsMv(5) * d(8))) + inputsMv(6) * d(7) + inputsMv(3) * d(11); // e1^e2^e3
+f(2) = inputsMv(3) * c(1); // e1
+f(3) = inputsMv(5) * c(1); // e2
+f(4) = inputsMv(6) * c(1); // e3
+f(7) = 0.0; // e1^e2
+f(8) = 0.0; // e1^e3
+f(11) = 0.0; // e2^e3
+f(17) = (-(inputsMv(5) * c(8))) + inputsMv(6) * c(7) + inputsMv(3) * c(11); // e1^e2^e3
 ?f;
