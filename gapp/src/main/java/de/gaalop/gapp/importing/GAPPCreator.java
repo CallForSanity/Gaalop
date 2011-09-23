@@ -23,7 +23,6 @@ import de.gaalop.gapp.instructionSet.GAPPSetVector;
 import de.gaalop.gapp.variables.GAPPConstant;
 import de.gaalop.gapp.variables.GAPPMultivector;
 import de.gaalop.gapp.variables.GAPPMultivectorComponent;
-import de.gaalop.gapp.variables.GAPPScalarVariable;
 import de.gaalop.gapp.variables.GAPPValueHolder;
 import de.gaalop.gapp.variables.GAPPVector;
 import java.util.HashSet;
@@ -36,6 +35,8 @@ import java.util.LinkedList;
 public class GAPPCreator implements ParallelObjectVisitor {
     // arg: GAPPMultivectorComponent: destination of this operation, otherwise null
     // return: GAPPMultivectorComponent if a new one is created, otherwise null
+
+    private static final boolean USE_DOTPRODUCT_OPTIMIZER = false;
 
     public GAPP gapp;
     
@@ -236,7 +237,7 @@ public class GAPPCreator implements ParallelObjectVisitor {
         //transformation is now easier
         
         //optimize order in every row
-        optimizeOrder(dotProduct);
+        if (USE_DOTPRODUCT_OPTIMIZER) new DotProductOptimizer().optimizeOrder(dotProduct);
 
         GAPPMultivectorComponent destination = (arg == null)
                 ? createMvComp()
@@ -275,15 +276,6 @@ public class GAPPCreator implements ParallelObjectVisitor {
 
         
         return (arg == null) ? destination: null;
-    }
-
-    /**
-     * Optimizes the order per row in a dot product.
-     * The order is optimal if the number of generated GAPP instructions is minimal
-     * @param dotProduct The dot product
-     */
-    private void optimizeOrder(DotProduct dotProduct) {
-        //TODO chs optimize order, so that less as possible multivectors are in one column
     }
 
     /**

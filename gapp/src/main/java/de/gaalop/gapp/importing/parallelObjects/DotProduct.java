@@ -122,5 +122,21 @@ public class DotProduct extends ParallelObject {
         return factors;
     }
 
+    /**
+     * Computes the witdh and the height
+     * and stores them in the attributes
+     */
+    public void computeWidthAndHeight() {
+        width = factors.size();
+        if (width >=1)
+            height = factors.getFirst().getSlots().size();
+        else
+            height = 0;
+    }
 
+    public void setFactors(LinkedList<ParallelVector> factors) {
+        this.factors = factors;
+    }
+
+    
 }

@@ -14,7 +14,6 @@ import de.gaalop.gapp.variables.GAPPValueHolder;
 import de.gaalop.gapp.variables.GAPPVariable;
 import de.gaalop.gapp.variables.GAPPVector;
 import de.gaalop.gapp.visitor.CFGGAPPVisitor;
-import de.gaalop.tba.UseAlgebra;
 import java.util.Arrays;
 import java.util.HashMap;
 
@@ -35,11 +34,6 @@ public class Executer extends CFGGAPPVisitor {
     private HashMap<String,VectorWithValues> vectors = new HashMap<String,VectorWithValues>();
 
     /**
-     * The currently used algebra
-     */
-    private UseAlgebra usedAlgebra;
-
-    /**
      * Maps the scalar inputs to their values
      */
     private HashMap<String,Float> inputValues;
@@ -58,9 +52,8 @@ public class Executer extends CFGGAPPVisitor {
         return values;
     }
 
-    public Executer(UseAlgebra usedAlgebra, HashMap<String,Float> inputValues) {
+    public Executer(HashMap<String,Float> inputValues) {
         this.inputValues = inputValues;
-        this.usedAlgebra = usedAlgebra;
     }
 
 

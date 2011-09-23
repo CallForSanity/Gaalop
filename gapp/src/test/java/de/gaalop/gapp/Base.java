@@ -47,7 +47,7 @@ public class Base {
 
         //Evaluate!
         HashMap<String, Float> inputValues = testable.getInputs();
-        Executer executer = new Executer(testable.getUsedAlgebra(),inputValues);
+        Executer executer = new Executer(inputValues);
         graph.accept(executer);
         return executer;
     }
