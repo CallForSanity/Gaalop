@@ -21,9 +21,6 @@ public class GAPPSetVector extends GAPPBaseInstruction {
     private GAPPMultivector sourceMv;
     private Selectorset selectorsSrc;
 
-    public GAPPSetVector() {
-    }
-
     public GAPPSetVector(GAPPVector destination, GAPPMultivector sourceMv, Selectorset selectorsSrc) {
         this.destination = destination;
         this.sourceMv = sourceMv;

@@ -21,9 +21,11 @@ public class GAPPDecorator extends EmptyControlFlowVisitor {
 
     private GAPPCreator  gappCreator;
     private GAPP gappStart;
+    private int bladeCount;
 
-    public GAPPDecorator(GAPP gappStart, HashSet<String> variables) {
+    public GAPPDecorator(GAPP gappStart, HashSet<String> variables, int bladeCount) {
         this.gappStart = gappStart;
+        this.bladeCount = bladeCount;
         gappCreator = new GAPPCreator(variables);
     }
 
@@ -45,7 +47,7 @@ public class GAPPDecorator extends EmptyControlFlowVisitor {
         if (!createdGAPPVariables.contains(name)) {
             // create a new GAPPMultivector for destination variable, if it does not exist
             GAPPMultivector mv = new GAPPMultivector(name);
-            gapp.addInstruction(new GAPPResetMv(mv));
+            gapp.addInstruction(new GAPPResetMv(mv, bladeCount));
             createdGAPPVariables.add(name);
         }
 

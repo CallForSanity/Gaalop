@@ -22,9 +22,6 @@ public class GAPPDotVectors extends GAPPBaseInstruction {
     private Selector destSelector;
     private LinkedList<GAPPVector> parts;
 
-    public GAPPDotVectors() {
-    }
-
     public GAPPDotVectors(GAPPMultivector destination, Selector destSelector,
             LinkedList<GAPPVector> parts) {
         this.destination = destination;

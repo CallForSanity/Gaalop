@@ -11,7 +11,6 @@ import de.gaalop.gapp.instructionSet.GAPPResetMv;
 import de.gaalop.gapp.instructionSet.GAPPSetMv;
 import de.gaalop.gapp.instructionSet.GAPPSetVector;
 import de.gaalop.gapp.variables.GAPPMultivector;
-import de.gaalop.gapp.variables.GAPPSignedMultivectorComponent;
 import de.gaalop.gapp.variables.GAPPValueHolder;
 import de.gaalop.gapp.variables.GAPPValueHolderCopier;
 import de.gaalop.gapp.variables.GAPPVector;
@@ -96,7 +95,9 @@ public class GAPPCopier implements GAPPVisitor {
     @Override
     public Object visitResetMv(GAPPResetMv gappResetMv, Object arg) {
         return new GAPPResetMv(
-                (GAPPMultivector) GAPPValueHolderCopier.copyValueHolder(gappResetMv.getDestinationMv())
+                (GAPPMultivector) GAPPValueHolderCopier.copyValueHolder(
+                    gappResetMv.getDestinationMv()),
+                    gappResetMv.getSize()
                 );
     }
 

@@ -20,9 +20,6 @@ public class GAPPAddMv extends GAPPBaseInstruction {
     private Selectorset selectorsDest;
     private Selectorset selectorsSrc;
 
-    public GAPPAddMv() {
-    }
-
     public GAPPAddMv(GAPPMultivector destinationMv, GAPPMultivector sourceMv, Selectorset selectorsDest, Selectorset selectorsSrc) {
         this.destinationMv = destinationMv;
         this.sourceMv = sourceMv;

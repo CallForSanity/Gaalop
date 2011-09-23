@@ -171,7 +171,9 @@ public class PrettyPrint extends CFGGAPPVisitor {
     public Object visitResetMv(GAPPResetMv gappResetMv, Object arg) {
         result.append("resetMv ");
         printMultivector(gappResetMv.getDestinationMv());
-        result.append(";\n");
+        result.append(" = <");
+        result.append(gappResetMv.getSize());
+        result.append(">;\n");
         return null;
     }
 

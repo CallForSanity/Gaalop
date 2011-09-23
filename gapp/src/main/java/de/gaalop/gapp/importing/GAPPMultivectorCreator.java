@@ -32,7 +32,7 @@ public class GAPPMultivectorCreator implements ParallelObjectVisitor {
 
     @Override
     public Object visitMvComponent(MvComponent mvComponent, Object arg) {
-            GAPPMultivector mvTmp = gappCreator.createMv();
+            GAPPMultivector mvTmp = gappCreator.createMv(1);
 
             Selectorset selDestSet = new Selectorset();
             selDestSet.add(new Selector(0, (byte) 1));
@@ -56,7 +56,7 @@ public class GAPPMultivectorCreator implements ParallelObjectVisitor {
 
     @Override
     public Object visitConstant(Constant constant, Object arg) {
-        GAPPMultivector mvTmp = gappCreator.createMv();
+        GAPPMultivector mvTmp = gappCreator.createMv(1);
 
         Selectorset selDestSet = new Selectorset();
         selDestSet.add(new Selector(0, constant.isNegated() ? (byte) -1 : (byte) 1));

@@ -12,12 +12,11 @@ import de.gaalop.gapp.variables.GAPPMultivector;
 public class GAPPResetMv extends GAPPBaseInstruction {
 
     private GAPPMultivector destinationMv;
+    private int size;
 
-    public GAPPResetMv() {
-    }
-
-    public GAPPResetMv(GAPPMultivector destinationMv) {
+    public GAPPResetMv(GAPPMultivector destinationMv, int size) {
         this.destinationMv = destinationMv;
+        this.size = size;
     }
 
     @Override
@@ -33,5 +32,12 @@ public class GAPPResetMv extends GAPPBaseInstruction {
         this.destinationMv = destinationMv;
     }
 
-    
+    public int getSize() {
+        return size;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
+    }
+
 }

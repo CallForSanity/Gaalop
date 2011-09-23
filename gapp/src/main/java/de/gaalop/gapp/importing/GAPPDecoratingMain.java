@@ -56,7 +56,7 @@ public class GAPPDecoratingMain {
 
         HashSet<String> variables = getAllVariableNames(graph);
         // import now the graph in GAPP
-        GAPPDecorator vCFG = new GAPPDecorator(gappStart, variables);
+        GAPPDecorator vCFG = new GAPPDecorator(gappStart, variables, usedAlgebra.getBladeCount());
         graph.accept(vCFG);
 
         return graph;
@@ -71,7 +71,8 @@ public class GAPPDecoratingMain {
         LinkedList<Variable> toDo = new LinkedList<Variable>(graph.getInputVariables());
 
         GAPPMultivector inputsMv = new GAPPMultivector("inputsMv");
-        gappStart.addInstruction(new GAPPResetMv(inputsMv));
+        gappStart.addInstruction(new GAPPResetMv(inputsMv, toDo.size()
+                ));
 
         HashMap<Variable,MultivectorComponent> map = new HashMap<Variable, MultivectorComponent>();
 

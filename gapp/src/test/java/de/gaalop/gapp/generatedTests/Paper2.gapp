@@ -1,7 +1,7 @@
 //c[0] = ((inputsMv[5] * inputsMv[1]) + (inputsMv[4] * inputsMv[3])) + (inputsMv[2] * inputsMv[0])
-resetMv inputsMv;
+resetMv inputsMv = <6>;
 assignMv inputsMv[0,1,2,3,4,5] = [b1,b3,a1,b2,a2,a3];
-resetMv c;
+resetMv c = <32>;
 setVector ve0 = inputsMv[5,4,2];
 setVector ve1 = inputsMv[1,3,0];
 dotVectors c[0] = <ve0,ve1>;
@@ -22,7 +22,7 @@ setVector ve7 = inputsMv[1,3];
 dotVectors c[10] = <ve6,ve7>;
 
 //f[1] = inputsMv[2] * c[0]
-resetMv f;
+resetMv f = <32>;
 setVector ve8 = inputsMv[2];
 setVector ve9 = c[0];
 dotVectors f[1] = <ve8,ve9>;

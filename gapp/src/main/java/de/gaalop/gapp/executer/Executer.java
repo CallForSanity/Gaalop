@@ -80,9 +80,8 @@ public class Executer extends CFGGAPPVisitor {
         if (values.containsKey(name))
             return values.get(name);
         else {
-            MultivectorWithValues newMv = new MultivectorWithValues(usedAlgebra.getBladeCount());
-            values.put(name, newMv);
-            return newMv;
+            System.err.println("Multivector "+name+" does not exist!");
+            return null;
         }
     }
 
@@ -136,7 +135,9 @@ public class Executer extends CFGGAPPVisitor {
     
     @Override
     public Object visitResetMv(GAPPResetMv gappResetMv, Object arg) {
-        getMultivector(gappResetMv.getDestinationMv().getName()).clear();
+        MultivectorWithValues mv = new MultivectorWithValues(gappResetMv.getSize());
+        values.put(gappResetMv.getDestinationMv().getName(), mv);
+        mv.clear();
         return null;
     }
 

@@ -22,9 +22,6 @@ public class GAPPAssignMv extends GAPPBaseInstruction {
     private Selectorset selectors;
     private Variableset values;
 
-    public GAPPAssignMv() {
-    }
-
     public GAPPAssignMv(GAPPMultivector destinationMv, Selectorset selectors, Variableset values) {
         this.destinationMv = destinationMv;
         this.selectors = selectors;

@@ -15,9 +15,6 @@ public class GAPPCalculateMv extends GAPPBaseInstruction {
     private GAPPMultivector operand1;
     private GAPPMultivector operand2;
 
-    public GAPPCalculateMv() {
-    }
-
     public GAPPCalculateMv(CalculationType type, GAPPMultivector target, GAPPMultivector operand1, GAPPMultivector operand2) {
         this.type = type;
         this.target = target;
