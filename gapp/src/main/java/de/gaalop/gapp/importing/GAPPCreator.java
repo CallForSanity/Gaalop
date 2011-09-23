@@ -492,9 +492,6 @@ public class GAPPCreator implements ParallelObjectVisitor {
                 ));
     }
 
-    //TODO chs Think about problem with size of multivectors!
-    //Is it possible to annotate every multivector with an arbitrary size (i.e > bladecount)?
-
     /**
      * Collects all names of multivectors in the MvComponents of a ParallelVector
      * @param vector The ParallelVector

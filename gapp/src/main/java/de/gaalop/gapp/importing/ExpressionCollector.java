@@ -3,6 +3,7 @@ package de.gaalop.gapp.importing;
 import de.gaalop.gapp.importing.parallelObjects.Constant;
 import de.gaalop.dfg.Addition;
 import de.gaalop.dfg.BaseVector;
+import de.gaalop.dfg.BinaryOperation;
 import de.gaalop.dfg.Division;
 import de.gaalop.dfg.Equality;
 import de.gaalop.dfg.Exponentiation;
@@ -24,6 +25,7 @@ import de.gaalop.dfg.OuterProduct;
 import de.gaalop.dfg.Relation;
 import de.gaalop.dfg.Reverse;
 import de.gaalop.dfg.Subtraction;
+import de.gaalop.dfg.UnaryOperation;
 import de.gaalop.dfg.Variable;
 import de.gaalop.gapp.importing.parallelObjects.ExtCalculation;
 import de.gaalop.gapp.importing.parallelObjects.MvComponent;
@@ -73,14 +75,7 @@ public class ExpressionCollector implements ExpressionVisitor {
 
     @Override
     public void visit(Division node) {
-        resultValue = null;
-        node.getLeft().accept(this);
-        ParallelObject left = resultValue;
-        resultValue = null;
-        node.getRight().accept(this);
-        ParallelObject right = resultValue;
-
-        resultValue = new ExtCalculation(CalculationType.DIVISION, left, right);
+        createExtCalculationFromBinaryOperation(node, CalculationType.DIVISION);
     }
 
     /**
@@ -124,21 +119,12 @@ public class ExpressionCollector implements ExpressionVisitor {
 
     @Override
     public void visit(MathFunctionCall node) {
-        resultValue = null;
-        node.getOperand().accept(this);
-        resultValue = new ExtCalculation(transformFunction(node.getFunction()), resultValue, null);
+        createExtCalculationFromUnaryOperation(node, transformFunction(node.getFunction()));
     }
 
     @Override
     public void visit(Exponentiation node) {
-        resultValue = null;
-        node.getLeft().accept(this);
-        ParallelObject left = resultValue;
-        resultValue = null;
-        node.getRight().accept(this);
-        ParallelObject right = resultValue;
-
-        resultValue = new ExtCalculation(CalculationType.EXPONENTIATION, left, right);
+        createExtCalculationFromBinaryOperation(node, CalculationType.EXPONENTIATION);
     }
 
     @Override
@@ -148,38 +134,72 @@ public class ExpressionCollector implements ExpressionVisitor {
         resultValue.negate();
     }
 
-    // ============================ Logical methods ============================
+    private void createExtCalculationFromUnaryOperation(UnaryOperation node, CalculationType type) {
+        resultValue = null;
+        node.getOperand().accept(this);
+        resultValue = new ExtCalculation(type, resultValue, null);
+    }
 
-    //TODO chs ? Add support to logical functions (is this needed? because controlflow isn't permitted)
+    private void createExtCalculationFromBinaryOperation(BinaryOperation node, CalculationType type) {
+        resultValue = null;
+        node.getLeft().accept(this);
+        ParallelObject left = resultValue;
+        resultValue = null;
+        node.getRight().accept(this);
+        ParallelObject right = resultValue;
+
+        resultValue = new ExtCalculation(type, left, right);
+    }
+
+
+
+    // ============================ Logical methods ============================
 
     @Override
     public void visit(LogicalOr node) {
-        throw new UnsupportedOperationException("Logical: Not supported yet.");
+        createExtCalculationFromBinaryOperation(node, CalculationType.LOG_OR);
     }
 
     @Override
     public void visit(LogicalAnd node) {
-        throw new UnsupportedOperationException("Logical: Not supported yet.");
+        createExtCalculationFromBinaryOperation(node, CalculationType.LOG_AND);
     }
 
     @Override
     public void visit(LogicalNegation node) {
-        throw new UnsupportedOperationException("Logical: Not supported yet.");
+        createExtCalculationFromUnaryOperation(node, CalculationType.LOG_INV);
     }
 
     @Override
     public void visit(Equality node) {
-        throw new UnsupportedOperationException("Logical: Not supported yet.");
+        createExtCalculationFromBinaryOperation(node, CalculationType.EQUAL);
     }
 
     @Override
     public void visit(Inequality node) {
-        throw new UnsupportedOperationException("Logical: Not supported yet.");
+        createExtCalculationFromBinaryOperation(node, CalculationType.INEQUAL);
     }
 
     @Override
     public void visit(Relation relation) {
-        throw new UnsupportedOperationException("Logical: Not supported yet.");
+        CalculationType type = null;
+        switch (relation.getType()) {
+            case GREATER:
+                type = CalculationType.REL_GR;
+                break;
+            case GREATER_OR_EQUAL:
+                type = CalculationType.REL_GREQ;
+                break;
+            case LESS:
+                type = CalculationType.REL_LE;
+                break;
+            case LESS_OR_EQUAL:
+                type = CalculationType.REL_LEEQ;
+                break;
+            default:
+                System.err.println("Unknown RelationType: "+relation.getType());
+        }
+        createExtCalculationFromBinaryOperation(relation, type);
     }
 
     // ========================= Illegal visit methods =========================
