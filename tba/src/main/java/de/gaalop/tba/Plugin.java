@@ -33,7 +33,7 @@ public class Plugin extends Observable implements OptimizationStrategyPlugin {
         public String maximaCommand = ProcessBuilderMaximaConnection.CMD_MAXIMA_LINUX;
 
         @ConfigurationProperty(type = Type.TEXT)
-        public String algebra = "conf5d"; //make conformal 5d to the standard algebra
+        public String algebra = "5d"; //make conformal 5d to the standard algebra
 
         @ConfigurationProperty(type = Type.BOOLEAN)
         public boolean optInserting = true;

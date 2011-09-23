@@ -44,7 +44,7 @@ public class Unused implements GenericTestable {
 
     @Override
     public UseAlgebra getUsedAlgebra() {
-        return new UseAlgebra("conf5d");
+        return new UseAlgebra("5d");
     }
 
 }

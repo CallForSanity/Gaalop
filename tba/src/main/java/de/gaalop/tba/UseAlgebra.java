@@ -23,10 +23,10 @@ public class UseAlgebra {
 
     public UseAlgebra(String algebraDirName) {
 
-        boolean useAsRessource = algebraDirName.equalsIgnoreCase("conf5d")
+        boolean useAsRessource = algebraDirName.equalsIgnoreCase("5d")
                 || algebraDirName.equalsIgnoreCase("2d")
                 || algebraDirName.equalsIgnoreCase("3d");
-        N3 = algebraDirName.equalsIgnoreCase("conf5d");
+        N3 = algebraDirName.equalsIgnoreCase("5d");
         String dirName = (useAsRessource) ? "algebra/"+algebraDirName+"/" : new File(algebraDirName).getAbsolutePath()+File.separatorChar;
 
         algebra = new Algebra(dirName+"blades.csv",useAsRessource);
@@ -106,7 +106,7 @@ public class UseAlgebra {
      */
     public static UseAlgebra get5dConformalGA() {
         //load 5d conformal algebra
-        return new UseAlgebra("conf5d");
+        return new UseAlgebra("5d");
     }
 
     /**
