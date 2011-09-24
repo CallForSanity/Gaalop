@@ -59,6 +59,9 @@ public class GAPPDecoratingMain {
         GAPPDecorator vCFG = new GAPPDecorator(gappStart, variables, usedAlgebra.getBladeCount());
         graph.accept(vCFG);
 
+        //System.out.println("Memory usage of "+graph.getSource().getName());
+        //MemoryUsage.printMemoryUsage(graph);
+
         return graph;
     }
 
