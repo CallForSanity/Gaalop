@@ -51,11 +51,14 @@ public class MvExpressionsBuilder extends EmptyControlFlowVisitor implements Exp
 
 	private final double EPSILON = 10E-07;
 
+        private boolean scalarFunctions;
+
 //	public static final byte INNER = 0;
 //	public static final byte OUTER = 1;
 //	public static final byte GEO = 2;
 
-	public MvExpressionsBuilder(UseAlgebra usedAlgebra) {
+	public MvExpressionsBuilder(UseAlgebra usedAlgebra, boolean scalarFunctions) {
+            this.scalarFunctions = scalarFunctions;
 		variables = new HashMap<String, MvExpressions>();
                 this.usedAlgebra = usedAlgebra;
 		counterMv = 0;
@@ -81,22 +84,32 @@ public class MvExpressionsBuilder extends EmptyControlFlowVisitor implements Exp
             return node;
         }
 
+        private Variable curVariable;
+
 	@Override
 	public void visit(AssignmentNode node) {
-		Variable variable = node.getVariable();
+		curVariable = node.getVariable();
+
 		Expression value = node.getValue();
+
 
 		value.accept(this);
 
 		MvExpressions mvExpr = expressions.get(value);
-		variables.put(variable.toString(), mvExpr);
+		variables.put(curVariable.toString(), mvExpr);
 
                 // when GAPP performing, only the MvExpressions are needed,
                 // the graph itself mustn't changed, espescially nodes won't be inserted.
                 // That's why we use a method for changing graph
-                AssignmentNode lastNode = changeGraph(node,mvExpr,variable);
+                AssignmentNode lastNode = node;
+                if (scalarFunctions) {
+                    lastNode = changeGraph(node,mvExpr,curVariable);
+                } else {
+                    if (!(value instanceof MathFunctionCall)) 
+                        lastNode = changeGraph(node,mvExpr,curVariable);     
+                }
 
-                
+               
 		lastNode.getSuccessor().accept(this);
 	}
 
@@ -289,35 +302,41 @@ public class MvExpressionsBuilder extends EmptyControlFlowVisitor implements Exp
 
 	@Override
 	public void visit(MathFunctionCall node) {
-		traverseUnary(node);
+            MvExpressions result = createNewMvExpressions();
+            if (scalarFunctions) {
+
+                    traverseUnary(node);
 
 
+                    switch (node.getFunction()) {
+                    case ABS:
+                            //sqrt(abs(op*op))
 
-		MvExpressions result = createNewMvExpressions();
-		switch (node.getFunction()) {
-		case ABS:
-			//sqrt(abs(op*op))
+                            MvExpressions op = expressions.get(node.getOperand());
+                            MvExpressions opR = getReverse(op);
+                            MvExpressions prod = calculateUsingMultTable(Products.GEO, op, opR);
 
-                        MvExpressions op = expressions.get(node.getOperand());
-                        MvExpressions opR = getReverse(op);
-                        MvExpressions prod = calculateUsingMultTable(Products.GEO, op, opR);
+                            Expression i0 = prod.bladeExpressions[0];
 
-			Expression i0 = prod.bladeExpressions[0];
+                            if (i0 == null) i0 = new FloatConstant(0);
 
-			if (i0 == null) i0 = new FloatConstant(0);
+                            result.bladeExpressions[0] = new MathFunctionCall(new MathFunctionCall(i0,MathFunction.ABS),MathFunction.SQRT);
 
-			result.bladeExpressions[0] = new MathFunctionCall(new MathFunctionCall(i0,MathFunction.ABS),MathFunction.SQRT);
+                            break;
+                    case SQRT:
+                            //sqrt(scalar)
+                            result.bladeExpressions[0] = new MathFunctionCall(expressions.get(node.getOperand()).bladeExpressions[0],MathFunction.SQRT);
+                            break;
+                    default:
+                            result.bladeExpressions[0] = new MathFunctionCall(expressions.get(node.getOperand()).bladeExpressions[0],node.getFunction());
+                            System.err.println("Warning: "+node.getFunction().toString()+" is only implemented for scalar inputs!");
+                            break;
+                    }
 
-			break;
-		case SQRT:
-			//sqrt(scalar)
-			result.bladeExpressions[0] = new MathFunctionCall(expressions.get(node.getOperand()).bladeExpressions[0],MathFunction.SQRT);
-			break;
-		default:
-			result.bladeExpressions[0] = new MathFunctionCall(expressions.get(node.getOperand()).bladeExpressions[0],node.getFunction());
-                        System.err.println("Warning: "+node.getFunction().toString()+" is only implemented for scalar inputs!");
-			break;
-		}
+                } else {
+                    for (int blade=0;blade<bladeCount;blade++)
+                        result.bladeExpressions[blade] = new MultivectorComponent(curVariable.getName(), blade);
+                }
 
 		expressions.put(node,result);
 	}

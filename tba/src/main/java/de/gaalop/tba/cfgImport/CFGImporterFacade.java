@@ -2,6 +2,8 @@ package de.gaalop.tba.cfgImport;
 
 import de.gaalop.OptimizationException;
 import de.gaalop.cfg.ControlFlowGraph;
+import de.gaalop.dfg.MathFunction;
+import de.gaalop.dfg.MathFunctionCall;
 import de.gaalop.tba.Plugin;
 import de.gaalop.tba.UseAlgebra;
 import de.gaalop.tba.cfgImport.optimization.OptConstantPropagation;
@@ -23,7 +25,10 @@ public class CFGImporterFacade {
 
     private LinkedList<OptimizationStrategyWithModifyFlag> optimizations;
 
+    private Plugin plugin;
+
     public CFGImporterFacade(Plugin plugin) {
+        this.plugin = plugin;
 
         //load desired algebra
         usedAlgebra = new UseAlgebra(plugin.getAlgebra());
@@ -59,7 +64,16 @@ public class CFGImporterFacade {
             graph.accept(checker);
         }
 
-        CFGImporter builder = new CFGImporter(usedAlgebra);
+        if (!plugin.isScalarFunctions()) {
+            
+            DivisionRemover divisionRemover = new DivisionRemover();
+            graph.accept(divisionRemover);
+            
+            MathFunctionSeparator mathFunctionSeparator = new MathFunctionSeparator();
+            graph.accept(mathFunctionSeparator);
+        }
+
+        CFGImporter builder = new CFGImporter(usedAlgebra, plugin.isScalarFunctions());
         graph.accept(builder);
 
         boolean repeat;

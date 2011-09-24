@@ -74,7 +74,12 @@ public enum MathFunction {
     /**
      * Evaluates the tangent of an angle.
      */
-    TAN;
+    TAN,
+
+    /**
+     * Inverts the multivector.
+     */
+    INVERT;
     
     public String toString() { 
     	return super.toString().toLowerCase();

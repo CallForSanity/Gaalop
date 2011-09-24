@@ -18,16 +18,16 @@ import de.gaalop.tba.cfgImport.optimization.maxima.ProcessBuilderMaximaConnectio
 public class Plugin extends Observable implements OptimizationStrategyPlugin {
 
         @ConfigurationProperty(type = Type.BOOLEAN)
-        public boolean optMaxima = true;
+        public boolean optMaxima = false;
 
         @ConfigurationProperty(type = Type.BOOLEAN)
-        public boolean optOneExpressionRemoval = true;
+        public boolean optOneExpressionRemoval = false;
 
         @ConfigurationProperty(type = Type.BOOLEAN)
-        public boolean optConstantPropagation = true;
+        public boolean optConstantPropagation = false;
 
         @ConfigurationProperty(type = Type.BOOLEAN)
-        public boolean optUnusedAssignments = true;
+        public boolean optUnusedAssignments = false;
 
         @ConfigurationProperty(type = Type.TEXT)
         public String maximaCommand = ProcessBuilderMaximaConnection.CMD_MAXIMA_LINUX;
@@ -36,7 +36,10 @@ public class Plugin extends Observable implements OptimizationStrategyPlugin {
         public String algebra = "5d"; //make conformal 5d to the standard algebra
 
         @ConfigurationProperty(type = Type.BOOLEAN)
-        public boolean optInserting = true;
+        public boolean optInserting = false;
+
+       
+        public boolean scalarFunctions = true;
 
         public String getAlgebra() {
             return algebra;
@@ -61,7 +64,11 @@ public class Plugin extends Observable implements OptimizationStrategyPlugin {
         public boolean isOptInserting() {
             return optInserting;
         }
-  
+
+        public boolean isScalarFunctions() {
+            return scalarFunctions;
+        }
+
         public String getMaximaCommand() {
             return maximaCommand;
         }
@@ -92,6 +99,10 @@ public class Plugin extends Observable implements OptimizationStrategyPlugin {
 
         public void setOptInserting(boolean optInserting) {
             this.optInserting = optInserting;
+        }
+
+        public void setScalarFunctions(boolean scalarFunctions) {
+            this.scalarFunctions = scalarFunctions;
         }
 
 	@Override

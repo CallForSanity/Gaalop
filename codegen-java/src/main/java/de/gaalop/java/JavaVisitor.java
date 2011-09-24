@@ -278,8 +278,9 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
                 node.getVariable().accept(this);
 		append(" = ");
 		node.getValue().accept(this);
-		append(';');
+		
                 if (node.getVariable() instanceof MultivectorComponent) {
+                    append(';');
 			append(" // ");
 
 			MultivectorComponent component = (MultivectorComponent) node.getVariable();

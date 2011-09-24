@@ -134,15 +134,31 @@ public class Unused implements GAProgram {
 	
 	@Override
 	public void calculate() {
-		Din$0 = arw$0; // 1.0;
-		Din$6 = arz$0; // e1^e2;
-		Din$7 = (-ary$0); // e1^e3;
-		Din$8 = (((-(((0.5f * ary$0) * lpz$0))) + ((0.5f * arz$0) * lpy$0)) - ((0.5f * arw$0) * lpx$0)); // e1^einf;
-		Din$10 = arx$0; // e2^e3;
-		Din$11 = ((((0.5f * arx$0) * lpz$0) - ((0.5f * arw$0) * lpy$0)) - ((0.5f * arz$0) * lpx$0)); // e2^einf;
-		Din$13 = (((-(((0.5f * arw$0) * lpz$0))) - ((0.5f * arx$0) * lpy$0)) + ((0.5f * ary$0) * lpx$0)); // e3^einf;
-		Din$26 = (((-(((0.5f * arz$0) * lpz$0))) - ((0.5f * ary$0) * lpy$0)) - ((0.5f * arx$0) * lpx$0)); // e1^e2^e3^einf;
+		rotor$0 = arw$0; // 1.0;
+		rotor$6 = ((arz$0 * ((1.0f * 1.0f) * 1.0f)) * 1.0f); // e1^e2;
+		rotor$7 = ((ary$0 * ((1.0f * 1.0f) * -1.0f)) * 1.0f); // e1^e3;
+		rotor$10 = ((arx$0 * ((1.0f * 1.0f) * 1.0f)) * 1.0f); // e2^e3;
+		translator$0 = 1.0f; // 1.0;
+		translator$8 = (-(((((0.5f * lpx$0) * 1.0f) * ((1.0f * 1.0f) * 1.0f)) * 1.0f))); // e1^einf;
+		translator$11 = (-(((((0.5f * lpy$0) * 1.0f) * ((1.0f * 1.0f) * 1.0f)) * 1.0f))); // e2^einf;
+		translator$13 = (-(((((0.5f * lpz$0) * 1.0f) * ((1.0f * 1.0f) * 1.0f)) * 1.0f))); // e3^einf;
+		Din$0 = ((translator$0 * rotor$0) * 1.0f); // 1.0;
+		Din$6 = ((translator$0 * rotor$6) * 1.0f); // e1^e2;
+		Din$7 = ((translator$0 * rotor$7) * 1.0f); // e1^e3;
+		Din$8 = ((((translator$8 * rotor$0) * 1.0f) + ((translator$11 * rotor$6) * -1.0f)) + ((translator$13 * rotor$7) * -1.0f)); // e1^einf;
+		Din$10 = ((translator$0 * rotor$10) * 1.0f); // e2^e3;
+		Din$11 = ((((translator$8 * rotor$6) * 1.0f) + ((translator$11 * rotor$0) * 1.0f)) + ((translator$13 * rotor$10) * -1.0f)); // e2^einf;
+		Din$13 = ((((translator$8 * rotor$7) * 1.0f) + ((translator$11 * rotor$10) * 1.0f)) + ((translator$13 * rotor$0) * 1.0f)); // e3^einf;
+		Din$26 = ((((translator$8 * rotor$10) * 1.0f) + ((translator$11 * rotor$7) * -1.0f)) + ((translator$13 * rotor$6) * 1.0f)); // e1^e2^e3^einf;
 	}
 
+	private float translator$0;
+	private float rotor$6;
+	private float rotor$7;
+	private float rotor$10;
+	private float translator$8;
+	private float rotor$0;
+	private float translator$13;
+	private float translator$11;
 
 }

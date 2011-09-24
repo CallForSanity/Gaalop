@@ -14,8 +14,8 @@ import de.gaalop.tba.UseAlgebra;
  */
 public class CFGImporter extends MvExpressionsBuilder {
 
-    public CFGImporter(UseAlgebra usedAlgebra) {
-        super(usedAlgebra);
+    public CFGImporter(UseAlgebra usedAlgebra, boolean scalarFunctions) {
+        super(usedAlgebra, scalarFunctions);
     }
 
     @Override
