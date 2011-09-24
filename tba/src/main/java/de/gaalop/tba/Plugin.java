@@ -18,16 +18,16 @@ import de.gaalop.tba.cfgImport.optimization.maxima.ProcessBuilderMaximaConnectio
 public class Plugin extends Observable implements OptimizationStrategyPlugin {
 
         @ConfigurationProperty(type = Type.BOOLEAN)
-        public boolean optMaxima = false;
+        public boolean optMaxima = true;
 
         @ConfigurationProperty(type = Type.BOOLEAN)
-        public boolean optOneExpressionRemoval = false;
+        public boolean optOneExpressionRemoval = true;
 
         @ConfigurationProperty(type = Type.BOOLEAN)
-        public boolean optConstantPropagation = false;
+        public boolean optConstantPropagation = true;
 
         @ConfigurationProperty(type = Type.BOOLEAN)
-        public boolean optUnusedAssignments = false;
+        public boolean optUnusedAssignments = true;
 
         @ConfigurationProperty(type = Type.TEXT)
         public String maximaCommand = ProcessBuilderMaximaConnection.CMD_MAXIMA_LINUX;
@@ -36,7 +36,7 @@ public class Plugin extends Observable implements OptimizationStrategyPlugin {
         public String algebra = "5d"; //make conformal 5d to the standard algebra
 
         @ConfigurationProperty(type = Type.BOOLEAN)
-        public boolean optInserting = false;
+        public boolean optInserting = true;
 
        
         public boolean scalarFunctions = true;
