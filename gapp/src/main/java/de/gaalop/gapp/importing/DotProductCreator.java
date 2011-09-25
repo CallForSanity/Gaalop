@@ -4,6 +4,7 @@ import de.gaalop.gapp.importing.parallelObjects.Constant;
 import de.gaalop.gapp.importing.parallelObjects.DotProduct;
 import de.gaalop.gapp.importing.parallelObjects.ExtCalculation;
 import de.gaalop.gapp.importing.parallelObjects.MvComponent;
+import de.gaalop.gapp.importing.parallelObjects.ParVariable;
 import de.gaalop.gapp.importing.parallelObjects.ParallelObject;
 import de.gaalop.gapp.importing.parallelObjects.ParallelObjectVisitor;
 import de.gaalop.gapp.importing.parallelObjects.Product;
@@ -85,6 +86,14 @@ public class DotProductCreator implements ParallelObjectVisitor {
         dotProduct.set(summandNo, 0, mvComponent);
         return null;
     }
+
+    @Override
+    public Object visitVariable(ParVariable variable, Object arg) {
+        dotProduct.set(summandNo, 0, variable);
+        return null;
+    }
+
+
 
     // ========================== Illegal methods ==============================
 

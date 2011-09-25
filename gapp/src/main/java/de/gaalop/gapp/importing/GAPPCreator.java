@@ -9,6 +9,7 @@ import de.gaalop.gapp.importing.parallelObjects.Constant;
 import de.gaalop.gapp.importing.parallelObjects.DotProduct;
 import de.gaalop.gapp.importing.parallelObjects.ExtCalculation;
 import de.gaalop.gapp.importing.parallelObjects.MvComponent;
+import de.gaalop.gapp.importing.parallelObjects.ParVariable;
 import de.gaalop.gapp.importing.parallelObjects.ParallelObject;
 import de.gaalop.gapp.importing.parallelObjects.ParallelObjectType;
 import de.gaalop.gapp.importing.parallelObjects.ParallelObjectVisitor;
@@ -47,8 +48,13 @@ public class GAPPCreator implements ParallelObjectVisitor {
 
     private HashSet<String> variables;
 
-    public GAPPCreator(HashSet<String> variables) {
+    private int bladeCount;
+    private boolean scalarFunctions;
+
+    public GAPPCreator(HashSet<String> variables, int bladeCount, boolean scalarFunctions) {
         this.variables = variables;
+        this.bladeCount = bladeCount;
+        this.scalarFunctions = scalarFunctions;
     }
 
     public void setGapp(GAPP gapp) {
@@ -111,6 +117,13 @@ public class GAPPCreator implements ParallelObjectVisitor {
     }
 
     @Override
+    public Object visitVariable(ParVariable variable, Object arg) {
+        throw new IllegalStateException("Variable should not appear in GAPPCreator!");
+    }
+
+
+
+    @Override
     public Object visitExtCalculation(ExtCalculation extCalculation, Object arg) {
         //arg must be filled!
 
@@ -160,6 +173,7 @@ public class GAPPCreator implements ParallelObjectVisitor {
 
             gapp.addInstruction(setMv);
         }
+   
 
         return null;
     }
@@ -170,7 +184,7 @@ public class GAPPCreator implements ParallelObjectVisitor {
      * @return The new GAPPMultivector
      */
     private GAPPMultivector createMultivectorFromParallelObjectTerminal(ParallelObject object) {
-         GAPPMultivectorCreator creator = new GAPPMultivectorCreator(this);
+         GAPPMultivectorCreator creator = new GAPPMultivectorCreator(this, bladeCount);
          return (GAPPMultivector) object.accept(creator, null);
     }
 

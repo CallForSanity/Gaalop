@@ -7,6 +7,7 @@ import de.gaalop.gapp.importing.parallelObjects.Constant;
 import de.gaalop.gapp.importing.parallelObjects.DotProduct;
 import de.gaalop.gapp.importing.parallelObjects.ExtCalculation;
 import de.gaalop.gapp.importing.parallelObjects.MvComponent;
+import de.gaalop.gapp.importing.parallelObjects.ParVariable;
 import de.gaalop.gapp.importing.parallelObjects.ParallelObjectVisitor;
 import de.gaalop.gapp.importing.parallelObjects.Product;
 import de.gaalop.gapp.importing.parallelObjects.Sum;
@@ -26,8 +27,16 @@ public class GAPPMultivectorCreator implements ParallelObjectVisitor {
 
     private GAPPCreator gappCreator;
 
-    public GAPPMultivectorCreator(GAPPCreator gappCreator) {
+    private int bladeCount;
+
+    public GAPPMultivectorCreator(GAPPCreator gappCreator, int bladeCount) {
         this.gappCreator = gappCreator;
+        this.bladeCount = bladeCount;
+    }
+
+    @Override
+    public Object visitVariable(ParVariable variable, Object arg) {
+        return gappCreator.createMv(bladeCount);
     }
 
     @Override

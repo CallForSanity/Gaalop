@@ -29,6 +29,7 @@ import de.gaalop.dfg.UnaryOperation;
 import de.gaalop.dfg.Variable;
 import de.gaalop.gapp.importing.parallelObjects.ExtCalculation;
 import de.gaalop.gapp.importing.parallelObjects.MvComponent;
+import de.gaalop.gapp.importing.parallelObjects.ParVariable;
 import de.gaalop.gapp.importing.parallelObjects.ParallelObject;
 import de.gaalop.gapp.instructionSet.CalculationType;
 
@@ -71,8 +72,6 @@ public class ExpressionCollector implements ExpressionVisitor {
         resultValue = new MvComponent(node);
     }
 
-
-
     @Override
     public void visit(Division node) {
         createExtCalculationFromBinaryOperation(node, CalculationType.DIVISION);
@@ -111,6 +110,8 @@ public class ExpressionCollector implements ExpressionVisitor {
                 return CalculationType.SQRT;
             case TAN:
                 return CalculationType.TAN;
+            case INVERT:
+                return CalculationType.INVERT;
             default:
                 System.err.println("Unknown MathFunction: "+function);
                 return null;
@@ -151,6 +152,10 @@ public class ExpressionCollector implements ExpressionVisitor {
         resultValue = new ExtCalculation(type, left, right);
     }
 
+    @Override
+    public void visit(Variable node) {
+        resultValue = new ParVariable(node.getName());
+    }
 
 
     // ============================ Logical methods ============================
@@ -203,12 +208,6 @@ public class ExpressionCollector implements ExpressionVisitor {
     }
 
     // ========================= Illegal visit methods =========================
-
-
-    @Override
-    public void visit(Variable node) {
-        throw new IllegalStateException("Variables should have been removed by GAPPDecoratingMain.");
-    }
 
     @Override
     public void visit(InnerProduct node) {

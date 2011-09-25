@@ -2,8 +2,6 @@ package de.gaalop.tba.cfgImport;
 
 import de.gaalop.OptimizationException;
 import de.gaalop.cfg.ControlFlowGraph;
-import de.gaalop.dfg.MathFunction;
-import de.gaalop.dfg.MathFunctionCall;
 import de.gaalop.tba.Plugin;
 import de.gaalop.tba.UseAlgebra;
 import de.gaalop.tba.cfgImport.optimization.OptConstantPropagation;
@@ -64,12 +62,16 @@ public class CFGImporterFacade {
             graph.accept(checker);
         }
 
-        if (!plugin.isScalarFunctions()) {
-            
+        if (!plugin.isInvertTransformation()) {
             DivisionRemover divisionRemover = new DivisionRemover();
             graph.accept(divisionRemover);
+        }
+
+        if (!plugin.isScalarFunctions()) {
+            VariablesCollector collector = new VariablesCollector();
+            graph.accept(collector);
             
-            MathFunctionSeparator mathFunctionSeparator = new MathFunctionSeparator();
+            MathFunctionSeparator mathFunctionSeparator = new MathFunctionSeparator(collector.getVariables());
             graph.accept(mathFunctionSeparator);
         }
 

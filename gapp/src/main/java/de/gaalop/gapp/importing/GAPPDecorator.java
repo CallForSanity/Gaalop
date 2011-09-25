@@ -3,9 +3,13 @@ package de.gaalop.gapp.importing;
 import de.gaalop.cfg.AssignmentNode;
 import de.gaalop.cfg.EmptyControlFlowVisitor;
 import de.gaalop.dfg.MultivectorComponent;
+import de.gaalop.dfg.Variable;
 import de.gaalop.gapp.GAPP;
 import de.gaalop.gapp.importing.parallelObjects.DotProduct;
+import de.gaalop.gapp.importing.parallelObjects.ExtCalculation;
+import de.gaalop.gapp.importing.parallelObjects.ParVariable;
 import de.gaalop.gapp.importing.parallelObjects.ParallelObject;
+import de.gaalop.gapp.instructionSet.GAPPCalculateMv;
 import de.gaalop.gapp.instructionSet.GAPPResetMv;
 import de.gaalop.gapp.variables.GAPPMultivector;
 import de.gaalop.gapp.variables.GAPPMultivectorComponent;
@@ -23,10 +27,10 @@ public class GAPPDecorator extends EmptyControlFlowVisitor {
     private GAPP gappStart;
     private int bladeCount;
 
-    public GAPPDecorator(GAPP gappStart, HashSet<String> variables, int bladeCount) {
+    public GAPPDecorator(GAPP gappStart, HashSet<String> variables, int bladeCount, boolean scalarFunctions) {
         this.gappStart = gappStart;
         this.bladeCount = bladeCount;
-        gappCreator = new GAPPCreator(variables);
+        gappCreator = new GAPPCreator(variables, bladeCount, scalarFunctions);
     }
 
     @Override
@@ -40,9 +44,9 @@ public class GAPPDecorator extends EmptyControlFlowVisitor {
             gappStart = null;
         }
 
-        // remember the name of the current destination multivector component
-        MultivectorComponent mvC = (MultivectorComponent) node.getVariable();
-        String name = mvC.getName();
+        Variable variable = node.getVariable();
+
+        String name = variable.getName();
 
         if (!createdGAPPVariables.contains(name)) {
             // create a new GAPPMultivector for destination variable, if it does not exist
@@ -62,9 +66,29 @@ public class GAPPDecorator extends EmptyControlFlowVisitor {
         if (newDot != null)
             parallelObject = newDot;
 
-        //process further: create GAPP from the ParallelObject data structure
-        GAPPMultivectorComponent gMvC = new GAPPMultivectorComponent(mvC.getName(), mvC.getBladeIndex());
-        parallelObject.accept(gappCreator, gMvC);
+
+        if (variable instanceof MultivectorComponent) {
+
+            MultivectorComponent mvC = (MultivectorComponent) variable;
+
+            //process further: create GAPP from the ParallelObject data structure
+            GAPPMultivectorComponent gMvC = new GAPPMultivectorComponent(mvC.getName(), mvC.getBladeIndex());
+            parallelObject.accept(gappCreator, gMvC);
+
+        } else {
+            // only a MathFunctionCall is possible
+            //create gapp here
+            ExtCalculation extCalculation = (ExtCalculation) parallelObject;
+            
+            gapp.addInstruction(new GAPPCalculateMv(extCalculation.getType(),
+                    new GAPPMultivector(variable.getName()),
+                    new GAPPMultivector(((ParVariable) extCalculation.getOperand1()).getName()),
+                    (extCalculation.getOperand2() == null)
+                        ? null
+                        : new GAPPMultivector(((ParVariable) extCalculation.getOperand2()).getName())
+                    ));
+
+        }
 
         // go further in graph
         super.visit(node);

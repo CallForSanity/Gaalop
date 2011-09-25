@@ -12,5 +12,6 @@ public interface ParallelObjectVisitor {
     public Object visitConstant(Constant constant, Object arg);
     public Object visitMvComponent(MvComponent mvComponent, Object arg);
     public Object visitDotProduct(DotProduct dotProduct, Object arg);
+    public Object visitVariable(ParVariable variable, Object arg);
     
 }

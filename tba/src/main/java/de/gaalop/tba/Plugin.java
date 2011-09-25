@@ -38,7 +38,7 @@ public class Plugin extends Observable implements OptimizationStrategyPlugin {
         @ConfigurationProperty(type = Type.BOOLEAN)
         public boolean optInserting = true;
 
-       
+        public boolean invertTransformation = true;
         public boolean scalarFunctions = true;
 
         public String getAlgebra() {
@@ -68,6 +68,12 @@ public class Plugin extends Observable implements OptimizationStrategyPlugin {
         public boolean isScalarFunctions() {
             return scalarFunctions;
         }
+
+        public boolean isInvertTransformation() {
+            return invertTransformation;
+        }
+
+
 
         public String getMaximaCommand() {
             return maximaCommand;
@@ -104,6 +110,12 @@ public class Plugin extends Observable implements OptimizationStrategyPlugin {
         public void setScalarFunctions(boolean scalarFunctions) {
             this.scalarFunctions = scalarFunctions;
         }
+
+        public void setInvertTransformation(boolean invertTransformation) {
+            this.invertTransformation = invertTransformation;
+        }
+
+
 
 	@Override
 	public String getDescription() {

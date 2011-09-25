@@ -9,6 +9,7 @@ import de.gaalop.dfg.MathFunctionCall;
 import de.gaalop.dfg.UnaryOperation;
 import de.gaalop.dfg.Variable;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 
 /**
@@ -23,8 +24,19 @@ public class MathFunctionSeparator extends EmptyControlFlowVisitor {
 
     private int tempCounter = -1;
 
+    private HashSet<String> variables;
+
+    public MathFunctionSeparator(HashSet<String> variables) {
+        this.variables = variables;
+    }
+
+
+
     private Variable getNewTemporaryVariable() {
         tempCounter++;
+        while (variables.contains("temp"+tempCounter))
+            tempCounter++;
+
         return new Variable("temp"+tempCounter);
     }
 

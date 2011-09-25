@@ -40,6 +40,8 @@ public class GAPPDecoratingMain {
      */
     public ControlFlowGraph decorateGraph(UseAlgebra usedAlgebra, ControlFlowGraph graph) throws OptimizationException {
 
+        boolean scalarFunctions = false;
+
         if (!usedAlgebra.isN3()) {
             BaseVectorChecker checker = new BaseVectorChecker(usedAlgebra.getAlgebra().getBase());
             graph.accept(checker);
@@ -47,6 +49,8 @@ public class GAPPDecoratingMain {
 
         Plugin plugin = new Plugin();
         plugin.setOptInserting(false);
+        plugin.setInvertTransformation(true);
+        plugin.setScalarFunctions(scalarFunctions);
         CFGImporterFacade facade = new CFGImporterFacade(plugin);
         facade.setUsedAlgebra(usedAlgebra);
         facade.importGraph(graph);
@@ -56,7 +60,7 @@ public class GAPPDecoratingMain {
 
         HashSet<String> variables = getAllVariableNames(graph);
         // import now the graph in GAPP
-        GAPPDecorator vCFG = new GAPPDecorator(gappStart, variables, usedAlgebra.getBladeCount());
+        GAPPDecorator vCFG = new GAPPDecorator(gappStart, variables, usedAlgebra.getBladeCount(), scalarFunctions);
         graph.accept(vCFG);
 
         //System.out.println("Memory usage of "+graph.getSource().getName());
