@@ -9,6 +9,7 @@ import de.gaalop.gapp.Variableset;
 import de.gaalop.gapp.instructionSet.CalculationType;
 import de.gaalop.gapp.instructionSet.GAPPAddMv;
 import de.gaalop.gapp.instructionSet.GAPPAssignMv;
+import de.gaalop.gapp.instructionSet.GAPPAssignVector;
 import de.gaalop.gapp.instructionSet.GAPPDotVectors;
 import de.gaalop.gapp.instructionSet.GAPPResetMv;
 import de.gaalop.gapp.instructionSet.GAPPSetMv;
@@ -215,6 +216,20 @@ public class Parser implements GAPPVisitor {
      */
     protected GAPPVector parseVector(String string, VariableGetter getter) {
         return getter.parseVector(string);
+    }
+
+    @Override
+    public Object visitAssignVector(GAPPAssignVector gappAssignVector, Object arg) {
+        String[] partsEquation = ((String) arg).split("=");
+
+        //Parse left side
+        gappAssignVector.setDestination(parseVector(partsEquation[0].trim(), getter));
+
+        //Parse right side
+        Variableset values = new Variableset();
+        gappAssignVector.setValues(values);
+        parseSelectors(partsEquation[1].trim(), values, getter);
+        return null;
     }
 
 }

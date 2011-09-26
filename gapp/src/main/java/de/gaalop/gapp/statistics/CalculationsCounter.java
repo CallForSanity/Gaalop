@@ -3,6 +3,7 @@ package de.gaalop.gapp.statistics;
 import de.gaalop.gapp.instructionSet.CalculationType;
 import de.gaalop.gapp.instructionSet.GAPPAddMv;
 import de.gaalop.gapp.instructionSet.GAPPAssignMv;
+import de.gaalop.gapp.instructionSet.GAPPAssignVector;
 import de.gaalop.gapp.instructionSet.GAPPCalculateMv;
 import de.gaalop.gapp.instructionSet.GAPPDotVectors;
 import de.gaalop.gapp.instructionSet.GAPPResetMv;
@@ -10,10 +11,8 @@ import de.gaalop.gapp.instructionSet.GAPPSetMv;
 import de.gaalop.gapp.instructionSet.GAPPSetVector;
 import de.gaalop.gapp.variables.GAPPVector;
 import de.gaalop.gapp.visitor.CFGGAPPVisitor;
-import de.gaalop.gapp.visitor.GAPPVisitor;
 import java.io.OutputStream;
 import java.io.PrintStream;
-import java.io.PrintWriter;
 import java.util.HashMap;
 
 /**
@@ -101,6 +100,13 @@ public class CalculationsCounter extends CFGGAPPVisitor {
         }
         out.println("#Cycles with calculations: "+(instructionCycleCount+sum));
 
+    }
+
+    @Override
+    public Object visitAssignVector(GAPPAssignVector gappAssignVector, Object arg) {
+       int countOfBlades = gappAssignVector.getValues().size();
+       instructionCycleCount += countOfBlades; // worst case
+       return null;
     }
 
 }

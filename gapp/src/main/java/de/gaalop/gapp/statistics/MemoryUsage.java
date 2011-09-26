@@ -3,12 +3,12 @@ package de.gaalop.gapp.statistics;
 import de.gaalop.cfg.ControlFlowGraph;
 import de.gaalop.gapp.instructionSet.GAPPAddMv;
 import de.gaalop.gapp.instructionSet.GAPPAssignMv;
+import de.gaalop.gapp.instructionSet.GAPPAssignVector;
 import de.gaalop.gapp.instructionSet.GAPPCalculateMv;
 import de.gaalop.gapp.instructionSet.GAPPDotVectors;
 import de.gaalop.gapp.instructionSet.GAPPResetMv;
 import de.gaalop.gapp.instructionSet.GAPPSetMv;
 import de.gaalop.gapp.instructionSet.GAPPSetVector;
-import de.gaalop.gapp.variables.GAPPMultivector;
 import de.gaalop.gapp.variables.GAPPSetOfVariables;
 import de.gaalop.gapp.visitor.CFGGAPPVisitor;
 import java.util.Collection;
@@ -142,6 +142,13 @@ public class MemoryUsage extends CFGGAPPVisitor {
         access(gappCalculateMv.getOperand1());
         if (gappCalculateMv.getOperand2() != null)
             access(gappCalculateMv.getOperand2());
+        return null;
+    }
+
+    @Override
+    public Object visitAssignVector(GAPPAssignVector gappAssignVector, Object arg) {
+        curLine++;
+        access(gappAssignVector.getDestination());
         return null;
     }
 

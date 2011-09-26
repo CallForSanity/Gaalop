@@ -5,6 +5,7 @@ import de.gaalop.gapp.Selectorset;
 import de.gaalop.gapp.Variableset;
 import de.gaalop.gapp.instructionSet.GAPPAddMv;
 import de.gaalop.gapp.instructionSet.GAPPAssignMv;
+import de.gaalop.gapp.instructionSet.GAPPAssignVector;
 import de.gaalop.gapp.instructionSet.GAPPCalculateMv;
 import de.gaalop.gapp.instructionSet.GAPPDotVectors;
 import de.gaalop.gapp.instructionSet.GAPPResetMv;
@@ -129,6 +130,12 @@ public class GAPPCopier implements GAPPVisitor {
                 );
     }
 
-
+    @Override
+    public Object visitAssignVector(GAPPAssignVector gappAssignVector, Object arg) {
+        return new GAPPAssignVector(
+                (GAPPVector) GAPPValueHolderCopier.copyValueHolder(gappAssignVector.getDestination()),
+                copyVariableset(gappAssignVector.getValues())
+                );
+    }
 
 }
