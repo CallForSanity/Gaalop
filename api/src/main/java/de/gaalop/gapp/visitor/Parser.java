@@ -113,7 +113,7 @@ public class Parser implements GAPPVisitor {
 
         //Parse right side
         Selectorset selectorsSrc = new Selectorset();
-        gappSetMv.setSourceMv(parseMultivectorWithSelectors(partsEquation[1].trim(), selectorsSrc, getter));
+        gappSetMv.setSource(parseMultivectorWithSelectors(partsEquation[1].trim(), selectorsSrc, getter));
         return null;
     }
 

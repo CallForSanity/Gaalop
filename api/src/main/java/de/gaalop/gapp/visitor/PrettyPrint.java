@@ -13,6 +13,7 @@ import de.gaalop.gapp.instructionSet.GAPPSetMv;
 import de.gaalop.gapp.instructionSet.GAPPSetVector;
 
 import de.gaalop.gapp.variables.GAPPMultivector;
+import de.gaalop.gapp.variables.GAPPSetOfVariables;
 import de.gaalop.gapp.variables.GAPPValueHolder;
 import de.gaalop.gapp.variables.GAPPVector;
 import java.util.LinkedList;
@@ -76,6 +77,15 @@ public class PrettyPrint extends CFGGAPPVisitor {
     private void printMultivector(GAPPMultivector multiVector) {
         result.append(multiVector.prettyPrint());
     }
+
+    /**
+     * Pretty prints a GAPPSetOfVariables at the end of result
+     * @param setOfVariables The GAPPSetOfVariables
+     */
+    private void printSetOfVariables(GAPPSetOfVariables setOfVariables) {
+        result.append(setOfVariables.prettyPrint());
+    }
+
 
     /**
      * Pretty prints a selector at the end of result
@@ -183,7 +193,7 @@ public class PrettyPrint extends CFGGAPPVisitor {
         printMultivector(gappSetMv.getDestinationMv());
         printSelectors(gappSetMv.getSelectorsDest());
         result.append(" = ");
-        printMultivector(gappSetMv.getSourceMv());
+        printSetOfVariables(gappSetMv.getSource());
         printSelectors(gappSetMv.getSelectorsSrc());
         result.append(";\n");
         return null;

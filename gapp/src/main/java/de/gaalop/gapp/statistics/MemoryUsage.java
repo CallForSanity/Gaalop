@@ -9,6 +9,7 @@ import de.gaalop.gapp.instructionSet.GAPPResetMv;
 import de.gaalop.gapp.instructionSet.GAPPSetMv;
 import de.gaalop.gapp.instructionSet.GAPPSetVector;
 import de.gaalop.gapp.variables.GAPPMultivector;
+import de.gaalop.gapp.variables.GAPPSetOfVariables;
 import de.gaalop.gapp.visitor.CFGGAPPVisitor;
 import java.util.Collection;
 import java.util.HashMap;
@@ -82,11 +83,11 @@ public class MemoryUsage extends CFGGAPPVisitor {
         }
     }
 
-    private void access(GAPPMultivector multivector) {
-        if (!liveStatistics.containsKey(multivector.getName())) {
-            System.err.println("Multivector "+multivector.getName()+" was not reseted!");
+    private void access(GAPPSetOfVariables gappSetOfVariables) {
+        if (!liveStatistics.containsKey(gappSetOfVariables.getName())) {
+            System.err.println("Multivector "+gappSetOfVariables.getName()+" was not reseted!");
         } else 
-            liveStatistics.get(multivector.getName()).getInterval().setTo(curLine);
+            liveStatistics.get(gappSetOfVariables.getName()).getInterval().setTo(curLine);
     }
 
     @Override
@@ -123,7 +124,7 @@ public class MemoryUsage extends CFGGAPPVisitor {
     public Object visitSetMv(GAPPSetMv gappSetMv, Object arg) {
         curLine++;
         access(gappSetMv.getDestinationMv());
-        access(gappSetMv.getSourceMv());
+        access(gappSetMv.getSource());
         return null;
     }
 

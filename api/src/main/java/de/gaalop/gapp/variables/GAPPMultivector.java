@@ -5,7 +5,7 @@ package de.gaalop.gapp.variables;
  *
  * @author Christian Steinmetz
  */
-public class GAPPMultivector extends GAPPVariable {
+public class GAPPMultivector extends GAPPSetOfVariables {
 
 
     public GAPPMultivector(String name) {

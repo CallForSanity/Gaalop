@@ -105,7 +105,7 @@ public class GAPPCopier implements GAPPVisitor {
     public Object visitSetMv(GAPPSetMv gappSetMv, Object arg) {
         return new GAPPSetMv(
                 (GAPPMultivector) GAPPValueHolderCopier.copyValueHolder(gappSetMv.getDestinationMv()),
-                (GAPPMultivector) GAPPValueHolderCopier.copyValueHolder(gappSetMv.getSourceMv()),
+                (GAPPMultivector) GAPPValueHolderCopier.copyValueHolder(gappSetMv.getSource()),
                 copySelectorset(gappSetMv.getSelectorsDest()),
                 copySelectorset(gappSetMv.getSelectorsSrc())
                 );

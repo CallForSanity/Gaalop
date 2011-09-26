@@ -2,6 +2,7 @@ package de.gaalop.gapp.instructionSet;
 
 import de.gaalop.gapp.Selectorset;
 import de.gaalop.gapp.variables.GAPPMultivector;
+import de.gaalop.gapp.variables.GAPPSetOfVariables;
 import de.gaalop.gapp.visitor.GAPPVisitor;
 
 /**
@@ -20,13 +21,13 @@ import de.gaalop.gapp.visitor.GAPPVisitor;
 public class GAPPSetMv extends GAPPBaseInstruction {
 
     private GAPPMultivector destinationMv;
-    private GAPPMultivector sourceMv;
+    private GAPPSetOfVariables source;
     private Selectorset selectorsDest;
     private Selectorset selectorsSrc;
 
-    public GAPPSetMv(GAPPMultivector destinationMv, GAPPMultivector sourceMv, Selectorset selectorsDest, Selectorset selectorsSrc) {
+    public GAPPSetMv(GAPPMultivector destinationMv, GAPPSetOfVariables source, Selectorset selectorsDest, Selectorset selectorsSrc) {
         this.destinationMv = destinationMv;
-        this.sourceMv = sourceMv;
+        this.source = source;
         this.selectorsDest = selectorsDest;
         this.selectorsSrc = selectorsSrc;
         assert (selectorsDest.size() == selectorsSrc.size());
@@ -50,8 +51,8 @@ public class GAPPSetMv extends GAPPBaseInstruction {
         return selectorsSrc;
     }
 
-    public GAPPMultivector getSourceMv() {
-        return sourceMv;
+    public GAPPSetOfVariables getSource() {
+        return source;
     }
 
     public void setDestinationMv(GAPPMultivector destinationMv) {
@@ -66,8 +67,8 @@ public class GAPPSetMv extends GAPPBaseInstruction {
         this.selectorsSrc = selectorsSrc;
     }
 
-    public void setSourceMv(GAPPMultivector sourceMv) {
-        this.sourceMv = sourceMv;
+    public void setSource(GAPPSetOfVariables source) {
+        this.source = source;
     }
 
 }

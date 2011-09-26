@@ -1,7 +1,5 @@
 package de.gaalop.gapp.variables;
 
-import java.util.LinkedList;
-
 /**
  * Represents a vector in the GAPP IR.
  *
@@ -9,7 +7,7 @@ import java.util.LinkedList;
  *
  * @author Christian Steinmetz
  */
-public class GAPPVector extends GAPPVariable {
+public class GAPPVector extends GAPPSetOfVariables {
 
     public GAPPVector(String name) {
         super(name);
