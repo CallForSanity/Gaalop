@@ -15,9 +15,11 @@ import de.gaalop.gapp.Selector;
 import de.gaalop.gapp.Selectorset;
 import de.gaalop.gapp.Variableset;
 import de.gaalop.gapp.instructionSet.GAPPAssignMv;
+import de.gaalop.gapp.instructionSet.GAPPAssignVector;
 import de.gaalop.gapp.instructionSet.GAPPResetMv;
 import de.gaalop.gapp.variables.GAPPMultivector;
 import de.gaalop.gapp.variables.GAPPScalarVariable;
+import de.gaalop.gapp.variables.GAPPVector;
 import de.gaalop.tba.Plugin;
 import de.gaalop.tba.UseAlgebra;
 import de.gaalop.tba.cfgImport.BaseVectorChecker;
@@ -76,24 +78,21 @@ public class GAPPDecoratingMain {
      */
     private void assignInputVariables(ControlFlowGraph graph, GAPP gappStart) {
         LinkedList<Variable> toDo = new LinkedList<Variable>(graph.getInputVariables());
+        //TODO chs test if variable "inputsVector" is not used recently
 
-        GAPPMultivector inputsMv = new GAPPMultivector("inputsMv");
-        gappStart.addInstruction(new GAPPResetMv(inputsMv, toDo.size()
-                ));
+        HashMap<Variable, MultivectorComponent> map = new HashMap<Variable, MultivectorComponent>();
 
-        HashMap<Variable,MultivectorComponent> map = new HashMap<Variable, MultivectorComponent>();
+        GAPPVector inputsMv = new GAPPVector("inputsVector");
 
-        Selectorset selSet = new Selectorset();
         Variableset varSet = new Variableset();
         int slotNo = 0;
         for (Variable var: toDo) {
-            selSet.add(new Selector(slotNo, (byte) 1));
             varSet.add(new GAPPScalarVariable(var.getName()));
-            map.put(var, new MultivectorComponent("inputsMv", slotNo));
+            map.put(var, new MultivectorComponent(inputsMv.getName(), slotNo));
             slotNo++;
         }
    
-        gappStart.addInstruction(new GAPPAssignMv(inputsMv, selSet, varSet));
+        gappStart.addInstruction(new GAPPAssignVector(inputsMv, varSet));
 
         
         while (!toDo.isEmpty()) {

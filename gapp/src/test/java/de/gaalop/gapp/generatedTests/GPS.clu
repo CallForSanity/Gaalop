@@ -21,22 +21,22 @@ sph1_opt = List(32);
 sph2_opt = List(32);
 rcPpDual_opt = List(32);
 
-sat1(5) = 0.5 * (inputsMv(8)^^2.0 + inputsMv(10)^^2.0 + inputsMv(11)^^2.0); // einf
-sat2(5) = 0.5 * (inputsMv(12)^^2.0 + inputsMv(7)^^2.0 + inputsMv(9)^^2.0); // einf
-sat3(5) = 0.5 * (inputsMv(6)^^2.0 + inputsMv(5)^^2.0 + inputsMv(4)^^2.0); // einf
-sph1(5) = sat1(5) - 0.5 * inputsMv(1)^^2.0; // einf
-sph2(5) = sat2(5) - 0.5 * inputsMv(2)^^2.0; // einf
-sph3(5) = sat3(5) - 0.5 * inputsMv(3)^^2.0; // einf
-rcPp(17) = (inputsMv(11) * inputsMv(7) - inputsMv(10) * inputsMv(9)) * inputsMv(6) - (inputsMv(11) * inputsMv(12) - inputsMv(8) * inputsMv(9)) * inputsMv(5) + (inputsMv(10) * inputsMv(12) - inputsMv(8) * inputsMv(7)) * inputsMv(4); // e1^e2^e3
-rcPp(18) = ((inputsMv(11) * inputsMv(7) - inputsMv(10) * inputsMv(9)) * sph3(5) + inputsMv(4) * (inputsMv(10) * sph2(5) - inputsMv(7) * sph1(5))) - inputsMv(5) * (inputsMv(11) * sph2(5) - inputsMv(9) * sph1(5)); // e1^e2^einf
-rcPp(19) = ((-((inputsMv(11) - inputsMv(9)) * inputsMv(5))) + (inputsMv(10) - inputsMv(7)) * inputsMv(4) + inputsMv(11) * inputsMv(7)) - inputsMv(10) * inputsMv(9); // e1^e2^e0
-rcPp(20) = ((inputsMv(11) * inputsMv(12) - inputsMv(8) * inputsMv(9)) * sph3(5) + inputsMv(4) * (inputsMv(8) * sph2(5) - inputsMv(12) * sph1(5))) - inputsMv(6) * (inputsMv(11) * sph2(5) - inputsMv(9) * sph1(5)); // e1^e3^einf
-rcPp(21) = ((-((inputsMv(11) - inputsMv(9)) * inputsMv(6))) + (inputsMv(8) - inputsMv(12)) * inputsMv(4) + inputsMv(11) * inputsMv(12)) - inputsMv(8) * inputsMv(9); // e1^e3^e0
-rcPp(22) = ((-((inputsMv(11) - inputsMv(9)) * sph3(5))) + inputsMv(11) * sph2(5) + inputsMv(4) * (sph1(5) - sph2(5))) - inputsMv(9) * sph1(5); // e1^einf^e0
-rcPp(23) = ((inputsMv(10) * inputsMv(12) - inputsMv(8) * inputsMv(7)) * sph3(5) + inputsMv(5) * (inputsMv(8) * sph2(5) - inputsMv(12) * sph1(5))) - inputsMv(6) * (inputsMv(10) * sph2(5) - inputsMv(7) * sph1(5)); // e2^e3^einf
-rcPp(24) = ((-((inputsMv(10) - inputsMv(7)) * inputsMv(6))) + (inputsMv(8) - inputsMv(12)) * inputsMv(5) + inputsMv(10) * inputsMv(12)) - inputsMv(8) * inputsMv(7); // e2^e3^e0
-rcPp(25) = ((-((inputsMv(10) - inputsMv(7)) * sph3(5))) + inputsMv(10) * sph2(5) + inputsMv(5) * (sph1(5) - sph2(5))) - inputsMv(7) * sph1(5); // e2^einf^e0
-rcPp(26) = ((-((inputsMv(8) - inputsMv(12)) * sph3(5))) + inputsMv(8) * sph2(5) + inputsMv(6) * (sph1(5) - sph2(5))) - inputsMv(12) * sph1(5); // e3^einf^e0
+sat1(5) = 0.5 * (inputsVector(8)^^2.0 + inputsVector(10)^^2.0 + inputsVector(11)^^2.0); // einf
+sat2(5) = 0.5 * (inputsVector(12)^^2.0 + inputsVector(7)^^2.0 + inputsVector(9)^^2.0); // einf
+sat3(5) = 0.5 * (inputsVector(6)^^2.0 + inputsVector(5)^^2.0 + inputsVector(4)^^2.0); // einf
+sph1(5) = sat1(5) - 0.5 * inputsVector(1)^^2.0; // einf
+sph2(5) = sat2(5) - 0.5 * inputsVector(2)^^2.0; // einf
+sph3(5) = sat3(5) - 0.5 * inputsVector(3)^^2.0; // einf
+rcPp(17) = (inputsVector(11) * inputsVector(7) - inputsVector(10) * inputsVector(9)) * inputsVector(6) - (inputsVector(11) * inputsVector(12) - inputsVector(8) * inputsVector(9)) * inputsVector(5) + (inputsVector(10) * inputsVector(12) - inputsVector(8) * inputsVector(7)) * inputsVector(4); // e1^e2^e3
+rcPp(18) = ((inputsVector(11) * inputsVector(7) - inputsVector(10) * inputsVector(9)) * sph3(5) + inputsVector(4) * (inputsVector(10) * sph2(5) - inputsVector(7) * sph1(5))) - inputsVector(5) * (inputsVector(11) * sph2(5) - inputsVector(9) * sph1(5)); // e1^e2^einf
+rcPp(19) = ((-((inputsVector(11) - inputsVector(9)) * inputsVector(5))) + (inputsVector(10) - inputsVector(7)) * inputsVector(4) + inputsVector(11) * inputsVector(7)) - inputsVector(10) * inputsVector(9); // e1^e2^e0
+rcPp(20) = ((inputsVector(11) * inputsVector(12) - inputsVector(8) * inputsVector(9)) * sph3(5) + inputsVector(4) * (inputsVector(8) * sph2(5) - inputsVector(12) * sph1(5))) - inputsVector(6) * (inputsVector(11) * sph2(5) - inputsVector(9) * sph1(5)); // e1^e3^einf
+rcPp(21) = ((-((inputsVector(11) - inputsVector(9)) * inputsVector(6))) + (inputsVector(8) - inputsVector(12)) * inputsVector(4) + inputsVector(11) * inputsVector(12)) - inputsVector(8) * inputsVector(9); // e1^e3^e0
+rcPp(22) = ((-((inputsVector(11) - inputsVector(9)) * sph3(5))) + inputsVector(11) * sph2(5) + inputsVector(4) * (sph1(5) - sph2(5))) - inputsVector(9) * sph1(5); // e1^einf^e0
+rcPp(23) = ((inputsVector(10) * inputsVector(12) - inputsVector(8) * inputsVector(7)) * sph3(5) + inputsVector(5) * (inputsVector(8) * sph2(5) - inputsVector(12) * sph1(5))) - inputsVector(6) * (inputsVector(10) * sph2(5) - inputsVector(7) * sph1(5)); // e2^e3^einf
+rcPp(24) = ((-((inputsVector(10) - inputsVector(7)) * inputsVector(6))) + (inputsVector(8) - inputsVector(12)) * inputsVector(5) + inputsVector(10) * inputsVector(12)) - inputsVector(8) * inputsVector(7); // e2^e3^e0
+rcPp(25) = ((-((inputsVector(10) - inputsVector(7)) * sph3(5))) + inputsVector(10) * sph2(5) + inputsVector(5) * (sph1(5) - sph2(5))) - inputsVector(7) * sph1(5); // e2^einf^e0
+rcPp(26) = ((-((inputsVector(8) - inputsVector(12)) * sph3(5))) + inputsVector(8) * sph2(5) + inputsVector(6) * (sph1(5) - sph2(5))) - inputsVector(12) * sph1(5); // e3^einf^e0
 temp0(1) = (rcPp(26)^^2.0 + rcPp(25)^^2.0 + 2.0 * rcPp(23) * rcPp(24) + rcPp(22)^^2.0 + 2.0 * rcPp(20) * rcPp(21) + 2.0 * rcPp(18) * rcPp(19)) - rcPp(17)^^2.0; // 1.0
 temp1 = abs(temp0);
 temp2 = sqrt(temp1);
@@ -121,27 +121,27 @@ rc2N(4) = ((((((-(rc2(8) * rc2(10) / (rc2(10)^^2.0 + rc2(6)^^2.0 + rc2(28)^^2.0 
 rc2N(5) = (((((((-(rc2(9) * rc2(10) / (rc2(10)^^2.0 + rc2(6)^^2.0 + rc2(28)^^2.0 + rc2(24)^^2.0 + rc2(21)^^2.0 + rc2(19)^^2.0 + rc2(15)^^2.0 + rc2(13)^^2.0))) - rc2(30) * rc2(8) / (rc2(10)^^2.0 + rc2(6)^^2.0 + rc2(28)^^2.0 + rc2(24)^^2.0 + rc2(21)^^2.0 + rc2(19)^^2.0 + rc2(15)^^2.0 + rc2(13)^^2.0) - rc2(29) * rc2(7) / (rc2(10)^^2.0 + rc2(6)^^2.0 + rc2(28)^^2.0 + rc2(24)^^2.0 + rc2(21)^^2.0 + rc2(19)^^2.0 + rc2(15)^^2.0 + rc2(13)^^2.0) + rc2(5) * rc2(6) / (rc2(10)^^2.0 + rc2(6)^^2.0 + rc2(28)^^2.0 + rc2(24)^^2.0 + rc2(21)^^2.0 + rc2(19)^^2.0 + rc2(15)^^2.0 + rc2(13)^^2.0) + rc2(32)^^2.0 / (rc2(10)^^2.0 + rc2(6)^^2.0 + rc2(28)^^2.0 + rc2(24)^^2.0 + rc2(21)^^2.0 + rc2(19)^^2.0 + rc2(15)^^2.0 + rc2(13)^^2.0)) - rc2(17) * rc2(32) / (rc2(10)^^2.0 + rc2(6)^^2.0 + rc2(28)^^2.0 + rc2(24)^^2.0 + rc2(21)^^2.0 + rc2(19)^^2.0 + rc2(15)^^2.0 + rc2(13)^^2.0) + rc2(31)^^2.0 / (rc2(10)^^2.0 + rc2(6)^^2.0 + rc2(28)^^2.0 + rc2(24)^^2.0 + rc2(21)^^2.0 + rc2(19)^^2.0 + rc2(15)^^2.0 + rc2(13)^^2.0)) - rc2(11) * rc2(31) / (rc2(10)^^2.0 + rc2(6)^^2.0 + rc2(28)^^2.0 + rc2(24)^^2.0 + rc2(21)^^2.0 + rc2(19)^^2.0 + rc2(15)^^2.0 + rc2(13)^^2.0) + rc2(26) * rc2(4) / (rc2(10)^^2.0 + rc2(6)^^2.0 + rc2(28)^^2.0 + rc2(24)^^2.0 + rc2(21)^^2.0 + rc2(19)^^2.0 + rc2(15)^^2.0 + rc2(13)^^2.0) + rc2(30)^^2.0 / (rc2(10)^^2.0 + rc2(6)^^2.0 + rc2(28)^^2.0 + rc2(24)^^2.0 + rc2(21)^^2.0 + rc2(19)^^2.0 + rc2(15)^^2.0 + rc2(13)^^2.0) + rc2(29)^^2.0 / (rc2(10)^^2.0 + rc2(6)^^2.0 + rc2(28)^^2.0 + rc2(24)^^2.0 + rc2(21)^^2.0 + rc2(19)^^2.0 + rc2(15)^^2.0 + rc2(13)^^2.0) + rc2(27) * rc2(28) / (rc2(10)^^2.0 + rc2(6)^^2.0 + rc2(28)^^2.0 + rc2(24)^^2.0 + rc2(21)^^2.0 + rc2(19)^^2.0 + rc2(15)^^2.0 + rc2(13)^^2.0)) - rc2(26)^^2.0 / (rc2(10)^^2.0 + rc2(6)^^2.0 + rc2(28)^^2.0 + rc2(24)^^2.0 + rc2(21)^^2.0 + rc2(19)^^2.0 + rc2(15)^^2.0 + rc2(13)^^2.0) - rc2(25)^^2.0 / (rc2(10)^^2.0 + rc2(6)^^2.0 + rc2(28)^^2.0 + rc2(24)^^2.0 + rc2(21)^^2.0 + rc2(19)^^2.0 + rc2(15)^^2.0 + rc2(13)^^2.0) + rc2(3) * rc2(25) / (rc2(10)^^2.0 + rc2(6)^^2.0 + rc2(28)^^2.0 + rc2(24)^^2.0 + rc2(21)^^2.0 + rc2(19)^^2.0 + rc2(15)^^2.0 + rc2(13)^^2.0)) - rc2(23) * rc2(24) / (rc2(10)^^2.0 + rc2(6)^^2.0 + rc2(28)^^2.0 + rc2(24)^^2.0 + rc2(21)^^2.0 + rc2(19)^^2.0 + rc2(15)^^2.0 + rc2(13)^^2.0) - rc2(22)^^2.0 / (rc2(10)^^2.0 + rc2(6)^^2.0 + rc2(28)^^2.0 + rc2(24)^^2.0 + rc2(21)^^2.0 + rc2(19)^^2.0 + rc2(15)^^2.0 + rc2(13)^^2.0) + rc2(2) * rc2(22) / (rc2(10)^^2.0 + rc2(6)^^2.0 + rc2(28)^^2.0 + rc2(24)^^2.0 + rc2(21)^^2.0 + rc2(19)^^2.0 + rc2(15)^^2.0 + rc2(13)^^2.0)) - rc2(20) * rc2(21) / (rc2(10)^^2.0 + rc2(6)^^2.0 + rc2(28)^^2.0 + rc2(24)^^2.0 + rc2(21)^^2.0 + rc2(19)^^2.0 + rc2(15)^^2.0 + rc2(13)^^2.0) - rc2(18) * rc2(19) / (rc2(10)^^2.0 + rc2(6)^^2.0 + rc2(28)^^2.0 + rc2(24)^^2.0 + rc2(21)^^2.0 + rc2(19)^^2.0 + rc2(15)^^2.0 + rc2(13)^^2.0) - rc2(16)^^2.0 / (rc2(10)^^2.0 + rc2(6)^^2.0 + rc2(28)^^2.0 + rc2(24)^^2.0 + rc2(21)^^2.0 + rc2(19)^^2.0 + rc2(15)^^2.0 + rc2(13)^^2.0) + rc2(1) * rc2(16) / (rc2(10)^^2.0 + rc2(6)^^2.0 + rc2(28)^^2.0 + rc2(24)^^2.0 + rc2(21)^^2.0 + rc2(19)^^2.0 + rc2(15)^^2.0 + rc2(13)^^2.0)) - rc2(14) * rc2(15) / (rc2(10)^^2.0 + rc2(6)^^2.0 + rc2(28)^^2.0 + rc2(24)^^2.0 + rc2(21)^^2.0 + rc2(19)^^2.0 + rc2(15)^^2.0 + rc2(13)^^2.0) - rc2(12) * rc2(13) / (rc2(10)^^2.0 + rc2(6)^^2.0 + rc2(28)^^2.0 + rc2(24)^^2.0 + rc2(21)^^2.0 + rc2(19)^^2.0 + rc2(15)^^2.0 + rc2(13)^^2.0); // einf
 rc2N(6) = ((-(rc2(10)^^2.0 / (rc2(10)^^2.0 + rc2(6)^^2.0 + rc2(28)^^2.0 + rc2(24)^^2.0 + rc2(21)^^2.0 + rc2(19)^^2.0 + rc2(15)^^2.0 + rc2(13)^^2.0))) + rc2(6)^^2.0 / (rc2(10)^^2.0 + rc2(6)^^2.0 + rc2(28)^^2.0 + rc2(24)^^2.0 + rc2(21)^^2.0 + rc2(19)^^2.0 + rc2(15)^^2.0 + rc2(13)^^2.0) + rc2(28)^^2.0 / (rc2(10)^^2.0 + rc2(6)^^2.0 + rc2(28)^^2.0 + rc2(24)^^2.0 + rc2(21)^^2.0 + rc2(19)^^2.0 + rc2(15)^^2.0 + rc2(13)^^2.0)) - rc2(24)^^2.0 / (rc2(10)^^2.0 + rc2(6)^^2.0 + rc2(28)^^2.0 + rc2(24)^^2.0 + rc2(21)^^2.0 + rc2(19)^^2.0 + rc2(15)^^2.0 + rc2(13)^^2.0) - rc2(21)^^2.0 / (rc2(10)^^2.0 + rc2(6)^^2.0 + rc2(28)^^2.0 + rc2(24)^^2.0 + rc2(21)^^2.0 + rc2(19)^^2.0 + rc2(15)^^2.0 + rc2(13)^^2.0) - rc2(19)^^2.0 / (rc2(10)^^2.0 + rc2(6)^^2.0 + rc2(28)^^2.0 + rc2(24)^^2.0 + rc2(21)^^2.0 + rc2(19)^^2.0 + rc2(15)^^2.0 + rc2(13)^^2.0) - rc2(15)^^2.0 / (rc2(10)^^2.0 + rc2(6)^^2.0 + rc2(28)^^2.0 + rc2(24)^^2.0 + rc2(21)^^2.0 + rc2(19)^^2.0 + rc2(15)^^2.0 + rc2(13)^^2.0) - rc2(13)^^2.0 / (rc2(10)^^2.0 + rc2(6)^^2.0 + rc2(28)^^2.0 + rc2(24)^^2.0 + rc2(21)^^2.0 + rc2(19)^^2.0 + rc2(15)^^2.0 + rc2(13)^^2.0); // e0
 ?rc2N;
-temp3(1) = (-(2.0 * ((-(sat1(5) * rc1N(6))) - rc1N(5) + inputsMv(8) * rc1N(4) + inputsMv(10) * rc1N(3) + inputsMv(11) * rc1N(2)))); // 1.0
+temp3(1) = (-(2.0 * ((-(sat1(5) * rc1N(6))) - rc1N(5) + inputsVector(8) * rc1N(4) + inputsVector(10) * rc1N(3) + inputsVector(11) * rc1N(2)))); // 1.0
 temp4 = sqrt(temp3);
-z11(1) = temp4(1) - inputsMv(1); // 1.0
+z11(1) = temp4(1) - inputsVector(1); // 1.0
 ?z11;
-temp5(1) = (-(2.0 * ((-(sat1(5) * rc2N(6))) - rc2N(5) + inputsMv(8) * rc2N(4) + inputsMv(10) * rc2N(3) + inputsMv(11) * rc2N(2)))); // 1.0
+temp5(1) = (-(2.0 * ((-(sat1(5) * rc2N(6))) - rc2N(5) + inputsVector(8) * rc2N(4) + inputsVector(10) * rc2N(3) + inputsVector(11) * rc2N(2)))); // 1.0
 temp6 = sqrt(temp5);
-z12(1) = temp6(1) - inputsMv(1); // 1.0
+z12(1) = temp6(1) - inputsVector(1); // 1.0
 ?z12;
-temp7(1) = (-(2.0 * ((-(sat2(5) * rc1N(6))) - rc1N(5) + inputsMv(12) * rc1N(4) + inputsMv(7) * rc1N(3) + inputsMv(9) * rc1N(2)))); // 1.0
+temp7(1) = (-(2.0 * ((-(sat2(5) * rc1N(6))) - rc1N(5) + inputsVector(12) * rc1N(4) + inputsVector(7) * rc1N(3) + inputsVector(9) * rc1N(2)))); // 1.0
 temp8 = sqrt(temp7);
-z21(1) = temp8(1) - inputsMv(2); // 1.0
+z21(1) = temp8(1) - inputsVector(2); // 1.0
 ?z21;
-temp9(1) = (-(2.0 * ((-(sat2(5) * rc2N(6))) - rc2N(5) + inputsMv(12) * rc2N(4) + inputsMv(7) * rc2N(3) + inputsMv(9) * rc2N(2)))); // 1.0
+temp9(1) = (-(2.0 * ((-(sat2(5) * rc2N(6))) - rc2N(5) + inputsVector(12) * rc2N(4) + inputsVector(7) * rc2N(3) + inputsVector(9) * rc2N(2)))); // 1.0
 temp10 = sqrt(temp9);
-z22(1) = temp10(1) - inputsMv(2); // 1.0
+z22(1) = temp10(1) - inputsVector(2); // 1.0
 ?z22;
-temp11(1) = (-(2.0 * ((-(sat3(5) * rc1N(6))) - rc1N(5) + inputsMv(6) * rc1N(4) + inputsMv(5) * rc1N(3) + inputsMv(4) * rc1N(2)))); // 1.0
+temp11(1) = (-(2.0 * ((-(sat3(5) * rc1N(6))) - rc1N(5) + inputsVector(6) * rc1N(4) + inputsVector(5) * rc1N(3) + inputsVector(4) * rc1N(2)))); // 1.0
 temp12 = sqrt(temp11);
-z31(1) = temp12(1) - inputsMv(3); // 1.0
+z31(1) = temp12(1) - inputsVector(3); // 1.0
 ?z31;
-temp13(1) = (-(2.0 * ((-(sat3(5) * rc2N(6))) - rc2N(5) + inputsMv(6) * rc2N(4) + inputsMv(5) * rc2N(3) + inputsMv(4) * rc2N(2)))); // 1.0
+temp13(1) = (-(2.0 * ((-(sat3(5) * rc2N(6))) - rc2N(5) + inputsVector(6) * rc2N(4) + inputsVector(5) * rc2N(3) + inputsVector(4) * rc2N(2)))); // 1.0
 temp14 = sqrt(temp13);
-z32(1) = temp14(1) - inputsMv(3); // 1.0
+z32(1) = temp14(1) - inputsVector(3); // 1.0
 ?z32;

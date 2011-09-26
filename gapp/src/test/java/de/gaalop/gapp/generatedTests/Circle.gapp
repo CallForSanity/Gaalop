@@ -1,25 +1,24 @@
-//v1[1] = inputsMv[5]
-resetMv inputsMv[6];
-assignMv inputsMv[0,1,2,3,4,5] = [y1,y2,y3,x2,x3,x1];
+//v1[1] = inputsVector[5]
+assignVector inputsVector = [y1,y2,y3,x2,x3,x1];
 resetMv v1[32];
-setMv v1[1] = inputsMv[5];
+setMv v1[1] = inputsVector[5];
 
-//v1[2] = inputsMv[0]
-setMv v1[2] = inputsMv[0];
+//v1[2] = inputsVector[0]
+setMv v1[2] = inputsVector[0];
 
-//v2[1] = inputsMv[3]
+//v2[1] = inputsVector[3]
 resetMv v2[32];
-setMv v2[1] = inputsMv[3];
+setMv v2[1] = inputsVector[3];
 
-//v2[2] = inputsMv[1]
-setMv v2[2] = inputsMv[1];
+//v2[2] = inputsVector[1]
+setMv v2[2] = inputsVector[1];
 
-//v3[1] = inputsMv[4]
+//v3[1] = inputsVector[4]
 resetMv v3[32];
-setMv v3[1] = inputsMv[4];
+setMv v3[1] = inputsVector[4];
 
-//v3[2] = inputsMv[2]
-setMv v3[2] = inputsMv[2];
+//v3[2] = inputsVector[2]
+setMv v3[2] = inputsVector[2];
 
 //p1[1] = v1[1]
 resetMv p1[32];

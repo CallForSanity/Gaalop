@@ -12,14 +12,14 @@ v3_opt = List(32);
 v2_opt = List(32);
 m_opt = List(32);
 
-v1(2) = inputsMv(6); // e1
-v1(3) = inputsMv(1); // e2
+v1(2) = inputsVector(6); // e1
+v1(3) = inputsVector(1); // e2
 ?v1;
-v2(2) = inputsMv(4); // e1
-v2(3) = inputsMv(2); // e2
+v2(2) = inputsVector(4); // e1
+v2(3) = inputsVector(2); // e2
 ?v2;
-v3(2) = inputsMv(5); // e1
-v3(3) = inputsMv(3); // e2
+v3(2) = inputsVector(5); // e1
+v3(3) = inputsVector(3); // e2
 ?v3;
 p1(2) = v1(2); // e1
 p1(3) = v1(3); // e2

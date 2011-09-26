@@ -1,23 +1,22 @@
-//sat1[4] = 0.5 * (((inputsMv[7] ^ 2) + (inputsMv[9] ^ 2)) + (inputsMv[10] ^ 2))
-resetMv inputsMv[12];
-assignMv inputsMv[0,1,2,3,4,5,6,7,8,9,10,11] = [d1,d2,d3,sat3x,sat3y,sat3z,sat2y,sat1z,sat2x,sat1y,sat1x,sat2z];
+//sat1[4] = 0.5 * (((inputsVector[7] ^ 2) + (inputsVector[9] ^ 2)) + (inputsVector[10] ^ 2))
+assignVector inputsVector = [d1,d2,d3,sat3x,sat3y,sat3z,sat2y,sat1z,sat2x,sat1y,sat1x,sat2z];
 resetMv sat1[32];
 resetMv mv0[1];
 resetMv mv1[1];
 resetMv mv2[1];
-setMv mv2[0] = inputsMv[7];
+setMv mv2[0] = inputsVector[7];
 resetMv mv3[1];
 assignMv mv3[0] = [2.0];
 calculateMv mv1 = EXPONENTIATION(mv2,mv3);
 resetMv mv4[1];
 resetMv mv5[1];
-setMv mv5[0] = inputsMv[9];
+setMv mv5[0] = inputsVector[9];
 resetMv mv6[1];
 assignMv mv6[0] = [2.0];
 calculateMv mv4 = EXPONENTIATION(mv5,mv6);
 resetMv mv7[1];
 resetMv mv8[1];
-setMv mv8[0] = inputsMv[10];
+setMv mv8[0] = inputsVector[10];
 resetMv mv9[1];
 assignMv mv9[0] = [2.0];
 calculateMv mv7 = EXPONENTIATION(mv8,mv9);
@@ -33,24 +32,24 @@ setVector ve12 = mv13[0];
 setVector ve14 = mv0[0];
 dotVectors sat1[4] = <ve12,ve14>;
 
-//sat2[4] = 0.5 * (((inputsMv[11] ^ 2) + (inputsMv[6] ^ 2)) + (inputsMv[8] ^ 2))
+//sat2[4] = 0.5 * (((inputsVector[11] ^ 2) + (inputsVector[6] ^ 2)) + (inputsVector[8] ^ 2))
 resetMv sat2[32];
 resetMv mv15[1];
 resetMv mv16[1];
 resetMv mv17[1];
-setMv mv17[0] = inputsMv[11];
+setMv mv17[0] = inputsVector[11];
 resetMv mv18[1];
 assignMv mv18[0] = [2.0];
 calculateMv mv16 = EXPONENTIATION(mv17,mv18);
 resetMv mv19[1];
 resetMv mv20[1];
-setMv mv20[0] = inputsMv[6];
+setMv mv20[0] = inputsVector[6];
 resetMv mv21[1];
 assignMv mv21[0] = [2.0];
 calculateMv mv19 = EXPONENTIATION(mv20,mv21);
 resetMv mv22[1];
 resetMv mv23[1];
-setMv mv23[0] = inputsMv[8];
+setMv mv23[0] = inputsVector[8];
 resetMv mv24[1];
 assignMv mv24[0] = [2.0];
 calculateMv mv22 = EXPONENTIATION(mv23,mv24);
@@ -66,24 +65,24 @@ setVector ve27 = mv28[0];
 setVector ve29 = mv15[0];
 dotVectors sat2[4] = <ve27,ve29>;
 
-//sat3[4] = 0.5 * (((inputsMv[5] ^ 2) + (inputsMv[4] ^ 2)) + (inputsMv[3] ^ 2))
+//sat3[4] = 0.5 * (((inputsVector[5] ^ 2) + (inputsVector[4] ^ 2)) + (inputsVector[3] ^ 2))
 resetMv sat3[32];
 resetMv mv30[1];
 resetMv mv31[1];
 resetMv mv32[1];
-setMv mv32[0] = inputsMv[5];
+setMv mv32[0] = inputsVector[5];
 resetMv mv33[1];
 assignMv mv33[0] = [2.0];
 calculateMv mv31 = EXPONENTIATION(mv32,mv33);
 resetMv mv34[1];
 resetMv mv35[1];
-setMv mv35[0] = inputsMv[4];
+setMv mv35[0] = inputsVector[4];
 resetMv mv36[1];
 assignMv mv36[0] = [2.0];
 calculateMv mv34 = EXPONENTIATION(mv35,mv36);
 resetMv mv37[1];
 resetMv mv38[1];
-setMv mv38[0] = inputsMv[3];
+setMv mv38[0] = inputsVector[3];
 resetMv mv39[1];
 assignMv mv39[0] = [2.0];
 calculateMv mv37 = EXPONENTIATION(mv38,mv39);
@@ -99,11 +98,11 @@ setVector ve42 = mv43[0];
 setVector ve44 = mv30[0];
 dotVectors sat3[4] = <ve42,ve44>;
 
-//sph1[4] = sat1[4] - (0.5 * (inputsMv[0] ^ 2))
+//sph1[4] = sat1[4] - (0.5 * (inputsVector[0] ^ 2))
 resetMv sph1[32];
 resetMv mv45[1];
 resetMv mv46[1];
-setMv mv46[0] = inputsMv[0];
+setMv mv46[0] = inputsVector[0];
 resetMv mv47[1];
 assignMv mv47[0] = [2.0];
 calculateMv mv45 = EXPONENTIATION(mv46,mv47);
@@ -117,11 +116,11 @@ assignMv mv51[0] = [1.0];
 setVector ve50 = mv51[0,1];
 dotVectors sph1[4] = <ve48,ve50>;
 
-//sph2[4] = sat2[4] - (0.5 * (inputsMv[1] ^ 2))
+//sph2[4] = sat2[4] - (0.5 * (inputsVector[1] ^ 2))
 resetMv sph2[32];
 resetMv mv52[1];
 resetMv mv53[1];
-setMv mv53[0] = inputsMv[1];
+setMv mv53[0] = inputsVector[1];
 resetMv mv54[1];
 assignMv mv54[0] = [2.0];
 calculateMv mv52 = EXPONENTIATION(mv53,mv54);
@@ -135,11 +134,11 @@ assignMv mv58[0] = [1.0];
 setVector ve57 = mv58[0,1];
 dotVectors sph2[4] = <ve55,ve57>;
 
-//sph3[4] = sat3[4] - (0.5 * (inputsMv[2] ^ 2))
+//sph3[4] = sat3[4] - (0.5 * (inputsVector[2] ^ 2))
 resetMv sph3[32];
 resetMv mv59[1];
 resetMv mv60[1];
-setMv mv60[0] = inputsMv[2];
+setMv mv60[0] = inputsVector[2];
 resetMv mv61[1];
 assignMv mv61[0] = [2.0];
 calculateMv mv59 = EXPONENTIATION(mv60,mv61);
@@ -153,44 +152,44 @@ assignMv mv65[0] = [1.0];
 setVector ve64 = mv65[0,1];
 dotVectors sph3[4] = <ve62,ve64>;
 
-//rcPp[16] = ((((inputsMv[10] * inputsMv[6]) - (inputsMv[9] * inputsMv[8])) * inputsMv[5]) - (((inputsMv[10] * inputsMv[11]) - (inputsMv[7] * inputsMv[8])) * inputsMv[4])) + (((inputsMv[9] * inputsMv[11]) - (inputsMv[7] * inputsMv[6])) * inputsMv[3])
+//rcPp[16] = ((((inputsVector[10] * inputsVector[6]) - (inputsVector[9] * inputsVector[8])) * inputsVector[5]) - (((inputsVector[10] * inputsVector[11]) - (inputsVector[7] * inputsVector[8])) * inputsVector[4])) + (((inputsVector[9] * inputsVector[11]) - (inputsVector[7] * inputsVector[6])) * inputsVector[3])
 resetMv rcPp[32];
 resetMv mv66[1];
-setVector ve67 = inputsMv[10,-9];
-setVector ve68 = inputsMv[6,8];
+setVector ve67 = inputsVector[10,-9];
+setVector ve68 = inputsVector[6,8];
 dotVectors mv66[0] = <ve67,ve68>;
 resetMv mv69[1];
 resetMv mv70[1];
-setVector ve71 = inputsMv[10,-7];
-setVector ve72 = inputsMv[11,8];
+setVector ve71 = inputsVector[10,-7];
+setVector ve72 = inputsVector[11,8];
 dotVectors mv70[0] = <ve71,ve72>;
 setMv mv69[0] = mv70[-0];
 resetMv mv73[1];
-setVector ve74 = inputsMv[9,-7];
-setVector ve75 = inputsMv[11,6];
+setVector ve74 = inputsVector[9,-7];
+setVector ve75 = inputsVector[11,6];
 dotVectors mv73[0] = <ve74,ve75>;
 resetMv mv77[3];
 setMv mv77[1] = mv69[0];
 setMv mv77[0] = mv66[0];
 setMv mv77[2] = mv73[0];
 setVector ve76 = mv77[0,1,2];
-setVector ve78 = inputsMv[5,4,3];
+setVector ve78 = inputsVector[5,4,3];
 dotVectors rcPp[16] = <ve76,ve78>;
 
-//rcPp[17] = ((((inputsMv[10] * inputsMv[6]) - (inputsMv[9] * inputsMv[8])) * sph3[4]) + (inputsMv[3] * ((inputsMv[9] * sph2[4]) - (inputsMv[6] * sph1[4])))) - (inputsMv[4] * ((inputsMv[10] * sph2[4]) - (inputsMv[8] * sph1[4])))
+//rcPp[17] = ((((inputsVector[10] * inputsVector[6]) - (inputsVector[9] * inputsVector[8])) * sph3[4]) + (inputsVector[3] * ((inputsVector[9] * sph2[4]) - (inputsVector[6] * sph1[4])))) - (inputsVector[4] * ((inputsVector[10] * sph2[4]) - (inputsVector[8] * sph1[4])))
 resetMv mv79[1];
-setVector ve80 = inputsMv[10,-9];
-setVector ve81 = inputsMv[6,8];
+setVector ve80 = inputsVector[10,-9];
+setVector ve81 = inputsVector[6,8];
 dotVectors mv79[0] = <ve80,ve81>;
 resetMv mv82[1];
-setVector ve83 = inputsMv[9,-6];
+setVector ve83 = inputsVector[9,-6];
 resetMv mv85[2];
 setMv mv85[1] = sph1[4];
 setMv mv85[0] = sph2[4];
 setVector ve84 = mv85[0,1];
 dotVectors mv82[0] = <ve83,ve84>;
 resetMv mv86[1];
-setVector ve87 = inputsMv[10,-8];
+setVector ve87 = inputsVector[10,-8];
 resetMv mv89[2];
 setMv mv89[1] = sph1[4];
 setMv mv89[0] = sph2[4];
@@ -198,7 +197,7 @@ setVector ve88 = mv89[0,1];
 dotVectors mv86[0] = <ve87,ve88>;
 resetMv mv91[3];
 setMv mv91[0] = mv79[0];
-setMv mv91[1,-2] = inputsMv[3,4];
+setMv mv91[1,-2] = inputsVector[3,4];
 setVector ve90 = mv91[0,1,2];
 resetMv mv93[3];
 setMv mv93[0] = sph3[4];
@@ -207,44 +206,44 @@ setMv mv93[2] = mv86[0];
 setVector ve92 = mv93[0,1,2];
 dotVectors rcPp[17] = <ve90,ve92>;
 
-//rcPp[18] = (((-((inputsMv[10] - inputsMv[8]) * inputsMv[4])) + ((inputsMv[9] - inputsMv[6]) * inputsMv[3])) + (inputsMv[10] * inputsMv[6])) - (inputsMv[9] * inputsMv[8])
+//rcPp[18] = (((-((inputsVector[10] - inputsVector[8]) * inputsVector[4])) + ((inputsVector[9] - inputsVector[6]) * inputsVector[3])) + (inputsVector[10] * inputsVector[6])) - (inputsVector[9] * inputsVector[8])
 resetMv mv94[1];
 resetMv mv95[1];
-setVector ve96 = inputsMv[10,-8];
+setVector ve96 = inputsVector[10,-8];
 dotVectors mv95[0] = <ve96>;
 setMv mv94[0] = mv95[-0];
 resetMv mv97[1];
-setVector ve98 = inputsMv[9,-6];
+setVector ve98 = inputsVector[9,-6];
 dotVectors mv97[0] = <ve98>;
 resetMv mv100[4];
 setMv mv100[1] = mv97[0];
-setMv mv100[2,-3] = inputsMv[10,9];
 setMv mv100[0] = mv94[0];
+setMv mv100[2,-3] = inputsVector[10,9];
 setVector ve99 = mv100[0,1,2,3];
-setVector ve101 = inputsMv[4,3,6,8];
+setVector ve101 = inputsVector[4,3,6,8];
 dotVectors rcPp[18] = <ve99,ve101>;
 
-//rcPp[19] = ((((inputsMv[10] * inputsMv[11]) - (inputsMv[7] * inputsMv[8])) * sph3[4]) + (inputsMv[3] * ((inputsMv[7] * sph2[4]) - (inputsMv[11] * sph1[4])))) - (inputsMv[5] * ((inputsMv[10] * sph2[4]) - (inputsMv[8] * sph1[4])))
+//rcPp[19] = ((((inputsVector[10] * inputsVector[11]) - (inputsVector[7] * inputsVector[8])) * sph3[4]) + (inputsVector[3] * ((inputsVector[7] * sph2[4]) - (inputsVector[11] * sph1[4])))) - (inputsVector[5] * ((inputsVector[10] * sph2[4]) - (inputsVector[8] * sph1[4])))
 resetMv mv102[1];
-setVector ve103 = inputsMv[10,-7];
-setVector ve104 = inputsMv[11,8];
+setVector ve103 = inputsVector[10,-7];
+setVector ve104 = inputsVector[11,8];
 dotVectors mv102[0] = <ve103,ve104>;
 resetMv mv105[1];
-setVector ve106 = inputsMv[7,-11];
+setVector ve106 = inputsVector[7,-11];
 resetMv mv108[2];
 setMv mv108[1] = sph1[4];
 setMv mv108[0] = sph2[4];
 setVector ve107 = mv108[0,1];
 dotVectors mv105[0] = <ve106,ve107>;
 resetMv mv109[1];
-setVector ve110 = inputsMv[10,-8];
+setVector ve110 = inputsVector[10,-8];
 resetMv mv112[2];
 setMv mv112[1] = sph1[4];
 setMv mv112[0] = sph2[4];
 setVector ve111 = mv112[0,1];
 dotVectors mv109[0] = <ve110,ve111>;
 resetMv mv114[3];
-setMv mv114[1,-2] = inputsMv[3,5];
+setMv mv114[1,-2] = inputsVector[3,5];
 setMv mv114[0] = mv102[0];
 setVector ve113 = mv114[0,1,2];
 resetMv mv116[3];
@@ -254,27 +253,27 @@ setMv mv116[2] = mv109[0];
 setVector ve115 = mv116[0,1,2];
 dotVectors rcPp[19] = <ve113,ve115>;
 
-//rcPp[20] = (((-((inputsMv[10] - inputsMv[8]) * inputsMv[5])) + ((inputsMv[7] - inputsMv[11]) * inputsMv[3])) + (inputsMv[10] * inputsMv[11])) - (inputsMv[7] * inputsMv[8])
+//rcPp[20] = (((-((inputsVector[10] - inputsVector[8]) * inputsVector[5])) + ((inputsVector[7] - inputsVector[11]) * inputsVector[3])) + (inputsVector[10] * inputsVector[11])) - (inputsVector[7] * inputsVector[8])
 resetMv mv117[1];
 resetMv mv118[1];
-setVector ve119 = inputsMv[10,-8];
+setVector ve119 = inputsVector[10,-8];
 dotVectors mv118[0] = <ve119>;
 setMv mv117[0] = mv118[-0];
 resetMv mv120[1];
-setVector ve121 = inputsMv[7,-11];
+setVector ve121 = inputsVector[7,-11];
 dotVectors mv120[0] = <ve121>;
 resetMv mv123[4];
-setMv mv123[2,-3] = inputsMv[10,7];
+setMv mv123[2,-3] = inputsVector[10,7];
 setMv mv123[0] = mv117[0];
 setMv mv123[1] = mv120[0];
 setVector ve122 = mv123[0,1,2,3];
-setVector ve124 = inputsMv[5,3,11,8];
+setVector ve124 = inputsVector[5,3,11,8];
 dotVectors rcPp[20] = <ve122,ve124>;
 
-//rcPp[21] = (((-((inputsMv[10] - inputsMv[8]) * sph3[4])) + (inputsMv[10] * sph2[4])) + (inputsMv[3] * (sph1[4] - sph2[4]))) - (inputsMv[8] * sph1[4])
+//rcPp[21] = (((-((inputsVector[10] - inputsVector[8]) * sph3[4])) + (inputsVector[10] * sph2[4])) + (inputsVector[3] * (sph1[4] - sph2[4]))) - (inputsVector[8] * sph1[4])
 resetMv mv125[1];
 resetMv mv126[1];
-setVector ve127 = inputsMv[10,-8];
+setVector ve127 = inputsVector[10,-8];
 dotVectors mv126[0] = <ve127>;
 setMv mv125[0] = mv126[-0];
 resetMv mv128[1];
@@ -285,7 +284,7 @@ setVector ve129 = mv130[0,1];
 dotVectors mv128[0] = <ve129>;
 resetMv mv132[4];
 setMv mv132[0] = mv125[0];
-setMv mv132[1,2,-3] = inputsMv[10,3,8];
+setMv mv132[1,2,-3] = inputsVector[10,3,8];
 setVector ve131 = mv132[0,1,2,3];
 resetMv mv134[4];
 setMv mv134[2] = mv128[0];
@@ -295,20 +294,20 @@ setMv mv134[1] = sph2[4];
 setVector ve133 = mv134[0,1,2,3];
 dotVectors rcPp[21] = <ve131,ve133>;
 
-//rcPp[22] = ((((inputsMv[9] * inputsMv[11]) - (inputsMv[7] * inputsMv[6])) * sph3[4]) + (inputsMv[4] * ((inputsMv[7] * sph2[4]) - (inputsMv[11] * sph1[4])))) - (inputsMv[5] * ((inputsMv[9] * sph2[4]) - (inputsMv[6] * sph1[4])))
+//rcPp[22] = ((((inputsVector[9] * inputsVector[11]) - (inputsVector[7] * inputsVector[6])) * sph3[4]) + (inputsVector[4] * ((inputsVector[7] * sph2[4]) - (inputsVector[11] * sph1[4])))) - (inputsVector[5] * ((inputsVector[9] * sph2[4]) - (inputsVector[6] * sph1[4])))
 resetMv mv135[1];
-setVector ve136 = inputsMv[9,-7];
-setVector ve137 = inputsMv[11,6];
+setVector ve136 = inputsVector[9,-7];
+setVector ve137 = inputsVector[11,6];
 dotVectors mv135[0] = <ve136,ve137>;
 resetMv mv138[1];
-setVector ve139 = inputsMv[7,-11];
+setVector ve139 = inputsVector[7,-11];
 resetMv mv141[2];
 setMv mv141[1] = sph1[4];
 setMv mv141[0] = sph2[4];
 setVector ve140 = mv141[0,1];
 dotVectors mv138[0] = <ve139,ve140>;
 resetMv mv142[1];
-setVector ve143 = inputsMv[9,-6];
+setVector ve143 = inputsVector[9,-6];
 resetMv mv145[2];
 setMv mv145[1] = sph1[4];
 setMv mv145[0] = sph2[4];
@@ -316,7 +315,7 @@ setVector ve144 = mv145[0,1];
 dotVectors mv142[0] = <ve143,ve144>;
 resetMv mv147[3];
 setMv mv147[0] = mv135[0];
-setMv mv147[1,-2] = inputsMv[4,5];
+setMv mv147[1,-2] = inputsVector[4,5];
 setVector ve146 = mv147[0,1,2];
 resetMv mv149[3];
 setMv mv149[1] = mv138[0];
@@ -325,27 +324,27 @@ setMv mv149[2] = mv142[0];
 setVector ve148 = mv149[0,1,2];
 dotVectors rcPp[22] = <ve146,ve148>;
 
-//rcPp[23] = (((-((inputsMv[9] - inputsMv[6]) * inputsMv[5])) + ((inputsMv[7] - inputsMv[11]) * inputsMv[4])) + (inputsMv[9] * inputsMv[11])) - (inputsMv[7] * inputsMv[6])
+//rcPp[23] = (((-((inputsVector[9] - inputsVector[6]) * inputsVector[5])) + ((inputsVector[7] - inputsVector[11]) * inputsVector[4])) + (inputsVector[9] * inputsVector[11])) - (inputsVector[7] * inputsVector[6])
 resetMv mv150[1];
 resetMv mv151[1];
-setVector ve152 = inputsMv[9,-6];
+setVector ve152 = inputsVector[9,-6];
 dotVectors mv151[0] = <ve152>;
 setMv mv150[0] = mv151[-0];
 resetMv mv153[1];
-setVector ve154 = inputsMv[7,-11];
+setVector ve154 = inputsVector[7,-11];
 dotVectors mv153[0] = <ve154>;
 resetMv mv156[4];
-setMv mv156[2,-3] = inputsMv[9,7];
+setMv mv156[2,-3] = inputsVector[9,7];
 setMv mv156[1] = mv153[0];
 setMv mv156[0] = mv150[0];
 setVector ve155 = mv156[0,1,2,3];
-setVector ve157 = inputsMv[5,4,11,6];
+setVector ve157 = inputsVector[5,4,11,6];
 dotVectors rcPp[23] = <ve155,ve157>;
 
-//rcPp[24] = (((-((inputsMv[9] - inputsMv[6]) * sph3[4])) + (inputsMv[9] * sph2[4])) + (inputsMv[4] * (sph1[4] - sph2[4]))) - (inputsMv[6] * sph1[4])
+//rcPp[24] = (((-((inputsVector[9] - inputsVector[6]) * sph3[4])) + (inputsVector[9] * sph2[4])) + (inputsVector[4] * (sph1[4] - sph2[4]))) - (inputsVector[6] * sph1[4])
 resetMv mv158[1];
 resetMv mv159[1];
-setVector ve160 = inputsMv[9,-6];
+setVector ve160 = inputsVector[9,-6];
 dotVectors mv159[0] = <ve160>;
 setMv mv158[0] = mv159[-0];
 resetMv mv161[1];
@@ -355,7 +354,7 @@ setMv mv163[-1] = sph2[4];
 setVector ve162 = mv163[0,1];
 dotVectors mv161[0] = <ve162>;
 resetMv mv165[4];
-setMv mv165[1,2,-3] = inputsMv[9,4,6];
+setMv mv165[1,2,-3] = inputsVector[9,4,6];
 setMv mv165[0] = mv158[0];
 setVector ve164 = mv165[0,1,2,3];
 resetMv mv167[4];
@@ -366,10 +365,10 @@ setMv mv167[2] = mv161[0];
 setVector ve166 = mv167[0,1,2,3];
 dotVectors rcPp[24] = <ve164,ve166>;
 
-//rcPp[25] = (((-((inputsMv[7] - inputsMv[11]) * sph3[4])) + (inputsMv[7] * sph2[4])) + (inputsMv[5] * (sph1[4] - sph2[4]))) - (inputsMv[11] * sph1[4])
+//rcPp[25] = (((-((inputsVector[7] - inputsVector[11]) * sph3[4])) + (inputsVector[7] * sph2[4])) + (inputsVector[5] * (sph1[4] - sph2[4]))) - (inputsVector[11] * sph1[4])
 resetMv mv168[1];
 resetMv mv169[1];
-setVector ve170 = inputsMv[7,-11];
+setVector ve170 = inputsVector[7,-11];
 dotVectors mv169[0] = <ve170>;
 setMv mv168[0] = mv169[-0];
 resetMv mv171[1];
@@ -379,7 +378,7 @@ setMv mv173[-1] = sph2[4];
 setVector ve172 = mv173[0,1];
 dotVectors mv171[0] = <ve172>;
 resetMv mv175[4];
-setMv mv175[1,2,-3] = inputsMv[7,5,11];
+setMv mv175[1,2,-3] = inputsVector[7,5,11];
 setMv mv175[0] = mv168[0];
 setVector ve174 = mv175[0,1,2,3];
 resetMv mv177[4];
@@ -22389,12 +22388,12 @@ setMv mv10690[7] = mv10655[0];
 setVector ve10689 = mv10690[0,1,2,3,4,5,6,7];
 dotVectors rc2N[5] = <ve10689>;
 
-//temp3[0] = -(2.0 * (((((-(sat1[4] * rc1N[5])) - rc1N[4]) + (inputsMv[7] * rc1N[3])) + (inputsMv[9] * rc1N[2])) + (inputsMv[10] * rc1N[1])))
+//temp3[0] = -(2.0 * (((((-(sat1[4] * rc1N[5])) - rc1N[4]) + (inputsVector[7] * rc1N[3])) + (inputsVector[9] * rc1N[2])) + (inputsVector[10] * rc1N[1])))
 resetMv temp3[32];
 resetMv mv10691[1];
 resetMv mv10693[5];
 setMv mv10693[-1] = rc1N[4];
-setMv mv10693[2,3,4] = inputsMv[7,9,10];
+setMv mv10693[2,3,4] = inputsVector[7,9,10];
 setMv mv10693[-0] = sat1[4];
 setVector ve10692 = mv10693[0,1,2,3,4];
 resetMv mv10695[5];
@@ -22414,19 +22413,19 @@ setMv temp3[0] = mv10696[-0];
 resetMv temp4[32];
 calculateMv temp4 = SQRT(temp3);
 
-//z11[0] = temp4[0] - inputsMv[0]
+//z11[0] = temp4[0] - inputsVector[0]
 resetMv z11[32];
 resetMv mv10701[2];
-setMv mv10701[-1] = inputsMv[0];
+setMv mv10701[-1] = inputsVector[0];
 setMv mv10701[0] = temp4[0];
 setVector ve10700 = mv10701[0,1];
 dotVectors z11[0] = <ve10700>;
 
-//temp5[0] = -(2.0 * (((((-(sat1[4] * rc2N[5])) - rc2N[4]) + (inputsMv[7] * rc2N[3])) + (inputsMv[9] * rc2N[2])) + (inputsMv[10] * rc2N[1])))
+//temp5[0] = -(2.0 * (((((-(sat1[4] * rc2N[5])) - rc2N[4]) + (inputsVector[7] * rc2N[3])) + (inputsVector[9] * rc2N[2])) + (inputsVector[10] * rc2N[1])))
 resetMv temp5[32];
 resetMv mv10702[1];
 resetMv mv10704[5];
-setMv mv10704[2,3,4] = inputsMv[7,9,10];
+setMv mv10704[2,3,4] = inputsVector[7,9,10];
 setMv mv10704[-1] = rc2N[4];
 setMv mv10704[-0] = sat1[4];
 setVector ve10703 = mv10704[0,1,2,3,4];
@@ -22447,21 +22446,21 @@ setMv temp5[0] = mv10707[-0];
 resetMv temp6[32];
 calculateMv temp6 = SQRT(temp5);
 
-//z12[0] = temp6[0] - inputsMv[0]
+//z12[0] = temp6[0] - inputsVector[0]
 resetMv z12[32];
 resetMv mv10712[2];
-setMv mv10712[-1] = inputsMv[0];
+setMv mv10712[-1] = inputsVector[0];
 setMv mv10712[0] = temp6[0];
 setVector ve10711 = mv10712[0,1];
 dotVectors z12[0] = <ve10711>;
 
-//temp7[0] = -(2.0 * (((((-(sat2[4] * rc1N[5])) - rc1N[4]) + (inputsMv[11] * rc1N[3])) + (inputsMv[6] * rc1N[2])) + (inputsMv[8] * rc1N[1])))
+//temp7[0] = -(2.0 * (((((-(sat2[4] * rc1N[5])) - rc1N[4]) + (inputsVector[11] * rc1N[3])) + (inputsVector[6] * rc1N[2])) + (inputsVector[8] * rc1N[1])))
 resetMv temp7[32];
 resetMv mv10713[1];
 resetMv mv10715[5];
 setMv mv10715[-1] = rc1N[4];
-setMv mv10715[2,3,4] = inputsMv[11,6,8];
 setMv mv10715[-0] = sat2[4];
+setMv mv10715[2,3,4] = inputsVector[11,6,8];
 setVector ve10714 = mv10715[0,1,2,3,4];
 resetMv mv10717[5];
 setMv mv10717[0,2,3,4] = rc1N[5,3,2,1];
@@ -22480,20 +22479,20 @@ setMv temp7[0] = mv10718[-0];
 resetMv temp8[32];
 calculateMv temp8 = SQRT(temp7);
 
-//z21[0] = temp8[0] - inputsMv[1]
+//z21[0] = temp8[0] - inputsVector[1]
 resetMv z21[32];
 resetMv mv10723[2];
-setMv mv10723[-1] = inputsMv[1];
+setMv mv10723[-1] = inputsVector[1];
 setMv mv10723[0] = temp8[0];
 setVector ve10722 = mv10723[0,1];
 dotVectors z21[0] = <ve10722>;
 
-//temp9[0] = -(2.0 * (((((-(sat2[4] * rc2N[5])) - rc2N[4]) + (inputsMv[11] * rc2N[3])) + (inputsMv[6] * rc2N[2])) + (inputsMv[8] * rc2N[1])))
+//temp9[0] = -(2.0 * (((((-(sat2[4] * rc2N[5])) - rc2N[4]) + (inputsVector[11] * rc2N[3])) + (inputsVector[6] * rc2N[2])) + (inputsVector[8] * rc2N[1])))
 resetMv temp9[32];
 resetMv mv10724[1];
 resetMv mv10726[5];
-setMv mv10726[2,3,4] = inputsMv[11,6,8];
 setMv mv10726[-0] = sat2[4];
+setMv mv10726[2,3,4] = inputsVector[11,6,8];
 setMv mv10726[-1] = rc2N[4];
 setVector ve10725 = mv10726[0,1,2,3,4];
 resetMv mv10728[5];
@@ -22513,21 +22512,21 @@ setMv temp9[0] = mv10729[-0];
 resetMv temp10[32];
 calculateMv temp10 = SQRT(temp9);
 
-//z22[0] = temp10[0] - inputsMv[1]
+//z22[0] = temp10[0] - inputsVector[1]
 resetMv z22[32];
 resetMv mv10734[2];
-setMv mv10734[-1] = inputsMv[1];
+setMv mv10734[-1] = inputsVector[1];
 setMv mv10734[0] = temp10[0];
 setVector ve10733 = mv10734[0,1];
 dotVectors z22[0] = <ve10733>;
 
-//temp11[0] = -(2.0 * (((((-(sat3[4] * rc1N[5])) - rc1N[4]) + (inputsMv[5] * rc1N[3])) + (inputsMv[4] * rc1N[2])) + (inputsMv[3] * rc1N[1])))
+//temp11[0] = -(2.0 * (((((-(sat3[4] * rc1N[5])) - rc1N[4]) + (inputsVector[5] * rc1N[3])) + (inputsVector[4] * rc1N[2])) + (inputsVector[3] * rc1N[1])))
 resetMv temp11[32];
 resetMv mv10735[1];
 resetMv mv10737[5];
 setMv mv10737[-1] = rc1N[4];
-setMv mv10737[2,3,4] = inputsMv[5,4,3];
 setMv mv10737[-0] = sat3[4];
+setMv mv10737[2,3,4] = inputsVector[5,4,3];
 setVector ve10736 = mv10737[0,1,2,3,4];
 resetMv mv10739[5];
 setMv mv10739[0,2,3,4] = rc1N[5,3,2,1];
@@ -22546,20 +22545,20 @@ setMv temp11[0] = mv10740[-0];
 resetMv temp12[32];
 calculateMv temp12 = SQRT(temp11);
 
-//z31[0] = temp12[0] - inputsMv[2]
+//z31[0] = temp12[0] - inputsVector[2]
 resetMv z31[32];
 resetMv mv10745[2];
-setMv mv10745[-1] = inputsMv[2];
 setMv mv10745[0] = temp12[0];
+setMv mv10745[-1] = inputsVector[2];
 setVector ve10744 = mv10745[0,1];
 dotVectors z31[0] = <ve10744>;
 
-//temp13[0] = -(2.0 * (((((-(sat3[4] * rc2N[5])) - rc2N[4]) + (inputsMv[5] * rc2N[3])) + (inputsMv[4] * rc2N[2])) + (inputsMv[3] * rc2N[1])))
+//temp13[0] = -(2.0 * (((((-(sat3[4] * rc2N[5])) - rc2N[4]) + (inputsVector[5] * rc2N[3])) + (inputsVector[4] * rc2N[2])) + (inputsVector[3] * rc2N[1])))
 resetMv temp13[32];
 resetMv mv10746[1];
 resetMv mv10748[5];
-setMv mv10748[2,3,4] = inputsMv[5,4,3];
 setMv mv10748[-0] = sat3[4];
+setMv mv10748[2,3,4] = inputsVector[5,4,3];
 setMv mv10748[-1] = rc2N[4];
 setVector ve10747 = mv10748[0,1,2,3,4];
 resetMv mv10750[5];
@@ -22579,11 +22578,11 @@ setMv temp13[0] = mv10751[-0];
 resetMv temp14[32];
 calculateMv temp14 = SQRT(temp13);
 
-//z32[0] = temp14[0] - inputsMv[2]
+//z32[0] = temp14[0] - inputsVector[2]
 resetMv z32[32];
 resetMv mv10756[2];
 setMv mv10756[0] = temp14[0];
-setMv mv10756[-1] = inputsMv[2];
+setMv mv10756[-1] = inputsVector[2];
 setVector ve10755 = mv10756[0,1];
 dotVectors z32[0] = <ve10755>;
 
