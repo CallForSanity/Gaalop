@@ -3,7 +3,6 @@ package de.gaalop.gapp.visitor;
 import de.gaalop.gapp.Selector;
 import de.gaalop.gapp.Selectorset;
 import de.gaalop.gapp.Variableset;
-import de.gaalop.gapp.instructionSet.GAPPAddMv;
 import de.gaalop.gapp.instructionSet.GAPPAssignMv;
 import de.gaalop.gapp.instructionSet.GAPPAssignVector;
 import de.gaalop.gapp.instructionSet.GAPPCalculateMv;
@@ -63,16 +62,6 @@ public class GAPPCopier implements GAPPVisitor {
         for (GAPPVector part: vectors)
             result.add((GAPPVector) GAPPValueHolderCopier.copyValueHolder(part));
         return result;
-    }
-
-    @Override
-    public Object visitAddMv(GAPPAddMv gappAddMv, Object arg) {
-        return new GAPPAddMv(
-                (GAPPMultivector) GAPPValueHolderCopier.copyValueHolder(gappAddMv.getDestinationMv()),
-                (GAPPMultivector) GAPPValueHolderCopier.copyValueHolder(gappAddMv.getSourceMv()),
-                copySelectorset(gappAddMv.getSelectorsDest()),
-                copySelectorset(gappAddMv.getSelectorsSrc())
-                );
     }
 
     @Override

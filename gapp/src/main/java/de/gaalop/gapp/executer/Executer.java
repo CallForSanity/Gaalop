@@ -2,7 +2,6 @@ package de.gaalop.gapp.executer;
 
 import de.gaalop.gapp.Selector;
 import de.gaalop.gapp.Selectorset;
-import de.gaalop.gapp.instructionSet.GAPPAddMv;
 import de.gaalop.gapp.instructionSet.GAPPAssignMv;
 import de.gaalop.gapp.instructionSet.GAPPAssignVector;
 import de.gaalop.gapp.instructionSet.GAPPCalculateMv;
@@ -90,26 +89,6 @@ public class Executer extends CFGGAPPVisitor {
      */
     private float getVariableValue(String name) {
         return inputValues.get(name);
-    }
-
-    @Override
-    public Object visitAddMv(GAPPAddMv gappAddMv, Object arg) {
-
-        MultivectorWithValues destination = getMultivector(gappAddMv.getDestinationMv().getName());
-        MultivectorWithValues source = getMultivector(gappAddMv.getSourceMv().getName());
-
-        Selectorset selSrc = gappAddMv.getSelectorsSrc();
-        Selectorset selDest = gappAddMv.getSelectorsDest();
-
-        int selCount = gappAddMv.getSelectorsSrc().size();
-        for (int sel=0;sel<selCount;sel++) {
-            Selector sDest = selDest.get(sel);
-            Selector sSrc = selSrc.get(sel);
-
-            destination.getEntries()[sDest.getIndex()] += sDest.getSign()*sSrc.getSign()*source.getEntries()[sSrc.getIndex()];
-        }
-
-        return null;
     }
     
     @Override

@@ -7,7 +7,6 @@ import de.gaalop.gapp.Selectorset;
 import de.gaalop.gapp.VariableGetter;
 import de.gaalop.gapp.Variableset;
 import de.gaalop.gapp.instructionSet.CalculationType;
-import de.gaalop.gapp.instructionSet.GAPPAddMv;
 import de.gaalop.gapp.instructionSet.GAPPAssignMv;
 import de.gaalop.gapp.instructionSet.GAPPAssignVector;
 import de.gaalop.gapp.instructionSet.GAPPDotVectors;
@@ -35,21 +34,6 @@ public class Parser implements GAPPVisitor {
 
     public void setGetter(VariableGetter getter) {
         this.getter = getter;
-    }
-
-    @Override
-    public Object visitAddMv(GAPPAddMv gappAddMv, Object arg) {
-        String[] partsEquation = ((String) arg).split("=");
-
-        Selectorset destSelectorset = new Selectorset();
-        //Parse left side
-        gappAddMv.setSelectorsDest(destSelectorset);
-        gappAddMv.setDestinationMv(parseMultivectorWithSelectors(partsEquation[0].trim(), destSelectorset, getter));
-
-        //Parse right side
-        Selectorset srcSelectorset = new Selectorset();
-        gappAddMv.setSourceMv(parseMultivectorWithSelectors(partsEquation[1].trim(), srcSelectorset, getter));
-        return null;
     }
 
     @Override

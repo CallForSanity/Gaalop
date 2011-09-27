@@ -12,7 +12,6 @@ import de.gaalop.OptimizationException;
 import de.gaalop.OutputFile;
 import de.gaalop.cfg.ControlFlowGraph;
 import de.gaalop.gapp.importing.GAPPDecoratingMain;
-import de.gaalop.gapp.statistics.CalculationsCounter;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.Set;
@@ -50,13 +49,6 @@ public class Base {
         Executer executer = new Executer(inputValues);
         graph.accept(executer);
         return executer;
-    }
-
-    private void printStatistics(ControlFlowGraph graph) {
-        // print some statistics
-        CalculationsCounter counter = new CalculationsCounter();
-        graph.accept(counter);
-        counter.printStatistics(System.out);
     }
 
     /**

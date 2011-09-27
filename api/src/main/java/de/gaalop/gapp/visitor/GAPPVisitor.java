@@ -8,7 +8,6 @@ import de.gaalop.gapp.instructionSet.*;
  */
 public interface GAPPVisitor {
 
-    public Object visitAddMv(GAPPAddMv gappAddMv, Object arg);
     public Object visitAssignMv(GAPPAssignMv gappAssignMv, Object arg);
     public Object visitDotVectors(GAPPDotVectors gappDotVectors, Object arg);
     public Object visitResetMv(GAPPResetMv gappResetMv, Object arg);

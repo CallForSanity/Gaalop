@@ -1,7 +1,6 @@
 package de.gaalop.gapp.statistics;
 
 import de.gaalop.cfg.ControlFlowGraph;
-import de.gaalop.gapp.instructionSet.GAPPAddMv;
 import de.gaalop.gapp.instructionSet.GAPPAssignMv;
 import de.gaalop.gapp.instructionSet.GAPPAssignVector;
 import de.gaalop.gapp.instructionSet.GAPPCalculateMv;
@@ -88,14 +87,6 @@ public class MemoryUsage extends CFGGAPPVisitor {
             System.err.println("Multivector "+gappSetOfVariables.getName()+" was not reseted!");
         } else 
             liveStatistics.get(gappSetOfVariables.getName()).getInterval().setTo(curLine);
-    }
-
-    @Override
-    public Object visitAddMv(GAPPAddMv gappAddMv, Object arg) {
-        curLine++;
-        access(gappAddMv.getDestinationMv());
-        access(gappAddMv.getSourceMv());
-        return null;
     }
 
     @Override
