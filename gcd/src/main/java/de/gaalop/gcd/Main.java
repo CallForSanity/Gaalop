@@ -140,14 +140,15 @@ public class Main {
         }
 
         // process gaalop files - call gaalop
-        // import declarations
-        StringBuffer variableDeclarations = new StringBuffer();
         // imported multivector components
         Map<String, List<MvComponent>> mvComponents = new HashMap<String, List<MvComponent>>();
         Vector<String> gaalopOutFileVector = new Vector<String>();
         for (int gaalopFileCount = 0; gaalopFileCount < gaalopInFileVector.size(); ++gaalopFileCount) {
 
-            // retrieve multivectors from previous sections
+            // import declarations
+            StringBuffer variableDeclarations = new StringBuffer();
+
+            // retrieve multivectors from previous section
             if (gaalopFileCount > 0) {
                 BufferedReader gaalopOutFile = new BufferedReader(new StringReader(gaalopOutFileVector.get(gaalopFileCount - 1)));
 
