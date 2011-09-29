@@ -54,9 +54,10 @@ public class GAPPDecoratingMain {
         facade.importGraph(graph);
 
         GAPP gappStart = new GAPP();
-        assignInputVariables(graph, gappStart);
 
         HashSet<String> variables = getAllVariableNames(graph);
+        assignInputVariables(graph, gappStart, variables);
+        
         // import now the graph in GAPP
         GAPPDecorator vCFG = new GAPPDecorator(gappStart, variables, usedAlgebra.getBladeCount(), scalarFunctions);
         graph.accept(vCFG);
@@ -75,14 +76,14 @@ public class GAPPDecoratingMain {
      * Adds instructions to a GAPP instance which assigns all InputVariables to a GAPPMultivector
      * @param graph The ControlFlowGraph
      * @param gappStart The GAPP instance
+     * @param variables All used variable names in the ControlFlowGraph
      */
-    private void assignInputVariables(ControlFlowGraph graph, GAPP gappStart) {
+    private void assignInputVariables(ControlFlowGraph graph, GAPP gappStart, HashSet<String> variables) {
         LinkedList<Variable> toDo = new LinkedList<Variable>(graph.getInputVariables());
-        //TODO chs test if variable "inputsVector" is not used recently
 
         HashMap<Variable, MultivectorComponent> map = new HashMap<Variable, MultivectorComponent>();
 
-        GAPPVector inputsMv = new GAPPVector("inputsVector");
+        GAPPVector inputsMv = new GAPPVector(createNameOfInputsVector(variables));
 
         Variableset varSet = new Variableset();
         int slotNo = 0;
@@ -99,6 +100,32 @@ public class GAPPDecoratingMain {
             Variable curVar = toDo.removeFirst();
             ReplaceVisitor replaceVisitor = new ReplaceVisitor(curVar, map.get(curVar));
             graph.accept(replaceVisitor);
+        }
+    }
+
+    /**
+     * Creates a recently non-used name for the inputsVector.
+     * Adds the new name to variables set and returns the new name.
+     * Preferes "inputsVector" as new name.
+     * An increasing number is appended on prefered name until the name is non-used.
+     *
+     * @param variables
+     * @return The new name
+     */
+    private String createNameOfInputsVector(HashSet<String> variables) {
+        // prefer as name "inputsVector"
+        String preferedName = "inputsVector";
+        if (!variables.contains(preferedName)) {
+            variables.add(preferedName);
+            return preferedName;
+        } else {
+            int number = 1;
+            while (variables.contains(preferedName+number))
+                number++;
+
+            String result = preferedName+number;
+            variables.add(result);
+            return result;
         }
     }
 
