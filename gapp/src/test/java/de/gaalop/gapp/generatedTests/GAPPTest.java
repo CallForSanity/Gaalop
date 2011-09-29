@@ -60,4 +60,17 @@ public void testPaper2() {
         }
 }
 
+@Test
+public void testPaper3() {
+        try {
+            Paper3 c = new Paper3();
+            Executer executer = executeProgram(c, "Paper3");
+            c.testOutput(executer);
+        } catch (OptimizationException ex) {
+            assertTrue("Optimization Error", false);
+        } catch (CodeParserException ex) {
+             assertTrue("Code Parse Error", false);
+        }
+}
+
 }

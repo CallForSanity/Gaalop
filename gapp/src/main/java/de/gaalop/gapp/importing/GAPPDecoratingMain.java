@@ -12,6 +12,7 @@ import de.gaalop.dfg.MultivectorComponent;
 import de.gaalop.dfg.Variable;
 import de.gaalop.gapp.GAPP;
 import de.gaalop.gapp.Variableset;
+import de.gaalop.gapp.importing.optimization.GAPPFurtherOptimizationsFacade;
 import de.gaalop.gapp.instructionSet.GAPPAssignVector;
 import de.gaalop.gapp.variables.GAPPScalarVariable;
 import de.gaalop.gapp.variables.GAPPVector;
@@ -59,6 +60,10 @@ public class GAPPDecoratingMain {
         // import now the graph in GAPP
         GAPPDecorator vCFG = new GAPPDecorator(gappStart, variables, usedAlgebra.getBladeCount(), scalarFunctions);
         graph.accept(vCFG);
+
+        // perform further optimizations
+        GAPPFurtherOptimizationsFacade furtherOpt = new GAPPFurtherOptimizationsFacade();
+        furtherOpt.doFurtherGAPPOptimizations(graph);
 
         //System.out.println("Memory usage of "+graph.getSource().getName());
         //MemoryUsage.printMemoryUsage(graph);

@@ -28,13 +28,10 @@ setVector ve14 = mv10[0];
 dotVectors f[3] = <ve13,ve14>;
 
 //f[6] = 0
-assignMv f[6] = [0.0];
 
 //f[7] = 0
-assignMv f[7] = [0.0];
 
 //f[10] = 0
-assignMv f[10] = [0.0];
 
 //f[16] = ((inputsVector[2] * ((inputsVector[4] * inputsVector[1]) - (inputsVector[5] * inputsVector[3]))) - (inputsVector[4] * ((inputsVector[2] * inputsVector[1]) - (inputsVector[5] * inputsVector[0])))) + (inputsVector[5] * ((inputsVector[2] * inputsVector[3]) - (inputsVector[4] * inputsVector[0])))
 resetMv mv15[1];

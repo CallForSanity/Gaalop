@@ -37,13 +37,10 @@ setVector ve13 = c[0];
 dotVectors f[3] = <ve12,ve13>;
 
 //f[6] = 0
-assignMv f[6] = [0.0];
 
 //f[7] = 0
-assignMv f[7] = [0.0];
 
 //f[10] = 0
-assignMv f[10] = [0.0];
 
 //f[16] = ((-(inputsVector[4] * c[7])) + (inputsVector[5] * c[6])) + (inputsVector[2] * c[10])
 setVector ve14 = inputsVector[-4,5,2];

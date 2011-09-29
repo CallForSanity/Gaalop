@@ -1,31 +1,27 @@
 //v1[1] = inputsVector[5]
 assignVector inputsVector = [y1,y2,y3,x2,x3,x1];
 resetMv v1[32];
-setMv v1[1] = inputsVector[5];
+setMv v1[1,2] = inputsVector[5,0];
 
 //v1[2] = inputsVector[0]
-setMv v1[2] = inputsVector[0];
 
 //v2[1] = inputsVector[3]
 resetMv v2[32];
-setMv v2[1] = inputsVector[3];
+setMv v2[1,2] = inputsVector[3,1];
 
 //v2[2] = inputsVector[1]
-setMv v2[2] = inputsVector[1];
 
 //v3[1] = inputsVector[4]
 resetMv v3[32];
-setMv v3[1] = inputsVector[4];
+setMv v3[1,2] = inputsVector[4,2];
 
 //v3[2] = inputsVector[2]
-setMv v3[2] = inputsVector[2];
 
 //p1[1] = v1[1]
 resetMv p1[32];
-setMv p1[1] = v1[1];
+setMv p1[1,2] = v1[1,2];
 
 //p1[2] = v1[2]
-setMv p1[2] = v1[2];
 
 //p1[4] = (0.5 * (v1[2] ^ 2)) + (0.5 * (v1[1] ^ 2))
 resetMv mv0[1];
@@ -53,14 +49,12 @@ dotVectors p1[4] = <ve6,ve8>;
 assignMv p1[5] = [1.0];
 
 //p1[17] = 0.0
-assignMv p1[17] = [0.0];
 
 //p2[1] = v2[1]
 resetMv p2[32];
-setMv p2[1] = v2[1];
+setMv p2[1,2] = v2[1,2];
 
 //p2[2] = v2[2]
-setMv p2[2] = v2[2];
 
 //p2[4] = (0.5 * (v2[2] ^ 2)) + (0.5 * (v2[1] ^ 2))
 resetMv mv10[1];
@@ -88,14 +82,12 @@ dotVectors p2[4] = <ve16,ve18>;
 assignMv p2[5] = [1.0];
 
 //p2[17] = 0.0
-assignMv p2[17] = [0.0];
 
 //p3[1] = v3[1]
 resetMv p3[32];
-setMv p3[1] = v3[1];
+setMv p3[1,2] = v3[1,2];
 
 //p3[2] = v3[2]
-setMv p3[2] = v3[2];
 
 //p3[4] = (0.5 * (v3[2] ^ 2)) + (0.5 * (v3[1] ^ 2))
 resetMv mv20[1];
@@ -123,7 +115,6 @@ dotVectors p3[4] = <ve26,ve28>;
 assignMv p3[5] = [1.0];
 
 //p3[17] = 0.0
-assignMv p3[17] = [0.0];
 
 //c[7] = (((-((p1[2] - p2[2]) * p3[4])) + ((p1[4] - p2[4]) * p3[2])) + (p1[2] * p2[4])) - (p1[4] * p2[2])
 resetMv c[32];
@@ -285,13 +276,10 @@ dotVectors mv98[0] = <ve99,ve101>;
 setMv ma[5] = mv98[-0];
 
 //ma[17] = 0
-assignMv ma[17] = [0.0];
 
 //ma[21] = 0
-assignMv ma[21] = [0.0];
 
 //ma[24] = 0
-assignMv ma[24] = [0.0];
 
 //m[1] = (ma[21] / ma[5]) + (ma[1] / ma[5])
 resetMv m[32];

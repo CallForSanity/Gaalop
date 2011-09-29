@@ -25,6 +25,7 @@ public class GAPPTestCreator {
         test("GPS");
         test("Paper");
         test("Paper2");
+        test("Paper3");
 
         endTestCase();
     }

@@ -444,19 +444,15 @@ calculateMv temp2 = SQRT(temp1);
 
 //rcPpDual[6] = -(rcPp[25])
 resetMv rcPpDual[32];
-setMv rcPpDual[-6] = rcPp[25];
+setMv rcPpDual[-6,-8,-10,-12,-13] = rcPp[25,22,21,20,17];
 
 //rcPpDual[8] = -(rcPp[22])
-setMv rcPpDual[-8] = rcPp[22];
 
 //rcPpDual[10] = -(rcPp[21])
-setMv rcPpDual[-10] = rcPp[21];
 
 //rcPpDual[12] = -(rcPp[20])
-setMv rcPpDual[-12] = rcPp[20];
 
 //rcPpDual[13] = -(rcPp[17])
-setMv rcPpDual[-13] = rcPp[17];
 
 //rc1[0] = ((((temp2[2] * rcPpDual[12]) / (((rcPpDual[12] ^ 2) + (rcPp[23] ^ 2)) + (rcPp[18] ^ 2))) + ((temp2[1] * rcPp[23]) / (((rcPpDual[12] ^ 2) + (rcPp[23] ^ 2)) + (rcPp[18] ^ 2)))) + ((temp2[3] * rcPp[18]) / (((rcPpDual[12] ^ 2) + (rcPp[23] ^ 2)) + (rcPp[18] ^ 2)))) - ((temp2[5] * rcPp[16]) / (((rcPpDual[12] ^ 2) + (rcPp[23] ^ 2)) + (rcPp[18] ^ 2)))
 resetMv rc1[32];
