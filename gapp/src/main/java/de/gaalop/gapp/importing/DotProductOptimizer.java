@@ -57,7 +57,7 @@ public class DotProductOptimizer {
                 switch (ParallelObjectType.getType(object)) {
                     case constant:
                         Constant constant = (Constant) object;
-                        if (Math.abs(constant.getValue()-1) > 1E-04)
+                        if (Math.abs(constant.getValue()-1) > 10E-04)
                             insertConstant(row, constant);
                         break;
                     case mvComponent:

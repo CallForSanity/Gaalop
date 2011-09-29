@@ -62,4 +62,10 @@ public class GAPP {
     public void addGAPP(GAPP toAdd) {
         instructions.addAll(toAdd.instructions);
     }
+
+    public LinkedList<GAPPBaseInstruction> getInstructions() {
+        return instructions;
+    }
+
+    
 }
