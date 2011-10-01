@@ -49,12 +49,10 @@ public class GAPPCreator implements ParallelObjectVisitor {
     private HashSet<String> variables;
 
     private int bladeCount;
-    private boolean scalarFunctions;
 
-    public GAPPCreator(HashSet<String> variables, int bladeCount, boolean scalarFunctions) {
+    public GAPPCreator(HashSet<String> variables, int bladeCount) {
         this.variables = variables;
         this.bladeCount = bladeCount;
-        this.scalarFunctions = scalarFunctions;
     }
 
     public void setGapp(GAPP gapp) {
@@ -118,14 +116,14 @@ public class GAPPCreator implements ParallelObjectVisitor {
 
     @Override
     public Object visitVariable(ParVariable variable, Object arg) {
-        throw new IllegalStateException("Variable should not appear in GAPPCreator!");
+        throw new IllegalStateException("Variable should not appear in GAPPCreator!"); 
     }
 
 
 
     @Override
     public Object visitExtCalculation(ExtCalculation extCalculation, Object arg) {
-        //arg must be filled!
+        //arg must be filled! Note that this method is only called for scalar destinations!
 
         GAPPMultivectorComponent destination = (GAPPMultivectorComponent) arg;
 
