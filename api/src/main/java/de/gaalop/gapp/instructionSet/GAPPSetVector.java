@@ -2,7 +2,6 @@ package de.gaalop.gapp.instructionSet;
 
 import de.gaalop.gapp.Selectorset;
 import de.gaalop.gapp.variables.GAPPMultivector;
-import de.gaalop.gapp.variables.GAPPSignedMultivectorComponent;
 import de.gaalop.gapp.variables.GAPPVector;
 import de.gaalop.gapp.visitor.GAPPVisitor;
 

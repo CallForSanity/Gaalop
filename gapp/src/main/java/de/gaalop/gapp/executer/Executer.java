@@ -1,5 +1,6 @@
 package de.gaalop.gapp.executer;
 
+import de.gaalop.gapp.PosSelectorset;
 import de.gaalop.gapp.Selector;
 import de.gaalop.gapp.Selectorset;
 import de.gaalop.gapp.instructionSet.GAPPAssignMv;
@@ -165,14 +166,14 @@ public class Executer extends CFGGAPPVisitor {
     public Object visitAssignMv(GAPPAssignMv gappAssignMv, Object arg) {
         MultivectorWithValues destination = getMultivector(gappAssignMv.getDestinationMv().getName());
 
-        Selectorset selector = gappAssignMv.getSelectors();
+        PosSelectorset selector = gappAssignMv.getSelectors();
         int selCount = selector.size();
         for (int sel=0;sel<selCount;sel++) {
             GAPPValueHolder scalarVar = gappAssignMv.getValues().get(sel);
             float value = (scalarVar.isVariable())
                     ? getVariableValue(((GAPPVariable) scalarVar).getName())
                     : ((GAPPConstant) scalarVar).getValue();
-            destination.getEntries()[selector.get(sel).getIndex()] = selector.get(sel).getSign()*value;
+            destination.getEntries()[selector.get(sel).getIndex()] = value;
         }
 
         return null;

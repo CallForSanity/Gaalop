@@ -3,17 +3,12 @@ package de.gaalop.tba.cfgImport.optimization.maxima;
 import de.gaalop.api.cfg.AssignmentNodeCollector;
 import de.gaalop.cfg.AssignmentNode;
 import de.gaalop.cfg.ControlFlowGraph;
-import de.gaalop.cfg.ControlFlowVisitor;
-import de.gaalop.cfg.EmptyControlFlowVisitor;
-import de.gaalop.cfg.FindStoreOutputNodes;
-import de.gaalop.cfg.StoreResultNode;
 import de.gaalop.dfg.Expression;
 import de.gaalop.dfg.Variable;
 import de.gaalop.tba.Plugin;
 import de.gaalop.tba.cfgImport.optimization.maxima.parser.MaximaLexer;
 import de.gaalop.tba.cfgImport.optimization.maxima.parser.MaximaParser;
 import de.gaalop.tba.cfgImport.optimization.maxima.parser.MaximaTransformer;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.ListIterator;
 import org.antlr.runtime.ANTLRStringStream;
@@ -56,17 +51,17 @@ public class MaximaOptimizer {
 
         MaximaOutput output = connection.optimizeWithMaxima(input);
 
-        //connect in and output
-        LinkedList<MaximaInOut> connected = new LinkedList<MaximaInOut>();
-        groupMaximaInAndOutputs(connected, output);
 
-        connected.removeFirst(); // remove batch
+
+        //connect in and output
+        LinkedList<String> connected = new LinkedList<String>();
+        groupMaximaInAndOutputs(connected, output);
+        
         connected.removeFirst(); // remove display2d
-        connected.removeLast(); // remove quit()
 
         ListIterator<AssignmentNode> listIterator = assignmentNodeCollector.getAssignmentNodes().listIterator();
-        for (MaximaInOut io: connected) {
-            Expression exp = getExpressionFromMaximaOutput(io.getOutput());
+        for (String io: connected) {
+            Expression exp = getExpressionFromMaximaOutput(io);
             listIterator.next().setValue(exp);
         }
 
@@ -100,42 +95,33 @@ public class MaximaOptimizer {
      * @param connected The list of MaximaInOut to be filled
      * @param output The output of maxima
      */
-    private void groupMaximaInAndOutputs(LinkedList<MaximaInOut> connected, MaximaOutput output) {
+    private void groupMaximaInAndOutputs(LinkedList<String> connected, MaximaOutput output) {
 
-        MaximaInOut curIO = new MaximaInOut(null, null);
+        StringBuilder sb = new StringBuilder();
 
-        boolean lastWasInput = false;
-
-        int curInput = -1;
-        READIN:
+        boolean input = false;
         for (String o: output) {
-             if (o.startsWith("(%i")) {
-                 int indexRBracket = o.indexOf(')');
-                 curIO = new MaximaInOut(o.substring(indexRBracket+1).trim(),null);
-                 connected.add(curIO);
-                 curInput = Integer.parseInt(o.substring(3, indexRBracket));
-                 lastWasInput = true;
-            } else
-                 if (o.startsWith("(%o")) {
-                     int indexRBracket = o.indexOf(')');
-                     if (curInput == Integer.parseInt(o.substring(3, indexRBracket)))
-                        connected.getLast().setOutput(o.substring(indexRBracket+1).trim());
-                     else {
-                         //ups.
-                         if (Integer.parseInt(o.substring(3, indexRBracket)) < curInput) {
-                             System.err.println("Error in associating maxima input to output: "+o+" expected: "+curInput+" actual: "+Integer.parseInt(o.substring(3, indexRBracket)));
-                         }
-                         break READIN;
-                     }
-                     lastWasInput = false;
+            if (o.startsWith("(%i")) {
+                input = false;
+                if (sb.length() != 0) {
+                    connected.add(sb.toString());
+                    sb.setLength(0);
+                }
+            } else {
+                if (o.startsWith("(%o")) {
+                    sb.append(o.substring(o.indexOf(")")+2));
+                    input = true;
                 } else {
-                    if (lastWasInput) {
-                        curIO.setInput(curIO.getInput()+o.trim());
-                    } else {
-                        curIO.setOutput(curIO.getOutput()+o.trim());
+                    if (input) {
+                        sb.append(o);
                     }
                 }
+            }
         }
+
+        if (input && sb.length()>0)
+            connected.add(sb.toString());
+
     }
 
     

@@ -1,5 +1,7 @@
 package de.gaalop.gapp.importing.optimization;
 
+import de.gaalop.gapp.PosSelector;
+import de.gaalop.gapp.PosSelectorset;
 import de.gaalop.gapp.Selector;
 import de.gaalop.gapp.Selectorset;
 import de.gaalop.gapp.Variableset;
@@ -21,16 +23,16 @@ public class GAPPRemoveZeroAssignments extends GAPPRemover {
     @Override
     public Object visitAssignMv(GAPPAssignMv gappAssignMv, Object arg) {
         //Remove all zeros in AssignMv
-        LinkedList<Selector> delSelectors = new LinkedList<Selector>();
+        LinkedList<PosSelector> delSelectors = new LinkedList<PosSelector>();
         LinkedList<GAPPValueHolder> delVariables = new LinkedList<GAPPValueHolder>();
 
-        Selectorset selSet = gappAssignMv.getSelectors();
+        PosSelectorset selSet = gappAssignMv.getSelectors();
         Variableset varSet = gappAssignMv.getValues();
 
-        Iterator<Selector> selIt = selSet.listIterator();
+        Iterator<PosSelector> selIt = selSet.listIterator();
         Iterator<GAPPValueHolder> varIt = varSet.listIterator();
         while (selIt.hasNext() && varIt.hasNext()) {
-            Selector curSel = selIt.next();
+            PosSelector curSel = selIt.next();
             GAPPValueHolder curVar = varIt.next();
 
             if (!curVar.isVariable())
@@ -41,7 +43,7 @@ public class GAPPRemoveZeroAssignments extends GAPPRemover {
         }
         
 
-        for (Selector sel: delSelectors)
+        for (PosSelector sel: delSelectors)
             selSet.remove(sel);
 
         for (GAPPValueHolder val: delVariables)

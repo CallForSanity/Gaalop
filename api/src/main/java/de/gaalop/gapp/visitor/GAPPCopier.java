@@ -1,6 +1,8 @@
 package de.gaalop.gapp.visitor;
 
+import de.gaalop.gapp.PosSelectorset;
 import de.gaalop.gapp.Selector;
+import de.gaalop.gapp.PosSelector;
 import de.gaalop.gapp.Selectorset;
 import de.gaalop.gapp.Variableset;
 import de.gaalop.gapp.instructionSet.GAPPAssignMv;
@@ -31,6 +33,18 @@ public class GAPPCopier implements GAPPVisitor {
         Selectorset copy = new Selectorset();
         for (Selector cur: sel)
             copy.add(new Selector(cur.getIndex(),cur.getSign()));
+        return copy;
+    }
+
+    /**
+     * Copies a posSelectorset
+     * @param sel The posSelectorset to be copied
+     * @return The copy
+     */
+    private PosSelectorset copyPosSelectorset(PosSelectorset sel) {
+        PosSelectorset copy = new PosSelectorset();
+        for (PosSelector cur: sel)
+            copy.add(new PosSelector(cur.getIndex()));
         return copy;
     }
 
@@ -68,7 +82,7 @@ public class GAPPCopier implements GAPPVisitor {
     public Object visitAssignMv(GAPPAssignMv gappAssignMv, Object arg) {
         return new GAPPAssignMv(
                 (GAPPMultivector) GAPPValueHolderCopier.copyValueHolder(gappAssignMv.getDestinationMv()),
-                copySelectorset(gappAssignMv.getSelectors()),
+                copyPosSelectorset(gappAssignMv.getSelectors()),
                 copyVariableset(gappAssignMv.getValues())
                 );
     }

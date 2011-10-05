@@ -1,7 +1,9 @@
 package de.gaalop.gapp.visitor;
 
 import de.gaalop.cfg.AssignmentNode;
+import de.gaalop.gapp.PosSelectorset;
 import de.gaalop.gapp.Selector;
+import de.gaalop.gapp.PosSelector;
 import de.gaalop.gapp.Selectorset;
 import de.gaalop.gapp.Variableset;
 import de.gaalop.gapp.instructionSet.GAPPAssignMv;
@@ -97,6 +99,14 @@ public class PrettyPrint extends CFGGAPPVisitor {
     }
 
     /**
+     * Pretty prints a selectorindex at the end of result
+     * @param selectorIndex The selectorindex
+     */
+    private void printSelectorIndex(PosSelector selectorIndex) {
+        result.append(selectorIndex.getIndex());
+    }
+
+    /**
      * Pretty prints a selectorset at the end of result
      * @param selectorset The selectorset
      */
@@ -104,6 +114,20 @@ public class PrettyPrint extends CFGGAPPVisitor {
         result.append("[");
         for (Selector cur: selectorset) {
             printSelector(cur);
+            result.append(",");
+        }
+        result.deleteCharAt(result.length()-1);
+        result.append("]");
+    }
+
+    /**
+     * Pretty prints a posSelectorset at the end of result
+     * @param posSelectorset The posSelectorset
+     */
+    private void printPosSelectors(PosSelectorset posSelectorset) {
+        result.append("[");
+        for (PosSelector cur: posSelectorset) {
+            printSelectorIndex(cur);
             result.append(",");
         }
         result.deleteCharAt(result.length()-1);
@@ -145,7 +169,7 @@ public class PrettyPrint extends CFGGAPPVisitor {
     public Object visitAssignMv(GAPPAssignMv gappAssignMv, Object arg) {
         result.append("assignMv ");
         printMultivector(gappAssignMv.getDestinationMv());
-        printSelectors(gappAssignMv.getSelectors());
+        printPosSelectors(gappAssignMv.getSelectors());
         result.append(" = ");
         printVariableSet(gappAssignMv.getValues());
         result.append(";\n");

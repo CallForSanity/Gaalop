@@ -2,6 +2,8 @@ package de.gaalop.gapp.importing;
 
 import de.gaalop.dfg.MultivectorComponent;
 import de.gaalop.gapp.GAPP;
+import de.gaalop.gapp.PosSelector;
+import de.gaalop.gapp.PosSelectorset;
 import de.gaalop.gapp.Selector;
 import de.gaalop.gapp.Selectorset;
 import de.gaalop.gapp.Variableset;
@@ -191,14 +193,11 @@ public class GAPPCreator implements ParallelObjectVisitor {
         //arg must be filled!
         GAPPMultivectorComponent destination = (GAPPMultivectorComponent) arg;
 
-        Selectorset selSet = new Selectorset();
-        selSet.add(new Selector(
-                destination.getBladeIndex(),
-                (constant.isNegated()) ? (byte) -1 : (byte) 1)
-                );
+        PosSelectorset selSet = new PosSelectorset();
+        selSet.add(new PosSelector(destination.getBladeIndex()));
 
         Variableset varSet = new Variableset();
-        varSet.add(new GAPPConstant(constant.getValue()));
+        varSet.add(new GAPPConstant(((constant.isNegated()) ? -1 : 1) * constant.getValue()));
 
         gapp.addInstruction(new GAPPAssignMv(new GAPPMultivector(destination.getName()), selSet, varSet));
 
@@ -362,17 +361,17 @@ public class GAPPCreator implements ParallelObjectVisitor {
         GAPPMultivector mvTmp = createMv(vector.getSlots().size());
         Variableset varMvDestSet = new Variableset();
 
-        Selectorset selSet = new Selectorset();
+        PosSelectorset selSet = new PosSelectorset();
         int slotNo = 0;
         for (ParallelObject obj: vector.getSlots()) {
             GAPPValueHolder valueHolder = null;
             switch (ParallelObjectType.getType(obj)) {
                 case constant:
-                    valueHolder = new GAPPConstant(((Constant) obj).getValue());
+                    valueHolder = new GAPPConstant(((obj.isNegated()) ? -1 : 1) *  ((Constant) obj).getValue());
                     break;
             }
             varMvDestSet.add(valueHolder);
-            selSet.add(new Selector(slotNo, obj.isNegated() ? (byte) -1: (byte) 1));
+            selSet.add(new PosSelector(slotNo));
             slotNo++;
         }
 
@@ -465,15 +464,15 @@ public class GAPPCreator implements ParallelObjectVisitor {
     private void case4(GAPPVector destination, ParallelVector vector, HashSet<String> multivectors) {
         GAPPMultivector mvTmp = createMv(vector.getSlots().size());
         Variableset varMvDestSet = new Variableset();
-        Selectorset selSet = new Selectorset();
+        PosSelectorset selSet = new PosSelectorset();
 
         int slotNo = 0;
         for (ParallelObject obj: vector.getSlots()) {
             GAPPValueHolder valueHolder = null;
             switch (ParallelObjectType.getType(obj)) {
                 case constant:
-                    valueHolder = new GAPPConstant(((Constant) obj).getValue());
-                    selSet.add(new Selector(slotNo, obj.isNegated() ? (byte) -1 : (byte) 1));
+                    valueHolder = new GAPPConstant((obj.isNegated() ? -1 : 1) * ((Constant) obj).getValue());
+                    selSet.add(new PosSelector(slotNo));
                     varMvDestSet.add(valueHolder);
                     break;
             }

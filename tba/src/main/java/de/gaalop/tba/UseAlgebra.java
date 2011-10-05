@@ -4,7 +4,6 @@ import de.gaalop.cfg.AlgebraSignature;
 import de.gaalop.dfg.Expression;
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

@@ -10,7 +10,6 @@ public interface GAPPVariableVisitor {
     public Object visitMultivector(GAPPMultivector gappMultivector, Object arg);
     public Object visitMultivectorComponent(GAPPMultivectorComponent gappMultivectorComponent, Object arg);
     public Object visitScalarVariable(GAPPScalarVariable gappScalarVariable, Object arg);
-    public Object visitSignedMultivectorComponent(GAPPSignedMultivectorComponent gappSignedMultivectorComponent, Object arg);
     public Object visitVector(GAPPVector gappVector, Object arg);
 
 }

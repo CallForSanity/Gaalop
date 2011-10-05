@@ -56,15 +56,6 @@ public class GAPPValueHolderCopier implements GAPPVariableVisitor {
         return new GAPPScalarVariable(gappScalarVariable.getName()); //Strings are immutable!
     }
 
-    @Override
-    public Object visitSignedMultivectorComponent(GAPPSignedMultivectorComponent gappSignedMultivectorComponent, Object arg) {
-        return new GAPPSignedMultivectorComponent(
-                gappSignedMultivectorComponent.getName(),
-                gappSignedMultivectorComponent.getBladeIndex(),
-                gappSignedMultivectorComponent.getSign()
-                ); //Strings are immutable!
-    }
-
     /**
      * Copies a list of slots (deep copy)
      * @param slots The list of slots

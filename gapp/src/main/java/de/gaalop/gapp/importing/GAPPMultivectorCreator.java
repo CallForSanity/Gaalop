@@ -1,5 +1,7 @@
 package de.gaalop.gapp.importing;
 
+import de.gaalop.gapp.PosSelector;
+import de.gaalop.gapp.PosSelectorset;
 import de.gaalop.gapp.Selector;
 import de.gaalop.gapp.Selectorset;
 import de.gaalop.gapp.Variableset;
@@ -67,11 +69,11 @@ public class GAPPMultivectorCreator implements ParallelObjectVisitor {
     public Object visitConstant(Constant constant, Object arg) {
         GAPPMultivector mvTmp = gappCreator.createMv(1);
 
-        Selectorset selDestSet = new Selectorset();
-        selDestSet.add(new Selector(0, constant.isNegated() ? (byte) -1 : (byte) 1));
+        PosSelectorset selDestSet = new PosSelectorset();
+        selDestSet.add(new PosSelector(0));
 
         Variableset varSet = new Variableset();
-        varSet.add(new GAPPConstant(constant.getValue()));
+        varSet.add(new GAPPConstant((constant.isNegated() ? -1 : 1) * constant.getValue()));
 
         gappCreator.gapp.addInstruction(new GAPPAssignMv(mvTmp,selDestSet,varSet));
         return mvTmp;
