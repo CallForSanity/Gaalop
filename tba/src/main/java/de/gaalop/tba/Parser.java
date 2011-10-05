@@ -22,7 +22,7 @@ public class Parser {
         if (trimmed.equals("0"))
             prefactor = 0;
 
-        if (trimmed.startsWith("G"))
+        if (trimmed.startsWith("E"))
             index = Integer.parseInt(trimmed.substring(1));
 
         return new BladeRef(prefactor, index);
