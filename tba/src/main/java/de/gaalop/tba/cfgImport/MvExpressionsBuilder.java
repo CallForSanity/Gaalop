@@ -141,7 +141,7 @@ public class MvExpressionsBuilder extends EmptyControlFlowVisitor implements Exp
 						Expression prodExpr = new Multiplication(left.bladeExpressions[bladeL],right.bladeExpressions[bladeR]);
 						Multivector prodMv = usedAlgebra.getProduct(typeProduct,bladeL,bladeR);
 
-						double[] prod = prodMv.getValueArr();
+						byte[] prod = prodMv.getValueArr();
 
 						for (int bladeResult = 0;bladeResult<bladeCount;bladeResult++)
 							if (Math.abs(prod[bladeResult])>EPSILON) {

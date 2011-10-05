@@ -1,1024 +1,1024 @@
 1;1;0;1;1
-1;e1;0;e1;e1
-1;e2;0;e2;e2
-1;e3;0;e3;e3
-1;einf;0;einf;einf
-1;e0;0;e0;e0
-1;e1^e2;0;e1^e2;e1^e2
-1;e1^e3;0;e1^e3;e1^e3
-1;e1^einf;0;e1^einf;e1^einf
-1;e1^e0;0;e1^e0;e1^e0
-1;e2^e3;0;e2^e3;e2^e3
-1;e2^einf;0;e2^einf;e2^einf
-1;e2^e0;0;e2^e0;e2^e0
-1;e3^einf;0;e3^einf;e3^einf
-1;e3^e0;0;e3^e0;e3^e0
-1;einf^e0;0;einf^e0;einf^e0
-1;e1^e2^e3;0;e1^e2^e3;e1^e2^e3
-1;e1^e2^einf;0;e1^e2^einf;e1^e2^einf
-1;e1^e2^e0;0;e1^e2^e0;e1^e2^e0
-1;e1^e3^einf;0;e1^e3^einf;e1^e3^einf
-1;e1^e3^e0;0;e1^e3^e0;e1^e3^e0
-1;e1^einf^e0;0;e1^einf^e0;e1^einf^e0
-1;e2^e3^einf;0;e2^e3^einf;e2^e3^einf
-1;e2^e3^e0;0;e2^e3^e0;e2^e3^e0
-1;e2^einf^e0;0;e2^einf^e0;e2^einf^e0
-1;e3^einf^e0;0;e3^einf^e0;e3^einf^e0
-1;e1^e2^e3^einf;0;e1^e2^e3^einf;e1^e2^e3^einf
-1;e1^e2^e3^e0;0;e1^e2^e3^e0;e1^e2^e3^e0
-1;e1^e2^einf^e0;0;e1^e2^einf^e0;e1^e2^einf^e0
-1;e1^e3^einf^e0;0;e1^e3^einf^e0;e1^e3^einf^e0
-1;e2^e3^einf^e0;0;e2^e3^einf^e0;e2^e3^einf^e0
-1;e1^e2^e3^einf^e0;0;e1^e2^e3^einf^e0;e1^e2^e3^einf^e0
-e1;1;0;1 e1;1 e1
-e1;e1;1;0;1
-e1;e2;0;1 e12;1 e12
-e1;e3;0;-1 e31;-1 e31
-e1;einf;0;1 e1^e;1 e1^e
-e1;e0;0;1 e1^e0;1 e1^e0
-e1;e1^e2;1 e2;0;1 e2
-e1;e1^e3;1 e3;0;1 e3
-e1;e1^einf;1 e;0;1 e
-e1;e1^e0;1 e0;0;1 e0
-e1;e2^e3;0;1 e123;1 e123
-e1;e2^einf;0;1 e12^e;1 e12^e
-e1;e2^e0;0;1 e12^e0;1 e12^e0
-e1;e3^einf;0;-1 e31^e;-1 e31^e
-e1;e3^e0;0;-1 e31^e0;-1 e31^e0
-e1;einf^e0;0;1 e1^E;1 e1^E
-e1;e1^e2^e3;1 e23;0;1 e23
-e1;e1^e2^einf;1 e2^e;0;1 e2^e
-e1;e1^e2^e0;1 e2^e0;0;1 e2^e0
-e1;e1^e3^einf;1 e3^e;0;1 e3^e
-e1;e1^e3^e0;1 e3^e0;0;1 e3^e0
-e1;e1^einf^e0;1 E;0;1 E
-e1;e2^e3^einf;0;1 e123^e;1 e123^e
-e1;e2^e3^e0;0;1 e123^e0;1 e123^e0
-e1;e2^einf^e0;0;1 e12^E;1 e12^E
-e1;e3^einf^e0;0;-1 e31^E;-1 e31^E
-e1;e1^e2^e3^einf;1 e23^e;0;1 e23^e
-e1;e1^e2^e3^e0;1 e23^e0;0;1 e23^e0
-e1;e1^e2^einf^e0;1 e2^E;0;1 e2^E
-e1;e1^e3^einf^e0;1 e3^E;0;1 e3^E
-e1;e2^e3^einf^e0;0;1 I;1 I
-e1;e1^e2^e3^einf^e0;1 e23^E;0;1 e23^E
-e2;1;0;1 e2;1 e2
-e2;e1;0;-1 e12;-1 e12
-e2;e2;1;0;1
-e2;e3;0;1 e23;1 e23
-e2;einf;0;1 e2^e;1 e2^e
-e2;e0;0;1 e2^e0;1 e2^e0
-e2;e1^e2;-1 e1;0;-1 e1
-e2;e1^e3;0;-1 e123;-1 e123
-e2;e1^einf;0;-1 e12^e;-1 e12^e
-e2;e1^e0;0;-1 e12^e0;-1 e12^e0
-e2;e2^e3;1 e3;0;1 e3
-e2;e2^einf;1 e;0;1 e
-e2;e2^e0;1 e0;0;1 e0
-e2;e3^einf;0;1 e23^e;1 e23^e
-e2;e3^e0;0;1 e23^e0;1 e23^e0
-e2;einf^e0;0;1 e2^E;1 e2^E
-e2;e1^e2^e3;1 e31;0;1 e31
-e2;e1^e2^einf;-1 e1^e;0;-1 e1^e
-e2;e1^e2^e0;-1 e1^e0;0;-1 e1^e0
-e2;e1^e3^einf;0;-1 e123^e;-1 e123^e
-e2;e1^e3^e0;0;-1 e123^e0;-1 e123^e0
-e2;e1^einf^e0;0;-1 e12^E;-1 e12^E
-e2;e2^e3^einf;1 e3^e;0;1 e3^e
-e2;e2^e3^e0;1 e3^e0;0;1 e3^e0
-e2;e2^einf^e0;1 E;0;1 E
-e2;e3^einf^e0;0;1 e23^E;1 e23^E
-e2;e1^e2^e3^einf;1 e31^e;0;1 e31^e
-e2;e1^e2^e3^e0;1 e31^e0;0;1 e31^e0
-e2;e1^e2^einf^e0;-1 e1^E;0;-1 e1^E
-e2;e1^e3^einf^e0;0;-1 I;-1 I
-e2;e2^e3^einf^e0;1 e3^E;0;1 e3^E
-e2;e1^e2^e3^einf^e0;1 e31^E;0;1 e31^E
-e3;1;0;1 e3;1 e3
-e3;e1;0;1 e31;1 e31
-e3;e2;0;-1 e23;-1 e23
-e3;e3;1;0;1
-e3;einf;0;1 e3^e;1 e3^e
-e3;e0;0;1 e3^e0;1 e3^e0
-e3;e1^e2;0;1 e123;1 e123
-e3;e1^e3;-1 e1;0;-1 e1
-e3;e1^einf;0;1 e31^e;1 e31^e
-e3;e1^e0;0;1 e31^e0;1 e31^e0
-e3;e2^e3;-1 e2;0;-1 e2
-e3;e2^einf;0;-1 e23^e;-1 e23^e
-e3;e2^e0;0;-1 e23^e0;-1 e23^e0
-e3;e3^einf;1 e;0;1 e
-e3;e3^e0;1 e0;0;1 e0
-e3;einf^e0;0;1 e3^E;1 e3^E
-e3;e1^e2^e3;1 e12;0;1 e12
-e3;e1^e2^einf;0;1 e123^e;1 e123^e
-e3;e1^e2^e0;0;1 e123^e0;1 e123^e0
-e3;e1^e3^einf;-1 e1^e;0;-1 e1^e
-e3;e1^e3^e0;-1 e1^e0;0;-1 e1^e0
-e3;e1^einf^e0;0;1 e31^E;1 e31^E
-e3;e2^e3^einf;-1 e2^e;0;-1 e2^e
-e3;e2^e3^e0;-1 e2^e0;0;-1 e2^e0
-e3;e2^einf^e0;0;-1 e23^E;-1 e23^E
-e3;e3^einf^e0;1 E;0;1 E
-e3;e1^e2^e3^einf;1 e12^e;0;1 e12^e
-e3;e1^e2^e3^e0;1 e12^e0;0;1 e12^e0
-e3;e1^e2^einf^e0;0;1 I;1 I
-e3;e1^e3^einf^e0;-1 e1^E;0;-1 e1^E
-e3;e2^e3^einf^e0;-1 e2^E;0;-1 e2^E
-e3;e1^e2^e3^einf^e0;1 e12^E;0;1 e12^E
-einf;1;0;1 e;1 e
-einf;e1;0;-1 e1^e;-1 e1^e
-einf;e2;0;-1 e2^e;-1 e2^e
-einf;e3;0;-1 e3^e;-1 e3^e
-einf;einf;0;0;0
-einf;e0;-1;1 E;-1 + 1 E
-einf;e1^e2;0;1 e12^e;1 e12^e
-einf;e1^e3;0;-1 e31^e;-1 e31^e
-einf;e1^einf;0;0;0
-einf;e1^e0;1 e1;-1 e1^E;1 e1 + -1 e1^E
-einf;e2^e3;0;1 e23^e;1 e23^e
-einf;e2^einf;0;0;0
-einf;e2^e0;1 e2;-1 e2^E;1 e2 + -1 e2^E
-einf;e3^einf;0;0;0
-einf;e3^e0;1 e3;-1 e3^E;1 e3 + -1 e3^E
-einf;einf^e0;1 e;0;1 e
-einf;e1^e2^e3;0;-1 e123^e;-1 e123^e
-einf;e1^e2^einf;0;0;0
-einf;e1^e2^e0;-1 e12;1 e12^E;-1 e12 + 1 e12^E
-einf;e1^e3^einf;0;0;0
-einf;e1^e3^e0;1 e31;-1 e31^E;1 e31 + -1 e31^E
-einf;e1^einf^e0;-1 e1^e;0;-1 e1^e
-einf;e2^e3^einf;0;0;0
-einf;e2^e3^e0;-1 e23;1 e23^E;-1 e23 + 1 e23^E
-einf;e2^einf^e0;-1 e2^e;0;-1 e2^e
-einf;e3^einf^e0;-1 e3^e;0;-1 e3^e
-einf;e1^e2^e3^einf;0;0;0
-einf;e1^e2^e3^e0;1 e123;-1 I;1 e123 + -1 I
-einf;e1^e2^einf^e0;1 e12^e;0;1 e12^e
-einf;e1^e3^einf^e0;-1 e31^e;0;-1 e31^e
-einf;e2^e3^einf^e0;1 e23^e;0;1 e23^e
-einf;e1^e2^e3^einf^e0;-1 e123^e;0;-1 e123^e
-e0;1;0;1 e0;1 e0
-e0;e1;0;-1 e1^e0;-1 e1^e0
-e0;e2;0;-1 e2^e0;-1 e2^e0
-e0;e3;0;-1 e3^e0;-1 e3^e0
-e0;einf;-1;-1 E;-1 + -1 E
-e0;e0;0;0;0
-e0;e1^e2;0;1 e12^e0;1 e12^e0
-e0;e1^e3;0;-1 e31^e0;-1 e31^e0
-e0;e1^einf;1 e1;1 e1^E;1 e1 + 1 e1^E
-e0;e1^e0;0;0;0
-e0;e2^e3;0;1 e23^e0;1 e23^e0
-e0;e2^einf;1 e2;1 e2^E;1 e2 + 1 e2^E
-e0;e2^e0;0;0;0
-e0;e3^einf;1 e3;1 e3^E;1 e3 + 1 e3^E
-e0;e3^e0;0;0;0
-e0;einf^e0;-1 e0;0;-1 e0
-e0;e1^e2^e3;0;-1 e123^e0;-1 e123^e0
-e0;e1^e2^einf;-1 e12;-1 e12^E;-1 e12 + -1 e12^E
-e0;e1^e2^e0;0;0;0
-e0;e1^e3^einf;1 e31;1 e31^E;1 e31 + 1 e31^E
-e0;e1^e3^e0;0;0;0
-e0;e1^einf^e0;1 e1^e0;0;1 e1^e0
-e0;e2^e3^einf;-1 e23;-1 e23^E;-1 e23 + -1 e23^E
-e0;e2^e3^e0;0;0;0
-e0;e2^einf^e0;1 e2^e0;0;1 e2^e0
-e0;e3^einf^e0;1 e3^e0;0;1 e3^e0
-e0;e1^e2^e3^einf;1 e123;1 I;1 e123 + 1 I
-e0;e1^e2^e3^e0;0;0;0
-e0;e1^e2^einf^e0;-1 e12^e0;0;-1 e12^e0
-e0;e1^e3^einf^e0;1 e31^e0;0;1 e31^e0
-e0;e2^e3^einf^e0;-1 e23^e0;0;-1 e23^e0
-e0;e1^e2^e3^einf^e0;1 e123^e0;0;1 e123^e0
-e1^e2;1;0;1 e12;1 e12
-e1^e2;e1;-1 e2;0;-1 e2
-e1^e2;e2;1 e1;0;1 e1
-e1^e2;e3;0;1 e123;1 e123
-e1^e2;einf;0;1 e12^e;1 e12^e
-e1^e2;e0;0;1 e12^e0;1 e12^e0
-e1^e2;e1^e2;-1;0;-1
-e1^e2;e1^e3;0;0;-1 e23
-e1^e2;e1^einf;0;0;-1 e2^e
-e1^e2;e1^e0;0;0;-1 e2^e0
-e1^e2;e2^e3;0;0;-1 e31
-e1^e2;e2^einf;0;0;1 e1^e
-e1^e2;e2^e0;0;0;1 e1^e0
-e1^e2;e3^einf;0;1 e123^e;1 e123^e
-e1^e2;e3^e0;0;1 e123^e0;1 e123^e0
-e1^e2;einf^e0;0;1 e12^E;1 e12^E
-e1^e2;e1^e2^e3;-1 e3;0;-1 e3
-e1^e2;e1^e2^einf;-1 e;0;-1 e
-e1^e2;e1^e2^e0;-1 e0;0;-1 e0
-e1^e2;e1^e3^einf;0;0;-1 e23^e
-e1^e2;e1^e3^e0;0;0;-1 e23^e0
-e1^e2;e1^einf^e0;0;0;-1 e2^E
-e1^e2;e2^e3^einf;0;0;-1 e31^e
-e1^e2;e2^e3^e0;0;0;-1 e31^e0
-e1^e2;e2^einf^e0;0;0;1 e1^E
-e1^e2;e3^einf^e0;0;1 I;1 I
-e1^e2;e1^e2^e3^einf;-1 e3^e;0;-1 e3^e
-e1^e2;e1^e2^e3^e0;-1 e3^e0;0;-1 e3^e0
-e1^e2;e1^e2^einf^e0;-1 E;0;-1 E
-e1^e2;e1^e3^einf^e0;0;0;-1 e23^E
-e1^e2;e2^e3^einf^e0;0;0;-1 e31^E
-e1^e2;e1^e2^e3^einf^e0;-1 e3^E;0;-1 e3^E
-e1^e3;1;0;-1 e31;-1 e31
-e1^e3;e1;-1 e3;0;-1 e3
-e1^e3;e2;0;-1 e123;-1 e123
-e1^e3;e3;1 e1;0;1 e1
-e1^e3;einf;0;-1 e31^e;-1 e31^e
-e1^e3;e0;0;-1 e31^e0;-1 e31^e0
-e1^e3;e1^e2;0;0;1 e23
-e1^e3;e1^e3;-1;0;-1
-e1^e3;e1^einf;0;0;-1 e3^e
-e1^e3;e1^e0;0;0;-1 e3^e0
-e1^e3;e2^e3;0;0;-1 e12
-e1^e3;e2^einf;0;-1 e123^e;-1 e123^e
-e1^e3;e2^e0;0;-1 e123^e0;-1 e123^e0
-e1^e3;e3^einf;0;0;1 e1^e
-e1^e3;e3^e0;0;0;1 e1^e0
-e1^e3;einf^e0;0;-1 e31^E;-1 e31^E
-e1^e3;e1^e2^e3;1 e2;0;1 e2
-e1^e3;e1^e2^einf;0;0;1 e23^e
-e1^e3;e1^e2^e0;0;0;1 e23^e0
-e1^e3;e1^e3^einf;-1 e;0;-1 e
-e1^e3;e1^e3^e0;-1 e0;0;-1 e0
-e1^e3;e1^einf^e0;0;0;-1 e3^E
-e1^e3;e2^e3^einf;0;0;-1 e12^e
-e1^e3;e2^e3^e0;0;0;-1 e12^e0
-e1^e3;e2^einf^e0;0;-1 I;-1 I
-e1^e3;e3^einf^e0;0;0;1 e1^E
-e1^e3;e1^e2^e3^einf;1 e2^e;0;1 e2^e
-e1^e3;e1^e2^e3^e0;1 e2^e0;0;1 e2^e0
-e1^e3;e1^e2^einf^e0;0;0;1 e23^E
-e1^e3;e1^e3^einf^e0;-1 E;0;-1 E
-e1^e3;e2^e3^einf^e0;0;0;-1 e12^E
-e1^e3;e1^e2^e3^einf^e0;1 e2^E;0;1 e2^E
-e1^einf;1;0;1 e1^e;1 e1^e
-e1^einf;e1;-1 e;0;-1 e
-e1^einf;e2;0;-1 e12^e;-1 e12^e
-e1^einf;e3;0;1 e31^e;1 e31^e
-e1^einf;einf;0;0;0
-e1^einf;e0;-1 e1;1 e1^E;-1 e1 + 1 e1^E
-e1^einf;e1^e2;0;0;1 e2^e
-e1^einf;e1^e3;0;0;1 e3^e
-e1^einf;e1^einf;0;0;0
-e1^einf;e1^e0;1;0;1 + -1 E
-e1^einf;e2^e3;0;1 e123^e;1 e123^e
-e1^einf;e2^einf;0;0;0
-e1^einf;e2^e0;0;-1 e12^E;1 e12 + -1 e12^E
-e1^einf;e3^einf;0;0;0
-e1^einf;e3^e0;0;1 e31^E;-1 e31 + 1 e31^E
-e1^einf;einf^e0;0;0;1 e1^e
-e1^einf;e1^e2^e3;0;0;-1 e23^e
-e1^einf;e1^e2^einf;0;0;0
-e1^einf;e1^e2^e0;-1 e2;0;-1 e2 + 1 e2^E
-e1^einf;e1^e3^einf;0;0;0
-e1^einf;e1^e3^e0;-1 e3;0;-1 e3 + 1 e3^E
-e1^einf;e1^einf^e0;-1 e;0;-1 e
-e1^einf;e2^e3^einf;0;0;0
-e1^einf;e2^e3^e0;0;1 I;-1 e123 + 1 I
-e1^einf;e2^einf^e0;0;0;-1 e12^e
-e1^einf;e3^einf^e0;0;0;1 e31^e
-e1^einf;e1^e2^e3^einf;0;0;0
-e1^einf;e1^e2^e3^e0;1 e23;0;1 e23 + -1 e23^E
-e1^einf;e1^e2^einf^e0;1 e2^e;0;1 e2^e
-e1^einf;e1^e3^einf^e0;1 e3^e;0;1 e3^e
-e1^einf;e2^e3^einf^e0;0;0;1 e123^e
-e1^einf;e1^e2^e3^einf^e0;-1 e23^e;0;-1 e23^e
-e1^e0;1;0;1 e1^e0;1 e1^e0
-e1^e0;e1;-1 e0;0;-1 e0
-e1^e0;e2;0;-1 e12^e0;-1 e12^e0
-e1^e0;e3;0;1 e31^e0;1 e31^e0
-e1^e0;einf;-1 e1;-1 e1^E;-1 e1 + -1 e1^E
-e1^e0;e0;0;0;0
-e1^e0;e1^e2;0;0;1 e2^e0
-e1^e0;e1^e3;0;0;1 e3^e0
-e1^e0;e1^einf;1;0;1 + 1 E
-e1^e0;e1^e0;0;0;0
-e1^e0;e2^e3;0;1 e123^e0;1 e123^e0
-e1^e0;e2^einf;0;1 e12^E;1 e12 + 1 e12^E
-e1^e0;e2^e0;0;0;0
-e1^e0;e3^einf;0;-1 e31^E;-1 e31 + -1 e31^E
-e1^e0;e3^e0;0;0;0
-e1^e0;einf^e0;0;0;-1 e1^e0
-e1^e0;e1^e2^e3;0;0;-1 e23^e0
-e1^e0;e1^e2^einf;-1 e2;0;-1 e2 + -1 e2^E
-e1^e0;e1^e2^e0;0;0;0
-e1^e0;e1^e3^einf;-1 e3;0;-1 e3 + -1 e3^E
-e1^e0;e1^e3^e0;0;0;0
-e1^e0;e1^einf^e0;1 e0;0;1 e0
-e1^e0;e2^e3^einf;0;-1 I;-1 e123 + -1 I
-e1^e0;e2^e3^e0;0;0;0
-e1^e0;e2^einf^e0;0;0;1 e12^e0
-e1^e0;e3^einf^e0;0;0;-1 e31^e0
-e1^e0;e1^e2^e3^einf;1 e23;0;1 e23 + 1 e23^E
-e1^e0;e1^e2^e3^e0;0;0;0
-e1^e0;e1^e2^einf^e0;-1 e2^e0;0;-1 e2^e0
-e1^e0;e1^e3^einf^e0;-1 e3^e0;0;-1 e3^e0
-e1^e0;e2^e3^einf^e0;0;0;-1 e123^e0
-e1^e0;e1^e2^e3^einf^e0;1 e23^e0;0;1 e23^e0
-e2^e3;1;0;1 e23;1 e23
-e2^e3;e1;0;1 e123;1 e123
-e2^e3;e2;-1 e3;0;-1 e3
-e2^e3;e3;1 e2;0;1 e2
-e2^e3;einf;0;1 e23^e;1 e23^e
-e2^e3;e0;0;1 e23^e0;1 e23^e0
-e2^e3;e1^e2;0;0;1 e31
-e2^e3;e1^e3;0;0;1 e12
-e2^e3;e1^einf;0;1 e123^e;1 e123^e
-e2^e3;e1^e0;0;1 e123^e0;1 e123^e0
-e2^e3;e2^e3;-1;0;-1
-e2^e3;e2^einf;0;0;-1 e3^e
-e2^e3;e2^e0;0;0;-1 e3^e0
-e2^e3;e3^einf;0;0;1 e2^e
-e2^e3;e3^e0;0;0;1 e2^e0
-e2^e3;einf^e0;0;1 e23^E;1 e23^E
-e2^e3;e1^e2^e3;-1 e1;0;-1 e1
-e2^e3;e1^e2^einf;0;0;1 e31^e
-e2^e3;e1^e2^e0;0;0;1 e31^e0
-e2^e3;e1^e3^einf;0;0;1 e12^e
-e2^e3;e1^e3^e0;0;0;1 e12^e0
-e2^e3;e1^einf^e0;0;1 I;1 I
-e2^e3;e2^e3^einf;-1 e;0;-1 e
-e2^e3;e2^e3^e0;-1 e0;0;-1 e0
-e2^e3;e2^einf^e0;0;0;-1 e3^E
-e2^e3;e3^einf^e0;0;0;1 e2^E
-e2^e3;e1^e2^e3^einf;-1 e1^e;0;-1 e1^e
-e2^e3;e1^e2^e3^e0;-1 e1^e0;0;-1 e1^e0
-e2^e3;e1^e2^einf^e0;0;0;1 e31^E
-e2^e3;e1^e3^einf^e0;0;0;1 e12^E
-e2^e3;e2^e3^einf^e0;-1 E;0;-1 E
-e2^e3;e1^e2^e3^einf^e0;-1 e1^E;0;-1 e1^E
-e2^einf;1;0;1 e2^e;1 e2^e
-e2^einf;e1;0;1 e12^e;1 e12^e
-e2^einf;e2;-1 e;0;-1 e
-e2^einf;e3;0;-1 e23^e;-1 e23^e
-e2^einf;einf;0;0;0
-e2^einf;e0;-1 e2;1 e2^E;-1 e2 + 1 e2^E
-e2^einf;e1^e2;0;0;-1 e1^e
-e2^einf;e1^e3;0;-1 e123^e;-1 e123^e
-e2^einf;e1^einf;0;0;0
-e2^einf;e1^e0;0;1 e12^E;-1 e12 + 1 e12^E
-e2^einf;e2^e3;0;0;1 e3^e
-e2^einf;e2^einf;0;0;0
-e2^einf;e2^e0;1;0;1 + -1 E
-e2^einf;e3^einf;0;0;0
-e2^einf;e3^e0;0;-1 e23^E;1 e23 + -1 e23^E
-e2^einf;einf^e0;0;0;1 e2^e
-e2^einf;e1^e2^e3;0;0;-1 e31^e
-e2^einf;e1^e2^einf;0;0;0
-e2^einf;e1^e2^e0;1 e1;0;1 e1 + -1 e1^E
-e2^einf;e1^e3^einf;0;0;0
-e2^einf;e1^e3^e0;0;-1 I;1 e123 + -1 I
-e2^einf;e1^einf^e0;0;0;1 e12^e
-e2^einf;e2^e3^einf;0;0;0
-e2^einf;e2^e3^e0;-1 e3;0;-1 e3 + 1 e3^E
-e2^einf;e2^einf^e0;-1 e;0;-1 e
-e2^einf;e3^einf^e0;0;0;-1 e23^e
-e2^einf;e1^e2^e3^einf;0;0;0
-e2^einf;e1^e2^e3^e0;1 e31;0;1 e31 + -1 e31^E
-e2^einf;e1^e2^einf^e0;-1 e1^e;0;-1 e1^e
-e2^einf;e1^e3^einf^e0;0;0;-1 e123^e
-e2^einf;e2^e3^einf^e0;1 e3^e;0;1 e3^e
-e2^einf;e1^e2^e3^einf^e0;-1 e31^e;0;-1 e31^e
-e2^e0;1;0;1 e2^e0;1 e2^e0
-e2^e0;e1;0;1 e12^e0;1 e12^e0
-e2^e0;e2;-1 e0;0;-1 e0
-e2^e0;e3;0;-1 e23^e0;-1 e23^e0
-e2^e0;einf;-1 e2;-1 e2^E;-1 e2 + -1 e2^E
-e2^e0;e0;0;0;0
-e2^e0;e1^e2;0;0;-1 e1^e0
-e2^e0;e1^e3;0;-1 e123^e0;-1 e123^e0
-e2^e0;e1^einf;0;-1 e12^E;-1 e12 + -1 e12^E
-e2^e0;e1^e0;0;0;0
-e2^e0;e2^e3;0;0;1 e3^e0
-e2^e0;e2^einf;1;0;1 + 1 E
-e2^e0;e2^e0;0;0;0
-e2^e0;e3^einf;0;1 e23^E;1 e23 + 1 e23^E
-e2^e0;e3^e0;0;0;0
-e2^e0;einf^e0;0;0;-1 e2^e0
-e2^e0;e1^e2^e3;0;0;-1 e31^e0
-e2^e0;e1^e2^einf;1 e1;0;1 e1 + 1 e1^E
-e2^e0;e1^e2^e0;0;0;0
-e2^e0;e1^e3^einf;0;1 I;1 e123 + 1 I
-e2^e0;e1^e3^e0;0;0;0
-e2^e0;e1^einf^e0;0;0;-1 e12^e0
-e2^e0;e2^e3^einf;-1 e3;0;-1 e3 + -1 e3^E
-e2^e0;e2^e3^e0;0;0;0
-e2^e0;e2^einf^e0;1 e0;0;1 e0
-e2^e0;e3^einf^e0;0;0;1 e23^e0
-e2^e0;e1^e2^e3^einf;1 e31;0;1 e31 + 1 e31^E
-e2^e0;e1^e2^e3^e0;0;0;0
-e2^e0;e1^e2^einf^e0;1 e1^e0;0;1 e1^e0
-e2^e0;e1^e3^einf^e0;0;0;1 e123^e0
-e2^e0;e2^e3^einf^e0;-1 e3^e0;0;-1 e3^e0
-e2^e0;e1^e2^e3^einf^e0;1 e31^e0;0;1 e31^e0
-e3^einf;1;0;1 e3^e;1 e3^e
-e3^einf;e1;0;-1 e31^e;-1 e31^e
-e3^einf;e2;0;1 e23^e;1 e23^e
-e3^einf;e3;-1 e;0;-1 e
-e3^einf;einf;0;0;0
-e3^einf;e0;-1 e3;1 e3^E;-1 e3 + 1 e3^E
-e3^einf;e1^e2;0;1 e123^e;1 e123^e
-e3^einf;e1^e3;0;0;-1 e1^e
-e3^einf;e1^einf;0;0;0
-e3^einf;e1^e0;0;-1 e31^E;1 e31 + -1 e31^E
-e3^einf;e2^e3;0;0;-1 e2^e
-e3^einf;e2^einf;0;0;0
-e3^einf;e2^e0;0;1 e23^E;-1 e23 + 1 e23^E
-e3^einf;e3^einf;0;0;0
-e3^einf;e3^e0;1;0;1 + -1 E
-e3^einf;einf^e0;0;0;1 e3^e
-e3^einf;e1^e2^e3;0;0;-1 e12^e
-e3^einf;e1^e2^einf;0;0;0
-e3^einf;e1^e2^e0;0;1 I;-1 e123 + 1 I
-e3^einf;e1^e3^einf;0;0;0
-e3^einf;e1^e3^e0;1 e1;0;1 e1 + -1 e1^E
-e3^einf;e1^einf^e0;0;0;-1 e31^e
-e3^einf;e2^e3^einf;0;0;0
-e3^einf;e2^e3^e0;1 e2;0;1 e2 + -1 e2^E
-e3^einf;e2^einf^e0;0;0;1 e23^e
-e3^einf;e3^einf^e0;-1 e;0;-1 e
-e3^einf;e1^e2^e3^einf;0;0;0
-e3^einf;e1^e2^e3^e0;1 e12;0;1 e12 + -1 e12^E
-e3^einf;e1^e2^einf^e0;0;0;1 e123^e
-e3^einf;e1^e3^einf^e0;-1 e1^e;0;-1 e1^e
-e3^einf;e2^e3^einf^e0;-1 e2^e;0;-1 e2^e
-e3^einf;e1^e2^e3^einf^e0;-1 e12^e;0;-1 e12^e
-e3^e0;1;0;1 e3^e0;1 e3^e0
-e3^e0;e1;0;-1 e31^e0;-1 e31^e0
-e3^e0;e2;0;1 e23^e0;1 e23^e0
-e3^e0;e3;-1 e0;0;-1 e0
-e3^e0;einf;-1 e3;-1 e3^E;-1 e3 + -1 e3^E
-e3^e0;e0;0;0;0
-e3^e0;e1^e2;0;1 e123^e0;1 e123^e0
-e3^e0;e1^e3;0;0;-1 e1^e0
-e3^e0;e1^einf;0;1 e31^E;1 e31 + 1 e31^E
-e3^e0;e1^e0;0;0;0
-e3^e0;e2^e3;0;0;-1 e2^e0
-e3^e0;e2^einf;0;-1 e23^E;-1 e23 + -1 e23^E
-e3^e0;e2^e0;0;0;0
-e3^e0;e3^einf;1;0;1 + 1 E
-e3^e0;e3^e0;0;0;0
-e3^e0;einf^e0;0;0;-1 e3^e0
-e3^e0;e1^e2^e3;0;0;-1 e12^e0
-e3^e0;e1^e2^einf;0;-1 I;-1 e123 + -1 I
-e3^e0;e1^e2^e0;0;0;0
-e3^e0;e1^e3^einf;1 e1;0;1 e1 + 1 e1^E
-e3^e0;e1^e3^e0;0;0;0
-e3^e0;e1^einf^e0;0;0;1 e31^e0
-e3^e0;e2^e3^einf;1 e2;0;1 e2 + 1 e2^E
-e3^e0;e2^e3^e0;0;0;0
-e3^e0;e2^einf^e0;0;0;-1 e23^e0
-e3^e0;e3^einf^e0;1 e0;0;1 e0
-e3^e0;e1^e2^e3^einf;1 e12;0;1 e12 + 1 e12^E
-e3^e0;e1^e2^e3^e0;0;0;0
-e3^e0;e1^e2^einf^e0;0;0;-1 e123^e0
-e3^e0;e1^e3^einf^e0;1 e1^e0;0;1 e1^e0
-e3^e0;e2^e3^einf^e0;1 e2^e0;0;1 e2^e0
-e3^e0;e1^e2^e3^einf^e0;1 e12^e0;0;1 e12^e0
-einf^e0;1;0;1 E;1 E
-einf^e0;e1;0;1 e1^E;1 e1^E
-einf^e0;e2;0;1 e2^E;1 e2^E
-einf^e0;e3;0;1 e3^E;1 e3^E
-einf^e0;einf;-1 e;0;-1 e
-einf^e0;e0;1 e0;0;1 e0
-einf^e0;e1^e2;0;1 e12^E;1 e12^E
-einf^e0;e1^e3;0;-1 e31^E;-1 e31^E
-einf^e0;e1^einf;0;0;-1 e1^e
-einf^e0;e1^e0;0;0;1 e1^e0
-einf^e0;e2^e3;0;1 e23^E;1 e23^E
-einf^e0;e2^einf;0;0;-1 e2^e
-einf^e0;e2^e0;0;0;1 e2^e0
-einf^e0;e3^einf;0;0;-1 e3^e
-einf^e0;e3^e0;0;0;1 e3^e0
-einf^e0;einf^e0;1;0;1
-einf^e0;e1^e2^e3;0;1 I;1 I
-einf^e0;e1^e2^einf;0;0;-1 e12^e
-einf^e0;e1^e2^e0;0;0;1 e12^e0
-einf^e0;e1^e3^einf;0;0;1 e31^e
-einf^e0;e1^e3^e0;0;0;-1 e31^e0
-einf^e0;e1^einf^e0;1 e1;0;1 e1
-einf^e0;e2^e3^einf;0;0;-1 e23^e
-einf^e0;e2^e3^e0;0;0;1 e23^e0
-einf^e0;e2^einf^e0;1 e2;0;1 e2
-einf^e0;e3^einf^e0;1 e3;0;1 e3
-einf^e0;e1^e2^e3^einf;0;0;-1 e123^e
-einf^e0;e1^e2^e3^e0;0;0;1 e123^e0
-einf^e0;e1^e2^einf^e0;1 e12;0;1 e12
-einf^e0;e1^e3^einf^e0;-1 e31;0;-1 e31
-einf^e0;e2^e3^einf^e0;1 e23;0;1 e23
-einf^e0;e1^e2^e3^einf^e0;1 e123;0;1 e123
-e1^e2^e3;1;0;1 e123;1 e123
-e1^e2^e3;e1;1 e23;0;1 e23
-e1^e2^e3;e2;1 e31;0;1 e31
-e1^e2^e3;e3;1 e12;0;1 e12
-e1^e2^e3;einf;0;1 e123^e;1 e123^e
-e1^e2^e3;e0;0;1 e123^e0;1 e123^e0
-e1^e2^e3;e1^e2;-1 e3;0;-1 e3
-e1^e2^e3;e1^e3;1 e2;0;1 e2
-e1^e2^e3;e1^einf;0;0;1 e23^e
-e1^e2^e3;e1^e0;0;0;1 e23^e0
-e1^e2^e3;e2^e3;-1 e1;0;-1 e1
-e1^e2^e3;e2^einf;0;0;1 e31^e
-e1^e2^e3;e2^e0;0;0;1 e31^e0
-e1^e2^e3;e3^einf;0;0;1 e12^e
-e1^e2^e3;e3^e0;0;0;1 e12^e0
-e1^e2^e3;einf^e0;0;1 I;1 I
-e1^e2^e3;e1^e2^e3;-1;0;-1
-e1^e2^e3;e1^e2^einf;0;0;-1 e3^e
-e1^e2^e3;e1^e2^e0;0;0;-1 e3^e0
-e1^e2^e3;e1^e3^einf;0;0;1 e2^e
-e1^e2^e3;e1^e3^e0;0;0;1 e2^e0
-e1^e2^e3;e1^einf^e0;0;0;1 e23^E
-e1^e2^e3;e2^e3^einf;0;0;-1 e1^e
-e1^e2^e3;e2^e3^e0;0;0;-1 e1^e0
-e1^e2^e3;e2^einf^e0;0;0;1 e31^E
-e1^e2^e3;e3^einf^e0;0;0;1 e12^E
-e1^e2^e3;e1^e2^e3^einf;-1 e;0;-1 e
-e1^e2^e3;e1^e2^e3^e0;-1 e0;0;-1 e0
-e1^e2^e3;e1^e2^einf^e0;0;0;-1 e3^E
-e1^e2^e3;e1^e3^einf^e0;0;0;1 e2^E
-e1^e2^e3;e2^e3^einf^e0;0;0;-1 e1^E
-e1^e2^e3;e1^e2^e3^einf^e0;-1 E;0;-1 E
-e1^e2^einf;1;0;1 e12^e;1 e12^e
-e1^e2^einf;e1;1 e2^e;0;1 e2^e
-e1^e2^einf;e2;-1 e1^e;0;-1 e1^e
-e1^e2^einf;e3;0;-1 e123^e;-1 e123^e
-e1^e2^einf;einf;0;0;0
-e1^e2^einf;e0;-1 e12;1 e12^E;-1 e12 + 1 e12^E
-e1^e2^einf;e1^e2;-1 e;0;-1 e
-e1^e2^einf;e1^e3;0;0;-1 e23^e
-e1^e2^einf;e1^einf;0;0;0
-e1^e2^einf;e1^e0;-1 e2;0;-1 e2 + 1 e2^E
-e1^e2^einf;e2^e3;0;0;-1 e31^e
-e1^e2^einf;e2^einf;0;0;0
-e1^e2^einf;e2^e0;1 e1;0;1 e1 + -1 e1^E
-e1^e2^einf;e3^einf;0;0;0
-e1^e2^einf;e3^e0;0;-1 I;1 e123 + -1 I
-e1^e2^einf;einf^e0;0;0;1 e12^e
-e1^e2^einf;e1^e2^e3;0;0;1 e3^e
-e1^e2^einf;e1^e2^einf;0;0;0
-e1^e2^einf;e1^e2^e0;1;0;1 + -1 E
-e1^e2^einf;e1^e3^einf;0;0;0
-e1^e2^einf;e1^e3^e0;0;0;1 e23 + -1 e23^E
-e1^e2^einf;e1^einf^e0;0;0;1 e2^e
-e1^e2^einf;e2^e3^einf;0;0;0
-e1^e2^einf;e2^e3^e0;0;0;1 e31 + -1 e31^E
-e1^e2^einf;e2^einf^e0;0;0;-1 e1^e
-e1^e2^einf;e3^einf^e0;0;0;-1 e123^e
-e1^e2^einf;e1^e2^e3^einf;0;0;0
-e1^e2^einf;e1^e2^e3^e0;-1 e3;0;-1 e3 + 1 e3^E
-e1^e2^einf;e1^e2^einf^e0;-1 e;0;-1 e
-e1^e2^einf;e1^e3^einf^e0;0;0;-1 e23^e
-e1^e2^einf;e2^e3^einf^e0;0;0;-1 e31^e
-e1^e2^einf;e1^e2^e3^einf^e0;1 e3^e;0;1 e3^e
-e1^e2^e0;1;0;1 e12^e0;1 e12^e0
-e1^e2^e0;e1;1 e2^e0;0;1 e2^e0
-e1^e2^e0;e2;-1 e1^e0;0;-1 e1^e0
-e1^e2^e0;e3;0;-1 e123^e0;-1 e123^e0
-e1^e2^e0;einf;-1 e12;-1 e12^E;-1 e12 + -1 e12^E
-e1^e2^e0;e0;0;0;0
-e1^e2^e0;e1^e2;-1 e0;0;-1 e0
-e1^e2^e0;e1^e3;0;0;-1 e23^e0
-e1^e2^e0;e1^einf;-1 e2;0;-1 e2 + -1 e2^E
-e1^e2^e0;e1^e0;0;0;0
-e1^e2^e0;e2^e3;0;0;-1 e31^e0
-e1^e2^e0;e2^einf;1 e1;0;1 e1 + 1 e1^E
-e1^e2^e0;e2^e0;0;0;0
-e1^e2^e0;e3^einf;0;1 I;1 e123 + 1 I
-e1^e2^e0;e3^e0;0;0;0
-e1^e2^e0;einf^e0;0;0;-1 e12^e0
-e1^e2^e0;e1^e2^e3;0;0;1 e3^e0
-e1^e2^e0;e1^e2^einf;1;0;1 + 1 E
-e1^e2^e0;e1^e2^e0;0;0;0
-e1^e2^e0;e1^e3^einf;0;0;1 e23 + 1 e23^E
-e1^e2^e0;e1^e3^e0;0;0;0
-e1^e2^e0;e1^einf^e0;0;0;-1 e2^e0
-e1^e2^e0;e2^e3^einf;0;0;1 e31 + 1 e31^E
-e1^e2^e0;e2^e3^e0;0;0;0
-e1^e2^e0;e2^einf^e0;0;0;1 e1^e0
-e1^e2^e0;e3^einf^e0;0;0;1 e123^e0
-e1^e2^e0;e1^e2^e3^einf;-1 e3;0;-1 e3 + -1 e3^E
-e1^e2^e0;e1^e2^e3^e0;0;0;0
-e1^e2^e0;e1^e2^einf^e0;1 e0;0;1 e0
-e1^e2^e0;e1^e3^einf^e0;0;0;1 e23^e0
-e1^e2^e0;e2^e3^einf^e0;0;0;1 e31^e0
-e1^e2^e0;e1^e2^e3^einf^e0;-1 e3^e0;0;-1 e3^e0
-e1^e3^einf;1;0;-1 e31^e;-1 e31^e
-e1^e3^einf;e1;1 e3^e;0;1 e3^e
-e1^e3^einf;e2;0;1 e123^e;1 e123^e
-e1^e3^einf;e3;-1 e1^e;0;-1 e1^e
-e1^e3^einf;einf;0;0;0
-e1^e3^einf;e0;1 e31;-1 e31^E;1 e31 + -1 e31^E
-e1^e3^einf;e1^e2;0;0;1 e23^e
-e1^e3^einf;e1^e3;-1 e;0;-1 e
-e1^e3^einf;e1^einf;0;0;0
-e1^e3^einf;e1^e0;-1 e3;0;-1 e3 + 1 e3^E
-e1^e3^einf;e2^e3;0;0;-1 e12^e
-e1^e3^einf;e2^einf;0;0;0
-e1^e3^einf;e2^e0;0;1 I;-1 e123 + 1 I
-e1^e3^einf;e3^einf;0;0;0
-e1^e3^einf;e3^e0;1 e1;0;1 e1 + -1 e1^E
-e1^e3^einf;einf^e0;0;0;-1 e31^e
-e1^e3^einf;e1^e2^e3;0;0;-1 e2^e
-e1^e3^einf;e1^e2^einf;0;0;0
-e1^e3^einf;e1^e2^e0;0;0;-1 e23 + 1 e23^E
-e1^e3^einf;e1^e3^einf;0;0;0
-e1^e3^einf;e1^e3^e0;1;0;1 + -1 E
-e1^e3^einf;e1^einf^e0;0;0;1 e3^e
-e1^e3^einf;e2^e3^einf;0;0;0
-e1^e3^einf;e2^e3^e0;0;0;1 e12 + -1 e12^E
-e1^e3^einf;e2^einf^e0;0;0;1 e123^e
-e1^e3^einf;e3^einf^e0;0;0;-1 e1^e
-e1^e3^einf;e1^e2^e3^einf;0;0;0
-e1^e3^einf;e1^e2^e3^e0;1 e2;0;1 e2 + -1 e2^E
-e1^e3^einf;e1^e2^einf^e0;0;0;1 e23^e
-e1^e3^einf;e1^e3^einf^e0;-1 e;0;-1 e
-e1^e3^einf;e2^e3^einf^e0;0;0;-1 e12^e
-e1^e3^einf;e1^e2^e3^einf^e0;-1 e2^e;0;-1 e2^e
-e1^e3^e0;1;0;-1 e31^e0;-1 e31^e0
-e1^e3^e0;e1;1 e3^e0;0;1 e3^e0
-e1^e3^e0;e2;0;1 e123^e0;1 e123^e0
-e1^e3^e0;e3;-1 e1^e0;0;-1 e1^e0
-e1^e3^e0;einf;1 e31;1 e31^E;1 e31 + 1 e31^E
-e1^e3^e0;e0;0;0;0
-e1^e3^e0;e1^e2;0;0;1 e23^e0
-e1^e3^e0;e1^e3;-1 e0;0;-1 e0
-e1^e3^e0;e1^einf;-1 e3;0;-1 e3 + -1 e3^E
-e1^e3^e0;e1^e0;0;0;0
-e1^e3^e0;e2^e3;0;0;-1 e12^e0
-e1^e3^e0;e2^einf;0;-1 I;-1 e123 + -1 I
-e1^e3^e0;e2^e0;0;0;0
-e1^e3^e0;e3^einf;1 e1;0;1 e1 + 1 e1^E
-e1^e3^e0;e3^e0;0;0;0
-e1^e3^e0;einf^e0;0;0;1 e31^e0
-e1^e3^e0;e1^e2^e3;0;0;-1 e2^e0
-e1^e3^e0;e1^e2^einf;0;0;-1 e23 + -1 e23^E
-e1^e3^e0;e1^e2^e0;0;0;0
-e1^e3^e0;e1^e3^einf;1;0;1 + 1 E
-e1^e3^e0;e1^e3^e0;0;0;0
-e1^e3^e0;e1^einf^e0;0;0;-1 e3^e0
-e1^e3^e0;e2^e3^einf;0;0;1 e12 + 1 e12^E
-e1^e3^e0;e2^e3^e0;0;0;0
-e1^e3^e0;e2^einf^e0;0;0;-1 e123^e0
-e1^e3^e0;e3^einf^e0;0;0;1 e1^e0
-e1^e3^e0;e1^e2^e3^einf;1 e2;0;1 e2 + 1 e2^E
-e1^e3^e0;e1^e2^e3^e0;0;0;0
-e1^e3^e0;e1^e2^einf^e0;0;0;-1 e23^e0
-e1^e3^e0;e1^e3^einf^e0;1 e0;0;1 e0
-e1^e3^e0;e2^e3^einf^e0;0;0;1 e12^e0
-e1^e3^e0;e1^e2^e3^einf^e0;1 e2^e0;0;1 e2^e0
-e1^einf^e0;1;0;1 e1^E;1 e1^E
-e1^einf^e0;e1;1 E;0;1 E
-e1^einf^e0;e2;0;1 e12^E;1 e12^E
-e1^einf^e0;e3;0;-1 e31^E;-1 e31^E
-e1^einf^e0;einf;-1 e1^e;0;-1 e1^e
-e1^einf^e0;e0;1 e1^e0;0;1 e1^e0
-e1^einf^e0;e1^e2;0;0;1 e2^E
-e1^einf^e0;e1^e3;0;0;1 e3^E
-e1^einf^e0;e1^einf;-1 e;0;-1 e
-e1^einf^e0;e1^e0;1 e0;0;1 e0
-e1^einf^e0;e2^e3;0;1 I;1 I
-e1^einf^e0;e2^einf;0;0;-1 e12^e
-e1^einf^e0;e2^e0;0;0;1 e12^e0
-e1^einf^e0;e3^einf;0;0;1 e31^e
-e1^einf^e0;e3^e0;0;0;-1 e31^e0
-e1^einf^e0;einf^e0;1 e1;0;1 e1
-e1^einf^e0;e1^e2^e3;0;0;1 e23^E
-e1^einf^e0;e1^e2^einf;0;0;-1 e2^e
-e1^einf^e0;e1^e2^e0;0;0;1 e2^e0
-e1^einf^e0;e1^e3^einf;0;0;-1 e3^e
-e1^einf^e0;e1^e3^e0;0;0;1 e3^e0
-e1^einf^e0;e1^einf^e0;1;0;1
-e1^einf^e0;e2^e3^einf;0;0;-1 e123^e
-e1^einf^e0;e2^e3^e0;0;0;1 e123^e0
-e1^einf^e0;e2^einf^e0;0;0;1 e12
-e1^einf^e0;e3^einf^e0;0;0;-1 e31
-e1^einf^e0;e1^e2^e3^einf;0;0;-1 e23^e
-e1^einf^e0;e1^e2^e3^e0;0;0;1 e23^e0
-e1^einf^e0;e1^e2^einf^e0;1 e2;0;1 e2
-e1^einf^e0;e1^e3^einf^e0;1 e3;0;1 e3
-e1^einf^e0;e2^e3^einf^e0;0;0;1 e123
-e1^einf^e0;e1^e2^e3^einf^e0;1 e23;0;1 e23
-e2^e3^einf;1;0;1 e23^e;1 e23^e
-e2^e3^einf;e1;0;-1 e123^e;-1 e123^e
-e2^e3^einf;e2;1 e3^e;0;1 e3^e
-e2^e3^einf;e3;-1 e2^e;0;-1 e2^e
-e2^e3^einf;einf;0;0;0
-e2^e3^einf;e0;-1 e23;1 e23^E;-1 e23 + 1 e23^E
-e2^e3^einf;e1^e2;0;0;1 e31^e
-e2^e3^einf;e1^e3;0;0;1 e12^e
-e2^e3^einf;e1^einf;0;0;0
-e2^e3^einf;e1^e0;0;-1 I;1 e123 + -1 I
-e2^e3^einf;e2^e3;-1 e;0;-1 e
-e2^e3^einf;e2^einf;0;0;0
-e2^e3^einf;e2^e0;-1 e3;0;-1 e3 + 1 e3^E
-e2^e3^einf;e3^einf;0;0;0
-e2^e3^einf;e3^e0;1 e2;0;1 e2 + -1 e2^E
-e2^e3^einf;einf^e0;0;0;1 e23^e
-e2^e3^einf;e1^e2^e3;0;0;1 e1^e
-e2^e3^einf;e1^e2^einf;0;0;0
-e2^e3^einf;e1^e2^e0;0;0;-1 e31 + 1 e31^E
-e2^e3^einf;e1^e3^einf;0;0;0
-e2^e3^einf;e1^e3^e0;0;0;-1 e12 + 1 e12^E
-e2^e3^einf;e1^einf^e0;0;0;-1 e123^e
-e2^e3^einf;e2^e3^einf;0;0;0
-e2^e3^einf;e2^e3^e0;1;0;1 + -1 E
-e2^e3^einf;e2^einf^e0;0;0;1 e3^e
-e2^e3^einf;e3^einf^e0;0;0;-1 e2^e
-e2^e3^einf;e1^e2^e3^einf;0;0;0
-e2^e3^einf;e1^e2^e3^e0;-1 e1;0;-1 e1 + 1 e1^E
-e2^e3^einf;e1^e2^einf^e0;0;0;1 e31^e
-e2^e3^einf;e1^e3^einf^e0;0;0;1 e12^e
-e2^e3^einf;e2^e3^einf^e0;-1 e;0;-1 e
-e2^e3^einf;e1^e2^e3^einf^e0;1 e1^e;0;1 e1^e
-e2^e3^e0;1;0;1 e23^e0;1 e23^e0
-e2^e3^e0;e1;0;-1 e123^e0;-1 e123^e0
-e2^e3^e0;e2;1 e3^e0;0;1 e3^e0
-e2^e3^e0;e3;-1 e2^e0;0;-1 e2^e0
-e2^e3^e0;einf;-1 e23;-1 e23^E;-1 e23 + -1 e23^E
-e2^e3^e0;e0;0;0;0
-e2^e3^e0;e1^e2;0;0;1 e31^e0
-e2^e3^e0;e1^e3;0;0;1 e12^e0
-e2^e3^e0;e1^einf;0;1 I;1 e123 + 1 I
-e2^e3^e0;e1^e0;0;0;0
-e2^e3^e0;e2^e3;-1 e0;0;-1 e0
-e2^e3^e0;e2^einf;-1 e3;0;-1 e3 + -1 e3^E
-e2^e3^e0;e2^e0;0;0;0
-e2^e3^e0;e3^einf;1 e2;0;1 e2 + 1 e2^E
-e2^e3^e0;e3^e0;0;0;0
-e2^e3^e0;einf^e0;0;0;-1 e23^e0
-e2^e3^e0;e1^e2^e3;0;0;1 e1^e0
-e2^e3^e0;e1^e2^einf;0;0;-1 e31 + -1 e31^E
-e2^e3^e0;e1^e2^e0;0;0;0
-e2^e3^e0;e1^e3^einf;0;0;-1 e12 + -1 e12^E
-e2^e3^e0;e1^e3^e0;0;0;0
-e2^e3^e0;e1^einf^e0;0;0;1 e123^e0
-e2^e3^e0;e2^e3^einf;1;0;1 + 1 E
-e2^e3^e0;e2^e3^e0;0;0;0
-e2^e3^e0;e2^einf^e0;0;0;-1 e3^e0
-e2^e3^e0;e3^einf^e0;0;0;1 e2^e0
-e2^e3^e0;e1^e2^e3^einf;-1 e1;0;-1 e1 + -1 e1^E
-e2^e3^e0;e1^e2^e3^e0;0;0;0
-e2^e3^e0;e1^e2^einf^e0;0;0;-1 e31^e0
-e2^e3^e0;e1^e3^einf^e0;0;0;-1 e12^e0
-e2^e3^e0;e2^e3^einf^e0;1 e0;0;1 e0
-e2^e3^e0;e1^e2^e3^einf^e0;-1 e1^e0;0;-1 e1^e0
-e2^einf^e0;1;0;1 e2^E;1 e2^E
-e2^einf^e0;e1;0;-1 e12^E;-1 e12^E
-e2^einf^e0;e2;1 E;0;1 E
-e2^einf^e0;e3;0;1 e23^E;1 e23^E
-e2^einf^e0;einf;-1 e2^e;0;-1 e2^e
-e2^einf^e0;e0;1 e2^e0;0;1 e2^e0
-e2^einf^e0;e1^e2;0;0;-1 e1^E
-e2^einf^e0;e1^e3;0;-1 I;-1 I
-e2^einf^e0;e1^einf;0;0;1 e12^e
-e2^einf^e0;e1^e0;0;0;-1 e12^e0
-e2^einf^e0;e2^e3;0;0;1 e3^E
-e2^einf^e0;e2^einf;-1 e;0;-1 e
-e2^einf^e0;e2^e0;1 e0;0;1 e0
-e2^einf^e0;e3^einf;0;0;-1 e23^e
-e2^einf^e0;e3^e0;0;0;1 e23^e0
-e2^einf^e0;einf^e0;1 e2;0;1 e2
-e2^einf^e0;e1^e2^e3;0;0;1 e31^E
-e2^einf^e0;e1^e2^einf;0;0;1 e1^e
-e2^einf^e0;e1^e2^e0;0;0;-1 e1^e0
-e2^einf^e0;e1^e3^einf;0;0;1 e123^e
-e2^einf^e0;e1^e3^e0;0;0;-1 e123^e0
-e2^einf^e0;e1^einf^e0;0;0;-1 e12
-e2^einf^e0;e2^e3^einf;0;0;-1 e3^e
-e2^einf^e0;e2^e3^e0;0;0;1 e3^e0
-e2^einf^e0;e2^einf^e0;1;0;1
-e2^einf^e0;e3^einf^e0;0;0;1 e23
-e2^einf^e0;e1^e2^e3^einf;0;0;-1 e31^e
-e2^einf^e0;e1^e2^e3^e0;0;0;1 e31^e0
-e2^einf^e0;e1^e2^einf^e0;-1 e1;0;-1 e1
-e2^einf^e0;e1^e3^einf^e0;0;0;-1 e123
-e2^einf^e0;e2^e3^einf^e0;1 e3;0;1 e3
-e2^einf^e0;e1^e2^e3^einf^e0;1 e31;0;1 e31
-e3^einf^e0;1;0;1 e3^E;1 e3^E
-e3^einf^e0;e1;0;1 e31^E;1 e31^E
-e3^einf^e0;e2;0;-1 e23^E;-1 e23^E
-e3^einf^e0;e3;1 E;0;1 E
-e3^einf^e0;einf;-1 e3^e;0;-1 e3^e
-e3^einf^e0;e0;1 e3^e0;0;1 e3^e0
-e3^einf^e0;e1^e2;0;1 I;1 I
-e3^einf^e0;e1^e3;0;0;-1 e1^E
-e3^einf^e0;e1^einf;0;0;-1 e31^e
-e3^einf^e0;e1^e0;0;0;1 e31^e0
-e3^einf^e0;e2^e3;0;0;-1 e2^E
-e3^einf^e0;e2^einf;0;0;1 e23^e
-e3^einf^e0;e2^e0;0;0;-1 e23^e0
-e3^einf^e0;e3^einf;-1 e;0;-1 e
-e3^einf^e0;e3^e0;1 e0;0;1 e0
-e3^einf^e0;einf^e0;1 e3;0;1 e3
-e3^einf^e0;e1^e2^e3;0;0;1 e12^E
-e3^einf^e0;e1^e2^einf;0;0;-1 e123^e
-e3^einf^e0;e1^e2^e0;0;0;1 e123^e0
-e3^einf^e0;e1^e3^einf;0;0;1 e1^e
-e3^einf^e0;e1^e3^e0;0;0;-1 e1^e0
-e3^einf^e0;e1^einf^e0;0;0;1 e31
-e3^einf^e0;e2^e3^einf;0;0;1 e2^e
-e3^einf^e0;e2^e3^e0;0;0;-1 e2^e0
-e3^einf^e0;e2^einf^e0;0;0;-1 e23
-e3^einf^e0;e3^einf^e0;1;0;1
-e3^einf^e0;e1^e2^e3^einf;0;0;-1 e12^e
-e3^einf^e0;e1^e2^e3^e0;0;0;1 e12^e0
-e3^einf^e0;e1^e2^einf^e0;0;0;1 e123
-e3^einf^e0;e1^e3^einf^e0;-1 e1;0;-1 e1
-e3^einf^e0;e2^e3^einf^e0;-1 e2;0;-1 e2
-e3^einf^e0;e1^e2^e3^einf^e0;1 e12;0;1 e12
-e1^e2^e3^einf;1;0;1 e123^e;1 e123^e
-e1^e2^e3^einf;e1;-1 e23^e;0;-1 e23^e
-e1^e2^e3^einf;e2;-1 e31^e;0;-1 e31^e
-e1^e2^e3^einf;e3;-1 e12^e;0;-1 e12^e
-e1^e2^e3^einf;einf;0;0;0
-e1^e2^e3^einf;e0;-1 e123;1 I;-1 e123 + 1 I
-e1^e2^e3^einf;e1^e2;-1 e3^e;0;-1 e3^e
-e1^e2^e3^einf;e1^e3;1 e2^e;0;1 e2^e
-e1^e2^e3^einf;e1^einf;0;0;0
-e1^e2^e3^einf;e1^e0;1 e23;0;1 e23 + -1 e23^E
-e1^e2^e3^einf;e2^e3;-1 e1^e;0;-1 e1^e
-e1^e2^e3^einf;e2^einf;0;0;0
-e1^e2^e3^einf;e2^e0;1 e31;0;1 e31 + -1 e31^E
-e1^e2^e3^einf;e3^einf;0;0;0
-e1^e2^e3^einf;e3^e0;1 e12;0;1 e12 + -1 e12^E
-e1^e2^e3^einf;einf^e0;0;0;1 e123^e
-e1^e2^e3^einf;e1^e2^e3;1 e;0;1 e
-e1^e2^e3^einf;e1^e2^einf;0;0;0
-e1^e2^e3^einf;e1^e2^e0;1 e3;0;1 e3 + -1 e3^E
-e1^e2^e3^einf;e1^e3^einf;0;0;0
-e1^e2^e3^einf;e1^e3^e0;-1 e2;0;-1 e2 + 1 e2^E
-e1^e2^e3^einf;e1^einf^e0;0;0;-1 e23^e
-e1^e2^e3^einf;e2^e3^einf;0;0;0
-e1^e2^e3^einf;e2^e3^e0;1 e1;0;1 e1 + -1 e1^E
-e1^e2^e3^einf;e2^einf^e0;0;0;-1 e31^e
-e1^e2^e3^einf;e3^einf^e0;0;0;-1 e12^e
-e1^e2^e3^einf;e1^e2^e3^einf;0;0;0
-e1^e2^e3^einf;e1^e2^e3^e0;-1;0;-1 + 1 E
-e1^e2^e3^einf;e1^e2^einf^e0;0;0;-1 e3^e
-e1^e2^e3^einf;e1^e3^einf^e0;0;0;1 e2^e
-e1^e2^e3^einf;e2^e3^einf^e0;0;0;-1 e1^e
-e1^e2^e3^einf;e1^e2^e3^einf^e0;1 e;0;1 e
-e1^e2^e3^e0;1;0;1 e123^e0;1 e123^e0
-e1^e2^e3^e0;e1;-1 e23^e0;0;-1 e23^e0
-e1^e2^e3^e0;e2;-1 e31^e0;0;-1 e31^e0
-e1^e2^e3^e0;e3;-1 e12^e0;0;-1 e12^e0
-e1^e2^e3^e0;einf;-1 e123;-1 I;-1 e123 + -1 I
-e1^e2^e3^e0;e0;0;0;0
-e1^e2^e3^e0;e1^e2;-1 e3^e0;0;-1 e3^e0
-e1^e2^e3^e0;e1^e3;1 e2^e0;0;1 e2^e0
-e1^e2^e3^e0;e1^einf;1 e23;0;1 e23 + 1 e23^E
-e1^e2^e3^e0;e1^e0;0;0;0
-e1^e2^e3^e0;e2^e3;-1 e1^e0;0;-1 e1^e0
-e1^e2^e3^e0;e2^einf;1 e31;0;1 e31 + 1 e31^E
-e1^e2^e3^e0;e2^e0;0;0;0
-e1^e2^e3^e0;e3^einf;1 e12;0;1 e12 + 1 e12^E
-e1^e2^e3^e0;e3^e0;0;0;0
-e1^e2^e3^e0;einf^e0;0;0;-1 e123^e0
-e1^e2^e3^e0;e1^e2^e3;1 e0;0;1 e0
-e1^e2^e3^e0;e1^e2^einf;1 e3;0;1 e3 + 1 e3^E
-e1^e2^e3^e0;e1^e2^e0;0;0;0
-e1^e2^e3^e0;e1^e3^einf;-1 e2;0;-1 e2 + -1 e2^E
-e1^e2^e3^e0;e1^e3^e0;0;0;0
-e1^e2^e3^e0;e1^einf^e0;0;0;1 e23^e0
-e1^e2^e3^e0;e2^e3^einf;1 e1;0;1 e1 + 1 e1^E
-e1^e2^e3^e0;e2^e3^e0;0;0;0
-e1^e2^e3^e0;e2^einf^e0;0;0;1 e31^e0
-e1^e2^e3^e0;e3^einf^e0;0;0;1 e12^e0
-e1^e2^e3^e0;e1^e2^e3^einf;-1;0;-1 + -1 E
-e1^e2^e3^e0;e1^e2^e3^e0;0;0;0
-e1^e2^e3^e0;e1^e2^einf^e0;0;0;1 e3^e0
-e1^e2^e3^e0;e1^e3^einf^e0;0;0;-1 e2^e0
-e1^e2^e3^e0;e2^e3^einf^e0;0;0;1 e1^e0
-e1^e2^e3^e0;e1^e2^e3^einf^e0;-1 e0;0;-1 e0
-e1^e2^einf^e0;1;0;1 e12^E;1 e12^E
-e1^e2^einf^e0;e1;-1 e2^E;0;-1 e2^E
-e1^e2^einf^e0;e2;1 e1^E;0;1 e1^E
-e1^e2^einf^e0;e3;0;1 I;1 I
-e1^e2^einf^e0;einf;-1 e12^e;0;-1 e12^e
-e1^e2^einf^e0;e0;1 e12^e0;0;1 e12^e0
-e1^e2^einf^e0;e1^e2;-1 E;0;-1 E
-e1^e2^einf^e0;e1^e3;0;0;-1 e23^E
-e1^e2^einf^e0;e1^einf;1 e2^e;0;1 e2^e
-e1^e2^einf^e0;e1^e0;-1 e2^e0;0;-1 e2^e0
-e1^e2^einf^e0;e2^e3;0;0;-1 e31^E
-e1^e2^einf^e0;e2^einf;-1 e1^e;0;-1 e1^e
-e1^e2^einf^e0;e2^e0;1 e1^e0;0;1 e1^e0
-e1^e2^einf^e0;e3^einf;0;0;-1 e123^e
-e1^e2^einf^e0;e3^e0;0;0;1 e123^e0
-e1^e2^einf^e0;einf^e0;1 e12;0;1 e12
-e1^e2^einf^e0;e1^e2^e3;0;0;-1 e3^E
-e1^e2^einf^e0;e1^e2^einf;1 e;0;1 e
-e1^e2^einf^e0;e1^e2^e0;-1 e0;0;-1 e0
-e1^e2^einf^e0;e1^e3^einf;0;0;1 e23^e
-e1^e2^einf^e0;e1^e3^e0;0;0;-1 e23^e0
-e1^e2^einf^e0;e1^einf^e0;-1 e2;0;-1 e2
-e1^e2^einf^e0;e2^e3^einf;0;0;1 e31^e
-e1^e2^einf^e0;e2^e3^e0;0;0;-1 e31^e0
-e1^e2^einf^e0;e2^einf^e0;1 e1;0;1 e1
-e1^e2^einf^e0;e3^einf^e0;0;0;1 e123
-e1^e2^einf^e0;e1^e2^e3^einf;0;0;1 e3^e
-e1^e2^einf^e0;e1^e2^e3^e0;0;0;-1 e3^e0
-e1^e2^einf^e0;e1^e2^einf^e0;-1;0;-1
-e1^e2^einf^e0;e1^e3^einf^e0;0;0;-1 e23
-e1^e2^einf^e0;e2^e3^einf^e0;0;0;-1 e31
-e1^e2^einf^e0;e1^e2^e3^einf^e0;-1 e3;0;-1 e3
-e1^e3^einf^e0;1;0;-1 e31^E;-1 e31^E
-e1^e3^einf^e0;e1;-1 e3^E;0;-1 e3^E
-e1^e3^einf^e0;e2;0;-1 I;-1 I
-e1^e3^einf^e0;e3;1 e1^E;0;1 e1^E
-e1^e3^einf^e0;einf;1 e31^e;0;1 e31^e
-e1^e3^einf^e0;e0;-1 e31^e0;0;-1 e31^e0
-e1^e3^einf^e0;e1^e2;0;0;1 e23^E
-e1^e3^einf^e0;e1^e3;-1 E;0;-1 E
-e1^e3^einf^e0;e1^einf;1 e3^e;0;1 e3^e
-e1^e3^einf^e0;e1^e0;-1 e3^e0;0;-1 e3^e0
-e1^e3^einf^e0;e2^e3;0;0;-1 e12^E
-e1^e3^einf^e0;e2^einf;0;0;1 e123^e
-e1^e3^einf^e0;e2^e0;0;0;-1 e123^e0
-e1^e3^einf^e0;e3^einf;-1 e1^e;0;-1 e1^e
-e1^e3^einf^e0;e3^e0;1 e1^e0;0;1 e1^e0
-e1^e3^einf^e0;einf^e0;-1 e31;0;-1 e31
-e1^e3^einf^e0;e1^e2^e3;0;0;1 e2^E
-e1^e3^einf^e0;e1^e2^einf;0;0;-1 e23^e
-e1^e3^einf^e0;e1^e2^e0;0;0;1 e23^e0
-e1^e3^einf^e0;e1^e3^einf;1 e;0;1 e
-e1^e3^einf^e0;e1^e3^e0;-1 e0;0;-1 e0
-e1^e3^einf^e0;e1^einf^e0;-1 e3;0;-1 e3
-e1^e3^einf^e0;e2^e3^einf;0;0;1 e12^e
-e1^e3^einf^e0;e2^e3^e0;0;0;-1 e12^e0
-e1^e3^einf^e0;e2^einf^e0;0;0;-1 e123
-e1^e3^einf^e0;e3^einf^e0;1 e1;0;1 e1
-e1^e3^einf^e0;e1^e2^e3^einf;0;0;-1 e2^e
-e1^e3^einf^e0;e1^e2^e3^e0;0;0;1 e2^e0
-e1^e3^einf^e0;e1^e2^einf^e0;0;0;1 e23
-e1^e3^einf^e0;e1^e3^einf^e0;-1;0;-1
-e1^e3^einf^e0;e2^e3^einf^e0;0;0;-1 e12
-e1^e3^einf^e0;e1^e2^e3^einf^e0;1 e2;0;1 e2
-e2^e3^einf^e0;1;0;1 e23^E;1 e23^E
-e2^e3^einf^e0;e1;0;1 I;1 I
-e2^e3^einf^e0;e2;-1 e3^E;0;-1 e3^E
-e2^e3^einf^e0;e3;1 e2^E;0;1 e2^E
-e2^e3^einf^e0;einf;-1 e23^e;0;-1 e23^e
-e2^e3^einf^e0;e0;1 e23^e0;0;1 e23^e0
-e2^e3^einf^e0;e1^e2;0;0;1 e31^E
-e2^e3^einf^e0;e1^e3;0;0;1 e12^E
-e2^e3^einf^e0;e1^einf;0;0;-1 e123^e
-e2^e3^einf^e0;e1^e0;0;0;1 e123^e0
-e2^e3^einf^e0;e2^e3;-1 E;0;-1 E
-e2^e3^einf^e0;e2^einf;1 e3^e;0;1 e3^e
-e2^e3^einf^e0;e2^e0;-1 e3^e0;0;-1 e3^e0
-e2^e3^einf^e0;e3^einf;-1 e2^e;0;-1 e2^e
-e2^e3^einf^e0;e3^e0;1 e2^e0;0;1 e2^e0
-e2^e3^einf^e0;einf^e0;1 e23;0;1 e23
-e2^e3^einf^e0;e1^e2^e3;0;0;-1 e1^E
-e2^e3^einf^e0;e1^e2^einf;0;0;-1 e31^e
-e2^e3^einf^e0;e1^e2^e0;0;0;1 e31^e0
-e2^e3^einf^e0;e1^e3^einf;0;0;-1 e12^e
-e2^e3^einf^e0;e1^e3^e0;0;0;1 e12^e0
-e2^e3^einf^e0;e1^einf^e0;0;0;1 e123
-e2^e3^einf^e0;e2^e3^einf;1 e;0;1 e
-e2^e3^einf^e0;e2^e3^e0;-1 e0;0;-1 e0
-e2^e3^einf^e0;e2^einf^e0;-1 e3;0;-1 e3
-e2^e3^einf^e0;e3^einf^e0;1 e2;0;1 e2
-e2^e3^einf^e0;e1^e2^e3^einf;0;0;1 e1^e
-e2^e3^einf^e0;e1^e2^e3^e0;0;0;-1 e1^e0
-e2^e3^einf^e0;e1^e2^einf^e0;0;0;1 e31
-e2^e3^einf^e0;e1^e3^einf^e0;0;0;1 e12
-e2^e3^einf^e0;e2^e3^einf^e0;-1;0;-1
-e2^e3^einf^e0;e1^e2^e3^einf^e0;-1 e1;0;-1 e1
-e1^e2^e3^einf^e0;1;0;1 I;1 I
-e1^e2^e3^einf^e0;e1;1 e23^E;0;1 e23^E
-e1^e2^e3^einf^e0;e2;1 e31^E;0;1 e31^E
-e1^e2^e3^einf^e0;e3;1 e12^E;0;1 e12^E
-e1^e2^e3^einf^e0;einf;-1 e123^e;0;-1 e123^e
-e1^e2^e3^einf^e0;e0;1 e123^e0;0;1 e123^e0
-e1^e2^e3^einf^e0;e1^e2;-1 e3^E;0;-1 e3^E
-e1^e2^e3^einf^e0;e1^e3;1 e2^E;0;1 e2^E
-e1^e2^e3^einf^e0;e1^einf;-1 e23^e;0;-1 e23^e
-e1^e2^e3^einf^e0;e1^e0;1 e23^e0;0;1 e23^e0
-e1^e2^e3^einf^e0;e2^e3;-1 e1^E;0;-1 e1^E
-e1^e2^e3^einf^e0;e2^einf;-1 e31^e;0;-1 e31^e
-e1^e2^e3^einf^e0;e2^e0;1 e31^e0;0;1 e31^e0
-e1^e2^e3^einf^e0;e3^einf;-1 e12^e;0;-1 e12^e
-e1^e2^e3^einf^e0;e3^e0;1 e12^e0;0;1 e12^e0
-e1^e2^e3^einf^e0;einf^e0;1 e123;0;1 e123
-e1^e2^e3^einf^e0;e1^e2^e3;-1 E;0;-1 E
-e1^e2^e3^einf^e0;e1^e2^einf;1 e3^e;0;1 e3^e
-e1^e2^e3^einf^e0;e1^e2^e0;-1 e3^e0;0;-1 e3^e0
-e1^e2^e3^einf^e0;e1^e3^einf;-1 e2^e;0;-1 e2^e
-e1^e2^e3^einf^e0;e1^e3^e0;1 e2^e0;0;1 e2^e0
-e1^e2^e3^einf^e0;e1^einf^e0;1 e23;0;1 e23
-e1^e2^e3^einf^e0;e2^e3^einf;1 e1^e;0;1 e1^e
-e1^e2^e3^einf^e0;e2^e3^e0;-1 e1^e0;0;-1 e1^e0
-e1^e2^e3^einf^e0;e2^einf^e0;1 e31;0;1 e31
-e1^e2^e3^einf^e0;e3^einf^e0;1 e12;0;1 e12
-e1^e2^e3^einf^e0;e1^e2^e3^einf;1 e;0;1 e
-e1^e2^e3^einf^e0;e1^e2^e3^e0;-1 e0;0;-1 e0
-e1^e2^e3^einf^e0;e1^e2^einf^e0;-1 e3;0;-1 e3
-e1^e2^e3^einf^e0;e1^e3^einf^e0;1 e2;0;1 e2
-e1^e2^e3^einf^e0;e2^e3^einf^e0;-1 e1;0;-1 e1
-e1^e2^e3^einf^e0;e1^e2^e3^einf^e0;-1;0;-1
+1;G1;0;G1;G1
+1;G2;0;G2;G2
+1;G3;0;G3;G3
+1;G4;0;G4;G4
+1;G5;0;G5;G5
+1;G6;0;G6;G6
+1;G7;0;G7;G7
+1;G8;0;G8;G8
+1;G9;0;G9;G9
+1;G10;0;G10;G10
+1;G11;0;G11;G11
+1;G12;0;G12;G12
+1;G13;0;G13;G13
+1;G14;0;G14;G14
+1;G15;0;G15;G15
+1;G16;0;G16;G16
+1;G17;0;G17;G17
+1;G18;0;G18;G18
+1;G19;0;G19;G19
+1;G20;0;G20;G20
+1;G21;0;G21;G21
+1;G22;0;G22;G22
+1;G23;0;G23;G23
+1;G24;0;G24;G24
+1;G25;0;G25;G25
+1;G26;0;G26;G26
+1;G27;0;G27;G27
+1;G28;0;G28;G28
+1;G29;0;G29;G29
+1;G30;0;G30;G30
+1;G31;0;G31;G31
+G1;1;0;G1;G1
+G1;G1;1;0;1
+G1;G2;0;G6;G6
+G1;G3;0;G7;G7
+G1;G4;0;G8;G8
+G1;G5;0;G9;G9
+G1;G6;G2;0;G2
+G1;G7;G3;0;G3
+G1;G8;G4;0;G4
+G1;G9;G5;0;G5
+G1;G10;0;G16;G16
+G1;G11;0;G17;G17
+G1;G12;0;G18;G18
+G1;G13;0;G19;G19
+G1;G14;0;G20;G20
+G1;G15;0;G21;G21
+G1;G16;G10;0;G10
+G1;G17;G11;0;G11
+G1;G18;G12;0;G12
+G1;G19;G13;0;G13
+G1;G20;G14;0;G14
+G1;G21;G15;0;G15
+G1;G22;0;G26;G26
+G1;G23;0;G27;G27
+G1;G24;0;G28;G28
+G1;G25;0;G29;G29
+G1;G26;G22;0;G22
+G1;G27;G23;0;G23
+G1;G28;G24;0;G24
+G1;G29;G25;0;G25
+G1;G30;0;G31;G31
+G1;G31;G30;0;G30
+G2;1;0;G2;G2
+G2;G1;0;-G6;-G6
+G2;G2;1;0;1
+G2;G3;0;G10;G10
+G2;G4;0;G11;G11
+G2;G5;0;G12;G12
+G2;G6;-G1;0;-G1
+G2;G7;0;-G16;-G16
+G2;G8;0;-G17;-G17
+G2;G9;0;-G18;-G18
+G2;G10;G3;0;G3
+G2;G11;G4;0;G4
+G2;G12;G5;0;G5
+G2;G13;0;G22;G22
+G2;G14;0;G23;G23
+G2;G15;0;G24;G24
+G2;G16;-G7;0;-G7
+G2;G17;-G8;0;-G8
+G2;G18;-G9;0;-G9
+G2;G19;0;-G26;-G26
+G2;G20;0;-G27;-G27
+G2;G21;0;-G28;-G28
+G2;G22;G13;0;G13
+G2;G23;G14;0;G14
+G2;G24;G15;0;G15
+G2;G25;0;G30;G30
+G2;G26;-G19;0;-G19
+G2;G27;-G20;0;-G20
+G2;G28;-G21;0;-G21
+G2;G29;0;-G31;-G31
+G2;G30;G25;0;G25
+G2;G31;-G29;0;-G29
+G3;1;0;G3;G3
+G3;G1;0;-G7;-G7
+G3;G2;0;-G10;-G10
+G3;G3;1;0;1
+G3;G4;0;G13;G13
+G3;G5;0;G14;G14
+G3;G6;0;G16;G16
+G3;G7;-G1;0;-G1
+G3;G8;0;-G19;-G19
+G3;G9;0;-G20;-G20
+G3;G10;-G2;0;-G2
+G3;G11;0;-G22;-G22
+G3;G12;0;-G23;-G23
+G3;G13;G4;0;G4
+G3;G14;G5;0;G5
+G3;G15;0;G25;G25
+G3;G16;G6;0;G6
+G3;G17;0;G26;G26
+G3;G18;0;G27;G27
+G3;G19;-G8;0;-G8
+G3;G20;-G9;0;-G9
+G3;G21;0;-G29;-G29
+G3;G22;-G11;0;-G11
+G3;G23;-G12;0;-G12
+G3;G24;0;-G30;-G30
+G3;G25;G15;0;G15
+G3;G26;G17;0;G17
+G3;G27;G18;0;G18
+G3;G28;0;G31;G31
+G3;G29;-G21;0;-G21
+G3;G30;-G24;0;-G24
+G3;G31;G28;0;G28
+G4;1;0;G4;G4
+G4;G1;0;-G8;-G8
+G4;G2;0;-G11;-G11
+G4;G3;0;-G13;-G13
+G4;G4;0;0;0
+G4;G5;-1;G15;-1+G15
+G4;G6;0;G17;G17
+G4;G7;0;G19;G19
+G4;G8;0;0;0
+G4;G9;G1;-G21;G1-G21
+G4;G10;0;G22;G22
+G4;G11;0;0;0
+G4;G12;G2;-G24;G2-G24
+G4;G13;0;0;0
+G4;G14;G3;-G25;G3-G25
+G4;G15;G4;0;G4
+G4;G16;0;-G26;-G26
+G4;G17;0;0;0
+G4;G18;-G6;G28;-G6+G28
+G4;G19;0;0;0
+G4;G20;-G7;G29;-G7+G29
+G4;G21;-G8;0;-G8
+G4;G22;0;0;0
+G4;G23;-G10;G30;-G10+G30
+G4;G24;-G11;0;-G11
+G4;G25;-G13;0;-G13
+G4;G26;0;0;0
+G4;G27;G16;-G31;G16-G31
+G4;G28;G17;0;G17
+G4;G29;G19;0;G19
+G4;G30;G22;0;G22
+G4;G31;-G26;0;-G26
+G5;1;0;G5;G5
+G5;G1;0;-G9;-G9
+G5;G2;0;-G12;-G12
+G5;G3;0;-G14;-G14
+G5;G4;-1;-G15;-1-G15
+G5;G5;0;0;0
+G5;G6;0;G18;G18
+G5;G7;0;G20;G20
+G5;G8;G1;G21;G1+G21
+G5;G9;0;0;0
+G5;G10;0;G23;G23
+G5;G11;G2;G24;G2+G24
+G5;G12;0;0;0
+G5;G13;G3;G25;G3+G25
+G5;G14;0;0;0
+G5;G15;-G5;0;-G5
+G5;G16;0;-G27;-G27
+G5;G17;-G6;-G28;-G6-G28
+G5;G18;0;0;0
+G5;G19;-G7;-G29;-G7-G29
+G5;G20;0;0;0
+G5;G21;G9;0;G9
+G5;G22;-G10;-G30;-G10-G30
+G5;G23;0;0;0
+G5;G24;G12;0;G12
+G5;G25;G14;0;G14
+G5;G26;G16;G31;G16+G31
+G5;G27;0;0;0
+G5;G28;-G18;0;-G18
+G5;G29;-G20;0;-G20
+G5;G30;-G23;0;-G23
+G5;G31;G27;0;G27
+G6;1;0;G6;G6
+G6;G1;-G2;0;-G2
+G6;G2;G1;0;G1
+G6;G3;0;G16;G16
+G6;G4;0;G17;G17
+G6;G5;0;G18;G18
+G6;G6;-1;0;-1
+G6;G7;0;0;-G10
+G6;G8;0;0;-G11
+G6;G9;0;0;-G12
+G6;G10;0;0;G7
+G6;G11;0;0;G8
+G6;G12;0;0;G9
+G6;G13;0;G26;G26
+G6;G14;0;G27;G27
+G6;G15;0;G28;G28
+G6;G16;-G3;0;-G3
+G6;G17;-G4;0;-G4
+G6;G18;-G5;0;-G5
+G6;G19;0;0;-G22
+G6;G20;0;0;-G23
+G6;G21;0;0;-G24
+G6;G22;0;0;G19
+G6;G23;0;0;G20
+G6;G24;0;0;G21
+G6;G25;0;G31;G31
+G6;G26;-G13;0;-G13
+G6;G27;-G14;0;-G14
+G6;G28;-G15;0;-G15
+G6;G29;0;0;-G30
+G6;G30;0;0;G29
+G6;G31;-G25;0;-G25
+G7;1;0;G7;G7
+G7;G1;-G3;0;-G3
+G7;G2;0;-G16;-G16
+G7;G3;G1;0;G1
+G7;G4;0;G19;G19
+G7;G5;0;G20;G20
+G7;G6;0;0;G10
+G7;G7;-1;0;-1
+G7;G8;0;0;-G13
+G7;G9;0;0;-G14
+G7;G10;0;0;-G6
+G7;G11;0;-G26;-G26
+G7;G12;0;-G27;-G27
+G7;G13;0;0;G8
+G7;G14;0;0;G9
+G7;G15;0;G29;G29
+G7;G16;G2;0;G2
+G7;G17;0;0;G22
+G7;G18;0;0;G23
+G7;G19;-G4;0;-G4
+G7;G20;-G5;0;-G5
+G7;G21;0;0;-G25
+G7;G22;0;0;-G17
+G7;G23;0;0;-G18
+G7;G24;0;-G31;-G31
+G7;G25;0;0;G21
+G7;G26;G11;0;G11
+G7;G27;G12;0;G12
+G7;G28;0;0;G30
+G7;G29;-G15;0;-G15
+G7;G30;0;0;-G28
+G7;G31;G24;0;G24
+G8;1;0;G8;G8
+G8;G1;-G4;0;-G4
+G8;G2;0;-G17;-G17
+G8;G3;0;-G19;-G19
+G8;G4;0;0;0
+G8;G5;-G1;G21;-G1+G21
+G8;G6;0;0;G11
+G8;G7;0;0;G13
+G8;G8;0;0;0
+G8;G9;1;0;1-G15
+G8;G10;0;G26;G26
+G8;G11;0;0;0
+G8;G12;0;-G28;G6-G28
+G8;G13;0;0;0
+G8;G14;0;-G29;G7-G29
+G8;G15;0;0;G8
+G8;G16;0;0;-G22
+G8;G17;0;0;0
+G8;G18;-G2;0;-G2+G24
+G8;G19;0;0;0
+G8;G20;-G3;0;-G3+G25
+G8;G21;-G4;0;-G4
+G8;G22;0;0;0
+G8;G23;0;G31;-G16+G31
+G8;G24;0;0;-G17
+G8;G25;0;0;-G19
+G8;G26;0;0;0
+G8;G27;G10;0;G10-G30
+G8;G28;G11;0;G11
+G8;G29;G13;0;G13
+G8;G30;0;0;G26
+G8;G31;-G22;0;-G22
+G9;1;0;G9;G9
+G9;G1;-G5;0;-G5
+G9;G2;0;-G18;-G18
+G9;G3;0;-G20;-G20
+G9;G4;-G1;-G21;-G1-G21
+G9;G5;0;0;0
+G9;G6;0;0;G12
+G9;G7;0;0;G14
+G9;G8;1;0;1+G15
+G9;G9;0;0;0
+G9;G10;0;G27;G27
+G9;G11;0;G28;G6+G28
+G9;G12;0;0;0
+G9;G13;0;G29;G7+G29
+G9;G14;0;0;0
+G9;G15;0;0;-G9
+G9;G16;0;0;-G23
+G9;G17;-G2;0;-G2-G24
+G9;G18;0;0;0
+G9;G19;-G3;0;-G3-G25
+G9;G20;0;0;0
+G9;G21;G5;0;G5
+G9;G22;0;-G31;-G16-G31
+G9;G23;0;0;0
+G9;G24;0;0;G18
+G9;G25;0;0;G20
+G9;G26;G10;0;G10+G30
+G9;G27;0;0;0
+G9;G28;-G12;0;-G12
+G9;G29;-G14;0;-G14
+G9;G30;0;0;-G27
+G9;G31;G23;0;G23
+G10;1;0;G10;G10
+G10;G1;0;G16;G16
+G10;G2;-G3;0;-G3
+G10;G3;G2;0;G2
+G10;G4;0;G22;G22
+G10;G5;0;G23;G23
+G10;G6;0;0;-G7
+G10;G7;0;0;G6
+G10;G8;0;G26;G26
+G10;G9;0;G27;G27
+G10;G10;-1;0;-1
+G10;G11;0;0;-G13
+G10;G12;0;0;-G14
+G10;G13;0;0;G11
+G10;G14;0;0;G12
+G10;G15;0;G30;G30
+G10;G16;-G1;0;-G1
+G10;G17;0;0;-G19
+G10;G18;0;0;-G20
+G10;G19;0;0;G17
+G10;G20;0;0;G18
+G10;G21;0;G31;G31
+G10;G22;-G4;0;-G4
+G10;G23;-G5;0;-G5
+G10;G24;0;0;-G25
+G10;G25;0;0;G24
+G10;G26;-G8;0;-G8
+G10;G27;-G9;0;-G9
+G10;G28;0;0;-G29
+G10;G29;0;0;G28
+G10;G30;-G15;0;-G15
+G10;G31;-G21;0;-G21
+G11;1;0;G11;G11
+G11;G1;0;G17;G17
+G11;G2;-G4;0;-G4
+G11;G3;0;-G22;-G22
+G11;G4;0;0;0
+G11;G5;-G2;G24;-G2+G24
+G11;G6;0;0;-G8
+G11;G7;0;-G26;-G26
+G11;G8;0;0;0
+G11;G9;0;G28;-G6+G28
+G11;G10;0;0;G13
+G11;G11;0;0;0
+G11;G12;1;0;1-G15
+G11;G13;0;0;0
+G11;G14;0;-G30;G10-G30
+G11;G15;0;0;G11
+G11;G16;0;0;G19
+G11;G17;0;0;0
+G11;G18;G1;0;G1-G21
+G11;G19;0;0;0
+G11;G20;0;-G31;G16-G31
+G11;G21;0;0;G17
+G11;G22;0;0;0
+G11;G23;-G3;0;-G3+G25
+G11;G24;-G4;0;-G4
+G11;G25;0;0;-G22
+G11;G26;0;0;0
+G11;G27;-G7;0;-G7+G29
+G11;G28;-G8;0;-G8
+G11;G29;0;0;-G26
+G11;G30;G13;0;G13
+G11;G31;G19;0;G19
+G12;1;0;G12;G12
+G12;G1;0;G18;G18
+G12;G2;-G5;0;-G5
+G12;G3;0;-G23;-G23
+G12;G4;-G2;-G24;-G2-G24
+G12;G5;0;0;0
+G12;G6;0;0;-G9
+G12;G7;0;-G27;-G27
+G12;G8;0;-G28;-G6-G28
+G12;G9;0;0;0
+G12;G10;0;0;G14
+G12;G11;1;0;1+G15
+G12;G12;0;0;0
+G12;G13;0;G30;G10+G30
+G12;G14;0;0;0
+G12;G15;0;0;-G12
+G12;G16;0;0;G20
+G12;G17;G1;0;G1+G21
+G12;G18;0;0;0
+G12;G19;0;G31;G16+G31
+G12;G20;0;0;0
+G12;G21;0;0;-G18
+G12;G22;-G3;0;-G3-G25
+G12;G23;0;0;0
+G12;G24;G5;0;G5
+G12;G25;0;0;G23
+G12;G26;-G7;0;-G7-G29
+G12;G27;0;0;0
+G12;G28;G9;0;G9
+G12;G29;0;0;G27
+G12;G30;-G14;0;-G14
+G12;G31;-G20;0;-G20
+G13;1;0;G13;G13
+G13;G1;0;G19;G19
+G13;G2;0;G22;G22
+G13;G3;-G4;0;-G4
+G13;G4;0;0;0
+G13;G5;-G3;G25;-G3+G25
+G13;G6;0;G26;G26
+G13;G7;0;0;-G8
+G13;G8;0;0;0
+G13;G9;0;G29;-G7+G29
+G13;G10;0;0;-G11
+G13;G11;0;0;0
+G13;G12;0;G30;-G10+G30
+G13;G13;0;0;0
+G13;G14;1;0;1-G15
+G13;G15;0;0;G13
+G13;G16;0;0;-G17
+G13;G17;0;0;0
+G13;G18;0;G31;-G16+G31
+G13;G19;0;0;0
+G13;G20;G1;0;G1-G21
+G13;G21;0;0;G19
+G13;G22;0;0;0
+G13;G23;G2;0;G2-G24
+G13;G24;0;0;G22
+G13;G25;-G4;0;-G4
+G13;G26;0;0;0
+G13;G27;G6;0;G6-G28
+G13;G28;0;0;G26
+G13;G29;-G8;0;-G8
+G13;G30;-G11;0;-G11
+G13;G31;-G17;0;-G17
+G14;1;0;G14;G14
+G14;G1;0;G20;G20
+G14;G2;0;G23;G23
+G14;G3;-G5;0;-G5
+G14;G4;-G3;-G25;-G3-G25
+G14;G5;0;0;0
+G14;G6;0;G27;G27
+G14;G7;0;0;-G9
+G14;G8;0;-G29;-G7-G29
+G14;G9;0;0;0
+G14;G10;0;0;-G12
+G14;G11;0;-G30;-G10-G30
+G14;G12;0;0;0
+G14;G13;1;0;1+G15
+G14;G14;0;0;0
+G14;G15;0;0;-G14
+G14;G16;0;0;-G18
+G14;G17;0;-G31;-G16-G31
+G14;G18;0;0;0
+G14;G19;G1;0;G1+G21
+G14;G20;0;0;0
+G14;G21;0;0;-G20
+G14;G22;G2;0;G2+G24
+G14;G23;0;0;0
+G14;G24;0;0;-G23
+G14;G25;G5;0;G5
+G14;G26;G6;0;G6+G28
+G14;G27;0;0;0
+G14;G28;0;0;-G27
+G14;G29;G9;0;G9
+G14;G30;G12;0;G12
+G14;G31;G18;0;G18
+G15;1;0;G15;G15
+G15;G1;0;G21;G21
+G15;G2;0;G24;G24
+G15;G3;0;G25;G25
+G15;G4;-G4;0;-G4
+G15;G5;G5;0;G5
+G15;G6;0;G28;G28
+G15;G7;0;G29;G29
+G15;G8;0;0;-G8
+G15;G9;0;0;G9
+G15;G10;0;G30;G30
+G15;G11;0;0;-G11
+G15;G12;0;0;G12
+G15;G13;0;0;-G13
+G15;G14;0;0;G14
+G15;G15;1;0;1
+G15;G16;0;G31;G31
+G15;G17;0;0;-G17
+G15;G18;0;0;G18
+G15;G19;0;0;-G19
+G15;G20;0;0;G20
+G15;G21;G1;0;G1
+G15;G22;0;0;-G22
+G15;G23;0;0;G23
+G15;G24;G2;0;G2
+G15;G25;G3;0;G3
+G15;G26;0;0;-G26
+G15;G27;0;0;G27
+G15;G28;G6;0;G6
+G15;G29;G7;0;G7
+G15;G30;G10;0;G10
+G15;G31;G16;0;G16
+G16;1;0;G16;G16
+G16;G1;G10;0;G10
+G16;G2;-G7;0;-G7
+G16;G3;G6;0;G6
+G16;G4;0;G26;G26
+G16;G5;0;G27;G27
+G16;G6;-G3;0;-G3
+G16;G7;G2;0;G2
+G16;G8;0;0;G22
+G16;G9;0;0;G23
+G16;G10;-G1;0;-G1
+G16;G11;0;0;-G19
+G16;G12;0;0;-G20
+G16;G13;0;0;G17
+G16;G14;0;0;G18
+G16;G15;0;G31;G31
+G16;G16;-1;0;-1
+G16;G17;0;0;-G13
+G16;G18;0;0;-G14
+G16;G19;0;0;G11
+G16;G20;0;0;G12
+G16;G21;0;0;G30
+G16;G22;0;0;-G8
+G16;G23;0;0;-G9
+G16;G24;0;0;-G29
+G16;G25;0;0;G28
+G16;G26;-G4;0;-G4
+G16;G27;-G5;0;-G5
+G16;G28;0;0;-G25
+G16;G29;0;0;G24
+G16;G30;0;0;-G21
+G16;G31;-G15;0;-G15
+G17;1;0;G17;G17
+G17;G1;G11;0;G11
+G17;G2;-G8;0;-G8
+G17;G3;0;-G26;-G26
+G17;G4;0;0;0
+G17;G5;-G6;G28;-G6+G28
+G17;G6;-G4;0;-G4
+G17;G7;0;0;-G22
+G17;G8;0;0;0
+G17;G9;-G2;0;-G2+G24
+G17;G10;0;0;G19
+G17;G11;0;0;0
+G17;G12;G1;0;G1-G21
+G17;G13;0;0;0
+G17;G14;0;-G31;G16-G31
+G17;G15;0;0;G17
+G17;G16;0;0;G13
+G17;G17;0;0;0
+G17;G18;1;0;1-G15
+G17;G19;0;0;0
+G17;G20;0;0;G10-G30
+G17;G21;0;0;G11
+G17;G22;0;0;0
+G17;G23;0;0;-G7+G29
+G17;G24;0;0;-G8
+G17;G25;0;0;-G26
+G17;G26;0;0;0
+G17;G27;-G3;0;-G3+G25
+G17;G28;-G4;0;-G4
+G17;G29;0;0;-G22
+G17;G30;0;0;G19
+G17;G31;G13;0;G13
+G18;1;0;G18;G18
+G18;G1;G12;0;G12
+G18;G2;-G9;0;-G9
+G18;G3;0;-G27;-G27
+G18;G4;-G6;-G28;-G6-G28
+G18;G5;0;0;0
+G18;G6;-G5;0;-G5
+G18;G7;0;0;-G23
+G18;G8;-G2;0;-G2-G24
+G18;G9;0;0;0
+G18;G10;0;0;G20
+G18;G11;G1;0;G1+G21
+G18;G12;0;0;0
+G18;G13;0;G31;G16+G31
+G18;G14;0;0;0
+G18;G15;0;0;-G18
+G18;G16;0;0;G14
+G18;G17;1;0;1+G15
+G18;G18;0;0;0
+G18;G19;0;0;G10+G30
+G18;G20;0;0;0
+G18;G21;0;0;-G12
+G18;G22;0;0;-G7-G29
+G18;G23;0;0;0
+G18;G24;0;0;G9
+G18;G25;0;0;G27
+G18;G26;-G3;0;-G3-G25
+G18;G27;0;0;0
+G18;G28;G5;0;G5
+G18;G29;0;0;G23
+G18;G30;0;0;-G20
+G18;G31;-G14;0;-G14
+G19;1;0;G19;G19
+G19;G1;G13;0;G13
+G19;G2;0;G26;G26
+G19;G3;-G8;0;-G8
+G19;G4;0;0;0
+G19;G5;-G7;G29;-G7+G29
+G19;G6;0;0;G22
+G19;G7;-G4;0;-G4
+G19;G8;0;0;0
+G19;G9;-G3;0;-G3+G25
+G19;G10;0;0;-G17
+G19;G11;0;0;0
+G19;G12;0;G31;-G16+G31
+G19;G13;0;0;0
+G19;G14;G1;0;G1-G21
+G19;G15;0;0;G19
+G19;G16;0;0;-G11
+G19;G17;0;0;0
+G19;G18;0;0;-G10+G30
+G19;G19;0;0;0
+G19;G20;1;0;1-G15
+G19;G21;0;0;G13
+G19;G22;0;0;0
+G19;G23;0;0;G6-G28
+G19;G24;0;0;G26
+G19;G25;0;0;-G8
+G19;G26;0;0;0
+G19;G27;G2;0;G2-G24
+G19;G28;0;0;G22
+G19;G29;-G4;0;-G4
+G19;G30;0;0;-G17
+G19;G31;-G11;0;-G11
+G20;1;0;G20;G20
+G20;G1;G14;0;G14
+G20;G2;0;G27;G27
+G20;G3;-G9;0;-G9
+G20;G4;-G7;-G29;-G7-G29
+G20;G5;0;0;0
+G20;G6;0;0;G23
+G20;G7;-G5;0;-G5
+G20;G8;-G3;0;-G3-G25
+G20;G9;0;0;0
+G20;G10;0;0;-G18
+G20;G11;0;-G31;-G16-G31
+G20;G12;0;0;0
+G20;G13;G1;0;G1+G21
+G20;G14;0;0;0
+G20;G15;0;0;-G20
+G20;G16;0;0;-G12
+G20;G17;0;0;-G10-G30
+G20;G18;0;0;0
+G20;G19;1;0;1+G15
+G20;G20;0;0;0
+G20;G21;0;0;-G14
+G20;G22;0;0;G6+G28
+G20;G23;0;0;0
+G20;G24;0;0;-G27
+G20;G25;0;0;G9
+G20;G26;G2;0;G2+G24
+G20;G27;0;0;0
+G20;G28;0;0;-G23
+G20;G29;G5;0;G5
+G20;G30;0;0;G18
+G20;G31;G12;0;G12
+G21;1;0;G21;G21
+G21;G1;G15;0;G15
+G21;G2;0;G28;G28
+G21;G3;0;G29;G29
+G21;G4;-G8;0;-G8
+G21;G5;G9;0;G9
+G21;G6;0;0;G24
+G21;G7;0;0;G25
+G21;G8;-G4;0;-G4
+G21;G9;G5;0;G5
+G21;G10;0;G31;G31
+G21;G11;0;0;-G17
+G21;G12;0;0;G18
+G21;G13;0;0;-G19
+G21;G14;0;0;G20
+G21;G15;G1;0;G1
+G21;G16;0;0;G30
+G21;G17;0;0;-G11
+G21;G18;0;0;G12
+G21;G19;0;0;-G13
+G21;G20;0;0;G14
+G21;G21;1;0;1
+G21;G22;0;0;-G26
+G21;G23;0;0;G27
+G21;G24;0;0;G6
+G21;G25;0;0;G7
+G21;G26;0;0;-G22
+G21;G27;0;0;G23
+G21;G28;G2;0;G2
+G21;G29;G3;0;G3
+G21;G30;0;0;G16
+G21;G31;G10;0;G10
+G22;1;0;G22;G22
+G22;G1;0;-G26;-G26
+G22;G2;G13;0;G13
+G22;G3;-G11;0;-G11
+G22;G4;0;0;0
+G22;G5;-G10;G30;-G10+G30
+G22;G6;0;0;-G19
+G22;G7;0;0;G17
+G22;G8;0;0;0
+G22;G9;0;-G31;G16-G31
+G22;G10;-G4;0;-G4
+G22;G11;0;0;0
+G22;G12;-G3;0;-G3+G25
+G22;G13;0;0;0
+G22;G14;G2;0;G2-G24
+G22;G15;0;0;G22
+G22;G16;0;0;G8
+G22;G17;0;0;0
+G22;G18;0;0;G7-G29
+G22;G19;0;0;0
+G22;G20;0;0;-G6+G28
+G22;G21;0;0;-G26
+G22;G22;0;0;0
+G22;G23;1;0;1-G15
+G22;G24;0;0;G13
+G22;G25;0;0;-G11
+G22;G26;0;0;0
+G22;G27;-G1;0;-G1+G21
+G22;G28;0;0;-G19
+G22;G29;0;0;G17
+G22;G30;-G4;0;-G4
+G22;G31;G8;0;G8
+G23;1;0;G23;G23
+G23;G1;0;-G27;-G27
+G23;G2;G14;0;G14
+G23;G3;-G12;0;-G12
+G23;G4;-G10;-G30;-G10-G30
+G23;G5;0;0;0
+G23;G6;0;0;-G20
+G23;G7;0;0;G18
+G23;G8;0;G31;G16+G31
+G23;G9;0;0;0
+G23;G10;-G5;0;-G5
+G23;G11;-G3;0;-G3-G25
+G23;G12;0;0;0
+G23;G13;G2;0;G2+G24
+G23;G14;0;0;0
+G23;G15;0;0;-G23
+G23;G16;0;0;G9
+G23;G17;0;0;G7+G29
+G23;G18;0;0;0
+G23;G19;0;0;-G6-G28
+G23;G20;0;0;0
+G23;G21;0;0;G27
+G23;G22;1;0;1+G15
+G23;G23;0;0;0
+G23;G24;0;0;-G14
+G23;G25;0;0;G12
+G23;G26;-G1;0;-G1-G21
+G23;G27;0;0;0
+G23;G28;0;0;G20
+G23;G29;0;0;-G18
+G23;G30;G5;0;G5
+G23;G31;-G9;0;-G9
+G24;1;0;G24;G24
+G24;G1;0;-G28;-G28
+G24;G2;G15;0;G15
+G24;G3;0;G30;G30
+G24;G4;-G11;0;-G11
+G24;G5;G12;0;G12
+G24;G6;0;0;-G21
+G24;G7;0;-G31;-G31
+G24;G8;0;0;G17
+G24;G9;0;0;-G18
+G24;G10;0;0;G25
+G24;G11;-G4;0;-G4
+G24;G12;G5;0;G5
+G24;G13;0;0;-G22
+G24;G14;0;0;G23
+G24;G15;G2;0;G2
+G24;G16;0;0;-G29
+G24;G17;0;0;G8
+G24;G18;0;0;-G9
+G24;G19;0;0;G26
+G24;G20;0;0;-G27
+G24;G21;0;0;-G6
+G24;G22;0;0;-G13
+G24;G23;0;0;G14
+G24;G24;1;0;1
+G24;G25;0;0;G10
+G24;G26;0;0;G19
+G24;G27;0;0;-G20
+G24;G28;-G1;0;-G1
+G24;G29;0;0;-G16
+G24;G30;G3;0;G3
+G24;G31;-G7;0;-G7
+G25;1;0;G25;G25
+G25;G1;0;-G29;-G29
+G25;G2;0;-G30;-G30
+G25;G3;G15;0;G15
+G25;G4;-G13;0;-G13
+G25;G5;G14;0;G14
+G25;G6;0;G31;G31
+G25;G7;0;0;-G21
+G25;G8;0;0;G19
+G25;G9;0;0;-G20
+G25;G10;0;0;-G24
+G25;G11;0;0;G22
+G25;G12;0;0;-G23
+G25;G13;-G4;0;-G4
+G25;G14;G5;0;G5
+G25;G15;G3;0;G3
+G25;G16;0;0;G28
+G25;G17;0;0;-G26
+G25;G18;0;0;G27
+G25;G19;0;0;G8
+G25;G20;0;0;-G9
+G25;G21;0;0;-G7
+G25;G22;0;0;G11
+G25;G23;0;0;-G12
+G25;G24;0;0;-G10
+G25;G25;1;0;1
+G25;G26;0;0;-G17
+G25;G27;0;0;G18
+G25;G28;0;0;G16
+G25;G29;-G1;0;-G1
+G25;G30;-G2;0;-G2
+G25;G31;G6;0;G6
+G26;1;0;G26;G26
+G26;G1;-G22;0;-G22
+G26;G2;G19;0;G19
+G26;G3;-G17;0;-G17
+G26;G4;0;0;0
+G26;G5;-G16;G31;-G16+G31
+G26;G6;-G13;0;-G13
+G26;G7;G11;0;G11
+G26;G8;0;0;0
+G26;G9;G10;0;G10-G30
+G26;G10;-G8;0;-G8
+G26;G11;0;0;0
+G26;G12;-G7;0;-G7+G29
+G26;G13;0;0;0
+G26;G14;G6;0;G6-G28
+G26;G15;0;0;G26
+G26;G16;G4;0;G4
+G26;G17;0;0;0
+G26;G18;G3;0;G3-G25
+G26;G19;0;0;0
+G26;G20;-G2;0;-G2+G24
+G26;G21;0;0;-G22
+G26;G22;0;0;0
+G26;G23;G1;0;G1-G21
+G26;G24;0;0;G19
+G26;G25;0;0;-G17
+G26;G26;0;0;0
+G26;G27;-1;0;-1+G15
+G26;G28;0;0;-G13
+G26;G29;0;0;G11
+G26;G30;0;0;-G8
+G26;G31;G4;0;G4
+G27;1;0;G27;G27
+G27;G1;-G23;0;-G23
+G27;G2;G20;0;G20
+G27;G3;-G18;0;-G18
+G27;G4;-G16;-G31;-G16-G31
+G27;G5;0;0;0
+G27;G6;-G14;0;-G14
+G27;G7;G12;0;G12
+G27;G8;G10;0;G10+G30
+G27;G9;0;0;0
+G27;G10;-G9;0;-G9
+G27;G11;-G7;0;-G7-G29
+G27;G12;0;0;0
+G27;G13;G6;0;G6+G28
+G27;G14;0;0;0
+G27;G15;0;0;-G27
+G27;G16;G5;0;G5
+G27;G17;G3;0;G3+G25
+G27;G18;0;0;0
+G27;G19;-G2;0;-G2-G24
+G27;G20;0;0;0
+G27;G21;0;0;G23
+G27;G22;G1;0;G1+G21
+G27;G23;0;0;0
+G27;G24;0;0;-G20
+G27;G25;0;0;G18
+G27;G26;-1;0;-1-G15
+G27;G27;0;0;0
+G27;G28;0;0;G14
+G27;G29;0;0;-G12
+G27;G30;0;0;G9
+G27;G31;-G5;0;-G5
+G28;1;0;G28;G28
+G28;G1;-G24;0;-G24
+G28;G2;G21;0;G21
+G28;G3;0;G31;G31
+G28;G4;-G17;0;-G17
+G28;G5;G18;0;G18
+G28;G6;-G15;0;-G15
+G28;G7;0;0;-G30
+G28;G8;G11;0;G11
+G28;G9;-G12;0;-G12
+G28;G10;0;0;G29
+G28;G11;-G8;0;-G8
+G28;G12;G9;0;G9
+G28;G13;0;0;-G26
+G28;G14;0;0;G27
+G28;G15;G6;0;G6
+G28;G16;0;0;-G25
+G28;G17;G4;0;G4
+G28;G18;-G5;0;-G5
+G28;G19;0;0;G22
+G28;G20;0;0;-G23
+G28;G21;-G2;0;-G2
+G28;G22;0;0;-G19
+G28;G23;0;0;G20
+G28;G24;G1;0;G1
+G28;G25;0;0;G16
+G28;G26;0;0;G13
+G28;G27;0;0;-G14
+G28;G28;-1;0;-1
+G28;G29;0;0;-G10
+G28;G30;0;0;G7
+G28;G31;-G3;0;-G3
+G29;1;0;G29;G29
+G29;G1;-G25;0;-G25
+G29;G2;0;-G31;-G31
+G29;G3;G21;0;G21
+G29;G4;-G19;0;-G19
+G29;G5;G20;0;G20
+G29;G6;0;0;G30
+G29;G7;-G15;0;-G15
+G29;G8;G13;0;G13
+G29;G9;-G14;0;-G14
+G29;G10;0;0;-G28
+G29;G11;0;0;G26
+G29;G12;0;0;-G27
+G29;G13;-G8;0;-G8
+G29;G14;G9;0;G9
+G29;G15;G7;0;G7
+G29;G16;0;0;G24
+G29;G17;0;0;-G22
+G29;G18;0;0;G23
+G29;G19;G4;0;G4
+G29;G20;-G5;0;-G5
+G29;G21;-G3;0;-G3
+G29;G22;0;0;G17
+G29;G23;0;0;-G18
+G29;G24;0;0;-G16
+G29;G25;G1;0;G1
+G29;G26;0;0;-G11
+G29;G27;0;0;G12
+G29;G28;0;0;G10
+G29;G29;-1;0;-1
+G29;G30;0;0;-G6
+G29;G31;G2;0;G2
+G30;1;0;G30;G30
+G30;G1;0;G31;G31
+G30;G2;-G25;0;-G25
+G30;G3;G24;0;G24
+G30;G4;-G22;0;-G22
+G30;G5;G23;0;G23
+G30;G6;0;0;-G29
+G30;G7;0;0;G28
+G30;G8;0;0;-G26
+G30;G9;0;0;G27
+G30;G10;-G15;0;-G15
+G30;G11;G13;0;G13
+G30;G12;-G14;0;-G14
+G30;G13;-G11;0;-G11
+G30;G14;G12;0;G12
+G30;G15;G10;0;G10
+G30;G16;0;0;-G21
+G30;G17;0;0;G19
+G30;G18;0;0;-G20
+G30;G19;0;0;-G17
+G30;G20;0;0;G18
+G30;G21;0;0;G16
+G30;G22;G4;0;G4
+G30;G23;-G5;0;-G5
+G30;G24;-G3;0;-G3
+G30;G25;G2;0;G2
+G30;G26;0;0;G8
+G30;G27;0;0;-G9
+G30;G28;0;0;-G7
+G30;G29;0;0;G6
+G30;G30;-1;0;-1
+G30;G31;-G1;0;-G1
+G31;1;0;G31;G31
+G31;G1;G30;0;G30
+G31;G2;-G29;0;-G29
+G31;G3;G28;0;G28
+G31;G4;-G26;0;-G26
+G31;G5;G27;0;G27
+G31;G6;-G25;0;-G25
+G31;G7;G24;0;G24
+G31;G8;-G22;0;-G22
+G31;G9;G23;0;G23
+G31;G10;-G21;0;-G21
+G31;G11;G19;0;G19
+G31;G12;-G20;0;-G20
+G31;G13;-G17;0;-G17
+G31;G14;G18;0;G18
+G31;G15;G16;0;G16
+G31;G16;-G15;0;-G15
+G31;G17;G13;0;G13
+G31;G18;-G14;0;-G14
+G31;G19;-G11;0;-G11
+G31;G20;G12;0;G12
+G31;G21;G10;0;G10
+G31;G22;G8;0;G8
+G31;G23;-G9;0;-G9
+G31;G24;-G7;0;-G7
+G31;G25;G6;0;G6
+G31;G26;G4;0;G4
+G31;G27;-G5;0;-G5
+G31;G28;-G3;0;-G3
+G31;G29;G2;0;G2
+G31;G30;-G1;0;-G1
+G31;G31;-1;0;-1

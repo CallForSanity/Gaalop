@@ -4,6 +4,7 @@ import de.gaalop.cfg.AlgebraSignature;
 import de.gaalop.dfg.Expression;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -35,10 +36,11 @@ public class UseAlgebra {
         tableGeo = new MultTableImpl();
         MultTableLoader loader = new MultTableLoader();
         try {
-            loader.load(this, dirName+"products.csv", dirName+"replaces.csv", useAsRessource);
+            loader.load(this, dirName+"products.csv", useAsRessource);
         } catch (IOException ex) {
             Logger.getLogger(UseAlgebra.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
     }
 
     public boolean isN3() {

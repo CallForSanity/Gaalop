@@ -1,7 +1,5 @@
 package de.gaalop.tba;
 
-import de.gaalop.common.BubbleSort;
-import de.gaalop.dfg.Addition;
 import de.gaalop.dfg.BaseVector;
 import de.gaalop.dfg.Expression;
 import de.gaalop.dfg.ExpressionFactory;
@@ -18,113 +16,30 @@ public class Blade {
 	private Algebra algebra;
 	
 	private Vector<String> bases;
-	private byte prefactor;
 	
 	public Blade(Algebra algebra) {
 		this.algebra = algebra;
-		prefactor = 1;
-		bases = new Vector<String>();
-	}
-	
-	public Blade(Algebra algebra, byte sign) {
-		this.algebra = algebra;
-		this.prefactor = sign;
 		bases = new Vector<String>();
 	}
 
-        public Blade(Algebra algebra, Vector<String> bases, byte sign) {
+        public Blade(Algebra algebra, Vector<String> bases) {
 		this.algebra = algebra;
-		this.prefactor = sign;
 		this.bases = bases;
-	}
-
-        /**
-         * Parses a string and returns the parsed blade
-         * @param toParse The string to parse
-         * @param algebra The Algebra to use
-         * @return The parsed blade
-         */
-	public static Blade parseStr(String toParse, Algebra algebra) {
-		 Blade result = new Blade(algebra);
-
-                 result.setPrefactor((byte) 1);
-
-		 if (toParse.equals("0")) {
-			 result.addBasis("1");
-			 result.prefactor = 0;
-			 return result;
-		 }
-
-		  String[] parts = toParse.split("\\^");
-
-                  // parse only prefactor
-		  if (parts[0].startsWith("-1")) {
-		    result.setPrefactor((byte) -1);
-		    parts[0] = parts[0].substring(2);
-		  } else {
-		    if (parts[0].startsWith("1")) {
-		       result.setPrefactor((byte) 1);
-		       if (!parts[0].equals("1")) {
-		    	   parts[0] = parts[0].substring(1);
-		       }
-		    } else 
-                        if (parts[0].startsWith("e")) {
-                            //implicit 1
-                            result.setPrefactor((byte) 1);
-                        } else if (parts[0].startsWith("-e")) {
-                            //implicit -1
-                            result.setPrefactor((byte) -1);
-                            parts[0] = parts[0].substring(1);
-                        } else {
-                            String intStr = parts[0].split("e")[0];
-                            result.prefactor = (byte) Integer.parseInt(intStr);
-                            if (parts[0].contains("e")) {
-                                parts[0] = parts[0].substring(parts[0].indexOf("e"));
-                            } else {
-                                parts[0] = "";
-                            }
-                        }
-		  }
-
-                  //parse only blade
-		  for (String part: parts) {
-			if (part.isEmpty()) {
-				result.addBasis("1");
-			} else
-                            result.addBasis(part);
-				//result.addBasis((part.equals("e")) ? "einf" : part);
-		  }
-		  
-		  result.makeCanonicial();
-		  
-		  return result;
-
-	}
-	
-	public double getValue() {
-		return prefactor;
 	}
 	
 	@Override
 	public String toString() {
-		if (prefactor == 0) return "0";
-		String t = (Math.abs(prefactor) == 1) ?((prefactor==1) ? "" : "-") : getValue()+"*";
-		
 		StringBuilder sb = new StringBuilder();
 		for (String b: bases) 
-			sb.append("^"+b);
-		
-		return t+sb.substring(1);
+                    sb.append("^"+b);
+                if (bases.size()>0)
+                   return sb.substring(1);
+                else
+                    return "";
 	}
-	
-	
 
 	public void addBasis(String toAdd) {
 		bases.add(toAdd);
-	}
-
-	private void setPrefactor(byte prefactor) {
-		this.prefactor = prefactor;
 	}
 
         /**
@@ -155,35 +70,11 @@ public class Blade {
 		return basesInt;
 	}
 
-        /**
-         * Makes this blade canonical
-         */
-	private void makeCanonicial() {
-		String[] base = algebra.getBase();
-		
-		int[] basesInt = getIndicesArray();
-		
-		//doBubbleSort on basesInt and count the exchanges
-		int numOfChanges = BubbleSort.doBubbleSort(basesInt);
-		
-		bases.clear();
-		
-		//update object members
-		for (int i=0;i<basesInt.length;i++)
-			bases.add(base[basesInt[i]]);
-		
-		if (numOfChanges % 2 != 0) {
-			prefactor *= -1; //invert sign
-		}
-		
-	}
 
 	@Override
 	public boolean equals(Object obj) {
-		makeCanonicial();
 		if (obj instanceof Blade) {
 			Blade comp = (Blade) obj;
-			comp.makeCanonicial();
 			return Arrays.equals(comp.getIndicesArray(), getIndicesArray());
 		}
 		return false;
@@ -193,6 +84,10 @@ public class Blade {
 		return bases;
 	}
 
+        /**
+         * Creates an expression of this blade
+         * @return The expression
+         */
         public Expression getExpression() {
 
             if (bases.size()>=1) {
@@ -201,18 +96,22 @@ public class Blade {
                     result = ExpressionFactory.wedge(result, getBaseVector(bases.get(i)));
                 return result;
             } else {
-                System.err.println("häh");
-                        return null;
+                throw new IllegalStateException("Blade: Blade contains no base element!");
             }
 
             
         }
 
-        private Expression getBaseVector(String baseElement) {
-            if (baseElement.equals("1")) 
+        /**
+         * Converts a string into either an BaseVector or FloatConstant
+         * @param string The string
+         * @return The converted string
+         */
+        private Expression getBaseVector(String string) {
+            if (string.equals("1"))
                 return new FloatConstant(1);
             else
-                return new BaseVector(baseElement.substring(1));
+                return new BaseVector(string.substring(1));
 
         }
 	

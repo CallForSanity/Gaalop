@@ -93,7 +93,7 @@ public class Algebra {
             int line = 0;
             while (d.ready()) {
                 readed = d.readLine();
-                Blade b = Blade.parseStr(readed,this);
+                Blade b = Parser.parseBlade(readed,this);
                 setBlade(line,b);
 
                 line++;
