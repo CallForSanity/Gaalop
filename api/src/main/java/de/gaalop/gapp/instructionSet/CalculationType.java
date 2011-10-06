@@ -6,6 +6,5 @@ package de.gaalop.gapp.instructionSet;
  */
 public enum CalculationType {
     DIVISION, EXPONENTIATION, INVERT, 
-    ABS, ACOS, ASIN, ATAN, CEIL, COS, EXP, FACT, FLOOR, LOG, SIN, SQRT, TAN,
-    LOG_OR, LOG_AND, LOG_INV, EQUAL, INEQUAL, REL_GR, REL_GREQ, REL_LE, REL_LEEQ  // logical functions
+    ABS, ACOS, ASIN, ATAN, CEIL, COS, EXP, FACT, FLOOR, LOG, SIN, SQRT, TAN
 }

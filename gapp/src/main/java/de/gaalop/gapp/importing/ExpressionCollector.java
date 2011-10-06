@@ -158,56 +158,37 @@ public class ExpressionCollector implements ExpressionVisitor {
     }
 
 
-    // ============================ Logical methods ============================
+    // ========================= Illegal visit methods =========================
 
     @Override
     public void visit(LogicalOr node) {
-        createExtCalculationFromBinaryOperation(node, CalculationType.LOG_OR);
+        throw new IllegalStateException("Logical functions are not allowed.");
     }
 
     @Override
     public void visit(LogicalAnd node) {
-        createExtCalculationFromBinaryOperation(node, CalculationType.LOG_AND);
+        throw new IllegalStateException("Logical functions are not allowed.");
     }
 
     @Override
     public void visit(LogicalNegation node) {
-        createExtCalculationFromUnaryOperation(node, CalculationType.LOG_INV);
+        throw new IllegalStateException("Logical functions are not allowed.");
     }
 
     @Override
     public void visit(Equality node) {
-        createExtCalculationFromBinaryOperation(node, CalculationType.EQUAL);
+        throw new IllegalStateException("Logical functions are not allowed.");
     }
 
     @Override
     public void visit(Inequality node) {
-        createExtCalculationFromBinaryOperation(node, CalculationType.INEQUAL);
+        throw new IllegalStateException("Logical functions are not allowed.");
     }
 
     @Override
     public void visit(Relation relation) {
-        CalculationType type = null;
-        switch (relation.getType()) {
-            case GREATER:
-                type = CalculationType.REL_GR;
-                break;
-            case GREATER_OR_EQUAL:
-                type = CalculationType.REL_GREQ;
-                break;
-            case LESS:
-                type = CalculationType.REL_LE;
-                break;
-            case LESS_OR_EQUAL:
-                type = CalculationType.REL_LEEQ;
-                break;
-            default:
-                System.err.println("Unknown RelationType: "+relation.getType());
-        }
-        createExtCalculationFromBinaryOperation(relation, type);
+        throw new IllegalStateException("Logical functions are not allowed.");
     }
-
-    // ========================= Illegal visit methods =========================
 
     @Override
     public void visit(InnerProduct node) {
