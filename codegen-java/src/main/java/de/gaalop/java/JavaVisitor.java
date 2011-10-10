@@ -15,8 +15,6 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
 
 	protected Log log = LogFactory.getLog(JavaVisitor.class);
 
-	protected final String suffix = "_opt";
-
         protected StringBuilder codePre = new StringBuilder();
 
 	protected StringBuilder codeCalc = new StringBuilder();
@@ -305,7 +303,7 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
 
 	@Override
 	public void visit(StoreResultNode node) {
-		assigned.add(node.getValue().getName() + suffix);
+		assigned.add(node.getValue().getName());
 		node.getSuccessor().accept(this);
 	}
 
@@ -502,6 +500,11 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
 		}
 	}
 
+        /**
+         * Returns if the exponentiation has an exponent which is equal to 2
+         * @param exponentiation The exponentiation
+         * @return <value>true</value> if the exponent is equal to 2, <value>false</value> otherwise
+         */
 	protected boolean isSquare(Exponentiation exponentiation) {
 		final FloatConstant two = new FloatConstant(2.0f);
 		return two.equals(exponentiation.getRight());

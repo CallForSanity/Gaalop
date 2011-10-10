@@ -20,6 +20,12 @@ public class BladePrinter implements ExpressionVisitor {
 		return code.toString();
 	}
 
+        /**
+         * Handles a binary operation: Prints the operator between the left and the right operand (infix)
+         * @param operation The binary operation
+         * @param operator The operator to be used
+         * @param withSpaces <value>true</value> if spaces should be printed next to operator, otherwise <value>false</value>
+         */
 	private void handleInfix(BinaryOperation operation, String operator, boolean withSpaces) {
 		addChild(operation, operation.getLeft());
 		if (withSpaces) {
@@ -32,6 +38,12 @@ public class BladePrinter implements ExpressionVisitor {
 		addChild(operation, operation.getRight());
 	}
 
+        /**
+         * Adds a child expression. If the child has a lower priority than the parent,
+         * it is parenthesized
+         * @param parent The parent expression
+         * @param child The child expression
+         */
 	private void addChild(Expression parent, Expression child) {
 		if (OperatorPriority.hasLowerPriority(parent, child)) {
 			code.append('(');
@@ -59,8 +71,7 @@ public class BladePrinter implements ExpressionVisitor {
 
 	@Override
 	public void visit(InnerProduct innerProduct) {
-		handleInfix(innerProduct, ".", true);
-//		throw new UnsupportedOperationException("Inner product is unsupported for code generation.");
+            throw new IllegalStateException("Inner product should have been removed by TBA.");
 	}
 
 	@Override
@@ -105,7 +116,7 @@ public class BladePrinter implements ExpressionVisitor {
 
 	@Override
 	public void visit(OuterProduct outerProduct) {
-		handleInfix(outerProduct, "^", false);
+            throw new IllegalStateException("Outer product should have been removed by TBA.");
 	}
 
 	@Override
@@ -163,6 +174,7 @@ public class BladePrinter implements ExpressionVisitor {
 
 	@Override
 	public void visit(MacroCall node) {
+            throw new IllegalStateException("Macros should have been inlined and are not allowed for output.");
 	}
 
 }

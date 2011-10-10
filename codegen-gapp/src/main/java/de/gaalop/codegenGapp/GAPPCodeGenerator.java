@@ -9,13 +9,11 @@ import java.util.Collections;
 import java.util.Set;
 
 /**
- * Implements a code generator for gapp members, which lists all GAPP members in a graph in a pretty print format
+ * Implements a code generator for gapp members, 
+ * which lists all GAPP members in a graph in a pretty-printed format
  * @author Christian Steinmetz
  */
-class GAPPCodeGenerator implements CodeGenerator {
-
-    public GAPPCodeGenerator() {
-    }
+public class GAPPCodeGenerator implements CodeGenerator {
 
     @Override
     public Set<OutputFile> generate(ControlFlowGraph in) {

@@ -5,7 +5,8 @@ import de.gaalop.CodeGeneratorPlugin;
 import java.awt.Image;
 
 /**
- * Implements a CodegeneratorPlugin, which lists all GAPP members in a graph in a pretty print format
+ * Implements a CodegeneratorPlugin, 
+ * which lists all GAPP members in a graph in a pretty-printed format
  * @author Christian Steinmetz
  */
 public class Plugin implements CodeGeneratorPlugin {
@@ -27,7 +28,7 @@ public class Plugin implements CodeGeneratorPlugin {
 
     @Override
     public Image getIcon() {
-        return null;
+        return null; //TODO chs optional create icon for GAPP Pretty Printer Plugin
     }
 
 }

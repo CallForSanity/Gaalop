@@ -3,10 +3,7 @@ package de.gaalop.java;
 import de.gaalop.CodeGenerator;
 import de.gaalop.OutputFile;
 import de.gaalop.cfg.ControlFlowGraph;
-import java.io.File;
-
 import java.util.Set;
-import java.util.Collections;
 import java.nio.charset.Charset;
 import java.util.HashSet;
 
@@ -17,7 +14,7 @@ public class JavaCodeGenerator implements CodeGenerator {
     
     private final Plugin plugin;
     
-    JavaCodeGenerator(Plugin plugin) {
+    public JavaCodeGenerator(Plugin plugin) {
     	this.plugin = plugin;
     }
 
@@ -40,6 +37,11 @@ public class JavaCodeGenerator implements CodeGenerator {
         return result;
     }
 
+    /**
+     * Generates a filename for a control flow graph
+     * @param in the control flow graph
+     * @return The filename
+     */
     private String generateFilename(ControlFlowGraph in) {
         String filename = "gaalop.java";
         if (in.getSource() != null) {
@@ -54,10 +56,10 @@ public class JavaCodeGenerator implements CodeGenerator {
     }
 
     /**
-     * Generates source code for a control dataflow graph.
+     * Generates source code for a control flow graph.
      *
-     * @param in
-     * @return
+     * @param in The control flow graph
+     * @return The generated source
      */
     private String generateCode(ControlFlowGraph in) {
         JavaVisitor visitor = new JavaVisitor();
@@ -69,50 +71,50 @@ public class JavaCodeGenerator implements CodeGenerator {
         return visitor.getCode();
     }
 
-        /**
-         * Returns a interface source for external Java programs,
-         * which use the optimized code
-         * @return The String containing the java interface source
-         */
-        private String createGAInterface() {
-           return
-            "\n"+
-            "\n"+
-            "import java.util.HashMap;\n"+
-            "\n"+
-            "/**\n"+
-            " * Performs the calculations specified in a Geometric Algebra Program\n"+
-            " */\n"+
-            "public interface GAProgram {\n"+
-            "\n"+
-            "    /**\n"+
-            "     * Performs the calculation\n"+
-            "     */\n"+
-            "    public void calculate();\n"+
-            "\n"+
-            "    /**\n"+
-            "     * Returns the value of a variable\n"+
-            "     * @param varName The variable name, specified in the Geometric Algebra program\n"+
-            "     * @return The value of the variable with the given name\n"+
-            "     */\n"+
-            "    public float getValue(String varName);\n"+
-            "\n"+
-            "    /**\n"+
-            "     * Sets the value of a variable\n"+
-            "     * @param varName The variable name, specified in the Geometric Algebra program\n"+
-            "     * @param value The value\n"+
-            "     * @returns <value>true</value> if the setting was successful, <value>false</value> otherwise\n"+
-            "     */\n"+
-            "    public boolean setValue(String varName, float value);\n"+
-            "\n"+
-            "    /**\n"+
-            "      * Returns all values in a map name->value\n"+
-            "      * @return The map which contains all values\n"+
-            "      */\n"+
-            "     public HashMap<String,Float> getValues();\n"+
-            "\n"+
-            "}\n";
-        }
+    /**
+     * Returns an interface source for external Java programs,
+     * that use the optimized code
+     * @return The String containing the java interface source
+     */
+    private String createGAInterface() {
+       return
+        "\n"+
+        "\n"+
+        "import java.util.HashMap;\n"+
+        "\n"+
+        "/**\n"+
+        " * Performs the calculations specified in a Geometric Algebra Program\n"+
+        " */\n"+
+        "public interface GAProgram {\n"+
+        "\n"+
+        "    /**\n"+
+        "     * Performs the calculation\n"+
+        "     */\n"+
+        "    public void calculate();\n"+
+        "\n"+
+        "    /**\n"+
+        "     * Returns the value of a variable\n"+
+        "     * @param varName The variable name, specified in the Geometric Algebra program\n"+
+        "     * @return The value of the variable with the given name\n"+
+        "     */\n"+
+        "    public float getValue(String varName);\n"+
+        "\n"+
+        "    /**\n"+
+        "     * Sets the value of a variable\n"+
+        "     * @param varName The variable name, specified in the Geometric Algebra program\n"+
+        "     * @param value The value\n"+
+        "     * @returns <value>true</value> if the setting was successful, <value>false</value> otherwise\n"+
+        "     */\n"+
+        "    public boolean setValue(String varName, float value);\n"+
+        "\n"+
+        "    /**\n"+
+        "      * Returns all values in a map name->value\n"+
+        "      * @return The map which contains all values\n"+
+        "      */\n"+
+        "     public HashMap<String,Float> getValues();\n"+
+        "\n"+
+        "}\n";
+    }
 
 
 
