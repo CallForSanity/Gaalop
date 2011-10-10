@@ -9,12 +9,6 @@ import java.util.LinkedList;
 
 /**
  * Represents the dotVectors command in the GAPP IR.
- *
- * Description from the paper:
- * Performs a scalar multiplication (dot product) on the
- * two vectors (parts of multivectors) part1 and part2 .
- * Saves the result in multivector mvdest at the location
- * selected by selector sel.
  */
 public class GAPPDotVectors extends GAPPBaseInstruction {
 

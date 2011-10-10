@@ -5,9 +5,9 @@ import de.gaalop.cfg.EmptyControlFlowVisitor;
 
 /**
  * Defines an abstract class, which traverses the ControlFlowGraph 
- * and calls all gapp members which are not null.
- * Subclasses must implement the GAPPVisitor methods,
- * which will be called by the traverse of this class.
+ * and calls all GAPP members, which are not null.
+ * Subclasses must implement only the GAPPVisitor methods,
+ * which will be called while traversing
  *
  * @author Christian Steinmetz
  */

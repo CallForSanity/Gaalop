@@ -4,19 +4,19 @@ import de.gaalop.gapp.variables.GAPPMultivector;
 import de.gaalop.gapp.visitor.GAPPVisitor;
 
 /**
- * Performs calculations on multivector parts, defined by two selectorsets
+ * Performs calculations on multivectors
  * @author Christian Steinmetz
  */
 public class GAPPCalculateMv extends GAPPBaseInstruction {
 
     private CalculationType type;
-    private GAPPMultivector target;
+    private GAPPMultivector destination;
     private GAPPMultivector operand1;
     private GAPPMultivector operand2;
 
-    public GAPPCalculateMv(CalculationType type, GAPPMultivector target, GAPPMultivector operand1, GAPPMultivector operand2) {
+    public GAPPCalculateMv(CalculationType type, GAPPMultivector destination, GAPPMultivector operand1, GAPPMultivector operand2) {
         this.type = type;
-        this.target = target;
+        this.destination = destination;
         this.operand1 = operand1;
         this.operand2 = operand2;
     }
@@ -38,8 +38,8 @@ public class GAPPCalculateMv extends GAPPBaseInstruction {
         return type;
     }
 
-    public GAPPMultivector getTarget() {
-        return target;
+    public GAPPMultivector getDestination() {
+        return destination;
     }
     
     public void setOperand1(GAPPMultivector operand1) {
@@ -54,8 +54,8 @@ public class GAPPCalculateMv extends GAPPBaseInstruction {
         this.type = type;
     }
 
-    public void setTarget(GAPPMultivector target) {
-        this.target = target;
+    public void setDestination(GAPPMultivector destination) {
+        this.destination = destination;
     }
 
     

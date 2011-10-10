@@ -103,7 +103,7 @@ public class Executer extends CFGGAPPVisitor {
 
     @Override
     public Object visitSetMv(GAPPSetMv gappSetMv, Object arg) {
-        MultivectorWithValues destination = getMultivector(gappSetMv.getDestinationMv().getName());
+        MultivectorWithValues destination = getMultivector(gappSetMv.getDestination().getName());
         MultivectorWithValues source = getMultivector(gappSetMv.getSource().getName());
 
         Selectorset selSrc = gappSetMv.getSelectorsSrc();
@@ -149,7 +149,7 @@ public class Executer extends CFGGAPPVisitor {
         String destName = gappSetVector.getDestination().getName();
         createVector(destName, size);
         MultivectorWithValues destination = getMultivector(destName);
-        MultivectorWithValues source = getMultivector(gappSetVector.getSourceMv().getName());
+        MultivectorWithValues source = getMultivector(gappSetVector.getSource().getName());
         Selectorset selSrc = gappSetVector.getSelectorsSrc();
 
         
@@ -193,7 +193,7 @@ public class Executer extends CFGGAPPVisitor {
             op2 = mv2.getEntry(0);
         }
 
-        MultivectorWithValues target = getMultivector(gappCalculate.getTarget().getName());
+        MultivectorWithValues target = getMultivector(gappCalculate.getDestination().getName());
 
         float result;
 

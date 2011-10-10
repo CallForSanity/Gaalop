@@ -57,7 +57,7 @@ public class GAPPSetMvMerger extends EmptyCFGGAPPVisitor {
 
     @Override
     public Object visitSetMv(GAPPSetMv gappSetMv, Object arg) {
-        if (gappSetMv.getDestinationMv().getName().equals(curDestination)) {
+        if (gappSetMv.getDestination().getName().equals(curDestination)) {
             String src = gappSetMv.getSource().getName();
             if (!mapSetMv.containsKey(src))
                 mapSetMv.put(src, new LinkedList<GAPPSetMv>());

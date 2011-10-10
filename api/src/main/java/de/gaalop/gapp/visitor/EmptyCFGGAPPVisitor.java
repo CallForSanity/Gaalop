@@ -9,7 +9,7 @@ import de.gaalop.gapp.instructionSet.GAPPSetMv;
 import de.gaalop.gapp.instructionSet.GAPPSetVector;
 
 /**
- * Implements an CFGGAPPVisitor with empty bodies of GAPP visit methods
+ * Implements an CFGGAPPVisitor with empty bodies of all GAPP visit methods
  * @author Christian Steinmetz
  */
 public class EmptyCFGGAPPVisitor extends CFGGAPPVisitor {

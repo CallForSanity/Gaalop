@@ -114,7 +114,7 @@ public class MemoryUsage extends CFGGAPPVisitor {
     @Override
     public Object visitSetMv(GAPPSetMv gappSetMv, Object arg) {
         curLine++;
-        access(gappSetMv.getDestinationMv());
+        access(gappSetMv.getDestination());
         access(gappSetMv.getSource());
         return null;
     }
@@ -122,14 +122,14 @@ public class MemoryUsage extends CFGGAPPVisitor {
     @Override
     public Object visitSetVector(GAPPSetVector gappSetVector, Object arg) {
         curLine++;
-        access(gappSetVector.getSourceMv());
+        access(gappSetVector.getSource());
         return null;
     }
 
     @Override
     public Object visitCalculateMv(GAPPCalculateMv gappCalculateMv, Object arg) {
         curLine++;
-        access(gappCalculateMv.getTarget());
+        access(gappCalculateMv.getDestination());
         access(gappCalculateMv.getOperand1());
         if (gappCalculateMv.getOperand2() != null)
             access(gappCalculateMv.getOperand2());

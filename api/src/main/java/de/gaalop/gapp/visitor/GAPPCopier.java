@@ -48,6 +48,11 @@ public class GAPPCopier implements GAPPVisitor {
         return copy;
     }
 
+    /**
+     * Copies a selector
+     * @param sel The selector to be copied
+     * @return The copy
+     */
     private Selector copySelector(Selector sel) {
         return new Selector(sel.getIndex(),sel.getSign());
     }
@@ -108,7 +113,7 @@ public class GAPPCopier implements GAPPVisitor {
     @Override
     public Object visitSetMv(GAPPSetMv gappSetMv, Object arg) {
         return new GAPPSetMv(
-                (GAPPMultivector) GAPPValueHolderCopier.copyValueHolder(gappSetMv.getDestinationMv()),
+                (GAPPMultivector) GAPPValueHolderCopier.copyValueHolder(gappSetMv.getDestination()),
                 (GAPPMultivector) GAPPValueHolderCopier.copyValueHolder(gappSetMv.getSource()),
                 copyPosSelectorset(gappSetMv.getSelectorsDest()),
                 copySelectorset(gappSetMv.getSelectorsSrc())
@@ -119,7 +124,7 @@ public class GAPPCopier implements GAPPVisitor {
     public Object visitSetVector(GAPPSetVector gappSetVector, Object arg) {
         return new GAPPSetVector(
                 (GAPPVector) GAPPValueHolderCopier.copyValueHolder(gappSetVector.getDestination()),
-                (GAPPMultivector) GAPPValueHolderCopier.copyValueHolder(gappSetVector.getSourceMv()),
+                (GAPPMultivector) GAPPValueHolderCopier.copyValueHolder(gappSetVector.getSource()),
                 copySelectorset(gappSetVector.getSelectorsSrc())
                 );
     }
@@ -127,7 +132,7 @@ public class GAPPCopier implements GAPPVisitor {
     @Override
     public Object visitCalculateMv(GAPPCalculateMv gappCalculateMv, Object arg) {
         return new GAPPCalculateMv(gappCalculateMv.getType(),
-                (GAPPMultivector) GAPPValueHolderCopier.copyValueHolder(gappCalculateMv.getTarget()),
+                (GAPPMultivector) GAPPValueHolderCopier.copyValueHolder(gappCalculateMv.getDestination()),
                 (GAPPMultivector) GAPPValueHolderCopier.copyValueHolder(gappCalculateMv.getOperand1()),
                 (GAPPMultivector) GAPPValueHolderCopier.copyValueHolder(gappCalculateMv.getOperand2())
                 );

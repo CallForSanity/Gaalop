@@ -3,7 +3,7 @@ package de.gaalop.gapp.variables;
 /**
  * Represents a vector in the GAPP IR.
  *
- * A vector contains components, which are not organized in fixed order
+ * A vector contains components, which are not organized in a fixed order
  *
  * @author Christian Steinmetz
  */

@@ -3,7 +3,7 @@ package de.gaalop.gapp.visitor;
 import de.gaalop.gapp.instructionSet.*;
 
 /**
- * Declares a interface of a visitor for the GAPP data structure
+ * Declares an interface of a visitor for the GAPP data structure
  * @author Christian Steinmetz
  */
 public interface GAPPVisitor {

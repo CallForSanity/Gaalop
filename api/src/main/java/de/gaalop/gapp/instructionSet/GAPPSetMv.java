@@ -7,27 +7,17 @@ import de.gaalop.gapp.variables.GAPPSetOfVariables;
 import de.gaalop.gapp.visitor.GAPPVisitor;
 
 /**
- * Represents the addMv command in the GAPP IR.
- *
- * Description from the paper:
- * Copies the selected blades from multivector mvsrc to
- * multivector mvdest . dest0 , src0 , dest1 , src1 , up to dest31
- * and src31 , are blade selectors. Note that it is invalid
- * language syntax to have more than one source multivector
- * speciﬁed in this command. To copy elements from
- * several multivectors it is required to use multiple setMv
- * commands, one for each multivector. This command is
- * restricted to one source and destination multivector.
+ * Represents the setMv command in the GAPP IR.
  */
 public class GAPPSetMv extends GAPPBaseInstruction {
 
-    private GAPPMultivector destinationMv;
+    private GAPPMultivector destination;
     private GAPPSetOfVariables source;
     private PosSelectorset selectorsDest;
     private Selectorset selectorsSrc;
 
-    public GAPPSetMv(GAPPMultivector destinationMv, GAPPSetOfVariables source, PosSelectorset selectorsDest, Selectorset selectorsSrc) {
-        this.destinationMv = destinationMv;
+    public GAPPSetMv(GAPPMultivector destination, GAPPSetOfVariables source, PosSelectorset selectorsDest, Selectorset selectorsSrc) {
+        this.destination = destination;
         this.source = source;
         this.selectorsDest = selectorsDest;
         this.selectorsSrc = selectorsSrc;
@@ -40,8 +30,8 @@ public class GAPPSetMv extends GAPPBaseInstruction {
         return visitor.visitSetMv(this, arg);
     }
 
-    public GAPPMultivector getDestinationMv() {
-        return destinationMv;
+    public GAPPMultivector getDestination() {
+        return destination;
     }
 
     public PosSelectorset getSelectorsDest() {
@@ -56,8 +46,8 @@ public class GAPPSetMv extends GAPPBaseInstruction {
         return source;
     }
 
-    public void setDestinationMv(GAPPMultivector destinationMv) {
-        this.destinationMv = destinationMv;
+    public void setDestination(GAPPMultivector destination) {
+        this.destination = destination;
     }
 
     public void setSelectorsDest(PosSelectorset selectorsDest) {

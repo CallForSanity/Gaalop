@@ -4,8 +4,8 @@ import java.util.LinkedList;
 
 /**
  * Implements a visitor which copies a GAPPVariable.
- * Simply call the accept method of the GAPPVariable with an instance of this vistor,
- * and returned is a (deep) copy of the variable.
+ * Simply call the accept method of the GAPPVariable with an instance of this visitor,
+ * and a (deep) copy of the variable will be returned.
  * 
  * @author Christian Steinmetz
  */
@@ -14,7 +14,11 @@ public class GAPPValueHolderCopier implements GAPPVariableVisitor {
     private GAPPValueHolderCopier() {
     }
 
-    //TODO chs JavaDoc
+    /**
+     * Facade method for copying a value holder object
+     * @param valueHolder The object to copy
+     * @return The copied object
+     */
     public static GAPPValueHolder copyValueHolder(GAPPValueHolder valueHolder) {
         GAPPValueHolderCopier visitor = new GAPPValueHolderCopier();
         return (GAPPValueHolder) valueHolder.accept(visitor, null);

@@ -202,7 +202,7 @@ public class PrettyPrint extends CFGGAPPVisitor {
     @Override
     public Object visitSetMv(GAPPSetMv gappSetMv, Object arg) {
         result.append("setMv ");
-        printMultivector(gappSetMv.getDestinationMv());
+        printMultivector(gappSetMv.getDestination());
         printPosSelectors(gappSetMv.getSelectorsDest());
         result.append(" = ");
         printSetOfVariables(gappSetMv.getSource());
@@ -216,7 +216,7 @@ public class PrettyPrint extends CFGGAPPVisitor {
         result.append("setVector ");
         printVector(gappSetVector.getDestination());
         result.append(" = ");
-        printMultivector(gappSetVector.getSourceMv());
+        printMultivector(gappSetVector.getSource());
         printSelectors(gappSetVector.getSelectorsSrc());
         result.append(";\n");
         return null;
@@ -225,7 +225,7 @@ public class PrettyPrint extends CFGGAPPVisitor {
     @Override
     public Object visitCalculateMv(GAPPCalculateMv gappCalculateMv, Object arg) {
         result.append("calculateMv ");
-        printMultivector(gappCalculateMv.getTarget());
+        printMultivector(gappCalculateMv.getDestination());
         result.append(" = ");
         result.append(gappCalculateMv.getType().toString());
         result.append("(");

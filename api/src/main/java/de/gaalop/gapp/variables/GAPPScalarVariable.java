@@ -1,7 +1,7 @@
 package de.gaalop.gapp.variables;
 
 /**
- * Represents a scalar in the GAPP IR.
+ * Represents a scalar variable in the GAPP IR.
  *
  * @author Christian Steinmetz
  */

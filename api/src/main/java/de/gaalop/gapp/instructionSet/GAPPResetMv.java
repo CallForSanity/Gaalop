@@ -6,8 +6,8 @@ import de.gaalop.gapp.variables.GAPPMultivector;
 /**
  * Represents the resetMv command in the GAPP IR.
  *
- * Description from the paper:
- * Zeros all blades of multivector mvdest .
+ * A member "size" stores the number of elements
+ * of the multivector that should be created
  */
 public class GAPPResetMv extends GAPPBaseInstruction {
 

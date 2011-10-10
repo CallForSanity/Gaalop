@@ -6,23 +6,17 @@ import de.gaalop.gapp.variables.GAPPVector;
 import de.gaalop.gapp.visitor.GAPPVisitor;
 
 /**
- * Represents the addMv command in the GAPP IR.
- *
- * Description from the paper:
- * Composes the vector (part of a multivector) partdest
- * from selected elements. sel0 , sel1 , up to sel31 , are a
- * blade selectors. Parts and blade selectors are explained
- * below.
+ * Represents the setVector command in the GAPP IR.
  */
 public class GAPPSetVector extends GAPPBaseInstruction {
 
     private GAPPVector destination;
-    private GAPPMultivector sourceMv;
+    private GAPPMultivector source;
     private Selectorset selectorsSrc;
 
-    public GAPPSetVector(GAPPVector destination, GAPPMultivector sourceMv, Selectorset selectorsSrc) {
+    public GAPPSetVector(GAPPVector destination, GAPPMultivector source, Selectorset selectorsSrc) {
         this.destination = destination;
-        this.sourceMv = sourceMv;
+        this.source = source;
         this.selectorsSrc = selectorsSrc;
     }
 
@@ -39,8 +33,8 @@ public class GAPPSetVector extends GAPPBaseInstruction {
         return selectorsSrc;
     }
 
-    public GAPPMultivector getSourceMv() {
-        return sourceMv;
+    public GAPPMultivector getSource() {
+        return source;
     }
 
     public void setDestination(GAPPVector destination) {
@@ -51,8 +45,8 @@ public class GAPPSetVector extends GAPPBaseInstruction {
         this.selectorsSrc = selectorsSrc;
     }
 
-    public void setSourceMv(GAPPMultivector sourceMv) {
-        this.sourceMv = sourceMv;
+    public void setSource(GAPPMultivector source) {
+        this.source = source;
     }
 
 
