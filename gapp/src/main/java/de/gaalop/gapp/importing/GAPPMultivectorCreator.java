@@ -45,8 +45,8 @@ public class GAPPMultivectorCreator implements ParallelObjectVisitor {
     public Object visitMvComponent(MvComponent mvComponent, Object arg) {
             GAPPMultivector mvTmp = gappCreator.createMv(1);
 
-            Selectorset selDestSet = new Selectorset();
-            selDestSet.add(new Selector(0, (byte) 1));
+            PosSelectorset selDestSet = new PosSelectorset();
+            selDestSet.add(new PosSelector(0));
 
             Selectorset selSrcSet = new Selectorset();
             selSrcSet.add(new Selector(

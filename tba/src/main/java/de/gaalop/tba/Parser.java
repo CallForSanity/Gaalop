@@ -14,16 +14,26 @@ public class Parser {
         int index = 0;
 
         String trimmed = readed.trim();
-        if (trimmed.startsWith("-")) {
-            trimmed = trimmed.substring(1).trim();
-            prefactor = -1;
-        }
-
-        if (trimmed.equals("0"))
+        if (trimmed.isEmpty() || trimmed.equals("0"))
             prefactor = 0;
+        else {
 
-        if (trimmed.startsWith("E"))
-            index = Integer.parseInt(trimmed.substring(1));
+            if (trimmed.startsWith("-E")) {
+                // for instance -E10
+                prefactor = -1;
+                index = Integer.parseInt(trimmed.substring(2));
+            } else {
+                if (trimmed.startsWith("E")) {
+                    // for instance E10
+                    index = Integer.parseInt(trimmed.substring(1));
+                } else {
+                    // for instance -1E10
+                    String[] parts = trimmed.split("E");
+                    prefactor = (byte) Integer.parseInt(parts[0]);
+                    index = Integer.parseInt(parts[1]);
+                }
+            }
+        }
 
         return new BladeRef(prefactor, index);
     }

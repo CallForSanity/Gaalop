@@ -25,7 +25,7 @@ public class GAPPConstant extends GAPPValueHolder {
         this.value = value;
     }
 
-    @Override
+    @Override //TODO chs optional auslagern PrettyPrint in Visitor
     public String prettyPrint() {
         return Float.toString(value);
     }

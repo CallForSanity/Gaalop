@@ -2,7 +2,6 @@ package de.gaalop.gapp.instructionSet;
 
 import de.gaalop.gapp.visitor.GAPPVisitor;
 import de.gaalop.gapp.Variableset;
-import de.gaalop.gapp.variables.GAPPScalarVariable;
 import de.gaalop.gapp.variables.GAPPVector;
 
 /**
@@ -24,10 +23,6 @@ public class GAPPAssignVector extends GAPPBaseInstruction {
     public GAPPAssignVector(GAPPVector destination) {
         this.destination = destination;
         this.values = new Variableset();
-    }
-
-    public void add(GAPPScalarVariable toAdd) {
-        values.add(toAdd);
     }
 
     @Override

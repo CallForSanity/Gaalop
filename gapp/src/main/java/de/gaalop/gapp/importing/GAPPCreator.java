@@ -160,8 +160,8 @@ public class GAPPCreator implements ParallelObjectVisitor {
 
         if (extCalculation.isNegated()) {
 
-            Selectorset selDest = new Selectorset();
-            selDest.add(new Selector(altDestination.getBladeIndex(), (byte) 1));
+            PosSelectorset selDest = new PosSelectorset();
+            selDest.add(new PosSelector(altDestination.getBladeIndex()));
 
             Selectorset selSrc = new Selectorset();
             selSrc.add(new Selector(destination.getBladeIndex(), (byte) -1));
@@ -209,16 +209,13 @@ public class GAPPCreator implements ParallelObjectVisitor {
         //arg must be filled!
         GAPPMultivectorComponent destination = (GAPPMultivectorComponent) arg;
 
-        Selectorset selDestSet = new Selectorset();
-        selDestSet.add(new Selector(
-                destination.getBladeIndex(),
-                (mvComponent.isNegated()) ? (byte) -1 : (byte) 1)
-                );
+        PosSelectorset selDestSet = new PosSelectorset();
+        selDestSet.add(new PosSelector(destination.getBladeIndex()));
 
         Selectorset selSrcSet = new Selectorset();
         selSrcSet.add(new Selector(
                 mvComponent.getMultivectorComponent().getBladeIndex(),
-                (byte) 1)
+                (mvComponent.isNegated()) ? (byte) -1 : (byte) 1)
                 );
 
         gapp.addInstruction(new GAPPSetMv(
@@ -270,8 +267,8 @@ public class GAPPCreator implements ParallelObjectVisitor {
 
         if (dotProduct.isNegated()) {
 
-            Selectorset selDest = new Selectorset();
-            selDest.add(new Selector(altDestination.getBladeIndex(), (byte) 1));
+            PosSelectorset selDest = new PosSelectorset();
+            selDest.add(new PosSelector(altDestination.getBladeIndex()));
 
             Selectorset selSrc = new Selectorset();
             selSrc.add(new Selector(destination.getBladeIndex(), (byte) -1));
@@ -431,7 +428,7 @@ public class GAPPCreator implements ParallelObjectVisitor {
      */
     private void copyFromManyMultivectors(GAPPMultivector mvDest, ParallelVector vector, HashSet<String> multivectors) {
         for (String mv: multivectors) {
-            Selectorset selSetDest = new Selectorset();
+            PosSelectorset selSetDest = new PosSelectorset();
             Selectorset selSetSrc = new Selectorset();
 
             int slotNo = 0;
@@ -439,8 +436,8 @@ public class GAPPCreator implements ParallelObjectVisitor {
                 if (ParallelObjectType.getType(object) == ParallelObjectType.mvComponent) {
                     MultivectorComponent mvC = ((MvComponent) object).getMultivectorComponent();
                     if (mvC.getName().equals(mv)) {
-                        selSetSrc.add(new Selector(mvC.getBladeIndex(), (byte) 1));
-                        selSetDest.add(new Selector(slotNo, object.isNegated() ? (byte) -1 : (byte) 1));
+                        selSetSrc.add(new Selector(mvC.getBladeIndex(), object.isNegated() ? (byte) -1 : (byte) 1));
+                        selSetDest.add(new PosSelector(slotNo));
                     }
                 }
 

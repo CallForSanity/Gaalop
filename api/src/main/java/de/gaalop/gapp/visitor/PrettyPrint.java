@@ -203,7 +203,7 @@ public class PrettyPrint extends CFGGAPPVisitor {
     public Object visitSetMv(GAPPSetMv gappSetMv, Object arg) {
         result.append("setMv ");
         printMultivector(gappSetMv.getDestinationMv());
-        printSelectors(gappSetMv.getSelectorsDest());
+        printPosSelectors(gappSetMv.getSelectorsDest());
         result.append(" = ");
         printSetOfVariables(gappSetMv.getSource());
         printSelectors(gappSetMv.getSelectorsSrc());

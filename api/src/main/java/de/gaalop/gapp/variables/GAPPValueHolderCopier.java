@@ -14,6 +14,7 @@ public class GAPPValueHolderCopier implements GAPPVariableVisitor {
     private GAPPValueHolderCopier() {
     }
 
+    //TODO chs JavaDoc
     public static GAPPValueHolder copyValueHolder(GAPPValueHolder valueHolder) {
         GAPPValueHolderCopier visitor = new GAPPValueHolderCopier();
         return (GAPPValueHolder) valueHolder.accept(visitor, null);

@@ -7,7 +7,6 @@ import de.gaalop.gapp.instructionSet.GAPPDotVectors;
 import de.gaalop.gapp.instructionSet.GAPPResetMv;
 import de.gaalop.gapp.instructionSet.GAPPSetMv;
 import de.gaalop.gapp.instructionSet.GAPPSetVector;
-import de.gaalop.gapp.visitor.CFGGAPPVisitor;
 
 /**
  * Implements an CFGGAPPVisitor with empty bodies of GAPP visit methods
