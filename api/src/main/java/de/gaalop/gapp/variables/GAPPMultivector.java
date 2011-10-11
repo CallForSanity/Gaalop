@@ -7,7 +7,6 @@ package de.gaalop.gapp.variables;
  */
 public class GAPPMultivector extends GAPPSetOfVariables {
 
-
     public GAPPMultivector(String name) {
         super(name);
     }
@@ -16,5 +15,4 @@ public class GAPPMultivector extends GAPPSetOfVariables {
     public Object accept(GAPPVariableVisitor visitor, Object arg) {
         return visitor.visitMultivector(this, arg);
     }
-
 }

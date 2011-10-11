@@ -19,7 +19,6 @@ import java.util.Observable;
 public class Plugin extends Observable implements CodeGeneratorPlugin {
 
     private Log log = LogFactory.getLog(Plugin.class);
-
     private Image icon;
 
     public Plugin() {
@@ -54,9 +53,9 @@ public class Plugin extends Observable implements CodeGeneratorPlugin {
     public Image getIcon() {
         return icon;
     }
-    
+
     void notifyError(Throwable error) {
-    	setChanged();
-    	notifyObservers(new Notifications.Error(error));
+        setChanged();
+        notifyObservers(new Notifications.Error(error));
     }
 }

@@ -119,8 +119,9 @@ public class ReplaceVisitor extends EmptyControlFlowVisitor implements Expressio
 
     @Override
     public void visit(Variable node) {
-        if (node.getName().equals(search.getName()))
+        if (node.getName().equals(search.getName())) {
             replace = true;
+        }
     }
 
     @Override
@@ -194,7 +195,4 @@ public class ReplaceVisitor extends EmptyControlFlowVisitor implements Expressio
     public void visit(MacroCall node) {
         throw new IllegalStateException("Macros should have been inlined");
     }
-
-
-    
 }

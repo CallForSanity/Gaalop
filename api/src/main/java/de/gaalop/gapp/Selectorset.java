@@ -8,5 +8,4 @@ import java.util.LinkedList;
  * @author Christian Steinmetz
  */
 public class Selectorset extends LinkedList<Selector> {
-
 }

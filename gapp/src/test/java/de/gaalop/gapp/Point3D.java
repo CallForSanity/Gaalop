@@ -39,7 +39,4 @@ public class Point3D {
     public void setZ(float z) {
         this.z = z;
     }
-
-    
-
 }

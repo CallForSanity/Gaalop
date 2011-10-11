@@ -23,7 +23,7 @@ public class Vec3D {
      * @return The length
      */
     public float abs() {
-        return (float) Math.sqrt(x*x+y*y+z*z);
+        return (float) Math.sqrt(x * x + y * y + z * z);
     }
 
     /**
@@ -51,7 +51,7 @@ public class Vec3D {
      * @return The copy
      */
     public Vec3D getCopy() {
-        return new Vec3D(x,y,z);
+        return new Vec3D(x, y, z);
     }
 
     /**
@@ -60,7 +60,7 @@ public class Vec3D {
      * @return The new point
      */
     public Point3D applyToPoint(Point3D p) {
-        return new Point3D(p.x+x, p.y+y, p.z+z);
+        return new Point3D(p.x + x, p.y + y, p.z + z);
     }
 
     /**
@@ -69,7 +69,6 @@ public class Vec3D {
      * @return The result of the dot product operation
      */
     public float dotProduct(Vec3D v) {
-        return x*v.x+y*v.y+z*v.z;
+        return x * v.x + y * v.y + z * v.z;
     }
-
 }

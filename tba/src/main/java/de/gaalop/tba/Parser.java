@@ -19,9 +19,9 @@ public class Parser {
         int index = 0;
 
         String trimmed = parse.trim();
-        if (trimmed.isEmpty() || trimmed.equals("0"))
+        if (trimmed.isEmpty() || trimmed.equals("0")) {
             prefactor = 0;
-        else {
+        } else {
 
             if (trimmed.startsWith("-E")) {
                 // for instance -E10
@@ -52,8 +52,9 @@ public class Parser {
     public static Blade parseBlade(String parse, Algebra algebra) {
         Vector<String> bases = new Vector<String>();
         String[] parts = parse.split("\\^");
-        for (String part: parts)
+        for (String part : parts) {
             bases.add(part.trim());
+        }
         return new Blade(algebra, bases);
     }
 
@@ -73,17 +74,18 @@ public class Parser {
             int indexMinus = -1;
 
             if (trimmed.charAt(0) == '-') {
-                indexPlus = trimmed.indexOf('+',1);
-                indexMinus =  trimmed.indexOf('-',1);
+                indexPlus = trimmed.indexOf('+', 1);
+                indexMinus = trimmed.indexOf('-', 1);
             } else {
                 indexPlus = trimmed.indexOf('+');
-                indexMinus =  trimmed.indexOf('-');
+                indexMinus = trimmed.indexOf('-');
             }
 
-            if (indexPlus == -1)
+            if (indexPlus == -1) {
                 index = (indexMinus == -1) ? -1 : indexMinus;
-            else
-                index = (indexMinus == -1) ? indexPlus : Math.min(indexMinus,indexPlus);
+            } else {
+                index = (indexMinus == -1) ? indexPlus : Math.min(indexMinus, indexPlus);
+            }
 
 
             if (index == -1) {
@@ -94,14 +96,14 @@ public class Parser {
                 // more blades
                 result.addBlade(parseBladeRef(trimmed.substring(0, index)));
 
-                if (trimmed.charAt(index) == '+')
-                    trimmed = trimmed.substring(index+1);
-                else
+                if (trimmed.charAt(index) == '+') {
+                    trimmed = trimmed.substring(index + 1);
+                } else {
                     trimmed = trimmed.substring(index);
+                }
             }
         }
 
         return result;
     }
-    
 }

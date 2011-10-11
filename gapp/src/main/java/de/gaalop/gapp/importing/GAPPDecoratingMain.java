@@ -57,7 +57,7 @@ public class GAPPDecoratingMain {
 
         HashSet<String> variables = getAllVariableNames(graph);
         assignInputVariables(graph, gappStart, variables);
-        
+
         // import now the graph in GAPP
         GAPPDecorator vCFG = new GAPPDecorator(gappStart, variables, usedAlgebra.getBladeCount(), scalarFunctions);
         graph.accept(vCFG);
@@ -87,15 +87,15 @@ public class GAPPDecoratingMain {
 
         Variableset varSet = new Variableset();
         int slotNo = 0;
-        for (Variable var: toDo) {
+        for (Variable var : toDo) {
             varSet.add(new GAPPScalarVariable(var.getName()));
             map.put(var, new MultivectorComponent(inputsMv.getName(), slotNo));
             slotNo++;
         }
-   
+
         gappStart.addInstruction(new GAPPAssignVector(inputsMv, varSet));
 
-        
+
         while (!toDo.isEmpty()) {
             Variable curVar = toDo.removeFirst();
             ReplaceVisitor replaceVisitor = new ReplaceVisitor(curVar, map.get(curVar));
@@ -120,10 +120,11 @@ public class GAPPDecoratingMain {
             return preferedName;
         } else {
             int number = 1;
-            while (variables.contains(preferedName+number))
+            while (variables.contains(preferedName + number)) {
                 number++;
+            }
 
-            String result = preferedName+number;
+            String result = preferedName + number;
             variables.add(result);
             return result;
         }
@@ -138,6 +139,7 @@ public class GAPPDecoratingMain {
         final HashSet<String> result = new HashSet<String>();
 
         ControlFlowVisitor visitor = new EmptyControlFlowVisitor() {
+
             private ExpressionVisitor visitorExp = new EmptyExpressionVisitor() {
 
                 @Override
@@ -151,7 +153,6 @@ public class GAPPDecoratingMain {
                     result.add(node.getName());
                     super.visit(node);
                 }
-
             };
 
             @Override
@@ -166,16 +167,10 @@ public class GAPPDecoratingMain {
                 node.getValue().accept(visitorExp);
                 super.visit(node);
             }
-
-
-
         };
 
         graph.accept(visitor);
 
         return result;
     }
-
-
-
 }

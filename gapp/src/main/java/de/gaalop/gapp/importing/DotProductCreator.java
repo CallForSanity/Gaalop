@@ -24,8 +24,8 @@ public class DotProductCreator implements ParallelObjectVisitor {
      * @param object The ParallelObject instance
      */
     private DotProduct processMoreDotProducts(ParallelObject object) {
-         DotProductsFinder finder = new DotProductsFinder();
-         return (DotProduct) object.accept(finder, null);
+        DotProductsFinder finder = new DotProductsFinder();
+        return (DotProduct) object.accept(finder, null);
     }
 
     public DotProductCreator(DotProduct dotProduct, int summandNo) {
@@ -35,15 +35,16 @@ public class DotProductCreator implements ParallelObjectVisitor {
 
     @Override
     public Object visitProduct(Product product, Object arg) {
-        
+
 
         int vectorNo = 0;
-        for (ParallelObject factor: product.getFactors()) {
+        for (ParallelObject factor : product.getFactors()) {
             dotProduct.set(summandNo, vectorNo, factor);
 
             DotProduct newDot = processMoreDotProducts(factor);
-            if (newDot != null) 
+            if (newDot != null) {
                 dotProduct.set(summandNo, vectorNo, newDot);
+            }
 
             if (product.isNegated()) {
                 dotProduct.get(summandNo, vectorNo).negate();
@@ -60,15 +61,17 @@ public class DotProductCreator implements ParallelObjectVisitor {
     @Override
     public Object visitExtCalculation(ExtCalculation extCalculation, Object arg) {
         dotProduct.set(summandNo, 0, extCalculation);
-        
+
         DotProduct newDot = processMoreDotProducts(extCalculation.getOperand1());
-        if (newDot != null)
+        if (newDot != null) {
             extCalculation.setOperand1(newDot);
+        }
 
         if (extCalculation.getOperand2() != null) {
             DotProduct newDot2 = processMoreDotProducts(extCalculation.getOperand2());
-            if (newDot2 != null)
+            if (newDot2 != null) {
                 extCalculation.setOperand2(newDot2);
+            }
         }
 
 
@@ -93,10 +96,7 @@ public class DotProductCreator implements ParallelObjectVisitor {
         return null;
     }
 
-
-
     // ========================== Illegal methods ==============================
-
     @Override
     public Object visitSum(Sum sum, Object arg) {
         throw new IllegalStateException("Sums are here not allowed");
@@ -106,5 +106,4 @@ public class DotProductCreator implements ParallelObjectVisitor {
     public Object visitDotProduct(DotProduct dotProduct, Object arg) {
         throw new IllegalStateException("DotProducts are here not allowed");
     }
-
 }

@@ -5,6 +5,7 @@ package de.gaalop.gapp.instructionSet;
  * @author Christian Steinmetz
  */
 public enum CalculationType {
-    DIVISION, EXPONENTIATION, INVERT, 
+
+    DIVISION, EXPONENTIATION, INVERT,
     ABS, ACOS, ASIN, ATAN, CEIL, COS, EXP, FACT, FLOOR, LOG, SIN, SQRT, TAN
 }

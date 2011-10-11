@@ -112,7 +112,6 @@ public class FactorsGetter implements ExpressionVisitor {
     }
 
     // ============================ Logical methods ============================
-
     @Override
     public void visit(LogicalOr node) {
         factors.getFactors().add(callExpressionCollector(node));
@@ -144,9 +143,6 @@ public class FactorsGetter implements ExpressionVisitor {
     }
 
     // ========================= Illegal visit methods =========================
-
-
-
     @Override
     public void visit(InnerProduct node) {
         throw new IllegalStateException("InnerProducts should have been removed by TBA.");
@@ -176,5 +172,4 @@ public class FactorsGetter implements ExpressionVisitor {
     public void visit(MacroCall node) {
         throw new IllegalStateException("FunctionArguments should have been removed by CLUCalc Parser.");
     }
-
 }

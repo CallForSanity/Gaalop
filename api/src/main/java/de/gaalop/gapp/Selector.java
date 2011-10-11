@@ -20,5 +20,4 @@ public class Selector extends SelectorIndex {
     public void setSign(byte sign) {
         this.sign = sign;
     }
-
 }

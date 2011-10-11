@@ -29,15 +29,16 @@ public class BaseVectorChecker extends EmptyControlFlowVisitor {
      * The ExpressionVisitor
      */
     private class DFGVisitor extends EmptyExpressionVisitor {
+
         private HashMap<Expression, Expression> toReplace = new HashMap<Expression, Expression>();
 
         @Override
         public void visit(Variable node) {
-            if (baseVectors.contains(node.getName()))
+            if (baseVectors.contains(node.getName())) {
                 toReplace.put(node, new BaseVector(node.getName().substring(1)));
+            }
             super.visit(node);
         }
-
     }
 
     @Override
@@ -45,7 +46,7 @@ public class BaseVectorChecker extends EmptyControlFlowVisitor {
         DFGVisitor dfgVisitor = new DFGVisitor();
         node.getValue().accept(dfgVisitor);
 
-        for (Expression toReplace: dfgVisitor.toReplace.keySet()) {
+        for (Expression toReplace : dfgVisitor.toReplace.keySet()) {
             Expression replacement = dfgVisitor.toReplace.get(toReplace);
             if (node.getValue() == toReplace) {
                 node.setValue(replacement);
@@ -56,7 +57,4 @@ public class BaseVectorChecker extends EmptyControlFlowVisitor {
 
         super.visit(node);
     }
-
-
-
 }

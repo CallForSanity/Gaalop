@@ -25,9 +25,7 @@ import de.gaalop.gapp.variables.GAPPMultivector;
 public class GAPPMultivectorCreator implements ParallelObjectVisitor {
 
     //return GAPPMultivector
-
     private GAPPCreator gappCreator;
-
     private int bladeCount;
 
     public GAPPMultivectorCreator(GAPPCreator gappCreator, int bladeCount) {
@@ -42,26 +40,22 @@ public class GAPPMultivectorCreator implements ParallelObjectVisitor {
 
     @Override
     public Object visitMvComponent(MvComponent mvComponent, Object arg) {
-            GAPPMultivector mvTmp = gappCreator.createMv(1);
+        GAPPMultivector mvTmp = gappCreator.createMv(1);
 
-            PosSelectorset selDestSet = new PosSelectorset();
-            selDestSet.add(new PosSelector(0));
+        PosSelectorset selDestSet = new PosSelectorset();
+        selDestSet.add(new PosSelector(0));
 
-            Selectorset selSrcSet = new Selectorset();
-            selSrcSet.add(new Selector(
-                        mvComponent.getMultivectorComponent().getBladeIndex(),
-                        mvComponent.isNegated() ? (byte) -1 : (byte) 1
-                    )
-            );
+        Selectorset selSrcSet = new Selectorset();
+        selSrcSet.add(new Selector(
+                mvComponent.getMultivectorComponent().getBladeIndex(),
+                mvComponent.isNegated() ? (byte) -1 : (byte) 1));
 
-            gappCreator.gapp.addInstruction(new GAPPSetMv(mvTmp,
-                    new GAPPMultivector(
-                        mvComponent.getMultivectorComponent().getName()),
-                        selDestSet,
-                        selSrcSet
-                    )
-            );
-            return mvTmp;
+        gappCreator.gapp.addInstruction(new GAPPSetMv(mvTmp,
+                new GAPPMultivector(
+                mvComponent.getMultivectorComponent().getName()),
+                selDestSet,
+                selSrcSet));
+        return mvTmp;
     }
 
     @Override
@@ -74,17 +68,16 @@ public class GAPPMultivectorCreator implements ParallelObjectVisitor {
         Variableset varSet = new Variableset();
         varSet.add(new GAPPConstant((constant.isNegated() ? -1 : 1) * constant.getValue()));
 
-        gappCreator.gapp.addInstruction(new GAPPAssignMv(mvTmp,selDestSet,varSet));
+        gappCreator.gapp.addInstruction(new GAPPAssignMv(mvTmp, selDestSet, varSet));
         return mvTmp;
     }
 
     // ========================== Illegal methods ==============================
-
     @Override
     public Object visitDotProduct(DotProduct dotProduct, Object arg) {
         throw new IllegalStateException("DotProducts are not allowed here");
     }
-    
+
     @Override
     public Object visitSum(Sum sum, Object arg) {
         throw new IllegalStateException("Sums are not allowed here");
@@ -99,5 +92,4 @@ public class GAPPMultivectorCreator implements ParallelObjectVisitor {
     public Object visitExtCalculation(ExtCalculation extCalculation, Object arg) {
         throw new IllegalStateException("ExtCalculations are not allowed here");
     }
-
 }

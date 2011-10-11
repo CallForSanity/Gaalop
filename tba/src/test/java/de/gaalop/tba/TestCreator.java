@@ -36,7 +36,6 @@ public class TestCreator {
     public static void main(String[] args) throws Exception {
         new TestCreator();
     }
-
     private PrintWriter out;
 
     /**
@@ -63,14 +62,14 @@ public class TestCreator {
      * Ends a test case
      */
     private void endTestCase() {
-            out.println("}");
+        out.println("}");
 
-            out.close();
+        out.close();
     }
 
     public TestCreator() throws Exception {
         beginTestCase();
-        
+
 
         // create all tests
 
@@ -86,33 +85,35 @@ public class TestCreator {
             testOutputCount();
             testUnusedTest();
 
-           testGPSNoVars();
+            testGPSNoVars();
             testGPSOnlyVars();
 
             testLinePointDistance();
         } catch (OptimizationException e) {
-                throw new Exception("CompileError in positive tests: "+e);
+            throw new Exception("CompileError in positive tests: " + e);
         }
 
         //negative tests - tests shouldn't be compiled, since they aren't conform to specification
         boolean valid = true;
-         try {
+        try {
             testMultipleAssignmentsTest();
         } catch (OptimizationException e) {
             valid = false;
         }
-        if (valid)
+        if (valid) {
             throw new Exception("No CompileError in negative test MultipleAssignmentsTest");
+        }
 
 
         valid = true;
-         try {
+        try {
             testControlFlowTest();
         } catch (OptimizationException e) {
             valid = false;
         }
-        if (valid)
+        if (valid) {
             throw new Exception("No CompileError in negative test ControlFlowTest");
+        }
 
 
         endTestCase();
@@ -138,17 +139,19 @@ public class TestCreator {
             CodeGenerator generator = (new de.gaalop.java.Plugin()).createCodeGenerator();
             Set<OutputFile> outputFiles = generator.generate(graph);
 
-            for (OutputFile outputFile: outputFiles)
+            for (OutputFile outputFile : outputFiles) {
                 writeFile(outputFile);
+            }
 
             for (InputOutput io : testable.getInputOutputs()) {
 
                 out.println("  @Test");
-                out.println("  public void test"+cluName+io.getNo()+"() {");
-                out.println("    "+cluName+" inst = new "+cluName+"();");
+                out.println("  public void test" + cluName + io.getNo() + "() {");
+                out.println("    " + cluName + " inst = new " + cluName + "();");
 
-                for (VariableValue curVal: io.getInputs())
-                    out.println("    assertTrue(inst.setValue(\""+curVal.getName()+"\","+curVal.getValue()+"f));");
+                for (VariableValue curVal : io.getInputs()) {
+                    out.println("    assertTrue(inst.setValue(\"" + curVal.getName() + "\"," + curVal.getValue() + "f));");
+                }
 
                 out.println("    inst.calculate();");
                 out.println("    // collect outputs");
@@ -157,9 +160,9 @@ public class TestCreator {
 
                 out.println("    // check outputs");
                 out.println(io.getCheckOutputsCode());
-                
+
                 out.println("  }");
-    
+
 
             }
 
@@ -167,8 +170,8 @@ public class TestCreator {
         } catch (CodeParserException ex) {
             Logger.getLogger(TestCreator.class.getName()).log(Level.SEVERE, null, ex);
         } catch (CodeGeneratorException ex) {
-                Logger.getLogger(TestCreator.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            Logger.getLogger(TestCreator.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
 
     }
@@ -178,7 +181,7 @@ public class TestCreator {
      * @throws OptimizationException
      */
     private void testTrigonometric() throws OptimizationException {
-        test(new TrigonometricFunctions(),"TrigonometricFunctions");
+        test(new TrigonometricFunctions(), "TrigonometricFunctions");
     }
 
     /**
@@ -187,10 +190,9 @@ public class TestCreator {
      */
     private void testLinePointDistance() throws OptimizationException {
         test(new LinePointDistance(
-                new Point3D(3,4,5),
-                new Point3D(7,8,10),
-                new Point3D(3,8,10)
-                ),"LinePointDistance");
+                new Point3D(3, 4, 5),
+                new Point3D(7, 8, 10),
+                new Point3D(3, 8, 10)), "LinePointDistance");
     }
 
     /**
@@ -198,7 +200,7 @@ public class TestCreator {
      * @throws OptimizationException
      */
     private void testCircleNoVars() throws OptimizationException {
-        test(new CircleNoVarsTest(new Point(5,2),new Point(3,9),new Point(6,4)),"CircleNoVars");
+        test(new CircleNoVarsTest(new Point(5, 2), new Point(3, 9), new Point(6, 4)), "CircleNoVars");
     }
 
     /**
@@ -206,7 +208,7 @@ public class TestCreator {
      * @throws OptimizationException
      */
     private void testCircleOneVar() throws OptimizationException {
-        test(new CircleOneVarTest(new Point(5,2),new Point(3,9),new Point(6,4),new boolean[]{true,false,false,false,false,false},50),"CircleOneVar");
+        test(new CircleOneVarTest(new Point(5, 2), new Point(3, 9), new Point(6, 4), new boolean[]{true, false, false, false, false, false}, 50), "CircleOneVar");
     }
 
     /**
@@ -214,7 +216,7 @@ public class TestCreator {
      * @throws OptimizationException
      */
     private void testCircleOnlyVars() throws OptimizationException {
-        test(new CircleOnlyVarsTest(new Point(5,2),new Point(3,9),new Point(6,4)),"CircleOnlyVars");
+        test(new CircleOnlyVarsTest(new Point(5, 2), new Point(3, 9), new Point(6, 4)), "CircleOnlyVars");
     }
 
     /**
@@ -222,7 +224,7 @@ public class TestCreator {
      * @throws OptimizationException
      */
     private void testGPSNoVars() throws OptimizationException {
-        test(new GPSNoVarsTest(new Point3D(1,1,1), new Point3D(0,0,1), new Point3D(0,1,0), 0.6f, 0.7f, 0.5f),"GPSNoVars");
+        test(new GPSNoVarsTest(new Point3D(1, 1, 1), new Point3D(0, 0, 1), new Point3D(0, 1, 0), 0.6f, 0.7f, 0.5f), "GPSNoVars");
     }
 
     /**
@@ -230,7 +232,7 @@ public class TestCreator {
      * @throws OptimizationException
      */
     private void testGPSOnlyVars() throws OptimizationException {
-        test(new GPSOnlyVarsTest(new Point3D(1,1,1), new Point3D(0,0,1), new Point3D(0,1,0), 0.6f, 0.7f, 0.9f),"GPSOnlyVars");
+        test(new GPSOnlyVarsTest(new Point3D(1, 1, 1), new Point3D(0, 0, 1), new Point3D(0, 1, 0), 0.6f, 0.7f, 0.9f), "GPSOnlyVars");
     }
 
     /**
@@ -238,7 +240,7 @@ public class TestCreator {
      * @throws OptimizationException
      */
     private void testMultipleAssignmentsTest() throws OptimizationException {
-        test(new MultipleAssignmentsTest(),"MultipleAssignments");
+        test(new MultipleAssignmentsTest(), "MultipleAssignments");
     }
 
     /**
@@ -246,7 +248,7 @@ public class TestCreator {
      * @throws OptimizationException
      */
     private void testControlFlowTest() throws OptimizationException {
-        test(new ControlFlowTest(),"ControlFlow");
+        test(new ControlFlowTest(), "ControlFlow");
     }
 
     /**
@@ -254,15 +256,15 @@ public class TestCreator {
      * @throws OptimizationException
      */
     private void testOutputCount() throws OptimizationException {
-        test(new OutputCountTest(),"OutputCount");
+        test(new OutputCountTest(), "OutputCount");
     }
-    
+
     /**
      * Dummy method
      * @throws OptimizationException
      */
     private void testUnusedTest() throws OptimizationException {
-        test(new Unused(),"Unused");
+        test(new Unused(), "Unused");
     }
 
     /**
@@ -271,7 +273,7 @@ public class TestCreator {
      */
     private void writeFile(OutputFile outputFile) {
         try {
-            PrintWriter out1 = new PrintWriter("src/test/java/de/gaalop/tba/generatedTests/"+outputFile.getName());
+            PrintWriter out1 = new PrintWriter("src/test/java/de/gaalop/tba/generatedTests/" + outputFile.getName());
             out1.println("package de.gaalop.tba.generatedTests;\n");
             out1.print(outputFile.getContent());
             out1.close();
@@ -279,9 +281,4 @@ public class TestCreator {
             Logger.getLogger(TestCreator.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
-
-
-
-
 }

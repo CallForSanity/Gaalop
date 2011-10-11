@@ -33,22 +33,24 @@ public class GAPPRemoveZeroAssignments extends GAPPRemover {
             PosSelector curSel = selIt.next();
             GAPPValueHolder curVar = varIt.next();
 
-            if (!curVar.isVariable())
+            if (!curVar.isVariable()) {
                 if (Math.abs(((GAPPConstant) curVar).getValue()) < 10E-04) {
                     delSelectors.add(curSel);
                     delVariables.add(curVar);
                 }
+            }
         }
-        
 
-        for (PosSelector sel: delSelectors)
+
+        for (PosSelector sel : delSelectors) {
             selSet.remove(sel);
+        }
 
-        for (GAPPValueHolder val: delVariables)
+        for (GAPPValueHolder val : delVariables) {
             varSet.remove(val);
+        }
 
         // if selList is Empty remove the whole command
         return selSet.isEmpty();
     }
-
 }

@@ -19,5 +19,4 @@ public class SelectorIndex {
     public void setIndex(int index) {
         this.index = index;
     }
-
 }

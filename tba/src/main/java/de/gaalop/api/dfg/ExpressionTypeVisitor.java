@@ -55,7 +55,6 @@ public abstract class ExpressionTypeVisitor implements ExpressionVisitor {
      */
     protected abstract void visitTerminal(Expression node);
 
-
     @Override
     public void visit(Subtraction node) {
         visitBinaryOperation(node);
@@ -165,7 +164,4 @@ public abstract class ExpressionTypeVisitor implements ExpressionVisitor {
     public void visit(MacroCall node) {
         throw new IllegalStateException("Macros should have been inlined");
     }
-
-
-
 }

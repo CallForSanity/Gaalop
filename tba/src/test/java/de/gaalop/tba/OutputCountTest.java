@@ -13,7 +13,7 @@ public class OutputCountTest implements GenericTestable {
     @Override
     public String getCLUScript() {
         return "a=0;\n"
-             + "?a;";
+                + "?a;";
     }
 
     @Override
@@ -29,13 +29,12 @@ public class OutputCountTest implements GenericTestable {
 
             @Override
             public String getCheckOutputsCode() {
-                return
-                        "assertEquals(32,outputs.size());";
+                return "assertEquals(32,outputs.size());";
             }
 
             @Override
             public int getNo() {
-               return 0;
+                return 0;
             }
         });
 
@@ -46,6 +45,4 @@ public class OutputCountTest implements GenericTestable {
     public UseAlgebra getUsedAlgebra() {
         return UseAlgebra.get5dConformalGA();
     }
-
-
 }

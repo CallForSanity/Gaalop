@@ -29,5 +29,4 @@ public interface IMultTable {
      * @param product The product
      */
     public void setProduct(Integer factor1, Integer factor2, Multivector product);
-	
 }

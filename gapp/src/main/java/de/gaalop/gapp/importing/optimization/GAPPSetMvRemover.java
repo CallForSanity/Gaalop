@@ -17,10 +17,10 @@ public class GAPPSetMvRemover extends GAPPRemover {
 
     @Override
     public Object visitSetMv(GAPPSetMv gappSetMv, Object arg) {
-        if (toRemove.contains(gappSetMv)) 
+        if (toRemove.contains(gappSetMv)) {
             return true;
-        
+        }
+
         return super.visitSetMv(gappSetMv, arg);
     }
-
 }

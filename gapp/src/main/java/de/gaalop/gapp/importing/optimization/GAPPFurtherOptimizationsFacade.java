@@ -23,5 +23,4 @@ public class GAPPFurtherOptimizationsFacade {
         GAPPSetMvRemover remover = new GAPPSetMvRemover(merger.getToRemove());
         graph.accept(remover);
     }
-
 }

@@ -5,5 +5,6 @@ package de.gaalop.tba;
  * @author Christian Steinmetz
  */
 public enum Products {
+
     INNER, OUTER, GEO
 }

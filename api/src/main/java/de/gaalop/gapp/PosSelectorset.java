@@ -7,5 +7,4 @@ import java.util.LinkedList;
  * @author Christian Steinmetz
  */
 public class PosSelectorset extends LinkedList<PosSelector> {
-
 }

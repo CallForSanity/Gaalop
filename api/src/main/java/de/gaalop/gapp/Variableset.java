@@ -9,5 +9,4 @@ import java.util.LinkedList;
  * @author Christian Steinmetz
  */
 public class Variableset extends LinkedList<GAPPValueHolder> {
-
 }

@@ -21,7 +21,6 @@ import de.gaalop.cfg.StoreResultNode;
 public class CFGNodeTypeGetter implements ControlFlowVisitor {
 
     private CFGNodeType type;
-
     private static final CFGNodeTypeGetter getter = new CFGNodeTypeGetter();
 
     /**
@@ -30,8 +29,10 @@ public class CFGNodeTypeGetter implements ControlFlowVisitor {
      * @return The type of the given node
      */
     public static CFGNodeType getTypeOfCFGNode(Node node) {
-        if (node == null) return null;
-        
+        if (node == null) {
+            return null;
+        }
+
         node.accept(getter);
         return getter.type;
     }
@@ -90,5 +91,4 @@ public class CFGNodeTypeGetter implements ControlFlowVisitor {
     public void visit(ColorNode node) {
         type = CFGNodeType.ColorNode;
     }
-
 }

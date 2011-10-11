@@ -23,7 +23,7 @@ public class DotProductsFinder implements ParallelObjectVisitor {
         // begin of a Dotproduct!
         DotProduct dotProduct = new DotProduct();
         int summandNo = 0;
-        for (ParallelObject summand: sum.getSummands()) {
+        for (ParallelObject summand : sum.getSummands()) {
             DotProductCreator creator = new DotProductCreator(dotProduct, summandNo);
             summand.accept(creator, null);
             summandNo++;
@@ -35,38 +35,42 @@ public class DotProductsFinder implements ParallelObjectVisitor {
     @Override
     public Object visitProduct(Product product, Object arg) {
 
-            LinkedList<ParallelObject> toRemove = new LinkedList<ParallelObject>();
-            LinkedList<ParallelObject> toAdd = new LinkedList<ParallelObject>();
+        LinkedList<ParallelObject> toRemove = new LinkedList<ParallelObject>();
+        LinkedList<ParallelObject> toAdd = new LinkedList<ParallelObject>();
 
-            for (ParallelObject factor: product.getFactors())  {
-                DotProduct dp = (DotProduct) factor.accept(this, null);
-                if (dp != null) {
-                    toRemove.add(factor);
-                    toAdd.add(dp);
-                }
+        for (ParallelObject factor : product.getFactors()) {
+            DotProduct dp = (DotProduct) factor.accept(this, null);
+            if (dp != null) {
+                toRemove.add(factor);
+                toAdd.add(dp);
             }
+        }
 
-            for (ParallelObject obj: toAdd)
-                product.getFactors().add(obj);
+        for (ParallelObject obj : toAdd) {
+            product.getFactors().add(obj);
+        }
 
-            for (ParallelObject obj: toRemove)
-                product.getFactors().remove(obj);
+        for (ParallelObject obj : toRemove) {
+            product.getFactors().remove(obj);
+        }
 
 
-            return null;
+        return null;
 
     }
 
     @Override
     public Object visitExtCalculation(ExtCalculation extCalculation, Object arg) {
         DotProduct dp1 = (DotProduct) extCalculation.getOperand1().accept(this, null);
-        if (dp1 != null)
+        if (dp1 != null) {
             extCalculation.setOperand1(dp1);
-        
+        }
+
         if (extCalculation.getOperand2() != null) {
             DotProduct dp2 = (DotProduct) extCalculation.getOperand2().accept(this, null);
-            if (dp2 != null)
+            if (dp2 != null) {
                 extCalculation.setOperand2(dp2);
+            }
         }
 
         return null;
@@ -91,5 +95,4 @@ public class DotProductsFinder implements ParallelObjectVisitor {
     public Object visitDotProduct(DotProduct dotProduct, Object arg) {
         throw new IllegalStateException("DotProducts are here not allowed");
     }
-
 }

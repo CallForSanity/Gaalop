@@ -23,22 +23,22 @@ public class GetAllOutputBlades {
 
         HashSet<VariableComponent> result = new HashSet<VariableComponent>();
 
-         // mark output vars as tabu
-        for (String output: graph.getPragmaOutputVariables()) {
+        // mark output vars as tabu
+        for (String output : graph.getPragmaOutputVariables()) {
             String[] parts = output.split("\\$");
-            result.add(new VariableComponent(parts[0],Integer.parseInt(parts[1]), null));
+            result.add(new VariableComponent(parts[0], Integer.parseInt(parts[1]), null));
         }
 
         FindStoreOutputNodes storeResultNodes = new FindStoreOutputNodes();
         graph.accept(storeResultNodes);
-        for (StoreResultNode curSRNode: storeResultNodes.getNodes()) {
+        for (StoreResultNode curSRNode : storeResultNodes.getNodes()) {
             String name = curSRNode.getValue().getName();
             int bladeCount = usedAlgebra.getBladeCount();
-            for (int blade=0;blade<bladeCount;blade++)
-                result.add(new VariableComponent(name,blade, null));
+            for (int blade = 0; blade < bladeCount; blade++) {
+                result.add(new VariableComponent(name, blade, null));
+            }
         }
 
         return result;
     }
-
 }

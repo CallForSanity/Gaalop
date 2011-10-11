@@ -20,7 +20,7 @@ public class GAPPCalculateMv extends GAPPBaseInstruction {
         this.operand1 = operand1;
         this.operand2 = operand2;
     }
-    
+
     @Override
     public Object accept(GAPPVisitor visitor, Object arg) {
         return visitor.visitCalculateMv(this, arg);
@@ -41,7 +41,7 @@ public class GAPPCalculateMv extends GAPPBaseInstruction {
     public GAPPMultivector getDestination() {
         return destination;
     }
-    
+
     public void setOperand1(GAPPMultivector operand1) {
         this.operand1 = operand1;
     }
@@ -57,7 +57,4 @@ public class GAPPCalculateMv extends GAPPBaseInstruction {
     public void setDestination(GAPPMultivector destination) {
         this.destination = destination;
     }
-
-    
-
 }

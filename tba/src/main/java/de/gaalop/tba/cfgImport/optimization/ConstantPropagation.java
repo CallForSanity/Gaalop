@@ -19,11 +19,8 @@ import java.util.HashMap;
 public class ConstantPropagation extends EmptyControlFlowVisitor {
 
     private ConstantFolding constantFolding = new ConstantFolding();
-    
-    private HashMap<VariableComponent,FloatConstant> mapConstants = new HashMap<VariableComponent, FloatConstant>();
-
+    private HashMap<VariableComponent, FloatConstant> mapConstants = new HashMap<VariableComponent, FloatConstant>();
     private DFGVisitorUsedVariables dfgVisitorUsedVariables = new DFGVisitorUsedVariables();
-
     private boolean graphModified = false;
 
     public boolean isGraphModified() {
@@ -43,26 +40,28 @@ public class ConstantPropagation extends EmptyControlFlowVisitor {
         dfgVisitorUsedVariables.getVariables().clear();
         expression.accept(dfgVisitorUsedVariables);
 
-        for (VariableComponent varComp: dfgVisitorUsedVariables.getVariables())
+        for (VariableComponent varComp : dfgVisitorUsedVariables.getVariables()) {
             if (mapConstants.containsKey(varComp)) {
                 // replace variable with constant
 
                 if (expression == varComp.getReferredExpression()) {
                     expression = mapConstants.get(varComp);
                 } else {
-                    expression.replaceExpression(varComp.getReferredExpression(),mapConstants.get(varComp));
+                    expression.replaceExpression(varComp.getReferredExpression(), mapConstants.get(varComp));
                 }
 
                 setGraphModified();
             }
+        }
 
         // do a constant folding on the value
         expression.accept(constantFolding);
-        if (constantFolding.isGraphModified()) setGraphModified();
-        
+        if (constantFolding.isGraphModified()) {
+            setGraphModified();
+        }
+
         return constantFolding.getResultExpr();
     }
-
 
     @Override
     public void visit(AssignmentNode node) {
@@ -76,8 +75,9 @@ public class ConstantPropagation extends EmptyControlFlowVisitor {
         // remove variable component from mapConstants, because of re-assignment
         mapConstants.remove(target);
 
-        if (isFloatConstant(node.getValue())) 
+        if (isFloatConstant(node.getValue())) {
             mapConstants.put(target, (FloatConstant) node.getValue());
+        }
 
         super.visit(node);
     }
@@ -86,7 +86,7 @@ public class ConstantPropagation extends EmptyControlFlowVisitor {
     public void visit(ColorNode node) {
         node.setR(performConstantPropagationOnExpression(node.getR()));
         node.setG(performConstantPropagationOnExpression(node.getG()));
-        node.setB( performConstantPropagationOnExpression(node.getB()));
+        node.setB(performConstantPropagationOnExpression(node.getB()));
         node.setAlpha(performConstantPropagationOnExpression(node.getAlpha()));
         super.visit(node);
     }
@@ -111,5 +111,4 @@ public class ConstantPropagation extends EmptyControlFlowVisitor {
     private boolean isFloatConstant(Expression expression) {
         return DFGNodeTypeGetter.getTypeOfDFGNode(expression) == DFGNodeType.FloatConstant;
     }
-
 }

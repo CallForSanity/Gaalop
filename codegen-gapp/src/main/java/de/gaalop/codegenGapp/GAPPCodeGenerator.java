@@ -49,6 +49,4 @@ public class GAPPCodeGenerator implements CodeGenerator {
         in.accept(printer);
         return printer.getResultString();
     }
-
-
 }

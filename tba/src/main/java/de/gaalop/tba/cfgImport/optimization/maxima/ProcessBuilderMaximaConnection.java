@@ -15,7 +15,6 @@ import java.util.logging.Logger;
 public class ProcessBuilderMaximaConnection implements MaximaConnection {
 
     public String commandMaxima;
-
     public static final String CMD_MAXIMA_WINDOWS = "C:\\Program Files (x86)\\Maxima-5.24.0\\bin\\maxima.bat";
     public static final String CMD_MAXIMA_LINUX = "/usr/bin/maxima";
 
@@ -29,18 +28,19 @@ public class ProcessBuilderMaximaConnection implements MaximaConnection {
             File tmpFile = File.createTempFile("tbaMaxima", ".txt");
 
             PrintWriter out = new PrintWriter(tmpFile);
-            for (String line: input)
+            for (String line : input) {
                 out.println(line);
+            }
             out.close();
 
             MaximaOutput output = new MaximaOutput();
 
             String path = tmpFile.getAbsolutePath();
             if (File.separatorChar == '\\') {
-                path = path.replaceAll("\\\\","\\\\\\\\");
+                path = path.replaceAll("\\\\", "\\\\\\\\");
             }
 
-            ProcessBuilder builder = new ProcessBuilder(commandMaxima, "-b",path);
+            ProcessBuilder builder = new ProcessBuilder(commandMaxima, "-b", path);
             Process p = builder.start();
 
             BufferedReader b = new BufferedReader(new InputStreamReader(p.getInputStream()));
@@ -60,7 +60,7 @@ public class ProcessBuilderMaximaConnection implements MaximaConnection {
             Logger.getLogger(ProcessBuilderMaximaConnection.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         }
-        
-        
+
+
     }
 }

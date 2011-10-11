@@ -57,5 +57,4 @@ public class GAPPDotVectors extends GAPPBaseInstruction {
     public void setParts(LinkedList<GAPPVector> parts) {
         this.parts = parts;
     }
-
 }

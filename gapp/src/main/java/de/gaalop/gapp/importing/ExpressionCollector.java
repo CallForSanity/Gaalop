@@ -113,7 +113,7 @@ public class ExpressionCollector implements ExpressionVisitor {
             case INVERT:
                 return CalculationType.INVERT;
             default:
-                System.err.println("Unknown MathFunction: "+function);
+                System.err.println("Unknown MathFunction: " + function);
                 return null;
         }
     }
@@ -167,9 +167,7 @@ public class ExpressionCollector implements ExpressionVisitor {
         resultValue = new ParVariable(node.getName());
     }
 
-
     // ========================= Illegal visit methods =========================
-
     @Override
     public void visit(LogicalOr node) {
         throw new IllegalStateException("Logical functions are not allowed.");
@@ -229,5 +227,4 @@ public class ExpressionCollector implements ExpressionVisitor {
     public void visit(MacroCall node) {
         throw new IllegalStateException("FunctionArguments should have been removed by CLUCalc Parser.");
     }
-
 }

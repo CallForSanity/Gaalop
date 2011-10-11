@@ -42,9 +42,10 @@ public class PrettyPrint extends CFGGAPPVisitor {
         result.append(node.getValue().toString());
         result.append('\n');
 
-        if (node.getGAPP() != null)
+        if (node.getGAPP() != null) {
             node.getGAPP().accept(this, null);
-        
+        }
+
         result.append('\n');
         node.getSuccessor().accept(this);
     }
@@ -71,7 +72,7 @@ public class PrettyPrint extends CFGGAPPVisitor {
     private void printVector(GAPPVector vector) {
         result.append(vector.prettyPrint());
     }
-    
+
     /**
      * Pretty prints a multivector at the end of result
      * @param multiVector The multivector
@@ -88,13 +89,14 @@ public class PrettyPrint extends CFGGAPPVisitor {
         result.append(setOfVariables.prettyPrint());
     }
 
-
     /**
      * Pretty prints a selector at the end of result
      * @param selector The selector
      */
     private void printSelector(Selector selector) {
-        if (selector.getSign() == (byte) -1) result.append('-');
+        if (selector.getSign() == (byte) -1) {
+            result.append('-');
+        }
         result.append(selector.getIndex());
     }
 
@@ -112,11 +114,11 @@ public class PrettyPrint extends CFGGAPPVisitor {
      */
     private void printSelectors(Selectorset selectorset) {
         result.append("[");
-        for (Selector cur: selectorset) {
+        for (Selector cur : selectorset) {
             printSelector(cur);
             result.append(",");
         }
-        result.deleteCharAt(result.length()-1);
+        result.deleteCharAt(result.length() - 1);
         result.append("]");
     }
 
@@ -126,29 +128,29 @@ public class PrettyPrint extends CFGGAPPVisitor {
      */
     private void printPosSelectors(PosSelectorset posSelectorset) {
         result.append("[");
-        for (PosSelector cur: posSelectorset) {
+        for (PosSelector cur : posSelectorset) {
             printSelectorIndex(cur);
             result.append(",");
         }
-        result.deleteCharAt(result.length()-1);
+        result.deleteCharAt(result.length() - 1);
         result.append("]");
     }
 
-   /**
+    /**
      * Pretty prints a variableset at the end of result
      * @param variableset The variableset
      */
     private void printVariableSet(Variableset variableset) {
         result.append("[");
-        for (GAPPValueHolder cur: variableset) {
+        for (GAPPValueHolder cur : variableset) {
             result.append(cur.prettyPrint());
             result.append(",");
         }
-        result.deleteCharAt(result.length()-1);
+        result.deleteCharAt(result.length() - 1);
         result.append("]");
     }
 
-   /**
+    /**
      * Pretty prints a dot product of vectors at the end of result
      * @param vectors The vectors of the dot product
      */
@@ -158,10 +160,11 @@ public class PrettyPrint extends CFGGAPPVisitor {
         ListIterator<GAPPVector> it = vectors.listIterator();
         while (it.hasNext()) {
             printVector(it.next());
-            if (it.hasNext())
+            if (it.hasNext()) {
                 result.append(",");
+            }
         }
-        
+
         result.append(">");
     }
 
@@ -247,5 +250,4 @@ public class PrettyPrint extends CFGGAPPVisitor {
         result.append(";\n");
         return null;
     }
-
 }

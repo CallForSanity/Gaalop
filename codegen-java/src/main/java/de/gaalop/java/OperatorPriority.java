@@ -54,5 +54,4 @@ public class OperatorPriority {
             return childPriority < parentPriority;
         }
     }
-
 }

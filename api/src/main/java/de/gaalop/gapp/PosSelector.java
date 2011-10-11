@@ -9,5 +9,4 @@ public class PosSelector extends SelectorIndex {
     public PosSelector(int index) {
         super(index);
     }
-
 }

@@ -12,5 +12,4 @@ public interface MaximaConnection {
      * @return The output of Maxima
      */
     public MaximaOutput optimizeWithMaxima(MaximaInput input);
-
 }

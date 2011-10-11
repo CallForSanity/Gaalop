@@ -36,7 +36,4 @@ public class MvComponent extends ParallelObject {
     public boolean isTerminal() {
         return true;
     }
-
-
-
 }

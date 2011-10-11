@@ -26,12 +26,11 @@ public class CFGVisitorUsedVariables implements ControlFlowVisitor {
 
     private VariableUsage variableUsage = new VariableUsage();
     private DFGVisitorUsedVariables dfgVisitorusedVariables = new DFGVisitorUsedVariables();
-    private HashMap<String,LinkedList<Integer>> outputBlades;
+    private HashMap<String, LinkedList<Integer>> outputBlades;
     private UseAlgebra usedAlgebra;
-
     private LinkedList<SequentialNode> nodeRemovals = new LinkedList<SequentialNode>();
 
-    public CFGVisitorUsedVariables(HashMap<String,LinkedList<Integer>> outputBlades, UseAlgebra usedAlgebra) {
+    public CFGVisitorUsedVariables(HashMap<String, LinkedList<Integer>> outputBlades, UseAlgebra usedAlgebra) {
         this.outputBlades = outputBlades;
         this.usedAlgebra = usedAlgebra;
     }
@@ -59,8 +58,9 @@ public class CFGVisitorUsedVariables implements ControlFlowVisitor {
             // value usage
             dfgVisitorusedVariables.getVariables().clear();
             node.getValue().accept(dfgVisitorusedVariables);
-            for (VariableComponent component: dfgVisitorusedVariables.getVariables())
+            for (VariableComponent component : dfgVisitorusedVariables.getVariables()) {
                 variableUsage.addUsage(component);
+            }
         }
     }
 
@@ -69,16 +69,18 @@ public class CFGVisitorUsedVariables implements ControlFlowVisitor {
         String name = node.getValue().getName();
         if (outputBlades.containsKey(name)) {
             // only special blades are outputted
-            for (Integer bladeIndex: outputBlades.get(name)) 
-                variableUsage.addUsage(new VariableComponent(name, bladeIndex,node.getValue()));
+            for (Integer bladeIndex : outputBlades.get(name)) {
+                variableUsage.addUsage(new VariableComponent(name, bladeIndex, node.getValue()));
+            }
         } else {
             // all blades are outputted
             int bladeCount = usedAlgebra.getBladeCount();
 
-            for (int blade = 0; blade<bladeCount; blade++)
-                variableUsage.addUsage(new VariableComponent(name, blade,node.getValue()));
+            for (int blade = 0; blade < bladeCount; blade++) {
+                variableUsage.addUsage(new VariableComponent(name, blade, node.getValue()));
+            }
         }
-        
+
     }
 
     @Override
@@ -86,35 +88,40 @@ public class CFGVisitorUsedVariables implements ControlFlowVisitor {
         // expression usage
         dfgVisitorusedVariables.getVariables().clear();
         node.getExpression().accept(dfgVisitorusedVariables);
-        for (VariableComponent component: dfgVisitorusedVariables.getVariables())
+        for (VariableComponent component : dfgVisitorusedVariables.getVariables()) {
             variableUsage.addUsage(component);
+        }
     }
 
     @Override
     public void visit(ColorNode node) {
-         // R usage
+        // R usage
         dfgVisitorusedVariables.getVariables().clear();
         node.getR().accept(dfgVisitorusedVariables);
-        for (VariableComponent component: dfgVisitorusedVariables.getVariables())
+        for (VariableComponent component : dfgVisitorusedVariables.getVariables()) {
             variableUsage.addUsage(component);
+        }
 
-         // G usage
+        // G usage
         dfgVisitorusedVariables.getVariables().clear();
         node.getG().accept(dfgVisitorusedVariables);
-        for (VariableComponent component: dfgVisitorusedVariables.getVariables())
+        for (VariableComponent component : dfgVisitorusedVariables.getVariables()) {
             variableUsage.addUsage(component);
+        }
 
-         // B usage
+        // B usage
         dfgVisitorusedVariables.getVariables().clear();
         node.getB().accept(dfgVisitorusedVariables);
-        for (VariableComponent component: dfgVisitorusedVariables.getVariables())
+        for (VariableComponent component : dfgVisitorusedVariables.getVariables()) {
             variableUsage.addUsage(component);
+        }
 
-         // Alpha usage
+        // Alpha usage
         dfgVisitorusedVariables.getVariables().clear();
         node.getAlpha().accept(dfgVisitorusedVariables);
-        for (VariableComponent component: dfgVisitorusedVariables.getVariables())
+        for (VariableComponent component : dfgVisitorusedVariables.getVariables()) {
             variableUsage.addUsage(component);
+        }
     }
 
     @Override
@@ -123,34 +130,25 @@ public class CFGVisitorUsedVariables implements ControlFlowVisitor {
 
     @Override
     public void visit(IfThenElseNode node) {
-       
     }
 
     @Override
     public void visit(BlockEndNode node) {
-        
     }
 
     @Override
     public void visit(LoopNode node) {
-        
     }
 
     @Override
     public void visit(BreakNode node) {
-        
     }
 
     @Override
     public void visit(Macro node) {
-        
     }
 
     @Override
     public void visit(EndNode node) {
-        
     }
-
-
-
 }

@@ -9,5 +9,4 @@ public abstract class GAPPSetOfVariables extends GAPPVariable {
     public GAPPSetOfVariables(String name) {
         super(name);
     }
-
 }

@@ -18,18 +18,19 @@ public class GAPPRemover extends EmptyCFGGAPPVisitor {
         if (node.getGAPP() != null) {
             LinkedList<GAPPBaseInstruction> instructions = node.getGAPP().getInstructions();
             LinkedList<GAPPBaseInstruction> delInstructions = new LinkedList<GAPPBaseInstruction>();
-            for (GAPPBaseInstruction instr: instructions) {
+            for (GAPPBaseInstruction instr : instructions) {
                 Object result = instr.accept(this, null);
-                
-                if (result != null && ((Boolean) result).booleanValue())
+
+                if (result != null && ((Boolean) result).booleanValue()) {
                     delInstructions.add(instr);
+                }
             }
 
-            for (GAPPBaseInstruction instr: delInstructions)
+            for (GAPPBaseInstruction instr : delInstructions) {
                 instructions.remove(instr);
+            }
 
         }
         super.visit(node);
     }
-
 }

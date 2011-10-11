@@ -29,8 +29,9 @@ public class GAPP {
         GAPP copy = new GAPP();
 
         GAPPCopier copier = new GAPPCopier();
-        for (GAPPBaseInstruction curInstr: instructions)
+        for (GAPPBaseInstruction curInstr : instructions) {
             copy.instructions.add((GAPPBaseInstruction) curInstr.accept(copier, null));
+        }
 
         return copy;
     }
@@ -51,8 +52,9 @@ public class GAPP {
      * @param arg An argument, which will be used in the calls
      */
     public void accept(GAPPVisitor visitor, Object arg) {
-        for (GAPPBaseInstruction inst : instructions) 
+        for (GAPPBaseInstruction inst : instructions) {
             inst.accept(visitor, null);
+        }
     }
 
     /**
@@ -66,6 +68,4 @@ public class GAPP {
     public LinkedList<GAPPBaseInstruction> getInstructions() {
         return instructions;
     }
-
-    
 }

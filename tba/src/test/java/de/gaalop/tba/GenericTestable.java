@@ -14,10 +14,10 @@ public interface GenericTestable {
      */
     public String getCLUScript();
 
-   /**
-    * Returns the InputOutputs for testing
-    * @return The InputOutputs
-    */
+    /**
+     * Returns the InputOutputs for testing
+     * @return The InputOutputs
+     */
     public LinkedList<InputOutput> getInputOutputs();
 
     /**
@@ -25,5 +25,4 @@ public interface GenericTestable {
      * @return The used algebra
      */
     public UseAlgebra getUsedAlgebra();
-
 }

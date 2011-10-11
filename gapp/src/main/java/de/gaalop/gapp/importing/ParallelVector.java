@@ -31,18 +31,16 @@ public class ParallelVector {
     public String toString() {
         StringBuilder sb = new StringBuilder("[");
 
-        for (ParallelObject obj: slots) {
+        for (ParallelObject obj : slots) {
             sb.append(obj.toString());
             sb.append(",");
         }
 
-        if (slots.size() > 0)
-            sb.deleteCharAt(sb.length()-1);
+        if (slots.size() > 0) {
+            sb.deleteCharAt(sb.length() - 1);
+        }
 
         sb.append("]");
         return sb.toString();
     }
-
-
-
 }

@@ -34,5 +34,4 @@ public abstract class ParallelObject {
      * @return
      */
     public abstract boolean isTerminal();
-
 }

@@ -21,6 +21,4 @@ public interface OptimizationStrategyWithModifyFlag {
      * @return <value>true</value> if the graph has been modified, <value>false</value> otherwise
      */
     boolean transform(ControlFlowGraph graph, UseAlgebra usedAlgebra);
-
-
 }

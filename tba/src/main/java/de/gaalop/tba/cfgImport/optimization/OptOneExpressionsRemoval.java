@@ -16,10 +16,10 @@ public class OptOneExpressionsRemoval implements OptimizationStrategyWithModifyF
         graph.accept(oneExpressionRemoval);
 
         // remove all nodes that are marked for removal
-        for (SequentialNode node: oneExpressionRemoval.getNodeRemovals())
-           graph.removeNode(node);
+        for (SequentialNode node : oneExpressionRemoval.getNodeRemovals()) {
+            graph.removeNode(node);
+        }
 
         return oneExpressionRemoval.isGraphModified();
     }
-
 }

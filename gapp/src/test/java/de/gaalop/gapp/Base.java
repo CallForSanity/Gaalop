@@ -32,12 +32,12 @@ public class Base {
      * @throws OptimizationException
      * @throws CodeParserException
      */
-     protected Executer executeProgram(GAPPTestable testable, String cluName) throws OptimizationException, CodeParserException {
+    protected Executer executeProgram(GAPPTestable testable, String cluName) throws OptimizationException, CodeParserException {
         CodeParser parser = (new de.gaalop.clucalc.input.Plugin()).createCodeParser();
         ControlFlowGraph graph = parser.parseFile(new InputFile(cluName, testable.getSource()));
 
         GAPPDecoratingMain importer = new GAPPDecoratingMain();
-        importer.decorateGraph(testable.getUsedAlgebra(),graph);
+        importer.decorateGraph(testable.getUsedAlgebra(), graph);
 
         outputPlugin(new de.gaalop.codegenGapp.Plugin(), graph);
         outputPlugin(new de.gaalop.clucalc.output.Plugin(), graph);
@@ -61,8 +61,9 @@ public class Base {
         Set<OutputFile> outputFiles;
         try {
             outputFiles = generator.generate(graph);
-            for (OutputFile outputFile: outputFiles)
+            for (OutputFile outputFile : outputFiles) {
                 writeFile(outputFile);
+            }
         } catch (CodeGeneratorException ex) {
             Logger.getLogger(GAPPDecoratingMain.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -74,12 +75,11 @@ public class Base {
      */
     protected static void writeFile(OutputFile outputFile) {
         try {
-            PrintWriter out = new PrintWriter("src/test/java/de/gaalop/gapp/generatedTests/"+outputFile.getName());
+            PrintWriter out = new PrintWriter("src/test/java/de/gaalop/gapp/generatedTests/" + outputFile.getName());
             out.print(outputFile.getContent());
             out.close();
         } catch (FileNotFoundException ex) {
             Logger.getLogger(GAPPDecoratingMain.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
 }

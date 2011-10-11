@@ -53,7 +53,7 @@ public class DFGToMaximaCode implements ExpressionVisitor {
         node.getRight().accept(this);
         result.append(")");
     }
-    
+
     @Override
     public void visit(Subtraction node) {
         handleBinary(node, "-");
@@ -132,7 +132,7 @@ public class DFGToMaximaCode implements ExpressionVisitor {
     @Override
     public void visit(Negation node) {
         result.append("(");
-        handleUnary(node,"-");
+        handleUnary(node, "-");
         result.append(")");
     }
 
@@ -192,8 +192,9 @@ public class DFGToMaximaCode implements ExpressionVisitor {
                 break;
         }
 
-        if (operator != null)
+        if (operator != null) {
             handleBinary(relation, operator);
+        }
     }
 
     @Override
@@ -205,5 +206,4 @@ public class DFGToMaximaCode implements ExpressionVisitor {
     public void visit(MacroCall node) {
         throw new IllegalStateException("Macros should have been removed.");
     }
-
 }

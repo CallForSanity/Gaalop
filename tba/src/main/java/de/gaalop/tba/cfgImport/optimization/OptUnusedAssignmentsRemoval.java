@@ -14,7 +14,6 @@ import java.util.LinkedList;
  */
 public class OptUnusedAssignmentsRemoval implements OptimizationStrategyWithModifyFlag {
 
-
     @Override
     public boolean transform(ControlFlowGraph graph, UseAlgebra usedAlgebra) {
         // traverse the graph in the opposite direction
@@ -23,9 +22,9 @@ public class OptUnusedAssignmentsRemoval implements OptimizationStrategyWithModi
         LinkedList<Node> nodeList = v.getNodeList();
 
         // list output blades
-        HashMap<String,LinkedList<Integer>> outputBlades = new HashMap<String,LinkedList<Integer>>();
+        HashMap<String, LinkedList<Integer>> outputBlades = new HashMap<String, LinkedList<Integer>>();
 
-        for (String output: graph.getPragmaOutputVariables()) {
+        for (String output : graph.getPragmaOutputVariables()) {
             String[] parts = output.split("\\$");
             LinkedList<Integer> list;
             if (outputBlades.containsKey(parts[0])) {
@@ -40,7 +39,7 @@ public class OptUnusedAssignmentsRemoval implements OptimizationStrategyWithModi
 
         Iterator<Node> descendingIterator = nodeList.descendingIterator();
 
-        CFGVisitorUsedVariables cfgVariableVisitor = new CFGVisitorUsedVariables(outputBlades,usedAlgebra);
+        CFGVisitorUsedVariables cfgVariableVisitor = new CFGVisitorUsedVariables(outputBlades, usedAlgebra);
 
         while (descendingIterator.hasNext()) {
             Node cur = descendingIterator.next();
@@ -48,10 +47,10 @@ public class OptUnusedAssignmentsRemoval implements OptimizationStrategyWithModi
         }
 
         // remove all nodes that are marked for removal
-        for (SequentialNode node: cfgVariableVisitor.getNodeRemovals())
+        for (SequentialNode node : cfgVariableVisitor.getNodeRemovals()) {
             graph.removeNode(node);
+        }
 
         return !cfgVariableVisitor.getNodeRemovals().isEmpty();
     }
-
 }

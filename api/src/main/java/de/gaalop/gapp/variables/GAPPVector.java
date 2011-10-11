@@ -17,6 +17,4 @@ public class GAPPVector extends GAPPSetOfVariables {
     public Object accept(GAPPVariableVisitor visitor, Object arg) {
         return visitor.visitVector(this, arg);
     }
-
-
 }

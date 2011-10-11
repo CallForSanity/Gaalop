@@ -28,20 +28,19 @@ public class UnusedCollector extends EmptyControlFlowVisitor {
      * @return <value>true</value> if it is used, <value>false</value> otherwise
      */
     private boolean isUsed(String name) {
-        for (Variable var: usedVariables)
-            if (var.getName().equals(name))
+        for (Variable var : usedVariables) {
+            if (var.getName().equals(name)) {
                 return true;
+            }
+        }
         return false;
     }
 
     @Override
     public void visit(AssignmentNode node) {
-        if (!isUsed(node.getVariable().getName()))
+        if (!isUsed(node.getVariable().getName())) {
             unusedNodes.add(node);
+        }
         super.visit(node);
     }
-
-
-    
-
 }

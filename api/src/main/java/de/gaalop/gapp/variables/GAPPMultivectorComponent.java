@@ -31,5 +31,4 @@ public class GAPPMultivectorComponent extends GAPPVariable {
     public Object accept(GAPPVariableVisitor visitor, Object arg) {
         return visitor.visitMultivectorComponent(this, arg);
     }
-    
 }

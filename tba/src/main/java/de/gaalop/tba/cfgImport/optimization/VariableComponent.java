@@ -44,25 +44,28 @@ public class VariableComponent {
 
     @Override
     public int hashCode() {
-        return 87*name.hashCode()+bladeIndex;
+        return 87 * name.hashCode() + bladeIndex;
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof VariableComponent)) return false;
+        if (!(obj instanceof VariableComponent)) {
+            return false;
+        }
         VariableComponent comp = (VariableComponent) obj;
 
-        if (comp.bladeIndex != this.bladeIndex) return false;
-        if (!comp.name.equals(this.name)) return false;
+        if (comp.bladeIndex != this.bladeIndex) {
+            return false;
+        }
+        if (!comp.name.equals(this.name)) {
+            return false;
+        }
 
         return true;
     }
 
     @Override
     public String toString() {
-        return name+"$"+bladeIndex;
+        return name + "$" + bladeIndex;
     }
-
-
-
 }

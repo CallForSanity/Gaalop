@@ -37,11 +37,17 @@ public class Interval {
 
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof Interval)) return false;
+        if (!(obj instanceof Interval)) {
+            return false;
+        }
         Interval comp = (Interval) obj;
 
-        if (from != comp.from) return false;
-        if (to != comp.to) return false;
+        if (from != comp.from) {
+            return false;
+        }
+        if (to != comp.to) {
+            return false;
+        }
 
         return true;
     }
@@ -56,7 +62,7 @@ public class Interval {
 
     @Override
     public String toString() {
-        return "("+from+"-"+to+")";
+        return "(" + from + "-" + to + ")";
     }
 
     /**
@@ -65,10 +71,6 @@ public class Interval {
      * @return <value>true</value> if the position is in the interval, otherwise <value>false</value>
      */
     public boolean contains(int position) {
-        return from<=position && position<=to;
+        return from <= position && position <= to;
     }
-
-
-
 }
-

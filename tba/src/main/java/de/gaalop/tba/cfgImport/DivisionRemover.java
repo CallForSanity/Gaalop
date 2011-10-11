@@ -19,7 +19,6 @@ import de.gaalop.dfg.UnaryOperation;
 public class DivisionRemover extends EmptyControlFlowVisitor {
 
     private Expression resultValue = null;
-
     private ExpressionVisitor expressionVisitor = new ExpressionTypeVisitor() {
 
         @Override
@@ -69,7 +68,4 @@ public class DivisionRemover extends EmptyControlFlowVisitor {
 
         super.visit(node);
     }
-
-    
-    
 }

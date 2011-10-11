@@ -20,20 +20,19 @@ public class GAPPSetMvMerger extends EmptyCFGGAPPVisitor {
     public HashSet<GAPPSetMv> getToRemove() {
         return toRemove;
     }
-
     private String curDestination;
-    
     private HashMap<String, LinkedList<GAPPSetMv>> mapSetMv = new HashMap<String, LinkedList<GAPPSetMv>>();
 
     @Override
     public void visit(AssignmentNode node) {
         String varName = node.getVariable().getName();
-        if (curDestination != null) 
+        if (curDestination != null) {
             if (!curDestination.equals(varName)) {
                 prepareMap();
                 mapSetMv.clear();
-            } 
-        
+            }
+        }
+
         curDestination = varName;
 
         super.visit(node);
@@ -43,11 +42,11 @@ public class GAPPSetMvMerger extends EmptyCFGGAPPVisitor {
      * Merges mergable GAPPSetMv to the first GAPPSetMv in mapSetMv
      */
     private void prepareMap() {
-        for (LinkedList<GAPPSetMv> list: mapSetMv.values())
-            if (list.size()>1) {
+        for (LinkedList<GAPPSetMv> list : mapSetMv.values()) {
+            if (list.size() > 1) {
                 //merge setMv instructions into the first GAPPSetMv instruction
                 GAPPSetMv first = list.removeFirst();
-                for (GAPPSetMv cur: list) {
+                for (GAPPSetMv cur : list) {
                     first.getSelectorsDest().addAll(cur.getSelectorsDest());
                     first.getSelectorsSrc().addAll(cur.getSelectorsSrc());
                 }
@@ -55,20 +54,20 @@ public class GAPPSetMvMerger extends EmptyCFGGAPPVisitor {
                 //and remove other instructions
                 toRemove.addAll(list);
             }
+        }
     }
-
 
     @Override
     public Object visitSetMv(GAPPSetMv gappSetMv, Object arg) {
         if (gappSetMv.getDestination().getName().equals(curDestination)) {
             String src = gappSetMv.getSource().getName();
-            if (!mapSetMv.containsKey(src))
+            if (!mapSetMv.containsKey(src)) {
                 mapSetMv.put(src, new LinkedList<GAPPSetMv>());
+            }
 
             mapSetMv.get(src).add(gappSetMv);
         }
-        
+
         return super.visitSetMv(gappSetMv, arg);
     }
-
 }

@@ -22,7 +22,7 @@ public abstract class GAPPVariable extends GAPPValueHolder {
     public String prettyPrint() {
         return name;
     }
-    
+
     public String getName() {
         return name;
     }
@@ -33,7 +33,9 @@ public abstract class GAPPVariable extends GAPPValueHolder {
 
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof GAPPVariable)) return false;
+        if (!(obj instanceof GAPPVariable)) {
+            return false;
+        }
         return name.equals(((GAPPVariable) obj).name);
     }
 
@@ -41,5 +43,4 @@ public abstract class GAPPVariable extends GAPPValueHolder {
     public boolean isVariable() {
         return true;
     }
-
 }

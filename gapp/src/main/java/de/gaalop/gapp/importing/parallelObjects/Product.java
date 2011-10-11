@@ -50,13 +50,14 @@ public class Product extends ParallelObject {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder((isNegated() ? "!" : "") + "(");
-        for (ParallelObject obj: factors) {
+        for (ParallelObject obj : factors) {
             sb.append(obj.toString());
             sb.append(" *");
         }
 
-        if (factors.size() >= 1)
-            sb.delete(sb.length()-2, sb.length());
+        if (factors.size() >= 1) {
+            sb.delete(sb.length() - 2, sb.length());
+        }
 
         sb.append(")");
         return sb.toString();
@@ -66,8 +67,4 @@ public class Product extends ParallelObject {
     public boolean isTerminal() {
         return false;
     }
-
-
-    
-
 }

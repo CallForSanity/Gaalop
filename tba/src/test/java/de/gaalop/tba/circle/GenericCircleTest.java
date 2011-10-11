@@ -13,7 +13,6 @@ public abstract class GenericCircleTest implements GenericTestable {
     protected static final double EPSILON = 10E-4;
 
     protected abstract String constantDefinition();
-
     protected Point p1;
     protected Point p2;
     protected Point p3;
@@ -26,30 +25,22 @@ public abstract class GenericCircleTest implements GenericTestable {
 
     @Override
     public String getCLUScript() {
-        return
-            "DefVarsN3();"+"\n"+
-            ":IPNS;"+"\n"+
-
-            "//#pragma output m$1"+"\n"+
-            "//#pragma output m$2"+"\n"+
-            "//#pragma output r$0"+"\n"+
-
-            constantDefinition() +"\n"+
-
-            "v1 = x1*e1+y1*e2;"+"\n"+
-            "v2 = x2*e1+y2*e2;"+"\n"+
-            "v3 = x3*e1+y3*e2;"+"\n"+
-
-            "p1 = v1 + 0.5*v1*v1*einf + e0;"+"\n"+
-            "p2 = v2 + 0.5*v2*v2*einf + e0;"+"\n"+
-            "p3 = v3 + 0.5*v3*v3*einf + e0;"+"\n"+
-
-            "c = *(p1^p2^p3);"+"\n"+
-
-            "mtmp = c*einf*c;"+"\n"+
-            "?m = -mtmp/(mtmp.einf);"+"\n"+
-            "?r = sqrt(abs(c.c/((einf.c)*(einf.c))));"+"\n"
-            ;
+        return "DefVarsN3();" + "\n"
+                + ":IPNS;" + "\n"
+                + "//#pragma output m$1" + "\n"
+                + "//#pragma output m$2" + "\n"
+                + "//#pragma output r$0" + "\n"
+                + constantDefinition() + "\n"
+                + "v1 = x1*e1+y1*e2;" + "\n"
+                + "v2 = x2*e1+y2*e2;" + "\n"
+                + "v3 = x3*e1+y3*e2;" + "\n"
+                + "p1 = v1 + 0.5*v1*v1*einf + e0;" + "\n"
+                + "p2 = v2 + 0.5*v2*v2*einf + e0;" + "\n"
+                + "p3 = v3 + 0.5*v3*v3*einf + e0;" + "\n"
+                + "c = *(p1^p2^p3);" + "\n"
+                + "mtmp = c*einf*c;" + "\n"
+                + "?m = -mtmp/(mtmp.einf);" + "\n"
+                + "?r = sqrt(abs(c.c/((einf.c)*(einf.c))));" + "\n";
     }
 
     /**
@@ -61,12 +52,11 @@ public abstract class GenericCircleTest implements GenericTestable {
      * @return The distance
      */
     protected String getDistance(String p1x, String p1y, String p2x, String p2y) {
-        return "(float) Math.sqrt(("+p2x+"-"+p1x+")*("+p2x+"-"+p1x+") + ("+p2y+"-"+p1y+")*("+p2y+"-"+p1y+"))";
+        return "(float) Math.sqrt((" + p2x + "-" + p1x + ")*(" + p2x + "-" + p1x + ") + (" + p2y + "-" + p1y + ")*(" + p2y + "-" + p1y + "))";
     }
 
     @Override
     public UseAlgebra getUsedAlgebra() {
         return UseAlgebra.get5dConformalGA();
     }
-
 }

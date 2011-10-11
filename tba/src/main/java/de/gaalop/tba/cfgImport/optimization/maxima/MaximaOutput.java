@@ -7,5 +7,4 @@ import java.util.LinkedList;
  * @author Christian Steinmetz
  */
 public class MaximaOutput extends LinkedList<String> {
-
 }

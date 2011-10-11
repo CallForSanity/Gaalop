@@ -48,5 +48,4 @@ public class EmptyCFGGAPPVisitor extends CFGGAPPVisitor {
     public Object visitAssignVector(GAPPAssignVector gappAssignVector, Object arg) {
         return null;
     }
-
 }

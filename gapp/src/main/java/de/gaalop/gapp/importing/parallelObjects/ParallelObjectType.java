@@ -18,7 +18,6 @@ public enum ParallelObjectType implements ParallelObjectVisitor {
         return (ParallelObjectType) object.accept(visitor, null);
     }
 
-
     @Override
     public Object visitSum(Sum sum, Object arg) {
         return this.summands;
@@ -53,5 +52,4 @@ public enum ParallelObjectType implements ParallelObjectVisitor {
     public Object visitVariable(ParVariable variable, Object arg) {
         return this.variable;
     }
-
 }

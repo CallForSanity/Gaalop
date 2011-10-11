@@ -17,129 +17,117 @@ import de.gaalop.tba.cfgImport.optimization.maxima.ProcessBuilderMaximaConnectio
  */
 public class Plugin extends Observable implements OptimizationStrategyPlugin {
 
-        @ConfigurationProperty(type = Type.BOOLEAN)
-        public boolean optMaxima = true;
+    @ConfigurationProperty(type = Type.BOOLEAN)
+    public boolean optMaxima = true;
+    @ConfigurationProperty(type = Type.BOOLEAN)
+    public boolean optOneExpressionRemoval = true;
+    @ConfigurationProperty(type = Type.BOOLEAN)
+    public boolean optConstantPropagation = true;
+    @ConfigurationProperty(type = Type.BOOLEAN)
+    public boolean optUnusedAssignments = true;
+    @ConfigurationProperty(type = Type.TEXT)
+    public String maximaCommand = ProcessBuilderMaximaConnection.CMD_MAXIMA_LINUX;
+    @ConfigurationProperty(type = Type.TEXT)
+    public String algebra = "5d"; //make conformal 5d to the standard algebra
+    @ConfigurationProperty(type = Type.BOOLEAN)
+    public boolean optInserting = true;
+    public boolean invertTransformation = true;
+    public boolean scalarFunctions = true;
 
-        @ConfigurationProperty(type = Type.BOOLEAN)
-        public boolean optOneExpressionRemoval = true;
+    public String getAlgebra() {
+        return algebra;
+    }
 
-        @ConfigurationProperty(type = Type.BOOLEAN)
-        public boolean optConstantPropagation = true;
+    public boolean isOptMaxima() {
+        return optMaxima;
+    }
 
-        @ConfigurationProperty(type = Type.BOOLEAN)
-        public boolean optUnusedAssignments = true;
+    public boolean isOptConstantPropagation() {
+        return optConstantPropagation;
+    }
 
-        @ConfigurationProperty(type = Type.TEXT)
-        public String maximaCommand = ProcessBuilderMaximaConnection.CMD_MAXIMA_LINUX;
+    public boolean isOptOneExpressionRemoval() {
+        return optOneExpressionRemoval;
+    }
 
-        @ConfigurationProperty(type = Type.TEXT)
-        public String algebra = "5d"; //make conformal 5d to the standard algebra
+    public boolean isOptUnusedAssignments() {
+        return optUnusedAssignments;
+    }
 
-        @ConfigurationProperty(type = Type.BOOLEAN)
-        public boolean optInserting = true;
+    public boolean isOptInserting() {
+        return optInserting;
+    }
 
-        public boolean invertTransformation = true;
-        public boolean scalarFunctions = true;
+    public boolean isScalarFunctions() {
+        return scalarFunctions;
+    }
 
-        public String getAlgebra() {
-            return algebra;
-        }
+    public boolean isInvertTransformation() {
+        return invertTransformation;
+    }
 
-        public boolean isOptMaxima() {
-            return optMaxima;
-        }
+    public String getMaximaCommand() {
+        return maximaCommand;
+    }
 
-        public boolean isOptConstantPropagation() {
-            return optConstantPropagation;
-        }
+    public void setAlgebra(String algebra) {
+        this.algebra = algebra;
+    }
 
-        public boolean isOptOneExpressionRemoval() {
-            return optOneExpressionRemoval;
-        }
+    public void setMaximaCommand(String maximaCommand) {
+        this.maximaCommand = maximaCommand;
+    }
 
-        public boolean isOptUnusedAssignments() {
-            return optUnusedAssignments;
-        }
+    public void setOptConstantPropagation(boolean optConstantPropagation) {
+        this.optConstantPropagation = optConstantPropagation;
+    }
 
-        public boolean isOptInserting() {
-            return optInserting;
-        }
+    public void setOptMaxima(boolean optMaxima) {
+        this.optMaxima = optMaxima;
+    }
 
-        public boolean isScalarFunctions() {
-            return scalarFunctions;
-        }
+    public void setOptOneExpressionRemoval(boolean optOneExpressionRemoval) {
+        this.optOneExpressionRemoval = optOneExpressionRemoval;
+    }
 
-        public boolean isInvertTransformation() {
-            return invertTransformation;
-        }
+    public void setOptUnusedAssignments(boolean optUnusedAssignments) {
+        this.optUnusedAssignments = optUnusedAssignments;
+    }
 
+    public void setOptInserting(boolean optInserting) {
+        this.optInserting = optInserting;
+    }
 
+    public void setScalarFunctions(boolean scalarFunctions) {
+        this.scalarFunctions = scalarFunctions;
+    }
 
-        public String getMaximaCommand() {
-            return maximaCommand;
-        }
+    public void setInvertTransformation(boolean invertTransformation) {
+        this.invertTransformation = invertTransformation;
+    }
 
-        public void setAlgebra(String algebra) {
-            this.algebra = algebra;
-        }
+    @Override
+    public String getDescription() {
+        return "This plugin uses a table based approach to optimize Geometric Algebra";
+    }
 
-        public void setMaximaCommand(String maximaCommand) {
-            this.maximaCommand = maximaCommand;
-        }
+    @Override
+    public Image getIcon() {
+        return null;
+    }
 
-        public void setOptConstantPropagation(boolean optConstantPropagation) {
-            this.optConstantPropagation = optConstantPropagation;
-        }
+    @Override
+    public String getName() {
+        return "TBA";
+    }
 
-        public void setOptMaxima(boolean optMaxima) {
-            this.optMaxima = optMaxima;
-        }
+    @Override
+    public OptimizationStrategy createOptimizationStrategy() {
+        return new TBAOptStrategy(this);
+    }
 
-        public void setOptOneExpressionRemoval(boolean optOneExpressionRemoval) {
-            this.optOneExpressionRemoval = optOneExpressionRemoval;
-        }
-
-        public void setOptUnusedAssignments(boolean optUnusedAssignments) {
-            this.optUnusedAssignments = optUnusedAssignments;
-        }
-
-        public void setOptInserting(boolean optInserting) {
-            this.optInserting = optInserting;
-        }
-
-        public void setScalarFunctions(boolean scalarFunctions) {
-            this.scalarFunctions = scalarFunctions;
-        }
-
-        public void setInvertTransformation(boolean invertTransformation) {
-            this.invertTransformation = invertTransformation;
-        }
-
-
-
-	@Override
-	public String getDescription() {
-		return "This plugin uses a table based approach to optimize Geometric Algebra";
-	}
-
-	@Override
-	public Image getIcon() {
-            return null;
-	}
-
-	@Override
-	public String getName() {
-		return "TBA";
-	}
-
-	@Override
-	public OptimizationStrategy createOptimizationStrategy() {
-            return new TBAOptStrategy(this);
-	}
-
-        void notifyError(Throwable error) {
-            setChanged();
-            notifyObservers(new Notifications.Error(error));
-        }
-
+    void notifyError(Throwable error) {
+        setChanged();
+        notifyObservers(new Notifications.Error(error));
+    }
 }

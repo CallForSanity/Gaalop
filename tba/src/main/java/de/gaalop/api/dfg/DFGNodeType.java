@@ -8,8 +8,7 @@ public enum DFGNodeType {
 
     Subtraction, Addition, Division, InnerProduct, Multiplication,
     MathFunctionCall, Variable, MultivectorComponent,
-    Exponentiation, FloatConstant, OuterProduct, BaseVector, 
+    Exponentiation, FloatConstant, OuterProduct, BaseVector,
     Negation, Reverse, LogicalOr, LogicalAnd, LogicalNegation,
     Equality, Inequality, Relation, FunctionArgument, MacroCall
-
 }

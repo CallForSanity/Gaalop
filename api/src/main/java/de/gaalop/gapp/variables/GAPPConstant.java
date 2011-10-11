@@ -11,7 +11,7 @@ public class GAPPConstant extends GAPPValueHolder {
     public GAPPConstant(float value) {
         this.value = value;
     }
-    
+
     @Override
     public boolean isVariable() {
         return false;
@@ -34,5 +34,4 @@ public class GAPPConstant extends GAPPValueHolder {
     public Object accept(GAPPVariableVisitor visitor, Object arg) {
         return visitor.visitConstant(this, arg);
     }
-
 }

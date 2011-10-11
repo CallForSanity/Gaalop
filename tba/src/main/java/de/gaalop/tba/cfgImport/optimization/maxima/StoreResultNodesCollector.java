@@ -33,11 +33,12 @@ public class StoreResultNodesCollector extends EmptyControlFlowVisitor {
      * @return <value>true</value>, if it is a store result variable, <value>false</value> otherwise
      */
     public boolean containsStoreResultVariableName(String name) {
-        for (Variable var: variables)
-            if (var.getName().equals(name))
+        for (Variable var : variables) {
+            if (var.getName().equals(name)) {
                 return true;
+            }
+        }
 
         return false;
     }
-
 }

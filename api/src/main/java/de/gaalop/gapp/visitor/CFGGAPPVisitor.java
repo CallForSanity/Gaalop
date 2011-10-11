@@ -15,9 +15,9 @@ public abstract class CFGGAPPVisitor extends EmptyControlFlowVisitor implements 
 
     @Override
     public void visit(AssignmentNode node) {
-        if (node.getGAPP() != null)
+        if (node.getGAPP() != null) {
             node.getGAPP().accept(this, null);
+        }
         super.visit(node);
     }
-    
 }

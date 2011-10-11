@@ -10,7 +10,6 @@ import java.util.LinkedList;
 public class DotProduct extends ParallelObject {
 
     private LinkedList<ParallelVector> factors;
-
     private int width;
     private int height;
 
@@ -29,12 +28,12 @@ public class DotProduct extends ParallelObject {
     public String toString() {
         StringBuilder result = new StringBuilder((isNegated() ? "!" : "") + "[");
         if (width > 0) {
-            for (ParallelVector vector: factors) {
+            for (ParallelVector vector : factors) {
                 result.append("(");
                 result.append(vector.toString());
                 result.append("),");
             }
-            result.deleteCharAt(result.length()-1);
+            result.deleteCharAt(result.length() - 1);
         }
 
         result.append("]");
@@ -49,10 +48,12 @@ public class DotProduct extends ParallelObject {
      * @param col The col of the cell
      */
     public void ensure(int row, int col) {
-        while (col>=width)
+        while (col >= width) {
             addCol();
-        while (row>=height)
+        }
+        while (row >= height) {
             addRow();
+        }
     }
 
     /**
@@ -60,8 +61,9 @@ public class DotProduct extends ParallelObject {
      */
     private void addCol() {
         ParallelVector vector = new ParallelVector();
-        for (int y=0;y<height;y++)
-           vector.getSlots().add(new Constant(1));
+        for (int y = 0; y < height; y++) {
+            vector.getSlots().add(new Constant(1));
+        }
 
         factors.add(vector);
         width++;
@@ -71,8 +73,9 @@ public class DotProduct extends ParallelObject {
      * Adds a row, and fills the new row with constants of the value "1"
      */
     private void addRow() {
-        for (ParallelVector factor: factors)
+        for (ParallelVector factor : factors) {
             factor.getSlots().add(new Constant(1));
+        }
         height++;
     }
 
@@ -128,15 +131,14 @@ public class DotProduct extends ParallelObject {
      */
     public void computeWidthAndHeight() {
         width = factors.size();
-        if (width >=1)
+        if (width >= 1) {
             height = factors.getFirst().getSlots().size();
-        else
+        } else {
             height = 0;
+        }
     }
 
     public void setFactors(LinkedList<ParallelVector> factors) {
         this.factors = factors;
     }
-
-    
 }

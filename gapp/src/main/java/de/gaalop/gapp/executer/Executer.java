@@ -28,12 +28,11 @@ public class Executer extends CFGGAPPVisitor {
     /**
      * Maps names of multivectors to their values
      */
-    private HashMap<String,MultivectorWithValues> values = new HashMap<String,MultivectorWithValues>();
-
+    private HashMap<String, MultivectorWithValues> values = new HashMap<String, MultivectorWithValues>();
     /**
      * Maps the scalar inputs to their values
      */
-    private HashMap<String,Float> inputValues;
+    private HashMap<String, Float> inputValues;
 
     /**
      * Returns the MultivectorWithValues object which stores the current values
@@ -49,10 +48,9 @@ public class Executer extends CFGGAPPVisitor {
         return values;
     }
 
-    public Executer(HashMap<String,Float> inputValues) {
+    public Executer(HashMap<String, Float> inputValues) {
         this.inputValues = inputValues;
     }
-
 
     /**
      * Returns the MultivectorWithValues object which stores the current values
@@ -67,10 +65,10 @@ public class Executer extends CFGGAPPVisitor {
      * @return The values of the multlivector with the given name
      */
     private MultivectorWithValues getMultivector(String name) {
-        if (values.containsKey(name))
+        if (values.containsKey(name)) {
             return values.get(name);
-        else {
-            System.err.println("Multivector "+name+" does not exist!");
+        } else {
+            System.err.println("Multivector " + name + " does not exist!");
             return null;
         }
     }
@@ -92,7 +90,7 @@ public class Executer extends CFGGAPPVisitor {
     private float getVariableValue(String name) {
         return inputValues.get(name);
     }
-    
+
     @Override
     public Object visitResetMv(GAPPResetMv gappResetMv, Object arg) {
         MultivectorWithValues mv = new MultivectorWithValues(gappResetMv.getSize());
@@ -110,11 +108,11 @@ public class Executer extends CFGGAPPVisitor {
         PosSelectorset selDest = gappSetMv.getSelectorsDest();
 
         int selCount = gappSetMv.getSelectorsSrc().size();
-        for (int sel=0;sel<selCount;sel++) {
-           PosSelector sDest = selDest.get(sel);
+        for (int sel = 0; sel < selCount; sel++) {
+            PosSelector sDest = selDest.get(sel);
             Selector sSrc = selSrc.get(sel);
 
-            destination.getEntries()[sDest.getIndex()] = sSrc.getSign()*source.getEntries()[sSrc.getIndex()];
+            destination.getEntries()[sDest.getIndex()] = sSrc.getSign() * source.getEntries()[sSrc.getIndex()];
         }
 
         return null;
@@ -127,18 +125,19 @@ public class Executer extends CFGGAPPVisitor {
         // calculate the dot product
         float sum = 0;
         int size = getMultivector(gappDotVectors.getParts().getFirst().getName()).getEntries().length;
-        for (int slot = 0;slot<size;slot++) {
+        for (int slot = 0; slot < size; slot++) {
             float prod = 1;
 
-            for (GAPPVector part: gappDotVectors.getParts())
+            for (GAPPVector part : gappDotVectors.getParts()) {
                 prod *= getMultivector(part.getName()).getEntry(slot);
-            
+            }
+
             sum += prod;
         }
 
         Selector sDest = gappDotVectors.getDestSelector();
 
-        destination.setEntry(sDest.getIndex(), sDest.getSign()*sum);
+        destination.setEntry(sDest.getIndex(), sDest.getSign() * sum);
         return null;
     }
 
@@ -152,12 +151,12 @@ public class Executer extends CFGGAPPVisitor {
         MultivectorWithValues source = getMultivector(gappSetVector.getSource().getName());
         Selectorset selSrc = gappSetVector.getSelectorsSrc();
 
-        
+
         destination.setEntries(new float[size]);
-        for (int sel=0;sel<size;sel++) {
+        for (int sel = 0; sel < size; sel++) {
             Selector sSrc = selSrc.get(sel);
 
-            destination.setEntry(sel,sSrc.getSign()*source.getEntries()[sSrc.getIndex()]);
+            destination.setEntry(sel, sSrc.getSign() * source.getEntries()[sSrc.getIndex()]);
         }
 
         return null;
@@ -169,7 +168,7 @@ public class Executer extends CFGGAPPVisitor {
 
         PosSelectorset selector = gappAssignMv.getSelectors();
         int selCount = selector.size();
-        for (int sel=0;sel<selCount;sel++) {
+        for (int sel = 0; sel < selCount; sel++) {
             GAPPValueHolder scalarVar = gappAssignMv.getValues().get(sel);
             float value = (scalarVar.isVariable())
                     ? getVariableValue(((GAPPVariable) scalarVar).getName())
@@ -223,12 +222,13 @@ public class Executer extends CFGGAPPVisitor {
                 result = (float) Math.exp(op1);
                 break;
             case EXPONENTIATION:
-                result = (float) Math.pow(op1,op2);
+                result = (float) Math.pow(op1, op2);
                 break;
             case FACT:
                 result = 1;
-                for (int i=2;i<=(int) op1;i++)
+                for (int i = 2; i <= (int) op1; i++) {
                     result *= i;
+                }
                 break;
             case FLOOR:
                 result = (float) Math.floor(op1);
@@ -246,7 +246,7 @@ public class Executer extends CFGGAPPVisitor {
                 result = (float) Math.tan(op1);
                 break;
             default:
-                throw new UnsupportedOperationException("Executer: "+gappCalculate.getType()+" is not supported yet.");
+                throw new UnsupportedOperationException("Executer: " + gappCalculate.getType() + " is not supported yet.");
         }
 
         target.setEntry(0, result);
@@ -262,19 +262,20 @@ public class Executer extends CFGGAPPVisitor {
     public void printAllValues() {
         String[] keys = values.keySet().toArray(new String[0]);
         Arrays.sort(keys);
-        for (String m: keys) 
-            System.out.println(m+" = "+Arrays.toString(values.get(m).getEntries()));
+        for (String m : keys) {
+            System.out.println(m + " = " + Arrays.toString(values.get(m).getEntries()));
+        }
     }
 
     @Override
     public Object visitAssignVector(GAPPAssignVector gappAssignVector, Object arg) {
         int size = gappAssignVector.getValues().size();
         String name = gappAssignVector.getDestination().getName();
-        
+
         createVector(name, size);
         MultivectorWithValues destination = getMultivector(name);
-        
-        for (int sel=0;sel<size;sel++) {
+
+        for (int sel = 0; sel < size; sel++) {
             GAPPValueHolder scalarVar = gappAssignVector.getValues().get(sel);
             float value = (scalarVar.isVariable())
                     ? getVariableValue(((GAPPVariable) scalarVar).getName())
@@ -284,5 +285,4 @@ public class Executer extends CFGGAPPVisitor {
 
         return null;
     }
-
 }

@@ -37,9 +37,6 @@ public class LiveStatistics {
 
     @Override
     public String toString() {
-        return interval.toString()+": "+size;
+        return interval.toString() + ": " + size;
     }
-
-    
-
 }

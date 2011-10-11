@@ -61,5 +61,4 @@ public class GAPPSetMv extends GAPPBaseInstruction {
     public void setSource(GAPPSetOfVariables source) {
         this.source = source;
     }
-
 }

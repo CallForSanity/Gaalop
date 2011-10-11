@@ -145,5 +145,4 @@ public class DFGTraversalVisitor implements ExpressionVisitor {
     @Override
     public void visit(MacroCall node) {
     }
-
 }

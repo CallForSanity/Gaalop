@@ -25,5 +25,4 @@ public abstract class InputOutput {
      * @return The index
      */
     public abstract int getNo();
-
 }

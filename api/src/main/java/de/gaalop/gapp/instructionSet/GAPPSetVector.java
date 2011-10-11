@@ -48,6 +48,4 @@ public class GAPPSetVector extends GAPPBaseInstruction {
     public void setSource(GAPPMultivector source) {
         this.source = source;
     }
-
-
 }

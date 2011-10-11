@@ -23,10 +23,11 @@ public class MultTableLoader {
     private void loadProducts(UseAlgebra useAlgebra, String filename_Products, boolean useAsRessource) throws IOException {
         Algebra algebra = useAlgebra.getAlgebra();
         InputStream resourceAsStream;
-        if (useAsRessource)
+        if (useAsRessource) {
             resourceAsStream = getClass().getResourceAsStream(filename_Products);
-        else
+        } else {
             resourceAsStream = new FileInputStream(new File(filename_Products));
+        }
 
         BufferedReader d = new BufferedReader(new InputStreamReader(resourceAsStream));
 
@@ -52,8 +53,6 @@ public class MultTableLoader {
 
         d.close();
     }
-
-
 
     /**
      * Loads an algebra from different files

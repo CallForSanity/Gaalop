@@ -32,7 +32,6 @@ import de.gaalop.dfg.Variable;
 public class DFGNodeTypeGetter implements ExpressionVisitor {
 
     private DFGNodeType type;
-
     private static final DFGNodeTypeGetter getter = new DFGNodeTypeGetter();
 
     /**
@@ -41,7 +40,9 @@ public class DFGNodeTypeGetter implements ExpressionVisitor {
      * @return The type of the given expression
      */
     public static DFGNodeType getTypeOfDFGNode(Expression expression) {
-        if (expression == null) return null;
+        if (expression == null) {
+            return null;
+        }
 
         expression.accept(getter);
         return getter.type;
@@ -156,5 +157,4 @@ public class DFGNodeTypeGetter implements ExpressionVisitor {
     public void visit(MacroCall node) {
         type = DFGNodeType.MacroCall;
     }
-
 }

@@ -17,7 +17,6 @@ public class UseAlgebra {
     private IMultTable tableInner;
     private IMultTable tableOuter;
     private IMultTable tableGeo;
-
     private boolean N3;
 
     public UseAlgebra(String algebraDirName) {
@@ -26,20 +25,20 @@ public class UseAlgebra {
                 || algebraDirName.equalsIgnoreCase("2d")
                 || algebraDirName.equalsIgnoreCase("3d");
         N3 = algebraDirName.equalsIgnoreCase("5d");
-        String dirName = (useAsRessource) ? "algebra/"+algebraDirName+"/" : new File(algebraDirName).getAbsolutePath()+File.separatorChar;
+        String dirName = (useAsRessource) ? "algebra/" + algebraDirName + "/" : new File(algebraDirName).getAbsolutePath() + File.separatorChar;
 
-        algebra = new Algebra(dirName+"blades.csv",useAsRessource);
+        algebra = new Algebra(dirName + "blades.csv", useAsRessource);
 
         tableInner = new MultTableImpl();
         tableOuter = new MultTableImpl();
         tableGeo = new MultTableImpl();
         MultTableLoader loader = new MultTableLoader();
         try {
-            loader.load(this, dirName+"products.csv", useAsRessource);
+            loader.load(this, dirName + "products.csv", useAsRessource);
         } catch (IOException ex) {
             Logger.getLogger(UseAlgebra.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
     }
 
     public boolean isN3() {
@@ -129,16 +128,16 @@ public class UseAlgebra {
         Multivector prodMv = null;
 
         switch (typeProduct) {
-        case INNER:
+            case INNER:
                 prodMv = inner(bladeL, bladeR);
                 break;
-        case OUTER:
+            case OUTER:
                 prodMv = outer(bladeL, bladeR);
                 break;
-        case GEO:
+            case GEO:
                 prodMv = geo(bladeL, bladeR);
                 break;
-        default:
+            default:
                 System.err.println("Product type is unknown!");
                 break;
         }
@@ -152,19 +151,16 @@ public class UseAlgebra {
      */
     public AlgebraSignature getAlgebraSignature() {
 
-       Expression[] bladlist = new Expression[algebra.getBlades().size()];
-       for (int blade = 0;blade<bladlist.length;blade++) {
-           bladlist[blade] = algebra.getBlades().get(blade).getExpression();
-       }
+        Expression[] bladlist = new Expression[algebra.getBlades().size()];
+        for (int blade = 0; blade < bladlist.length; blade++) {
+            bladlist[blade] = algebra.getBlades().get(blade).getExpression();
+        }
 
 
-       AlgebraSignature sig = new AlgebraSignature(algebra.getBaseCount(),bladlist,N3);
+        AlgebraSignature sig = new AlgebraSignature(algebra.getBaseCount(), bladlist, N3);
 
-       sig.setBasesFromBladesFile(algebra.getBase());
+        sig.setBasesFromBladesFile(algebra.getBase());
 
-       return sig;
+        return sig;
     }
-
-    
-
 }

@@ -15,5 +15,4 @@ public class GAPPScalarVariable extends GAPPVariable {
     public Object accept(GAPPVariableVisitor visitor, Object arg) {
         return visitor.visitScalarVariable(this, arg);
     }
-
 }

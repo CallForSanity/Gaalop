@@ -17,7 +17,7 @@ public class VariableUsage {
      * @param component The component to add
      */
     public void addUsage(VariableComponent component) {
-       usedComponents.add(component);
+        usedComponents.add(component);
     }
 
     /**
@@ -39,5 +39,4 @@ public class VariableUsage {
     public boolean isUsed(VariableComponent component) {
         return usedComponents.contains(component);
     }
-
 }

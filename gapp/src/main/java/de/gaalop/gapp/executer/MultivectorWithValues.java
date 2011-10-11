@@ -29,7 +29,7 @@ public class MultivectorWithValues {
     public float getEntry(int blade) {
         return entries[blade];
     }
-    
+
     public void setEntry(int blade, float value) {
         entries[blade] = value;
     }
@@ -43,9 +43,6 @@ public class MultivectorWithValues {
      * Clears all components to zero
      */
     public void clear() {
-        Arrays.fill(entries,0.0f);
+        Arrays.fill(entries, 0.0f);
     }
-
-
-
 }

@@ -22,8 +22,7 @@ import java.util.HashSet;
 public class GAPPDecorator extends EmptyControlFlowVisitor {
 
     private HashSet<String> createdGAPPVariables = new HashSet<String>();
-
-    private GAPPCreator  gappCreator;
+    private GAPPCreator gappCreator;
     private GAPP gappStart;
     private int bladeCount;
 
@@ -63,8 +62,9 @@ public class GAPPDecorator extends EmptyControlFlowVisitor {
 
         DotProductsFinder finder = new DotProductsFinder();
         DotProduct newDot = (DotProduct) parallelObject.accept(finder, null);
-        if (newDot != null)
+        if (newDot != null) {
             parallelObject = newDot;
+        }
 
 
         if (variable instanceof MultivectorComponent) {
@@ -79,19 +79,17 @@ public class GAPPDecorator extends EmptyControlFlowVisitor {
             // only a MathFunctionCall is possible
             //create gapp here
             ExtCalculation extCalculation = (ExtCalculation) parallelObject;
-            
+
             gapp.addInstruction(new GAPPCalculateMv(extCalculation.getType(),
                     new GAPPMultivector(variable.getName()),
                     new GAPPMultivector(((ParVariable) extCalculation.getOperand1()).getName()),
                     (extCalculation.getOperand2() == null)
-                        ? null
-                        : new GAPPMultivector(((ParVariable) extCalculation.getOperand2()).getName())
-                    ));
+                    ? null
+                    : new GAPPMultivector(((ParVariable) extCalculation.getOperand2()).getName())));
 
         }
 
         // go further in graph
         super.visit(node);
     }
-
 }

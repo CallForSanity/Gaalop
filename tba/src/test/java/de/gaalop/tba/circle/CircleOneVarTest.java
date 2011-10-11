@@ -14,31 +14,25 @@ import java.util.LinkedList;
 public class CircleOneVarTest extends GenericCircleTest {
 
     private boolean[] commented;
-
     private int n;
 
     public CircleOneVarTest(Point p1, Point p2, Point p3, boolean[] commented, int n) {
-        super(p1,p2,p3);
+        super(p1, p2, p3);
         this.commented = commented;
         this.n = n;
     }
 
     @Override
     protected String constantDefinition() {
-        return
-            ((commented[0]) ? "// " : "") + "x1 = "+p1.x+";"+"\n"+
-            ((commented[1]) ? "// " : "") + "y1 = "+p1.y+";"+"\n"+
-
-            ((commented[2]) ? "// " : "") + "x2 = "+p2.x+";"+"\n"+
-            ((commented[3]) ? "// " : "") + "y2 = "+p2.y+";"+"\n"+
-
-            ((commented[4]) ? "// " : "") + "x3 = "+p3.x+";"+"\n"+
-            ((commented[5]) ? "// " : "") + "y3 = "+p3.y+";"+"\n"
-            ;
+        return ((commented[0]) ? "// " : "") + "x1 = " + p1.x + ";" + "\n"
+                + ((commented[1]) ? "// " : "") + "y1 = " + p1.y + ";" + "\n"
+                + ((commented[2]) ? "// " : "") + "x2 = " + p2.x + ";" + "\n"
+                + ((commented[3]) ? "// " : "") + "y2 = " + p2.y + ";" + "\n"
+                + ((commented[4]) ? "// " : "") + "x3 = " + p3.x + ";" + "\n"
+                + ((commented[5]) ? "// " : "") + "y3 = " + p3.y + ";" + "\n";
     }
-
-     private int currentI;
-     private float currentValue;
+    private int currentI;
+    private float currentValue;
 
     @Override
     public LinkedList<InputOutput> getInputOutputs() {
@@ -46,9 +40,9 @@ public class CircleOneVarTest extends GenericCircleTest {
 
 
 
-        for (int i=-n/2;i<=n/2;i++) {
-            currentValue = i*1;
-            currentI = i+n/2;
+        for (int i = -n / 2; i <= n / 2; i++) {
+            currentValue = i * 1;
+            currentI = i + n / 2;
 
             result.add(new InputOutput() {
 
@@ -58,12 +52,12 @@ public class CircleOneVarTest extends GenericCircleTest {
                 @Override
                 public LinkedList<VariableValue> getInputs() {
                     LinkedList<VariableValue> result = new LinkedList<VariableValue>();
-                    for (int i=0;i<6;i++)
-                        if (commented[i])
-                        {
-                            String varName = ((i%2==0) ? "x" : "y" ) + (i/2+1)+"$0";
+                    for (int i = 0; i < 6; i++) {
+                        if (commented[i]) {
+                            String varName = ((i % 2 == 0) ? "x" : "y") + (i / 2 + 1) + "$0";
                             result.add(new VariableValue(varName, currentValues));
                         }
+                    }
 
 
                     return result;
@@ -74,25 +68,19 @@ public class CircleOneVarTest extends GenericCircleTest {
 
                     // assume that points aren't collinear
 
-                    return 
-                    "// check containing r$0,m$1,m$2\n"+
-                    "assertTrue(outputs.containsKey(\"r$0\"));\n"+
-                    "assertTrue(outputs.containsKey(\"m$1\"));\n"+
-                    "assertTrue(outputs.containsKey(\"m$2\"));\n"+
-
-                    "float r$0 = outputs.get(\"r$0\");\n"+
-                    "float m$x = outputs.get(\"m$1\");\n"+
-                    "float m$y = outputs.get(\"m$2\");\n"+
-
-
-                    "// check radius (should be equal to distance from m to p1,p2,p3)\n"+
-                    "assertEquals("+getDistance("m$x","m$y", getCoordinate(0, currentValues)+"", getCoordinate(1, currentValues)+"")+",r$0,"+EPSILON+");\n"+
-                    "assertEquals("+getDistance("m$x","m$y",getCoordinate(2, currentValues)+"", getCoordinate(3, currentValues)+"")+",r$0,"+EPSILON+");\n"+
-                    "assertEquals("+getDistance("m$x","m$y",getCoordinate(4, currentValues)+"", getCoordinate(5, currentValues)+"")+",r$0,"+EPSILON+");\n"+
-
-                    "// check number of outputs\n"+
-                    "assertEquals(3, outputs.size());\n"
-                            ;
+                    return "// check containing r$0,m$1,m$2\n"
+                            + "assertTrue(outputs.containsKey(\"r$0\"));\n"
+                            + "assertTrue(outputs.containsKey(\"m$1\"));\n"
+                            + "assertTrue(outputs.containsKey(\"m$2\"));\n"
+                            + "float r$0 = outputs.get(\"r$0\");\n"
+                            + "float m$x = outputs.get(\"m$1\");\n"
+                            + "float m$y = outputs.get(\"m$2\");\n"
+                            + "// check radius (should be equal to distance from m to p1,p2,p3)\n"
+                            + "assertEquals(" + getDistance("m$x", "m$y", getCoordinate(0, currentValues) + "", getCoordinate(1, currentValues) + "") + ",r$0," + EPSILON + ");\n"
+                            + "assertEquals(" + getDistance("m$x", "m$y", getCoordinate(2, currentValues) + "", getCoordinate(3, currentValues) + "") + ",r$0," + EPSILON + ");\n"
+                            + "assertEquals(" + getDistance("m$x", "m$y", getCoordinate(4, currentValues) + "", getCoordinate(5, currentValues) + "") + ",r$0," + EPSILON + ");\n"
+                            + "// check number of outputs\n"
+                            + "assertEquals(3, outputs.size());\n";
 
 
                 }
@@ -101,9 +89,6 @@ public class CircleOneVarTest extends GenericCircleTest {
                 public int getNo() {
                     return currentIs;
                 }
-
-
-
             });
 
         }
@@ -134,12 +119,10 @@ public class CircleOneVarTest extends GenericCircleTest {
                 case 4:
                     return p3.x;
                 case 5:
-                    return p3.y; 
+                    return p3.y;
             }
             System.err.println("Programming error");
             return currentValue;
         }
     }
-
-
 }

@@ -37,8 +37,9 @@ public class GAPPValueHolderCopier implements GAPPVariableVisitor {
     private GAPPValueHolder[] copyBlades(GAPPValueHolder[] blades) {
         GAPPValueHolder[] bladesCopy = new GAPPValueHolder[blades.length];
 
-        for (int blade=0;blade<blades.length;blade++)
+        for (int blade = 0; blade < blades.length; blade++) {
             bladesCopy[blade] = (GAPPValueHolder) blades[blade].accept(this, null);
+        }
 
         return bladesCopy;
     }
@@ -52,8 +53,7 @@ public class GAPPValueHolderCopier implements GAPPVariableVisitor {
     public Object visitMultivectorComponent(GAPPMultivectorComponent gappMultivectorComponent, Object arg) {
         return new GAPPMultivectorComponent(
                 gappMultivectorComponent.getName(),
-                gappMultivectorComponent.getBladeIndex()
-                ); //Strings are immutable!
+                gappMultivectorComponent.getBladeIndex()); //Strings are immutable!
     }
 
     @Override
@@ -69,8 +69,9 @@ public class GAPPValueHolderCopier implements GAPPVariableVisitor {
     private LinkedList<GAPPValueHolder> copySlots(LinkedList<GAPPValueHolder> slots) {
         LinkedList<GAPPValueHolder> result = new LinkedList<GAPPValueHolder>();
 
-        for (GAPPValueHolder slot: slots) 
+        for (GAPPValueHolder slot : slots) {
             result.add((GAPPValueHolder) slot.accept(this, null));
+        }
 
         return result;
     }
@@ -79,5 +80,4 @@ public class GAPPValueHolderCopier implements GAPPVariableVisitor {
     public Object visitVector(GAPPVector gappVector, Object arg) {
         return new GAPPVector(gappVector.getName());
     }
-
 }

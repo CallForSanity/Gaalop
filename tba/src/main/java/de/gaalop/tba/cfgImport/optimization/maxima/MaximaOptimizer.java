@@ -23,11 +23,8 @@ import org.antlr.runtime.tree.CommonTreeNodeStream;
 public class MaximaOptimizer {
 
     private MaximaConnection connection;
-
     private AssignmentNodeCollector assignmentNodeCollector;
-
     private Plugin plugin;
-
     private StoreResultNodesCollector collector;
 
     public MaximaOptimizer(MaximaConnection connection, Plugin plugin) {
@@ -46,7 +43,7 @@ public class MaximaOptimizer {
 
         MaximaInput input = new MaximaInput();
         input.add("display2d:false;"); // very important!
-        fillMaximaInput(graph,input);
+        fillMaximaInput(graph, input);
         input.add("quit();"); // very important!
 
         MaximaOutput output = connection.optimizeWithMaxima(input);
@@ -56,17 +53,18 @@ public class MaximaOptimizer {
         //connect in and output
         LinkedList<String> connected = new LinkedList<String>();
         groupMaximaInAndOutputs(connected, output);
-        
+
         connected.removeFirst(); // remove display2d
 
         ListIterator<AssignmentNode> listIterator = assignmentNodeCollector.getAssignmentNodes().listIterator();
-        for (String io: connected) {
+        for (String io : connected) {
             Expression exp = getExpressionFromMaximaOutput(io);
             listIterator.next().setValue(exp);
         }
 
-        if (plugin.isOptInserting())
+        if (plugin.isOptInserting()) {
             removeUnusedAssignments(graph, collector.getVariables());
+        }
 
 
     }
@@ -100,7 +98,7 @@ public class MaximaOptimizer {
         StringBuilder sb = new StringBuilder();
 
         boolean input = false;
-        for (String o: output) {
+        for (String o : output) {
             if (o.startsWith("(%i")) {
                 input = false;
                 if (sb.length() != 0) {
@@ -109,7 +107,7 @@ public class MaximaOptimizer {
                 }
             } else {
                 if (o.startsWith("(%o")) {
-                    sb.append(o.substring(o.indexOf(")")+2));
+                    sb.append(o.substring(o.indexOf(")") + 2));
                     input = true;
                 } else {
                     if (input) {
@@ -119,30 +117,30 @@ public class MaximaOptimizer {
             }
         }
 
-        if (input && sb.length()>0)
+        if (input && sb.length() > 0) {
             connected.add(sb.toString());
+        }
 
     }
 
-    
     /**
      * Fills a given MaximaInput instance with input for maxima, determined from a given graph
      * @param graph The graph to be transformed in MaximaInput
      * @param input The MaximaInput instance to be filled
      */
     private void fillMaximaInput(ControlFlowGraph graph, MaximaInput input) {
-        
+
 
         assignmentNodeCollector = new AssignmentNodeCollector();
         graph.accept(assignmentNodeCollector);
-        
-        for (AssignmentNode node: assignmentNodeCollector.getAssignmentNodes()) {
-            
+
+        for (AssignmentNode node : assignmentNodeCollector.getAssignmentNodes()) {
+
             DFGToMaximaCode dfg = new DFGToMaximaCode();
             node.getVariable().accept(dfg);
             String variable = "";
 
-            
+
 
             //using the store result nodes for marking to evaluate immediately is not possible in all cases,
             //reason: consider a large cluscript with only one StoreResultNode add the end
@@ -152,17 +150,17 @@ public class MaximaOptimizer {
 
             dfg = new DFGToMaximaCode();
             node.getValue().accept(dfg);
-            String value = dfg.getResultString()+";";
+            String value = dfg.getResultString() + ";";
             if (plugin.isOptInserting()) {
 
                 if (!collector.containsStoreResultVariableName(node.getVariable().getName())) { // see comment above
                     dfg = new DFGToMaximaCode();
                     node.getVariable().accept(dfg);
-                    variable = dfg.getResultString()+"::";
+                    variable = dfg.getResultString() + "::";
                 }
-            } 
+            }
 
-            input.add(variable+value);
+            input.add(variable + value);
 
         }
 
@@ -174,15 +172,13 @@ public class MaximaOptimizer {
      * @param usedVariables A list of the used variables
      */
     private void removeUnusedAssignments(ControlFlowGraph graph, LinkedList<Variable> usedVariables) {
-        
+
         UnusedCollector collector = new UnusedCollector(usedVariables);
         graph.accept(collector);
 
-        for (AssignmentNode node: collector.getUnusedNodes())
+        for (AssignmentNode node : collector.getUnusedNodes()) {
             graph.removeNode(node);
+        }
 
     }
-
-    
-
 }

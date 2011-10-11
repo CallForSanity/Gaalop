@@ -34,5 +34,4 @@ public class ParVariable extends ParallelObject {
     public boolean isTerminal() {
         return true;
     }
-
 }

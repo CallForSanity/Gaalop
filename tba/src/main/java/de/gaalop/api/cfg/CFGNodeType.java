@@ -9,5 +9,4 @@ public enum CFGNodeType {
     StartNode, AssignmentNode, StoreResultNode,
     IfThenElseNode, BlockEndNode, LoopNode, BreakNode,
     Macro, ExpressionStatement, EndNode, ColorNode
-
 }

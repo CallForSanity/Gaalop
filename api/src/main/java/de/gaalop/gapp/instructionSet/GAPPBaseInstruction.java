@@ -27,7 +27,4 @@ public abstract class GAPPBaseInstruction {
         accept(printer, null);
         return printer.getResultString();
     }
-
-
-
 }

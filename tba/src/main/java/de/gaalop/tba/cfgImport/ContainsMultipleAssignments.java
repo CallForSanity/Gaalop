@@ -13,7 +13,6 @@ import java.util.HashSet;
 public class ContainsMultipleAssignments extends EmptyControlFlowVisitor {
 
     private boolean containsMultipleAssignments = false;
-
     private HashSet<Variable> assigned = new HashSet<Variable>();
 
     public boolean isContainsMultipleAssignments() {
@@ -44,6 +43,4 @@ public class ContainsMultipleAssignments extends EmptyControlFlowVisitor {
 
         super.visit(node);
     }
-
-    
 }

@@ -22,15 +22,12 @@ import java.util.LinkedList;
 public class MathFunctionSeparator extends EmptyControlFlowVisitor {
 
     private Expression resultValue = null;
-
     private int tempCounter = -1;
-
     private HashSet<String> variables;
 
     public MathFunctionSeparator(HashSet<String> variables) {
         this.variables = variables;
     }
-
 
     /**
      * Create a new temporary, recently unused variable name
@@ -38,15 +35,14 @@ public class MathFunctionSeparator extends EmptyControlFlowVisitor {
      */
     private Variable getNewTemporaryVariable() {
         tempCounter++;
-        while (variables.contains("temp"+tempCounter))
+        while (variables.contains("temp" + tempCounter)) {
             tempCounter++;
+        }
 
-        return new Variable("temp"+tempCounter);
+        return new Variable("temp" + tempCounter);
     }
-
     private HashMap<Variable, Expression> toInsert = new HashMap<Variable, Expression>();
     private LinkedList<Variable> toInsertVars = new LinkedList<Variable>();
-    
     private ExpressionVisitor expressionVisitor = new ExpressionTypeVisitor() {
 
         @Override
@@ -100,7 +96,6 @@ public class MathFunctionSeparator extends EmptyControlFlowVisitor {
             toInsertVars.add(var2);
             resultValue = var2;
         }
-        
     };
 
     @Override
@@ -111,7 +106,7 @@ public class MathFunctionSeparator extends EmptyControlFlowVisitor {
             node.setValue(resultValue);
             resultValue = null;
         }
-        for (Variable var: toInsertVars) {
+        for (Variable var : toInsertVars) {
             AssignmentNode newNode = new AssignmentNode(node.getGraph(), var, toInsert.get(var));
             node.insertBefore(newNode);
         }
@@ -120,8 +115,4 @@ public class MathFunctionSeparator extends EmptyControlFlowVisitor {
 
         super.visit(node);
     }
-
-
-
-
 }

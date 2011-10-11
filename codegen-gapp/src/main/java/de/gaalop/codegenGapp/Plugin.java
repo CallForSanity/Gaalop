@@ -19,7 +19,6 @@ import java.net.URL;
 public class Plugin implements CodeGeneratorPlugin {
 
     private Log log = LogFactory.getLog(Plugin.class);
-
     private Image icon;
 
     public Plugin() {
@@ -54,5 +53,4 @@ public class Plugin implements CodeGeneratorPlugin {
     public Image getIcon() {
         return icon;
     }
-
 }

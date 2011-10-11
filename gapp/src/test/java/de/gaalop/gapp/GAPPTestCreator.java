@@ -45,7 +45,7 @@ public class GAPPTestCreator {
             out.println("import org.junit.Test;");
             out.println("import de.gaalop.gapp.*;");
             out.println("import static org.junit.Assert.*;");
-           // out.println("import org.junit.Ignore;");
+            // out.println("import org.junit.Ignore;");
             out.println();
             out.println("public class GAPPTest extends Base {");
 
@@ -58,9 +58,9 @@ public class GAPPTestCreator {
      * Terminates a testcase, e.g. writes the closing to the java file
      */
     private void endTestCase() {
-            out.println("}");
+        out.println("}");
 
-            out.close();
+        out.close();
     }
 
     /**
@@ -71,10 +71,10 @@ public class GAPPTestCreator {
      */
     private void test(String className) {
         out.println("@Test");
-        out.println("public void test"+className+"() {");
+        out.println("public void test" + className + "() {");
         out.println("        try {");
-        out.println("            "+className+" c = new "+className+"();");
-        out.println("            Executer executer = executeProgram(c, \""+className+"\");");
+        out.println("            " + className + " c = new " + className + "();");
+        out.println("            Executer executer = executeProgram(c, \"" + className + "\");");
         out.println("            c.testOutput(executer);");
         out.println("        } catch (OptimizationException ex) {");
         out.println("            assertTrue(\"Optimization Error\", false);");
@@ -84,5 +84,4 @@ public class GAPPTestCreator {
         out.println("}");
         out.println();
     }
-
 }

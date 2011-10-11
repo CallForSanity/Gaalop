@@ -29,7 +29,4 @@ public class VariableValue {
     public void setValue(float value) {
         this.value = value;
     }
-
-    
-
 }

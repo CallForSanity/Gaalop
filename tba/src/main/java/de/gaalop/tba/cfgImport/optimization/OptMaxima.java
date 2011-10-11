@@ -18,18 +18,17 @@ public class OptMaxima implements OptimizationStrategyWithModifyFlag {
     private MaximaOptimizer transformer;
 
     public OptMaxima(String commandMaxima, Plugin plugin) {
-        transformer = new MaximaOptimizer(new ProcessBuilderMaximaConnection(commandMaxima),plugin);
+        transformer = new MaximaOptimizer(new ProcessBuilderMaximaConnection(commandMaxima), plugin);
     }
 
     @Override
     public boolean transform(ControlFlowGraph graph, UseAlgebra usedAlgebra) {
         try {
-          transformer.transformGraph(graph);
+            transformer.transformGraph(graph);
         } catch (RecognitionException ex) {
             Logger.getLogger(OptMaxima.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-       return false; // don't do a second step, if it was not necessary for other optimizations
+        return false; // don't do a second step, if it was not necessary for other optimizations
     }
-
 }

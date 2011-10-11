@@ -31,5 +31,4 @@ public class BladeRef {
     public void setPrefactor(byte prefactor) {
         this.prefactor = prefactor;
     }
-
 }

@@ -26,12 +26,10 @@ import java.util.LinkedList;
 public class OneExpressionRemoval extends EmptyControlFlowVisitor {
 
     private boolean graphModified = false;
-
     private HashSet<VariableComponent> tabuVariables = new HashSet<VariableComponent>();
-    private HashMap<VariableComponent,VariableComponent> mapOneExpressions = new HashMap<VariableComponent,VariableComponent>();
+    private HashMap<VariableComponent, VariableComponent> mapOneExpressions = new HashMap<VariableComponent, VariableComponent>();
     private DFGVisitorUsedVariables dfgVisitorusedVariables = new DFGVisitorUsedVariables();
     private LinkedList<SequentialNode> nodeRemovals = new LinkedList<SequentialNode>();
-
     private UseAlgebra usedAlgebra;
 
     public OneExpressionRemoval(UseAlgebra usedAlgebra) {
@@ -66,31 +64,32 @@ public class OneExpressionRemoval extends EmptyControlFlowVisitor {
 
         dfgVisitorusedVariables.getVariables().clear();
         value.accept(dfgVisitorusedVariables);
-        for (VariableComponent variable: dfgVisitorusedVariables.getVariables())
+        for (VariableComponent variable : dfgVisitorusedVariables.getVariables()) {
             if (mapOneExpressions.containsKey(variable)) {
-                
+
                 Expression toReplace = variable.getReferredExpression();
                 Expression replacement = mapOneExpressions.get(variable).getReferredExpression();
-                
+
                 if (value == toReplace) {
                     value = replacement;
                 } else {
-                    value.replaceExpression(toReplace,replacement);
+                    value.replaceExpression(toReplace, replacement);
                 }
 
                 setGraphModified();
 
             }
+        }
 
         return value;
     }
 
     @Override
     public void visit(AssignmentNode node) {
-    
+
         // replace all variables that are in mapOneExpressions
         Expression value = node.getValue();
-        node.setValue(performExpressionReplacements(value)); 
+        node.setValue(performExpressionReplacements(value));
         mapOneExpressions.remove(getVariableComponent(node.getVariable()));
 
         // if this is no output variable assignment
@@ -100,8 +99,7 @@ public class OneExpressionRemoval extends EmptyControlFlowVisitor {
             if (typeValue == DFGNodeType.MultivectorComponent || typeValue == DFGNodeType.Variable) {
                 mapOneExpressions.put(
                         getVariableComponent(node.getVariable()),
-                        getVariableComponent(node.getValue())
-                        );
+                        getVariableComponent(node.getValue()));
                 setGraphModified();
                 nodeRemovals.add(node);
             }
@@ -116,17 +114,17 @@ public class OneExpressionRemoval extends EmptyControlFlowVisitor {
      * @return The VariableComponent
      */
     private VariableComponent getVariableComponent(Expression expression) {
-        
-         DFGNodeType typeValue = DFGNodeTypeGetter.getTypeOfDFGNode(expression);
-         if (typeValue == DFGNodeType.MultivectorComponent) {
-             MultivectorComponent comp = (MultivectorComponent) expression;
-            return new VariableComponent(comp.getName(),comp.getBladeIndex(),expression);
-         }
-         if (typeValue == DFGNodeType.Variable) {
+
+        DFGNodeType typeValue = DFGNodeTypeGetter.getTypeOfDFGNode(expression);
+        if (typeValue == DFGNodeType.MultivectorComponent) {
+            MultivectorComponent comp = (MultivectorComponent) expression;
+            return new VariableComponent(comp.getName(), comp.getBladeIndex(), expression);
+        }
+        if (typeValue == DFGNodeType.Variable) {
             Variable comp = (Variable) expression;
-            return new VariableComponent(comp.getName(),0,expression);
-         }
-         return null;
+            return new VariableComponent(comp.getName(), 0, expression);
+        }
+        return null;
     }
 
     @Override
@@ -137,7 +135,7 @@ public class OneExpressionRemoval extends EmptyControlFlowVisitor {
         node.setG(performExpressionReplacements(node.getG()));
         node.setB(performExpressionReplacements(node.getB()));
         node.setAlpha(performExpressionReplacements(node.getAlpha()));
-        
+
         super.visit(node);
     }
 
@@ -156,5 +154,4 @@ public class OneExpressionRemoval extends EmptyControlFlowVisitor {
 
         super.visit(node);
     }
-
 }

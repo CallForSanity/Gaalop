@@ -11,11 +11,11 @@ import java.util.HashSet;
  * This class facilitates Java code generation.
  */
 public class JavaCodeGenerator implements CodeGenerator {
-    
+
     private final Plugin plugin;
-    
+
     public JavaCodeGenerator(Plugin plugin) {
-    	this.plugin = plugin;
+        this.plugin = plugin;
     }
 
     @Override
@@ -31,8 +31,7 @@ public class JavaCodeGenerator implements CodeGenerator {
         result.add(new OutputFile(
                 "GAProgram.java",
                 createGAInterface(),
-                Charset.forName("UTF-8")
-                ));
+                Charset.forName("UTF-8")));
 
         return result;
     }
@@ -64,9 +63,9 @@ public class JavaCodeGenerator implements CodeGenerator {
     private String generateCode(ControlFlowGraph in) {
         JavaVisitor visitor = new JavaVisitor();
         try {
-        	in.accept(visitor);
+            in.accept(visitor);
         } catch (Throwable error) {
-        	plugin.notifyError(error);
+            plugin.notifyError(error);
         }
         return visitor.getCode();
     }
@@ -77,45 +76,41 @@ public class JavaCodeGenerator implements CodeGenerator {
      * @return The String containing the java interface source
      */
     private String createGAInterface() {
-       return
-        "\n"+
-        "\n"+
-        "import java.util.HashMap;\n"+
-        "\n"+
-        "/**\n"+
-        " * Performs the calculations specified in a Geometric Algebra Program\n"+
-        " */\n"+
-        "public interface GAProgram {\n"+
-        "\n"+
-        "    /**\n"+
-        "     * Performs the calculation\n"+
-        "     */\n"+
-        "    public void calculate();\n"+
-        "\n"+
-        "    /**\n"+
-        "     * Returns the value of a variable\n"+
-        "     * @param varName The variable name, specified in the Geometric Algebra program\n"+
-        "     * @return The value of the variable with the given name\n"+
-        "     */\n"+
-        "    public float getValue(String varName);\n"+
-        "\n"+
-        "    /**\n"+
-        "     * Sets the value of a variable\n"+
-        "     * @param varName The variable name, specified in the Geometric Algebra program\n"+
-        "     * @param value The value\n"+
-        "     * @returns <value>true</value> if the setting was successful, <value>false</value> otherwise\n"+
-        "     */\n"+
-        "    public boolean setValue(String varName, float value);\n"+
-        "\n"+
-        "    /**\n"+
-        "      * Returns all values in a map name->value\n"+
-        "      * @return The map which contains all values\n"+
-        "      */\n"+
-        "     public HashMap<String,Float> getValues();\n"+
-        "\n"+
-        "}\n";
+        return "\n"
+                + "\n"
+                + "import java.util.HashMap;\n"
+                + "\n"
+                + "/**\n"
+                + " * Performs the calculations specified in a Geometric Algebra Program\n"
+                + " */\n"
+                + "public interface GAProgram {\n"
+                + "\n"
+                + "    /**\n"
+                + "     * Performs the calculation\n"
+                + "     */\n"
+                + "    public void calculate();\n"
+                + "\n"
+                + "    /**\n"
+                + "     * Returns the value of a variable\n"
+                + "     * @param varName The variable name, specified in the Geometric Algebra program\n"
+                + "     * @return The value of the variable with the given name\n"
+                + "     */\n"
+                + "    public float getValue(String varName);\n"
+                + "\n"
+                + "    /**\n"
+                + "     * Sets the value of a variable\n"
+                + "     * @param varName The variable name, specified in the Geometric Algebra program\n"
+                + "     * @param value The value\n"
+                + "     * @returns <value>true</value> if the setting was successful, <value>false</value> otherwise\n"
+                + "     */\n"
+                + "    public boolean setValue(String varName, float value);\n"
+                + "\n"
+                + "    /**\n"
+                + "      * Returns all values in a map name->value\n"
+                + "      * @return The map which contains all values\n"
+                + "      */\n"
+                + "     public HashMap<String,Float> getValues();\n"
+                + "\n"
+                + "}\n";
     }
-
-
-
 }

@@ -34,7 +34,4 @@ public class Constant extends ParallelObject {
     public boolean isTerminal() {
         return true;
     }
-
-    
-
 }

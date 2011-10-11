@@ -28,5 +28,4 @@ public abstract class GAPPValueHolder {
      * @return The return value of the called visit method
      */
     public abstract Object accept(GAPPVariableVisitor visitor, Object arg);
-
 }

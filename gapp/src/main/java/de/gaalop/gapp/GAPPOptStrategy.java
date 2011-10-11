@@ -21,7 +21,6 @@ public class GAPPOptStrategy implements OptimizationStrategy {
     @Override
     public void transform(ControlFlowGraph graph) throws OptimizationException {
         GAPPDecoratingMain importer = new GAPPDecoratingMain();
-        graph = importer.decorateGraph(new UseAlgebra(plugin.getAlgebra()),graph);
+        graph = importer.decorateGraph(new UseAlgebra(plugin.getAlgebra()), graph);
     }
-
 }

@@ -38,6 +38,4 @@ public interface GAPPTestable {
      * @return The used algebra
      */
     public UseAlgebra getUsedAlgebra();
-
-
 }

@@ -15,5 +15,4 @@ public class OptConstantPropagation implements OptimizationStrategyWithModifyFla
         graph.accept(propagation);
         return propagation.isGraphModified();
     }
-
 }

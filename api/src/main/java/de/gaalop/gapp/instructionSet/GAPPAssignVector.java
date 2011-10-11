@@ -45,5 +45,4 @@ public class GAPPAssignVector extends GAPPBaseInstruction {
     public void setValues(Variableset values) {
         this.values = values;
     }
-
 }

@@ -34,7 +34,6 @@ import de.gaalop.gapp.importing.parallelObjects.Sum;
 public class SignedSummandsGetter implements ExpressionVisitor {
 
     private Sum summands = new Sum();
-
     private boolean curSignPositive = true;
 
     //private constructor to make using of the static facade method mandatory
@@ -79,7 +78,9 @@ public class SignedSummandsGetter implements ExpressionVisitor {
 
     private void handleNodes(Expression node) {
         ParallelObject object = callExpressionCollector(node);
-        if (!curSignPositive) object.negate();
+        if (!curSignPositive) {
+            object.negate();
+        }
         summands.getSummands().add(object);
     }
 
@@ -103,7 +104,6 @@ public class SignedSummandsGetter implements ExpressionVisitor {
         handleNodes(node);
     }
 
-
     @Override
     public void visit(Variable node) {
         handleNodes(node);
@@ -125,7 +125,6 @@ public class SignedSummandsGetter implements ExpressionVisitor {
     }
 
     // ============================ Logical methods ============================
-
     @Override
     public void visit(LogicalOr node) {
         handleNodes(node);
@@ -157,8 +156,6 @@ public class SignedSummandsGetter implements ExpressionVisitor {
     }
 
     // ========================= Illegal visit methods =========================
-
-
     @Override
     public void visit(InnerProduct node) {
         throw new IllegalStateException("InnerProducts should have been removed by TBA.");
@@ -188,7 +185,4 @@ public class SignedSummandsGetter implements ExpressionVisitor {
     public void visit(MacroCall node) {
         throw new IllegalStateException("FunctionArguments should have been removed by CLUCalc Parser.");
     }
-
-
-
 }

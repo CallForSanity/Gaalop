@@ -248,8 +248,7 @@ public class ConstantFolding implements ExpressionVisitor, ControlFlowVisitor {
             FloatConstant operand = (FloatConstant) operandExpr;
             resultExpr = new FloatConstant((float) Math.sqrt(operand.getValue()));
             setGraphModified();
-        }
-        else if ((node.getFunction() == MathFunction.ABS)
+        } else if ((node.getFunction() == MathFunction.ABS)
                 && (DFGNodeTypeGetter.getTypeOfDFGNode(operandExpr) == DFGNodeType.MathFunctionCall)) {
             // remove abs() around sqrts, as they are always positive
             MathFunctionCall insideFunc = (MathFunctionCall) operandExpr;
@@ -260,11 +259,11 @@ public class ConstantFolding implements ExpressionVisitor, ControlFlowVisitor {
             }
         } // this results in a endless loop, when uncommenting!
         /*  else if ((node.getFunction() == MathFunction.SQRT)
-                && ((DFGNodeTypeGetter.getTypeOfDFGNode(operandExpr) == DFGNodeType.MathFunctionCall)
-                && (((MathFunctionCall) operandExpr).getFunction() != MathFunction.ABS))) {
-            // insert in every sqrt() an abs()
-            resultExpr = new MathFunctionCall(new MathFunctionCall(operandExpr, MathFunction.ABS), MathFunction.SQRT);
-            setGraphModified();
+        && ((DFGNodeTypeGetter.getTypeOfDFGNode(operandExpr) == DFGNodeType.MathFunctionCall)
+        && (((MathFunctionCall) operandExpr).getFunction() != MathFunction.ABS))) {
+        // insert in every sqrt() an abs()
+        resultExpr = new MathFunctionCall(new MathFunctionCall(operandExpr, MathFunction.ABS), MathFunction.SQRT);
+        setGraphModified();
         }*/ else if ((node.getFunction() == MathFunction.ABS)
                 && isConstant(operandExpr)) {
             FloatConstant operand = (FloatConstant) operandExpr;

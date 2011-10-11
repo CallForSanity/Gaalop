@@ -52,5 +52,4 @@ public enum InstructionType implements GAPPVisitor {
     public Object visitAssignVector(GAPPAssignVector gappAssignVector, Object arg) {
         return assignVector;
     }
-
 }

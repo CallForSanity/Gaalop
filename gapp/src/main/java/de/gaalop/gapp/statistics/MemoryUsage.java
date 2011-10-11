@@ -21,7 +21,6 @@ import java.util.LinkedList;
 public class MemoryUsage extends CFGGAPPVisitor {
 
     private HashMap<String, LiveStatistics> liveStatistics = new HashMap<String, LiveStatistics>();
-
     private int curLine = 0;
 
     private MemoryUsage() { //Make usage of static method mandatory
@@ -35,16 +34,17 @@ public class MemoryUsage extends CFGGAPPVisitor {
         MemoryUsage visitor = new MemoryUsage();
         graph.accept(visitor);
 
-        System.out.println("#Instructions: "+visitor.curLine);
-        System.out.println("#Multivectors: "+visitor.liveStatistics.size());
+        System.out.println("#Instructions: " + visitor.curLine);
+        System.out.println("#Multivectors: " + visitor.liveStatistics.size());
 
         long sum = 0;
-        for (LiveStatistics live: visitor.liveStatistics.values())
+        for (LiveStatistics live : visitor.liveStatistics.values()) {
             sum += live.getSize();
+        }
 
-        System.out.println("Sum of multivectors sizes (liveness start until end): "+sum);
+        System.out.println("Sum of multivectors sizes (liveness start until end): " + sum);
 
-        System.out.println("Maximum of used space: "+visitor.maximumUsedSpace());
+        System.out.println("Maximum of used space: " + visitor.maximumUsedSpace());
 
     }
 
@@ -65,40 +65,45 @@ public class MemoryUsage extends CFGGAPPVisitor {
      * @return The maximum used space of the interval
      */
     private long maximumUsedSpaceDivAndConq(int lineStart, int lineEnd, Collection<LiveStatistics> list) {
-        if (list.isEmpty()) return 0;
+        if (list.isEmpty()) {
+            return 0;
+        }
 
-        if (lineEnd-lineStart == 0) {
+        if (lineEnd - lineStart == 0) {
             //simple case
             long sum = 0;
-            for (LiveStatistics stat: list)
+            for (LiveStatistics stat : list) {
                 sum += stat.getSize();
+            }
             return sum;
         } else {
             //difficult case: split to simpler cases
             //create the separated lists
-            int centerlastIntLeft = (lineStart+lineEnd)/2;
+            int centerlastIntLeft = (lineStart + lineEnd) / 2;
 
             LinkedList<LiveStatistics> leftList = new LinkedList<LiveStatistics>();
             LinkedList<LiveStatistics> rightList = new LinkedList<LiveStatistics>();
 
-            for (LiveStatistics element: list) {
+            for (LiveStatistics element : list) {
                 Interval interval = element.getInterval();
                 int from = interval.getFrom();
                 int to = interval.getTo();
 
                 if (from <= centerlastIntLeft) {
                     leftList.add(element);
-                    if (to > centerlastIntLeft)
+                    if (to > centerlastIntLeft) {
                         rightList.add(element);
-                } else
+                    }
+                } else {
                     rightList.add(element);
+                }
             }
             // recursion
             long leftMax = maximumUsedSpaceDivAndConq(lineStart, centerlastIntLeft, leftList);
-            long rightMax = maximumUsedSpaceDivAndConq(centerlastIntLeft+1, lineEnd, rightList);
+            long rightMax = maximumUsedSpaceDivAndConq(centerlastIntLeft + 1, lineEnd, rightList);
 
             // merge
-            return Math.max(leftMax,rightMax);
+            return Math.max(leftMax, rightMax);
         }
     }
 
@@ -108,9 +113,10 @@ public class MemoryUsage extends CFGGAPPVisitor {
      */
     private void access(GAPPSetOfVariables gappSetOfVariables) {
         if (!liveStatistics.containsKey(gappSetOfVariables.getName())) {
-            System.err.println("Multivector "+gappSetOfVariables.getName()+" was not reseted!");
-        } else 
+            System.err.println("Multivector " + gappSetOfVariables.getName() + " was not reseted!");
+        } else {
             liveStatistics.get(gappSetOfVariables.getName()).getInterval().setTo(curLine);
+        }
     }
 
     @Override
@@ -155,8 +161,9 @@ public class MemoryUsage extends CFGGAPPVisitor {
         curLine++;
         access(gappCalculateMv.getDestination());
         access(gappCalculateMv.getOperand1());
-        if (gappCalculateMv.getOperand2() != null)
+        if (gappCalculateMv.getOperand2() != null) {
             access(gappCalculateMv.getOperand2());
+        }
         return null;
     }
 
@@ -166,5 +173,4 @@ public class MemoryUsage extends CFGGAPPVisitor {
         access(gappAssignVector.getDestination());
         return null;
     }
-
 }

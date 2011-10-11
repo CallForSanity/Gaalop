@@ -14,21 +14,16 @@ public class MultipleAssignmentsTest implements GenericTestable {
 
     @Override
     public String getCLUScript() {
-        return
-            "DefVarsN3();"+"\n"+
-            ":IPNS;"+"\n"+
-
-            pragmaOutputMvAll("b") +
-            pragmaOutputMvAll("d") +
-
-            "a = e1;"+"\n"+
-            "b = a^e2;"+"\n"+
-            "b = a^e3;"+"\n"+
-
-            "d = a^e3;"+"\n"+
-            "?b;"+"\n"+
-            "?d;"+"\n"
-            ;
+        return "DefVarsN3();" + "\n"
+                + ":IPNS;" + "\n"
+                + pragmaOutputMvAll("b")
+                + pragmaOutputMvAll("d")
+                + "a = e1;" + "\n"
+                + "b = a^e2;" + "\n"
+                + "b = a^e3;" + "\n"
+                + "d = a^e3;" + "\n"
+                + "?b;" + "\n"
+                + "?d;" + "\n";
     }
 
     @Override
@@ -45,7 +40,7 @@ public class MultipleAssignmentsTest implements GenericTestable {
             public String getCheckOutputsCode() {
                 StringBuilder result = new StringBuilder();
 
-                compareTwoCompleteMv(result,"b","d");
+                compareTwoCompleteMv(result, "b", "d");
 
                 return result.toString();
             }
@@ -65,20 +60,20 @@ public class MultipleAssignmentsTest implements GenericTestable {
      * @param mvName2 The name of the second multivector
      */
     private void compareTwoCompleteMv(StringBuilder result, String mvName1, String mvName2) {
-        for (int blade=0;blade<32;blade++) {
-                    result.append("assertEquals(outputs.get(\"");
-                    result.append(mvName1);
-                    result.append("$");
-                    result.append(Integer.toString(blade));
-                    result.append("\"),outputs.get(\"");
-                    result.append(mvName2);
-                    result.append('$');
-                    result.append(Integer.toString(blade));
-                    result.append("\"),");
-                    result.append(Double.toString(EPSILON));
-                    result.append(")");
-                    result.append(";\n");
-                }
+        for (int blade = 0; blade < 32; blade++) {
+            result.append("assertEquals(outputs.get(\"");
+            result.append(mvName1);
+            result.append("$");
+            result.append(Integer.toString(blade));
+            result.append("\"),outputs.get(\"");
+            result.append(mvName2);
+            result.append('$');
+            result.append(Integer.toString(blade));
+            result.append("\"),");
+            result.append(Double.toString(EPSILON));
+            result.append(")");
+            result.append(";\n");
+        }
     }
 
     /**
@@ -89,7 +84,7 @@ public class MultipleAssignmentsTest implements GenericTestable {
     private String pragmaOutputMvAll(String mvName) {
         StringBuilder result = new StringBuilder();
 
-        for (int blade=0;blade<32;blade++) {
+        for (int blade = 0; blade < 32; blade++) {
             result.append("//#pragma output ");
             result.append(mvName);
             result.append("$");
@@ -104,5 +99,4 @@ public class MultipleAssignmentsTest implements GenericTestable {
     public UseAlgebra getUsedAlgebra() {
         return UseAlgebra.get5dConformalGA();
     }
-
 }

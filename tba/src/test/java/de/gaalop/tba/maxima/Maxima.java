@@ -24,15 +24,13 @@ public class Maxima {
         try {
             Expression expr = MaximaOptimizer.getExpressionFromMaximaOutput(str);
 
-            System.out.println(str + " -> "+expr);
+            System.out.println(str + " -> " + expr);
 
         } catch (RecognitionException ex) {
             Logger.getLogger(Maxima.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }
-
-
 
     @Test
     public void testFloatConstant() {
@@ -49,6 +47,4 @@ public class Maxima {
         test("5-x");
         test("3+x*4");
     }
-  
-
 }

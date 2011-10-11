@@ -19,7 +19,6 @@ public class VariablesCollector extends EmptyControlFlowVisitor {
     public HashSet<String> getVariables() {
         return variables;
     }
-
     private ExpressionVisitor expressionVisitor = new EmptyExpressionVisitor() {
 
         @Override
@@ -37,11 +36,7 @@ public class VariablesCollector extends EmptyControlFlowVisitor {
     public void visit(AssignmentNode node) {
         node.getVariable().accept(expressionVisitor);
         node.getValue().accept(expressionVisitor);
-        
+
         super.visit(node);
     }
-
-    
-
-
 }
