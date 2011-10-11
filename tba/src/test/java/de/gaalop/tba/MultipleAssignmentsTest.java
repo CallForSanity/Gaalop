@@ -58,11 +58,12 @@ public class MultipleAssignmentsTest implements GenericTestable {
         return result;
     }
 
-    private void outputOfCompleteMv(LinkedList<String> outputs, String mvName) {
-        for (int blade=0;blade<32;blade++) 
-            outputs.add(mvName+"$"+blade);
-    }
-
+    /**
+     * Produces code for comparison of two complete multivectors
+     * @param result The code container to append on
+     * @param mvName1 The name of the first multivector
+     * @param mvName2 The name of the second multivector
+     */
     private void compareTwoCompleteMv(StringBuilder result, String mvName1, String mvName2) {
         for (int blade=0;blade<32;blade++) {
                     result.append("assertEquals(outputs.get(\"");
@@ -80,6 +81,11 @@ public class MultipleAssignmentsTest implements GenericTestable {
                 }
     }
 
+    /**
+     * Produces pragma output for every blade in a multivector
+     * @param mvName The name of the multivector
+     * @return The code
+     */
     private String pragmaOutputMvAll(String mvName) {
         StringBuilder result = new StringBuilder();
 

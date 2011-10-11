@@ -57,6 +57,11 @@ public class OneExpressionRemoval extends EmptyControlFlowVisitor {
         super.visit(node);
     }
 
+    /**
+     * Replace all expressions in a expression, that are listed in mapOneExpressions
+     * @param value The value to search in
+     * @return The result expression
+     */
     private Expression performExpressionReplacements(Expression value) {
 
         dfgVisitorusedVariables.getVariables().clear();
@@ -83,7 +88,7 @@ public class OneExpressionRemoval extends EmptyControlFlowVisitor {
     @Override
     public void visit(AssignmentNode node) {
     
-        // replace all variables which are in mapOneExpressions
+        // replace all variables that are in mapOneExpressions
         Expression value = node.getValue();
         node.setValue(performExpressionReplacements(value)); 
         mapOneExpressions.remove(getVariableComponent(node.getVariable()));

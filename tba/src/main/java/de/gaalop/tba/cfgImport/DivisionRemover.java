@@ -1,5 +1,6 @@
 package de.gaalop.tba.cfgImport;
 
+import de.gaalop.api.dfg.ExpressionTypeVisitor;
 import de.gaalop.cfg.AssignmentNode;
 import de.gaalop.cfg.EmptyControlFlowVisitor;
 import de.gaalop.dfg.BinaryOperation;
@@ -12,7 +13,7 @@ import de.gaalop.dfg.Multiplication;
 import de.gaalop.dfg.UnaryOperation;
 
 /**
- *
+ * Removes the division operations and inserts a Multiplication with the inverse
  * @author Christian Steinmetz
  */
 public class DivisionRemover extends EmptyControlFlowVisitor {

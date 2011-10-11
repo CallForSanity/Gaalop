@@ -100,16 +100,6 @@ public class DFGToMaximaCode implements ExpressionVisitor {
     @Override
     public void visit(Variable node) {
         result.append(node.getName());
-       /* StringBuilder sb = new StringBuilder();
-        String name = node.getName();
-        for (int i=0;i<name.length();i++)
-            if (name.charAt(i) == '$') {
-                sb.append("\\");
-                sb.append("$");
-            } else
-                sb.append(name.charAt(i));
-
-        result.append(sb.toString());*/
     }
 
     @Override

@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package de.gaalop.tba.cfgImport.optimization.maxima;
 
 import de.gaalop.cfg.AssignmentNode;
@@ -11,7 +6,7 @@ import de.gaalop.dfg.Variable;
 import java.util.LinkedList;
 
 /**
- *
+ * Collects all unused variables in a control flow graph
  * @author Christian Steinmetz
  */
 public class UnusedCollector extends EmptyControlFlowVisitor {
@@ -27,6 +22,11 @@ public class UnusedCollector extends EmptyControlFlowVisitor {
         return unusedNodes;
     }
 
+    /**
+     * Determines, if a variable name is used
+     * @param name The name of the variable
+     * @return <value>true</value> if it is used, <value>false</value> otherwise
+     */
     private boolean isUsed(String name) {
         for (Variable var: usedVariables)
             if (var.getName().equals(name))

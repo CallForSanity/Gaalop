@@ -1,5 +1,6 @@
 package de.gaalop.tba.cfgImport;
 
+import de.gaalop.api.dfg.ExpressionTypeVisitor;
 import de.gaalop.cfg.AssignmentNode;
 import de.gaalop.cfg.EmptyControlFlowVisitor;
 import de.gaalop.dfg.BinaryOperation;
@@ -13,12 +14,12 @@ import java.util.HashSet;
 import java.util.LinkedList;
 
 /**
+ * Extract MathFunctions so that the operand has an own temporary multivector.
+ * The result is assigned to an own multivector.
  *
  * @author Christian Steinmetz
  */
 public class MathFunctionSeparator extends EmptyControlFlowVisitor {
-// Extract MathFunctions so that the operand has an own temporary multivector
-            // and the result is an own Multivector
 
     private Expression resultValue = null;
 
@@ -31,7 +32,10 @@ public class MathFunctionSeparator extends EmptyControlFlowVisitor {
     }
 
 
-
+    /**
+     * Create a new temporary, recently unused variable name
+     * @return The new name
+     */
     private Variable getNewTemporaryVariable() {
         tempCounter++;
         while (variables.contains("temp"+tempCounter))

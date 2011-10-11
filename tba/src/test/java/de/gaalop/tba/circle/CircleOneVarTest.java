@@ -136,7 +136,7 @@ public class CircleOneVarTest extends GenericCircleTest {
                 case 5:
                     return p3.y; 
             }
-            System.err.println("Programmierfehler");
+            System.err.println("Programming error");
             return currentValue;
         }
     }

@@ -128,15 +128,6 @@ public abstract class GenericGPSTest implements GenericTestable {
                 "assertEquals(0,z31,"+EPSILON+");\n" +
                 "assertEquals(0,z32,"+EPSILON+");\n" +
 
-//                "assertEquals("+getDistance("rc1Nx", "rc1Ny","rc1Nz", sat1.x+"",sat1.y+"",sat1.z+"")+","+d1+","+EPSILON+");\n"+
-//                "assertEquals("+getDistance("rc2Nx", "rc2Ny","rc2Nz", sat1.x+"",sat1.y+"",sat1.z+"")+","+d1+","+EPSILON+");\n"+
-//
-//                "assertEquals("+getDistance("rc1Nx", "rc1Ny","rc1Nz", sat2.x+"",sat2.y+"",sat2.z+"")+","+d2+","+EPSILON+");\n"+
-//                "assertEquals("+getDistance("rc2Nx", "rc2Ny","rc2Nz", sat2.x+"",sat2.y+"",sat2.z+"")+","+d2+","+EPSILON+");\n"+
-//
-//                "assertEquals("+getDistance("rc1Nx", "rc1Ny","rc1Nz", sat3.x+"",sat3.y+"",sat3.z+"")+","+d3+","+EPSILON+");\n"+
-//                "assertEquals("+getDistance("rc2Nx", "rc2Ny","rc2Nz", sat3.x+"",sat3.y+"",sat3.z+"")+","+d3+","+EPSILON+");\n"+
-
                 "// check number of outputs\n"+
                 "assertEquals(12, outputs.size());\n"
                 ;

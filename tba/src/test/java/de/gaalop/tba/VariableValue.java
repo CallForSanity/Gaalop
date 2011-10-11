@@ -1,7 +1,7 @@
 package de.gaalop.tba;
 
 /**
- * Stores a variable and it's value
+ * Stores a variable and its value
  * @author Christian Steinmetz
  */
 public class VariableValue {

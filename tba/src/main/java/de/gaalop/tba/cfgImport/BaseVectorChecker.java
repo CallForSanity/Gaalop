@@ -12,8 +12,8 @@ import java.util.HashSet;
 
 /**
  * Checks all variables to be no BaseVector in the UseAlgebra,
- * if not it replaces them by real BaseVectorInstances.
- * This step is needed because the CluCalcParser don't recognizes for example e6 as a BaseVector.
+ * if not, it replaces them by real BaseVectorInstances.
+ * This step is needed because the CluCalcParser do not recognize for example e6 as a BaseVector.
  * 
  * @author Christian Steinmetz
  */
@@ -25,6 +25,9 @@ public class BaseVectorChecker extends EmptyControlFlowVisitor {
         this.baseVectors = new HashSet<String>(Arrays.asList(baseVectors));
     }
 
+    /**
+     * The ExpressionVisitor
+     */
     private class DFGVisitor extends EmptyExpressionVisitor {
         private HashMap<Expression, Expression> toReplace = new HashMap<Expression, Expression>();
 

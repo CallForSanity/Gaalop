@@ -4,7 +4,7 @@ import java.util.LinkedList;
 import org.junit.Ignore;
 
 /**
- * Tests the controlflowtest
+ * Tests the test for detecting controlflow
  * @author Christian Steinmetz
  */
 @Ignore

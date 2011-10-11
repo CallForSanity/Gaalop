@@ -39,25 +39,6 @@ public class CFGImporter extends MvExpressionsBuilder {
 
         }
 
-        // zero all null expressions
-        // isn't necessary, because MultipleAssignments aren't allowed
-                /*
-        for (int i=0;i<cfgExpressionVisitor.bladeCount;i++)
-        {
-
-        Expression e = mvExpr.bladeExpressions[i];
-
-        if (e==null)
-        {
-        AssignmentNode insNode = new AssignmentNode(node.getGraph(), new MultivectorComponent(variable.getName(),i),new FloatConstant(0.0f));
-
-        lastNode.insertAfter(insNode);
-        lastNode = insNode;
-        }
-
-        }
-         */
-
         node.getGraph().removeNode(node);
 
         if (!inserted) {

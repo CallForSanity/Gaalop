@@ -39,6 +39,9 @@ public class TestCreator {
 
     private PrintWriter out;
 
+    /**
+     * Starts a test case
+     */
     private void beginTestCase() {
         try {
             out = new PrintWriter("src/test/java/de/gaalop/tba/generatedTests/TBATest.java");
@@ -56,6 +59,9 @@ public class TestCreator {
         }
     }
 
+    /**
+     * Ends a test case
+     */
     private void endTestCase() {
             out.println("}");
 
@@ -112,6 +118,12 @@ public class TestCreator {
         endTestCase();
     }
 
+    /**
+     * Tests a GenericTestable
+     * @param testable The GenericTestable object
+     * @param cluName The name of the CLUScript
+     * @throws OptimizationException
+     */
     private void test(GenericTestable testable, String cluName) throws OptimizationException {
         try {
             CodeParser parser = (new de.gaalop.clucalc.input.Plugin()).createCodeParser();
@@ -161,66 +173,102 @@ public class TestCreator {
 
     }
 
+    /**
+     * Dummy method
+     * @throws OptimizationException
+     */
     private void testTrigonometric() throws OptimizationException {
         test(new TrigonometricFunctions(),"TrigonometricFunctions");
-
     }
 
+    /**
+     * Dummy method
+     * @throws OptimizationException
+     */
     private void testLinePointDistance() throws OptimizationException {
         test(new LinePointDistance(
                 new Point3D(3,4,5),
                 new Point3D(7,8,10),
                 new Point3D(3,8,10)
                 ),"LinePointDistance");
-
     }
 
-    
+    /**
+     * Dummy method
+     * @throws OptimizationException
+     */
     private void testCircleNoVars() throws OptimizationException {
         test(new CircleNoVarsTest(new Point(5,2),new Point(3,9),new Point(6,4)),"CircleNoVars");
-
     }
 
-   
+    /**
+     * Dummy method
+     * @throws OptimizationException
+     */
     private void testCircleOneVar() throws OptimizationException {
         test(new CircleOneVarTest(new Point(5,2),new Point(3,9),new Point(6,4),new boolean[]{true,false,false,false,false,false},50),"CircleOneVar");
-
     }
 
-    
+    /**
+     * Dummy method
+     * @throws OptimizationException
+     */
     private void testCircleOnlyVars() throws OptimizationException {
         test(new CircleOnlyVarsTest(new Point(5,2),new Point(3,9),new Point(6,4)),"CircleOnlyVars");
-
     }
 
+    /**
+     * Dummy method
+     * @throws OptimizationException
+     */
     private void testGPSNoVars() throws OptimizationException {
         test(new GPSNoVarsTest(new Point3D(1,1,1), new Point3D(0,0,1), new Point3D(0,1,0), 0.6f, 0.7f, 0.5f),"GPSNoVars");
-
     }
 
-
+    /**
+     * Dummy method
+     * @throws OptimizationException
+     */
     private void testGPSOnlyVars() throws OptimizationException {
         test(new GPSOnlyVarsTest(new Point3D(1,1,1), new Point3D(0,0,1), new Point3D(0,1,0), 0.6f, 0.7f, 0.9f),"GPSOnlyVars");
-
     }
 
+    /**
+     * Dummy method
+     * @throws OptimizationException
+     */
     private void testMultipleAssignmentsTest() throws OptimizationException {
         test(new MultipleAssignmentsTest(),"MultipleAssignments");
     }
 
+    /**
+     * Dummy method
+     * @throws OptimizationException
+     */
     private void testControlFlowTest() throws OptimizationException {
         test(new ControlFlowTest(),"ControlFlow");
     }
 
+    /**
+     * Dummy method
+     * @throws OptimizationException
+     */
     private void testOutputCount() throws OptimizationException {
         test(new OutputCountTest(),"OutputCount");
     }
-
+    
+    /**
+     * Dummy method
+     * @throws OptimizationException
+     */
     private void testUnusedTest() throws OptimizationException {
         test(new Unused(),"Unused");
     }
 
-
+    /**
+     * Writes a file
+     * @param outputFile The OutputFile object
+     */
     private void writeFile(OutputFile outputFile) {
         try {
             PrintWriter out1 = new PrintWriter("src/test/java/de/gaalop/tba/generatedTests/"+outputFile.getName());

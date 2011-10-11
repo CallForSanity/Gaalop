@@ -1,4 +1,4 @@
-package de.gaalop.tba.cfgImport;
+package de.gaalop.api.dfg;
 
 import de.gaalop.dfg.Addition;
 import de.gaalop.dfg.BaseVector;
@@ -33,10 +33,26 @@ import de.gaalop.dfg.Variable;
  */
 public abstract class ExpressionTypeVisitor implements ExpressionVisitor {
 
+    /**
+     * This method is called while traversing the DFG tree.
+     * It handles the actions to be done for a binary operation
+     * @param node The binary operation
+     */
     protected abstract void visitBinaryOperation(BinaryOperation node);
 
+    /**
+     * This method is called while traversing the DFG tree.
+     * It handles the actions to be done for a unary operation
+     * @param node The unary operation
+     */
     protected abstract void visitUnaryOperation(UnaryOperation node);
 
+    /**
+     * This method is called while traversing the DFG tree.
+     * It handles the actions to be done for a terminal.
+     * A terminal is an expression that has no child elements
+     * @param node The terminal expression
+     */
     protected abstract void visitTerminal(Expression node);
 
 

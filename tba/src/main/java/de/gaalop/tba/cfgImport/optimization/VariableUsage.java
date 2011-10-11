@@ -3,7 +3,7 @@ package de.gaalop.tba.cfgImport.optimization;
 import java.util.HashSet;
 
 /**
- * Manages the overview usage and definitions of variable componts
+ * Manages the overview usage and definitions of variable components
  * @author Christian Steinmetz
  */
 public class VariableUsage {

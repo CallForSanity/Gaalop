@@ -43,22 +43,15 @@ public class MvExpressionsBuilder extends EmptyControlFlowVisitor implements Exp
 
 	public HashMap<String,MvExpressions> variables;
         public HashMap<Expression,MvExpressions> expressions;
-
 	private int counterMv;
 	public int bladeCount;
-
         private UseAlgebra usedAlgebra;
-
 	private final double EPSILON = 10E-07;
-
         private boolean scalarFunctions;
-
-//	public static final byte INNER = 0;
-//	public static final byte OUTER = 1;
-//	public static final byte GEO = 2;
+        private Variable curVariable;
 
 	public MvExpressionsBuilder(UseAlgebra usedAlgebra, boolean scalarFunctions) {
-            this.scalarFunctions = scalarFunctions;
+                this.scalarFunctions = scalarFunctions;
 		variables = new HashMap<String, MvExpressions>();
                 this.usedAlgebra = usedAlgebra;
 		counterMv = 0;
@@ -74,7 +67,6 @@ public class MvExpressionsBuilder extends EmptyControlFlowVisitor implements Exp
          *
          * In the MvExpresseionsBuilder class, the graph isn't changed.
          *
-         *
          * @param node The current assignment node
          * @param mvExpr The MvExpressions for the value
          * @param variable The destination variable
@@ -84,8 +76,7 @@ public class MvExpressionsBuilder extends EmptyControlFlowVisitor implements Exp
             return node;
         }
 
-        private Variable curVariable;
-
+        
 	@Override
 	public void visit(AssignmentNode node) {
 		curVariable = node.getVariable();

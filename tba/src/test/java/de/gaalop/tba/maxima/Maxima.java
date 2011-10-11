@@ -8,7 +8,7 @@ import org.antlr.runtime.RecognitionException;
 import org.junit.Test;
 
 /**
- * Class for manually testing the maxima connection and translation
+ * Class for manually testing the parser for maxima output
  * @author Christian Steinmetz
  */
 public class Maxima {
@@ -16,6 +16,10 @@ public class Maxima {
     public Maxima() {
     }
 
+    /**
+     * Dummy method for testing the parser for maxima output
+     * @param str The string to be parsed
+     */
     private void test(String str) {
         try {
             Expression expr = MaximaOptimizer.getExpressionFromMaximaOutput(str);

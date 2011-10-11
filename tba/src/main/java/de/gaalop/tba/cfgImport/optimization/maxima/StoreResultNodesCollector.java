@@ -27,6 +27,11 @@ public class StoreResultNodesCollector extends EmptyControlFlowVisitor {
         super.visit(node);
     }
 
+    /**
+     * Determines, if a variable is a store result variable
+     * @param name The name of the variable
+     * @return <value>true</value>, if it is a store result variable, <value>false</value> otherwise
+     */
     public boolean containsStoreResultVariableName(String name) {
         for (Variable var: variables)
             if (var.getName().equals(name))
