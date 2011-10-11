@@ -1,7 +1,7 @@
 package de.gaalop.gapp.statistics;
 
 /**
- * Represents an (closed) interval
+ * Represents a (closed) interval
  * @author Christian Steinmetz
  */
 public class Interval {

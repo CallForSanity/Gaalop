@@ -17,7 +17,6 @@ import de.gaalop.gapp.instructionSet.GAPPAssignMv;
 import de.gaalop.gapp.instructionSet.GAPPSetMv;
 import de.gaalop.gapp.variables.GAPPConstant;
 import de.gaalop.gapp.variables.GAPPMultivector;
-import de.gaalop.gapp.variables.GAPPScalarVariable;
 
 /**
  * Creates a GAPPMultivector from ParallelObject, which is a terminal

@@ -24,9 +24,13 @@ public class MemoryUsage extends CFGGAPPVisitor {
 
     private int curLine = 0;
 
-    private MemoryUsage() {
+    private MemoryUsage() { //Make usage of static method mandatory
     }
 
+    /**
+     * Prints the memory usage of a control flow graph
+     * @param graph The graph
+     */
     public static void printMemoryUsage(ControlFlowGraph graph) {
         MemoryUsage visitor = new MemoryUsage();
         graph.accept(visitor);
@@ -44,19 +48,34 @@ public class MemoryUsage extends CFGGAPPVisitor {
 
     }
 
+    /**
+     * Returns the maximum used space
+     * @return The maximum used space
+     */
     private long maximumUsedSpace() {
+        // Divide and Conquer algorithm start
         return maximumUsedSpaceDivAndConq(1, curLine, liveStatistics.values());
     }
 
+    /**
+     * Returns the maximum used space of an interval
+     * @param lineStart The interval start
+     * @param lineEnd The interval end
+     * @param list The list of LiveStatistics that overlap with the interval
+     * @return The maximum used space of the interval
+     */
     private long maximumUsedSpaceDivAndConq(int lineStart, int lineEnd, Collection<LiveStatistics> list) {
         if (list.isEmpty()) return 0;
 
         if (lineEnd-lineStart == 0) {
+            //simple case
             long sum = 0;
             for (LiveStatistics stat: list)
                 sum += stat.getSize();
             return sum;
         } else {
+            //difficult case: split to simpler cases
+            //create the separated lists
             int centerlastIntLeft = (lineStart+lineEnd)/2;
 
             LinkedList<LiveStatistics> leftList = new LinkedList<LiveStatistics>();
@@ -74,14 +93,19 @@ public class MemoryUsage extends CFGGAPPVisitor {
                 } else
                     rightList.add(element);
             }
-
+            // recursion
             long leftMax = maximumUsedSpaceDivAndConq(lineStart, centerlastIntLeft, leftList);
             long rightMax = maximumUsedSpaceDivAndConq(centerlastIntLeft+1, lineEnd, rightList);
 
+            // merge
             return Math.max(leftMax,rightMax);
         }
     }
 
+    /**
+     * This method is called, if a GAPPSetOfVariables instance is accessed
+     * @param gappSetOfVariables The GAPPSetOfVariables instance
+     */
     private void access(GAPPSetOfVariables gappSetOfVariables) {
         if (!liveStatistics.containsKey(gappSetOfVariables.getName())) {
             System.err.println("Multivector "+gappSetOfVariables.getName()+" was not reseted!");

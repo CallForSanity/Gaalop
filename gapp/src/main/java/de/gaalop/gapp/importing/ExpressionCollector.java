@@ -135,12 +135,22 @@ public class ExpressionCollector implements ExpressionVisitor {
         resultValue.negate();
     }
 
+    /**
+     * Creates a extended calculation from an unary operation
+     * @param node The unary operation node
+     * @param type The calculation type
+     */
     private void createExtCalculationFromUnaryOperation(UnaryOperation node, CalculationType type) {
         resultValue = null;
         node.getOperand().accept(this);
         resultValue = new ExtCalculation(type, resultValue, null);
     }
 
+    /**
+     * Creates a extended calculation from an binary operation
+     * @param node The binary operation node
+     * @param type The calculation type
+     */
     private void createExtCalculationFromBinaryOperation(BinaryOperation node, CalculationType type) {
         resultValue = null;
         node.getLeft().accept(this);

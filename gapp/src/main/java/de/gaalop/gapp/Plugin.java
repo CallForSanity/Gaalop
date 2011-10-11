@@ -9,7 +9,7 @@ import java.awt.Image;
 import java.util.Observable;
 
 /**
- * Implements an plugin for decorating the Control Flow Graph with GAPP instructions
+ * Implements a plugin for decorating the Control Flow Graph with GAPP instructions
  * @author Christian Steinmetz
  */
 public class Plugin extends Observable implements OptimizationStrategyPlugin {

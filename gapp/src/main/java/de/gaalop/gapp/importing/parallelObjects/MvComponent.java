@@ -3,7 +3,7 @@ package de.gaalop.gapp.importing.parallelObjects;
 import de.gaalop.dfg.MultivectorComponent;
 
 /**
- * Represents a multlivector component
+ * Represents a multivector component
  * @author Christian Steinmetz
  */
 public class MvComponent extends ParallelObject {

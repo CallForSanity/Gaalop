@@ -8,6 +8,11 @@ public enum ParallelObjectType implements ParallelObjectVisitor {
 
     summands, factors, extCalculation, constant, mvComponent, dotProduct, variable;
 
+    /**
+     * Returns the type of a given ParallelObject instance
+     * @param object The ParallelObject instance
+     * @return The type
+     */
     public static ParallelObjectType getType(ParallelObject object) {
         ParallelObjectType visitor = summands;
         return (ParallelObjectType) object.accept(visitor, null);

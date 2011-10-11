@@ -31,12 +31,20 @@ public class Product extends ParallelObject {
         return visitor.visitProduct(this, arg);
     }
 
+    /**
+     * Adds a factor to the factors list
+     * @param factor The factor to be added
+     */
     public void add(ParallelObject factor) {
         factors.add(factor);
     }
 
-    public void add(Product factors) {
-        this.factors.addAll(factors.getFactors());
+    /**
+     * Adds all factors of a product to the factors list
+     * @param product The product
+     */
+    public void add(Product product) {
+        this.factors.addAll(product.getFactors());
     }
 
     @Override

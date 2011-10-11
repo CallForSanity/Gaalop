@@ -10,7 +10,7 @@ public class GAPPFurtherOptimizationsFacade {
 
     /**
      * Performs some further GAPP optimizations
-     * @param graph
+     * @param graph The graph
      */
     public void doFurtherGAPPOptimizations(ControlFlowGraph graph) {
         //Remove zero-assignments

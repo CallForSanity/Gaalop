@@ -35,7 +35,7 @@ public class FactorsGetter implements ExpressionVisitor {
 
     private Product factors = new Product();
 
-    private FactorsGetter() {
+    private FactorsGetter() { //Make usage of static getFactors method mandatory
     }
 
     /**

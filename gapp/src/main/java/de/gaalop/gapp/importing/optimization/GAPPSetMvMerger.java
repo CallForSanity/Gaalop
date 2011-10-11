@@ -39,6 +39,9 @@ public class GAPPSetMvMerger extends EmptyCFGGAPPVisitor {
         super.visit(node);
     }
 
+    /**
+     * Merges mergable GAPPSetMv to the first GAPPSetMv in mapSetMv
+     */
     private void prepareMap() {
         for (LinkedList<GAPPSetMv> list: mapSetMv.values())
             if (list.size()>1) {

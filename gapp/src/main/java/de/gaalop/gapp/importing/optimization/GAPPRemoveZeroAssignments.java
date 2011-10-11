@@ -2,8 +2,6 @@ package de.gaalop.gapp.importing.optimization;
 
 import de.gaalop.gapp.PosSelector;
 import de.gaalop.gapp.PosSelectorset;
-import de.gaalop.gapp.Selector;
-import de.gaalop.gapp.Selectorset;
 import de.gaalop.gapp.Variableset;
 import de.gaalop.gapp.instructionSet.GAPPAssignMv;
 import de.gaalop.gapp.variables.GAPPConstant;
