@@ -2,7 +2,14 @@ package de.gaalop.codegenGapp;
 
 import de.gaalop.CodeGenerator;
 import de.gaalop.CodeGeneratorPlugin;
-import java.awt.Image;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.io.IOException;
+import java.net.URL;
 
 /**
  * Implements a CodegeneratorPlugin, 
@@ -10,6 +17,23 @@ import java.awt.Image;
  * @author Christian Steinmetz
  */
 public class Plugin implements CodeGeneratorPlugin {
+
+    private Log log = LogFactory.getLog(Plugin.class);
+
+    private Image icon;
+
+    public Plugin() {
+        URL url = getClass().getResource("icon.png");
+        if (url != null) {
+            try {
+                icon = ImageIO.read(url);
+            } catch (IOException e) {
+                log.error("Unable to read plugin icon " + url);
+            }
+        } else {
+            log.warn("Unable to find plugin icon!");
+        }
+    }
 
     @Override
     public CodeGenerator createCodeGenerator() {
@@ -28,7 +52,7 @@ public class Plugin implements CodeGeneratorPlugin {
 
     @Override
     public Image getIcon() {
-        return null; //TODO chs optional create icon for GAPP Pretty Printer Plugin
+        return icon;
     }
 
 }
