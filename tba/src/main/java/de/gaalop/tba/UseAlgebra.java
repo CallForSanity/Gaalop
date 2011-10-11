@@ -4,7 +4,6 @@ import de.gaalop.cfg.AlgebraSignature;
 import de.gaalop.dfg.Expression;
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -77,10 +76,19 @@ public class UseAlgebra {
         return tableGeo.getProduct(factor1, factor2);
     }
 
+    /**
+     * Returns the number of blades in this algebra
+     * @return The number of blades
+     */
     public int getBladeCount() {
         return algebra.getBlades().size();
     }
 
+    /**
+     * Returns the grade of a blade in this algebra
+     * @param blade The index of the blade
+     * @return The grade
+     */
     public int getGrade(int blade) {
         return algebra.getBlade(blade).getBases().size();
     }
@@ -138,7 +146,10 @@ public class UseAlgebra {
 
     }
 
-
+    /**
+     * Creates a new AlgebraSignature from this algebra
+     * @return The new AlgebraSignature
+     */
     public AlgebraSignature getAlgebraSignature() {
 
        Expression[] bladlist = new Expression[algebra.getBlades().size()];

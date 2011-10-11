@@ -38,6 +38,10 @@ public class Blade {
                     return "";
 	}
 
+        /**
+         * Adds a basis to this blade
+         * @param toAdd The basis to be added
+         */
 	public void addBasis(String toAdd) {
 		bases.add(toAdd);
 	}

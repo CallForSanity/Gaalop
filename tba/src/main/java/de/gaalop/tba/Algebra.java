@@ -103,8 +103,12 @@ public class Algebra {
             d.close();
 	}
 
-    public int getBaseCount() {
-        return base.length-1;
-    }
+        /**
+         * Returns the number of elements in the base
+         * @return The number of base elements
+         */
+        public int getBaseCount() {
+            return base.length-1;
+        }
 	
 }

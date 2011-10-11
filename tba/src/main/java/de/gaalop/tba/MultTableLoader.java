@@ -8,7 +8,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 /**
- * Loads a Multiplication table from a file
+ * Provides methods for loading a Multiplication table from a file
  * @author Christian Steinmetz
  */
 public class MultTableLoader {
@@ -17,7 +17,6 @@ public class MultTableLoader {
      * Loads products from a file
      * @param useAlgebra The Algebra to be used
      * @param filename_Products The file which contains the products
-     * @param replaces The replaces list to be used
      * @param useAsRessource true, if filename_products is a ressource
      * @throws IOException
      */
@@ -60,7 +59,7 @@ public class MultTableLoader {
      * Loads an algebra from different files
      * @param useAlgebra The algebra to be used
      * @param filename_Products The filename of the file which contains the products
-     * @param filename_Replaces The filename of the file which contains the replaces
+     * @param useAsRessource true, if filename_products is a ressource
      * @throws IOException
      */
     public void load(UseAlgebra useAlgebra, String filename_Products, boolean useAsRessource) throws IOException {

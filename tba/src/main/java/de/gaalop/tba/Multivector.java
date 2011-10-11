@@ -17,6 +17,10 @@ public class Multivector {
 		this.algebra = algebra;
 	}
 
+        /**
+         * Adds a BladeRef object to this multivector
+         * @param blade The bladeref object to be added
+         */
 	public void addBlade(BladeRef blade) {
 		blades.add(blade);
 	}

@@ -3,17 +3,22 @@ package de.gaalop.tba;
 import java.util.Vector;
 
 /**
- *
+ * Provides methods for parsing blades, blades references and multivectors
  * @author christian
  */
 public class Parser {
 
-    public static BladeRef parseBladeRef(String readed) {
+    /**
+     * Parses a blade refrence from a string
+     * @param parse The string to parse
+     * @return The parsed blade reference
+     */
+    public static BladeRef parseBladeRef(String parse) {
 
         byte prefactor = 1;
         int index = 0;
 
-        String trimmed = readed.trim();
+        String trimmed = parse.trim();
         if (trimmed.isEmpty() || trimmed.equals("0"))
             prefactor = 0;
         else {
@@ -38,14 +43,26 @@ public class Parser {
         return new BladeRef(prefactor, index);
     }
 
-    public static Blade parseBlade(String readed, Algebra algebra) {
+    /**
+     * Parses a blade from a string
+     * @param parse The string to parse
+     * @param algebra The current algebra
+     * @return The parsed blade
+     */
+    public static Blade parseBlade(String parse, Algebra algebra) {
         Vector<String> bases = new Vector<String>();
-        String[] parts = readed.split("\\^");
+        String[] parts = parse.split("\\^");
         for (String part: parts)
             bases.add(part.trim());
         return new Blade(algebra, bases);
     }
 
+    /**
+     * Parses a multivector from a string
+     * @param readed The string to parse
+     * @param algebra The current algebra
+     * @return The parsed blade
+     */
     public static Multivector parseMultivector(String parse, Algebra algebra) {
         String trimmed = parse.trim();
         Multivector result = new Multivector(algebra);

@@ -15,7 +15,7 @@ import de.gaalop.cfg.StartNode;
 import de.gaalop.cfg.StoreResultNode;
 
 /**
- * Returns the type of a ControlFlowGraphNode
+ * Returns the type of a ControlFlowGraph node
  * @author Christian Steinmetz
  */
 public class CFGNodeTypeGetter implements ControlFlowVisitor {

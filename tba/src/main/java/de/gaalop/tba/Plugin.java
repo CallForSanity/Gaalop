@@ -10,7 +10,7 @@ import de.gaalop.OptimizationStrategyPlugin;
 import de.gaalop.tba.cfgImport.optimization.maxima.ProcessBuilderMaximaConnection;
 
 /**
- * Implements the Table Based Approach as an OptimizationStrategyPlugin,
+ * Implements the Table Based Approach as an OptimizationStrategyPlugin
  * for using in Gaalop
  * 
  * @author Christian Steinmetz

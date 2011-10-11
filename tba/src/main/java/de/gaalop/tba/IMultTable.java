@@ -18,7 +18,7 @@ public interface IMultTable {
      * Returns the product of two blades with specified indices in the algebra
      * @param factor1 The index of the blade of the first factor
      * @param factor2 The index of the blade of the second factor
-     * @return
+     * @return The product
      */
     public Multivector getProduct(Integer factor1, Integer factor2);
 
@@ -28,6 +28,6 @@ public interface IMultTable {
      * @param factor2 The index of the blade of the second factor
      * @param product The product
      */
-    public void setProduct(Integer factor1, Integer factor2, Multivector product );
+    public void setProduct(Integer factor1, Integer factor2, Multivector product);
 	
 }
