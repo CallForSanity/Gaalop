@@ -70,7 +70,7 @@ public class BladePrinter implements ExpressionVisitor {
 
     @Override
     public void visit(InnerProduct innerProduct) {
-        throw new IllegalStateException("Inner product should have been removed by TBA.");
+        handleInfix(innerProduct, ".", true);
     }
 
     @Override
@@ -115,7 +115,7 @@ public class BladePrinter implements ExpressionVisitor {
 
     @Override
     public void visit(OuterProduct outerProduct) {
-        throw new IllegalStateException("Outer product should have been removed by TBA.");
+        handleInfix(outerProduct, "^", false);
     }
 
     @Override
