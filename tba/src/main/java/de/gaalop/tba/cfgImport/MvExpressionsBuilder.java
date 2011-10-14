@@ -265,7 +265,7 @@ public class MvExpressionsBuilder extends EmptyControlFlowVisitor implements Exp
 
         for (int blade = 0; blade < bladeCount; blade++) {
             if (mv.bladeExpressions[blade] != null) {
-                result.bladeExpressions[blade] = new Division(mv.bladeExpressions[blade], length.bladeExpressions[0]);
+                result.bladeExpressions[blade] = new Division(revR.bladeExpressions[blade], length.bladeExpressions[0]);
             }
         }
 
