@@ -17,8 +17,13 @@ import de.gaalop.tba.cfgImport.optimization.maxima.ProcessBuilderMaximaConnectio
  */
 public class Plugin extends Observable implements OptimizationStrategyPlugin {
 
+    /*
+     * Please make sure this is disabled by default.
+     * Some tests fail otherwise.
+     */
     @ConfigurationProperty(type = Type.BOOLEAN)
-    public boolean optMaxima = true;
+    public boolean optMaxima = false;
+
     @ConfigurationProperty(type = Type.BOOLEAN)
     public boolean optOneExpressionRemoval = true;
     @ConfigurationProperty(type = Type.BOOLEAN)
