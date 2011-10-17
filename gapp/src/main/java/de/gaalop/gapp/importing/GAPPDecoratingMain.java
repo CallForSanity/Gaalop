@@ -49,6 +49,7 @@ public class GAPPDecoratingMain {
         plugin.setOptInserting(false);
         plugin.setInvertTransformation(true);
         plugin.setScalarFunctions(scalarFunctions);
+        plugin.setOptMaxima(false);
         CFGImporterFacade facade = new CFGImporterFacade(plugin);
         facade.setUsedAlgebra(usedAlgebra);
         facade.importGraph(graph);

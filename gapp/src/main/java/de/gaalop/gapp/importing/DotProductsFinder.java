@@ -29,6 +29,8 @@ public class DotProductsFinder implements ParallelObjectVisitor {
             summandNo++;
         }
 
+        if (sum.isNegated()) dotProduct.negate();
+
         return dotProduct;
     }
 
