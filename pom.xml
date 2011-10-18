@@ -15,6 +15,7 @@
         <module>api</module>
         <module>maple</module>
         <module>tba</module>
+        <module>gapp</module>
         <module>clucalc</module>
         <module>codegen-dot</module>
         <module>codegen-cpp</module>
