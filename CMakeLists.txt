@@ -29,7 +29,7 @@ ADD_SUBDIRECTORY(share)
 
 # build
 add_custom_target(gaalop ALL COMMENT "Compiling Gaalop.")
-add_custom_command(TARGET gaalop COMMAND ${MVN_BINARY} -DupdateOnly=true package assembly:directory WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+add_custom_command(TARGET gaalop COMMAND ${MVN_BINARY} -DupdateOnly=true -Dmaven.test.skip=true package assembly:directory WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 #add_custom_target(mvn_clean ALL COMMENT "Maven Clean Gaalop.")
 #add_custom_command(TARGET mvn_clean COMMAND ${MVN_BINARY} clean WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 # copy
@@ -38,8 +38,8 @@ COPY_DIRECTORY(gaalop-copy "target/gaalop*" "share/gcd/gaalop")
 COPY_DIRECTORY(dependencies-copy dependencies "share/gcd/gaalop/plugins")
 
 # find paths
-FILE(GLOB GAALOP_BUILD_TARGET_DIR_LIST "${CMAKE_CURRENT_SOURCE_DIR}/target/gaalop*")
-LIST(GET GAALOP_BUILD_TARGET_DIR_LIST 0 GAALOP_BUILD_TARGET_DIR)
+#FILE(GLOB GAALOP_BUILD_TARGET_DIR_LIST "${CMAKE_CURRENT_SOURCE_DIR}/target/gaalop*")
+#LIST(GET GAALOP_BUILD_TARGET_DIR_LIST 0 GAALOP_BUILD_TARGET_DIR)
 
 # install
 INSTALL(DIRECTORY "${GAALOP_BUILD_TARGET_DIR}/." DESTINATION share/gcd/gaalop PATTERN ".svn" EXCLUDE)
