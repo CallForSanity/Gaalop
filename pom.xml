@@ -22,6 +22,7 @@
         <module>codegen-java</module>
         <module>codegen-gaalet</module>
         <module>codegen-compressed</module>
+	<module>codegen-gapp</module>
         <module>gcd</module>
         <module>starter</module>
     </modules>
