@@ -110,11 +110,20 @@ public class UseAlgebra {
 
     /**
      * Returns the useAlgebra which represents the calculations in 5d conformal geometric algebra
-     * @return The useAlgerba instance
+     * @return The useAlgebra instance
      */
     public static UseAlgebra get5dConformalGA() {
         //load 5d conformal algebra
         return new UseAlgebra("5d");
+    }
+
+    /**
+     * Returns the useAlgebra which represents the calculations in 3d geometric algebra
+     * @return The useAlgebra instance
+     */
+    public static UseAlgebra get3dGA() {
+        //load 3d algebra
+        return new UseAlgebra("3d");
     }
 
     /**
