@@ -7,6 +7,7 @@ import de.gaalop.gapp.Selectorset;
 import de.gaalop.gapp.instructionSet.GAPPAssignMv;
 import de.gaalop.gapp.instructionSet.GAPPAssignVector;
 import de.gaalop.gapp.instructionSet.GAPPCalculateMv;
+import de.gaalop.gapp.instructionSet.GAPPCalculateMvCoeff;
 import de.gaalop.gapp.instructionSet.GAPPDotVectors;
 import de.gaalop.gapp.instructionSet.GAPPResetMv;
 import de.gaalop.gapp.instructionSet.GAPPSetMv;
@@ -282,6 +283,81 @@ public class Executer extends CFGGAPPVisitor {
                     : ((GAPPConstant) scalarVar).getValue();
             destination.getEntries()[sel] = value;
         }
+
+        return null;
+    }
+
+    @Override
+    public Object visitCalculateMvCoeff(GAPPCalculateMvCoeff gappCalculateCoeff, Object arg) {
+
+        MultivectorWithValues mv1 = getMultivector(gappCalculateCoeff.getOperand1().getName());
+        float op1 = mv1.getEntry(0);
+
+        MultivectorWithValues mv2 = null;
+        float op2 = 0;
+        if (gappCalculateCoeff.getOperand2() != null) {
+            mv2 = getMultivector(gappCalculateCoeff.getOperand2().getName());
+            op2 = mv2.getEntry(0);
+        }
+
+        MultivectorWithValues target = getMultivector(gappCalculateCoeff.getDestination().getName());
+
+        float result;
+
+        switch (gappCalculateCoeff.getType()) {
+            case ABS:
+                result = Math.abs(op1);
+                break;
+            case ACOS:
+                result = (float) Math.acos(op1);
+                break;
+            case ASIN:
+                result = (float) Math.asin(op1);
+                break;
+            case ATAN:
+                result = (float) Math.atan(op1);
+                break;
+            case CEIL:
+                result = (float) Math.ceil(op1);
+                break;
+            case COS:
+                result = (float) Math.cos(op1);
+                break;
+            case DIVISION:
+                result = op1 / op2;
+                break;
+            case EXP:
+                result = (float) Math.exp(op1);
+                break;
+            case EXPONENTIATION:
+                result = (float) Math.pow(op1, op2);
+                break;
+            case FACT:
+                result = 1;
+                for (int i = 2; i <= (int) op1; i++) {
+                    result *= i;
+                }
+                break;
+            case FLOOR:
+                result = (float) Math.floor(op1);
+                break;
+            case LOG:
+                result = (float) Math.log(op1);
+                break;
+            case SIN:
+                result = (float) Math.sin(op1);
+                break;
+            case SQRT:
+                result = (float) Math.sqrt(op1);
+                break;
+            case TAN:
+                result = (float) Math.tan(op1);
+                break;
+            default:
+                throw new UnsupportedOperationException("Executer: " + gappCalculateCoeff.getType() + " is not supported yet.");
+        }
+
+        target.setEntry(gappCalculateCoeff.getDestination().getBladeIndex(), result);
 
         return null;
     }

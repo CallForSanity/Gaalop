@@ -19,6 +19,7 @@ import de.gaalop.gapp.importing.parallelObjects.Product;
 import de.gaalop.gapp.importing.parallelObjects.Sum;
 import de.gaalop.gapp.instructionSet.GAPPAssignMv;
 import de.gaalop.gapp.instructionSet.GAPPCalculateMv;
+import de.gaalop.gapp.instructionSet.GAPPCalculateMvCoeff;
 import de.gaalop.gapp.instructionSet.GAPPDotVectors;
 import de.gaalop.gapp.instructionSet.GAPPResetMv;
 import de.gaalop.gapp.instructionSet.GAPPSetMv;
@@ -145,8 +146,8 @@ public class GAPPCreator implements ParallelObjectVisitor {
         }
 
 
-        gapp.addInstruction(new GAPPCalculateMv(extCalculation.getType(),
-                new GAPPMultivector(destination.getName()),
+        gapp.addInstruction(new GAPPCalculateMvCoeff(extCalculation.getType(),
+                destination,
                 createMultivectorFromParallelObjectTerminal(extCalculation.getOperand1()),
                 (extCalculation.getOperand2() == null)
                 ? null

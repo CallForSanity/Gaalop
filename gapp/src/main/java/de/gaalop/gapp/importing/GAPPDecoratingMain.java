@@ -46,10 +46,11 @@ public class GAPPDecoratingMain {
         }
 
         Plugin plugin = new Plugin();
-        plugin.setOptInserting(false);
+        plugin.setOptInserting(true);
         plugin.setInvertTransformation(true);
         plugin.setScalarFunctions(scalarFunctions);
-        plugin.setOptMaxima(false);
+        plugin.setOptMaxima(true);
+        plugin.setMaximaExpand(true);
         CFGImporterFacade facade = new CFGImporterFacade(plugin);
         facade.setUsedAlgebra(usedAlgebra);
         facade.importGraph(graph);

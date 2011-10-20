@@ -73,4 +73,17 @@ public void testPaper3() {
         }
 }
 
+@Test
+public void testMoreVector() {
+        try {
+            MoreVector c = new MoreVector();
+            Executer executer = executeProgram(c, "MoreVector");
+            c.testOutput(executer);
+        } catch (OptimizationException ex) {
+            assertTrue("Optimization Error", false);
+        } catch (CodeParserException ex) {
+             assertTrue("Code Parse Error", false);
+        }
+}
+
 }

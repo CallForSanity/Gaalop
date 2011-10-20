@@ -3,6 +3,7 @@ package de.gaalop.gapp.visitor;
 import de.gaalop.gapp.instructionSet.GAPPAssignMv;
 import de.gaalop.gapp.instructionSet.GAPPAssignVector;
 import de.gaalop.gapp.instructionSet.GAPPCalculateMv;
+import de.gaalop.gapp.instructionSet.GAPPCalculateMvCoeff;
 import de.gaalop.gapp.instructionSet.GAPPDotVectors;
 import de.gaalop.gapp.instructionSet.GAPPResetMv;
 import de.gaalop.gapp.instructionSet.GAPPSetMv;
@@ -16,7 +17,7 @@ import de.gaalop.gapp.instructionSet.GAPPSetVector;
  */
 public enum InstructionType implements GAPPVisitor {
 
-    resetMv, assignMv, setMv, setVector, dotVectors, calculateMv, assignVector;
+    resetMv, assignMv, setMv, setVector, dotVectors, calculateMv, assignVector, calculateMvCoeff;
 
     @Override
     public Object visitAssignMv(GAPPAssignMv gappAssignMv, Object arg) {
@@ -52,4 +53,11 @@ public enum InstructionType implements GAPPVisitor {
     public Object visitAssignVector(GAPPAssignVector gappAssignVector, Object arg) {
         return assignVector;
     }
+
+    @Override
+    public Object visitCalculateMvCoeff(GAPPCalculateMvCoeff gappCalculateMvCoeff, Object arg) {
+        return calculateMvCoeff;
+    }
+
+
 }

@@ -8,6 +8,7 @@ import de.gaalop.gapp.Variableset;
 import de.gaalop.gapp.instructionSet.GAPPAssignMv;
 import de.gaalop.gapp.instructionSet.GAPPAssignVector;
 import de.gaalop.gapp.instructionSet.GAPPCalculateMv;
+import de.gaalop.gapp.instructionSet.GAPPCalculateMvCoeff;
 import de.gaalop.gapp.instructionSet.GAPPDotVectors;
 import de.gaalop.gapp.instructionSet.GAPPResetMv;
 import de.gaalop.gapp.instructionSet.GAPPSetMv;
@@ -141,5 +142,13 @@ public class GAPPCopier implements GAPPVisitor {
         return new GAPPAssignVector(
                 (GAPPVector) GAPPValueHolderCopier.copyValueHolder(gappAssignVector.getDestination()),
                 copyVariableset(gappAssignVector.getValues()));
+    }
+
+    @Override
+    public Object visitCalculateMvCoeff(GAPPCalculateMvCoeff gappCalculateMvCoeff, Object arg) {
+        return new GAPPCalculateMv(gappCalculateMvCoeff.getType(),
+                (GAPPMultivector) GAPPValueHolderCopier.copyValueHolder(gappCalculateMvCoeff.getDestination()),
+                (GAPPMultivector) GAPPValueHolderCopier.copyValueHolder(gappCalculateMvCoeff.getOperand1()),
+                (GAPPMultivector) GAPPValueHolderCopier.copyValueHolder(gappCalculateMvCoeff.getOperand2()));
     }
 }

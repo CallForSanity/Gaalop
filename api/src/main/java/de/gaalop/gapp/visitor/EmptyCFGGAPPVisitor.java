@@ -3,6 +3,7 @@ package de.gaalop.gapp.visitor;
 import de.gaalop.gapp.instructionSet.GAPPAssignMv;
 import de.gaalop.gapp.instructionSet.GAPPAssignVector;
 import de.gaalop.gapp.instructionSet.GAPPCalculateMv;
+import de.gaalop.gapp.instructionSet.GAPPCalculateMvCoeff;
 import de.gaalop.gapp.instructionSet.GAPPDotVectors;
 import de.gaalop.gapp.instructionSet.GAPPResetMv;
 import de.gaalop.gapp.instructionSet.GAPPSetMv;
@@ -46,6 +47,11 @@ public class EmptyCFGGAPPVisitor extends CFGGAPPVisitor {
 
     @Override
     public Object visitAssignVector(GAPPAssignVector gappAssignVector, Object arg) {
+        return null;
+    }
+
+    @Override
+    public Object visitCalculateMvCoeff(GAPPCalculateMvCoeff gappCalculateMvCoeff, Object arg) {
         return null;
     }
 }

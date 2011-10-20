@@ -21,4 +21,6 @@ public interface GAPPVisitor {
     public Object visitCalculateMv(GAPPCalculateMv gappCalculateMv, Object arg);
 
     public Object visitAssignVector(GAPPAssignVector gappAssignVector, Object arg);
+
+    public Object visitCalculateMvCoeff(GAPPCalculateMvCoeff gappCalculateMvCoeff, Object arg);
 }
