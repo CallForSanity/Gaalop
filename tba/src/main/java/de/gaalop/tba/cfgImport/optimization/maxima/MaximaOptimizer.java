@@ -4,6 +4,7 @@ import de.gaalop.api.cfg.AssignmentNodeCollector;
 import de.gaalop.cfg.AssignmentNode;
 import de.gaalop.cfg.ControlFlowGraph;
 import de.gaalop.dfg.Expression;
+import de.gaalop.dfg.MultivectorComponent;
 import de.gaalop.dfg.Variable;
 import de.gaalop.tba.Plugin;
 import de.gaalop.tba.cfgImport.optimization.maxima.parser.MaximaLexer;
@@ -61,11 +62,11 @@ public class MaximaOptimizer {
             Expression exp = getExpressionFromMaximaOutput(io);
             listIterator.next().setValue(exp);
         }
-
-        if (plugin.isOptInserting()) {
+/*
+        if (plugin.isOptInserting() && plugin.isScalarFunctions()) {
             removeUnusedAssignments(graph, collector.getVariables());
         }
-
+*/
 
     }
 
@@ -160,7 +161,14 @@ public class MaximaOptimizer {
                 }
             }
 
-            input.add(variable + value);
+            if (!plugin.isScalarFunctions() & !(node.getVariable() instanceof MultivectorComponent)) {
+                variable = "";
+            }
+
+            if (plugin.isMaximaExpand())
+                input.add(variable + "expand("+value.substring(0, value.length()-1)+");");
+            else
+                input.add(variable + value);
 
         }
 

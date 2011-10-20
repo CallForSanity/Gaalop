@@ -4,6 +4,7 @@ import de.gaalop.OptimizationException;
 import de.gaalop.cfg.ControlFlowGraph;
 import de.gaalop.tba.Plugin;
 import de.gaalop.tba.UseAlgebra;
+import de.gaalop.tba.cfgImport.optimization.ConstantFolding;
 import de.gaalop.tba.cfgImport.optimization.OptConstantPropagation;
 import de.gaalop.tba.cfgImport.optimization.OptMaxima;
 import de.gaalop.tba.cfgImport.optimization.OptOneExpressionsRemoval;
@@ -93,6 +94,10 @@ public class CFGImporterFacade {
                 repeat = repeat || curOpt.transform(graph, usedAlgebra);
             }
         } while (repeat);
+
+        OptConstantPropagation p = new OptConstantPropagation();
+        p.transform(graph, usedAlgebra);
+        
 
         return graph;
     }

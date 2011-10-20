@@ -134,15 +134,23 @@ public class Unused implements GAProgram {
 	
 	@Override
 	public void calculate() {
+		rotor$7 = (-ary$0); // e1^e3;
+		translator$8 = (-((lpx$0 / 2.0f))); // e1^einf;
+		translator$11 = (-((lpy$0 / 2.0f))); // e2^einf;
+		translator$13 = (-((lpz$0 / 2.0f))); // e3^einf;
 		Din$0 = arw$0; // 1.0;
 		Din$6 = arz$0; // e1^e2;
-		Din$7 = (-ary$0); // e1^e3;
-		Din$8 = (((-(((0.5f * ary$0) * lpz$0))) + ((0.5f * arz$0) * lpy$0)) - ((0.5f * arw$0) * lpx$0)); // e1^einf;
+		Din$7 = rotor$7; // e1^e3;
+		Din$8 = (((translator$8 * arw$0) + (-((translator$11 * arz$0)))) + (-((translator$13 * rotor$7)))); // e1^einf;
 		Din$10 = arx$0; // e2^e3;
-		Din$11 = ((((0.5f * arx$0) * lpz$0) - ((0.5f * arw$0) * lpy$0)) - ((0.5f * arz$0) * lpx$0)); // e2^einf;
-		Din$13 = (((-(((0.5f * arw$0) * lpz$0))) - ((0.5f * arx$0) * lpy$0)) + ((0.5f * ary$0) * lpx$0)); // e3^einf;
-		Din$26 = (((-(((0.5f * arz$0) * lpz$0))) - ((0.5f * ary$0) * lpy$0)) - ((0.5f * arx$0) * lpx$0)); // e1^e2^e3^einf;
+		Din$11 = (((translator$8 * arz$0) + (translator$11 * arw$0)) + (-((translator$13 * arx$0)))); // e2^einf;
+		Din$13 = (((translator$8 * rotor$7) + (translator$11 * arx$0)) + (translator$13 * arw$0)); // e3^einf;
+		Din$26 = (((translator$8 * arx$0) + (-((translator$11 * rotor$7)))) + (translator$13 * arz$0)); // e1^e2^e3^einf;
 	}
 
+	private float rotor$7;
+	private float translator$8;
+	private float translator$13;
+	private float translator$11;
 
 }
