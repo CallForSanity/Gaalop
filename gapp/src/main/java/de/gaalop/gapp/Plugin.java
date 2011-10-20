@@ -16,6 +16,13 @@ public class Plugin extends Observable implements OptimizationStrategyPlugin {
 
     @ConfigurationProperty(type = Type.TEXT)
     public String algebra = "5d"; //make conformal 5d to the standard algebra
+    
+    /*
+     * Please make sure this is disabled by default.
+     * Some tests fail otherwise.
+     */
+    @ConfigurationProperty(type = Type.BOOLEAN)
+    public boolean optMaxima = false;
 
     @Override
     public OptimizationStrategy createOptimizationStrategy() {
@@ -48,5 +55,13 @@ public class Plugin extends Observable implements OptimizationStrategyPlugin {
 
     public void setAlgebra(String algebra) {
         this.algebra = algebra;
+    }
+
+    public boolean isOptMaxima() {
+        return optMaxima;
+    }
+
+    public void setOptMaxima(boolean optMaxima) {
+        this.optMaxima = optMaxima;
     }
 }

@@ -34,11 +34,13 @@ public class GAPPDecoratingMain {
 
     /**
      * Decorates a given ControlFlowGraph with GAPP instructions
+     * @param usedAlgebra The used algebra
      * @param graph The ControlFlowGraph
+     * @param optMaxima Should Maxima be used?
      * @return The same graph object (which is now decorated with GAPP instructions)
      * @throws OptimizationException
      */
-    public ControlFlowGraph decorateGraph(UseAlgebra usedAlgebra, ControlFlowGraph graph) throws OptimizationException {
+    public ControlFlowGraph decorateGraph(UseAlgebra usedAlgebra, ControlFlowGraph graph, boolean optMaxima) throws OptimizationException {
 
         boolean scalarFunctions = false;
 
@@ -48,11 +50,14 @@ public class GAPPDecoratingMain {
         }
 
         Plugin plugin = new Plugin();
-        plugin.setOptInserting(true);
+        
         plugin.setInvertTransformation(true);
         plugin.setScalarFunctions(scalarFunctions);
-        plugin.setOptMaxima(true);
-        plugin.setMaximaExpand(true);
+        
+        plugin.setOptMaxima(optMaxima);
+        plugin.setOptInserting(optMaxima);
+        plugin.setMaximaExpand(optMaxima);
+        
         CFGImporterFacade facade = new CFGImporterFacade(plugin);
         facade.setUsedAlgebra(usedAlgebra);
         facade.importGraph(graph);

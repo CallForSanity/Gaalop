@@ -15,23 +15,23 @@ setMv b[1,2,3] = inputsVector[3,4,5];
 
 //b[3] = inputsVector[5]
 
-//c[0] = ((a[3] * b[3]) + (a[2] * b[2])) + (a[1] * b[1])
+//c[0] = ((a[1] * b[1]) + (a[2] * b[2])) + (a[3] * b[3])
 resetMv c[8];
-setVector ve0 = a[3,2,1];
-setVector ve1 = b[3,2,1];
+setVector ve0 = a[1,2,3];
+setVector ve1 = b[1,2,3];
 dotVectors c[0] = <ve0,ve1>;
 
-//c[4] = (a[1] * b[2]) - (a[2] * b[1])
+//c[4] = (a[1] * b[2]) + (-(a[2] * b[1]))
 setVector ve2 = a[1,-2];
 setVector ve3 = b[2,1];
 dotVectors c[4] = <ve2,ve3>;
 
-//c[5] = (a[1] * b[3]) - (a[3] * b[1])
+//c[5] = (a[1] * b[3]) + (-(a[3] * b[1]))
 setVector ve4 = a[1,-3];
 setVector ve5 = b[3,1];
 dotVectors c[5] = <ve4,ve5>;
 
-//c[6] = (a[2] * b[3]) - (a[3] * b[2])
+//c[6] = (a[2] * b[3]) + (-(a[3] * b[2]))
 setVector ve6 = a[2,-3];
 setVector ve7 = b[3,2];
 dotVectors c[6] = <ve6,ve7>;
@@ -52,14 +52,23 @@ setVector ve12 = a[3];
 setVector ve13 = c[0];
 dotVectors f[3] = <ve12,ve13>;
 
-//f[4] = 0
+//f[4] = (a[1] * a[2]) + (-(a[2] * a[1]))
+setVector ve14 = a[1,-2];
+setVector ve15 = a[2,1];
+dotVectors f[4] = <ve14,ve15>;
 
-//f[5] = 0
+//f[5] = (a[1] * a[3]) + (-(a[3] * a[1]))
+setVector ve16 = a[1,-3];
+setVector ve17 = a[3,1];
+dotVectors f[5] = <ve16,ve17>;
 
-//f[6] = 0
+//f[6] = (a[2] * a[3]) + (-(a[3] * a[2]))
+setVector ve18 = a[2,-3];
+setVector ve19 = a[3,2];
+dotVectors f[6] = <ve18,ve19>;
 
-//f[7] = ((a[1] * c[6]) - (a[2] * c[5])) + (a[3] * c[4])
-setVector ve14 = a[1,-2,3];
-setVector ve15 = c[6,5,4];
-dotVectors f[7] = <ve14,ve15>;
+//f[7] = ((a[1] * c[6]) + (-(a[2] * c[5]))) + (a[3] * c[4])
+setVector ve20 = a[1,-2,3];
+setVector ve21 = c[6,5,4];
+dotVectors f[7] = <ve20,ve21>;
 

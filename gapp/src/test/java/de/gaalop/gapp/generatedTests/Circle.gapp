@@ -23,37 +23,50 @@ setMv p1[1,2] = v1[1,2];
 
 //p1[2] = v1[2]
 
-//p1[4] = ((v1[2] * v1[2]) / 2.0) + ((v1[1] * v1[1]) / 2.0)
+//p1[4] = ((v1[1] / 2.0) * v1[1]) + ((v1[2] / 2.0) * v1[2])
 resetMv mv0[1];
 resetMv mv1[1];
-setVector ve2 = v1[2];
-setVector ve3 = v1[2];
-dotVectors mv1[0] = <ve2,ve3>;
+setMv mv1[0] = v1[1];
+resetMv mv2[1];
+assignMv mv2[0] = [2.0];
+calculateMvCoeff mv0[0] = DIVISION(mv1,mv2);
+resetMv mv3[1];
 resetMv mv4[1];
-setMv mv4[0] = mv1[0];
+setMv mv4[0] = v1[2];
 resetMv mv5[1];
 assignMv mv5[0] = [2.0];
-calculateMvCoeff mv0[0] = DIVISION(mv4,mv5);
-resetMv mv6[1];
-resetMv mv7[1];
-setVector ve8 = v1[1];
-setVector ve9 = v1[1];
-dotVectors mv7[0] = <ve8,ve9>;
-resetMv mv10[1];
-setMv mv10[0] = mv7[0];
-resetMv mv11[1];
-assignMv mv11[0] = [2.0];
-calculateMvCoeff mv6[0] = DIVISION(mv10,mv11);
-resetMv mv13[2];
-setMv mv13[1] = mv6[0];
-setMv mv13[0] = mv0[0];
-setVector ve12 = mv13[0,1];
-dotVectors p1[4] = <ve12>;
+calculateMvCoeff mv3[0] = DIVISION(mv4,mv5);
+resetMv mv7[2];
+setMv mv7[1] = mv3[0];
+setMv mv7[0] = mv0[0];
+setVector ve6 = mv7[0,1];
+setVector ve8 = v1[1,2];
+dotVectors p1[4] = <ve6,ve8>;
 
 //p1[5] = 1.0
 assignMv p1[5] = [1.0];
 
-//p1[17] = 0.0
+//p1[17] = ((v1[1] / 2.0) * v1[2]) + (-((v1[2] / 2.0) * v1[1]))
+resetMv mv9[1];
+resetMv mv10[1];
+setMv mv10[0] = v1[1];
+resetMv mv11[1];
+assignMv mv11[0] = [2.0];
+calculateMvCoeff mv9[0] = DIVISION(mv10,mv11);
+resetMv mv12[1];
+resetMv mv13[1];
+resetMv mv14[1];
+setMv mv14[0] = v1[2];
+resetMv mv15[1];
+assignMv mv15[0] = [2.0];
+calculateMvCoeff mv13[0] = DIVISION(mv14,mv15);
+setMv mv12[0] = mv13[-0];
+resetMv mv17[2];
+setMv mv17[1] = mv12[0];
+setMv mv17[0] = mv9[0];
+setVector ve16 = mv17[0,1];
+setVector ve18 = v1[2,1];
+dotVectors p1[17] = <ve16,ve18>;
 
 //p2[1] = v2[1]
 resetMv p2[32];
@@ -61,37 +74,50 @@ setMv p2[1,2] = v2[1,2];
 
 //p2[2] = v2[2]
 
-//p2[4] = ((v2[2] * v2[2]) / 2.0) + ((v2[1] * v2[1]) / 2.0)
-resetMv mv14[1];
-resetMv mv15[1];
-setVector ve16 = v2[2];
-setVector ve17 = v2[2];
-dotVectors mv15[0] = <ve16,ve17>;
-resetMv mv18[1];
-setMv mv18[0] = mv15[0];
+//p2[4] = ((v2[1] / 2.0) * v2[1]) + ((v2[2] / 2.0) * v2[2])
 resetMv mv19[1];
-assignMv mv19[0] = [2.0];
-calculateMvCoeff mv14[0] = DIVISION(mv18,mv19);
 resetMv mv20[1];
+setMv mv20[0] = v2[1];
 resetMv mv21[1];
-setVector ve22 = v2[1];
-setVector ve23 = v2[1];
-dotVectors mv21[0] = <ve22,ve23>;
+assignMv mv21[0] = [2.0];
+calculateMvCoeff mv19[0] = DIVISION(mv20,mv21);
+resetMv mv22[1];
+resetMv mv23[1];
+setMv mv23[0] = v2[2];
 resetMv mv24[1];
-setMv mv24[0] = mv21[0];
-resetMv mv25[1];
-assignMv mv25[0] = [2.0];
-calculateMvCoeff mv20[0] = DIVISION(mv24,mv25);
-resetMv mv27[2];
-setMv mv27[1] = mv20[0];
-setMv mv27[0] = mv14[0];
-setVector ve26 = mv27[0,1];
-dotVectors p2[4] = <ve26>;
+assignMv mv24[0] = [2.0];
+calculateMvCoeff mv22[0] = DIVISION(mv23,mv24);
+resetMv mv26[2];
+setMv mv26[0] = mv19[0];
+setMv mv26[1] = mv22[0];
+setVector ve25 = mv26[0,1];
+setVector ve27 = v2[1,2];
+dotVectors p2[4] = <ve25,ve27>;
 
 //p2[5] = 1.0
 assignMv p2[5] = [1.0];
 
-//p2[17] = 0.0
+//p2[17] = ((v2[1] / 2.0) * v2[2]) + (-((v2[2] / 2.0) * v2[1]))
+resetMv mv28[1];
+resetMv mv29[1];
+setMv mv29[0] = v2[1];
+resetMv mv30[1];
+assignMv mv30[0] = [2.0];
+calculateMvCoeff mv28[0] = DIVISION(mv29,mv30);
+resetMv mv31[1];
+resetMv mv32[1];
+resetMv mv33[1];
+setMv mv33[0] = v2[2];
+resetMv mv34[1];
+assignMv mv34[0] = [2.0];
+calculateMvCoeff mv32[0] = DIVISION(mv33,mv34);
+setMv mv31[0] = mv32[-0];
+resetMv mv36[2];
+setMv mv36[1] = mv31[0];
+setMv mv36[0] = mv28[0];
+setVector ve35 = mv36[0,1];
+setVector ve37 = v2[2,1];
+dotVectors p2[17] = <ve35,ve37>;
 
 //p3[1] = v3[1]
 resetMv p3[32];
@@ -99,268 +125,351 @@ setMv p3[1,2] = v3[1,2];
 
 //p3[2] = v3[2]
 
-//p3[4] = ((v3[2] * v3[2]) / 2.0) + ((v3[1] * v3[1]) / 2.0)
-resetMv mv28[1];
-resetMv mv29[1];
-setVector ve30 = v3[2];
-setVector ve31 = v3[2];
-dotVectors mv29[0] = <ve30,ve31>;
-resetMv mv32[1];
-setMv mv32[0] = mv29[0];
-resetMv mv33[1];
-assignMv mv33[0] = [2.0];
-calculateMvCoeff mv28[0] = DIVISION(mv32,mv33);
-resetMv mv34[1];
-resetMv mv35[1];
-setVector ve36 = v3[1];
-setVector ve37 = v3[1];
-dotVectors mv35[0] = <ve36,ve37>;
+//p3[4] = ((v3[1] / 2.0) * v3[1]) + ((v3[2] / 2.0) * v3[2])
 resetMv mv38[1];
-setMv mv38[0] = mv35[0];
 resetMv mv39[1];
-assignMv mv39[0] = [2.0];
-calculateMvCoeff mv34[0] = DIVISION(mv38,mv39);
-resetMv mv41[2];
-setMv mv41[0] = mv28[0];
-setMv mv41[1] = mv34[0];
-setVector ve40 = mv41[0,1];
-dotVectors p3[4] = <ve40>;
+setMv mv39[0] = v3[1];
+resetMv mv40[1];
+assignMv mv40[0] = [2.0];
+calculateMvCoeff mv38[0] = DIVISION(mv39,mv40);
+resetMv mv41[1];
+resetMv mv42[1];
+setMv mv42[0] = v3[2];
+resetMv mv43[1];
+assignMv mv43[0] = [2.0];
+calculateMvCoeff mv41[0] = DIVISION(mv42,mv43);
+resetMv mv45[2];
+setMv mv45[1] = mv41[0];
+setMv mv45[0] = mv38[0];
+setVector ve44 = mv45[0,1];
+setVector ve46 = v3[1,2];
+dotVectors p3[4] = <ve44,ve46>;
 
 //p3[5] = 1.0
 assignMv p3[5] = [1.0];
 
-//p3[17] = 0.0
+//p3[17] = ((v3[1] / 2.0) * v3[2]) + (-((v3[2] / 2.0) * v3[1]))
+resetMv mv47[1];
+resetMv mv48[1];
+setMv mv48[0] = v3[1];
+resetMv mv49[1];
+assignMv mv49[0] = [2.0];
+calculateMvCoeff mv47[0] = DIVISION(mv48,mv49);
+resetMv mv50[1];
+resetMv mv51[1];
+resetMv mv52[1];
+setMv mv52[0] = v3[2];
+resetMv mv53[1];
+assignMv mv53[0] = [2.0];
+calculateMvCoeff mv51[0] = DIVISION(mv52,mv53);
+setMv mv50[0] = mv51[-0];
+resetMv mv55[2];
+setMv mv55[1] = mv50[0];
+setMv mv55[0] = mv47[0];
+setVector ve54 = mv55[0,1];
+setVector ve56 = v3[2,1];
+dotVectors p3[17] = <ve54,ve56>;
 
-//c[7] = (((((p2[2] * p3[4]) - (p1[2] * p3[4])) - (p2[4] * p3[2])) + (p1[4] * p3[2])) + (p1[2] * p2[4])) - (p1[4] * p2[2])
+//c[7] = (((p1[2] * p2[4]) + (-(p1[4] * p2[2]))) + (-((p1[2] + (-(p2[2]))) * p3[4]))) + ((p1[4] + (-(p2[4]))) * p3[2])
 resetMv c[32];
-resetMv mv43[6];
-setMv mv43[0,2] = p2[2,-4];
-setMv mv43[1,3,4,5] = p1[-2,4,2,-4];
-setVector ve42 = mv43[0,1,2,3,4,5];
-resetMv mv45[6];
-setMv mv45[0,1,2,3] = p3[4,4,2,2];
-setMv mv45[4,5] = p2[4,2];
-setVector ve44 = mv45[0,1,2,3,4,5];
-dotVectors c[7] = <ve42,ve44>;
-
-//c[10] = (((((-(p2[1] * p3[4])) + (p1[1] * p3[4])) + (p2[4] * p3[1])) - (p1[4] * p3[1])) - (p1[1] * p2[4])) + (p1[4] * p2[1])
-resetMv mv47[6];
-setMv mv47[0,2] = p2[-1,4];
-setMv mv47[1,3,4,5] = p1[1,-4,-1,4];
-setVector ve46 = mv47[0,1,2,3,4,5];
-resetMv mv49[6];
-setMv mv49[0,1,2,3] = p3[4,4,1,1];
-setMv mv49[4,5] = p2[4,1];
-setVector ve48 = mv49[0,1,2,3,4,5];
-dotVectors c[10] = <ve46,ve48>;
-
-//c[13] = (((((-((p1[1] * p2[2]) * p3[4])) + ((p1[2] * p2[1]) * p3[4])) + ((p1[1] * p2[4]) * p3[2])) - ((p1[4] * p2[1]) * p3[2])) - ((p1[2] * p2[4]) * p3[1])) + ((p1[4] * p2[2]) * p3[1])
-setVector ve50 = p1[-1,2,1,-4,-2,4];
-setVector ve51 = p2[2,1,4,1,4,2];
-setVector ve52 = p3[4,4,2,2,1,1];
-dotVectors c[13] = <ve50,ve51,ve52>;
-
-//c[14] = (((((p2[1] * p3[2]) - (p1[1] * p3[2])) - (p2[2] * p3[1])) + (p1[2] * p3[1])) + (p1[1] * p2[2])) - (p1[2] * p2[1])
-resetMv mv54[6];
-setMv mv54[0,2] = p2[1,-2];
-setMv mv54[1,3,4,5] = p1[-1,2,1,-2];
-setVector ve53 = mv54[0,1,2,3,4,5];
-resetMv mv56[6];
-setMv mv56[0,1,2,3] = p3[2,2,1,1];
-setMv mv56[4,5] = p2[2,1];
-setVector ve55 = mv56[0,1,2,3,4,5];
-dotVectors c[14] = <ve53,ve55>;
-
-//ma[1] = (2 * c[14]) * c[7]
-resetMv ma[32];
+resetMv mv57[1];
 resetMv mv58[1];
-assignMv mv58[0] = [2.0];
-setVector ve57 = mv58[0];
-setVector ve59 = c[14];
-setVector ve60 = c[7];
-dotVectors ma[1] = <ve57,ve59,ve60>;
+resetMv mv60[2];
+setMv mv60[1] = p2[-2];
+setMv mv60[0] = p1[2];
+setVector ve59 = mv60[0,1];
+dotVectors mv58[0] = <ve59>;
+setMv mv57[0] = mv58[-0];
+resetMv mv61[1];
+resetMv mv63[2];
+setMv mv63[1] = p2[-4];
+setMv mv63[0] = p1[4];
+setVector ve62 = mv63[0,1];
+dotVectors mv61[0] = <ve62>;
+resetMv mv65[4];
+setMv mv65[2] = mv57[0];
+setMv mv65[0,1] = p1[2,-4];
+setMv mv65[3] = mv61[0];
+setVector ve64 = mv65[0,1,2,3];
+resetMv mv67[4];
+setMv mv67[2,3] = p3[4,2];
+setMv mv67[0,1] = p2[4,2];
+setVector ve66 = mv67[0,1,2,3];
+dotVectors c[7] = <ve64,ve66>;
 
-//ma[2] = (2 * c[10]) * c[14]
-resetMv mv62[1];
-assignMv mv62[0] = [2.0];
-setVector ve61 = mv62[0];
-setVector ve63 = c[10];
-setVector ve64 = c[14];
-dotVectors ma[2] = <ve61,ve63,ve64>;
-
-//ma[4] = (-(c[7] * c[7])) - (c[10] * c[10])
-setVector ve65 = c[-7,-10];
-setVector ve66 = c[7,10];
-dotVectors ma[4] = <ve65,ve66>;
-
-//ma[5] = -(2 * (c[14] * c[14]))
-resetMv mv67[1];
+//c[10] = -((((p1[1] * p2[4]) + (-(p1[4] * p2[1]))) + (-((p1[1] + (-(p2[1]))) * p3[4]))) + ((p1[4] + (-(p2[4]))) * p3[1]))
+resetMv mv68[1];
 resetMv mv69[1];
-assignMv mv69[0] = [2.0];
-setVector ve68 = mv69[0];
-setVector ve70 = c[14];
-setVector ve71 = c[14];
-dotVectors mv67[0] = <ve68,ve70,ve71>;
-setMv ma[5] = mv67[-0];
-
-//ma[17] = 0
-
-//ma[21] = 0
-
-//ma[24] = 0
-
-//m[1] = (ma[1] / ma[5]) - (0 / ma[5])
-resetMv m[32];
+resetMv mv71[2];
+setMv mv71[1] = p2[-1];
+setMv mv71[0] = p1[1];
+setVector ve70 = mv71[0,1];
+dotVectors mv69[0] = <ve70>;
+setMv mv68[0] = mv69[-0];
 resetMv mv72[1];
-resetMv mv73[1];
-setMv mv73[0] = ma[1];
-resetMv mv74[1];
-setMv mv74[0] = ma[5];
-calculateMvCoeff mv72[0] = DIVISION(mv73,mv74);
+resetMv mv74[2];
+setMv mv74[1] = p2[-4];
+setMv mv74[0] = p1[4];
+setVector ve73 = mv74[0,1];
+dotVectors mv72[0] = <ve73>;
 resetMv mv75[1];
-resetMv mv76[1];
-resetMv mv77[1];
-resetMv mv78[1];
-setMv mv78[0] = ma[5];
-calculateMvCoeff mv76[0] = DIVISION(mv77,mv78);
-setMv mv75[0] = mv76[-0];
-resetMv mv80[2];
-setMv mv80[1] = mv75[0];
-setMv mv80[0] = mv72[0];
-setVector ve79 = mv80[0,1];
-dotVectors m[1] = <ve79>;
+resetMv mv77[4];
+setMv mv77[0,1] = p1[1,-4];
+setMv mv77[2] = mv68[0];
+setMv mv77[3] = mv72[0];
+setVector ve76 = mv77[0,1,2,3];
+resetMv mv79[4];
+setMv mv79[2,3] = p3[4,1];
+setMv mv79[0,1] = p2[4,1];
+setVector ve78 = mv79[0,1,2,3];
+dotVectors mv75[0] = <ve76,ve78>;
+setMv c[10] = mv75[-0];
 
-//m[2] = (ma[2] / ma[5]) - (0 / ma[5])
-resetMv mv81[1];
-resetMv mv82[1];
-setMv mv82[0] = ma[2];
+//c[13] = -(((((p1[1] * p2[2]) + (-(p1[2] * p2[1]))) * p3[4]) + (-(((p1[1] * p2[4]) + (-(p1[4] * p2[1]))) * p3[2]))) + (((p1[2] * p2[4]) + (-(p1[4] * p2[2]))) * p3[1]))
+resetMv mv80[1];
+setVector ve81 = p1[1,-2];
+setVector ve82 = p2[2,1];
+dotVectors mv80[0] = <ve81,ve82>;
 resetMv mv83[1];
-setMv mv83[0] = ma[5];
-calculateMvCoeff mv81[0] = DIVISION(mv82,mv83);
 resetMv mv84[1];
-resetMv mv85[1];
-resetMv mv86[1];
+setVector ve85 = p1[1,-4];
+setVector ve86 = p2[4,1];
+dotVectors mv84[0] = <ve85,ve86>;
+setMv mv83[0] = mv84[-0];
 resetMv mv87[1];
-setMv mv87[0] = ma[5];
-calculateMvCoeff mv85[0] = DIVISION(mv86,mv87);
-setMv mv84[0] = mv85[-0];
-resetMv mv89[2];
-setMv mv89[0] = mv81[0];
-setMv mv89[1] = mv84[0];
-setVector ve88 = mv89[0,1];
-dotVectors m[2] = <ve88>;
-
-//m[4] = ((((ma[4] / ma[5]) + (0.0 / (ma[5] * ma[5]))) - (0 / (ma[5] * ma[5]))) + (0.0 / (ma[5] * ma[5]))) - (0 / (ma[5] * ma[5]))
+setVector ve88 = p1[2,-4];
+setVector ve89 = p2[4,2];
+dotVectors mv87[0] = <ve88,ve89>;
 resetMv mv90[1];
-resetMv mv91[1];
-setMv mv91[0] = ma[4];
-resetMv mv92[1];
-setMv mv92[0] = ma[5];
-calculateMvCoeff mv90[0] = DIVISION(mv91,mv92);
-resetMv mv93[1];
+resetMv mv92[3];
+setMv mv92[2] = mv87[0];
+setMv mv92[0] = mv80[0];
+setMv mv92[1] = mv83[0];
+setVector ve91 = mv92[0,1,2];
+setVector ve93 = p3[4,2,1];
+dotVectors mv90[0] = <ve91,ve93>;
+setMv c[13] = mv90[-0];
+
+//c[14] = (((p1[1] * p2[2]) + (-(p1[2] * p2[1]))) + (-((p1[1] + (-(p2[1]))) * p3[2]))) + ((p1[2] + (-(p2[2]))) * p3[1])
 resetMv mv94[1];
-setVector ve95 = ma[5];
-setVector ve96 = ma[5];
-dotVectors mv94[0] = <ve95,ve96>;
-resetMv mv97[1];
+resetMv mv95[1];
+resetMv mv97[2];
+setMv mv97[1] = p2[-1];
+setMv mv97[0] = p1[1];
+setVector ve96 = mv97[0,1];
+dotVectors mv95[0] = <ve96>;
+setMv mv94[0] = mv95[-0];
 resetMv mv98[1];
-setMv mv98[0] = mv94[0];
-calculateMvCoeff mv93[0] = DIVISION(mv97,mv98);
-resetMv mv99[1];
-resetMv mv100[1];
-resetMv mv101[1];
-setVector ve102 = ma[5];
-setVector ve103 = ma[5];
-dotVectors mv101[0] = <ve102,ve103>;
-resetMv mv104[1];
-resetMv mv105[1];
-setMv mv105[0] = mv101[0];
-calculateMvCoeff mv100[0] = DIVISION(mv104,mv105);
-setMv mv99[0] = mv100[-0];
-resetMv mv106[1];
-resetMv mv107[1];
-setVector ve108 = ma[5];
-setVector ve109 = ma[5];
-dotVectors mv107[0] = <ve108,ve109>;
-resetMv mv110[1];
-resetMv mv111[1];
-setMv mv111[0] = mv107[0];
-calculateMvCoeff mv106[0] = DIVISION(mv110,mv111);
-resetMv mv112[1];
-resetMv mv113[1];
-resetMv mv114[1];
-setVector ve115 = ma[5];
-setVector ve116 = ma[5];
-dotVectors mv114[0] = <ve115,ve116>;
-resetMv mv117[1];
-resetMv mv118[1];
-setMv mv118[0] = mv114[0];
-calculateMvCoeff mv113[0] = DIVISION(mv117,mv118);
-setMv mv112[0] = mv113[-0];
-resetMv mv120[5];
-setMv mv120[3] = mv106[0];
-setMv mv120[4] = mv112[0];
-setMv mv120[1] = mv93[0];
-setMv mv120[0] = mv90[0];
-setMv mv120[2] = mv99[0];
-setVector ve119 = mv120[0,1,2,3,4];
-dotVectors m[4] = <ve119>;
+resetMv mv100[2];
+setMv mv100[1] = p2[-2];
+setMv mv100[0] = p1[2];
+setVector ve99 = mv100[0,1];
+dotVectors mv98[0] = <ve99>;
+resetMv mv102[4];
+setMv mv102[2] = mv94[0];
+setMv mv102[0,1] = p1[1,-2];
+setMv mv102[3] = mv98[0];
+setVector ve101 = mv102[0,1,2,3];
+resetMv mv104[4];
+setMv mv104[2,3] = p3[2,1];
+setMv mv104[0,1] = p2[2,1];
+setVector ve103 = mv104[0,1,2,3];
+dotVectors c[14] = <ve101,ve103>;
 
-//m[5] = 1
-assignMv m[5] = [1.0];
+//ma[1] = (-((-(c[14])) * c[7])) + (c[7] * c[14])
+resetMv ma[32];
+setVector ve105 = c[14,7];
+setVector ve106 = c[7,14];
+dotVectors ma[1] = <ve105,ve106>;
 
-//temp0[0] = ((-((c[7] * c[7]) / (c[14] * c[14]))) + ((2 * c[13]) / c[14])) - ((c[10] * c[10]) / (c[14] * c[14]))
-resetMv temp0[32];
-resetMv mv121[1];
-resetMv mv122[1];
+//ma[2] = (-((-(c[14])) * c[10])) + (c[10] * c[14])
+setVector ve107 = c[14,10];
+setVector ve108 = c[10,14];
+dotVectors ma[2] = <ve107,ve108>;
+
+//ma[4] = ((((-(c[14])) * c[13]) + (-(c[7] * c[7]))) + (-(c[10] * c[10]))) + (-((-(c[14])) * c[13]))
+setVector ve109 = c[-14,-7,-10,14];
+setVector ve110 = c[13,7,10,13];
+dotVectors ma[4] = <ve109,ve110>;
+
+//ma[5] = ((-(c[14])) * c[14]) + ((-(c[14])) * c[14])
+setVector ve111 = c[-14,-14];
+setVector ve112 = c[14,14];
+dotVectors ma[5] = <ve111,ve112>;
+
+//ma[17] = (-(c[7] * c[10])) + (c[10] * c[7])
+setVector ve113 = c[-7,10];
+setVector ve114 = c[10,7];
+dotVectors ma[17] = <ve113,ve114>;
+
+//ma[21] = (-(c[7] * c[14])) + (-((-(c[14])) * c[7]))
+setVector ve115 = c[-7,14];
+setVector ve116 = c[14,7];
+dotVectors ma[21] = <ve115,ve116>;
+
+//ma[24] = (-(c[10] * c[14])) + (-((-(c[14])) * c[10]))
+setVector ve117 = c[-10,14];
+setVector ve118 = c[14,10];
+dotVectors ma[24] = <ve117,ve118>;
+
+//m[1] = ((-(ma[1])) * ((-(ma[5])) / ((-(ma[5])) * (-(ma[5]))))) + ((-(ma[5])) * (ma[21] / ((-(ma[5])) * (-(ma[5])))))
+resetMv m[32];
+resetMv mv119[1];
+resetMv mv120[1];
+setVector ve121 = ma[-5];
+setVector ve122 = ma[-5];
+dotVectors mv120[0] = <ve121,ve122>;
 resetMv mv123[1];
-setVector ve124 = c[7];
-setVector ve125 = c[7];
-dotVectors mv123[0] = <ve124,ve125>;
+setMv mv123[0] = ma[-5];
+resetMv mv124[1];
+setMv mv124[0] = mv120[0];
+calculateMvCoeff mv119[0] = DIVISION(mv123,mv124);
+resetMv mv125[1];
 resetMv mv126[1];
-setVector ve127 = c[14];
-setVector ve128 = c[14];
+setVector ve127 = ma[-5];
+setVector ve128 = ma[-5];
 dotVectors mv126[0] = <ve127,ve128>;
 resetMv mv129[1];
-setMv mv129[0] = mv123[0];
+setMv mv129[0] = ma[21];
 resetMv mv130[1];
 setMv mv130[0] = mv126[0];
-calculateMvCoeff mv122[0] = DIVISION(mv129,mv130);
-setMv mv121[0] = mv122[-0];
-resetMv mv131[1];
-resetMv mv132[1];
+calculateMvCoeff mv125[0] = DIVISION(mv129,mv130);
+setVector ve131 = ma[-1,-5];
+resetMv mv133[2];
+setMv mv133[1] = mv125[0];
+setMv mv133[0] = mv119[0];
+setVector ve132 = mv133[0,1];
+dotVectors m[1] = <ve131,ve132>;
+
+//m[2] = ((-(ma[2])) * ((-(ma[5])) / ((-(ma[5])) * (-(ma[5]))))) + ((-(ma[5])) * (ma[24] / ((-(ma[5])) * (-(ma[5])))))
 resetMv mv134[1];
-assignMv mv134[0] = [2.0];
-setVector ve133 = mv134[0];
-setVector ve135 = c[13];
-dotVectors mv132[0] = <ve133,ve135>;
-resetMv mv136[1];
-setMv mv136[0] = mv132[0];
-resetMv mv137[1];
-setMv mv137[0] = c[14];
-calculateMvCoeff mv131[0] = DIVISION(mv136,mv137);
+resetMv mv135[1];
+setVector ve136 = ma[-5];
+setVector ve137 = ma[-5];
+dotVectors mv135[0] = <ve136,ve137>;
 resetMv mv138[1];
+setMv mv138[0] = ma[-5];
 resetMv mv139[1];
+setMv mv139[0] = mv135[0];
+calculateMvCoeff mv134[0] = DIVISION(mv138,mv139);
 resetMv mv140[1];
-setVector ve141 = c[10];
-setVector ve142 = c[10];
-dotVectors mv140[0] = <ve141,ve142>;
-resetMv mv143[1];
-setVector ve144 = c[14];
-setVector ve145 = c[14];
-dotVectors mv143[0] = <ve144,ve145>;
-resetMv mv146[1];
-setMv mv146[0] = mv140[0];
-resetMv mv147[1];
-setMv mv147[0] = mv143[0];
-calculateMvCoeff mv139[0] = DIVISION(mv146,mv147);
-setMv mv138[0] = mv139[-0];
-resetMv mv149[3];
-setMv mv149[2] = mv138[0];
-setMv mv149[1] = mv131[0];
-setMv mv149[0] = mv121[0];
-setVector ve148 = mv149[0,1,2];
-dotVectors temp0[0] = <ve148>;
+resetMv mv141[1];
+setVector ve142 = ma[-5];
+setVector ve143 = ma[-5];
+dotVectors mv141[0] = <ve142,ve143>;
+resetMv mv144[1];
+setMv mv144[0] = ma[24];
+resetMv mv145[1];
+setMv mv145[0] = mv141[0];
+calculateMvCoeff mv140[0] = DIVISION(mv144,mv145);
+setVector ve146 = ma[-2,-5];
+resetMv mv148[2];
+setMv mv148[0] = mv134[0];
+setMv mv148[1] = mv140[0];
+setVector ve147 = mv148[0,1];
+dotVectors m[2] = <ve146,ve147>;
+
+//m[4] = (((((-(ma[1])) * (ma[21] / ((-(ma[5])) * (-(ma[5]))))) + ((-(ma[2])) * (ma[24] / ((-(ma[5])) * (-(ma[5])))))) + ((-(ma[4])) * ((-(ma[5])) / ((-(ma[5])) * (-(ma[5])))))) + (-((-(ma[21])) * (ma[21] / ((-(ma[5])) * (-(ma[5]))))))) + (-((-(ma[24])) * (ma[24] / ((-(ma[5])) * (-(ma[5]))))))
+resetMv mv149[1];
+resetMv mv150[1];
+setVector ve151 = ma[-5];
+setVector ve152 = ma[-5];
+dotVectors mv150[0] = <ve151,ve152>;
+resetMv mv153[1];
+setMv mv153[0] = ma[21];
+resetMv mv154[1];
+setMv mv154[0] = mv150[0];
+calculateMvCoeff mv149[0] = DIVISION(mv153,mv154);
+resetMv mv155[1];
+resetMv mv156[1];
+setVector ve157 = ma[-5];
+setVector ve158 = ma[-5];
+dotVectors mv156[0] = <ve157,ve158>;
+resetMv mv159[1];
+setMv mv159[0] = ma[24];
+resetMv mv160[1];
+setMv mv160[0] = mv156[0];
+calculateMvCoeff mv155[0] = DIVISION(mv159,mv160);
+resetMv mv161[1];
+resetMv mv162[1];
+setVector ve163 = ma[-5];
+setVector ve164 = ma[-5];
+dotVectors mv162[0] = <ve163,ve164>;
+resetMv mv165[1];
+setMv mv165[0] = ma[-5];
+resetMv mv166[1];
+setMv mv166[0] = mv162[0];
+calculateMvCoeff mv161[0] = DIVISION(mv165,mv166);
+resetMv mv167[1];
+resetMv mv168[1];
+setVector ve169 = ma[-5];
+setVector ve170 = ma[-5];
+dotVectors mv168[0] = <ve169,ve170>;
+resetMv mv171[1];
+setMv mv171[0] = ma[21];
+resetMv mv172[1];
+setMv mv172[0] = mv168[0];
+calculateMvCoeff mv167[0] = DIVISION(mv171,mv172);
+resetMv mv173[1];
+resetMv mv174[1];
+setVector ve175 = ma[-5];
+setVector ve176 = ma[-5];
+dotVectors mv174[0] = <ve175,ve176>;
+resetMv mv177[1];
+setMv mv177[0] = ma[24];
+resetMv mv178[1];
+setMv mv178[0] = mv174[0];
+calculateMvCoeff mv173[0] = DIVISION(mv177,mv178);
+setVector ve179 = ma[-1,-2,-4,21,24];
+resetMv mv181[5];
+setMv mv181[3] = mv167[0];
+setMv mv181[0] = mv149[0];
+setMv mv181[4] = mv173[0];
+setMv mv181[1] = mv155[0];
+setMv mv181[2] = mv161[0];
+setVector ve180 = mv181[0,1,2,3,4];
+dotVectors m[4] = <ve179,ve180>;
+
+//m[5] = (-(ma[5])) * ((-(ma[5])) / ((-(ma[5])) * (-(ma[5]))))
+resetMv mv182[1];
+resetMv mv183[1];
+setVector ve184 = ma[-5];
+setVector ve185 = ma[-5];
+dotVectors mv183[0] = <ve184,ve185>;
+resetMv mv186[1];
+setMv mv186[0] = ma[-5];
+resetMv mv187[1];
+setMv mv187[0] = mv183[0];
+calculateMvCoeff mv182[0] = DIVISION(mv186,mv187);
+setVector ve188 = ma[-5];
+setVector ve189 = mv182[0];
+dotVectors m[5] = <ve188,ve189>;
+
+//temp0[0] = ((((-(c[7] * c[7])) + (-(c[10] * c[10]))) + (c[13] * c[14])) + (c[14] * c[13])) * ((c[14] * c[14]) / ((c[14] * c[14]) * (c[14] * c[14])))
+resetMv temp0[32];
+resetMv mv190[1];
+resetMv mv191[1];
+setVector ve192 = c[14];
+setVector ve193 = c[14];
+dotVectors mv191[0] = <ve192,ve193>;
+resetMv mv194[1];
+setVector ve195 = c[14];
+setVector ve196 = c[14];
+setVector ve197 = c[14];
+setVector ve198 = c[14];
+dotVectors mv194[0] = <ve195,ve196,ve197,ve198>;
+resetMv mv199[1];
+setMv mv199[0] = mv191[0];
+resetMv mv200[1];
+setMv mv200[0] = mv194[0];
+calculateMvCoeff mv190[0] = DIVISION(mv199,mv200);
+resetMv mv201[1];
+setVector ve202 = c[-7,-10,13,14];
+setVector ve203 = c[7,10,14,13];
+dotVectors mv201[0] = <ve202,ve203>;
+setVector ve204 = mv190[0];
+setVector ve205 = mv201[0];
+dotVectors temp0[0] = <ve204,ve205>;
 
 //temp1 = abs(temp0)
 resetMv temp1[32];
