@@ -21,22 +21,22 @@ sph1_opt = List(32);
 sph2_opt = List(32);
 rcPpDual_opt = List(32);
 
-sat1(2) = inputsVector(11); // e1
-sat1(3) = inputsVector(10); // e2
-sat1(4) = inputsVector(8); // e3
-sat1(5) = inputsVector(8) * inputsVector(8) / 2.0 + inputsVector(10) * inputsVector(10) / 2.0 + inputsVector(11) * inputsVector(11) / 2.0; // einf
+sat1(2) = inputsVector(4); // e1
+sat1(3) = inputsVector(5); // e2
+sat1(4) = inputsVector(6); // e3
+sat1(5) = inputsVector(6) * inputsVector(6) / 2.0 + inputsVector(5) * inputsVector(5) / 2.0 + inputsVector(4) * inputsVector(4) / 2.0; // einf
 sat1(6) = 1.0; // e0
 ?sat1;
-sat2(2) = inputsVector(9); // e1
-sat2(3) = inputsVector(7); // e2
-sat2(4) = inputsVector(12); // e3
-sat2(5) = inputsVector(12) * inputsVector(12) / 2.0 + inputsVector(7) * inputsVector(7) / 2.0 + inputsVector(9) * inputsVector(9) / 2.0; // einf
+sat2(2) = inputsVector(7); // e1
+sat2(3) = inputsVector(8); // e2
+sat2(4) = inputsVector(9); // e3
+sat2(5) = inputsVector(9) * inputsVector(9) / 2.0 + inputsVector(8) * inputsVector(8) / 2.0 + inputsVector(7) * inputsVector(7) / 2.0; // einf
 sat2(6) = 1.0; // e0
 ?sat2;
-sat3(2) = inputsVector(4); // e1
-sat3(3) = inputsVector(5); // e2
-sat3(4) = inputsVector(6); // e3
-sat3(5) = inputsVector(6) * inputsVector(6) / 2.0 + inputsVector(5) * inputsVector(5) / 2.0 + inputsVector(4) * inputsVector(4) / 2.0; // einf
+sat3(2) = inputsVector(10); // e1
+sat3(3) = inputsVector(11); // e2
+sat3(4) = inputsVector(12); // e3
+sat3(5) = inputsVector(12) * inputsVector(12) / 2.0 + inputsVector(11) * inputsVector(11) / 2.0 + inputsVector(10) * inputsVector(10) / 2.0; // einf
 sat3(6) = 1.0; // e0
 ?sat3;
 sph1(2) = sat1(2); // e1

@@ -6,13 +6,13 @@ b_opt = List(32);
 c_opt = List(32);
 a_opt = List(32);
 
-a(2) = inputsVector(3); // e1
-a(3) = inputsVector(5); // e2
-a(4) = inputsVector(6); // e3
+a(2) = inputsVector(1); // e1
+a(3) = inputsVector(2); // e2
+a(4) = inputsVector(3); // e3
 ?a;
-b(2) = inputsVector(1); // e1
-b(3) = inputsVector(4); // e2
-b(4) = inputsVector(2); // e3
+b(2) = inputsVector(4); // e1
+b(3) = inputsVector(5); // e2
+b(4) = inputsVector(6); // e3
 ?b;
 c(1) = a(4) * b(4) + a(3) * b(3) + a(2) * b(2); // 1.0
 c(7) = a(2) * b(3) - a(3) * b(2); // e1^e2

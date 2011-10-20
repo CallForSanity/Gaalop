@@ -20,6 +20,8 @@ import de.gaalop.tba.Plugin;
 import de.gaalop.tba.UseAlgebra;
 import de.gaalop.tba.cfgImport.BaseVectorChecker;
 import de.gaalop.tba.cfgImport.CFGImporterFacade;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -82,6 +84,14 @@ public class GAPPDecoratingMain {
      */
     private void assignInputVariables(ControlFlowGraph graph, GAPP gappStart, HashSet<String> variables) {
         LinkedList<Variable> toDo = new LinkedList<Variable>(graph.getInputVariables());
+        
+        //Sort variable names in for putting in inputsVector for better readability
+        Collections.sort(toDo, new Comparator<Variable>() {
+            @Override
+            public int compare(Variable o1, Variable o2) {
+                return o1.getName().compareTo(o2.getName());
+            }
+        });
 
         HashMap<Variable, MultivectorComponent> map = new HashMap<Variable, MultivectorComponent>();
 

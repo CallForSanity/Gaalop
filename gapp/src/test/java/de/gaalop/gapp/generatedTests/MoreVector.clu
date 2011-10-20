@@ -2,5 +2,5 @@ DefVarsN3();
 
 d_opt = List(32);
 
-d(1) = inputsVector(5) * inputsVector(4) * inputsVector(2) + inputsVector(5) * inputsVector(3) * inputsVector(2) + inputsVector(5) * inputsVector(4) * inputsVector(1) + inputsVector(5) * inputsVector(3) * inputsVector(1); // 1.0
+d(1) = inputsVector(1) * inputsVector(3) * inputsVector(5) + inputsVector(1) * inputsVector(2) * inputsVector(5) + inputsVector(1) * inputsVector(3) * inputsVector(4) + inputsVector(1) * inputsVector(2) * inputsVector(4); // 1.0
 ?d;

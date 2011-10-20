@@ -1,17 +1,17 @@
-//sat1[1] = inputsVector[10]
-assignVector inputsVector = [d1,d2,d3,sat3x,sat3y,sat3z,sat2y,sat1z,sat2x,sat1y,sat1x,sat2z];
+//sat1[1] = inputsVector[3]
+assignVector inputsVector = [d1,d2,d3,sat1x,sat1y,sat1z,sat2x,sat2y,sat2z,sat3x,sat3y,sat3z];
 resetMv sat1[32];
-setMv sat1[1,2,3] = inputsVector[10,9,7];
+setMv sat1[1,2,3] = inputsVector[3,4,5];
 
-//sat1[2] = inputsVector[9]
+//sat1[2] = inputsVector[4]
 
-//sat1[3] = inputsVector[7]
+//sat1[3] = inputsVector[5]
 
-//sat1[4] = (((inputsVector[7] * inputsVector[7]) / 2.0) + ((inputsVector[9] * inputsVector[9]) / 2.0)) + ((inputsVector[10] * inputsVector[10]) / 2.0)
+//sat1[4] = (((inputsVector[5] * inputsVector[5]) / 2.0) + ((inputsVector[4] * inputsVector[4]) / 2.0)) + ((inputsVector[3] * inputsVector[3]) / 2.0)
 resetMv mv0[1];
 resetMv mv1[1];
-setVector ve2 = inputsVector[7];
-setVector ve3 = inputsVector[7];
+setVector ve2 = inputsVector[5];
+setVector ve3 = inputsVector[5];
 dotVectors mv1[0] = <ve2,ve3>;
 resetMv mv4[1];
 setMv mv4[0] = mv1[0];
@@ -20,8 +20,8 @@ assignMv mv5[0] = [2.0];
 calculateMvCoeff mv0[0] = DIVISION(mv4,mv5);
 resetMv mv6[1];
 resetMv mv7[1];
-setVector ve8 = inputsVector[9];
-setVector ve9 = inputsVector[9];
+setVector ve8 = inputsVector[4];
+setVector ve9 = inputsVector[4];
 dotVectors mv7[0] = <ve8,ve9>;
 resetMv mv10[1];
 setMv mv10[0] = mv7[0];
@@ -30,8 +30,8 @@ assignMv mv11[0] = [2.0];
 calculateMvCoeff mv6[0] = DIVISION(mv10,mv11);
 resetMv mv12[1];
 resetMv mv13[1];
-setVector ve14 = inputsVector[10];
-setVector ve15 = inputsVector[10];
+setVector ve14 = inputsVector[3];
+setVector ve15 = inputsVector[3];
 dotVectors mv13[0] = <ve14,ve15>;
 resetMv mv16[1];
 setMv mv16[0] = mv13[0];
@@ -48,19 +48,19 @@ dotVectors sat1[4] = <ve18>;
 //sat1[5] = 1.0
 assignMv sat1[5] = [1.0];
 
-//sat2[1] = inputsVector[8]
+//sat2[1] = inputsVector[6]
 resetMv sat2[32];
-setMv sat2[1,2,3] = inputsVector[8,6,11];
+setMv sat2[1,2,3] = inputsVector[6,7,8];
 
-//sat2[2] = inputsVector[6]
+//sat2[2] = inputsVector[7]
 
-//sat2[3] = inputsVector[11]
+//sat2[3] = inputsVector[8]
 
-//sat2[4] = (((inputsVector[11] * inputsVector[11]) / 2.0) + ((inputsVector[6] * inputsVector[6]) / 2.0)) + ((inputsVector[8] * inputsVector[8]) / 2.0)
+//sat2[4] = (((inputsVector[8] * inputsVector[8]) / 2.0) + ((inputsVector[7] * inputsVector[7]) / 2.0)) + ((inputsVector[6] * inputsVector[6]) / 2.0)
 resetMv mv20[1];
 resetMv mv21[1];
-setVector ve22 = inputsVector[11];
-setVector ve23 = inputsVector[11];
+setVector ve22 = inputsVector[8];
+setVector ve23 = inputsVector[8];
 dotVectors mv21[0] = <ve22,ve23>;
 resetMv mv24[1];
 setMv mv24[0] = mv21[0];
@@ -69,8 +69,8 @@ assignMv mv25[0] = [2.0];
 calculateMvCoeff mv20[0] = DIVISION(mv24,mv25);
 resetMv mv26[1];
 resetMv mv27[1];
-setVector ve28 = inputsVector[6];
-setVector ve29 = inputsVector[6];
+setVector ve28 = inputsVector[7];
+setVector ve29 = inputsVector[7];
 dotVectors mv27[0] = <ve28,ve29>;
 resetMv mv30[1];
 setMv mv30[0] = mv27[0];
@@ -79,8 +79,8 @@ assignMv mv31[0] = [2.0];
 calculateMvCoeff mv26[0] = DIVISION(mv30,mv31);
 resetMv mv32[1];
 resetMv mv33[1];
-setVector ve34 = inputsVector[8];
-setVector ve35 = inputsVector[8];
+setVector ve34 = inputsVector[6];
+setVector ve35 = inputsVector[6];
 dotVectors mv33[0] = <ve34,ve35>;
 resetMv mv36[1];
 setMv mv36[0] = mv33[0];
@@ -97,19 +97,19 @@ dotVectors sat2[4] = <ve38>;
 //sat2[5] = 1.0
 assignMv sat2[5] = [1.0];
 
-//sat3[1] = inputsVector[3]
+//sat3[1] = inputsVector[9]
 resetMv sat3[32];
-setMv sat3[1,2,3] = inputsVector[3,4,5];
+setMv sat3[1,2,3] = inputsVector[9,10,11];
 
-//sat3[2] = inputsVector[4]
+//sat3[2] = inputsVector[10]
 
-//sat3[3] = inputsVector[5]
+//sat3[3] = inputsVector[11]
 
-//sat3[4] = (((inputsVector[5] * inputsVector[5]) / 2.0) + ((inputsVector[4] * inputsVector[4]) / 2.0)) + ((inputsVector[3] * inputsVector[3]) / 2.0)
+//sat3[4] = (((inputsVector[11] * inputsVector[11]) / 2.0) + ((inputsVector[10] * inputsVector[10]) / 2.0)) + ((inputsVector[9] * inputsVector[9]) / 2.0)
 resetMv mv40[1];
 resetMv mv41[1];
-setVector ve42 = inputsVector[5];
-setVector ve43 = inputsVector[5];
+setVector ve42 = inputsVector[11];
+setVector ve43 = inputsVector[11];
 dotVectors mv41[0] = <ve42,ve43>;
 resetMv mv44[1];
 setMv mv44[0] = mv41[0];
@@ -118,8 +118,8 @@ assignMv mv45[0] = [2.0];
 calculateMvCoeff mv40[0] = DIVISION(mv44,mv45);
 resetMv mv46[1];
 resetMv mv47[1];
-setVector ve48 = inputsVector[4];
-setVector ve49 = inputsVector[4];
+setVector ve48 = inputsVector[10];
+setVector ve49 = inputsVector[10];
 dotVectors mv47[0] = <ve48,ve49>;
 resetMv mv50[1];
 setMv mv50[0] = mv47[0];
@@ -128,8 +128,8 @@ assignMv mv51[0] = [2.0];
 calculateMvCoeff mv46[0] = DIVISION(mv50,mv51);
 resetMv mv52[1];
 resetMv mv53[1];
-setVector ve54 = inputsVector[3];
-setVector ve55 = inputsVector[3];
+setVector ve54 = inputsVector[9];
+setVector ve55 = inputsVector[9];
 dotVectors mv53[0] = <ve54,ve55>;
 resetMv mv56[1];
 setMv mv56[0] = mv53[0];

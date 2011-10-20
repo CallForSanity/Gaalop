@@ -26,7 +26,8 @@ public class GAPPTestCreator {
         test("Paper");
         test("Paper2");
         test("Paper3");
-        test("MoreVector"); //TODO chs rem
+        test("MoreVector");
+        test("Paper3d");
 
         endTestCase();
     }
