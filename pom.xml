@@ -14,7 +14,6 @@
     <modules>
         <module>api</module>
         <module>maple</module>
-        <module>table-based</module>
         <module>clucalc</module>
         <module>cli</module>
         <module>gui</module>
@@ -23,6 +22,7 @@
         <module>codegen-dot</module>
         <module>codegen-compressed</module>
         <module>codegen-verilog</module>
+        <module>codegen-gappopencl</module>
         <module>starter</module>
         <module>gaalet</module>
         <module>setup</module>
