@@ -13,6 +13,7 @@ import de.gaalop.gapp.instructionSet.GAPPResetMv;
 import de.gaalop.gapp.instructionSet.GAPPSetMv;
 import de.gaalop.gapp.instructionSet.GAPPSetVector;
 
+
 /**
  *
  * @author patrick
@@ -21,16 +22,6 @@ public class GAPPOpenCLVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor {
     
     private StringBuilder result = new StringBuilder();
     
-    @Override
-    public Object visitAssignMv(GAPPAssignMv gappAssignMv, Object arg) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public Object visitDotVectors(GAPPDotVectors gappDotVectors, Object arg) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
     @Override
     public Object visitResetMv(GAPPResetMv gappResetMv, Object arg) {
         throw new UnsupportedOperationException("Not supported yet.");
@@ -61,7 +52,17 @@ public class GAPPOpenCLVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor {
         throw new UnsupportedOperationException("Not supported yet.");
     }
     
+    @Override
+    public Object visitAssignMv(GAPPAssignMv gappAssignMv, Object arg) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public Object visitDotVectors(GAPPDotVectors gappDotVectors, Object arg) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
     String getCode() {
-        return "";
+        return result.toString();
     }
 }

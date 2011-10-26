@@ -34,7 +34,7 @@ public class CppVisitor extends de.gaalop.cpp.CppVisitor {
 		this.variableType = variableType;
 	}
 	
-	private void printVarName(String key) {
+	protected void printVarName(String key) {
 		code.append(NameTable.getInstance().get(key));
 	}
 
@@ -100,7 +100,7 @@ public class CppVisitor extends de.gaalop.cpp.CppVisitor {
 		node.getSuccessor().accept(this);
 	}
 	
-	private void createVectorSet (FindStoreOutputNodes findOutput) {
+	protected void createVectorSet (FindStoreOutputNodes findOutput) {
 		for (Variable var : graph.getInputVariables()) {
 			FieldsUsedVisitor fieldVisitor = new FieldsUsedVisitor(var.getName());
 			graph.accept(fieldVisitor);
@@ -122,7 +122,7 @@ public class CppVisitor extends de.gaalop.cpp.CppVisitor {
 	* Declare local variables
 	*	 but first local variables in a set, so we reduce redundancy
 	*/
-	private void handleLocalVariables() {
+	protected void handleLocalVariables() {
 		Set <String> varNames = new HashSet<String> ();
 		for (Variable var : graph.getLocalVariables()) {
 			varNames.add(var.getName());			
