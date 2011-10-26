@@ -20,7 +20,7 @@
         <module>codegen-cpp</module>
         <module>codegen-latex</module>
         <module>codegen-dot</module>
-        <module>codegen-compressed</module>
+        <!--<module>codegen-compressed</module>-->
         <module>codegen-verilog</module>
         <module>codegen-gappopencl</module>
         <module>starter</module>
