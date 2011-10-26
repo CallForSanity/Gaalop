@@ -25,9 +25,15 @@ import de.gaalop.dfg.FloatConstant;
  */
 public class AlgebraSignature {
 
-  private final int[] baseSquares;
+  public static AlgebraSignature curAlgebraSignature;
+
+  private int baseCount;
 
   private final Expression[] defaultBladeList;
+
+  private boolean N3;
+
+  private String[] basesFromBladesFile;
 
   /**
    * Constructs a new algebra signature with a given list of base vector squares.
@@ -38,13 +44,26 @@ public class AlgebraSignature {
    * @param N3 whether to use e0, einf in 5D conformal algebra or standard base vectors e<sub>i
    */
   public AlgebraSignature(int[] baseSquares, boolean N3) {
-    this.baseSquares = baseSquares.clone();
+      baseCount = baseSquares.length;
+      curAlgebraSignature = this;
+      this.N3 = N3;
+   // this.baseSquares = baseSquares.clone();
     if (N3) {
     	this.defaultBladeList = handleN3();
     } else {
     	this.defaultBladeList = BladeListBuilder.createDefaultBladeList(baseSquares.length);
     }
   }
+
+  public AlgebraSignature(int baseCount, Expression[] bladelist, boolean N3) {
+      curAlgebraSignature = this;
+      this.baseCount = baseCount;
+      this.N3 = N3;
+    
+    this.defaultBladeList = bladelist;
+    
+  }
+
   
 	/**
 	 * Special treatment of 5D conformal algebra. The basis blades are assigned
@@ -53,7 +72,7 @@ public class AlgebraSignature {
 	 * @return
 	 */
   private Expression[] handleN3() {
-	  Expression[] blades = new Expression[(int) Math.pow(2, baseSquares.length)];
+	  Expression[] blades = new Expression[(int) Math.pow(2, baseCount)];
 	  
 	  blades[0] = new FloatConstant(1.0f);
 	  
@@ -101,9 +120,16 @@ public class AlgebraSignature {
    * 
    * @return An array that equals {(e<sub>1</sub>)<sup>2</sup>, ..., (e<sub>n</sub>)<sup>2</sup>}.
    */
-  public int[] getBaseSquares() {
-    return baseSquares.clone();
-  }
+//  public int[] getBaseSquares() {
+//    return baseSquares.clone();
+//  }
+
+    public int getBaseCount() {
+        return baseCount;
+    }
+
+
+
 
   /**
    * Gets the dimension of this algebra.
@@ -111,7 +137,7 @@ public class AlgebraSignature {
    * @return The number of base vectors in this algebra signature.
    */
   public int getDimension() {
-    return baseSquares.length;
+    return baseCount;
   }
 
   /**
@@ -126,6 +152,88 @@ public class AlgebraSignature {
    */
   public Expression[] getDefaultBladeList() {
     return defaultBladeList.clone();
+  }
+
+    public void setBasesFromBladesFile(String[] basesFromBladesFile) {
+        this.basesFromBladesFile = basesFromBladesFile;
+    }
+
+  
+
+  public int getOrder(BaseVector baseVector) {
+      String index = baseVector.getIndex();
+
+      if (basesFromBladesFile == null)
+          return getOrderOfN3(index);
+
+      if (N3) {
+        return getOrderOfN3(index);
+      } else {
+         
+             //search index
+             index = "e" + index;
+             for (int i=0;i<basesFromBladesFile.length;i++) {
+                 if (index.equalsIgnoreCase(basesFromBladesFile[i])) 
+                     return i;
+             }
+
+             System.err.println(index +" wasn't found in base list");
+             return 0;
+
+      }
+  }
+
+  private int getOrderOfN3(String index) {
+      try {
+                int i = Integer.parseInt(index);
+                if (i == 0) {
+                        return 5;
+                } else {
+                        return i;
+                }
+        } catch (NumberFormatException e) {
+                if ("inf".equals(index)) {
+                        return 4;
+                }
+                throw e;
+        }
+  }
+
+  /**
+   * Prints the base vector to a string with correct handling of underlyin algebra
+   * @param baseVector The base vector to print
+   * @return The string
+   * @author Christian Steinmetz
+   */
+  public String printBaseVector(BaseVector baseVector) {
+        // TODO Correctly handle the underlying algebra mode here
+       if (N3) {
+           //use conformal N3 (e0, einf)
+           switch (baseVector.getOrder()) {
+            case 1:
+            case 2:
+            case 3:
+                    return "e"+baseVector.getIndex();
+            case 4:
+                    if (baseVector.getIndex().equals("inf")) {
+                            return "einf";
+                    } else {
+                            return "ep";
+                    }
+            case 5:
+                    if (baseVector.getIndex().equals("0")) {
+                            return "e0";
+                    } else {
+                            return "em";
+                    }
+            default:
+                    throw new IllegalArgumentException("Invalid base vector index: " + baseVector.getIndex());
+            }
+      } else {
+           // use base vectors which had been readed from blades file
+           int order = getOrder(baseVector);
+           return basesFromBladesFile[order];
+      }
   }
 
   /**

@@ -95,16 +95,16 @@ public class CfgVisitor implements ControlFlowVisitor {
 		}
 		
 		appendIndent();
-		addCode(assignmentNode.getVariable());
+		addCode(assignmentNode.getVariable(), assignmentNode.getGraph().getSignature());
 		code.append(" = ");
-		addCode(assignmentNode.getValue());
+		addCode(assignmentNode.getValue(), assignmentNode.getGraph().getSignature());
 		if (assignmentNode.getVariable() instanceof MultivectorComponent) {
 			code.append("; // ");
 
 			MultivectorComponent component = (MultivectorComponent) assignmentNode.getVariable();
 			Expression[] bladeList = assignmentNode.getGraph().getBladeList();
 
-			DfgVisitor bladeVisitor = new DfgVisitor(codeSuffix, MAPLE_SUFFIX);
+			DfgVisitor bladeVisitor = new DfgVisitor(codeSuffix, MAPLE_SUFFIX, assignmentNode.getGraph().getSignature());
 			bladeList[component.getBladeIndex()].accept(bladeVisitor);
 			code.append(bladeVisitor.getCode());
 
@@ -125,7 +125,7 @@ public class CfgVisitor implements ControlFlowVisitor {
 	@Override
 	public void visit(ExpressionStatement node) {
 		appendIndent();
-		addCode(node.getExpression());
+		addCode(node.getExpression(), node.getGraph().getSignature());
 		code.append(";\n");
 		
 		node.getSuccessor().accept(this);
@@ -160,7 +160,7 @@ public class CfgVisitor implements ControlFlowVisitor {
 				code.append(i + 1);
 				code.append(")");
 				code.append(" * ");
-				addCode(blade);
+				addCode(blade, node.getGraph().getSignature());
 				code.append(" + ");
 			}
 			// Remove the last " + "
@@ -180,7 +180,7 @@ public class CfgVisitor implements ControlFlowVisitor {
 		code.append('\n');
 		appendIndent();
 		code.append("if (");
-		addCode(node.getCondition());
+		addCode(node.getCondition(), node.getGraph().getSignature());
 		code.append(") {\n");
 		indent++;
 
@@ -241,8 +241,8 @@ public class CfgVisitor implements ControlFlowVisitor {
 		// nothing to do
 	}
 
-	void addCode(Expression value) {
-		DfgVisitor visitor = new DfgVisitor(codeSuffix, MAPLE_SUFFIX);
+	void addCode(Expression value, AlgebraSignature signature) {
+		DfgVisitor visitor = new DfgVisitor(codeSuffix, MAPLE_SUFFIX, signature);
 		value.accept(visitor);
 		code.append(visitor.getCode());
 	}

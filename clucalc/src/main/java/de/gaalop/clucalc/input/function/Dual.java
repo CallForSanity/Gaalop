@@ -26,6 +26,6 @@ public class Dual implements Function {
       throw new IllegalArgumentException("The dual is only defined for one operand.");
     }
 
-    return new Multiplication(new Negation(args[0]), mode.getConstant("I").copy());
+    return new Multiplication(new Negation(args[0]), mode.getConstant("I").copy()); //chs: only for some algebras!!!
   }
 }

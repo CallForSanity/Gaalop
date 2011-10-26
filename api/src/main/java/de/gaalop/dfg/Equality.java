@@ -29,7 +29,7 @@ public final class Equality extends BinaryOperation {
 
     @Override
     public Expression copy() {
-        return new Equality(getLeft().copy(), getRight().copy());
+    	return new Equality(getLeft().copy(), getRight().copy());
     }
 
     /**

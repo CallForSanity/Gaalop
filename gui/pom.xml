@@ -29,8 +29,19 @@
             <version>1.0.0</version>
         </dependency>
         <dependency>
+            <groupId>net.java.dev.jna</groupId>
+            <artifactId>jna</artifactId>
+            <version>3.3.0</version>
+        </dependency>
+        
+        <dependency>
             <groupId>de.gaalop</groupId>
             <artifactId>codegen-cpp</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>de.gaalop</groupId>
+            <artifactId>tba</artifactId>
             <version>1.0.0</version>
         </dependency>
         <dependency>
@@ -57,6 +68,21 @@
             <groupId>commons-beanutils</groupId>
             <artifactId>commons-beanutils</artifactId>
             <version>1.8.0</version>
+        </dependency>
+        <dependency>
+            <groupId>de.gaalop</groupId>
+            <artifactId>codegen-java</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>de.gaalop</groupId>
+            <artifactId>codegen-gapp</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>de.gaalop</groupId>
+            <artifactId>gapp</artifactId>
+            <version>1.0.0</version>
         </dependency>
     </dependencies>
 </project>

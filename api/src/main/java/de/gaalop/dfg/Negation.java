@@ -14,7 +14,7 @@ public final class Negation extends UnaryOperation {
 
     @Override
     public Expression copy() {
-        return new Negation(getOperand());
+    	return new Negation(getOperand());
     }
 
     /**

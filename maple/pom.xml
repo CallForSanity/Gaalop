@@ -54,9 +54,9 @@
             <type>jar</type>
         </dependency>
         <dependency>
-            <groupId>com.sun.jna</groupId>
+            <groupId>net.java.dev.jna</groupId>
             <artifactId>jna</artifactId>
-            <version>3.0.5</version>
+            <version>3.3.0</version>
         </dependency>
     </dependencies>
 </project>

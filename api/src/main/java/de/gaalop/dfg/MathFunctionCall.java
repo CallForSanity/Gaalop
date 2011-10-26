@@ -29,7 +29,7 @@ public final class MathFunctionCall extends UnaryOperation {
 
 	@Override
 	public Expression copy() {
-		return new MathFunctionCall(getOperand().copy(), function);
+            return new MathFunctionCall(getOperand().copy(), function);
 	}
 
 	/**

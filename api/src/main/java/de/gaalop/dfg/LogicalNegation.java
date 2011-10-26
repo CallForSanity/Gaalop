@@ -19,7 +19,7 @@ public class LogicalNegation extends UnaryOperation {
 
 	@Override
 	public Expression copy() {
-		return new LogicalNegation(getOperand().copy());
+            return new LogicalNegation(getOperand().copy());
 	}
 	
 	@Override

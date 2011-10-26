@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.gaalop</groupId>
     <artifactId>gaalop</artifactId>
@@ -22,11 +21,15 @@
         <module>codegen-dot</module>
         <!--<module>codegen-compressed</module>-->
         <module>codegen-verilog</module>
-        <module>codegen-gappopencl</module>
         <module>starter</module>
         <module>gaalet</module>
         <module>setup</module>
-    </modules>
+        <module>tba</module>
+        <module>codegen-java</module>
+        <module>gapp</module>
+        <module>codegen-gapp</module>
+        <module>codegen-gappopencl</module>
+  </modules>
 
     <!--
              All submodules should be built for the Java 6 platform.

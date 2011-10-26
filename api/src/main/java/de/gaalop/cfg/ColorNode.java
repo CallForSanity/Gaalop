@@ -4,11 +4,12 @@ import de.gaalop.dfg.Expression;
 import de.gaalop.dfg.FloatConstant;
 
 public class ColorNode extends SequentialNode {
-	
-	private final Expression r;
-	private final Expression g;
-	private final Expression b;
-	private final Expression alpha;
+
+        //changed by chs: no reason for making final
+	private Expression r;
+	private Expression g;
+	private Expression b;
+	private Expression alpha;
 	
 	public ColorNode(ControlFlowGraph graph, Expression r, Expression g, Expression b) {
 		super(graph);
@@ -58,5 +59,23 @@ public class ColorNode extends SequentialNode {
 	public String toString() {
 		return "Color(" + r + ", " + g + ", " + b + ", " + alpha + ")";
 	}
+
+        public void setR(Expression r) {
+            this.r = r;
+        }
+
+        public void setG(Expression g) {
+            this.g = g;
+        }
+
+        public void setB(Expression b) {
+            this.b = b;
+        }
+
+        public void setAlpha(Expression alpha) {
+            this.alpha = alpha;
+        }
+
+        
 
 }

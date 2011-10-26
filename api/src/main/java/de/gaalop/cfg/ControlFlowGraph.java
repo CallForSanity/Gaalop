@@ -314,10 +314,10 @@ public final class ControlFlowGraph {
 					+ " cannot be a local variable and an input variable at the same time.");
 		}
 
-		if (name.contains("e")) {
-			throw new IllegalArgumentException("Input variable " + variable
-					+ " contains 'e' which is not supported by Maple.");
-		}
+//		if (name.contains("e")) {
+//			throw new IllegalArgumentException("Input variable " + variable
+//					+ " contains 'e' which is not supported by Maple.");
+//		}
 
 		inputVariables.add(variable);
 	}

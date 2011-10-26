@@ -22,6 +22,8 @@ RANGE_LITERAL : 'range';
 
 OUTPUT_LITERAL: 'output';
 
+ALGEBRA_LITERAL: 'algebraDimension';
+
 UNROLL_LITERAL: 'unroll';
 
 COUNT_LITERAL: 'count';
@@ -95,6 +97,7 @@ LETTER
 	:	'A'..'Z'
 	|	'a'..'z'
 	|	'_'
+        |       '$'
 	;
 
 fragment
@@ -117,7 +120,6 @@ PRAGMA
 LINE_COMMENT
     : '//'~'#'  ~('\n'|'\r')* '\r'? '\n' {$channel=HIDDEN;}
     ;
-
 
 EQUALS
 	:	'='

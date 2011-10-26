@@ -44,4 +44,10 @@ public class ExpressionStatement extends SequentialNode {
 		return expression.toString();
 	}
 
+        public void setExpression(Expression expression) {
+            this.expression = expression;
+        }
+
+        
+
 }

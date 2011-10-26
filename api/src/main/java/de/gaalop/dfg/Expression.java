@@ -39,4 +39,5 @@ public abstract class Expression {
 	 * @param visitor The object that the visit method should be called on.
 	 */
 	public abstract void accept(ExpressionVisitor visitor);
+
 }

@@ -1,5 +1,7 @@
 package de.gaalop.dfg;
 
+import de.gaalop.cfg.AlgebraSignature;
+
 /**
  * This class represents a base vector of the algebra. The base vectors are usually indexed from 1 to n where n is the
  * dimension of the algebra. In order to support other base vectors, e.g. for the conformal geometric algebra with
@@ -49,24 +51,12 @@ public final class BaseVector extends Expression {
 	 * @return order of base vector in blade list
 	 */
 	public int getOrder() {
-		try {
-			int i = Integer.parseInt(index);
-			if (i == 0) {
-				return 5;
-			} else {
-				return i;
-			}
-		} catch (NumberFormatException e) {
-			if ("inf".equals(index)) {
-				return 4;
-			}
-			throw e;
-		}
+            return AlgebraSignature.curAlgebraSignature.getOrder(this);
 	}
 
 	@Override
 	public Expression copy() {
-		return new BaseVector(this.index);
+            return new BaseVector(this.index);
 	}
 
 	/**

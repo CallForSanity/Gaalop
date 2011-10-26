@@ -125,5 +125,4 @@ public abstract class Node {
 		predecessors.clear(); // previous predecessors are no predecessors anymore
 		addPredecessor(newNode);
 	}
-
 }

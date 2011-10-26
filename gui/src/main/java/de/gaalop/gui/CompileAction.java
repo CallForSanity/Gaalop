@@ -79,14 +79,13 @@ public class CompileAction extends AbstractAction {
         String preferredOptimizationPlugin = prefs.get("preferredOptimizationPlugin", "");
         log.debug("Preferred optimization plugin is " + preferredOptimizationPlugin);
 
-        OptimizationStrategyPlugin optimizationPlugin = null;
         for (OptimizationStrategyPlugin plugin : Plugins.getOptimizationStrategyPlugins()) {
-            optimizationPlugin = plugin;
-            if (plugin.getClass().getName().equals(preferredOptimizationPlugin)) {
-                break;
+            String name = plugin.getClass().getName();
+            if (name.equals(preferredOptimizationPlugin)) {
+                return plugin;
             }
         }
-        return optimizationPlugin;
+        return null;
     }
 
     private void displayOutput(Set<OutputFile> output) {
