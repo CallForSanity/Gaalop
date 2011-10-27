@@ -12,23 +12,31 @@
      -->
     <modules>
         <module>api</module>
-        <module>maple</module>
+
+	<!-- front end -->
         <module>clucalc</module>
-        <module>cli</module>
-        <module>gui</module>
-        <module>codegen-cpp</module>
-        <module>codegen-latex</module>
-        <module>codegen-dot</module>
-        <!--<module>codegen-compressed</module>-->
-        <module>codegen-verilog</module>
-        <module>starter</module>
-        <module>gaalet</module>
-        <module>setup</module>
+
+	<!-- middle end -->
+        <module>maple</module>
         <module>tba</module>
-        <module>codegen-java</module>
         <module>gapp</module>
+
+	<!-- back end -->
+        <module>codegen-cpp</module>
+        <module>codegen-java</module>
+        <module>codegen-dot</module>
         <module>codegen-gapp</module>
         <module>codegen-gappopencl</module>
+        <!--<module>codegen-compressed</module>-->
+        <module>codegen-verilog</module>
+        <module>codegen-latex</module>
+        <module>gaalet</module>
+
+	<!-- interface -->
+        <module>starter</module>
+        <module>setup</module>
+        <module>cli</module>
+        <module>gui</module>
   </modules>
 
     <!--
@@ -47,6 +55,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-assembly-plugin</artifactId>
+		    <inherited>true</inherited>
                     <configuration>
                         <descriptors>
                             <descriptor>src/assemble/dist.xml</descriptor>
