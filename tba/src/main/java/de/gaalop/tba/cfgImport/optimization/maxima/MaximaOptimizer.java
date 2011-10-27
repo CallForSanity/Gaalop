@@ -1,5 +1,6 @@
 package de.gaalop.tba.cfgImport.optimization.maxima;
 
+import de.gaalop.OptimizationException;
 import de.gaalop.api.cfg.AssignmentNodeCollector;
 import de.gaalop.cfg.AssignmentNode;
 import de.gaalop.cfg.ControlFlowGraph;
@@ -38,7 +39,7 @@ public class MaximaOptimizer {
      * @param graph The ControlFlowGraph to be transformed
      * @throws RecognitionException
      */
-    public void transformGraph(ControlFlowGraph graph) throws RecognitionException {
+    public void transformGraph(ControlFlowGraph graph) throws RecognitionException, OptimizationException {
         collector = new StoreResultNodesCollector();
         graph.accept(collector);
 

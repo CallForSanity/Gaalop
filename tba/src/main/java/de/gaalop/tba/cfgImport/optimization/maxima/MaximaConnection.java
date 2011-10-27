@@ -1,5 +1,7 @@
 package de.gaalop.tba.cfgImport.optimization.maxima;
 
+import de.gaalop.OptimizationException;
+
 /**
  * Declares an interface for optimizing with maxima
  * @author Christian Steinmetz
@@ -11,5 +13,5 @@ public interface MaximaConnection {
      * @param input The input for Maxima
      * @return The output of Maxima
      */
-    public MaximaOutput optimizeWithMaxima(MaximaInput input);
+    public MaximaOutput optimizeWithMaxima(MaximaInput input) throws OptimizationException;
 }
