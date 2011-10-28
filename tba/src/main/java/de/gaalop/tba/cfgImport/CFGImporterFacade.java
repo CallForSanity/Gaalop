@@ -4,14 +4,12 @@ import de.gaalop.OptimizationException;
 import de.gaalop.cfg.ControlFlowGraph;
 import de.gaalop.tba.Plugin;
 import de.gaalop.tba.UseAlgebra;
-import de.gaalop.tba.cfgImport.optimization.ConstantFolding;
 import de.gaalop.tba.cfgImport.optimization.OptConstantPropagation;
 import de.gaalop.tba.cfgImport.optimization.OptMaxima;
 import de.gaalop.tba.cfgImport.optimization.OptOneExpressionsRemoval;
 import de.gaalop.tba.cfgImport.optimization.OptimizationStrategyWithModifyFlag;
 import de.gaalop.tba.cfgImport.optimization.OptUnusedAssignmentsRemoval;
 import java.util.LinkedList;
-import sun.org.mozilla.javascript.optimizer.OptRuntime;
 
 /**
  * This class provides a simple facade to transform the graph
