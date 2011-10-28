@@ -24,37 +24,37 @@ rcPpDual_opt = List(32);
 sat1(2) = inputsVector(4); // e1
 sat1(3) = inputsVector(5); // e2
 sat1(4) = inputsVector(6); // e3
-sat1(5) = (inputsVector(4) * inputsVector(4) + inputsVector(5) * inputsVector(5) + inputsVector(6) * inputsVector(6)) / 2.0; // einf
+sat1(5) = 0.5 * (inputsVector(4) * inputsVector(4) + inputsVector(5) * inputsVector(5) + inputsVector(6) * inputsVector(6)); // einf
 sat1(6) = 1.0; // e0
 ?sat1;
 sat2(2) = inputsVector(7); // e1
 sat2(3) = inputsVector(8); // e2
 sat2(4) = inputsVector(9); // e3
-sat2(5) = (inputsVector(7) * inputsVector(7) + inputsVector(8) * inputsVector(8) + inputsVector(9) * inputsVector(9)) / 2.0; // einf
+sat2(5) = 0.5 * (inputsVector(7) * inputsVector(7) + inputsVector(8) * inputsVector(8) + inputsVector(9) * inputsVector(9)); // einf
 sat2(6) = 1.0; // e0
 ?sat2;
 sat3(2) = inputsVector(10); // e1
 sat3(3) = inputsVector(11); // e2
 sat3(4) = inputsVector(12); // e3
-sat3(5) = (inputsVector(10) * inputsVector(10) + inputsVector(11) * inputsVector(11) + inputsVector(12) * inputsVector(12)) / 2.0; // einf
+sat3(5) = 0.5 * (inputsVector(10) * inputsVector(10) + inputsVector(11) * inputsVector(11) + inputsVector(12) * inputsVector(12)); // einf
 sat3(6) = 1.0; // e0
 ?sat3;
 sph1(2) = sat1(2); // e1
 sph1(3) = sat1(3); // e2
 sph1(4) = sat1(4); // e3
-sph1(5) = sat1(5) - inputsVector(1) / 2.0 * inputsVector(1); // einf
+sph1(5) = sat1(5) - 0.5 * inputsVector(1) * inputsVector(1); // einf
 sph1(6) = 1.0; // e0
 ?sph1;
 sph2(2) = sat2(2); // e1
 sph2(3) = sat2(3); // e2
 sph2(4) = sat2(4); // e3
-sph2(5) = sat2(5) - inputsVector(2) / 2.0 * inputsVector(2); // einf
+sph2(5) = sat2(5) - 0.5 * inputsVector(2) * inputsVector(2); // einf
 sph2(6) = 1.0; // e0
 ?sph2;
 sph3(2) = sat3(2); // e1
 sph3(3) = sat3(3); // e2
 sph3(4) = sat3(4); // e3
-sph3(5) = sat3(5) - inputsVector(3) / 2.0 * inputsVector(3); // einf
+sph3(5) = sat3(5) - 0.5 * inputsVector(3) * inputsVector(3); // einf
 sph3(6) = 1.0; // e0
 ?sph3;
 rcPp(17) = (sph1(2) * sph2(3) + (-(sph1(3) * sph2(2)))) * sph3(4) + (-((sph1(2) * sph2(4) + (-(sph1(4) * sph2(2)))) * sph3(3))) + (sph1(3) * sph2(4) + (-(sph1(4) * sph2(3)))) * sph3(2); // e1^e2^e3
