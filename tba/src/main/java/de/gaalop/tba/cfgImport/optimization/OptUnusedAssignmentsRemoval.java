@@ -51,6 +51,18 @@ public class OptUnusedAssignmentsRemoval implements OptimizationStrategyWithModi
             graph.removeNode(node);
         }
 
-        return !cfgVariableVisitor.getNodeRemovals().isEmpty();
+        boolean changedGraph = !cfgVariableVisitor.getNodeRemovals().isEmpty();
+
+        // collect zero assignments
+        ZeroAssignmentsCollector collector = new ZeroAssignmentsCollector();
+        graph.accept(collector);
+
+        // remove all nodes that are marked for removal
+        for (SequentialNode node : collector.getToRemove()) {
+            graph.removeNode(node);
+        }
+
+
+        return changedGraph;
     }
 }

@@ -120,7 +120,6 @@ public class OutputCount implements GAProgram {
 	
 	@Override
 	public void calculate() {
-		a$0 = 0.0f; // 1.0;
 	}
 
 
