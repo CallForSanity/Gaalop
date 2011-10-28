@@ -49,6 +49,11 @@
             </binaries>
         </moduleSet>
     </moduleSets>
+    <dependencySets>
+        <dependencySet>
+            <outputDirectory>plugins</outputDirectory>
+        </dependencySet>
+    </dependencySets>
     <fileSets>
         <fileSet>
             <directory>startupscripts</directory>
