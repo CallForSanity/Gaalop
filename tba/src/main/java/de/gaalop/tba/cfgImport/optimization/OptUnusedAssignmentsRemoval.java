@@ -62,6 +62,7 @@ public class OptUnusedAssignmentsRemoval implements OptimizationStrategyWithModi
             graph.removeNode(node);
         }
 
+        UpdateLocalVariableSet.updateVariableSets(graph);
 
         return changedGraph;
     }

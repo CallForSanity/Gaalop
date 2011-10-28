@@ -20,6 +20,8 @@ public class OptOneExpressionsRemoval implements OptimizationStrategyWithModifyF
             graph.removeNode(node);
         }
 
+        UpdateLocalVariableSet.updateVariableSets(graph);
+
         return oneExpressionRemoval.isGraphModified();
     }
 }

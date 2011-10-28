@@ -1,10 +1,7 @@
 DefVarsN3();
 
 f_opt = List(32);
-d_opt = List(32);
-b_opt = List(32);
 c_opt = List(32);
-a_opt = List(32);
 
 c(1) = inputsVector(1) * inputsVector(4) + inputsVector(2) * inputsVector(5) + inputsVector(3) * inputsVector(6); // 1.0
 c(7) = inputsVector(1) * inputsVector(5) + (-(inputsVector(2) * inputsVector(4))); // e1^e2

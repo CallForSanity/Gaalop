@@ -175,19 +175,4 @@ public class MaximaOptimizer {
 
     }
 
-    /**
-     * Remove unused assignments in a graph
-     * @param graph The graph
-     * @param usedVariables A list of the used variables
-     */
-    private void removeUnusedAssignments(ControlFlowGraph graph, LinkedList<Variable> usedVariables) {
-
-        UnusedCollector collector = new UnusedCollector(usedVariables);
-        graph.accept(collector);
-
-        for (AssignmentNode node : collector.getUnusedNodes()) {
-            graph.removeNode(node);
-        }
-
-    }
 }

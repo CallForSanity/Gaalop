@@ -1,7 +1,6 @@
 DefVars();
 
 f_opt = List(8);
-d_opt = List(8);
 b_opt = List(8);
 c_opt = List(8);
 a_opt = List(8);

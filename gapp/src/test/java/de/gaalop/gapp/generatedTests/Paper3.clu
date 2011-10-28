@@ -1,7 +1,6 @@
 DefVarsN3();
 
 f_opt = List(32);
-d_opt = List(32);
 b_opt = List(32);
 c_opt = List(32);
 a_opt = List(32);
