@@ -29,7 +29,7 @@ public class CppVisitor extends de.gaalop.cpp.CppVisitor {
 	}
 
 	public CppVisitor(boolean standalone) {
-		super(standalone);
+		this.standalone = standalone;
 	}
 
 	@Override
@@ -125,13 +125,6 @@ public class CppVisitor extends de.gaalop.cpp.CppVisitor {
 			appendIndentation();
 			FieldsUsedVisitor fieldVisitor = new FieldsUsedVisitor(var);
 
-			// GCD definition
-			if(gcdMetaInfo) {
-				code.append("#pragma gcd multivector ");
-				code.append(var);
-				code.append('\n');
-			}
-
 			// standard definition
 			graph.accept(fieldVisitor);
 			code.append(fieldVisitor.giveDefinition(variableType)); 
@@ -146,15 +139,12 @@ public class CppVisitor extends de.gaalop.cpp.CppVisitor {
 	@Override
 	public void visit(MultivectorComponent component) {
 		// get blade pos in array
-		String name = component.getName().replace(suffix, "");
+		String name = component.getName().replace(outputSuffix, "");
 		int pos = -1;
 		for (GealgMultiVector vec : vectorSet) {
 			if(name.equals(vec.getName()))
 				pos = vec.getBladePosInArray(component.getBladeIndex());
 		}
-
-		// GCD definition
-		component.gcdDefinition(code,assigned,suffix,gcdMetaInfo);
 
 		// standard definition		
 		printVarName(name);

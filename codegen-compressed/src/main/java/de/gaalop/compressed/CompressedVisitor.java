@@ -16,6 +16,8 @@ import org.apache.commons.logging.LogFactory;
  */
 public class CompressedVisitor extends de.gaalop.gaalet.output.CppVisitor {
 
+    protected boolean gcdMetaInfo = true;
+
     public CompressedVisitor(boolean standalone) {
         super(standalone);
     }
@@ -76,11 +78,9 @@ public class CompressedVisitor extends de.gaalop.gaalet.output.CppVisitor {
             FieldsUsedVisitor fieldVisitor = new FieldsUsedVisitor(var);
 
             // GCD definition
-            if (gcdMetaInfo) {
-                code.append("#pragma gcd multivector ");
-                code.append(var);
-                code.append('\n');
-            }
+            code.append("#pragma gcd multivector ");
+            code.append(var);
+            code.append('\n');
 
             // standard definition
             graph.accept(fieldVisitor);
@@ -113,4 +113,39 @@ public class CompressedVisitor extends de.gaalop.gaalet.output.CppVisitor {
             }
         }
     }
+    
+    	@Override
+	public void visit(MultivectorComponent component) {
+		// GCD definition
+		gcdDefinition(component,code,assigned,outputSuffix,gcdMetaInfo);
+
+		// standard definition
+		code.append(component.getName().replace(outputSuffix, ""));
+		code.append('[');
+		code.append(component.getBladeIndex());
+		code.append(']');
+	}
+
+   protected void gcdDefinition(MultivectorComponent component,StringBuilder code,
+                        Set<String> assigned,String outputSuffix,boolean gcdMetaInfo)
+   {
+	String componentName = component.getName().replace(outputSuffix, "") + '_' + component.getBladeHandle();
+	if(gcdMetaInfo && !assigned.contains(componentName))
+	{
+		code.append("//#pragma gcd multivector_component ");
+		code.append(component.getName().replace(outputSuffix, ""));
+		code.append(' ');
+		code.append(component.getBladeHandle());
+		code.append(' ');
+		code.append(component.getBladeName());
+		code.append(' ');
+		code.append(component.getBladeIndex());
+		code.append('\n');
+		code.append("const float ");
+		code.append(componentName);
+		code.append(" = ");
+			
+		assigned.add(componentName);
+	}
+   }
 }

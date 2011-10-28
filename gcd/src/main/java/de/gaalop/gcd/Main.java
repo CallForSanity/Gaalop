@@ -58,6 +58,8 @@ public class Main {
 
     private static String PATH_SEP = "/";
     private static char LINE_END = '\n';
+    private static final String mvSearchString = "//#pragma gcd multivector ";
+    private static final String mvCompSearchString = "//#pragma gcd multivector_component ";
 
     /**
      * Starts the command line interface of Gaalop.
@@ -155,7 +157,6 @@ public class Main {
                 while ((line = gaalopOutFile.readLine()) != null) {
                     // retrieve multivector declarations
                     {
-                        final String mvSearchString = "#pragma gcd multivector ";
                         final int statementPos = line.indexOf(mvSearchString);
                         if (statementPos >= 0) {
                             final String mvName = line.substring(statementPos
@@ -166,8 +167,6 @@ public class Main {
 
                     // retrieve multivector component declarations
                     {
-                        final String mvCompSearchString =
-                                "#pragma gcd multivector_component ";
                         final int statementPos = line.indexOf(mvCompSearchString);
 
                         if (statementPos >= 0) {
@@ -295,7 +294,7 @@ public class Main {
         while ((line = inStream.readLine()) != null) {
 
             // find multivector meta-statement
-            int index = line.indexOf("#pragma gcd multivector");
+            int index = line.indexOf(mvSearchString); // will also find components
             if (index >= 0) {
                 // extract exported multivector
                 final String exportedMV = line.substring(index).split(" ")[3];
