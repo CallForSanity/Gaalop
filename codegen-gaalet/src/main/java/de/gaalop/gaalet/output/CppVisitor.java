@@ -23,13 +23,14 @@ public class CppVisitor extends de.gaalop.cpp.CppVisitor {
 	protected Set<GealgMultiVector> vectorSet = new HashSet<GealgMultiVector>();
 
 	protected String variableType = "float";
+	protected String outputSuffix = "_out";
 
 	protected void printVarName(String key) {
 		code.append(NameTable.getInstance().get(key));
 	}
 
 	public CppVisitor(boolean standalone) {
-		this.standalone = standalone;
+		super(standalone);
 	}
 
 	@Override
@@ -39,7 +40,7 @@ public class CppVisitor extends de.gaalop.cpp.CppVisitor {
 		FindStoreOutputNodes findOutput = new FindStoreOutputNodes();
 		graph.accept(findOutput);
 		for (StoreResultNode var : findOutput.getNodes()) {
-			String outputName = var.getValue().getName() + "_out";
+			String outputName = var.getValue().getName() + outputSuffix;
 		
 			outputNamesMap.put(var, outputName);
 		}

@@ -78,7 +78,7 @@ public class CompressedVisitor extends de.gaalop.gaalet.output.CppVisitor {
             FieldsUsedVisitor fieldVisitor = new FieldsUsedVisitor(var);
 
             // GCD definition
-            code.append("#pragma gcd multivector ");
+            code.append("//#pragma gcd multivector ");
             code.append(var);
             code.append('\n');
 
