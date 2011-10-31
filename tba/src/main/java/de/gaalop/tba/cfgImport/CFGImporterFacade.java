@@ -11,7 +11,6 @@ import de.gaalop.tba.cfgImport.optimization.OptOneExpressionsRemoval;
 import de.gaalop.tba.cfgImport.optimization.OptimizationStrategyWithModifyFlag;
 import de.gaalop.tba.cfgImport.optimization.OptUnusedAssignmentsRemoval;
 import java.util.LinkedList;
-import sun.org.mozilla.javascript.optimizer.OptRuntime;
 
 /**
  * This class provides a simple facade to transform the graph
