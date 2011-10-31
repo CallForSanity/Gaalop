@@ -62,6 +62,9 @@ public class GAPPDecoratingMain {
         facade.setUsedAlgebra(usedAlgebra);
         facade.importGraph(graph);
 
+        //Transform divisions with constants in multiplications
+        ConstantDivisionTransformer.transform(graph);
+
         GAPP gappStart = new GAPP();
 
         HashSet<String> variables = getAllVariableNames(graph);

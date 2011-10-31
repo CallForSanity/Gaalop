@@ -5,6 +5,7 @@ import de.gaalop.dfg.Expression;
 import de.gaalop.dfg.MultivectorComponent;
 import de.gaalop.dfg.Variable;
 import de.gaalop.tba.UseAlgebra;
+import de.gaalop.tba.cfgImport.optimization.UpdateLocalVariableSet;
 
 /**
  * Changes the control flow graph by building the mvExpressions.
@@ -41,12 +42,15 @@ public class CFGImporter extends MvExpressionsBuilder {
 
         node.getGraph().removeNode(node);
 
+        /*
         if (!inserted) {
             //Remove local variable (for gcd),
             //since there are no non-empty multivector components
             node.getGraph().removeLocalVariable(node.getVariable());
 
-        }
+        }*/
+
+        UpdateLocalVariableSet.updateVariableSets(node.getGraph());
 
         return lastNode;
     }

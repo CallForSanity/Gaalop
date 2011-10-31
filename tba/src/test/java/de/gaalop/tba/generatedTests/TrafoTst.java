@@ -412,28 +412,18 @@ public class TrafoTst implements GAProgram {
 		p$2 = 6.0f; // e2;
 		p$4 = 22.5f; // einf;
 		p$5 = 1.0f; // e0;
-		p$17 = 0.0f; // e1^e2^einf;
 		pt$1 = 4.0f; // e1;
 		pt$2 = 8.0f; // e2;
 		pt$4 = 40.0f; // einf;
 		pt$5 = 1.0f; // e0;
-		pt$17 = 0.0f; // e1^e2^einf;
-		pt$21 = 0.0f; // e1^einf^e0;
-		pt$24 = 0.0f; // e2^einf^e0;
 		pt2$1 = 3.0f; // e1;
 		pt2$2 = 6.0f; // e2;
 		pt2$4 = 22.5f; // einf;
 		pt2$5 = 1.0f; // e0;
-		pt2$17 = 0.0f; // e1^e2^einf;
-		pt2$21 = 0.0f; // e1^einf^e0;
-		pt2$24 = 0.0f; // e2^einf^e0;
 		pt3$1 = 3.0f; // e1;
 		pt3$2 = 6.0f; // e2;
 		pt3$4 = 22.5f; // einf;
 		pt3$5 = 1.0f; // e0;
-		pt3$17 = 0.0f; // e1^e2^einf;
-		pt3$21 = 0.0f; // e1^einf^e0;
-		pt3$24 = 0.0f; // e2^einf^e0;
 	}
 
 

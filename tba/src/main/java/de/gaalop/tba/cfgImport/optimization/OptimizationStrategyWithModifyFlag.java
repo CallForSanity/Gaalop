@@ -1,5 +1,6 @@
 package de.gaalop.tba.cfgImport.optimization;
 
+import de.gaalop.OptimizationException;
 import de.gaalop.cfg.ControlFlowGraph;
 import de.gaalop.tba.UseAlgebra;
 
@@ -20,5 +21,5 @@ public interface OptimizationStrategyWithModifyFlag {
      * @param usedAlgebra The underlying algebra
      * @return <value>true</value> if the graph has been modified, <value>false</value> otherwise
      */
-    boolean transform(ControlFlowGraph graph, UseAlgebra usedAlgebra);
+    boolean transform(ControlFlowGraph graph, UseAlgebra usedAlgebra) throws OptimizationException;
 }

@@ -1,5 +1,6 @@
 package de.gaalop.tba.cfgImport.optimization.maxima;
 
+import de.gaalop.OptimizationException;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -23,7 +24,7 @@ public class ProcessBuilderMaximaConnection implements MaximaConnection {
     }
 
     @Override
-    public MaximaOutput optimizeWithMaxima(MaximaInput input) {
+    public MaximaOutput optimizeWithMaxima(MaximaInput input) throws OptimizationException {
         try {
             File tmpFile = File.createTempFile("tbaMaxima", ".txt");
 
@@ -40,8 +41,14 @@ public class ProcessBuilderMaximaConnection implements MaximaConnection {
                 path = path.replaceAll("\\\\", "\\\\\\\\");
             }
 
-            ProcessBuilder builder = new ProcessBuilder(commandMaxima, "-b", path);
-            Process p = builder.start();
+            Process p;
+            try {
+                ProcessBuilder builder = new ProcessBuilder(commandMaxima, "-b", path);
+                p = builder.start();
+            } catch (Exception e) {
+                tmpFile.delete();
+                throw new OptimizationException("Maxima is not accessible. Please check the Maxima command in the Configurations panel or disable the usage of Maxima.", null);
+            }
 
             BufferedReader b = new BufferedReader(new InputStreamReader(p.getInputStream()));
 

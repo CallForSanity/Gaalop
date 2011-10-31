@@ -285,28 +285,5 @@ public final class MultivectorComponent extends Variable {
 			return "error";
 	}
    }
-
-   public void gcdDefinition(StringBuilder code,Set<String> assigned,String suffix,boolean gcdMetaInfo)
-   {
-	String componentName = getName().replace(suffix, "") + '_' + getBladeHandle();
-	if(gcdMetaInfo && !assigned.contains(componentName))
-	{
-		code.append("#pragma gcd multivector_component ");
-		code.append(getName().replace(suffix, ""));
-		code.append(' ');
-		code.append(getBladeHandle());
-		code.append(' ');
-		code.append(getBladeName());
-		code.append(' ');
-		code.append(getBladeIndex());
-		code.append('\n');
-		code.append("const float ");
-		code.append(componentName);
-		code.append(" = ");
-			
-		assigned.add(componentName);
-	}
-   }
-
 }
 

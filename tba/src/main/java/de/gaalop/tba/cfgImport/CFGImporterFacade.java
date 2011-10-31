@@ -11,6 +11,7 @@ import de.gaalop.tba.cfgImport.optimization.OptOneExpressionsRemoval;
 import de.gaalop.tba.cfgImport.optimization.OptimizationStrategyWithModifyFlag;
 import de.gaalop.tba.cfgImport.optimization.OptUnusedAssignmentsRemoval;
 import java.util.LinkedList;
+import sun.org.mozilla.javascript.optimizer.OptRuntime;
 
 /**
  * This class provides a simple facade to transform the graph
@@ -40,10 +41,6 @@ public class CFGImporterFacade {
         }
         if (plugin.isOptOneExpressionRemoval()) {
             optimizations.add(new OptOneExpressionsRemoval());
-        }
-
-        if (plugin.isOptMaxima()) {
-            optimizations.add(new OptMaxima(plugin.getMaximaCommand(), plugin));
         }
 
     }
@@ -87,17 +84,31 @@ public class CFGImporterFacade {
         CFGImporter builder = new CFGImporter(usedAlgebra, plugin.isScalarFunctions());
         graph.accept(builder);
 
+        int count = 0;
         boolean repeat;
         do {
             repeat = false;
             for (OptimizationStrategyWithModifyFlag curOpt : optimizations) {
                 repeat = repeat || curOpt.transform(graph, usedAlgebra);
             }
+            count++;
         } while (repeat);
 
-        OptConstantPropagation p = new OptConstantPropagation();
-        p.transform(graph, usedAlgebra);
-        
+        //Use Maxima only once
+        if (plugin.isOptMaxima()) {
+            OptMaxima optMaxima = new OptMaxima(plugin.getMaximaCommand(), plugin);
+            optMaxima.transform(graph, usedAlgebra);
+
+            //repeat other optimizations
+            count = 0;
+            do {
+                repeat = false;
+                for (OptimizationStrategyWithModifyFlag curOpt : optimizations) {
+                    repeat = repeat || curOpt.transform(graph, usedAlgebra);
+                }
+                count++;
+            } while (repeat);
+        }
 
         return graph;
     }

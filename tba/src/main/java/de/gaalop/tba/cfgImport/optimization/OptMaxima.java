@@ -1,5 +1,6 @@
 package de.gaalop.tba.cfgImport.optimization;
 
+import de.gaalop.OptimizationException;
 import de.gaalop.cfg.ControlFlowGraph;
 import de.gaalop.tba.Plugin;
 import de.gaalop.tba.UseAlgebra;
@@ -22,7 +23,7 @@ public class OptMaxima implements OptimizationStrategyWithModifyFlag {
     }
 
     @Override
-    public boolean transform(ControlFlowGraph graph, UseAlgebra usedAlgebra) {
+    public boolean transform(ControlFlowGraph graph, UseAlgebra usedAlgebra) throws OptimizationException {
         try {
             transformer.transformGraph(graph);
         } catch (RecognitionException ex) {
