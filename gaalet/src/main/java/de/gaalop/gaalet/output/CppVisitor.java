@@ -20,9 +20,9 @@ public class CppVisitor extends de.gaalop.cpp.CppVisitor {
 	// Maps the nodes that output variables to their result parameter names
 	protected Map<StoreResultNode, String> outputNamesMap = new HashMap<StoreResultNode, String>();
 
-	private Set<GaaletMultiVector> vectorSet = new HashSet<GaaletMultiVector>();
+	protected Set<GaaletMultiVector> vectorSet = new HashSet<GaaletMultiVector>();
 
-	private String variableType;
+	protected String variableType;
 	
 	public CppVisitor(boolean standalone) {
 		super(standalone);
