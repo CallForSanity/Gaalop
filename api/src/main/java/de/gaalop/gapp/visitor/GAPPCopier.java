@@ -33,7 +33,7 @@ public class GAPPCopier implements GAPPVisitor {
     private Selectorset copySelectorset(Selectorset sel) {
         Selectorset copy = new Selectorset();
         for (Selector cur : sel) {
-            copy.add(new Selector(cur.getIndex(), cur.getSign()));
+            copy.add(new Selector(cur.getIndex(), cur.getSign(), cur.getBladeName()));
         }
         return copy;
     }
@@ -46,7 +46,7 @@ public class GAPPCopier implements GAPPVisitor {
     private PosSelectorset copyPosSelectorset(PosSelectorset sel) {
         PosSelectorset copy = new PosSelectorset();
         for (PosSelector cur : sel) {
-            copy.add(new PosSelector(cur.getIndex()));
+            copy.add(new PosSelector(cur.getIndex(), cur.getBladeName()));
         }
         return copy;
     }
@@ -57,7 +57,7 @@ public class GAPPCopier implements GAPPVisitor {
      * @return The copy
      */
     private Selector copySelector(Selector sel) {
-        return new Selector(sel.getIndex(), sel.getSign());
+        return new Selector(sel.getIndex(), sel.getSign(), sel.getBladeName());
     }
 
     /**

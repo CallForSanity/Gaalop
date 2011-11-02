@@ -13,6 +13,7 @@ import de.gaalop.gapp.instructionSet.GAPPCalculateMv;
 import de.gaalop.gapp.instructionSet.GAPPResetMv;
 import de.gaalop.gapp.variables.GAPPMultivector;
 import de.gaalop.gapp.variables.GAPPMultivectorComponent;
+import de.gaalop.tba.Algebra;
 import java.util.HashSet;
 
 /**
@@ -25,11 +26,12 @@ public class GAPPDecorator extends EmptyControlFlowVisitor {
     private GAPPCreator gappCreator;
     private GAPP gappStart;
     private int bladeCount;
+    private Algebra algebra;
 
-    public GAPPDecorator(GAPP gappStart, HashSet<String> variables, int bladeCount, boolean scalarFunctions) {
+    public GAPPDecorator(GAPP gappStart, HashSet<String> variables, int bladeCount, boolean scalarFunctions, Algebra algebra) {
         this.gappStart = gappStart;
         this.bladeCount = bladeCount;
-        gappCreator = new GAPPCreator(variables, bladeCount);
+        gappCreator = new GAPPCreator(variables, bladeCount, algebra);
     }
 
     @Override

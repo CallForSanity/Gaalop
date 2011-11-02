@@ -17,6 +17,7 @@ import de.gaalop.gapp.instructionSet.GAPPAssignMv;
 import de.gaalop.gapp.instructionSet.GAPPSetMv;
 import de.gaalop.gapp.variables.GAPPConstant;
 import de.gaalop.gapp.variables.GAPPMultivector;
+import de.gaalop.tba.Algebra;
 
 /**
  * Creates a GAPPMultivector from ParallelObject, which is a terminal
@@ -27,10 +28,12 @@ public class GAPPMultivectorCreator implements ParallelObjectVisitor {
     //return GAPPMultivector
     private GAPPCreator gappCreator;
     private int bladeCount;
+    private Algebra algebra;
 
-    public GAPPMultivectorCreator(GAPPCreator gappCreator, int bladeCount) {
+    public GAPPMultivectorCreator(GAPPCreator gappCreator, int bladeCount, Algebra algebra) {
         this.gappCreator = gappCreator;
         this.bladeCount = bladeCount;
+        this.algebra = algebra;
     }
 
     @Override
@@ -43,12 +46,13 @@ public class GAPPMultivectorCreator implements ParallelObjectVisitor {
         GAPPMultivector mvTmp = gappCreator.createMv(1);
 
         PosSelectorset selDestSet = new PosSelectorset();
-        selDestSet.add(new PosSelector(0));
+        selDestSet.add(new PosSelector(0, algebra.getBlade(0).toString()));
 
         Selectorset selSrcSet = new Selectorset();
         selSrcSet.add(new Selector(
                 mvComponent.getMultivectorComponent().getBladeIndex(),
-                mvComponent.isNegated() ? (byte) -1 : (byte) 1));
+                mvComponent.isNegated() ? (byte) -1 : (byte) 1, 
+                algebra.getBlade(mvComponent.getMultivectorComponent().getBladeIndex()).toString()));
 
         gappCreator.gapp.addInstruction(new GAPPSetMv(mvTmp,
                 new GAPPMultivector(
@@ -63,7 +67,7 @@ public class GAPPMultivectorCreator implements ParallelObjectVisitor {
         GAPPMultivector mvTmp = gappCreator.createMv(1);
 
         PosSelectorset selDestSet = new PosSelectorset();
-        selDestSet.add(new PosSelector(0));
+        selDestSet.add(new PosSelector(0, algebra.getBlade(0).toString()));
 
         Variableset varSet = new Variableset();
         varSet.add(new GAPPConstant((constant.isNegated() ? -1 : 1) * constant.getValue()));

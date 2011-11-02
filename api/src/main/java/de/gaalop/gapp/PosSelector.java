@@ -6,7 +6,7 @@ package de.gaalop.gapp;
  */
 public class PosSelector extends SelectorIndex {
 
-    public PosSelector(int index) {
-        super(index);
+    public PosSelector(int index, String bladeName) {
+        super(index, bladeName);
     }
 }

@@ -8,8 +8,8 @@ public class Selector extends SelectorIndex {
 
     private byte sign;
 
-    public Selector(int index, byte sign) {
-        super(index);
+    public Selector(int index, byte sign, String bladeName) {
+        super(index, bladeName);
         this.sign = sign;
     }
 
