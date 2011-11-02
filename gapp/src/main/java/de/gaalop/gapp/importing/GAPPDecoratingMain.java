@@ -91,6 +91,8 @@ public class GAPPDecoratingMain {
      * @param variables All used variable names in the ControlFlowGraph
      */
     private void assignInputVariables(ControlFlowGraph graph, GAPP gappStart, HashSet<String> variables) {
+        if (graph.getInputVariables().isEmpty()) return;
+        
         LinkedList<Variable> toDo = new LinkedList<Variable>(graph.getInputVariables());
         
         //Sort variable names in for putting in inputsVector for better readability

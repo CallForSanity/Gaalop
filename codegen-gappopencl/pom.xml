@@ -9,7 +9,7 @@
   </parent>
   <groupId>de.gaalop</groupId>
   <artifactId>codegen-gappopencl</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0.0</version>
   <name>Gaalop GAPPOpenCL Plugin</name>
   <url>http://maven.apache.org</url>
   <dependencies>

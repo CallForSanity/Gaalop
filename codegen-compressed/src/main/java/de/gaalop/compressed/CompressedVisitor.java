@@ -15,6 +15,8 @@ import org.apache.commons.logging.LogFactory;
  */
 public class CompressedVisitor extends de.gaalop.gaalet.output.CppVisitor {
 
+        protected boolean gcdMetaInfo = true;
+
 	public CompressedVisitor(boolean standalone) {
 		super(standalone);
 	}
@@ -75,11 +77,11 @@ public class CompressedVisitor extends de.gaalop.gaalet.output.CppVisitor {
 			FieldsUsedVisitor fieldVisitor = new FieldsUsedVisitor(var);
 
 			// GCD definition
-			//if(gcdMetaInfo) {
-				code.append("#pragma gcd multivector ");
+			if(gcdMetaInfo) {
+				code.append("//#pragma gcd multivector ");
 				code.append(var);
 				code.append('\n');
-			//}
+			}
 
 			// standard definition
 			graph.accept(fieldVisitor);
