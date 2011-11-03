@@ -15,12 +15,12 @@
         <module>api</module>
         <module>maple</module>
         <module>tba</module>
-        <!--<module>gapp</module>-->
+        <module>gapp</module>
         <module>clucalc</module>
+	<module>gaalet</module>
         <module>codegen-dot</module>
         <module>codegen-cpp</module>
         <module>codegen-java</module>
-        <module>codegen-gaalet</module>
         <module>codegen-compressed</module>
 	<module>codegen-gapp</module>
         <module>gcd</module>
