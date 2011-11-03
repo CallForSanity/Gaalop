@@ -315,7 +315,6 @@ public class GAPPOpenCLVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor
 
         // parallel pyramid reduce
         int vectorSize = getOpenCLVectorSize(mvBladeMap.get(gappDotVectors.getParts().get(0).getName()).size());
-        System.out.println(vectorSize);
         while((vectorSize >>= 1) > 1) {
             result.append("dot").append(dotCount+1);
             result.append(" = ");
