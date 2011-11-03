@@ -6,6 +6,7 @@ package de.gaalop.gappopencl;
 
 import de.gaalop.gapp.PosSelector;
 import de.gaalop.gapp.Selector;
+import de.gaalop.gapp.SelectorIndex;
 import de.gaalop.gapp.instructionSet.CalculationType;
 import de.gaalop.gapp.instructionSet.GAPPAssignMv;
 import de.gaalop.gapp.instructionSet.GAPPAssignVector;
@@ -54,7 +55,7 @@ public class GAPPOpenCLVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor
 
         for(PosSelector sel : gappSetMv.getSelectorsDest()) {
             if(gcdMetaInfo)
-                declareGCDMultivectorComponent(gappSetMv, thisMvSetCount, sel);
+                declareGCDMultivectorComponent(gappSetMv.getDestination().getName(), thisMvSetCount, sel);
 
             result.append(gappSetMv.getDestination().getName());
             result.append(".s").append(getOpenCLIndex(thisMvSetCount));
@@ -74,11 +75,11 @@ public class GAPPOpenCLVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor
         return null;
     }
 
-    protected void declareGCDMultivectorComponent(GAPPSetMv gappSetMv, Integer thisMvSetCount, PosSelector sel) {
+    protected void declareGCDMultivectorComponent(String mv, Integer blade, SelectorIndex sel) {
         result.append("//#pragma gcd multivector_component ");
-        result.append(gappSetMv.getDestination().getName());
-        result.append(" .s").append(thisMvSetCount);
-        result.append(" ").append(sel.getIndex()); // TODO
+        result.append(mv);
+        result.append(".s").append(blade);
+        result.append(" ").append(sel.getBladeName());
         result.append("\n");
     }
 
@@ -90,11 +91,13 @@ public class GAPPOpenCLVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor
         result.append(gappSetVector.getDestination().getName());
         result.append(" = make_float").append(vectorSize).append("(");
 
+        Map<Integer,Integer> bladeMap = new HashMap<Integer,Integer>();
         Iterator<Selector> it = gappSetVector.getSelectorsSrc().iterator();
         Selector sel = it.next();
         if(sel.getSign() < 0)
             result.append("-");
-        result.append(gappSetVector.getSource().getName()).append(".s").append(sel.getIndex());
+        result.append(gappSetVector.getSource().getName());
+        result.append(".s").append(mvBladeMap.get(gappSetVector.getSource().getName()).get(sel.getIndex()));
         while(it.hasNext()) {
             sel = it.next();
             result.append(",");
@@ -102,8 +105,18 @@ public class GAPPOpenCLVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor
                 result.append("-");
             result.append(gappSetVector.getSource().getName());
             result.append(".s").append(mvBladeMap.get(gappSetVector.getSource().getName()).get(sel.getIndex()));
+
+            bladeMap.put(bladeMap.size(), bladeMap.size());
         }
+        
+        // fill remaining vector space with zeros
+        for(int counter = gappSetVector.getSelectorsSrc().size();
+            counter < vectorSize; ++counter)
+            result.append(",0");
+
         result.append(");\n");
+
+        mvBladeMap.put(gappSetVector.getDestination().getName(),bladeMap);
 
         return null;
     }
@@ -165,13 +178,17 @@ public class GAPPOpenCLVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor
         result.append(vectorSize);
         result.append("(");
 
+        Map<Integer,Integer> bladeMap = new HashMap<Integer,Integer>();
         Iterator<GAPPValueHolder> it = gappAssignVector.getValues().iterator();
         result.append(it.next().prettyPrint());
+        bladeMap.put(bladeMap.size(), bladeMap.size());
         while(it.hasNext()) {
             result.append(",").append(it.next().prettyPrint());
+            bladeMap.put(bladeMap.size(), bladeMap.size());
         }
-
         result.append(");\n");
+
+        mvBladeMap.put(gappAssignVector.getDestination().getName(),bladeMap);
 
         return null;
     }
@@ -180,75 +197,79 @@ public class GAPPOpenCLVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor
     public Object visitCalculateMvCoeff(GAPPCalculateMvCoeff gappCalculateMvCoeff, Object arg) {
         result.append(gappCalculateMvCoeff.getDestination().prettyPrint());
         result.append(" = ");
+        printCalculateOp(gappCalculateMvCoeff.getType(),
+                         gappCalculateMvCoeff.getOperand1().prettyPrint(),
+                         gappCalculateMvCoeff.getOperand2().prettyPrint());
+        result.append(";\n");
 
-        switch(gappCalculateMvCoeff.getType()) {
+        return null;
+    }
+
+    protected void printCalculateOp(CalculationType type,String operand1,String operand2) {
+        switch (type) {
             case DIVISION:
                 result.append("(");
-                result.append(gappCalculateMvCoeff.getOperand1().prettyPrint());
+                result.append(operand1);
                 result.append(") / (");
-                result.append(gappCalculateMvCoeff.getOperand2().prettyPrint());
+                result.append(operand2);
                 result.append(")");
                 break;
             case ABS:
                 result.append("abs(");
-                result.append(gappCalculateMvCoeff.getOperand1().prettyPrint());
+                result.append(operand1);
                 result.append(")");
                 break;
             case ACOS:
                 result.append("acos(");
-                result.append(gappCalculateMvCoeff.getOperand1().prettyPrint());
+                result.append(operand1);
                 result.append(")");
                 break;
             case ASIN:
                 result.append("asin(");
-                result.append(gappCalculateMvCoeff.getOperand1().prettyPrint());
+                result.append(operand1);
                 result.append(")");
                 break;
             case ATAN:
                 result.append("atan(");
-                result.append(gappCalculateMvCoeff.getOperand1().prettyPrint());
+                result.append(operand1);
                 result.append(")");
                 break;
             case CEIL:
                 result.append("ceil(");
-                result.append(gappCalculateMvCoeff.getOperand1().prettyPrint());
+                result.append(operand1);
                 result.append(")");
                 break;
             case COS:
                 result.append("cos(");
-                result.append(gappCalculateMvCoeff.getOperand1().prettyPrint());
+                result.append(operand1);
                 result.append(")");
                 break;
             case FLOOR:
                 result.append("floor(");
-                result.append(gappCalculateMvCoeff.getOperand1().prettyPrint());
+                result.append(operand1);
                 result.append(")");
                 break;
             case LOG:
                 result.append("log(");
-                result.append(gappCalculateMvCoeff.getOperand1().prettyPrint());
+                result.append(operand1);
                 result.append(")");
                 break;
             case SIN:
                 result.append("sin(");
-                result.append(gappCalculateMvCoeff.getOperand1().prettyPrint());
+                result.append(operand1);
                 result.append(")");
                 break;
             case SQRT:
                 result.append("sqrt(");
-                result.append(gappCalculateMvCoeff.getOperand1().prettyPrint());
+                result.append(operand1);
                 result.append(")");
                 break;
             case TAN:
                 result.append("tan(");
-                result.append(gappCalculateMvCoeff.getOperand1().prettyPrint());
+                result.append(operand1);
                 result.append(")");
                 break;
         }
-        
-        result.append(";\n");
-
-        return null;
     }
     
     @Override
@@ -269,19 +290,57 @@ public class GAPPOpenCLVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor
         return null;
     }
 
+    protected static int dotCount = 0;
+
     @Override
     public Object visitDotVectors(GAPPDotVectors gappDotVectors, Object arg) {
-        result.append(gappDotVectors.getDestination().getName());
-        result.append(" = ");
+        Integer thisMvSetCount = mvBladeMap.get(gappDotVectors.getDestination().getName()).size();
 
+        // gcd meta info
+        if(gcdMetaInfo)
+            declareGCDMultivectorComponent(gappDotVectors.getDestination().getName(),
+                                           thisMvSetCount,
+                                           gappDotVectors.getDestSelector());
+
+        // parallel multiply operation
+        result.append("dot").append(dotCount);
+        result.append(" = ");
         Iterator<GAPPVector> it = gappDotVectors.getParts().iterator();
         result.append(it.next().getName());
-
         while(it.hasNext()) {
             result.append(" * ");
             result.append(it.next().getName());
         }
         result.append(";\n");
+
+        // parallel pyramid reduce
+        int vectorSize = getOpenCLVectorSize(mvBladeMap.get(gappDotVectors.getParts().get(0).getName()).size());
+        System.out.println(vectorSize);
+        while((vectorSize >>= 1) > 1) {
+            result.append("dot").append(dotCount+1);
+            result.append(" = ");
+            result.append("dot").append(dotCount).append(".odd");
+            result.append(" + ");
+            result.append("dot").append(dotCount).append(".even");
+            result.append(";\n");
+
+            ++dotCount;
+        }
+
+        // last step directly assigns to destination
+        result.append(gappDotVectors.getDestination().getName());
+        result.append(".s").append(thisMvSetCount);
+        result.append(" = ");
+        result.append("dot").append(dotCount).append(".odd");
+        result.append(" + ");
+        result.append("dot").append(dotCount).append(".even");
+        result.append(";\n");
+        ++dotCount;
+
+        // update blade map
+        mvBladeMap.get(gappDotVectors.getDestination().getName()).
+                put(thisMvSetCount,
+                    gappDotVectors.getDestSelector().getIndex());
         
         return null;
     }

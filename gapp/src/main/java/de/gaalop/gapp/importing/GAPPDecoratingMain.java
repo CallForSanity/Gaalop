@@ -71,7 +71,7 @@ public class GAPPDecoratingMain {
         assignInputVariables(graph, gappStart, variables);
 
         // import now the graph in GAPP
-        GAPPDecorator vCFG = new GAPPDecorator(gappStart, variables, usedAlgebra.getBladeCount(), scalarFunctions);
+        GAPPDecorator vCFG = new GAPPDecorator(gappStart, variables, usedAlgebra.getBladeCount(), scalarFunctions, usedAlgebra.getAlgebra());
         graph.accept(vCFG);
 
         // perform further optimizations

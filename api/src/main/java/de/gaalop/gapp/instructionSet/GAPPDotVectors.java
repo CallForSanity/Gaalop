@@ -23,9 +23,9 @@ public class GAPPDotVectors extends GAPPBaseInstruction {
         this.parts = parts;
     }
 
-    public GAPPDotVectors(GAPPMultivectorComponent destination, LinkedList<GAPPVector> parts) {
+    public GAPPDotVectors(GAPPMultivectorComponent destination, LinkedList<GAPPVector> parts, String bladeName) {
         this.destination = new GAPPMultivector(destination.getName());
-        this.destSelector = new Selector(destination.getBladeIndex(), (byte) 1);
+        this.destSelector = new Selector(destination.getBladeIndex(), (byte) 1, bladeName);
         this.parts = parts;
     }
 
