@@ -27,8 +27,10 @@ INCLUDE_DIRECTORIES(${GCD_INCLUDE_DIR})
 # define common args
 IF(GCD_WITH_MAPLE)
 SET(GCD_COMMON_ARGS -optimizer "de.gaalop.maple.Plugin" -m "${MAPLE_BIN_DIR}")
+SET(GCD_EXTOPT_ARGS -m "${MAPLE_BIN_DIR}")
 ELSEIF(GCD_WITH_MAXIMA)
 SET(GCD_COMMON_ARGS -optimizer "de.gaalop.tba.Plugin" -m "${MAXIMA_BIN}")
+SET(GCD_EXTOPT_ARGS -m "${MAXIMA_BIN}")
 ELSE(GCD_WITH_MAPLE)
 SET(GCD_COMMON_ARGS -optimizer "de.gaalop.tba.Plugin")
 ENDIF(GCD_WITH_MAPLE)
@@ -36,8 +38,8 @@ ENDIF(GCD_WITH_MAPLE)
 # define specific args
 SET(GCD_CXX_ARGS ${GCD_COMMON_ARGS} -generator "de.gaalop.compressed.Plugin")
 SET(GCD_CUDA_ARGS ${GCD_COMMON_ARGS} -generator "de.gaalop.compressed.Plugin")
-SET(GCD_OPENCL_ARGS ${GCD_COMMON_ARGS} -generator "de.gaalop.cpp.Plugin")
-SET(GCD_JAVA_ARGS ${GCD_COMMON_ARGS} -generator "de.gaalop.cpp.Plugin")
+SET(GCD_OPENCL_ARGS ${GCD_EXTOPT_ARGS} -optimizer "de.gaalop.gapp.Plugin" -generator "de.gaalop.gappopencl.Plugin")
+SET(GCD_JAVA_ARGS ${GCD_COMMON_ARGS} -generator "de.gaalop.compressed.Plugin")
 
 # configure compile script
 get_filename_component(CMAKE_CURRENT_LIST_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
@@ -79,7 +81,7 @@ MACRO(GCD_WRAP_SRCS generated_files)
 
 			ADD_CUSTOM_COMMAND(OUTPUT ${generated_file}
 			                COMMAND ${GCD_COMPILE_SCRIPT}
-			                ARGS ${GCD_CXX_ARGS} -o "${generated_file}" -i "${source_file}"
+			                ARGS ${GCD_CUDA_ARGS} -o "${generated_file}" -i "${source_file}"
 					        MAIN_DEPENDENCY ${source_file})
 			LIST(APPEND ${generated_files} ${generated_file}) # needed here, to exclude non-gcd files
 		ELSEIF(${source_file} MATCHES ".*\\.gcl$" AND NOT is_header)
@@ -91,7 +93,7 @@ MACRO(GCD_WRAP_SRCS generated_files)
 
 			ADD_CUSTOM_COMMAND(OUTPUT ${generated_file}
 			                COMMAND ${GCD_COMPILE_SCRIPT}
-			                ARGS ${GCD_CXX_ARGS} -o "${generated_file}" -i "${source_file}"
+			                ARGS ${GCD_OPENCL_ARGS} -o "${generated_file}" -i "${source_file}"
 					        MAIN_DEPENDENCY ${source_file})
 			LIST(APPEND ${generated_files} ${generated_file}) # needed here, to exclude non-gcd files
 		ELSEIF(${source_file} MATCHES ".*\\.gcj$" AND NOT is_header)
@@ -103,7 +105,7 @@ MACRO(GCD_WRAP_SRCS generated_files)
 
 			ADD_CUSTOM_COMMAND(OUTPUT ${generated_file}
 			                COMMAND ${GCD_COMPILE_SCRIPT}
-			                ARGS ${GCD_CXX_ARGS} -o "${generated_file}" -i "${source_file}"
+			                ARGS ${GCD_JAVA_ARGS} -o "${generated_file}" -i "${source_file}"
 					        MAIN_DEPENDENCY ${source_file})
 			LIST(APPEND ${generated_files} ${generated_file}) # needed here, to exclude non-gcd files
 		ENDIF(${source_file} MATCHES ".*\\.gcp$" AND NOT is_header)
