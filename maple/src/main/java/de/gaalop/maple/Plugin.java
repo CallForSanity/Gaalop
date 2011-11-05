@@ -45,7 +45,7 @@ public class Plugin extends Observable implements OptimizationStrategyPlugin {
 	
 	/** This is a configuration property and should not be modified. */
 	@ConfigurationProperty(type = Type.BOOLEAN)
-	public boolean useCodeSegmenter=true;
+	public boolean useCodeSegmenter;
 
 	/**
 	 * Try guessing a default value for the maple Path on Windows
