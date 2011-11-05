@@ -30,22 +30,22 @@ public class Plugin extends Observable implements OptimizationStrategyPlugin {
 
 	/** This is a configuration property and should not be modified. */
 	@ConfigurationProperty(type = Type.TEXT)
-	public String mapleBinaryPath;
+	public String mapleBinaryPath="";
 
 	/** This is a configuration property and should not be modified. */
 	@ConfigurationProperty(type = Type.TEXT)
-	public String mapleJavaPath;
+	public String mapleJavaPath="";
 	
 	/** This is a configuration property and should not be modified. */
 	@ConfigurationProperty(type = Type.TEXT)
-	public String gaalopPath;	
+	public String gaalopPath="";
 
 	@ConfigurationProperty(type = Type.BOOLEAN)
 	public boolean constantFolding = false;
 	
 	/** This is a configuration property and should not be modified. */
 	@ConfigurationProperty(type = Type.BOOLEAN)
-	public boolean useCodeSegmenter;
+	public boolean useCodeSegmenter=true;
 
 	/**
 	 * Try guessing a default value for the maple Path on Windows
