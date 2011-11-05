@@ -8,7 +8,7 @@
 <entry key="de.gaalop.cpp.Plugin.standalone">false</entry>
 <entry key="de.gaalop.tba.Plugin.maximaCommand">/usr/bin/maxima</entry>
 <entry key="de.gaalop.tba.Plugin.optInserting">true</entry>
-<entry key="de.gaalop.tba.Plugin.optMaxima">true</entry>
+<entry key="de.gaalop.tba.Plugin.optMaxima">false</entry>
 <entry key="de.gaalop.tba.Plugin.optOneExpressionRemoval">true</entry>
 <entry key="de.gaalop.clucalc.output.Plugin.suffix">_opt</entry>
 <entry key="de.gaalop.gaalet.output.Plugin.useNameTable">false</entry>
