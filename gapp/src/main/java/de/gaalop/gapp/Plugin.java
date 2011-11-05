@@ -5,6 +5,7 @@ import de.gaalop.ConfigurationProperty.Type;
 import de.gaalop.Notifications;
 import de.gaalop.OptimizationStrategy;
 import de.gaalop.OptimizationStrategyPlugin;
+import de.gaalop.tba.cfgImport.optimization.maxima.ProcessBuilderMaximaConnection;
 import java.awt.Image;
 import java.util.Observable;
 
@@ -16,6 +17,8 @@ public class Plugin extends Observable implements OptimizationStrategyPlugin {
 
     @ConfigurationProperty(type = Type.TEXT)
     public String algebra = "5d"; //make conformal 5d to the standard algebra
+    @ConfigurationProperty(type = Type.TEXT)
+    public String maximaCommand = ProcessBuilderMaximaConnection.CMD_MAXIMA_LINUX;
     
     /*
      * Please make sure this is disabled by default.
@@ -64,4 +67,13 @@ public class Plugin extends Observable implements OptimizationStrategyPlugin {
     public void setOptMaxima(boolean optMaxima) {
         this.optMaxima = optMaxima;
     }
+
+    public String getMaximaCommand() {
+        return maximaCommand;
+    }
+
+    public void setMaximaCommand(String maximaCommand) {
+        this.maximaCommand = maximaCommand;
+    }
+
 }
