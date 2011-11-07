@@ -37,7 +37,7 @@ public class Base {
         ControlFlowGraph graph = parser.parseFile(new InputFile(cluName, testable.getSource()));
 
         GAPPDecoratingMain importer = new GAPPDecoratingMain();
-        importer.decorateGraph(testable.getUsedAlgebra(), graph, false);
+        importer.decorateGraph(testable.getUsedAlgebra(), graph, false, "");
 
         outputPlugin(new de.gaalop.codegenGapp.Plugin(), graph);
         outputPlugin(new de.gaalop.clucalc.output.Plugin(), graph);

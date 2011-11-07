@@ -37,10 +37,11 @@ public class GAPPDecoratingMain {
      * @param usedAlgebra The used algebra
      * @param graph The ControlFlowGraph
      * @param optMaxima Should Maxima be used?
+     * @param maximaCommand The maxima command
      * @return The same graph object (which is now decorated with GAPP instructions)
      * @throws OptimizationException
      */
-    public ControlFlowGraph decorateGraph(UseAlgebra usedAlgebra, ControlFlowGraph graph, boolean optMaxima) throws OptimizationException {
+    public ControlFlowGraph decorateGraph(UseAlgebra usedAlgebra, ControlFlowGraph graph, boolean optMaxima, String maximaCommand) throws OptimizationException {
 
         boolean scalarFunctions = false;
 
@@ -50,6 +51,7 @@ public class GAPPDecoratingMain {
         }
 
         Plugin plugin = new Plugin();
+        plugin.setMaximaCommand(maximaCommand);
         
         plugin.setInvertTransformation(true);
         plugin.setScalarFunctions(scalarFunctions);
