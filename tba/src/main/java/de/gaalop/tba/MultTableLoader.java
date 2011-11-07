@@ -33,19 +33,21 @@ public class MultTableLoader {
 
         int line = 0;
         while (d.ready()) {
-            String readed = d.readLine();
+            String rest = d.readLine();
 
-            String[] parts = readed.split(";");
-
-            BladeRef ref0 = Parser.parseBladeRef(parts[0]);
-            BladeRef ref1 = Parser.parseBladeRef(parts[1]);
+            BladeRef ref0 = Parser.parseBladeRef(rest.substring(0,rest.indexOf(';')));
+            rest = rest.substring(rest.indexOf(';')+1);
+            BladeRef ref1 = Parser.parseBladeRef(rest.substring(0,rest.indexOf(';')));
+            rest = rest.substring(rest.indexOf(';')+1);
 
             int index0 = ref0.getIndex();
             int index1 = ref1.getIndex();
 
-            useAlgebra.getTableInner().setProduct(index0, index1, Parser.parseMultivector(parts[2], algebra));
-            useAlgebra.getTableOuter().setProduct(index0, index1, Parser.parseMultivector(parts[3], algebra));
-            useAlgebra.getTableGeo().setProduct(index0, index1, Parser.parseMultivector(parts[4], algebra));
+            useAlgebra.getTableInner().setProduct(index0, index1, Parser.parseMultivector(rest.substring(0,rest.indexOf(';')), algebra));
+            rest = rest.substring(rest.indexOf(';')+1);
+            useAlgebra.getTableOuter().setProduct(index0, index1, Parser.parseMultivector(rest.substring(0,rest.indexOf(';')), algebra));
+            rest = rest.substring(rest.indexOf(';')+1);
+            useAlgebra.getTableGeo().setProduct(index0, index1, Parser.parseMultivector(rest, algebra));
 
 
             line++;
