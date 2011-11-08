@@ -3,6 +3,7 @@ package de.gaalop.compressed;
 import de.gaalop.Notifications;
 import de.gaalop.cfg.*;
 import de.gaalop.dfg.*;
+import de.gaalop.gaalet.*;
 import de.gaalop.gaalet.output.*;
 
 import java.util.*;
@@ -21,46 +22,46 @@ public class CompressedVisitor extends de.gaalop.gaalet.output.CppVisitor {
 		super(standalone);
 	}
 
-	@Override
-	public void visit(StartNode node) {
-		graph = node.getGraph();
-
-		FindStoreOutputNodes findOutput = new FindStoreOutputNodes();
-		graph.accept(findOutput);
-		for (StoreResultNode var : findOutput.getNodes()) {
-			String outputName = var.getValue().getName() + "_out";
-		
-			outputNamesMap.put(var, outputName);
-		}
-		if (standalone) {
-			code.append("void calculate(");
-
-			// Input Parameters
-			List<Variable> inputParameters = sortVariables(graph.getInputVariables());
-			for (Variable var : inputParameters) {
-				code.append("float "); // The assumption here is that they all are normal scalars
-				printVarName(var.getName());
-				code.append(", ");
-			}
-
-			for (StoreResultNode var : findOutput.getNodes()) {
-				code.append("float **");
-				printVarName(outputNamesMap.get(var));
-				code.append(", ");
-			}
-
-			if (!graph.getInputVariables().isEmpty() || !findOutput.getNodes().isEmpty()) {
-				code.setLength(code.length() - 2);
-			}
-
-			code.append(") {\n");
-			indentation++;
-		}
-
-		handleLocalVariables();
-		createVectorSet(findOutput);
-		node.getSuccessor().accept(this);
-	}
+//	@Override
+//	public void visit(StartNode node) {
+//		graph = node.getGraph();
+//
+//		FindStoreOutputNodes findOutput = new FindStoreOutputNodes();
+//		graph.accept(findOutput);
+//		for (StoreResultNode var : findOutput.getNodes()) {
+//			String outputName = var.getValue().getName() + "_out";
+//
+//			outputNamesMap.put(var, outputName);
+//		}
+//		if (standalone) {
+//			code.append("void calculate(");
+//
+//			// Input Parameters
+//			List<Variable> inputParameters = sortVariables(graph.getInputVariables());
+//			for (Variable var : inputParameters) {
+//				code.append("float "); // The assumption here is that they all are normal scalars
+//				printVarName(var.getName());
+//				code.append(", ");
+//			}
+//
+//			for (StoreResultNode var : findOutput.getNodes()) {
+//				code.append("float **");
+//				printVarName(outputNamesMap.get(var));
+//				code.append(", ");
+//			}
+//
+//			if (!graph.getInputVariables().isEmpty() || !findOutput.getNodes().isEmpty()) {
+//				code.setLength(code.length() - 2);
+//			}
+//
+//			code.append(") {\n");
+//			indentation++;
+//		}
+//
+//		handleLocalVariables();
+//		createVectorSet(findOutput);
+//		node.getSuccessor().accept(this);
+//	}
 	
 	/**	
 	* Declare local variables
@@ -68,40 +69,28 @@ public class CompressedVisitor extends de.gaalop.gaalet.output.CppVisitor {
 	*/
 	@Override
 	protected void handleLocalVariables() {
-		Set <String> varNames = new HashSet<String> ();
+                 System.out.println("blub");
 		for (Variable var : graph.getLocalVariables()) {
-			varNames.add(var.getName());			
-		}		
-		for (String var : varNames) {
-			appendIndentation();
-			FieldsUsedVisitor fieldVisitor = new FieldsUsedVisitor(var);
+                        // count number of components
+			FieldsUsedVisitor fieldVisitor = new FieldsUsedVisitor(var.getName());
+			graph.accept(fieldVisitor);
+			final int size = fieldVisitor.getMultiVector().getGaalopBlades().size();
+//                        if(size <= 0)
+//                            continue;
+                        System.out.println(size);
 
 			// GCD definition
 			if(gcdMetaInfo) {
+           			appendIndentation();
 				code.append("//#pragma gcd multivector ");
-				code.append(var);
+				code.append(var.getName());
 				code.append('\n');
 			}
 
 			// standard definition
-			graph.accept(fieldVisitor);
-			int size = fieldVisitor.getMultiVector().getGaalopBlades().size();		
-			code.append(variableType + ' ' + fieldVisitor.getMultiVector().getName());
-			if(size > 0)
-			    	code.append("[" + size + "]");
-			code.append(";\n");
-
-			// blade usage definition
-			Iterator<Integer> it = fieldVisitor.getMultiVector().getGaalopBlades().keySet().iterator();
-			code.append("const unsigned int ");
-			code.append(var);
-			code.append("_usage = 0");
-			while (it.hasNext()) {
-				code.append(" | (1 << ");
-				code.append(it.next());
-				code.append(')');
-			}
-
+           		appendIndentation();
+			code.append(variableType + ' ' + var.getName());
+			code.append("[" + size + "]");
 			code.append(";\n");
 		}
 
@@ -109,4 +98,55 @@ public class CompressedVisitor extends de.gaalop.gaalet.output.CppVisitor {
 			code.append("\n");
 		}				
 	}
+        
+	@Override
+	public void visit(AssignmentNode node) {
+		if (assigned.contains(node.getVariable().getName())) {
+			log.warn("Reuse of variable " + node.getVariable().getName()
+				+ ". Make sure to reset this variable or use another name.");
+			code.append("\n");
+			appendIndentation();
+			code.append("// Warning: reuse of variable ");
+			code.append(node.getVariable().getName());
+			code.append(".\n");
+			appendIndentation();
+			code.append("// Make sure to reset this variable or use another name.\n");
+			assigned.remove(node.getVariable().getName());
+		}
+
+		appendIndentation();
+                 System.out.println("blob");
+		node.getVariable().accept(this);
+		code.append(" = ");
+		node.getValue().accept(this);
+		code.append(";\n");
+
+		node.getSuccessor().accept(this);
+	}
+
+        @Override
+        public void visit(MultivectorComponent component) {
+                 System.out.println("blab");
+                // get blade pos in array
+                String name = component.getName().replace(suffix, "");
+                int pos = -1;
+                for (GaaletMultiVector vec : vectorSet) {
+                        if(name.equals(vec.getName()))
+                                pos = vec.getBladePosInArray(component.getBladeIndex());
+                }
+
+                // GCD definition
+                String componentName = name + '[' + pos + ']';
+                if(gcdMetaInfo)
+                {
+                        code.append("//#pragma gcd multivector_component ");
+                        code.append(componentName);
+                        code.append(' ');
+                        code.append(component.getBladeName());
+                        code.append('\n');
+                }
+
+                // standard definition
+                printVarName(componentName);
+        }
 }
