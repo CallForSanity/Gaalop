@@ -75,8 +75,8 @@ public class CompressedVisitor extends de.gaalop.gaalet.output.CppVisitor {
 			FieldsUsedVisitor fieldVisitor = new FieldsUsedVisitor(var.getName());
 			graph.accept(fieldVisitor);
 			final int size = fieldVisitor.getMultiVector().getGaalopBlades().size();
-//                        if(size <= 0)
-//                            continue;
+                        if(size <= 0)
+                            continue;
                         System.out.println(size);
 
 			// GCD definition
@@ -99,36 +99,36 @@ public class CompressedVisitor extends de.gaalop.gaalet.output.CppVisitor {
 		}				
 	}
         
-	@Override
-	public void visit(AssignmentNode node) {
-		if (assigned.contains(node.getVariable().getName())) {
-			log.warn("Reuse of variable " + node.getVariable().getName()
-				+ ". Make sure to reset this variable or use another name.");
-			code.append("\n");
-			appendIndentation();
-			code.append("// Warning: reuse of variable ");
-			code.append(node.getVariable().getName());
-			code.append(".\n");
-			appendIndentation();
-			code.append("// Make sure to reset this variable or use another name.\n");
-			assigned.remove(node.getVariable().getName());
-		}
-
-		appendIndentation();
-                 System.out.println("blob");
-		node.getVariable().accept(this);
-		code.append(" = ");
-		node.getValue().accept(this);
-		code.append(";\n");
-
-		node.getSuccessor().accept(this);
-	}
+//	@Override
+//	public void visit(AssignmentNode node) {
+//		if (assigned.contains(node.getVariable().getName())) {
+//			log.warn("Reuse of variable " + node.getVariable().getName()
+//				+ ". Make sure to reset this variable or use another name.");
+//			code.append("\n");
+//			appendIndentation();
+//			code.append("// Warning: reuse of variable ");
+//			code.append(node.getVariable().getName());
+//			code.append(".\n");
+//			appendIndentation();
+//			code.append("// Make sure to reset this variable or use another name.\n");
+//			assigned.remove(node.getVariable().getName());
+//		}
+//
+//		appendIndentation();
+//                 System.out.println("blob");
+//		node.getVariable().accept(this);
+//		code.append(" = ");
+//		node.getValue().accept(this);
+//		code.append(";\n");
+//
+//		node.getSuccessor().accept(this);
+//	}
 
         @Override
         public void visit(MultivectorComponent component) {
                  System.out.println("blab");
                 // get blade pos in array
-                String name = component.getName().replace(suffix, "");
+                final String name = component.getName().replace(suffix, "");
                 int pos = -1;
                 for (GaaletMultiVector vec : vectorSet) {
                         if(name.equals(vec.getName()))
@@ -136,7 +136,7 @@ public class CompressedVisitor extends de.gaalop.gaalet.output.CppVisitor {
                 }
 
                 // GCD definition
-                String componentName = name + '[' + pos + ']';
+                final String componentName = name + '[' + pos + ']';
                 if(gcdMetaInfo)
                 {
                         code.append("//#pragma gcd multivector_component ");
