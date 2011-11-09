@@ -25,6 +25,7 @@
         <module>codegen-cpp</module>
         <module>codegen-java</module>
         <module>codegen-compressed</module>
+	<module>codegen-gapp</module>
 	<module>codegen-gappopencl</module>
 
         <module>gcd</module>
