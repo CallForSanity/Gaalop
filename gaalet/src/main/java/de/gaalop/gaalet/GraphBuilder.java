@@ -1,5 +1,6 @@
 package de.gaalop.gaalet;
 
+import de.gaalop.NameTable;
 import de.gaalop.CheckGAVisitor;
 import de.gaalop.cfg.*;
 import de.gaalop.clucalc.algebra.*;

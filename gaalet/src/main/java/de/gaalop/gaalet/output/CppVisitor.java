@@ -2,7 +2,7 @@ package de.gaalop.gaalet.output;
 
 import de.gaalop.cfg.*;
 import de.gaalop.dfg.*;
-import de.gaalop.gaalet.NameTable;
+import de.gaalop.NameTable;
 import de.gaalop.gaalet.GaaletMultiVector;
 
 import java.util.*;
