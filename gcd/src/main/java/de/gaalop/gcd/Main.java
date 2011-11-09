@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.Vector;
@@ -35,10 +36,8 @@ public class Main {
     }
 
     class MvComponent {
-
-        String bladeHandle;
+        String bladeCoeffName;
         String bladeName;
-        int bladeArrayIndex;
     };
     
     private Log log = LogFactory.getLog(Main.class);
@@ -58,6 +57,8 @@ public class Main {
 
     private static String PATH_SEP = "/";
     private static char LINE_END = '\n';
+    private static final String gcdBegin = "#pragma gcd begin";
+    private static final String gcdEnd = "#pragma gcd end";
     private static final String mvSearchString = "//#pragma gcd multivector ";
     private static final String mvCompSearchString = "//#pragma gcd multivector_component ";
 
@@ -122,12 +123,12 @@ public class Main {
             final BufferedReader inputFile = createFileInputStringStream(inputFilePath);
             while ((line = inputFile.readLine()) != null) {
                 // found gaalop line
-                if (line.contains("#pragma gcd begin")) {
+                if (line.contains(gcdBegin)) {
                     StringBuffer gaalopInFileStream = new StringBuffer();
 
                     // read until end of optimized file
                     while ((line = inputFile.readLine()) != null) {
-                        if (line.contains("#pragma gcd end")) {
+                        if (line.contains(gcdEnd)) {
                             break;
                         } else {
                             gaalopInFileStream.append(line);
@@ -175,9 +176,8 @@ public class Main {
 
                             final String mvName = lineStream.next();
                             MvComponent mvComp = new MvComponent();
-                            mvComp.bladeHandle = lineStream.next();
+                            mvComp.bladeCoeffName = lineStream.next();
                             mvComp.bladeName = lineStream.next();
-                            mvComp.bladeArrayIndex = lineStream.nextInt();
 
                             mvComponents.get(mvName).add(mvComp);
                         }
@@ -189,9 +189,9 @@ public class Main {
                     variableDeclarations.append(mvName).append(" = 0");
 
                     for (final MvComponent mvComp : mvComponents.get(mvName)) {
-                        variableDeclarations.append(" +").append(mvComp.bladeName);
-                        variableDeclarations.append('*').append(mvName).append('_');
-                        variableDeclarations.append(mvComp.bladeHandle);
+                        final String hashedBladeCoeff = NameTable.getInstance().createKey(mvComp.bladeCoeffName);
+                        variableDeclarations.append(" +").append(hashedBladeCoeff);
+                        variableDeclarations.append('*').append(mvComp.bladeName);
                     }
 
                     variableDeclarations.append(";\n");
@@ -216,7 +216,10 @@ public class Main {
 
                 StringBuffer gaalopOutFileStream = new StringBuffer();
                 for (OutputFile output : outputFiles) {
-                    gaalopOutFileStream.append(filterImportedMultivectorsFromExport(output.getContent(), mvComponents.keySet())).append(LINE_END);
+                    String content = output.getContent();
+                    content = filterHashedBladeCoefficients(content);
+                    content = filterImportedMultivectorsFromExport(content, mvComponents.keySet());
+                    gaalopOutFileStream.append(content).append(LINE_END);
                 }
 
                 gaalopOutFileVector.add(gaalopOutFileStream.toString());
@@ -255,7 +258,7 @@ public class Main {
                     outputFile.write(line.substring(pos));
                     outputFile.write(LINE_END);
                 } // found gaalop line - insert intermediate gaalop file
-                else if (line.indexOf("#pragma gcd begin") >= 0) {
+                else if (line.indexOf(gcdBegin) >= 0) {
                     // line pragma for compile errors
                     outputFile.write("#line ");
                     outputFile.write(lineCount.toString());
@@ -269,7 +272,7 @@ public class Main {
                     // skip original code
                     while ((line = inputFile.readLine()) != null) {
                         ++lineCount;
-                        if (line.contains("#pragma gcd end")) {
+                        if (line.contains(gcdEnd)) {
                             break;
                         }
                     }
@@ -309,6 +312,21 @@ public class Main {
                 outStream.append(LINE_END);
             } else if(importedMVs.isEmpty())
                 System.err.println("Internal Error: GCD Should not remove multivectors if there are none imported!");
+        }
+
+        return outStream.toString();
+    }
+    
+    private String filterHashedBladeCoefficients(final String content) throws Exception {
+        final BufferedReader inStream = new BufferedReader(new StringReader(content));
+        StringBuffer outStream = new StringBuffer();
+
+        String line;
+        while ((line = inStream.readLine()) != null) {
+            for(Entry<String,String> entry : NameTable.getInstance().getTable().entrySet())
+                line.replaceAll(entry.getKey(),entry.getValue());
+            
+            outStream.append(line).append(LINE_END);
         }
 
         return outStream.toString();
