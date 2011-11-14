@@ -6,13 +6,13 @@
   
   <groupId>de.gaalop</groupId>
   
-  <artifactId>gcd</artifactId>
+  <artifactId>gpc</artifactId>
   
   <packaging>jar</packaging>
   
   <version>1.0.0</version>
   
-  <name>Gaalop Compiler Driver</name>
+  <name>Gaalop Precompiler</name>
   
   <url>http://maven.apache.org</url>
   

@@ -33,6 +33,11 @@ bool pointTriangleTest(const float t1x, const float t1y, const float t1z,
 	?d3 = side3 . TestPoint;
 #pragma gcd end
 
+	const float d_SCALAR = mv_get_bladecoeff(d,1);
+	const float d1_SCALAR = mv_get_bladecoeff(d1,1);
+	const float d2_SCALAR = mv_get_bladecoeff(d2,1);
+	const float d3_SCALAR = mv_get_bladecoeff(d3,1);
+
 	if (d_SCALAR * d_SCALAR > h * h)
 		return false;
 

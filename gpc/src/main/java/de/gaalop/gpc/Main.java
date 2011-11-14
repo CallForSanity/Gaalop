@@ -1,4 +1,4 @@
-package de.gaalop.gcd;
+package de.gaalop.gpc;
 
 import de.gaalop.*;
 import org.apache.commons.logging.Log;
@@ -26,122 +26,68 @@ import java.util.Vector;
  */
 public class Main {
 
-    private void writeLinePragma(BufferedWriter outputFile, Integer lineCount) throws IOException {
-        // line pragma for compile errors
-        outputFile.write("#line ");
-        outputFile.write(lineCount.toString());
-        outputFile.write(" \"");
-        outputFile.write(inputFilePath);
-        outputFile.write("\"\n");
-    }
-
-    class MvComponent {
-        String bladeCoeffName;
-        String bladeName;
-    };
-    
-    private Log log = LogFactory.getLog(Main.class);
-    
-    @Option(name = "-i", required = true, usage = "The input file.")
-    private String inputFilePath;
-    @Option(name = "-o", required = true, usage = "The output file.")
-    private String outputFilePath;
-    @Option(name = "-m", required = false, usage = "Sets an external optimzer path. This can be either Maple Binary Path or Maxima Path")
-    private String externalOptimizerPath = "";
-    @Option(name = "-parser", required = false, usage = "Sets the class name of the code parser plugin that should be used.")
-    private String codeParserPlugin = "de.gaalop.clucalc.input.Plugin";
-    @Option(name = "-generator", required = false, usage = "Sets the class name of the code generator plugin that should be used.")
-    private String codeGeneratorPlugin = "de.gaalop.compressed.Plugin";
-    @Option(name = "-optimizer", required = false, usage = "Sets the class name of the optimization strategy plugin that should be used.")
-    private String optimizationStrategyPlugin = "de.gaalop.maple.Plugin";
-
-    private static String PATH_SEP = "/";
-    private static char LINE_END = '\n';
-    private static final String gcdBegin = "#pragma gcd begin";
-    private static final String gcdEnd = "#pragma gcd end";
-    private static final String mvSearchString = "//#pragma gcd multivector ";
-    private static final String mvCompSearchString = "//#pragma gcd multivector_component ";
-
-    /**
-     * Starts the command line interface of Gaalop.
-     *
-     * @param args -i to specify the input file (mandatory), -o to specify the output directory,
-     * -parser to set the input parser, -generator to set the code generator plugin, -optimizer to
-     * select the optimization strategy.
-     */
-    public static void main(String[] args) throws Exception {
-        Main main = new Main();
-        CmdLineParser parser = new CmdLineParser(main);
-        try {
-            parser.parseArgument(args);
-            main.runGCD();
-        } catch (CmdLineException e) {
-            System.err.println(e.getMessage());
-            parser.printUsage(System.err);
-        } catch (Throwable t) {
-//            while (t.getCause() != null) {
-//                t = t.getCause();
-//            }
-
-//            System.err.println(t.getMessage());
-            t.printStackTrace();
-        }
-    }
-
-    public static final BufferedReader createFileInputStringStream(String fileName) {
-        try {
-            final FileInputStream fstream = new FileInputStream(fileName);
-            final DataInputStream in = new DataInputStream(fstream);
-            return new BufferedReader(new InputStreamReader(in));
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    public static BufferedWriter createFileOutputStringStream(String fileName) {
-        try {
-            final FileWriter fstream = new FileWriter(fileName);
-            return new BufferedWriter(fstream);
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    public void runGCD() throws Exception {
-
-        String runPath;
-        {
-            final File directory = new File(".");
-            runPath = directory.getCanonicalPath();
-        }
-
-        // process input file
-        // split into gaalop input files and save in memory
-        List<String> gaalopInFileVector = new ArrayList<String>();
+    protected void composeOutputFile(Vector<String> gaalopOutFileVector) throws IOException {
         String line;
+        // log
+        System.out.println("writing");
+        // retrieve input file directory
+        String inputFileDir;
         {
-            final BufferedReader inputFile = createFileInputStringStream(inputFilePath);
-            while ((line = inputFile.readLine()) != null) {
-                // found gaalop line
-                if (line.contains(gcdBegin)) {
-                    StringBuffer gaalopInFileStream = new StringBuffer();
+            int pos = inputFilePath.lastIndexOf('/');
+            if (pos <= 0) {
+                pos = inputFilePath.lastIndexOf('\\');
+            }
+            assert (pos > 0);
+            inputFileDir = inputFilePath.substring(0, pos + 1);
+        }
+        BufferedWriter outputFile = createFileOutputStringStream(outputFilePath);
+        final BufferedReader inputFile = createFileInputStringStream(inputFilePath);
+        Integer gaalopFileCount = 0;
+        Integer lineCount = 1;
+        writeLinePragma(outputFile, lineCount++);
+        while ((line = inputFile.readLine()) != null) {
+            if (line.indexOf("#include") >= 0 && line.indexOf('\"') >= 0) {
+                final int pos = line.indexOf('\"') + 1;
+                outputFile.write(line.substring(0, pos));
+                outputFile.write(inputFileDir);
+                outputFile.write(line.substring(pos));
+                outputFile.write(LINE_END);
+            } // found gaalop line - insert intermediate gaalop file
+            else if (line.indexOf(gpcBegin) >= 0) {
+                // line pragma for compile errors
+                writeLinePragma(outputFile, lineCount++); // we skipped gcd begin line
 
-                    // read until end of optimized file
-                    while ((line = inputFile.readLine()) != null) {
-                        if (line.contains(gcdEnd)) {
-                            break;
-                        } else {
-                            gaalopInFileStream.append(line);
-                            gaalopInFileStream.append(LINE_END);
-                        }
-                    }
+                // merge optimized code
+                outputFile.write(gaalopOutFileVector.get(gaalopFileCount++));
 
-                    // add to vector
-                    gaalopInFileVector.add(gaalopInFileStream.toString());
+                // skip original code
+                while ((line = inputFile.readLine()) != null) {
+                    if (line.contains(gpcEnd))
+                        break;
+                    ++lineCount;
                 }
+
+                // line pragma for compile errors
+                writeLinePragma(outputFile, lineCount++); // we skipped gcd end line
+            } else if(line.indexOf(gpcMvGetBladeCoeff) >= 0) {
+                CommandParser cp = new CommandParser(line,inputFile,gpcMvGetBladeCoeff);
+                
+                
+                outputFile.write();
+                outputFile.write(LINE_END);
+            } else {
+                outputFile.write(line);
+                outputFile.write(LINE_END);
+                ++lineCount; // we wrote one line
             }
         }
+        // close output file
+        outputFile.close();
+    }
 
+    protected Vector<String> processOptimizationBlocks(List<String> gaalopInFileVector) throws Exception {
+        String line;
+        
         // process gaalop files - call gaalop
         // imported multivector components
         Map<String, List<MvComponent>> mvComponents = new HashMap<String, List<MvComponent>>();
@@ -225,67 +171,137 @@ public class Main {
                 gaalopOutFileVector.add(gaalopOutFileStream.toString());
             }
         }
+        return gaalopOutFileVector;
+    }
 
-        // compose output file
+    protected List<String> readInputFile() throws IOException {
+        // process input file
+        // split into gaalop input files and save in memory
+        List<String> gaalopInFileVector = new ArrayList<String>();
+        String line;
         {
-            // log
-            System.out.println("writing");
-
-            // retrieve input file directory
-            String inputFileDir;
-            {
-                int pos = inputFilePath.lastIndexOf('/');
-                if (pos <= 0) {
-                    pos = inputFilePath.lastIndexOf('\\');
-                }
-                assert (pos > 0);
-                inputFileDir = inputFilePath.substring(0, pos + 1);
-            }
-
-            BufferedWriter outputFile = createFileOutputStringStream(outputFilePath);
             final BufferedReader inputFile = createFileInputStringStream(inputFilePath);
-            Integer gaalopFileCount = 0;
-            Integer lineCount = 1; // think one line ahead
-
-            writeLinePragma(outputFile, lineCount++);
             while ((line = inputFile.readLine()) != null) {
-                ++lineCount;
+                // found gaalop line
+                if (line.contains(gpcBegin)) {
+                    StringBuffer gaalopInFileStream = new StringBuffer();
 
-                if (line.indexOf("#include") >= 0 && line.indexOf('\"') >= 0) {
-                    final int pos = line.indexOf('\"') + 1;
-                    outputFile.write(line.substring(0, pos));
-                    outputFile.write(inputFileDir);
-                    outputFile.write(line.substring(pos));
-                    outputFile.write(LINE_END);
-                } // found gaalop line - insert intermediate gaalop file
-                else if (line.indexOf(gcdBegin) >= 0) {
-                    // line pragma for compile errors
-                    outputFile.write("#line ");
-                    outputFile.write(lineCount.toString());
-                    outputFile.write(" \"");
-                    outputFile.write(inputFilePath);
-                    outputFile.write("\"\n");
-
-                    // merge optimized code
-                    outputFile.write(gaalopOutFileVector.get(gaalopFileCount++));
-
-                    // skip original code
+                    // read until end of optimized file
                     while ((line = inputFile.readLine()) != null) {
-                        ++lineCount;
-                        if (line.contains(gcdEnd)) {
+                        if (line.contains(gpcEnd)) {
                             break;
+                        } else {
+                            gaalopInFileStream.append(line);
+                            gaalopInFileStream.append(LINE_END);
                         }
                     }
-                    writeLinePragma(outputFile, lineCount);
-                } else {
-                    outputFile.write(line);
-                    outputFile.write(LINE_END);
+
+                    // add to vector
+                    gaalopInFileVector.add(gaalopInFileStream.toString());
                 }
             }
-
-            // close output file
-            outputFile.close();
         }
+        return gaalopInFileVector;
+    }
+
+    private void writeLinePragma(BufferedWriter outputFile, Integer lineCount) throws IOException {
+        // line pragma for compile errors
+        outputFile.write("#line ");
+        outputFile.write(lineCount.toString());
+        outputFile.write(" \"");
+        outputFile.write(inputFilePath);
+        outputFile.write("\"\n");
+    }
+
+    class MvComponent {
+        String bladeCoeffName;
+        String bladeName;
+    };
+    
+    private Log log = LogFactory.getLog(Main.class);
+    
+    @Option(name = "-i", required = true, usage = "The input file.")
+    private String inputFilePath;
+    @Option(name = "-o", required = true, usage = "The output file.")
+    private String outputFilePath;
+    @Option(name = "-m", required = false, usage = "Sets an external optimzer path. This can be either Maple Binary Path or Maxima Path")
+    private String externalOptimizerPath = "";
+    @Option(name = "-parser", required = false, usage = "Sets the class name of the code parser plugin that should be used.")
+    private String codeParserPlugin = "de.gaalop.clucalc.input.Plugin";
+    @Option(name = "-generator", required = false, usage = "Sets the class name of the code generator plugin that should be used.")
+    private String codeGeneratorPlugin = "de.gaalop.compressed.Plugin";
+    @Option(name = "-optimizer", required = false, usage = "Sets the class name of the optimization strategy plugin that should be used.")
+    private String optimizationStrategyPlugin = "de.gaalop.maple.Plugin";
+
+    private static String PATH_SEP = "/";
+    private static char LINE_END = '\n';
+    private static final String gpcBegin = "#pragma gcd begin";
+    private static final String gpcEnd = "#pragma gcd end";
+
+    private static final String gpcMvFromArray = "mv_from_array";
+    
+    private static final String gpcMvGetBladeCoeff = "mv_get_bladecoeff";
+    private static final String gpcMvToArray = "mv_to_array";
+    private static final String gpcMvToStridedArray = "mv_to_stridedarray";
+    
+    private static final String mvSearchString = "//#pragma gcd multivector ";
+    private static final String mvCompSearchString = "//#pragma gcd multivector_component ";
+
+    /**
+     * Starts the command line interface of Gaalop.
+     *
+     * @param args -i to specify the input file (mandatory), -o to specify the output directory,
+     * -parser to set the input parser, -generator to set the code generator plugin, -optimizer to
+     * select the optimization strategy.
+     */
+    public static void main(String[] args) throws Exception {
+        Main main = new Main();
+        CmdLineParser parser = new CmdLineParser(main);
+        try {
+            parser.parseArgument(args);
+            main.runGCD();
+        } catch (CmdLineException e) {
+            System.err.println(e.getMessage());
+            parser.printUsage(System.err);
+        } catch (Throwable t) {
+//            while (t.getCause() != null) {
+//                t = t.getCause();
+//            }
+
+//            System.err.println(t.getMessage());
+            t.printStackTrace();
+        }
+    }
+
+    public static final BufferedReader createFileInputStringStream(String fileName) {
+        try {
+            final FileInputStream fstream = new FileInputStream(fileName);
+            final DataInputStream in = new DataInputStream(fstream);
+            return new BufferedReader(new InputStreamReader(in));
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public static BufferedWriter createFileOutputStringStream(String fileName) {
+        try {
+            final FileWriter fstream = new FileWriter(fileName);
+            return new BufferedWriter(fstream);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public void runGCD() throws Exception {
+
+        // read input file and split into optimization blocks
+        List<String> gaalopInFileVector = readInputFile();
+        
+        // process optimization blocks
+        Vector<String> gaalopOutFileVector = processOptimizationBlocks(gaalopInFileVector);
+
+        // compose output file
+        composeOutputFile(gaalopOutFileVector);
     }
 
     private String filterImportedMultivectorsFromExport(final String content, final Set<String> importedMVs) throws Exception {
