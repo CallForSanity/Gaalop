@@ -141,9 +141,11 @@ public class CompressedVisitor extends de.gaalop.gaalet.output.CppVisitor {
             final String componentName = name + '[' + pos + ']';
             if (gcdMetaInfo) {
                 code.append("//#pragma gcd multivector_component ");
-                code.append(componentName);
+                code.append(component.getName());                
                 code.append(' ');
                 code.append(component.getBladeName());
+                code.append(' ');
+                code.append(componentName);
                 code.append('\n');
             }
 
