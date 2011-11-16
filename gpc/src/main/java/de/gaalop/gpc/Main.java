@@ -40,6 +40,9 @@ public class Main {
             assert (pos > 0);
             inputFileDir = inputFilePath.substring(0, pos + 1);
         }
+        
+        // process line by line
+        Map<String, Map<String,String>> mvComponents = new HashMap<String, Map<String,String>>();
         BufferedWriter outputFile = createFileOutputStringStream(outputFilePath);
         final BufferedReader inputFile = createFileInputStringStream(inputFilePath);
         Integer gaalopFileCount = 0;
@@ -58,7 +61,7 @@ public class Main {
                 writeLinePragma(outputFile, lineCount++); // we skipped gcd begin line
 
                 // merge optimized code
-                outputFile.write(gaalopOutFileVector.get(gaalopFileCount++));
+                outputFile.write(gaalopOutFileVector.get(gaalopFileCount));
 
                 // skip original code
                 while ((line = inputFile.readLine()) != null) {
@@ -69,11 +72,23 @@ public class Main {
 
                 // line pragma for compile errors
                 writeLinePragma(outputFile, lineCount++); // we skipped gcd end line
+
+                // scan block
+                scanBlock(gaalopOutFileVector, gaalopFileCount, mvComponents);
+                
+                ++gaalopFileCount;
             } else if(line.indexOf(gpcMvGetBladeCoeff) >= 0) {
-                CommandParser cp = new CommandParser(line,inputFile,gpcMvGetBladeCoeff);
+                CommandReplacer cp = new CommandReplacer(line,inputFile,gpcMvGetBladeCoeff);
+                lineCount += cp.getLineCount();
                 
+                // get blade coeffe array entry
+                String bladeCoeff = mvComponents.get(cp.getCommandParams()[0]).get(cp.getCommandParams()[1]);
                 
-                outputFile.write();
+                // handle the case that this blade coeff is zero
+                if(bladeCoeff == null)
+                    bladeCoeff = "0.0f";
+                
+                outputFile.write(cp.replace(bladeCoeff));
                 outputFile.write(LINE_END);
             } else {
                 outputFile.write(line);
@@ -90,58 +105,20 @@ public class Main {
         
         // process gaalop files - call gaalop
         // imported multivector components
-        Map<String, List<MvComponent>> mvComponents = new HashMap<String, List<MvComponent>>();
+        Map<String, Map<String,String>> mvComponents = new HashMap<String, Map<String,String>>();
         Vector<String> gaalopOutFileVector = new Vector<String>();
         for (int gaalopFileCount = 0; gaalopFileCount < gaalopInFileVector.size(); ++gaalopFileCount) {
 
             // import declarations
             StringBuffer variableDeclarations = new StringBuffer();
 
-            // retrieve multivectors from previous section
+            // retrieve multivectors from previous block
             if (gaalopFileCount > 0) {
-                BufferedReader gaalopOutFile = new BufferedReader(new StringReader(gaalopOutFileVector.get(gaalopFileCount - 1)));
-
-                while ((line = gaalopOutFile.readLine()) != null) {
-                    // retrieve multivector declarations
-                    {
-                        final int statementPos = line.indexOf(mvSearchString);
-                        if (statementPos >= 0) {
-                            final String mvName = line.substring(statementPos
-                                    + mvSearchString.length());
-                            mvComponents.put(mvName, new ArrayList<MvComponent>());
-                        }
-                    }
-
-                    // retrieve multivector component declarations
-                    {
-                        final int statementPos = line.indexOf(mvCompSearchString);
-
-                        if (statementPos >= 0) {
-                            final Scanner lineStream = new Scanner(line.substring(statementPos
-                                    + mvCompSearchString.length()));
-
-                            final String mvName = lineStream.next();
-                            MvComponent mvComp = new MvComponent();
-                            mvComp.bladeCoeffName = lineStream.next();
-                            mvComp.bladeName = lineStream.next();
-
-                            mvComponents.get(mvName).add(mvComp);
-                        }
-                    }
-                }
-
+                // scan previous block
+                scanBlock(gaalopOutFileVector, gaalopFileCount-1, mvComponents);
+                
                 // generate import declarations
-                for (final String mvName : mvComponents.keySet()) {
-                    variableDeclarations.append(mvName).append(" = 0");
-
-                    for (final MvComponent mvComp : mvComponents.get(mvName)) {
-                        final String hashedBladeCoeff = NameTable.getInstance().createKey(mvComp.bladeCoeffName);
-                        variableDeclarations.append(" +").append(hashedBladeCoeff);
-                        variableDeclarations.append('*').append(mvComp.bladeName);
-                    }
-
-                    variableDeclarations.append(";\n");
-                }
+                generateImportDeclarations(mvComponents, variableDeclarations);
             }
 
             // run Gaalop
@@ -158,6 +135,7 @@ public class Main {
 
                 // Perform compilation
                 final InputFile inputFile = new InputFile("inputFile", inputFileStream.toString());
+                System.out.println(inputFile.getContent());
                 Set<OutputFile> outputFiles = compiler.compile(inputFile);
 
                 StringBuffer gaalopOutFileStream = new StringBuffer();
@@ -172,6 +150,50 @@ public class Main {
             }
         }
         return gaalopOutFileVector;
+    }
+
+    protected void generateImportDeclarations(Map<String, Map<String, String>> mvComponents, StringBuffer variableDeclarations) {
+        // generate import declarations
+        for (final Entry<String,Map<String,String>> mv : mvComponents.entrySet()) {
+            variableDeclarations.append(mv.getKey()).append(" = 0");
+
+            for (final Entry<String,String> mvComp : mv.getValue().entrySet()) {
+                final String hashedBladeCoeff = NameTable.getInstance().add(mvComp.getValue());
+                variableDeclarations.append(" +").append(hashedBladeCoeff);
+                variableDeclarations.append('*').append(mvComp.getKey());
+            }
+
+            variableDeclarations.append(";\n");
+        }
+    }
+
+    protected void scanBlock(Vector<String> gaalopOutFileVector, int gaalopFileNumber, Map<String, Map<String,String>> mvComponents) throws IOException {
+        String line;
+        BufferedReader gaalopOutFile = new BufferedReader(new StringReader(gaalopOutFileVector.get(gaalopFileNumber)));
+        while ((line = gaalopOutFile.readLine()) != null) {
+            // retrieve multivector declarations
+            {
+                final int statementPos = line.indexOf(mvSearchString);
+                if (statementPos >= 0) {
+                    final String mvName = line.substring(statementPos
+                            + mvSearchString.length());
+                    mvComponents.put(mvName, new HashMap<String,String>());
+                }
+            }
+
+            // retrieve multivector component declarations
+            {
+                final int statementPos = line.indexOf(mvCompSearchString);
+
+                if (statementPos >= 0) {
+                    final Scanner lineStream = new Scanner(line.substring(statementPos
+                            + mvCompSearchString.length()));
+
+                    // read and save mvName mvBladeCoeffName bladeName
+                    mvComponents.get(lineStream.next()).put(lineStream.next(), lineStream.next());
+                }
+            }
+        }
     }
 
     protected List<String> readInputFile() throws IOException {
@@ -340,7 +362,7 @@ public class Main {
         String line;
         while ((line = inStream.readLine()) != null) {
             for(Entry<String,String> entry : NameTable.getInstance().getTable().entrySet())
-                line.replaceAll(entry.getKey(),entry.getValue());
+                line = line.replace(entry.getKey(),entry.getValue());
             
             outStream.append(line).append(LINE_END);
         }

@@ -10,5 +10,5 @@ int main() {
 	?b = a + 5;
 #pragma gcd end
 
-	return !(b_SCALAR == 10.0f);
+	return !(mv_get_bladecoeff(b,1) == 10.0f);
 }

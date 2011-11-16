@@ -20,7 +20,7 @@
                 <include>de.gaalop:maple</include>
                 <include>de.gaalop:tba</include>
 		<include>de.gaalop:gapp</include>
-                <include>de.gaalop:gcd</include>
+                <include>de.gaalop:gpc</include>
             </includes>
             <binaries>
                 <outputDirectory>plugins</outputDirectory>

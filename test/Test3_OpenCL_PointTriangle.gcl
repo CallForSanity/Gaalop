@@ -108,18 +108,14 @@ __kernel void pointTriangleTest(__global bool* collision,
 #pragma gcd end
 	collision[id] = true;
 
-	const float d_ = getMvComp(d,d_usage,SCALAR);
-	const float d1_ = getMvComp(d1,d1_usage,SCALAR);
-	const float d2_ = getMvComp(d2,d2_usage,SCALAR);
-	const float d3_ = getMvComp(d3,d3_usage,SCALAR);
+	const float d_ = mv_get_bladecoeff(d,1);
+	const float d1_ = mv_get_bladecoeff(d1,1);
+	const float d2_ = mv_get_bladecoeff(d2,1);
+	const float d3_ = mv_get_bladecoeff(d3,1);
 	if(d_*d_ > h*h ||
 	   d1_ <= 0.0f && d2_ <= 0.0f && d3_ <= 0.0f ||
 	   d1_ >= 0.0f && d2_ >= 0.0f && d3_ >= 0.0f)
   		collision[id] = true;
 	else
 		collision[id] = false;
-
-#pragma gcd begin
-	?test = normal_;
-#pragma gcd end
 }

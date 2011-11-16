@@ -1,19 +1,3 @@
-float getMvComp(const float* mv,const unsigned int usageDescriptor,const unsigned int idx)
-{
-	unsigned int cnt = 0;
-	for(unsigned int counter = 0; counter <= idx; ++counter)
-	{
-		if(usageDescriptor & (1 << counter))
-		{
-			if(idx == counter)
-				return mv[cnt];
-			++cnt;
-		}
-	}
-
-	return 0.0f;
-}
-
 __kernel void grasping(__global float* finalPosition,
 		__global float* targetPosition,
 		__global const float* gripper,
@@ -64,7 +48,7 @@ __kernel void grasping(__global float* finalPosition,
 #pragma gcd end
 
 	// magnitude of dirvec
-	const float mag = sqrt(fabs(dirvec_abs_SCALAR));
+	const float mag = sqrt(fabs(mv_get_bladecoeff(dirvec_abs,1)));
 
 #pragma gcd begin
 	// apex point
@@ -96,7 +80,7 @@ __kernel void grasping(__global float* finalPosition,
 #pragma gcd end
 
 	// magnitude of l_T
-	const float d = sqrt(fabs(l_T_abs_SCALAR));
+	const float d = sqrt(fabs(mv_get_bladecoeff(l_T_abs,1)));
 
 #pragma gcd begin
 	// normalized translation axis
@@ -113,11 +97,11 @@ __kernel void grasping(__global float* finalPosition,
 	?inner_lt_lh = l_t . l_h;
 #pragma gcd end
 
-	const float abs_lh = sqrt(fabs(l_h_abs_SCALAR));
-	const float abs_lt = sqrt(fabs(l_t_abs_SCALAR));
-	const float abs_lRd = sqrt(fabs(l_R_d_abs_SCALAR));
+	const float abs_lh = sqrt(fabs(mv_get_bladecoeff(l_h_abs,1)));
+	const float abs_lt = sqrt(fabs(mv_get_bladecoeff(l_t_abs,1)));
+	const float abs_lRd = sqrt(fabs(mv_get_bladecoeff(l_R_d_abs,1)));
 
-	const float phi = acos(inner_lt_lh_SCALAR / (abs_lh*abs_lt));
+	const float phi = acos(mv_get_bladecoeff(inner_lt_lh,1) / (abs_lh*abs_lt));
 	const float cos_phi = cos(0.5*phi);
 	const float sin_phi = sin(0.5*phi);
 
@@ -136,7 +120,7 @@ __kernel void grasping(__global float* finalPosition,
 
 	// copy output variables
 	for(unsigned int i = 0; i < 32; ++i) {
-		targetPosition[i] = getMvComp(z_t,z_t_usage,i);
-		finalPosition[i] = getMvComp(z_h_new,z_h_new_usage,i);
+		//targetPosition[i] = getMvComp(z_t,z_t_usage,i);
+		//finalPosition[i] = getMvComp(z_h_new,z_h_new_usage,i);
 	}
 }

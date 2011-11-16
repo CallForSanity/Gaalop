@@ -28,7 +28,7 @@
 	<module>codegen-gapp</module>
 	<module>codegen-gappopencl</module>
 
-        <module>gcd</module>
+        <module>gpc</module>
         <module>starter</module>
     </modules>
 
