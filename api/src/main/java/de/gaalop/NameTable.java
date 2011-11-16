@@ -21,7 +21,7 @@ public class NameTable {
 	/**
 	 * describes if the name table is used or just the true variable name.
 	 */
-	private static boolean use; 
+	private static boolean use = true; 
 
 
 	private Map <String, String> table;
