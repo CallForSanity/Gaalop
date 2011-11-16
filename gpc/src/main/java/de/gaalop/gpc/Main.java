@@ -25,6 +25,7 @@ import java.util.Vector;
  *
  */
 public class Main {
+    protected static final String gpcZero = "0.0f";
 
     protected void composeOutputFile(Vector<String> gaalopOutFileVector) throws IOException {
         String line;
@@ -81,14 +82,42 @@ public class Main {
                 CommandReplacer cp = new CommandReplacer(line,inputFile,gpcMvGetBladeCoeff);
                 lineCount += cp.getLineCount();
                 
-                // get blade coeffe array entry
+                // get blade coeff array entry
                 String bladeCoeff = mvComponents.get(cp.getCommandParams()[0]).get(cp.getCommandParams()[1]);
                 
                 // handle the case that this blade coeff is zero
                 if(bladeCoeff == null)
-                    bladeCoeff = "0.0f";
+                    bladeCoeff = gpcZero;
                 
                 outputFile.write(cp.replace(bladeCoeff));
+                outputFile.write(LINE_END);
+            } else if(line.indexOf(gpcMvToArray) >= 0) {
+                String array = "";
+                
+                CommandReplacer cp = new CommandReplacer(line,inputFile,gpcMvToArray);
+                lineCount += cp.getLineCount();
+                
+                Iterator<String> it = new ArrayIterator(cp.getCommandParams());
+                final String mv = it.next();
+                int count = 0;
+                while(it.hasNext()) {
+                    outputFile.write(array);
+                    outputFile.write('[');
+                    outputFile.write(count++);
+                    outputFile.write(']');
+                    outputFile.write(" = ");                    
+                    
+                    // get blade coeff array entry
+                    String bladeCoeff = mvComponents.get(it.next()).get(cp.getCommandParams()[1]);
+                
+                    // handle the case that this blade coeff is zero
+                    if(bladeCoeff == null)
+                        bladeCoeff = gpcZero;
+                    
+                    outputFile.write(bladeCoeff);                                        
+                    outputFile.write(";\n");
+                }
+                
                 outputFile.write(LINE_END);
             } else {
                 outputFile.write(line);
@@ -234,11 +263,6 @@ public class Main {
         outputFile.write(inputFilePath);
         outputFile.write("\"\n");
     }
-
-    class MvComponent {
-        String bladeCoeffName;
-        String bladeName;
-    };
     
     private Log log = LogFactory.getLog(Main.class);
     

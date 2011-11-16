@@ -56,6 +56,10 @@ public class CommandReplacer {
         // split into params
         commandParams = argsBuffer.toString().split(",");
         
+        // trim params
+        for(String param : commandParams)
+            param.trim();
+        
         // end cleanedLine
         cleanedLineEnd = line.substring(pos);
     }

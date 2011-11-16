@@ -2,56 +2,81 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   
-  <modelVersion>4.0.0</modelVersion>
+    <modelVersion>4.0.0</modelVersion>
   
-  <groupId>de.gaalop</groupId>
+    <groupId>de.gaalop</groupId>
   
-  <artifactId>gpc</artifactId>
+    <artifactId>gpc</artifactId>
   
-  <packaging>jar</packaging>
+    <packaging>jar</packaging>
   
-  <version>1.0.0</version>
+    <version>1.0.0</version>
   
-  <name>Gaalop Precompiler</name>
+    <name>Gaalop Precompiler</name>
   
-  <url>http://maven.apache.org</url>
+    <url>http://maven.apache.org</url>
   
-  <parent>
-          <artifactId>gaalop</artifactId>
-          <groupId>de.gaalop</groupId>
-          <version>1.0.0</version>
+    <parent>
+        <artifactId>gaalop</artifactId>
+        <groupId>de.gaalop</groupId>
+        <version>1.0.0</version>
     </parent>
     
-  <dependencies>
-    <dependency>
-    	<groupId>de.gaalop</groupId>
-    	<artifactId>api</artifactId>
-    	<version>1.0.0</version>
-    </dependency>
-    <dependency>
-      <groupId>de.gaalop</groupId>
-      <artifactId>maple</artifactId>
-      <version>1.0.0</version>
-      <type>jar</type>
-    </dependency>
-    <dependency>
-      <groupId>de.gaalop</groupId>
-      <artifactId>tba</artifactId>
-      <version>1.0.0</version>
-      <type>jar</type>
-    </dependency>
-    <dependency>
-      <groupId>de.gaalop</groupId>
-      <artifactId>codegen-cpp</artifactId>
-      <version>1.0.0</version>
-      <type>jar</type>
-    </dependency>
-    <dependency>
-      <groupId>args4j</groupId>
-      <artifactId>args4j</artifactId>
-      <version>2.0.9</version>
-      <type>jar</type>
-    </dependency>
-  </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.antlr</groupId>
+                <artifactId>antlr3-maven-plugin</artifactId>
+                <version>3.1.1.2</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>antlr</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <!--
+                      This configuration is required to use the tokenVocab directive in ANTLR.
+                      Otherwise the .token files will not be found.
+                      See http://mojo.codehaus.org/antlr3-maven-plugin/examples/tokenVocab.html
+                    -->
+                    <libDirectory>target/generated-sources/antlr/de/gaalop/gpc/input</libDirectory>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+	    
+    <dependencies>
+        <dependency>
+            <groupId>de.gaalop</groupId>
+            <artifactId>api</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>de.gaalop</groupId>
+            <artifactId>maple</artifactId>
+            <version>1.0.0</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>de.gaalop</groupId>
+            <artifactId>tba</artifactId>
+            <version>1.0.0</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>de.gaalop</groupId>
+            <artifactId>codegen-cpp</artifactId>
+            <version>1.0.0</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>args4j</groupId>
+            <artifactId>args4j</artifactId>
+            <version>2.0.9</version>
+            <type>jar</type>
+        </dependency>
+    </dependencies>
 </project>
 
