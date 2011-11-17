@@ -10,5 +10,8 @@ int main() {
 	?b = a + 5;
 #pragma gcd end
 
+	float array[10];
+	array = mv_to_array(b,1);
+
 	return !(mv_get_bladecoeff(b,1) == 10.0f);
 }

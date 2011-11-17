@@ -41,7 +41,7 @@
                       Otherwise the .token files will not be found.
                       See http://mojo.codehaus.org/antlr3-maven-plugin/examples/tokenVocab.html
                     -->
-                    <libDirectory>target/generated-sources/antlr/de/gaalop/gpc/input</libDirectory>
+                    <libDirectory>target/generated-sources/antlr/de/gaalop/gpc</libDirectory>
                 </configuration>
             </plugin>
         </plugins>

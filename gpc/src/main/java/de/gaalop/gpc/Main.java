@@ -1,6 +1,10 @@
 package de.gaalop.gpc;
 
 import de.gaalop.*;
+import de.gaalop.cfg.AssignmentNode;
+import de.gaalop.dfg.Expression;
+import de.gaalop.dfg.MacroCall;
+import org.antlr.runtime.RecognitionException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.kohsuke.args4j.CmdLineException;
@@ -17,6 +21,9 @@ import java.util.Map.Entry;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.Vector;
+import org.antlr.runtime.ANTLRStringStream;
+import org.antlr.runtime.CommonTokenStream;
+import org.antlr.runtime.tree.CommonTreeNodeStream;
 
 /**
  * Main class of the Gaalop command line interface. Arguments are parsed using the args4j plugin.
@@ -27,7 +34,7 @@ import java.util.Vector;
 public class Main {
     protected static final String gpcZero = "0.0f";
 
-    protected void composeOutputFile(Vector<String> gaalopOutFileVector) throws IOException {
+    protected void composeOutputFile(Vector<String> gaalopOutFileVector) throws IOException, RecognitionException {
         String line;
         // log
         System.out.println("writing");
@@ -83,50 +90,192 @@ public class Main {
                 lineCount += cp.getLineCount();
                 
                 // get blade coeff array entry
-                String bladeCoeff = mvComponents.get(cp.getCommandParams()[0]).get(cp.getCommandParams()[1]);
+                String bladeCoeffArrayEntry = getMvBladeCoeffArrayEntry(mvComponents,
+                                                                    cp.getCommandParams()[0],
+                                                                    cp.getCommandParams()[1]);
                 
-                // handle the case that this blade coeff is zero
-                if(bladeCoeff == null)
-                    bladeCoeff = gpcZero;
-                
-                outputFile.write(cp.replace(bladeCoeff));
+                outputFile.write(cp.replace(bladeCoeffArrayEntry));
                 outputFile.write(LINE_END);
-            } else if(line.indexOf(gpcMvToArray) >= 0) {
-                String array = "";
-                
-                CommandReplacer cp = new CommandReplacer(line,inputFile,gpcMvToArray);
-                lineCount += cp.getLineCount();
-                
-                Iterator<String> it = new ArrayIterator(cp.getCommandParams());
-                final String mv = it.next();
-                int count = 0;
-                while(it.hasNext()) {
-                    outputFile.write(array);
-                    outputFile.write('[');
-                    outputFile.write(count++);
-                    outputFile.write(']');
-                    outputFile.write(" = ");                    
-                    
-                    // get blade coeff array entry
-                    String bladeCoeff = mvComponents.get(it.next()).get(cp.getCommandParams()[1]);
-                
-                    // handle the case that this blade coeff is zero
-                    if(bladeCoeff == null)
-                        bladeCoeff = gpcZero;
-                    
-                    outputFile.write(bladeCoeff);                                        
-                    outputFile.write(";\n");
-                }
-                
-                outputFile.write(LINE_END);
-            } else {
+            } else if(line.indexOf(gpcMvToArray) >= 0)
+                lineCount = processMvToArray(line, inputFile, outputFile, mvComponents, lineCount); 
+            else if(line.indexOf(gpcMvToStridedArray) >= 0)
+                lineCount = processMvToStridedArray(line, inputFile, outputFile, mvComponents, lineCount); 
+            else if(line.indexOf(gpcMvToVec) >= 0)
+                lineCount = processMvToVec(line, inputFile, outputFile, mvComponents, lineCount); 
+            else if(line.indexOf(gpcMvToVecArray) >= 0)
+                lineCount = processMvToVecArray(line, inputFile, outputFile, mvComponents, lineCount); 
+            else {
                 outputFile.write(line);
                 outputFile.write(LINE_END);
-                ++lineCount; // we wrote one line
+                ++lineCount; // we read one line
             }
         }
         // close output file
         outputFile.close();
+    }
+
+    protected String getMvBladeCoeffArrayEntry(Map<String, Map<String, String>> mvComponents, final String mv, final String blade) {
+        // get blade coeff array entry
+        String bladeCoeffArrayEntry = mvComponents.get(mv).get(blade);
+        // handle the case that this blade coeff is zero
+        if(bladeCoeffArrayEntry == null)
+            bladeCoeffArrayEntry = gpcZero;
+        return bladeCoeffArrayEntry;
+    }
+
+    protected Integer processMvToArray(String line, final BufferedReader inputFile, BufferedWriter outputFile, Map<String, Map<String, String>> mvComponents, Integer lineCount) throws RecognitionException, IOException {
+        // read until end of statement
+        String statement = readUntilEndOfStatement(line, inputFile);
+        // parse assignment
+        AssignmentNode assignment = parseAssignment(statement);
+        // get array name
+        String array = assignment.getVariable().getName();
+        // print array assignments
+        Iterator<Expression> it = ((MacroCall)assignment.getValue()).getArguments().iterator();
+        final String mv = it.next().toString();
+        Integer count = 0;
+        while(it.hasNext()) {
+            outputFile.write(array);
+            outputFile.write('[');
+            outputFile.write((count++).toString());
+            outputFile.write(']');
+            outputFile.write(" = ");                    
+            outputFile.write(getMvBladeCoeffArrayEntry(mvComponents,
+                                                       mv,
+                                                       it.next().toString()));                                        
+            outputFile.write(";\n");
+        }
+        outputFile.write(LINE_END);
+        ++lineCount; // we read one line
+        return lineCount;
+    }
+
+    protected Integer processMvToStridedArray(String line, final BufferedReader inputFile, BufferedWriter outputFile, Map<String, Map<String, String>> mvComponents, Integer lineCount) throws RecognitionException, IOException {
+        // read until end of statement
+        String statement = readUntilEndOfStatement(line, inputFile);
+        // parse assignment
+        AssignmentNode assignment = parseAssignment(statement);
+        // get array name
+        String array = assignment.getVariable().getName();
+        // print array assignments
+        Iterator<Expression> it = ((MacroCall)assignment.getValue()).getArguments().iterator();
+        final String mv = it.next().toString();
+        final int stride = Integer.parseInt(it.next().toString());
+        Integer index = 0;
+        while(it.hasNext()) {
+            outputFile.write(array);
+            outputFile.write('[');
+            outputFile.write(index.toString());
+            outputFile.write(']');
+            outputFile.write(" = ");                    
+            
+            // update index
+            index+=stride;
+
+            outputFile.write(getMvBladeCoeffArrayEntry(mvComponents,
+                                                       mv,
+                                                       it.next().toString()));                                        
+            outputFile.write(";\n");
+        }
+        outputFile.write(LINE_END);
+        ++lineCount; // we read one line
+        return lineCount;
+    }
+    
+    protected String getOpenCLIndex(Integer index) {
+        if(index < 10)
+            return index.toString();
+        else switch(index) {
+            case 10:
+                return "a";
+            case 11:
+                return "b";
+            case 12:
+                return "c";
+            case 13:
+                return "d";
+            case 14:
+                return "e";
+            case 15:
+                return "f";
+        }
+        
+        assert(false);
+        return "fail";
+    }
+
+    protected Integer processMvToVec(String line, final BufferedReader inputFile, BufferedWriter outputFile, Map<String, Map<String, String>> mvComponents, Integer lineCount) throws RecognitionException, IOException {
+        // read until end of statement
+        String statement = readUntilEndOfStatement(line, inputFile);
+        // parse assignment
+        AssignmentNode assignment = parseAssignment(statement);
+        // get array name
+        final String vec = assignment.getVariable().getName();
+        // print array assignments
+        Iterator<Expression> it = ((MacroCall)assignment.getValue()).getArguments().iterator();
+        final String mv = it.next().toString();
+        outputFile.write(vec);
+        outputFile.write(" = make_float4(");
+        outputFile.write(getMvBladeCoeffArrayEntry(mvComponents,
+                                                   mv,
+                                                   "e1"));                                        
+        outputFile.write(getMvBladeCoeffArrayEntry(mvComponents,
+                                                   mv,
+                                                   "e2"));                                        
+        outputFile.write(getMvBladeCoeffArrayEntry(mvComponents,
+                                                   mv,
+                                                   "e3"));                                        
+        outputFile.write(",0);\n");
+        ++lineCount; // we read one line
+        return lineCount;
+    }
+
+    protected Integer processMvToVecArray(String line, final BufferedReader inputFile, BufferedWriter outputFile, Map<String, Map<String, String>> mvComponents, Integer lineCount) throws RecognitionException, IOException {
+        // read until end of statement
+        String statement = readUntilEndOfStatement(line, inputFile);
+        // parse assignment
+        AssignmentNode assignment = parseAssignment(statement);
+        // get array name
+        String vec = assignment.getVariable().getName();
+        // print array assignments
+        Iterator<Expression> it = ((MacroCall)assignment.getValue()).getArguments().iterator();
+        final String mv = it.next().toString();
+        int count = 0;
+        while(it.hasNext()) {
+            outputFile.write(vec);
+            outputFile.write(".s"); // TODO recognize vector size and assign with make_float
+            outputFile.write(getOpenCLIndex(count++));
+            outputFile.write(" = ");
+            outputFile.write(getMvBladeCoeffArrayEntry(mvComponents,
+                                                       mv,
+                                                       it.next().toString()));                                        
+            outputFile.write(";\n");
+        }
+        outputFile.write(LINE_END);
+        ++lineCount; // we read one line
+        return lineCount;
+    }
+
+    protected String readUntilEndOfStatement(String line, final BufferedReader inputFile) throws IOException {
+        // read until end of statement
+        StringBuffer statementBuffer = new StringBuffer();
+        statementBuffer.append(line).append(LINE_END);
+        while((line = inputFile.readLine()) != null && !line.contains(";"))
+            statementBuffer.append(line).append(LINE_END);
+        
+        return statementBuffer.toString();
+    }
+
+    protected AssignmentNode parseAssignment(String line) throws RecognitionException {
+        ANTLRStringStream inputStream = new ANTLRStringStream(line);
+        GPCLexer lexer = new GPCLexer(inputStream);
+        CommonTokenStream tokenStream = new CommonTokenStream(lexer);
+        GPCParser parser = new GPCParser(tokenStream);
+        GPCParser.program_return parserResult = parser.program();
+        CommonTreeNodeStream treeNodeStream = new CommonTreeNodeStream(parserResult.getTree());
+        GPCTransformer transformer = new GPCTransformer(treeNodeStream);
+        AssignmentNode assignment = transformer.assignment();
+        return assignment;
     }
 
     protected Vector<String> processOptimizationBlocks(List<String> gaalopInFileVector) throws Exception {
@@ -289,6 +438,8 @@ public class Main {
     private static final String gpcMvGetBladeCoeff = "mv_get_bladecoeff";
     private static final String gpcMvToArray = "mv_to_array";
     private static final String gpcMvToStridedArray = "mv_to_stridedarray";
+    private static final String gpcMvToVec = "mv_to_vec";
+    private static final String gpcMvToVecArray = "mv_to_vecarray";
     
     private static final String mvSearchString = "//#pragma gcd multivector ";
     private static final String mvCompSearchString = "//#pragma gcd multivector_component ";
@@ -305,7 +456,7 @@ public class Main {
         CmdLineParser parser = new CmdLineParser(main);
         try {
             parser.parseArgument(args);
-            main.runGCD();
+            main.runGPC();
         } catch (CmdLineException e) {
             System.err.println(e.getMessage());
             parser.printUsage(System.err);
@@ -338,7 +489,7 @@ public class Main {
         }
     }
 
-    public void runGCD() throws Exception {
+    public void runGPC() throws Exception {
 
         // read input file and split into optimization blocks
         List<String> gaalopInFileVector = readInputFile();
