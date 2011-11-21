@@ -53,11 +53,18 @@ public class Main {
         Map<String, Map<String,String>> mvComponents = new HashMap<String, Map<String,String>>();
         BufferedWriter outputFile = createFileOutputStringStream(outputFilePath);
         final BufferedReader inputFile = createFileInputStringStream(inputFilePath);
-        Integer gaalopFileCount = 0;
+        StringBuffer commandBuffer = new StringBuffer();
+        Integer gaalopBlockCount = 0;
         Integer lineCount = 1;
         writeLinePragma(outputFile, lineCount++);
         while ((line = inputFile.readLine()) != null) {
-            if (line.indexOf("#include") >= 0 && line.indexOf('\"') >= 0) {
+            
+            // parse line commands first
+            if (line.indexOf("#include") >= 0 && line.indexOf('\"') >= 0) { // TODO parse this with ANTLR
+                // flush command buffer first
+                outputFile.append(commandBuffer.toString());
+                commandBuffer = new StringBuffer();
+                
                 final int pos = line.indexOf('\"') + 1;
                 outputFile.write(line.substring(0, pos));
                 outputFile.write(inputFileDir);
@@ -65,11 +72,15 @@ public class Main {
                 outputFile.write(LINE_END);
             } // found gaalop line - insert intermediate gaalop file
             else if (line.indexOf(gpcBegin) >= 0) {
+                // flush command buffer first
+                outputFile.append(commandBuffer.toString());
+                commandBuffer = new StringBuffer();
+
                 // line pragma for compile errors
                 writeLinePragma(outputFile, lineCount++); // we skipped gcd begin line
 
                 // merge optimized code
-                outputFile.write(gaalopOutFileVector.get(gaalopFileCount));
+                outputFile.write(gaalopOutFileVector.get(gaalopBlockCount));
 
                 // skip original code
                 while ((line = inputFile.readLine()) != null) {
@@ -82,33 +93,71 @@ public class Main {
                 writeLinePragma(outputFile, lineCount++); // we skipped gcd end line
 
                 // scan block
-                scanBlock(gaalopOutFileVector, gaalopFileCount, mvComponents);
+                scanBlock(gaalopOutFileVector, gaalopBlockCount, mvComponents);
                 
-                ++gaalopFileCount;
-            } else if(line.indexOf(gpcMvGetBladeCoeff) >= 0) {
-                CommandReplacer cp = new CommandReplacer(line,inputFile,gpcMvGetBladeCoeff);
-                lineCount += cp.getLineCount();
+                ++gaalopBlockCount;
+            } else { // non-line commands
+                // search for command end
+                int commandEnd = line.indexOf(";");
+                if (commandEnd < 0)
+                    commandEnd = line.indexOf("}");
+                else if (commandEnd < 0)
+                    commandEnd = line.indexOf("{");
+
+                // fill command buffer
+                if (commandEnd >= 0) { // we found a command end
+                    // fill buffer until command end
+                    commandBuffer.append(line.substring(0,commandEnd+1));
+                    final String command = commandBuffer.toString();
                 
-                // get blade coeff array entry
-                String bladeCoeffArrayEntry = getMvBladeCoeffArrayEntry(mvComponents,
-                                                                    cp.getCommandParams()[0],
-                                                                    cp.getCommandParams()[1]);
-                
-                outputFile.write(cp.replace(bladeCoeffArrayEntry));
-                outputFile.write(LINE_END);
-            } else if(line.indexOf(gpcMvToArray) >= 0)
-                lineCount = processMvToArray(line, inputFile, outputFile, mvComponents, lineCount); 
-            else if(line.indexOf(gpcMvToStridedArray) >= 0)
-                lineCount = processMvToStridedArray(line, inputFile, outputFile, mvComponents, lineCount); 
-            else if(line.indexOf(gpcMvToVec) >= 0)
-                lineCount = processMvToVec(line, inputFile, outputFile, mvComponents, lineCount); 
-            else if(line.indexOf(gpcMvToVecArray) >= 0)
-                lineCount = processMvToVecArray(line, inputFile, outputFile, mvComponents, lineCount); 
-            else {
-                outputFile.write(line);
-                outputFile.write(LINE_END);
-                ++lineCount; // we read one line
+                    // we found a command end, start new command by emptying buffer
+                    commandBuffer = new StringBuffer();
+                    
+                    // rest of line is start of new command buffer
+                    if(commandEnd < line.length())
+                        commandBuffer.append(line.substring(commandEnd+1)).append(LINE_END);
+                            
+                    // search for keywords in command and parse the command
+                    if (command.indexOf(gpcMvGetBladeCoeff) >= 0) {
+                        int pos = 0;
+                        
+                        do {
+                            CommandReplacer cp = new CommandReplacer(
+                                    command.substring(pos),
+                                    gpcMvGetBladeCoeff);
+
+                            // get blade coeff array entry
+                            final String bladeCoeffArrayEntry = getMvBladeCoeffArrayEntry(
+                                    mvComponents,
+                                    cp.getCommandParams()[0],
+                                    cp.getCommandParams()[1]);
+
+                            outputFile.write(cp.replace(bladeCoeffArrayEntry));
+                            
+                            // search for further occurences
+                            pos = command.indexOf(gpcMvGetBladeCoeff,
+                                                  pos+gpcMvGetBladeCoeff.length());
+                        } while(pos >= 0);
+                    } else if (command.indexOf(gpcMvToArray) >= 0) {
+                        processMvToArray(command, outputFile, mvComponents);
+                    } else if (command.indexOf(gpcMvToStridedArray) >= 0) {
+                        processMvToStridedArray(command, outputFile, mvComponents);
+                    } else if (command.indexOf(gpcMvToVec) >= 0) {
+                        processMvToVec(command, outputFile, mvComponents);
+                    } else if (command.indexOf(gpcMvToVecArray) >= 0) {
+                        processMvToVecArray(command, outputFile, mvComponents);
+                    } else {
+                        outputFile.write(command);
+                        //outputFile.write(commandBuffer.toString());
+                    }
+                } else { // no command end found
+                    // continue filling command buffer
+                    commandBuffer.append(line).append(LINE_END);
+                }
             }
+            
+            // we read one line
+            ++lineCount;
         }
         // close output file
         outputFile.close();
@@ -123,11 +172,9 @@ public class Main {
         return bladeCoeffArrayEntry;
     }
 
-    protected Integer processMvToArray(String line, final BufferedReader inputFile, BufferedWriter outputFile, Map<String, Map<String, String>> mvComponents, Integer lineCount) throws RecognitionException, IOException {
-        // read until end of statement
-        String statement = readUntilEndOfStatement(line, inputFile);
+    protected void processMvToArray(final String command, BufferedWriter outputFile, Map<String, Map<String, String>> mvComponents) throws RecognitionException, IOException {
         // parse assignment
-        AssignmentNode assignment = parseAssignment(statement);
+        AssignmentNode assignment = parseAssignment(command);
         // get array name
         String array = assignment.getVariable().getName();
         // print array assignments
@@ -146,17 +193,13 @@ public class Main {
             outputFile.write(";\n");
         }
         outputFile.write(LINE_END);
-        ++lineCount; // we read one line
-        return lineCount;
     }
 
-    protected Integer processMvToStridedArray(String line, final BufferedReader inputFile, BufferedWriter outputFile, Map<String, Map<String, String>> mvComponents, Integer lineCount) throws RecognitionException, IOException {
-        // read until end of statement
-        String statement = readUntilEndOfStatement(line, inputFile);
+    protected void processMvToStridedArray(final String command, BufferedWriter outputFile, Map<String, Map<String, String>> mvComponents) throws RecognitionException, IOException {
         // parse assignment
-        AssignmentNode assignment = parseAssignment(statement);
-        // get array name
-        String array = assignment.getVariable().getName();
+        AssignmentNode assignment = parseAssignment(command);
+        // get array expression
+        final String array = assignment.getVariable().getName();
         // print array assignments
         Iterator<Expression> it = ((MacroCall)assignment.getValue()).getArguments().iterator();
         final String mv = it.next().toString();
@@ -178,8 +221,6 @@ public class Main {
             outputFile.write(";\n");
         }
         outputFile.write(LINE_END);
-        ++lineCount; // we read one line
-        return lineCount;
     }
     
     protected String getOpenCLIndex(Integer index) {
@@ -204,11 +245,9 @@ public class Main {
         return "fail";
     }
 
-    protected Integer processMvToVec(String line, final BufferedReader inputFile, BufferedWriter outputFile, Map<String, Map<String, String>> mvComponents, Integer lineCount) throws RecognitionException, IOException {
-        // read until end of statement
-        String statement = readUntilEndOfStatement(line, inputFile);
+    protected void processMvToVec(final String command, BufferedWriter outputFile, Map<String, Map<String, String>> mvComponents) throws RecognitionException, IOException {
         // parse assignment
-        AssignmentNode assignment = parseAssignment(statement);
+        AssignmentNode assignment = parseAssignment(command);
         // get array name
         final String vec = assignment.getVariable().getName();
         // print array assignments
@@ -226,15 +265,11 @@ public class Main {
                                                    mv,
                                                    "e3"));                                        
         outputFile.write(",0);\n");
-        ++lineCount; // we read one line
-        return lineCount;
     }
 
-    protected Integer processMvToVecArray(String line, final BufferedReader inputFile, BufferedWriter outputFile, Map<String, Map<String, String>> mvComponents, Integer lineCount) throws RecognitionException, IOException {
-        // read until end of statement
-        String statement = readUntilEndOfStatement(line, inputFile);
+    protected void processMvToVecArray(final String command, BufferedWriter outputFile, Map<String, Map<String, String>> mvComponents) throws RecognitionException, IOException {
         // parse assignment
-        AssignmentNode assignment = parseAssignment(statement);
+        AssignmentNode assignment = parseAssignment(command);
         // get array name
         String vec = assignment.getVariable().getName();
         // print array assignments
@@ -252,21 +287,9 @@ public class Main {
             outputFile.write(";\n");
         }
         outputFile.write(LINE_END);
-        ++lineCount; // we read one line
-        return lineCount;
     }
 
-    protected String readUntilEndOfStatement(String line, final BufferedReader inputFile) throws IOException {
-        // read until end of statement
-        StringBuffer statementBuffer = new StringBuffer();
-        statementBuffer.append(line).append(LINE_END);
-        while((line = inputFile.readLine()) != null && !line.contains(";"))
-            statementBuffer.append(line).append(LINE_END);
-        
-        return statementBuffer.toString();
-    }
-
-    protected AssignmentNode parseAssignment(String line) throws RecognitionException {
+    protected AssignmentNode parseAssignment(final String line) throws RecognitionException {
         ANTLRStringStream inputStream = new ANTLRStringStream(line);
         GPCLexer lexer = new GPCLexer(inputStream);
         CommonTokenStream tokenStream = new CommonTokenStream(lexer);

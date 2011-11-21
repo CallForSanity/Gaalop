@@ -18,31 +18,24 @@ public class CommandReplacer {
     private String cleanedLineStart;
     private String cleanedLineEnd;
     
-    public CommandReplacer(String line,
-                         final BufferedReader inputFile,
+    public CommandReplacer(final String command,
                          final String commandName) throws IOException {
-        // start cleaned line
-        int pos = line.indexOf(commandName);
+        // start cleaned command
+        int pos = command.indexOf(commandName);
         StringBuffer cleanedLineBuffer = new StringBuffer();
-        cleanedLineStart = line.substring(0, pos);
+        cleanedLineStart = command.substring(0, pos);
         
         // find params start
         pos += commandName.length();
-        pos = line.indexOf('(', pos) + 1;
+        pos = command.indexOf('(', pos) + 1;
         
         // find params
         StringBuffer argsBuffer = new StringBuffer();
         int level = 1;
         while(true) {
-            if(line.charAt(pos) == '\n') {
-                line = inputFile.readLine();
-                ++lineCount;
-                pos = 0;
-            }
-                        
-            if(line.charAt(pos) == '(')
+            if(command.charAt(pos) == '(')
                 ++level;
-            else if(line.charAt(pos) == ')')
+            else if(command.charAt(pos) == ')')
                 --level;
             
             if(level == 0) {
@@ -50,7 +43,7 @@ public class CommandReplacer {
                 break;
             }
             else
-                argsBuffer.append(line.charAt(pos++));
+                argsBuffer.append(command.charAt(pos++));
         }
         
         // split into params
@@ -61,11 +54,7 @@ public class CommandReplacer {
             param.trim();
         
         // end cleanedLine
-        cleanedLineEnd = line.substring(pos);
-    }
-    
-    public int getLineCount() {
-        return lineCount;
+        cleanedLineEnd = command.substring(pos);
     }
     
     public String[] getCommandParams() {
