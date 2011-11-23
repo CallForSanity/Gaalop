@@ -16,8 +16,6 @@ import java.util.Observable;
 public class Plugin extends Observable implements OptimizationStrategyPlugin {
 
     @ConfigurationProperty(type = Type.TEXT)
-    public String algebra = "5d"; //make conformal 5d to the standard algebra
-    @ConfigurationProperty(type = Type.TEXT)
     public String maximaCommand = ProcessBuilderMaximaConnection.CMD_MAXIMA_LINUX;
     
     /*
@@ -50,14 +48,6 @@ public class Plugin extends Observable implements OptimizationStrategyPlugin {
     void notifyError(Throwable error) {
         setChanged();
         notifyObservers(new Notifications.Error(error));
-    }
-
-    public String getAlgebra() {
-        return algebra;
-    }
-
-    public void setAlgebra(String algebra) {
-        this.algebra = algebra;
     }
 
     public boolean isOptMaxima() {

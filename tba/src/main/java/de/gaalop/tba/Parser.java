@@ -49,13 +49,13 @@ public class Parser {
      * @param algebra The current algebra
      * @return The parsed blade
      */
-    public static Blade parseBlade(String parse, Algebra algebra) {
+    public static Blade parseBlade(String parse) {
         Vector<String> bases = new Vector<String>();
         String[] parts = parse.split("\\^");
         for (String part : parts) {
             bases.add(part.trim());
         }
-        return new Blade(algebra, bases);
+        return new Blade(bases);
     }
 
     /**
@@ -64,9 +64,9 @@ public class Parser {
      * @param algebra The current algebra
      * @return The parsed blade
      */
-    public static Multivector parseMultivector(String parse, Algebra algebra) {
+    public static Multivector parseMultivector(String parse) {
         String trimmed = parse.trim();
-        Multivector result = new Multivector(algebra);
+        Multivector result = new Multivector();
 
         while (!trimmed.isEmpty()) {
             int index = -1;

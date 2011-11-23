@@ -39,7 +39,7 @@ public final class ControlFlowGraph {
 	private Set<Variable> scalarVariables = new HashSet<Variable>();
 	private Set<Variable> inputVariables = new HashSet<Variable>();
 
-	private AlgebraSignature signature;
+        private AlgebraDefinitionFile algebraDefinitionFile = new AlgebraDefinitionFile();
 
 	private final StartNode startNode;
 
@@ -57,13 +57,6 @@ public final class ControlFlowGraph {
 
 	private HashMap<String, String> pragmaMinValue = new HashMap<String, String>();
 	private HashMap<String, String> pragmaMaxValue = new HashMap<String, String>();
-
-	/**
-	 * This field contains a list of blades that correspond to the indices of a multi vector that is represented by an
-	 * array. This list can be modified, but whenever the underlying signature is changed, the blade list is
-	 * automatically regenerated to a sane value.
-	 */
-	private Expression[] bladeList;
 
 	public HashMap<String, String> getPragmaMaxValue() {
 		return pragmaMaxValue;
@@ -156,46 +149,6 @@ public final class ControlFlowGraph {
 		endNode = new EndNode(this);
 		startNode.setSuccessor(endNode);
 		endNode.addPredecessor(startNode);
-	}
-
-	/**
-	 * Gets the list of blades this control flow graph is using.
-	 * <p/>
-	 * Once the representation of multivectors has been lowered, this array can be used to identify the blades the
-	 * elements of a multivector array correspond to. This information can then be used to create a linear combination
-	 * of the array elements with the content of this array to reverse the lowering.
-	 * <p/>
-	 * In a new graph this is equal to the default blade list of the underlying algebra signature.
-	 * 
-	 * @return A modifyable array of dataflow graphs that each models a blade.
-	 * @see #getSignature()
-	 */
-	public Expression[] getBladeList() {
-		return bladeList;
-	}
-
-	/**
-	 * Gets the signature of the algebra used by this graph.
-	 * 
-	 * @return The algebra signature linked with this control flow graph.
-	 */
-	public AlgebraSignature getSignature() {
-		return signature;
-	}
-
-	/**
-	 * Changes the algebra signature associated with this control flow graph.
-	 * <p/>
-	 * This method will also change the blade list to the default blade list of the new algebra.
-	 * 
-	 * @param signature The new algebra signature that should be used.
-	 * @see #getBladeList()
-	 * @see AlgebraSignature#getDefaultBladeList()
-	 */
-	public void setSignature(AlgebraSignature signature) {
-		this.signature = signature;
-		this.bladeList = signature.getDefaultBladeList();
-		log.debug("Changing blade list to " + Arrays.toString(bladeList));
 	}
 
 	/**
@@ -509,4 +462,13 @@ public final class ControlFlowGraph {
 		}
 
 	}
+
+    public AlgebraDefinitionFile getAlgebraDefinitionFile() {
+        return algebraDefinitionFile;
+    }
+
+    public void setAlgebraDefinitionFile(AlgebraDefinitionFile algebraDefinitionFile) {
+        this.algebraDefinitionFile = algebraDefinitionFile;
+    }
+
 }

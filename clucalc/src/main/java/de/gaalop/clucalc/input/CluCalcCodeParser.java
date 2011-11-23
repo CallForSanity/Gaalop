@@ -4,6 +4,7 @@ import de.gaalop.CodeParser;
 import de.gaalop.CodeParserException;
 import de.gaalop.InputFile;
 import de.gaalop.cfg.ControlFlowGraph;
+import java.io.IOException;
 import org.antlr.runtime.ANTLRStringStream;
 import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.RecognitionException;
@@ -46,7 +47,7 @@ public enum CluCalcCodeParser implements CodeParser {
         return graph;
     }
 
-    private ControlFlowGraph parse(InputFile input) throws CodeParserException, RecognitionException {
+    private ControlFlowGraph parse(InputFile input) throws CodeParserException, RecognitionException, IOException {
         ANTLRStringStream inputStream = new ANTLRStringStream(input.getContent());
         CluCalcLexer lexer = new CluCalcLexer(inputStream);
         CommonTokenStream tokenStream = new CommonTokenStream(lexer);

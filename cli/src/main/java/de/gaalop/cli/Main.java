@@ -35,6 +35,9 @@ public class Main {
   @Option(name = "-optimizer", required = false, usage = "Sets the class name of the optimization strategy plugin that should be used.")
   private String optimizationStrategyPlugin = "de.gaalop.maple.Plugin";
 
+  @Option(name = "-algebra", required = false, usage = "Sets the class name of the algebra strategy plugin that should be used.")
+  private String algebraStrategyPlugin = "de.gaalop.algebra.Plugin";
+
   /**
    * Starts the command line interface of Gaalop.
    * 
@@ -94,11 +97,13 @@ public class Main {
   private CompilerFacade createCompiler() {
     CodeParser codeParser = createCodeParser();
 
+    AlgebraStrategy algebraStrategy = createAlgebraStrategy();
+
     OptimizationStrategy optimizationStrategy = createOptimizationStrategy();
 
     CodeGenerator codeGenerator = createCodeGenerator();
 
-    return new CompilerFacade(codeParser, optimizationStrategy, codeGenerator);
+    return new CompilerFacade(codeParser, algebraStrategy, optimizationStrategy, codeGenerator);
   }
 
   private CodeParser createCodeParser() {
@@ -114,6 +119,19 @@ public class Main {
     return null;
   }
 
+  private AlgebraStrategy createAlgebraStrategy() {
+    Set<AlgebraStrategyPlugin> plugins = Plugins.getAlgebraStrategyPlugins();
+    for (AlgebraStrategyPlugin plugin : plugins) {
+      if (plugin.getClass().getName().equals(algebraStrategyPlugin)) {
+        return plugin.createAlgebraStrategy();
+      }
+    }
+
+    System.err.println("Unknown algebra strategy plugin: " + algebraStrategyPlugin);
+    System.exit(-3);
+    return null;
+  }
+
   private OptimizationStrategy createOptimizationStrategy() {
     Set<OptimizationStrategyPlugin> plugins = Plugins.getOptimizationStrategyPlugins();
     for (OptimizationStrategyPlugin plugin : plugins) {
@@ -123,7 +141,7 @@ public class Main {
     }
 
     System.err.println("Unknown optimization strategy plugin: " + optimizationStrategyPlugin);
-    System.exit(-3);
+    System.exit(-4);
     return null;
   }
 
@@ -136,7 +154,7 @@ public class Main {
     }
 
     System.err.println("Unknown code generator plugin: " + codeGeneratorPlugin);
-    System.exit(-4);
+    System.exit(-5);
     return null;
   }
 

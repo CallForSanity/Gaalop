@@ -16,6 +16,9 @@
 	<!-- front end -->
         <module>clucalc</module>
 
+        <!-- algebra -->
+        <module>algebra</module>
+
 	<!-- middle end -->
         <module>maple</module>
         <module>tba</module>
@@ -37,6 +40,9 @@
         <module>setup</module>
         <module>cli</module>
         <module>gui</module>
+
+        <!-- testbenches -->
+        <module>testbenchTbaGapp</module>
   </modules>
 
     <!--

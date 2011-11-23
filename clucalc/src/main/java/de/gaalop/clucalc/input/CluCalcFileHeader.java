@@ -1,7 +1,6 @@
 package de.gaalop.clucalc.input;
 
 import de.gaalop.annotation.AnnotationContainer;
-import de.gaalop.clucalc.algebra.AlgebraMode;
 
 /**
  * This annotation contains information about the CluCalc header that was used to generate a certain
@@ -10,8 +9,6 @@ import de.gaalop.clucalc.algebra.AlgebraMode;
 public class CluCalcFileHeader {
 
   private static AnnotationContainer<CluCalcFileHeader> container = new AnnotationContainer<CluCalcFileHeader>();
-
-  private AlgebraMode algebraMode;
 
   private NullSpace nullSpace;
 
@@ -41,14 +38,6 @@ public class CluCalcFileHeader {
    */
   public static boolean isAttached(Object object) {
     return container.isAnnotated(object);
-  }
-
-  public AlgebraMode getAlgebraMode() {
-    return algebraMode;
-  }
-
-  public void setAlgebraMode(AlgebraMode algebraMode) {
-    this.algebraMode = algebraMode;
   }
 
   public NullSpace getNullSpace() {

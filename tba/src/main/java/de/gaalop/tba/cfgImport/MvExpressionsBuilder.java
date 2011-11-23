@@ -1,5 +1,6 @@
 package de.gaalop.tba.cfgImport;
 
+import de.gaalop.cfg.AlgebraDefinitionFile;
 import de.gaalop.cfg.StartNode;
 import de.gaalop.dfg.ExpressionVisitor;
 import de.gaalop.cfg.AssignmentNode;
@@ -31,6 +32,7 @@ import de.gaalop.dfg.Reverse;
 import de.gaalop.dfg.Subtraction;
 import de.gaalop.dfg.UnaryOperation;
 import de.gaalop.dfg.Variable;
+import de.gaalop.tba.Algebra;
 import de.gaalop.tba.Multivector;
 import de.gaalop.tba.Products;
 import de.gaalop.tba.UseAlgebra;
@@ -49,9 +51,11 @@ public class MvExpressionsBuilder extends EmptyControlFlowVisitor implements Exp
     private final double EPSILON = 10E-07;
     private boolean scalarFunctions;
     private Variable curVariable;
+    private AlgebraDefinitionFile alFile;
 
-    public MvExpressionsBuilder(UseAlgebra usedAlgebra, boolean scalarFunctions) {
+    public MvExpressionsBuilder(UseAlgebra usedAlgebra, boolean scalarFunctions, AlgebraDefinitionFile alFile) {
         this.scalarFunctions = scalarFunctions;
+        this.alFile = alFile;
         variables = new HashMap<String, MvExpressions>();
         this.usedAlgebra = usedAlgebra;
         counterMv = 0;
@@ -122,6 +126,7 @@ public class MvExpressionsBuilder extends EmptyControlFlowVisitor implements Exp
      */
     private MvExpressions calculateUsingMultTable(Products typeProduct, MvExpressions left, MvExpressions right) {
         MvExpressions result = createNewMvExpressions();
+        Algebra algebra = usedAlgebra.getAlgebra();
 
         for (int bladeL = 0; bladeL < bladeCount; bladeL++) {
             if (left.bladeExpressions[bladeL] != null) {
@@ -130,7 +135,7 @@ public class MvExpressionsBuilder extends EmptyControlFlowVisitor implements Exp
                         Expression prodExpr = new Multiplication(left.bladeExpressions[bladeL], right.bladeExpressions[bladeR]);
                         Multivector prodMv = usedAlgebra.getProduct(typeProduct, bladeL, bladeR);
 
-                        byte[] prod = prodMv.getValueArr();
+                        byte[] prod = prodMv.getValueArr(algebra);
 
                         for (int bladeResult = 0; bladeResult < bladeCount; bladeResult++) {
                             if (Math.abs(prod[bladeResult]) > EPSILON) {
@@ -387,7 +392,7 @@ public class MvExpressionsBuilder extends EmptyControlFlowVisitor implements Exp
     @Override
     public void visit(BaseVector node) {
         MvExpressions result = createNewMvExpressions();
-        result.bladeExpressions[node.getOrder()] = new FloatConstant(1);
+        result.bladeExpressions[alFile.getIndex(node.toString())] = new FloatConstant(1);
         expressions.put(node, result);
     }
 
@@ -534,9 +539,4 @@ public class MvExpressionsBuilder extends EmptyControlFlowVisitor implements Exp
         throw new IllegalStateException("Macros should have been inlined and no macro calls should be in the graph.");
     }
 
-    @Override
-    public void visit(StartNode node) {
-        node.getGraph().setSignature(usedAlgebra.getAlgebraSignature());
-        super.visit(node);
-    }
 }

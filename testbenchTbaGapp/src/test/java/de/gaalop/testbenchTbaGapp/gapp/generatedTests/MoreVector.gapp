@@ -1,0 +1,14 @@
+//d[0] = (inputsVector[0] * (inputsVector[1] + inputsVector[2])) * (inputsVector[4] + inputsVector[3])
+assignVector inputsVector = [a,b,c,f,g];
+resetMv d[32];
+resetMv mv0[1];
+setVector ve1 = inputsVector[1,2];
+dotVectors mv0[0] = <ve1>;
+resetMv mv2[1];
+setVector ve3 = inputsVector[4,3];
+dotVectors mv2[0] = <ve3>;
+setVector ve4 = inputsVector[0];
+setVector ve5 = mv0[0];
+setVector ve6 = mv2[0];
+dotVectors d[0] = <ve4,ve5,ve6>;
+

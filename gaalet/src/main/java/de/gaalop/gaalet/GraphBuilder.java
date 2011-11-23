@@ -3,7 +3,6 @@ package de.gaalop.gaalet;
 import de.gaalop.NameTable;
 import de.gaalop.CheckGAVisitor;
 import de.gaalop.cfg.*;
-import de.gaalop.clucalc.algebra.*;
 import de.gaalop.UsedVariablesVisitor;
 import de.gaalop.dfg.Expression;
 import de.gaalop.dfg.MacroCall;
@@ -118,18 +117,9 @@ public final class GraphBuilder {
 
 	}
 
-	/**
-	 * The list of algebra modes supported in CluCalc.
-	 */
-	private static final AlgebraMode[] ALGEBRA_MODES = new AlgebraMode[] {
-		new AlgebraC2(), new AlgebraE3(), new AlgebraN3(), new AlgebraP3(),
-	};
-
 	private final ControlFlowGraph graph;
 
 	private SequentialNode lastNode;
-
-	private AlgebraMode mode;
 
 	private HashMap<String, GaaletMultiVector> vectorSet = new HashMap<String, GaaletMultiVector>();
 	
@@ -156,8 +146,6 @@ public final class GraphBuilder {
 	public GraphBuilder() {
 		graph = new ControlFlowGraph();
 		lastNode = graph.getStartNode();
-		// initially set mode to 5D conformal algebra (in case this statement is missing in input)
-		setMode(new AlgebraN3());
 	}
 
 	void checkIllegalVariable(Variable variable) {
@@ -233,10 +221,6 @@ public final class GraphBuilder {
 	
 	public ControlFlowGraph getGraph() {
 		return graph;
-	}
-
-	public AlgebraMode getMode() {
-		return mode;
 	}
 	
 	/**
@@ -375,16 +359,18 @@ public final class GraphBuilder {
 	 * @param name The name of the procedure that was called.
 	 */
 	public void handleProcedure(String name) {
+            /*//@changedalgebra
 		String hashname = NameTable.getInstance().add(name);
 		// Initialization of an algebra mode?
 		for (AlgebraMode mode : ALGEBRA_MODES) {
 			if (mode.getDefinitionMethod().equals(hashname)) {
-				setMode(mode); 
+				setMode(mode);
 				return;
 			}
 		}
 
 		throw new IllegalArgumentException("Unknown procedure: " + name + "  "+ hashname);
+            */
 	}
 
 	/**
@@ -444,23 +430,6 @@ public final class GraphBuilder {
 		current.replaceSuccessor(current.getSuccessor(), new BlockEndNode(graph, current)); // mark the end of this block
 	}
 
-	/**
-	 * Activate a new algebra mode.
-	 * 
-	 * @param newMode The new algebra mode.
-	 */
-
-	private void setMode(AlgebraMode newMode) {
-		// Get annotation for graphs start node
-		// Set the graphs dimension+signature based on our algebra
-		boolean N3 = false;
-
-		graph.setSignature(new AlgebraSignature(newMode.getSignature(), N3));
-
-		mode = newMode;
-
-	}
-
 
 	/**
 	 * Searches the expression for variable references. If an undeclared reference is found, it is added to the input variables of
@@ -490,14 +459,18 @@ public final class GraphBuilder {
 
 	// Creates an expression from an identifier and takes constants into account
 	public Expression processIdentifier(String name) {
+            /*//@changedalgebra
 		String hashname = NameTable.getInstance().add(name);
 		if (mode != null && mode.isConstant(hashname)) {
 			return mode.getConstant(hashname);
 		} else {
 			return new Variable(hashname);
 		}
+             */
+            return new Variable(name);
 	}
 	public Expression processFunction(String name, List<Expression> args) {
+            /*//@changedalgebra
 		for (AlgebraMode mode : ALGEBRA_MODES) {
 			if (mode.getDefinitionMethod().equals(name)) {
 				setMode(mode);
@@ -524,7 +497,7 @@ public final class GraphBuilder {
 			name = name.substring(2);
 		}
 		String hashname = NameTable.getInstance().add(name);
-		
+
 		if (macros.contains(hashname)) {
 			if (name.equals(currentMacroDefinition)) {
 				throw new IllegalArgumentException("Recursive macro calls are not supported: " + name);
@@ -536,6 +509,9 @@ public final class GraphBuilder {
 		throw new IllegalArgumentException("Call to undefined function " + name + "(" + args + ").\n"
 				+ "Maybe this function is not defined in " + mode + "\n"
 				+ "Also make sure that macros are defined before they are called.");
+             *
+             */
+            return new MacroCall(name, args);
 	}
 
 	public SequentialNode handleDefGaalet(String name,ArrayList<String> blades,

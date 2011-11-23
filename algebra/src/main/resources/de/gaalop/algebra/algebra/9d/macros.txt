@@ -1,0 +1,5 @@
+ds(x):=x.(e1^e2^e3^einfx^einfy^einfz^(e0x+e0y+ez))
+sd(x):=x.(e1^e2^e3^e0x^e0y^e0z^((einfx+einfy+einfz)/3))
+createEllipsoid(a,b,c,h,k,l):=h/(a*a)*e1+k/(b*b)*e2+l/(c*c)*e3+0.5*((h*h)/(a*a)+(k*k)/(b*b)+(l*l)/(c*c)-1)*(einfx+einfy+einfz)/3+1/(a*a)*e0x+1/(b*b)*e0y+1/(c*c)*e0z
+createSphere(h,k,l,r):=h*e1+k*e2+l*e3+0.5*(h*h+k*k+l*l-r*r)*(einfx+einfy+einfz)/3+e0x+e0y+e0z
+createCylinder(a,b,h,k):=h/(a*a)*e1+k/(b*b)*e2+0.5*((h*h)/(a*a)+(k*k)/(b*b)-1)*(einfx+einfy+einfz)/3+1/(a*a)*e0x+1/(b*b)*e0y

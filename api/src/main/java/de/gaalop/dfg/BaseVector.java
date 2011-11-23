@@ -1,7 +1,5 @@
 package de.gaalop.dfg;
 
-import de.gaalop.cfg.AlgebraSignature;
-
 /**
  * This class represents a base vector of the algebra. The base vectors are usually indexed from 1 to n where n is the
  * dimension of the algebra. In order to support other base vectors, e.g. for the conformal geometric algebra with
@@ -40,18 +38,6 @@ public final class BaseVector extends Expression {
 	 */
 	public String getIndex() {
 		return index;
-	}
-
-	/**
-	 * Tries to estimate the ordering of the given base vector. For vectors with integer index, the output is the
-	 * integer itself. For string representations like e_0 or e_inf of the conformal geometric algebra, the
-	 * corresponding ordering is used. Other cases are not supported currently. <br>
-	 * For 5D conformal algebra, we assume the following ordering: <e1, e2, e3, e_inf, e0>
-	 * 
-	 * @return order of base vector in blade list
-	 */
-	public int getOrder() {
-            return AlgebraSignature.curAlgebraSignature.getOrder(this);
 	}
 
 	@Override

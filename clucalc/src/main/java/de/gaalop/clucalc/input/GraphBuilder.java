@@ -4,7 +4,6 @@ import de.gaalop.CheckGAVisitor;
 import de.gaalop.Notifications;
 import de.gaalop.UsedVariablesVisitor;
 import de.gaalop.cfg.*;
-import de.gaalop.clucalc.algebra.*;
 import de.gaalop.dfg.Expression;
 import de.gaalop.dfg.FloatConstant;
 import de.gaalop.dfg.MacroCall;
@@ -132,22 +131,12 @@ public final class GraphBuilder {
 		illegalNames.put("length", "protected in Maple");
 		illegalNames.put("point", "protected in Maple");
 	}
-
-	/**
-	 * The list of algebra modes supported in CluCalc.
-	 */
-	private static final AlgebraMode[] ALGEBRA_MODES = new AlgebraMode[] { new AlgebraC2(), new AlgebraE3(),
-			new AlgebraN3(), new AlgebraP3(), };
-
+        
 	final ControlFlowGraph graph;
 
 	private SequentialNode lastNode;
 
-	private AlgebraMode mode;
-
 	private CluCalcFileHeader header;
-
-	private final FunctionFactory functionFactory;
 
 	private boolean setMode = false;
 
@@ -170,12 +159,7 @@ public final class GraphBuilder {
                 algebraDimension = 0;
 		graph = new ControlFlowGraph();
 		lastNode = graph.getStartNode();
-		functionFactory = new FunctionFactory();
-		{
-			// initially set mode to 5D conformal algebra (in case this statement is missing in input)
-			setMode(new AlgebraN3());
-			setMode = false;
-		}
+		
 		{
 			COLORS = new HashMap<String, ColorNode>();
 			COLORS.put("Black", getRBGColor(0, 0, 0));
@@ -187,6 +171,11 @@ public final class GraphBuilder {
 			COLORS.put("Red", getRBGColor(1, 0, 0));
 			COLORS.put("White", getRBGColor(1, 1, 1));
 			COLORS.put("Yellow", getRBGColor(1, 1, 0));
+		}
+                // Get annotation for graphs start node
+		header = CluCalcFileHeader.get(graph.getStartNode());
+		if (header == null) {
+			header = new CluCalcFileHeader(graph.getStartNode());
 		}
 	}
 
@@ -205,18 +194,6 @@ public final class GraphBuilder {
          */
         public void setAlgebraDimension(int dimension) {
                 algebraDimension = dimension;
-                setMode(new AbstractAlgebraMode() {
-
-                @Override
-                public String getDefinitionMethod() {
-                    return "DefVars";
-                }
-
-                @Override
-                public int[] getSignature() {
-                    return new int[algebraDimension];
-                }
-            });
         }
 
 	/**
@@ -240,15 +217,7 @@ public final class GraphBuilder {
 	public ControlFlowGraph getGraph() {
 		return graph;
 	}
-
-	public AlgebraMode getMode() {
-		return mode;
-	}
-
-	public FunctionFactory getFunctionFactory() {
-		return functionFactory;
-	}
-
+        
 	/**
 	 * Add an assignment node to the end of this graph.
 	 * 
@@ -456,46 +425,17 @@ public final class GraphBuilder {
 		current.replaceSuccessor(current.getSuccessor(), new BlockEndNode(graph, base)); // mark the end of this block
 	}
 
-	/**
-	 * Activate a new algebra mode.
-	 * 
-	 * @param newMode The new algebra mode.
-	 */
-	private void setMode(AlgebraMode newMode) {
-		// Get annotation for graphs start node
-		header = CluCalcFileHeader.get(graph.getStartNode());
-		if (header == null) {
-			header = new CluCalcFileHeader(graph.getStartNode());
-		}
-		header.setAlgebraMode(newMode);
-
-		// Set the graphs dimension+signature based on our algebra
-		boolean N3 = false;
-		if (newMode instanceof AlgebraN3) {
-			// handle the case of 5D conformal algebra
-			N3 = true;
-		}
-		graph.setSignature(new AlgebraSignature(newMode.getSignature(), N3));
-
-		mode = newMode;
-		functionFactory.setMode(newMode);
-
-		setMode = true;
-	}
-
+	
 	// Creates an expression from an identifier and takes constants into account
 	public Expression processIdentifier(String name) {
-		if (mode != null && mode.isConstant(name)) {
-			return mode.getConstant(name);
-		} else {
-			Variable v = new Variable(name);
-			currentScope.addVariable(v);
-			return v;
-		}
+            Variable v = new Variable(name);
+            currentScope.addVariable(v);
+            return v;
 	}
 
 	public Expression processFunction(String name, List<Expression> args) {
-		for (AlgebraMode mode : ALGEBRA_MODES) {
+	/*
+            for (AlgebraMode mode : ALGEBRA_MODES) {
 			if (mode.getDefinitionMethod().equals(name)) {
 				setMode(mode);
 				return null;
@@ -531,7 +471,9 @@ public final class GraphBuilder {
 		throw new IllegalArgumentException("Call to undefined function " + name + "(" + args + ").\n"
 				+ "Maybe this function is not defined in " + mode + "\n"
 				+ "Also make sure that macros are defined before they are called.");
-	}
+	*/
+            return new MacroCall(name, args);
+         }
 
 	public ExpressionStatement processExpressionStatement(Expression e) {
 		ExpressionStatement statement = new ExpressionStatement(graph, e);
@@ -544,9 +486,6 @@ public final class GraphBuilder {
 	 * the graph can be performed here.
 	 */
 	public void finish() {
-		if (!setMode) {
-			Notifications.addWarning("Missing algebra mode has been set to " + mode);
-		}
 		FindStoreOutputNodes outputNodes = new FindStoreOutputNodes();
 		graph.accept(outputNodes);
 		if (outputNodes.getNodes().isEmpty()) {

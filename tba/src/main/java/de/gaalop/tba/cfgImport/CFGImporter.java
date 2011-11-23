@@ -1,5 +1,6 @@
 package de.gaalop.tba.cfgImport;
 
+import de.gaalop.cfg.AlgebraDefinitionFile;
 import de.gaalop.cfg.AssignmentNode;
 import de.gaalop.dfg.Expression;
 import de.gaalop.dfg.MultivectorComponent;
@@ -15,8 +16,8 @@ import de.gaalop.tba.cfgImport.optimization.UpdateLocalVariableSet;
  */
 public class CFGImporter extends MvExpressionsBuilder {
 
-    public CFGImporter(UseAlgebra usedAlgebra, boolean scalarFunctions) {
-        super(usedAlgebra, scalarFunctions);
+    public CFGImporter(UseAlgebra usedAlgebra, boolean scalarFunctions, AlgebraDefinitionFile alFile) {
+        super(usedAlgebra, scalarFunctions, alFile);
     }
 
     @Override

@@ -13,7 +13,7 @@ import org.apache.commons.logging.LogFactory;
  * This visitor traverses the control and data flow graphs and generates C/C++ code.
  */
 public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
-
+    private int bladeCount = 512;
 	protected Log log = LogFactory.getLog(CppVisitor.class);
 
 	protected boolean standalone = true;
@@ -65,7 +65,7 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 			for (Variable var : localVariables) {
 				code.append("float ");
 				code.append(var.getName());
-				code.append("[32], ");
+				code.append("["+bladeCount+"], ");
 			}
 
 			if (graph.getLocalVariables().size() > 0) {
@@ -79,7 +79,7 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 				appendIndentation();
 				code.append("float ");
 				code.append(var.getName());
-				code.append("[32] = { 0.0f };\n");
+				code.append("["+bladeCount+"] = { 0.0f };\n");
 			}
 		}
 
@@ -146,13 +146,8 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 
 		if (node.getVariable() instanceof MultivectorComponent) {
 			code.append(" // ");
-
 			MultivectorComponent component = (MultivectorComponent) node.getVariable();
-			Expression[] bladeList = node.getGraph().getBladeList();
-
-			BladePrinter bladeVisitor = new BladePrinter(node.getGraph().getSignature());
-			bladeList[component.getBladeIndex()].accept(bladeVisitor);
-			code.append(bladeVisitor.getCode());
+			code.append(node.getGraph().getAlgebraDefinitionFile().getBladeString(component.getBladeIndex()));
 		}
 
 		code.append('\n');

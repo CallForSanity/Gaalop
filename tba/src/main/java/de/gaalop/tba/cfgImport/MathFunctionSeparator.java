@@ -1,6 +1,5 @@
 package de.gaalop.tba.cfgImport;
 
-import de.gaalop.api.dfg.ExpressionTypeVisitor;
 import de.gaalop.cfg.AssignmentNode;
 import de.gaalop.cfg.EmptyControlFlowVisitor;
 import de.gaalop.dfg.BinaryOperation;
@@ -9,6 +8,7 @@ import de.gaalop.dfg.ExpressionVisitor;
 import de.gaalop.dfg.MathFunctionCall;
 import de.gaalop.dfg.UnaryOperation;
 import de.gaalop.dfg.Variable;
+import de.gaalop.visitors.ExpressionTypeVisitor;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;

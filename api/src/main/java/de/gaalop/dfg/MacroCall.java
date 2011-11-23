@@ -32,6 +32,12 @@ public class MacroCall extends Expression {
 	public List<Expression> getArguments() {
 		return args;
 	}
+
+    public void setArgs(List<Expression> args) {
+        this.args = args;
+    }
+
+
 	
 	public void setSingleLine() {
 		this.singleLine = true;

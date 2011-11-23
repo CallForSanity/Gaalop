@@ -2,6 +2,7 @@ package de.gaalop.tba.cfgImport.optimization;
 
 import de.gaalop.dfg.MultivectorComponent;
 import de.gaalop.dfg.Variable;
+import de.gaalop.visitors.DFGTraversalVisitor;
 import java.util.LinkedList;
 
 /**

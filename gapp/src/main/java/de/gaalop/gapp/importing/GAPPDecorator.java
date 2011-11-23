@@ -26,7 +26,6 @@ public class GAPPDecorator extends EmptyControlFlowVisitor {
     private GAPPCreator gappCreator;
     private GAPP gappStart;
     private int bladeCount;
-    private Algebra algebra;
 
     public GAPPDecorator(GAPP gappStart, HashSet<String> variables, int bladeCount, boolean scalarFunctions, Algebra algebra) {
         this.gappStart = gappStart;

@@ -13,17 +13,17 @@
     <dependencies>
         <dependency>
             <groupId>de.gaalop</groupId>
-            <artifactId>codegen-gapp</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>de.gaalop</groupId>
             <artifactId>tba</artifactId>
             <version>1.0.0</version>
         </dependency>
         <dependency>
             <groupId>de.gaalop</groupId>
             <artifactId>api</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>de.gaalop</groupId>
+            <artifactId>algebra</artifactId>
             <version>1.0.0</version>
         </dependency>
     </dependencies>

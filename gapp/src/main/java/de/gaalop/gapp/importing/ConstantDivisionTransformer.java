@@ -1,6 +1,5 @@
 package de.gaalop.gapp.importing;
 
-import de.gaalop.api.dfg.ExpressionTypeVisitor;
 import de.gaalop.cfg.AssignmentNode;
 import de.gaalop.cfg.ControlFlowGraph;
 import de.gaalop.cfg.EmptyControlFlowVisitor;
@@ -11,6 +10,7 @@ import de.gaalop.dfg.ExpressionVisitor;
 import de.gaalop.dfg.FloatConstant;
 import de.gaalop.dfg.Multiplication;
 import de.gaalop.dfg.UnaryOperation;
+import de.gaalop.visitors.ExpressionTypeVisitor;
 
 /**
  * Replaces divisions with constants with multiplications

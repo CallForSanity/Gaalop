@@ -45,6 +45,8 @@ public class MaximaOptimizer {
 
         MaximaInput input = new MaximaInput();
         input.add("display2d:false;"); // very important!
+        input.add("ratprint:false;"); // very important!
+        input.add("keepfloat:true;");
         fillMaximaInput(graph, input);
         input.add("quit();"); // very important!
 
@@ -57,6 +59,8 @@ public class MaximaOptimizer {
         groupMaximaInAndOutputs(connected, output);
 
         connected.removeFirst(); // remove display2d
+        connected.removeFirst(); // remove ratsimp
+        connected.removeFirst(); // remove keepfloat
 
         ListIterator<AssignmentNode> listIterator = assignmentNodeCollector.getAssignmentNodes().listIterator();
         for (String io : connected) {
@@ -167,7 +171,7 @@ public class MaximaOptimizer {
             }
 
             if (plugin.isMaximaExpand())
-                input.add(variable + "expand("+value.substring(0, value.length()-1)+");");
+                input.add(variable + "expand(ratsimp("+value.substring(0, value.length()-1)+"));");
             else
                 input.add(variable + value);
 

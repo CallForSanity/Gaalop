@@ -17,8 +17,6 @@ import de.gaalop.gapp.instructionSet.GAPPAssignVector;
 import de.gaalop.gapp.variables.GAPPScalarVariable;
 import de.gaalop.gapp.variables.GAPPVector;
 import de.gaalop.tba.Plugin;
-import de.gaalop.tba.UseAlgebra;
-import de.gaalop.tba.cfgImport.BaseVectorChecker;
 import de.gaalop.tba.cfgImport.CFGImporterFacade;
 import java.util.Collections;
 import java.util.Comparator;
@@ -34,34 +32,26 @@ public class GAPPDecoratingMain {
 
     /**
      * Decorates a given ControlFlowGraph with GAPP instructions
-     * @param usedAlgebra The used algebra
      * @param graph The ControlFlowGraph
      * @param optMaxima Should Maxima be used?
      * @param maximaCommand The maxima command
      * @return The same graph object (which is now decorated with GAPP instructions)
      * @throws OptimizationException
      */
-    public ControlFlowGraph decorateGraph(UseAlgebra usedAlgebra, ControlFlowGraph graph, boolean optMaxima, String maximaCommand) throws OptimizationException {
+    public ControlFlowGraph decorateGraph(ControlFlowGraph graph, boolean optMaxima, String maximaCommand) throws OptimizationException {
 
         boolean scalarFunctions = false;
-
-        if (!usedAlgebra.isN3()) {
-            BaseVectorChecker checker = new BaseVectorChecker(usedAlgebra.getAlgebra().getBase());
-            graph.accept(checker);
-        }
 
         Plugin plugin = new Plugin();
         plugin.setMaximaCommand(maximaCommand);
         
         plugin.setInvertTransformation(true);
         plugin.setScalarFunctions(scalarFunctions);
-        
         plugin.setOptMaxima(optMaxima);
         plugin.setOptInserting(optMaxima);
         plugin.setMaximaExpand(optMaxima);
         
         CFGImporterFacade facade = new CFGImporterFacade(plugin);
-        facade.setUsedAlgebra(usedAlgebra);
         facade.importGraph(graph);
 
         //Transform divisions with constants in multiplications
@@ -73,7 +63,7 @@ public class GAPPDecoratingMain {
         assignInputVariables(graph, gappStart, variables);
 
         // import now the graph in GAPP
-        GAPPDecorator vCFG = new GAPPDecorator(gappStart, variables, usedAlgebra.getBladeCount(), scalarFunctions, usedAlgebra.getAlgebra());
+        GAPPDecorator vCFG = new GAPPDecorator(gappStart, variables, facade.getUsedAlgebra().getBladeCount(), scalarFunctions, facade.getUsedAlgebra().getAlgebra());
         graph.accept(vCFG);
 
         // perform further optimizations

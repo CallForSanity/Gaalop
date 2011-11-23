@@ -598,7 +598,7 @@ public class MapleCfgVisitor_optAllInIf implements ControlFlowVisitor {
 		int i = 0;
 		for (MultivectorComponent mc : components) {
 			Variable coefficient = new Variable(getTempVarName(mc));
-			Expression blade = graph.getBladeList()[mc.getBladeIndex()];
+			Expression blade = graph.getAlgebraDefinitionFile().getBladeExpression(mc.getBladeIndex());
 			Multiplication product = ExpressionFactory.product(coefficient, blade);
 			products[i++] = product;
 		}

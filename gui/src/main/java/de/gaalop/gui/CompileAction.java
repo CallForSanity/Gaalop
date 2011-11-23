@@ -39,6 +39,15 @@ public class CompileAction extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
     	statusBar.reset();
+
+        AlgebraStrategyPlugin algebraPlugin = getAlgebraStrategy();
+
+        if (algebraPlugin == null) {
+            JOptionPane.showMessageDialog(null, "No algebra strategy is available. Please install " +
+                    "an appropiate plugin.", "No Algebra Strategy Available", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
         OptimizationStrategyPlugin optimizationPlugin = getOptimizationStrategy();
 
         if (optimizationPlugin == null) {
@@ -50,6 +59,7 @@ public class CompileAction extends AbstractAction {
         CodeParserPlugin parserPlugin = sourcePanel.getParserPlugin();
 
         final CompilerFacade facade = new CompilerFacade(parserPlugin.createCodeParser(),
+                algebraPlugin.createAlgebraStrategy(),
                 optimizationPlugin.createOptimizationStrategy(),
                 codeGeneratorPlugin.createCodeGenerator());
         facade.addObserver(statusBar);
@@ -72,6 +82,25 @@ public class CompileAction extends AbstractAction {
 			}
 		});
 		compiler.start();
+    }
+
+    private AlgebraStrategyPlugin getAlgebraStrategy() {
+        Preferences prefs = Preferences.userNodeForPackage(getClass());
+        String preferredAlgebraPlugin = prefs.get("preferredAlgebraPlugin", "");
+        log.debug("Preferred algebra plugin is " + preferredAlgebraPlugin);
+
+        for (AlgebraStrategyPlugin plugin : Plugins.getAlgebraStrategyPlugins()) {
+            String name = plugin.getClass().getName();
+            if (name.equals(preferredAlgebraPlugin)) {
+                return plugin;
+            }
+        }
+
+        if (Plugins.getAlgebraStrategyPlugins().size() > 0) 
+            return Plugins.getAlgebraStrategyPlugins().iterator().next();
+        
+
+        return null;
     }
 
     private OptimizationStrategyPlugin getOptimizationStrategy() {

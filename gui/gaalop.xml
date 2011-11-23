@@ -2,15 +2,25 @@
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
 <comment>Gaalop Configuration File</comment>
-<entry key="de.gaalop.tba.Plugin.algebra">5d</entry>
-<entry key="de.gaalop.tba.Plugin.optConstantPropagation">true</entry>
-<entry key="de.gaalop.gapp.Plugin.algebra">5d</entry>
-<entry key="de.gaalop.cpp.Plugin.standalone">false</entry>
-<entry key="de.gaalop.tba.Plugin.maximaCommand">/usr/bin/maxima</entry>
-<entry key="de.gaalop.tba.Plugin.optInserting">true</entry>
-<entry key="de.gaalop.tba.Plugin.optMaxima">true</entry>
-<entry key="de.gaalop.tba.Plugin.optOneExpressionRemoval">true</entry>
-<entry key="de.gaalop.clucalc.output.Plugin.suffix">_opt</entry>
-<entry key="de.gaalop.gaalet.output.Plugin.useNameTable">false</entry>
+<entry key="de.gaalop.gapp.Plugin.maximaCommand">/usr/bin/maxima</entry>
+<entry key="de.gaalop.algebra.Plugin.usePrecalulatedTables">false</entry>
+<entry key="de.gaalop.maple.Plugin.gaalopPath">/</entry>
+<entry key="de.gaalop.algebra.Plugin.macrosFilePath">algebra/5d/macros.txt</entry>
+<entry key="de.gaalop.maple.Plugin.mapleJavaPath">/net/bifur/gaalop/maple/java/</entry>
 <entry key="de.gaalop.tba.Plugin.optUnusedAssignments">true</entry>
+<entry key="de.gaalop.cpp.Plugin.standalone">true</entry>
+<entry key="de.gaalop.gaalet.output.Plugin.useNameTable">false</entry>
+<entry key="de.gaalop.maple.Plugin.mapleBinaryPath">/net/bifur/gaalop/maple/bin.IBM_INTEL_LINUX/</entry>
+<entry key="de.gaalop.tba.Plugin.optConstantPropagation">true</entry>
+<entry key="de.gaalop.algebra.Plugin.useBuiltInFiles">true</entry>
+<entry key="de.gaalop.clucalc.output.Plugin.suffix">_opt</entry>
+<entry key="de.gaalop.tba.Plugin.optOneExpressionRemoval">true</entry>
+<entry key="de.gaalop.maple.Plugin.constantFolding">false</entry>
+<entry key="de.gaalop.tba.Plugin.optMaxima">true</entry>
+<entry key="de.gaalop.tba.Plugin.optInserting">true</entry>
+<entry key="de.gaalop.algebra.Plugin.definitionFilePath">algebra/5d/definition.csv</entry>
+<entry key="de.gaalop.maple.Plugin.useCodeSegmenter">false</entry>
+<entry key="de.gaalop.tba.Plugin.maximaCommand">/usr/bin/maxima</entry>
+<entry key="de.gaalop.algebra.Plugin.productsFilePath">algebra/5d/products.csv</entry>
+<entry key="de.gaalop.gapp.Plugin.optMaxima">true</entry>
 </properties>

@@ -1,5 +1,6 @@
 package de.gaalop.gui;
 
+import de.gaalop.AlgebraStrategyPlugin;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -21,6 +22,7 @@ import javax.swing.JTextField;
 import org.apache.commons.beanutils.BeanUtils;
 
 import de.gaalop.CodeGeneratorPlugin;
+import de.gaalop.CodeParserPlugin;
 import de.gaalop.ConfigurationProperty;
 import de.gaalop.OptimizationStrategyPlugin;
 import de.gaalop.Plugin;
@@ -49,6 +51,10 @@ public class ConfigurationPanel extends JPanel {
 	private void initialize() {
 		setLayout(new BorderLayout());
 		add(pluginPanes, BorderLayout.CENTER);
+                for (CodeParserPlugin parser: Plugins.getCodeParserPlugins())
+                    addPluginConfig(parser);
+                for (AlgebraStrategyPlugin algebra: Plugins.getAlgebraStrategyPlugins())
+                    addPluginConfig(algebra);
 		for (OptimizationStrategyPlugin strategy : Plugins.getOptimizationStrategyPlugins()) {
 			addPluginConfig(strategy);
 		}
@@ -58,13 +64,6 @@ public class ConfigurationPanel extends JPanel {
 			addPluginConfig(generator);
 		}
 		pluginPanes.setSelectedIndex(0);
-	}
-
-	private void addOptimizationConfig(OptimizationStrategyPlugin strategy) {
-		JPanel panel = new JPanel();
-		for (final Field property : getConfigurationProperties(strategy)) {
-			
-		}
 	}
 
 	private void addPluginConfig(final Plugin plugin) {

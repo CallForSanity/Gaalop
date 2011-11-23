@@ -105,7 +105,7 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
             // Remind that only variables can be outputted, no MultivectorComponents!
             if (!known.contains(name)) {
                 known.add(name);
-                int bladeCount = (int) Math.pow(2, graph.getSignature().getDimension());
+                int bladeCount = graph.getAlgebraDefinitionFile().getBladeCount();
                 for (int blade = 0; blade < bladeCount; blade++) {
                     String bladeName = name + "$" + blade;
                     outputs.add(bladeName);
@@ -272,11 +272,7 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
             append(" // ");
 
             MultivectorComponent component = (MultivectorComponent) node.getVariable();
-            Expression[] bladeList = node.getGraph().getBladeList();
-
-            BladePrinter bladeVisitor = new BladePrinter(node.getGraph().getSignature());
-            bladeList[component.getBladeIndex()].accept(bladeVisitor);
-            append(bladeVisitor.getCode());
+            append(node.getGraph().getAlgebraDefinitionFile().getBladeString(component.getBladeIndex()));
         }
         append(";\n");
         node.getSuccessor().accept(this);
