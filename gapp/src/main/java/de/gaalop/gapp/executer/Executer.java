@@ -4,6 +4,7 @@ import de.gaalop.gapp.PosSelector;
 import de.gaalop.gapp.PosSelectorset;
 import de.gaalop.gapp.Selector;
 import de.gaalop.gapp.Selectorset;
+import de.gaalop.gapp.instructionSet.GAPPAddMv;
 import de.gaalop.gapp.instructionSet.GAPPAssignMv;
 import de.gaalop.gapp.instructionSet.GAPPAssignVector;
 import de.gaalop.gapp.instructionSet.GAPPCalculateMv;
@@ -151,13 +152,13 @@ public class Executer extends CFGGAPPVisitor {
         MultivectorWithValues destination = getMultivector(destName);
         MultivectorWithValues source = getMultivector(gappSetVector.getSource().getName());
         Selectorset selSrc = gappSetVector.getSelectorsSrc();
-
+        PosSelectorset selDest = gappSetVector.getSelectorsDest();
 
         destination.setEntries(new float[size]);
         for (int sel = 0; sel < size; sel++) {
             Selector sSrc = selSrc.get(sel);
 
-            destination.setEntry(sel, sSrc.getSign() * source.getEntries()[sSrc.getIndex()]);
+            destination.setEntry(selDest.get(sel).getIndex(), sSrc.getSign() * source.getEntries()[sSrc.getIndex()]);
         }
 
         return null;
@@ -358,6 +359,25 @@ public class Executer extends CFGGAPPVisitor {
         }
 
         target.setEntry(gappCalculateCoeff.getDestination().getBladeIndex(), result);
+
+        return null;
+    }
+
+    @Override
+    public Object visitAddMv(GAPPAddMv gappAddMv, Object arg) {
+        MultivectorWithValues destination = getMultivector(gappAddMv.getDestination().getName());
+        MultivectorWithValues source = getMultivector(gappAddMv.getSource().getName());
+
+        Selectorset selSrc = gappAddMv.getSelectorsSrc();
+        PosSelectorset selDest = gappAddMv.getSelectorsDest();
+
+        int selCount = gappAddMv.getSelectorsSrc().size();
+        for (int sel = 0; sel < selCount; sel++) {
+            PosSelector sDest = selDest.get(sel);
+            Selector sSrc = selSrc.get(sel);
+
+            destination.getEntries()[sDest.getIndex()] = destination.getEntries()[sDest.getIndex()] + sSrc.getSign() * source.getEntries()[sSrc.getIndex()];
+        }
 
         return null;
     }

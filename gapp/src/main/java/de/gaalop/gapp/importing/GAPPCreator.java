@@ -339,6 +339,7 @@ public class GAPPCreator implements ParallelObjectVisitor {
      */
     private void case1(GAPPVector destination, ParallelVector vector) {
         Selectorset selSet = new Selectorset();
+        PosSelectorset posSelSet = new PosSelectorset();
         GAPPMultivector source = null;
         int slotNo = 0;
         for (ParallelObject slot : vector.getSlots()) {
@@ -347,10 +348,11 @@ public class GAPPCreator implements ParallelObjectVisitor {
                 source = new GAPPMultivector(mvC.getName());
             }
             selSet.add(new Selector(mvC.getBladeIndex(), slot.isNegated() ? (byte) -1 : (byte) 1, algebra.getBlade(mvC.getBladeIndex()).toString()));
+            posSelSet.add(new PosSelector(slotNo, algebra.getBlade(slotNo).toString()));
             slotNo++;
         }
 
-        gapp.addInstruction(new GAPPSetVector(destination, source, selSet));
+        gapp.addInstruction(new GAPPSetVector(destination, source, selSet, posSelSet));
     }
 
     /**
@@ -364,6 +366,7 @@ public class GAPPCreator implements ParallelObjectVisitor {
         Variableset varMvDestSet = new Variableset();
 
         PosSelectorset selSet = new PosSelectorset();
+        PosSelectorset selSetDest = new PosSelectorset();
         int slotNo = 0;
         for (ParallelObject obj : vector.getSlots()) {
             GAPPValueHolder valueHolder = null;
@@ -374,6 +377,7 @@ public class GAPPCreator implements ParallelObjectVisitor {
             }
             varMvDestSet.add(valueHolder);
             selSet.add(new PosSelector(slotNo, algebra.getBlade(slotNo).toString()));
+            selSetDest.add(new PosSelector(slotNo, algebra.getBlade(slotNo).toString()));
             slotNo++;
         }
 
@@ -386,7 +390,9 @@ public class GAPPCreator implements ParallelObjectVisitor {
         gapp.addInstruction(new GAPPSetVector(
                 destination,
                 mvTmp,
-                createIncreasingSelectorset(vector.getSlots().size())));
+                createIncreasingSelectorset(vector.getSlots().size()),
+                selSetDest
+                ));
     }
 
     /**
@@ -399,6 +405,20 @@ public class GAPPCreator implements ParallelObjectVisitor {
         Selectorset result = new Selectorset();
         for (int slot = 0; slot < numberOfSlots; slot++) {
             result.add(new Selector(slot, (byte) 1, algebra.getBlade(slot).toString()));
+        }
+        return result;
+    }
+
+    /**
+     * Creates a Selectorset which consists of an increasing series of slots.
+     * The sign of all slots is +1
+     * @param numberOfSlots The number of slots that should be created
+     * @return The Selectorset
+     */
+    private PosSelectorset createIncreasingPosSelectorset(int numberOfSlots) {
+        PosSelectorset result = new PosSelectorset();
+        for (int slot = 0; slot < numberOfSlots; slot++) {
+            result.add(new PosSelector(slot, algebra.getBlade(slot).toString()));
         }
         return result;
     }
@@ -420,7 +440,9 @@ public class GAPPCreator implements ParallelObjectVisitor {
         gapp.addInstruction(new GAPPSetVector(
                 destination,
                 mvTmp,
-                createIncreasingSelectorset(vector.getSlots().size())));
+                createIncreasingSelectorset(vector.getSlots().size()),
+                createIncreasingPosSelectorset(vector.getSlots().size())
+                ));
     }
 
     /**
@@ -490,7 +512,9 @@ public class GAPPCreator implements ParallelObjectVisitor {
         gapp.addInstruction(new GAPPSetVector(
                 destination,
                 mvTmp,
-                createIncreasingSelectorset(vector.getSlots().size())));
+                createIncreasingSelectorset(vector.getSlots().size()),
+                createIncreasingPosSelectorset(vector.getSlots().size())
+                ));
     }
 
     /**

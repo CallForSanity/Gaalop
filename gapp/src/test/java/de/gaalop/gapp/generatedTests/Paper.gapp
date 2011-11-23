@@ -2,64 +2,64 @@
 assignVector inputsVector = [a1,a2,a3,b1,b2,b3];
 resetMv f[32];
 resetMv mv0[1];
-setVector ve1 = inputsVector[0,1,2];
-setVector ve2 = inputsVector[3,4,5];
+setVector ve1[0,1,2] = inputsVector[0,1,2];
+setVector ve2[0,1,2] = inputsVector[3,4,5];
 dotVectors mv0[0] = <ve1,ve2>;
-setVector ve3 = inputsVector[0];
-setVector ve4 = mv0[0];
+setVector ve3[0] = inputsVector[0];
+setVector ve4[0] = mv0[0];
 dotVectors f[1] = <ve3,ve4>;
 
 //f[2] = inputsVector[1] * (((inputsVector[0] * inputsVector[3]) + (inputsVector[1] * inputsVector[4])) + (inputsVector[2] * inputsVector[5]))
 resetMv mv5[1];
-setVector ve6 = inputsVector[0,1,2];
-setVector ve7 = inputsVector[3,4,5];
+setVector ve6[0,1,2] = inputsVector[0,1,2];
+setVector ve7[0,1,2] = inputsVector[3,4,5];
 dotVectors mv5[0] = <ve6,ve7>;
-setVector ve8 = inputsVector[1];
-setVector ve9 = mv5[0];
+setVector ve8[0] = inputsVector[1];
+setVector ve9[0] = mv5[0];
 dotVectors f[2] = <ve8,ve9>;
 
 //f[3] = inputsVector[2] * (((inputsVector[0] * inputsVector[3]) + (inputsVector[1] * inputsVector[4])) + (inputsVector[2] * inputsVector[5]))
 resetMv mv10[1];
-setVector ve11 = inputsVector[0,1,2];
-setVector ve12 = inputsVector[3,4,5];
+setVector ve11[0,1,2] = inputsVector[0,1,2];
+setVector ve12[0,1,2] = inputsVector[3,4,5];
 dotVectors mv10[0] = <ve11,ve12>;
-setVector ve13 = inputsVector[2];
-setVector ve14 = mv10[0];
+setVector ve13[0] = inputsVector[2];
+setVector ve14[0] = mv10[0];
 dotVectors f[3] = <ve13,ve14>;
 
 //f[6] = (inputsVector[0] * inputsVector[1]) + (-(inputsVector[1] * inputsVector[0]))
-setVector ve15 = inputsVector[0,-1];
-setVector ve16 = inputsVector[1,0];
+setVector ve15[0,1] = inputsVector[0,-1];
+setVector ve16[0,1] = inputsVector[1,0];
 dotVectors f[6] = <ve15,ve16>;
 
 //f[7] = (inputsVector[0] * inputsVector[2]) + (-(inputsVector[2] * inputsVector[0]))
-setVector ve17 = inputsVector[0,-2];
-setVector ve18 = inputsVector[2,0];
+setVector ve17[0,1] = inputsVector[0,-2];
+setVector ve18[0,1] = inputsVector[2,0];
 dotVectors f[7] = <ve17,ve18>;
 
 //f[10] = (inputsVector[1] * inputsVector[2]) + (-(inputsVector[2] * inputsVector[1]))
-setVector ve19 = inputsVector[1,-2];
-setVector ve20 = inputsVector[2,1];
+setVector ve19[0,1] = inputsVector[1,-2];
+setVector ve20[0,1] = inputsVector[2,1];
 dotVectors f[10] = <ve19,ve20>;
 
 //f[16] = ((inputsVector[0] * ((inputsVector[1] * inputsVector[5]) + (-(inputsVector[2] * inputsVector[4])))) + (-(inputsVector[1] * ((inputsVector[0] * inputsVector[5]) + (-(inputsVector[2] * inputsVector[3])))))) + (inputsVector[2] * ((inputsVector[0] * inputsVector[4]) + (-(inputsVector[1] * inputsVector[3]))))
 resetMv mv21[1];
-setVector ve22 = inputsVector[1,-2];
-setVector ve23 = inputsVector[5,4];
+setVector ve22[0,1] = inputsVector[1,-2];
+setVector ve23[0,1] = inputsVector[5,4];
 dotVectors mv21[0] = <ve22,ve23>;
 resetMv mv24[1];
-setVector ve25 = inputsVector[0,-2];
-setVector ve26 = inputsVector[5,3];
+setVector ve25[0,1] = inputsVector[0,-2];
+setVector ve26[0,1] = inputsVector[5,3];
 dotVectors mv24[0] = <ve25,ve26>;
 resetMv mv27[1];
-setVector ve28 = inputsVector[0,-1];
-setVector ve29 = inputsVector[4,3];
+setVector ve28[0,1] = inputsVector[0,-1];
+setVector ve29[0,1] = inputsVector[4,3];
 dotVectors mv27[0] = <ve28,ve29>;
-setVector ve30 = inputsVector[0,-1,2];
+setVector ve30[0,1,2] = inputsVector[0,-1,2];
 resetMv mv32[3];
 setMv mv32[1] = mv24[0];
 setMv mv32[0] = mv21[0];
 setMv mv32[2] = mv27[0];
-setVector ve31 = mv32[0,1,2];
+setVector ve31[0,1,2] = mv32[0,1,2];
 dotVectors f[16] = <ve30,ve31>;
 
