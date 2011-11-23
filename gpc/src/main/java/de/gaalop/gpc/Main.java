@@ -353,7 +353,6 @@ public class Main {
 
                 // Perform compilation
                 final InputFile inputFile = new InputFile("inputFile", inputFileStream.toString());
-                System.out.println(inputFile.getContent());
                 Set<OutputFile> outputFiles = compiler.compile(inputFile);
 
                 StringBuffer gaalopOutFileStream = new StringBuffer();

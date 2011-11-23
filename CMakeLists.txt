@@ -10,7 +10,7 @@ SET(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/share/cmake-2.8/Modules")
 # setup CPack
 INCLUDE(InstallRequiredSystemLibraries)
 SET(CPACK_PACKAGE_CONTACT "Patrick Charrier <patrick.charrier@stud.tu-darmstadt.de>")
-SET(CPACK_PACKAGE_DESCRIPTION "Gaalop Compiler Driver (GCD) compiles source files containing Geometric Algebra expressions expressed in CLUCalc into C++-compatible object files.")
+SET(CPACK_PACKAGE_DESCRIPTION "Gaalop Precompiler (GPC) compiles source files containing Geometric Algebra expressions expressed in CLUCalc into C++-compatible object files.")
 INCLUDE(CPack)
 
 # use packages
@@ -34,8 +34,8 @@ add_custom_command(TARGET gaalop COMMAND ${MVN_BINARY} -DupdateOnly=true -Dmaven
 #add_custom_command(TARGET mvn_clean COMMAND ${MVN_BINARY} clean WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 # copy
 COPY_DIRECTORY(include-copy include include)
-COPY_DIRECTORY(gaalop-copy "target/gaalop*" "share/gcd/gaalop")
-COPY_DIRECTORY(dependencies-copy dependencies "share/gcd/gaalop/plugins")
+COPY_DIRECTORY(gaalop-copy "target/gaalop*" "share/gpc/gaalop")
+COPY_DIRECTORY(dependencies-copy dependencies "share/gpc/gaalop/plugins")
 
 # find paths
 FILE(GLOB GAALOP_BUILD_TARGET_DIR_LIST "${CMAKE_CURRENT_SOURCE_DIR}/target/gaalop*")
@@ -45,12 +45,12 @@ ENDIF(GAALOP_BUILD_TARGET_DIR_LIST)
 
 # install
 IF(GAALOP_BUILD_TARGET_DIR)
-	INSTALL(DIRECTORY "${GAALOP_BUILD_TARGET_DIR}/." DESTINATION share/gcd/gaalop PATTERN ".svn" EXCLUDE)
+	INSTALL(DIRECTORY "${GAALOP_BUILD_TARGET_DIR}/." DESTINATION share/gpc/gaalop PATTERN ".svn" EXCLUDE)
 ENDIF(GAALOP_BUILD_TARGET_DIR)
-INSTALL(DIRECTORY "dependencies/." DESTINATION share/gcd/gaalop/plugins PATTERN ".svn" EXCLUDE)
+INSTALL(DIRECTORY "dependencies/." DESTINATION share/gpc/gaalop/plugins PATTERN ".svn" EXCLUDE)
 
 # set root dir
-SET(GCD_ROOT_DIR "${CMAKE_CURRENT_BINARY_DIR}" CACHE PATH "Gaalop Compiler Driver root directory" FORCE)
+SET(GPC_ROOT_DIR "${CMAKE_CURRENT_BINARY_DIR}" CACHE PATH "Gaalop Compiler Driver root directory" FORCE)
 
 # build and install helper library
 ADD_SUBDIRECTORY(include)
@@ -63,7 +63,7 @@ IF(BUILD_WITH_TESTS)
 ENDIF(BUILD_WITH_TESTS)
 
 # install tests
-INSTALL(DIRECTORY test DESTINATION share/gcd PATTERN ".svn" EXCLUDE)
+INSTALL(DIRECTORY test DESTINATION share/gpc PATTERN ".svn" EXCLUDE)
 
 # package upload
 FILE(GLOB PACKAGES
