@@ -6,7 +6,6 @@ import de.gaalop.gapp.Selector;
 import de.gaalop.gapp.PosSelector;
 import de.gaalop.gapp.Selectorset;
 import de.gaalop.gapp.Variableset;
-import de.gaalop.gapp.instructionSet.GAPPAddMv;
 import de.gaalop.gapp.instructionSet.GAPPAssignMv;
 import de.gaalop.gapp.instructionSet.GAPPAssignVector;
 import de.gaalop.gapp.instructionSet.GAPPCalculateMv;
@@ -220,7 +219,6 @@ public class PrettyPrint extends CFGGAPPVisitor {
     public Object visitSetVector(GAPPSetVector gappSetVector, Object arg) {
         result.append("setVector ");
         printVector(gappSetVector.getDestination());
-        printPosSelectors(gappSetVector.getSelectorsDest());
         result.append(" = ");
         printMultivector(gappSetVector.getSource());
         printSelectors(gappSetVector.getSelectorsSrc());
@@ -273,15 +271,4 @@ public class PrettyPrint extends CFGGAPPVisitor {
         return null;
     }
 
-    @Override
-    public Object visitAddMv(GAPPAddMv gappAddMv, Object arg) {
-        result.append("addMv ");
-        printMultivector(gappAddMv.getDestination());
-        printPosSelectors(gappAddMv.getSelectorsDest());
-        result.append(" = ");
-        printSetOfVariables(gappAddMv.getSource());
-        printSelectors(gappAddMv.getSelectorsSrc());
-        result.append(";\n");
-        return null;
-    }
 }

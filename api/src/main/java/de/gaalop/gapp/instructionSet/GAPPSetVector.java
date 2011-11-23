@@ -1,6 +1,5 @@
 package de.gaalop.gapp.instructionSet;
 
-import de.gaalop.gapp.PosSelectorset;
 import de.gaalop.gapp.Selectorset;
 import de.gaalop.gapp.variables.GAPPMultivector;
 import de.gaalop.gapp.variables.GAPPVector;
@@ -14,13 +13,11 @@ public class GAPPSetVector extends GAPPBaseInstruction {
     private GAPPVector destination;
     private GAPPMultivector source;
     private Selectorset selectorsSrc;
-    private PosSelectorset selectorsDest;
 
-    public GAPPSetVector(GAPPVector destination, GAPPMultivector source, Selectorset selectorsSrc, PosSelectorset selectorsDest) {
+    public GAPPSetVector(GAPPVector destination, GAPPMultivector source, Selectorset selectorsSrc) {
         this.destination = destination;
         this.source = source;
         this.selectorsSrc = selectorsSrc;
-        this.selectorsDest = selectorsDest;
     }
 
     @Override
@@ -38,14 +35,6 @@ public class GAPPSetVector extends GAPPBaseInstruction {
 
     public GAPPMultivector getSource() {
         return source;
-    }
-
-    public PosSelectorset getSelectorsDest() {
-        return selectorsDest;
-    }
-
-    public void setSelectorsDest(PosSelectorset selectorsDest) {
-        this.selectorsDest = selectorsDest;
     }
 
     public void setDestination(GAPPVector destination) {
