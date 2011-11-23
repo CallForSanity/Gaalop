@@ -108,23 +108,25 @@ public class Main {
                 if (commandEnd >= 0) { // we found a command end
                     // fill buffer until command end
                     commandBuffer.append(line.substring(0,commandEnd+1));
-                    final String command = commandBuffer.toString();
+                    String command = commandBuffer.toString();
                 
                     // we found a command end, start new command by emptying buffer
                     commandBuffer = new StringBuffer();
                     
                     // rest of line is start of new command buffer
                     if(commandEnd < line.length())
-                        commandBuffer.append(line.substring(commandEnd+1)).append(LINE_END);
+                        commandBuffer.append(line.substring(commandEnd+1));
+                    commandBuffer.append(LINE_END);
                             
                     // search for keywords in command and parse the command
-                    if (command.indexOf(gpcMvGetBladeCoeff) >= 0) {
-                        int pos = 0;
-                        
-                        do {
-                            CommandReplacer cp = new CommandReplacer(
-                                    command.substring(pos),
-                                    gpcMvGetBladeCoeff);
+                    // handle mv_get_bladecoeff as a specieal case
+                    // because it may be embedded anywhere.
+                    {
+                        CommandFunctionReplacer cp = new CommandFunctionReplacer(
+                                command,
+                                gpcMvGetBladeCoeff);
+
+                        while (cp.isFound()) {
 
                             // get blade coeff array entry
                             final String bladeCoeffArrayEntry = getMvBladeCoeffArrayEntry(
@@ -132,13 +134,23 @@ public class Main {
                                     cp.getCommandParams()[0],
                                     cp.getCommandParams()[1]);
 
-                            outputFile.write(cp.replace(bladeCoeffArrayEntry));
-                            
+                            // write to file
+                            outputFile.write(cp.getCleanedLineStart());
+                            outputFile.write(bladeCoeffArrayEntry);
+
                             // search for further occurences
-                            pos = command.indexOf(gpcMvGetBladeCoeff,
-                                                  pos+gpcMvGetBladeCoeff.length());
-                        } while(pos >= 0);
-                    } else if (command.indexOf(gpcMvToArray) >= 0) {
+                            System.out.println(cp.getCleanedLineEnd());
+                            cp = new CommandFunctionReplacer(
+                                    cp.getCleanedLineEnd(),
+                                    gpcMvGetBladeCoeff);
+                        }
+                        
+                        // go on with remains of command
+                        command = cp.getCleanedLineEnd();
+                    }
+                    
+                    // other commands are always exclusive and not embedded
+                    if (command.indexOf(gpcMvToArray) >= 0) {
                         processMvToArray(command, outputFile, mvComponents);
                     } else if (command.indexOf(gpcMvToStridedArray) >= 0) {
                         processMvToStridedArray(command, outputFile, mvComponents);
@@ -148,7 +160,6 @@ public class Main {
                         processMvToVecArray(command, outputFile, mvComponents);
                     } else {
                         outputFile.write(command);
-                        //outputFile.write(commandBuffer.toString());
                     }
                 } else { // no command end found
                     // continue filling command buffer
@@ -181,6 +192,8 @@ public class Main {
         Iterator<Expression> it = ((MacroCall)assignment.getValue()).getArguments().iterator();
         final String mv = it.next().toString();
         Integer count = 0;
+        outputFile.write(LINE_END);
+        outputFile.write(LINE_END);
         while(it.hasNext()) {
             outputFile.write(array);
             outputFile.write('[');
@@ -205,6 +218,8 @@ public class Main {
         final String mv = it.next().toString();
         final int stride = Integer.parseInt(it.next().toString());
         Integer index = 0;
+        outputFile.write(LINE_END);
+        outputFile.write(LINE_END);
         while(it.hasNext()) {
             outputFile.write(array);
             outputFile.write('[');
@@ -253,6 +268,7 @@ public class Main {
         // print array assignments
         Iterator<Expression> it = ((MacroCall)assignment.getValue()).getArguments().iterator();
         final String mv = it.next().toString();
+        outputFile.write(LINE_END);
         outputFile.write(vec);
         outputFile.write(" = make_float4(");
         outputFile.write(getMvBladeCoeffArrayEntry(mvComponents,
@@ -276,6 +292,7 @@ public class Main {
         Iterator<Expression> it = ((MacroCall)assignment.getValue()).getArguments().iterator();
         final String mv = it.next().toString();
         int count = 0;
+        outputFile.write(LINE_END);
         while(it.hasNext()) {
             outputFile.write(vec);
             outputFile.write(".s"); // TODO recognize vector size and assign with make_float

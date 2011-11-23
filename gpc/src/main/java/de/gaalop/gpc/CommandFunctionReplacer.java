@@ -9,19 +9,27 @@ import java.io.IOException;
 import java.util.Vector;
 
 /**
- *
+ * Replaces functions in commands.
  * @author pc
  */
-public class CommandReplacer {
-    private int lineCount = 1;
+public class CommandFunctionReplacer {
     private String[] commandParams;
     private String cleanedLineStart;
     private String cleanedLineEnd;
+    private boolean found = false;
     
-    public CommandReplacer(final String command,
-                         final String commandName) throws IOException {
-        // start cleaned command
+    public CommandFunctionReplacer(final String command,
+                           final String commandName) throws IOException {
+        
+        // search command
         int pos = command.indexOf(commandName);
+        if(!(found = (pos >= 0))) {
+            cleanedLineStart = "";
+            cleanedLineEnd = command;
+            return;
+        }
+
+        // start cleaned 
         StringBuffer cleanedLineBuffer = new StringBuffer();
         cleanedLineStart = command.substring(0, pos);
         
@@ -29,7 +37,12 @@ public class CommandReplacer {
         pos += commandName.length();
         pos = command.indexOf('(', pos) + 1;
         
-        // find params
+        /*
+         * Find params.
+         * Since we do not know the end of the command beforehand,
+         * we cannot parse the command directly.
+         * Find end of function first.
+         */
         StringBuffer argsBuffer = new StringBuffer();
         int level = 1;
         while(true) {
@@ -57,11 +70,19 @@ public class CommandReplacer {
         cleanedLineEnd = command.substring(pos);
     }
     
+    public boolean isFound() {
+        return found;
+    }
+    
     public String[] getCommandParams() {
         return commandParams;
     }
     
-    public String replace(final String replacement) {
-        return cleanedLineStart + replacement + cleanedLineEnd;
+    public String getCleanedLineStart() {
+        return cleanedLineStart;
+    }
+    
+    public String getCleanedLineEnd() {
+        return cleanedLineEnd;
     }
 }
