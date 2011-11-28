@@ -2,6 +2,7 @@ package de.gaalop.gapp.importing;
 
 import de.gaalop.dfg.MultivectorComponent;
 import de.gaalop.gapp.GAPP;
+import de.gaalop.gapp.PairSetOfVariablesAndIndices;
 import de.gaalop.gapp.PosSelector;
 import de.gaalop.gapp.PosSelectorset;
 import de.gaalop.gapp.Selector;
@@ -31,7 +32,7 @@ import de.gaalop.gapp.variables.GAPPVector;
 import de.gaalop.tba.Algebra;
 import java.util.HashSet;
 import java.util.LinkedList;
-
+//TODO chs modify generation so that setVector is used instead of setMv for building up the vectors used for dotVectors
 /**
  * Creates GAPP code from the ParallelObject data structure
  * @author Christian Steinmetz
@@ -349,8 +350,11 @@ public class GAPPCreator implements ParallelObjectVisitor {
             selSet.add(new Selector(mvC.getBladeIndex(), slot.isNegated() ? (byte) -1 : (byte) 1, algebra.getBlade(mvC.getBladeIndex()).toString()));
             slotNo++;
         }
+        PairSetOfVariablesAndIndices pair = new PairSetOfVariablesAndIndices(source, selSet);
+        LinkedList<PairSetOfVariablesAndIndices> list = new LinkedList<PairSetOfVariablesAndIndices>();
+        list.add(pair);
 
-        gapp.addInstruction(new GAPPSetVector(destination, source, selSet));
+        gapp.addInstruction(new GAPPSetVector(destination, list));
     }
 
     /**
@@ -383,10 +387,13 @@ public class GAPPCreator implements ParallelObjectVisitor {
                 selSet,
                 varMvDestSet));
 
+        PairSetOfVariablesAndIndices pair = new PairSetOfVariablesAndIndices(mvTmp, createIncreasingSelectorset(vector.getSlots().size()));
+        LinkedList<PairSetOfVariablesAndIndices> list = new LinkedList<PairSetOfVariablesAndIndices>();
+        list.add(pair);
+
         gapp.addInstruction(new GAPPSetVector(
                 destination,
-                mvTmp,
-                createIncreasingSelectorset(vector.getSlots().size())));
+                list));
     }
 
     /**
@@ -417,10 +424,14 @@ public class GAPPCreator implements ParallelObjectVisitor {
 
         copyFromManyMultivectors(mvTmp, vector, multivectors);
 
+
+        PairSetOfVariablesAndIndices pair = new PairSetOfVariablesAndIndices(mvTmp, createIncreasingSelectorset(vector.getSlots().size()));
+        LinkedList<PairSetOfVariablesAndIndices> list = new LinkedList<PairSetOfVariablesAndIndices>();
+        list.add(pair);
+
         gapp.addInstruction(new GAPPSetVector(
                 destination,
-                mvTmp,
-                createIncreasingSelectorset(vector.getSlots().size())));
+                list));
     }
 
     /**
@@ -487,10 +498,13 @@ public class GAPPCreator implements ParallelObjectVisitor {
                 selSet,
                 varMvDestSet));
 
+        PairSetOfVariablesAndIndices pair = new PairSetOfVariablesAndIndices(mvTmp, createIncreasingSelectorset(vector.getSlots().size()));
+        LinkedList<PairSetOfVariablesAndIndices> list = new LinkedList<PairSetOfVariablesAndIndices>();
+        list.add(pair);
+
         gapp.addInstruction(new GAPPSetVector(
                 destination,
-                mvTmp,
-                createIncreasingSelectorset(vector.getSlots().size())));
+                list));
     }
 
     /**

@@ -1,5 +1,6 @@
 package de.gaalop.gapp.executer;
 
+import de.gaalop.gapp.PairSetOfVariablesAndIndices;
 import de.gaalop.gapp.PosSelector;
 import de.gaalop.gapp.PosSelectorset;
 import de.gaalop.gapp.Selector;
@@ -144,22 +145,25 @@ public class Executer extends CFGGAPPVisitor {
 
     @Override
     public Object visitSetVector(GAPPSetVector gappSetVector, Object arg) {
-        int size = gappSetVector.getSelectorsSrc().size();
+        //estimiate size
+        int size = 0;
+        for (PairSetOfVariablesAndIndices pair: gappSetVector.getEntries())
+            size += pair.getSelectors().size();
 
         String destName = gappSetVector.getDestination().getName();
         createVector(destName, size);
         MultivectorWithValues destination = getMultivector(destName);
-        MultivectorWithValues source = getMultivector(gappSetVector.getSource().getName());
-        Selectorset selSrc = gappSetVector.getSelectorsSrc();
-
 
         destination.setEntries(new float[size]);
-        for (int sel = 0; sel < size; sel++) {
-            Selector sSrc = selSrc.get(sel);
-
-            destination.setEntry(sel, sSrc.getSign() * source.getEntries()[sSrc.getIndex()]);
+        int i = 0;
+        for (PairSetOfVariablesAndIndices pair: gappSetVector.getEntries()) {
+            MultivectorWithValues source = getMultivector(pair.getSetOfVariable().getName());
+            for (Selector sel: pair.getSelectors()) {
+                destination.setEntry(i, sel.getSign() * source.getEntries()[sel.getIndex()]);
+                i++;
+            }
         }
-
+        
         return null;
     }
 

@@ -1,6 +1,7 @@
 package de.gaalop.gapp.visitor;
 
 import de.gaalop.cfg.AssignmentNode;
+import de.gaalop.gapp.PairSetOfVariablesAndIndices;
 import de.gaalop.gapp.PosSelectorset;
 import de.gaalop.gapp.Selector;
 import de.gaalop.gapp.PosSelector;
@@ -152,6 +153,30 @@ public class PrettyPrint extends CFGGAPPVisitor {
     }
 
     /**
+     * Prints a PairSetOfVariablesAndIncides instance
+     * @param pair The pair
+     */
+    private void printPair(PairSetOfVariablesAndIndices pair) {
+        result.append(pair.getSetOfVariable().prettyPrint());
+        printSelectors(pair.getSelectors());
+    }
+
+
+    /**
+     * Prints a list of PairSetOfVariablesAndIncides
+     * @param list The list
+     */
+    private void printListOfPairs(LinkedList<PairSetOfVariablesAndIndices> list) {
+        result.append("{");
+        for (PairSetOfVariablesAndIndices cur : list) {
+            printPair(cur);
+            result.append(",");
+        }
+        result.deleteCharAt(result.length() - 1);
+        result.append("}");
+    }
+
+    /**
      * Pretty prints a dot product of vectors at the end of result
      * @param vectors The vectors of the dot product
      */
@@ -220,8 +245,7 @@ public class PrettyPrint extends CFGGAPPVisitor {
         result.append("setVector ");
         printVector(gappSetVector.getDestination());
         result.append(" = ");
-        printMultivector(gappSetVector.getSource());
-        printSelectors(gappSetVector.getSelectorsSrc());
+        printListOfPairs(gappSetVector.getEntries());
         result.append(";\n");
         return null;
     }
@@ -270,5 +294,9 @@ public class PrettyPrint extends CFGGAPPVisitor {
         result.append(");\n");
         return null;
     }
+
+
+
+
 
 }
