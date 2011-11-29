@@ -13,6 +13,7 @@
      -->
     <modules>
         <module>api</module>
+	<module>algebra</module>
 
 	<module>clucalc</module>
 

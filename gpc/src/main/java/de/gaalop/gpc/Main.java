@@ -59,6 +59,11 @@ public class Main {
         writeLinePragma(outputFile, lineCount++);
         while ((line = inputFile.readLine()) != null) {
             
+            // handle line comments
+            int lineCommentPos = line.indexOf("//");
+            if(lineCommentPos >= 0)
+                line = line.substring(0,lineCommentPos-1);
+            
             // parse line commands first
             if (line.indexOf("#include") >= 0 && line.indexOf('\"') >= 0) { // TODO parse this with ANTLR
                 // flush command buffer first
@@ -97,58 +102,34 @@ public class Main {
                 
                 ++gaalopBlockCount;
             } else { // non-line commands
-                // search for command end
-                int commandEnd = line.indexOf(";");
-                if (commandEnd < 0)
-                    commandEnd = line.indexOf("}");
-                else if (commandEnd < 0)
-                    commandEnd = line.indexOf("{");
-
-                // fill command buffer
-                if (commandEnd >= 0) { // we found a command end
-                    // fill buffer until command end
-                    commandBuffer.append(line.substring(0,commandEnd+1));
+                // add line to command buffer
+                commandBuffer.append(line).append(LINE_END);
+                                
+                while(true) {
+                    // get buffered command
                     String command = commandBuffer.toString();
-                
-                    // we found a command end, start new command by emptying buffer
-                    commandBuffer = new StringBuffer();
                     
-                    // rest of line is start of new command buffer
-                    if(commandEnd < line.length())
-                        commandBuffer.append(line.substring(commandEnd+1));
-                    commandBuffer.append(LINE_END);
-                            
-                    // search for keywords in command and parse the command
-                    // handle mv_get_bladecoeff as a specieal case
-                    // because it may be embedded anywhere.
-                    {
-                        CommandFunctionReplacer cp = new CommandFunctionReplacer(
-                                command,
-                                gpcMvGetBladeCoeff);
+                    // search for command end
+                    final String[] commandEndTokens = {";", "}", "*/", "}"};
+                    int commandEndPos = -1;
+                    for (final String commandEndToken : commandEndTokens) {
+                        int foundPos = command.indexOf(commandEndToken);
 
-                        while (cp.isFound()) {
-
-                            // get blade coeff array entry
-                            final String bladeCoeffArrayEntry = getMvBladeCoeffArrayEntry(
-                                    mvComponents,
-                                    cp.getCommandParams()[0],
-                                    cp.getCommandParams()[1]);
-
-                            // write to file
-                            outputFile.write(cp.getCleanedLineStart());
-                            outputFile.write(bladeCoeffArrayEntry);
-
-                            // search for further occurences
-                            System.out.println(cp.getCleanedLineEnd());
-                            cp = new CommandFunctionReplacer(
-                                    cp.getCleanedLineEnd(),
-                                    gpcMvGetBladeCoeff);
-                        }
-                        
-                        // go on with remains of command
-                        command = cp.getCleanedLineEnd();
+                        if (foundPos >= 0
+                                && ((foundPos += commandEndToken.length()) < commandEndPos)
+                                || commandEndPos < 0)
+                            commandEndPos = foundPos;
                     }
+
+                    // exit loop, if no command end found
+                    if(commandEndPos < 0)
+                        break;
                     
+                    // extract command
+                    command = command.substring(0,commandEndPos);                    
+                    // special case handling
+                    command = processMvGetBladeCoeff(command,mvComponents);
+
                     // other commands are always exclusive and not embedded
                     if (command.indexOf(gpcMvToArray) >= 0) {
                         processMvToArray(command, outputFile, mvComponents);
@@ -159,21 +140,63 @@ public class Main {
                     } else if (command.indexOf(gpcMvToVecArray) >= 0) {
                         processMvToVecArray(command, outputFile, mvComponents);
                     } else {
+                        // we found a comand, but it is not one of ours
                         outputFile.write(command);
                     }
-                } else { // no command end found
-                    // continue filling command buffer
-                    commandBuffer.append(line).append(LINE_END);
+
+                    // we found a command end, remove command from buffer
+                    commandBuffer.delete(0, commandEndPos);
                 }
             }
             
             // we read one line
             ++lineCount;
         }
+        
+        // flush command buffer
+        outputFile.write(processMvGetBladeCoeff(commandBuffer.toString(),mvComponents));
         // close output file
         outputFile.close();
     }
 
+    /*
+     * Search for keywords in command and parse the command.
+     * Handle mv_get_bladecoeff as a specieal case
+     * because it may be embedded anywhere.
+     */
+    protected String processMvGetBladeCoeff(String command,
+            Map<String, Map<String,String>> mvComponents) throws IOException {
+        
+        StringBuffer out = new StringBuffer();
+        
+        // replace step by step
+        CommandFunctionReplacer cp = new CommandFunctionReplacer(
+                command,
+                gpcMvGetBladeCoeff);
+        while (cp.isFound()) {
+
+            // get blade coeff array entry
+            final String bladeCoeffArrayEntry = getMvBladeCoeffArrayEntry(
+                    mvComponents,
+                    cp.getCommandParams()[0],
+                    cp.getCommandParams()[1]);
+
+            // write to file
+            out.append(cp.getCleanedLineStart());
+            out.append(bladeCoeffArrayEntry);
+
+            // search for further occurences
+            cp = new CommandFunctionReplacer(
+                    cp.getCleanedLineEnd(),
+                    gpcMvGetBladeCoeff);
+        }
+
+        // go on with remains of command
+        out.append(cp.getCleanedLineEnd());
+
+        return out.toString();
+    }
+    
     protected String getMvBladeCoeffArrayEntry(Map<String, Map<String, String>> mvComponents, final String mv, final String blade) {
         // get blade coeff array entry
         String bladeCoeffArrayEntry = mvComponents.get(mv).get(blade);
@@ -183,7 +206,7 @@ public class Main {
         return bladeCoeffArrayEntry;
     }
 
-    protected void processMvToArray(final String command, BufferedWriter outputFile, Map<String, Map<String, String>> mvComponents) throws RecognitionException, IOException {
+    protected void processMvToArray(final String command, BufferedWriter outputFile, Map<String, Map<String, String>> mvComponents) throws RecognitionException, IOException {        
         // parse assignment
         AssignmentNode assignment = parseAssignment(command);
         // get array name
@@ -466,6 +489,9 @@ public class Main {
     private String codeGeneratorPlugin = "de.gaalop.compressed.Plugin";
     @Option(name = "-optimizer", required = false, usage = "Sets the class name of the optimization strategy plugin that should be used.")
     private String optimizationStrategyPlugin = "de.gaalop.maple.Plugin";
+    @Option(name = "-algebra", required = false, usage = "Sets the class name of the algebra strategy plugin that should be used.")
+    private String algebraStrategyPlugin = "de.gaalop.algebra.Plugin";
+
 
     private static String PATH_SEP = "/";
     private static char LINE_END = '\n';
@@ -594,12 +620,11 @@ public class Main {
 
     private CompilerFacade createCompiler() {
         CodeParser codeParser = createCodeParser();
-
+        AlgebraStrategy algebraStrategy = createAlgebraStrategy();
         OptimizationStrategy optimizationStrategy = createOptimizationStrategy();
-
         CodeGenerator codeGenerator = createCodeGenerator();
 
-        return new CompilerFacade(codeParser, optimizationStrategy, codeGenerator);
+        return new CompilerFacade(codeParser, algebraStrategy, optimizationStrategy, codeGenerator);
     }
 
     private CodeParser createCodeParser() {
@@ -612,6 +637,19 @@ public class Main {
 
         System.err.println("Unknown code parser plugin: " + codeParserPlugin);
         System.exit(-2);
+        return null;
+    }
+
+    private AlgebraStrategy createAlgebraStrategy() {
+        Set<AlgebraStrategyPlugin> plugins = Plugins.getAlgebraStrategyPlugins();
+        for (AlgebraStrategyPlugin plugin : plugins) {
+            if (plugin.getClass().getName().equals(algebraStrategyPlugin)) {
+                return plugin.createAlgebraStrategy();
+            }
+        }
+
+        System.err.println("Unknown algebra strategy plugin: " + algebraStrategyPlugin);
+        System.exit(-3);
         return null;
     }
 

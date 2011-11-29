@@ -1,5 +1,5 @@
 #include <iostream>
-#include <gcd.h>
+#include <gpc.h>
 
 int main() {
 #pragma gcd begin
@@ -11,7 +11,8 @@ int main() {
 #pragma gcd end
 
 	float array[1];
-	array = mv_to_array(b,1);
+/*
+*/array = mv_to_array(b,1);
 
 	return !(mv_get_bladecoeff(b,1) == 10.0f);
 }
