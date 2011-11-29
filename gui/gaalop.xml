@@ -14,13 +14,14 @@
 <entry key="de.gaalop.tba.Plugin.optConstantPropagation">true</entry>
 <entry key="de.gaalop.algebra.Plugin.useBuiltInFiles">true</entry>
 <entry key="de.gaalop.clucalc.output.Plugin.suffix">_opt</entry>
+<entry key="de.gaalop.gappopencl.Plugin.standalone">true</entry>
 <entry key="de.gaalop.tba.Plugin.optOneExpressionRemoval">true</entry>
 <entry key="de.gaalop.maple.Plugin.constantFolding">false</entry>
-<entry key="de.gaalop.tba.Plugin.optMaxima">true</entry>
+<entry key="de.gaalop.tba.Plugin.optMaxima">false</entry>
 <entry key="de.gaalop.tba.Plugin.optInserting">true</entry>
 <entry key="de.gaalop.algebra.Plugin.definitionFilePath">algebra/5d/definition.csv</entry>
 <entry key="de.gaalop.maple.Plugin.useCodeSegmenter">false</entry>
 <entry key="de.gaalop.tba.Plugin.maximaCommand">/usr/bin/maxima</entry>
 <entry key="de.gaalop.algebra.Plugin.productsFilePath">algebra/5d/products.csv</entry>
-<entry key="de.gaalop.gapp.Plugin.optMaxima">true</entry>
+<entry key="de.gaalop.gapp.Plugin.optMaxima">false</entry>
 </properties>
