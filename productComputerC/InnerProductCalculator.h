@@ -14,15 +14,15 @@
 class InnerProductCalculator: public ProductCalculator {
 private:
 	unordered_map<int,int> baseSquares;
-	void calculateProductBlades(intList& base1, intList& base2, Blade& result);
-	void calculateProductBlades(int base1, intList& base2, Blade& result);
-	void calculateProductBlades(intList& base1, int base2, Blade& result);
-	void calculateProductBlades(int base1, int base2, Blade& result);
+	void calculateProductBlades(const intVector& base1, const intVector& base2, Blade& result);
+	void calculateProductBlades(const int base1, const intVector& base2, Blade& result);
+	void calculateProductBlades(const intVector& base1, const int base2, Blade& result);
+	void calculateProductBlades(const int base1, const int base2, Blade& result);
 public:
 	InnerProductCalculator();
 	virtual ~InnerProductCalculator();
 
-	virtual void calculate(Blade& blade1, Blade& blade2, unordered_map<int,int>& baseSquares, SumOfBlades& result);
+	virtual void calculate(const Blade& blade1, const Blade& blade2, unordered_map<int,int>& baseSquares, SumOfBlades& result);
 };
 
 #endif /* INNERPRODUCTCALCULATOR_H_ */

@@ -13,32 +13,23 @@
 class BladeStr {
 private:
 	float prefactor;
-    vector<string> baseVectors;
+
 public:
+	vector<string> baseVectors;
 	virtual ~BladeStr();
 
 
-    BladeStr(string& baseVector);
-    BladeStr(vector<string>& baseVectors);
-    BladeStr(float prefactor, string& baseVector);
-    BladeStr(float prefactor, vector<string>& baseVectors);
-
-    inline vector<string> getBaseVectors() const
-    {
-        return baseVectors;
-    }
+    BladeStr(const string& baseVector);
+    BladeStr(const vector<string>& baseVectors);
+    BladeStr(const float prefactor, const string& baseVector);
+    BladeStr(const float prefactor, const vector<string>& baseVectors);
 
     inline float getPrefactor() const
     {
         return prefactor;
     }
 
-    inline void setBaseVectors(vector<string>& baseVectors)
-    {
-        this->baseVectors = baseVectors;
-    }
-
-    inline void setPrefactor(float prefactor)
+    inline void setPrefactor(const float prefactor)
     {
         this->prefactor = prefactor;
     }

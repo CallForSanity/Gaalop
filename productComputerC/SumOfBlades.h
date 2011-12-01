@@ -17,16 +17,17 @@ typedef list<Blade> listBlade;
 
 class SumOfBlades {
 private:
-	listBlade blades;
+
 public:
+	listBlade blades;
 	SumOfBlades();
 	virtual ~SumOfBlades();
 
-	SumOfBlades(Blade& blade) {
+	SumOfBlades(const Blade& blade) {
 		blades.push_back(blade);
 	}
 
-	SumOfBlades(listBlade& blades) {
+	SumOfBlades(const listBlade& blades) {
 		this->blades = blades;
 	}
 
@@ -40,7 +41,7 @@ public:
 	 * @param arr The array to use
 	 * @return Contains the given array an element at least two times?
 	 */
-	bool containsDoubleIndex(list<int>& arr);
+	bool containsDoubleIndex(const intVector& arr);
 
 	void normalize() {
 		for (listBlade::iterator ci=blades.begin();
@@ -52,10 +53,6 @@ public:
 
 	void toMultivector(ListOfBlades& listOfBlades, Multivector& result);
 
-	inline listBlade getBlades() const
-	{
-		return blades;
-	}
 
 	void print() {
 		std::cout << "|";
@@ -67,13 +64,10 @@ public:
 		std::cout << "|";
 	}
 
-	inline void addBlade(Blade& blade) {
+	inline void addBlade(const Blade& blade) {
 		blades.push_back(blade);
 	}
 
-	inline void setBlades(listBlade& blades) {
-		this->blades = blades;
-	}
 
 	inline void clear() {
 		blades.clear();

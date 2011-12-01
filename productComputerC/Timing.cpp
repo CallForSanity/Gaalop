@@ -20,7 +20,7 @@ void Timing::startTime(const string& clock) {
 void Timing::stopTime(const string& clock) {
 	time_t endCurSection;
 	time(&endCurSection);
-	if (mapSumSections.count(clock) == 1)
+	if (mapSumSections.count(clock) == 0)
 		mapSumSections[clock] = 0;
 	mapSumSections[clock] += difftime(endCurSection, mapStartCurSection[clock]);
 }

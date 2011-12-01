@@ -18,7 +18,7 @@ ListOfBlades::~ListOfBlades() {
  * @param bases The base
  * @return The index
  */
-int ListOfBlades::getIndex(intVector& bases) {
+int ListOfBlades::getIndex(const intVector& bases) {
 	if (mapIndices.count(bases) == 1)
 		return mapIndices[bases];
 	else

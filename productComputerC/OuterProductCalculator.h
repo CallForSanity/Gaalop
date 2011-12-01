@@ -16,7 +16,7 @@ public:
 	OuterProductCalculator();
 	virtual ~OuterProductCalculator();
 
-	virtual void calculate(Blade& blade1, Blade& blade2, unordered_map<int,int>& baseSquares, SumOfBlades& result);
+	virtual void calculate(const Blade& blade1, const Blade& blade2, unordered_map<int,int>& baseSquares, SumOfBlades& result);
 };
 
 #endif /* OUTERPRODUCTCALCULATOR_H_ */

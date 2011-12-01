@@ -13,12 +13,13 @@ GeoProductCalculator::GeoProductCalculator() {
 GeoProductCalculator::~GeoProductCalculator() {
 }
 
-void GeoProductCalculator::calculate(Blade& blade1, Blade& blade2, unordered_map<int,int>& baseSquares, SumOfBlades& result) {
+void GeoProductCalculator::calculate(const Blade& blade1, const Blade& blade2, unordered_map<int,int>& baseSquares, SumOfBlades& result) {
 	//approach method from the dissertation: Daniel Fontijne, "Efficient Implementation of Geometric Algebra" (2007)
 
-	intList list1 = blade1.getBaseVectors();
-	intList list2 = blade2.getBaseVectors();
-
+	intList list1;
+	intList list2;
+	VectorMethods::intVectorToList(blade1.baseVectors,list1);
+	VectorMethods::intVectorToList(blade2.baseVectors,list2);
 
 	bool negate = false;
 
@@ -39,13 +40,18 @@ void GeoProductCalculator::calculate(Blade& blade1, Blade& blade2, unordered_map
 		if (baseSquares[element] == -1) negate = !negate;
 	}
 
-	intList merged(list1);
-	VectorMethods::mergeLists(merged,list2);
+	Blade b;
+	intVector& merged = b.baseVectors;
+	merged.reserve(list1.size()+list2.size());
+	for (intList::const_iterator ci = list1.begin(); ci != list1.end(); ++ci)
+		merged.push_back(*ci);
+	for (intList::const_iterator ci = list2.begin(); ci != list2.end(); ++ci)
+		merged.push_back(*ci);
 
 	float prefactor = blade1.getPrefactor()*blade2.getPrefactor();
 	if (negate) prefactor *= -1;
+	b.setPrefactor(prefactor);
 
-	Blade b(prefactor, merged);
 	result.addBlade(b);
 }
 
@@ -56,7 +62,7 @@ void GeoProductCalculator::calculate(Blade& blade1, Blade& blade2, unordered_map
  * @param list2 The second list
  * @return A common element
  */
-int GeoProductCalculator::commonElement(intList& list1, intList& list2, int& i1, int& i2) {
+int GeoProductCalculator::commonElement(const intList& list1, const intList& list2, int& i1, int& i2) {
 	i1 = 0;
 	i2 = 0;
 	for (intList::const_iterator ci1 = list1.begin(); ci1 != list1.end(); ++ci1) {

@@ -24,7 +24,7 @@ private:
     int to;
     int bladeCount;
 public:
-	CalcThread(int from, int to, int bladeCount, Algebra& algebra) {
+	CalcThread(const int from, const  int to,const  int bladeCount,const Algebra& algebra) {
 		this->from = from;
 		this->to = to;
 		this->bladeCount = bladeCount;

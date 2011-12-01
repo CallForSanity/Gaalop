@@ -10,25 +10,25 @@
 BladeStr::~BladeStr() {
 }
 
-BladeStr::BladeStr(string& baseVector)
+BladeStr::BladeStr(const string& baseVector)
 {
 	prefactor = 1;
 	this->baseVectors.push_back(baseVector);
 }
 
-BladeStr::BladeStr(vector<string>& baseVectors)
+BladeStr::BladeStr(const vector<string>& baseVectors)
 {
 	prefactor = 1;
 	this->baseVectors = baseVectors;
 }
 
-BladeStr::BladeStr(float prefactor, string& baseVector)
+BladeStr::BladeStr(const float prefactor, const string& baseVector)
 {
 	this->prefactor = prefactor;
 	this->baseVectors.push_back(baseVector);
 }
 
-BladeStr::BladeStr(float prefactor, vector<string>& baseVectors)
+BladeStr::BladeStr(const float prefactor, const vector<string>& baseVectors)
 {
 	this->prefactor = prefactor;
 	this->baseVectors = baseVectors;

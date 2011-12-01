@@ -17,28 +17,18 @@ private:
 	float prefactor;
 
 public:
-	intList baseVectors;
+	intVector baseVectors;
 	Blade();
-	Blade(float prefactor, int baseVector);
-    Blade(float prefactor, intList& baseVectors);
+	Blade(const float prefactor, const int baseVector);
+    Blade(const float prefactor, const intVector& baseVectors);
 	virtual ~Blade();
-
-	inline intList getBaseVectors() const
-    {
-        return baseVectors;
-    }
 
 	inline float getPrefactor() const
     {
         return prefactor;
     }
 
-	inline void setBaseVectors(intList& baseVectors)
-    {
-        this->baseVectors = baseVectors;
-    }
-
-	inline void setPrefactor(float prefactor)
+	inline void setPrefactor(const float prefactor)
     {
         this->prefactor = prefactor;
     }
@@ -51,7 +41,7 @@ public:
 
 	void print() {
 		std::cout << prefactor << "*";
-		VectorMethods::printIntList(baseVectors);
+		VectorMethods::printIntVector(baseVectors);
 	}
 
 };

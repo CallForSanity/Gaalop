@@ -16,8 +16,8 @@ public:
 	BladeArrayRoutines();
 	virtual ~BladeArrayRoutines();
 
-	void createBlades(intVector& base, vector<Blade>& result);
-	void createBladesHelp(intList& arrTrailing, int startPos, int k, intVector& base, vector<Blade>& blades);
+	void createBlades(const intVector& base, vector<Blade>& result);
+	void createBladesHelp(const intVector& arrTrailing, const int startPos, const int k, const intVector& base, vector<Blade>& blades);
 };
 
 #endif /* BLADEARRAYROUTINES_H_ */

@@ -13,7 +13,7 @@ PermutableIterator::PermutableIterator() {
 PermutableIterator::~PermutableIterator() {
 }
 
-void PermutableIterator::initialize(intVector& lengths, intVector& permutation) {
+void PermutableIterator::initialize(const intVector& lengths, intVector& permutation) {
 	this->lengths = lengths;
 	permutation.reserve(lengths.size());
 	curNo = 0;
@@ -26,7 +26,7 @@ void PermutableIterator::initialize(intVector& lengths, intVector& permutation) 
 
 void PermutableIterator::getNextPermutation(intVector& permutation) {
 	curNo++;
-	if (!hasNextPermutation()) return;
+	if (!(curNo<count)) return;
 
 	int pos = permutation.size();
 	bool ueberlauf = true;
@@ -38,8 +38,4 @@ void PermutableIterator::getNextPermutation(intVector& permutation) {
 		else
 			permutation[pos]++;
 	}
-}
-
-bool PermutableIterator::hasNextPermutation() {
-	return (curNo<count);
 }

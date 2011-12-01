@@ -14,12 +14,12 @@
 
 class GeoProductCalculator: public ProductCalculator {
 private:
-	int commonElement(intList& list1, intList& list2, int& i1, int& i2);
+	int commonElement(const intList& list1, const intList& list2, int& i1, int& i2);
 public:
 	GeoProductCalculator();
 	virtual ~GeoProductCalculator();
 
-	virtual void calculate(Blade& blade1, Blade& blade2, unordered_map<int,int>& baseSquares, SumOfBlades& result);
+	virtual void calculate(const Blade& blade1,const  Blade& blade2, unordered_map<int,int>& baseSquares, SumOfBlades& result);
 };
 
 #endif /* GEOPRODUCTCALCULATOR_H_ */

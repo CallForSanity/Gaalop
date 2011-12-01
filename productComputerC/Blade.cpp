@@ -14,12 +14,12 @@ Blade::Blade() {
 Blade::~Blade() {
 }
 
-Blade::Blade(float prefactor, int baseVector) {
+Blade::Blade(const float prefactor, const int baseVector) {
 	this->prefactor = prefactor;
 	this->baseVectors.push_back(baseVector);
 }
 
-Blade::Blade(float prefactor, intList& baseVectors) {
+Blade::Blade(const float prefactor, const intVector& baseVectors) {
 	this->prefactor = prefactor;
 	this->baseVectors = baseVectors;
 }
@@ -28,13 +28,6 @@ Blade::Blade(float prefactor, intList& baseVectors) {
 #include "BubbleSort.h"
 
 void Blade::normalize() {
-
-	intVector arr;
-	VectorMethods::intListToVector(baseVectors,arr);
-
-    if ((BubbleSort::doBubbleSort(arr) % 2) == 1)
+    if ((BubbleSort::doBubbleSort(baseVectors) % 2) == 1)
         negate();
-
-    baseVectors.clear();
-    VectorMethods::intVectorToList(arr, baseVectors);
 }

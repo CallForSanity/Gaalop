@@ -5,6 +5,8 @@
  *      Author: christian
  */
 
+//#define TIMING
+
 #include "ProductComputer.h"
 
 ProductComputer::ProductComputer() {
@@ -24,7 +26,7 @@ ProductComputer::~ProductComputer() {
      * @param mapToPlusMinus The map from ZeroInf base to PlusMinus base
      * @param mapToZeroInf The map from PlusMinus base to ZeroInf base
      */
-	void ProductComputer::initialize(Algebra& algebra) {
+	void ProductComputer::initialize(const Algebra& algebra) {
 		//create blades in "blades"
 		intVector intBase;
 		intBase.reserve(algebra.getBase().size());
@@ -48,8 +50,8 @@ ProductComputer::~ProductComputer() {
 		//baseSquares to integer system
 
 		BaseSquareMap map = algebra.getBaseSquaresStr();
-		for (BaseSquareMap::iterator ci = map.begin(); ci != map.end(); ++ci) {
-			std::pair<string,int> pair = *ci;
+		for (BaseSquareMap::const_iterator ci = map.begin(); ci != map.end(); ++ci) {
+			const std::pair<string,int> pair = *ci;
 			baseSquares[baseVectors.getIndex(pair.first)] = pair.second;
 		}
 
@@ -78,44 +80,67 @@ ProductComputer::~ProductComputer() {
 
 	typedef list<Blade> listBlade;
 
+#ifdef TIMING
 #include "Timing.h"
-Timing Timing::timing;
+#endif
 
 
-	void ProductComputer::calcProduct(int i, int j, ProductCalculator& calculator, Multivector& result) {
+	void ProductComputer::calcProduct(const int i, const int j, ProductCalculator& calculator, Multivector& result) {
         //use bladesPM and mapBaseChangeToZeroInf
+#ifdef TIMING
+		Timing::timing.startTime("1");
+#endif
 
         //calculate real product
-        list<Blade> blades1 = bladesPM[i].getBlades();
-        list<Blade> blades2 = bladesPM[j].getBlades();
+        list<Blade>& blades1 = bladesPM[i].blades;
+        list<Blade>& blades2 = bladesPM[j].blades;
         SumOfBlades product;
 
 
-        for (listBlade::iterator ci1 = blades1.begin(); ci1 != blades1.end();++ci1)
-            for (listBlade::iterator ci2 = blades2.begin(); ci2 != blades2.end();++ci2) {
-            	Blade blade1 = *ci1;
-            	Blade blade2 = *ci2;
-            	SumOfBlades s;
-            	calculator.calculate(blade1, blade2, baseSquares, s);
-            	listBlade lis = s.getBlades();
-            	for (listBlade::iterator ci = lis.begin(); ci != lis.end(); ++ci)
-					product.addBlade(*ci);
+        const listBlade::const_iterator& endItBlades1 = blades1.end();
+        const listBlade::const_iterator& endItBlades2 = blades2.end();
+        for (listBlade::const_iterator ci1 = blades1.begin(); ci1 != endItBlades1;++ci1)
+            for (listBlade::const_iterator ci2 = blades2.begin(); ci2 != endItBlades2;++ci2) {
+            	calculator.calculate(*ci1, *ci2, baseSquares, product);
             }
-
+        //product.print();
+#ifdef TIMING
+        Timing::timing.stopTime("1");
+        Timing::timing.startTime("2");
+#endif
 
         //base change
         SumOfBlades blade;
         changeBaseOfBlade(product, mapBaseChangeToZeroInf, blade);
         //12s
-
+#ifdef TIMING
+        Timing::timing.stopTime("2");
+        Timing::timing.startTime("3");
+#endif
         //checking if some blades are zero
         blade.checkIfSomeBladesAreZero();
+#ifdef TIMING
+        Timing::timing.stopTime("3");
+        Timing::timing.startTime("4");
+#endif
+
         //normalise blades
         blade.normalize();
+#ifdef TIMING
+        Timing::timing.stopTime("4");
+        Timing::timing.startTime("5");
+#endif
          //group blades
         blade.group();
+#ifdef TIMING
+        Timing::timing.stopTime("5");
+        Timing::timing.startTime("6");
+#endif
         //merge to multivector
         blade.toMultivector(listOfBlades, result);
+#ifdef TIMING
+        Timing::timing.stopTime("6");
+#endif
 
     }
 
@@ -125,20 +150,19 @@ Timing Timing::timing;
      * @param baseVectors The initialized BaseVectors object for finding indices
      * @return The new map
      */
-    void ProductComputer::convertMap(mapStringBladestrlist& mapBaseChangeStr, BaseVectors& baseVectors, mapIntBladearray& result) {
-		for (mapStringBladestrlist::iterator ci = mapBaseChangeStr.begin(); ci != mapBaseChangeStr.end(); ++ci) {
-			std::pair<string, bladeStrList> pair = *ci;
+    void ProductComputer::convertMap(mapStringBladestrlist& mapBaseChangeStr,  BaseVectors& baseVectors, mapIntBladearray& result) {
+		for (mapStringBladestrlist::const_iterator ci = mapBaseChangeStr.begin(); ci != mapBaseChangeStr.end(); ++ci) {
+			const std::pair<string, bladeStrList> pair = *ci;
 
-            vector<Blade> blades;
-            for (bladeStrList::iterator ci1 = pair.second.begin(); ci1 != pair.second.end(); ++ci1) {
+			BladeArray bladeArray;
+            vector<Blade>& blades = bladeArray.blades;
+            for (bladeStrList::const_iterator ci1 = pair.second.begin(); ci1 != pair.second.end(); ++ci1) {
             	BladeStr bladeStr = *ci1;
             	Blade b;
             	convertBladeStrToBlade(bladeStr, baseVectors, b);
             	blades.push_back(b);
             }
 
-            BladeArray bladeArray;
-            bladeArray.setBlades(blades);
             result[baseVectors.getIndex(pair.first)] = bladeArray;
         }
     }
@@ -149,15 +173,16 @@ Timing Timing::timing;
      * @param baseVectors The baseVectors for finding indices
      * @return The new Blade object
      */
-    void ProductComputer::convertBladeStrToBlade(BladeStr& bladeStr, BaseVectors& baseVectors, Blade& result) {
-        vector<string> baseVectorsStr = bladeStr.getBaseVectors();
+    void ProductComputer::convertBladeStrToBlade(const BladeStr& bladeStr,  BaseVectors& baseVectors, Blade& result) {
+        const vector<string>& baseVectorsStr = bladeStr.baseVectors;
 
-        intList baseV;
+        intVector& baseV = result.baseVectors;
+        baseV.clear();
+        baseV.reserve(baseVectorsStr.size());
         for (unsigned int i=0;i<baseVectorsStr.size();i++)
             baseV.push_back(baseVectors.getIndex(baseVectorsStr[i]));
 
         result.setPrefactor(bladeStr.getPrefactor());
-        result.setBaseVectors(baseV);
     }
 
     /**
@@ -167,13 +192,11 @@ Timing Timing::timing;
      * @param map The map to use for the basechange
      * @return The new SumOfBlades object
      */
-    void ProductComputer::changeBaseOfBlade(SumOfBlades& sumOfBlades, unordered_map<int, BladeArray>& map, SumOfBlades& resultB) {
-        listBlade blades = sumOfBlades.getBlades();
-        for (listBlade::iterator ci=blades.begin(); ci != blades.end(); ++ci) {
-        	Blade blade = *ci;
-        	changeBaseOfBlade(blade, map, resultB);
-        }
-
+    void ProductComputer::changeBaseOfBlade(const SumOfBlades& sumOfBlades, unordered_map<int, BladeArray>& map, SumOfBlades& resultB) {
+    	const listBlade& blades = sumOfBlades.blades;
+    	const listBlade::const_iterator& endIt = blades.end();
+        for (listBlade::const_iterator ci=blades.begin(); ci != endIt; ++ci)
+        	changeBaseOfBlade(*ci, map, resultB);
     }
 
 #include "PermutableIterator.h"
@@ -185,8 +208,8 @@ Timing Timing::timing;
      * @param map The map to use for the basechange
      * @return The new SumOfBlades object
      */
-    void ProductComputer::changeBaseOfBlade(Blade& blade, unordered_map<int, BladeArray>& map, SumOfBlades& resultB) {
-    	intList& baseVectors = blade.baseVectors;
+    void ProductComputer::changeBaseOfBlade(const Blade& blade, unordered_map<int, BladeArray>& map, SumOfBlades& resultB) {
+    	const intVector& baseVectors = blade.baseVectors;
         if (baseVectors.size() == 0) {
         	resultB.addBlade(blade);
         	return;
@@ -194,12 +217,14 @@ Timing Timing::timing;
 
         //find the lengths for creating a permutation
         intVector lengths;
+
         lengths.reserve(baseVectors.size());
         int j = 0;
-        for (intList::const_iterator ci=baseVectors.begin(); ci != baseVectors.end(); ++ci) {
-        	int i = *ci;
+        const intVector::const_iterator& endItBaseVectors0 = baseVectors.end();
+        for (intVector::const_iterator ci=baseVectors.begin(); ci != endItBaseVectors0; ++ci) {
+        	const int i = *ci;
             lengths.push_back((map.count(i) == 1)
-                    ? map[i].getBlades().size()
+                    ? map[i].blades.size()
                     : 1);
             j++;
         }
@@ -210,32 +235,40 @@ Timing Timing::timing;
         intVector permutation;
         iterator.initialize(lengths, permutation);
 
-
         do {
 
             //build current permutation in baseList
-            intList baseList;
+        	Blade c;
+            intVector& baseList = c.baseVectors;
+            baseList.reserve(lengths.size());
 
             float prefactor = 1;
             j=0;
 
-            for (intList::iterator ci=baseVectors.begin(); ci != baseVectors.end(); ++ci) {
-            	int i = *ci;
-                if (map.count(i) == 1) {
+
+
+            const intVector::const_iterator& endItBaseVectors = baseVectors.end();
+            for (intVector::const_iterator ci=baseVectors.begin(); ci != endItBaseVectors; ++ci) {
+            	const int i = *ci;
+
+            	unordered_map<int, BladeArray>::iterator it = map.find(i);
+                if (it != map.end()) {
                     Blade b;
-                    map[i].getBlade(permutation[j],b);
+                    (*it).second.getBlade(permutation[j],b);
                     prefactor *= b.getPrefactor();
-                    VectorMethods::mergeLists(baseList, b.baseVectors);
+                    const intVector::const_iterator& endItBBaseVectors = b.baseVectors.end();
+                    for (intVector::const_iterator ci2 = b.baseVectors.begin(); ci2 != endItBBaseVectors; ++ci2)
+                    	baseList.push_back(*ci2);
                 } else {
                     baseList.push_back(i);
                 }
                 j++;
             }
 
-            Blade c(prefactor*blade.getPrefactor(), baseList);
+
+            c.setPrefactor(prefactor*blade.getPrefactor());
             resultB.addBlade(c);
             iterator.getNextPermutation(permutation);
 
-        } while (iterator.hasNextPermutation());
-
+        } while (iterator.curNo<iterator.count);
     }

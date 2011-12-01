@@ -15,9 +15,9 @@ public:
 	Permutable();
 	virtual ~Permutable();
 
-    virtual void initialize(intVector& lengths, intVector& permutation) = 0;
+    virtual void initialize(const intVector& lengths, intVector& permutation) = 0;
     virtual void getNextPermutation(intVector& permutation) = 0;
-    virtual bool hasNextPermutation() = 0;
+    inline virtual bool hasNextPermutation() = 0;
 };
 
 #endif /* PERMUTABLE_H_ */

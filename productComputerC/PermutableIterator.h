@@ -10,20 +10,21 @@
 
 #include "Permutable.h"
 
-class PermutableIterator: public Permutable {
+class PermutableIterator {
 
 private:
-    int curNo;
-    int count;
+
 
     intVector lengths;
 public:
+	int curNo;
+	int count;
+
 	PermutableIterator();
 	virtual ~PermutableIterator();
 
-	virtual void initialize(intVector& lengths, intVector& permutation);
-	virtual void getNextPermutation(intVector& permutation);
-	virtual bool hasNextPermutation();
+	void initialize(const intVector& lengths, intVector& permutation);
+	void getNextPermutation(intVector& permutation);
 };
 
 #endif /* PERMUTABLEITERATOR_H_ */

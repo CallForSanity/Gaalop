@@ -17,30 +17,39 @@ public:
 	VectorMethods();
 	virtual ~VectorMethods();
 
-	static bool intVectorEquals(intVector& v1, intVector& v2) {
+	static bool intVectorEquals(const intVector& v1, const intVector& v2) {
 		if (v1.size() != v2.size()) return false;
-		for (unsigned int i=0;i<v1.size();++i)
+		const unsigned int size = v1.size();
+		for (unsigned int i=0;i<size;++i)
 			if (v1[i] != v2[i]) return false;
 		return true;
 	}
 
-	static void intListToVector(intList& list, intVector& vec) {
-		vec.reserve(list.size());
+	static void intListToVector(const intList& list, intVector& vec) {
 		vec.clear();
-
-		for (intList::const_iterator ci = list.begin(); ci != list.end(); ++ci)
+		vec.reserve(list.size());
+		const intList::const_iterator& endIt = list.end();
+		for (intList::const_iterator ci = list.begin(); ci != endIt; ++ci)
 			vec.push_back(*ci);
 	}
 
-	static void intVectorToList(intVector& vec, intList& list) {
+	static void intVectorToList(const intVector& vec, intList& list) {
 		list.clear();
-
-		for (unsigned int i=0;i<vec.size();++i)
-			list.push_back(vec[i]);
+		const intVector::const_iterator& endIt = vec.end();
+		for (intVector::const_iterator ci = vec.begin(); ci != endIt; ++ci)
+			list.push_back(*ci);
 	}
 
-	static void mergeLists(intList& listDestSrc, intList& listSrc) {
-		for (intList::const_iterator ci = listSrc.begin(); ci != listSrc.end(); ++ci)
+	static void mergeLists(intList& listDestSrc, const intList& listSrc) {
+		const intList::const_iterator& endIt = listSrc.end();
+		for (intList::const_iterator ci = listSrc.begin(); ci != endIt; ++ci)
+			listDestSrc.push_back(*ci);
+	}
+
+	static void mergeVectors(intVector& listDestSrc, const intVector& listSrc) {
+		listDestSrc.reserve(listDestSrc.size()+listSrc.size());
+		const intVector::const_iterator& endIt = listSrc.end();
+		for (intVector::const_iterator ci = listSrc.begin(); ci != endIt; ++ci)
 			listDestSrc.push_back(*ci);
 	}
 
@@ -50,9 +59,10 @@ public:
      * @param list The list to search in
      * @return The index, -1 if the list doesn't contain the searched int
      */
-	static int getIndexOfString(int search, intList& list) {
+	static int getIndexOfString(const int search, const intVector& list) {
         int i=0;
-        for (intList::const_iterator ci=list.begin();ci != list.end();++ci) {
+        const intVector::const_iterator& endIt = list.end();
+        for (intVector::const_iterator ci=list.begin();ci != endIt;++ci) {
             if (search == *ci)
                 return i;
             i++;
@@ -62,7 +72,7 @@ public:
 
 
 
-	static void printIntList(intList& list) {
+	static void printIntList(const intList& list) {
 		std::cout << "{";
 		int size = list.size();
 		int cur = 0;
@@ -74,7 +84,7 @@ public:
 		std::cout << "}";
 	}
 
-	static void printIntVector(intVector& v) {
+	static void printIntVector(const intVector& v) {
 		std::cout << "{";
 		int size = v.size();
 		int cur = 0;

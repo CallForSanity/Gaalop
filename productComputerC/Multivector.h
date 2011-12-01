@@ -13,18 +13,16 @@
 
 class Multivector {
 private:
-	vector<BladeRef> blades;
+
 public:
+	vector<BladeRef> blades;
 	Multivector();
 	virtual ~Multivector();
 
-	inline void addBlade(BladeRef& blade) {
+	inline void addBlade(const BladeRef& blade) {
 		blades.push_back(blade);
 	}
 
-	inline vector<BladeRef> getBlades() const {
-		return blades;
-	}
 };
 
 #endif /* MULTIVECTOR_H_ */

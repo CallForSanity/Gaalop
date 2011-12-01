@@ -13,7 +13,7 @@ private:
 	signed char prefactor;
 	int index;
 public:
-	BladeRef(signed char prefactor, int index);
+	BladeRef(const signed char prefactor, const  int index);
 	virtual ~BladeRef();
 
 	inline int getIndex() const
@@ -26,12 +26,12 @@ public:
         return prefactor;
     }
 
-	inline void setIndex(int index)
+	inline void setIndex(const int index)
     {
         this->index = index;
     }
 
-	inline void setPrefactor(signed char prefactor)
+	inline void setPrefactor(const signed char prefactor)
     {
         this->prefactor = prefactor;
     }

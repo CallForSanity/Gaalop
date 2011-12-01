@@ -14,12 +14,12 @@ OuterProductCalculator::~OuterProductCalculator() {
 }
 
 
-void OuterProductCalculator::calculate(Blade& blade1, Blade& blade2, unordered_map<int,int>& baseSquares, SumOfBlades& result) {
-	intList list;
+void OuterProductCalculator::calculate(const Blade& blade1, const Blade& blade2, unordered_map<int,int>& baseSquares, SumOfBlades& result) {
+	intVector list;
 	Blade resultB(blade1.getPrefactor()*blade2.getPrefactor(), list);
 
-	intList base1 = blade1.getBaseVectors();
-	intList base2 = blade2.getBaseVectors();
+	const intVector& base1 = blade1.baseVectors;
+	const intVector& base2 = blade2.baseVectors;
 
 
 		if (base1.empty()) {
@@ -27,22 +27,27 @@ void OuterProductCalculator::calculate(Blade& blade1, Blade& blade2, unordered_m
 				result.addBlade(resultB);
 				return;
 			} else {
-				resultB.setBaseVectors(base2);
-				result.addBlade(resultB);
+				Blade resultF(blade1.getPrefactor()*blade2.getPrefactor(), base2);
+				result.addBlade(resultF);
 				return;
 			}
 		} else {
 			if (base2.empty()) {
-				resultB.setBaseVectors(base1);
-				result.addBlade(resultB);
+				Blade resultF(blade1.getPrefactor()*blade2.getPrefactor(), base1);
+				result.addBlade(resultF);
 				return;
 			}
 		}
 
-		intList baseConcat(base1);
-		for (intList::const_iterator ci=base2.begin();ci != base2.end(); ++ci)
+
+
+		intVector& baseConcat = resultB.baseVectors;
+		baseConcat.clear();
+		baseConcat.reserve(base1.size()+base2.size());
+		for (intVector::const_iterator ci=base1.begin();ci != base1.end(); ++ci)
 			baseConcat.push_back(*ci);
-		resultB.setBaseVectors(baseConcat);
+		for (intVector::const_iterator ci=base2.begin();ci != base2.end(); ++ci)
+			baseConcat.push_back(*ci);
 
 		result.addBlade(resultB);
 }

@@ -13,14 +13,14 @@
 #include <string>
 #include <vector>
 #include <list>
-#include <tr1/unordered_map>
-#include <tr1/unordered_set>
+#include <boost/unordered_map.hpp>
+#include <boost/unordered_set.hpp>
 
 using std::string; //TODO optional nicht schöner stil
 using std::vector;
 using std::list;
-using std::tr1::unordered_map;
-using std::tr1::unordered_set;
+using boost::unordered_map;
+using boost::unordered_set;
 
 
 typedef list<int> intList;
@@ -32,10 +32,22 @@ struct hashIntVector
   size_t
   operator()(intVector v) const {
 	  int sum = 0;
-	  int fac = 7;
-	  for (unsigned int i=0;i<v.size();++i) {
-		  sum += fac*v[i];
-		  fac *= 7;
+	  const unsigned int size = v.size();
+	  for (unsigned int i=0;i<size;++i) {
+		  sum += v[i];
+	  }
+	  return sum;
+  }
+};
+
+struct hashIntList
+{
+  size_t
+  operator()(intList v) const {
+	  int sum = 0;
+	  const intList::const_iterator& endIt = v.end();
+	  for (intList::const_iterator ci=v.begin();ci != endIt; ++ci) {
+		  sum += (*ci);
 	  }
 	  return sum;
   }

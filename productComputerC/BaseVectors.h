@@ -9,37 +9,27 @@
 #define BASEVECTORS_H_
 
 #include "stdTypes.h"
-#include "DoubledHashMap.h"
 
 class BaseVectors {
 private:
 	int cur;
-	DoubledHashMap<string, int> bases;
+	unordered_map<string, int> bases;
 public:
 	BaseVectors();
 	virtual ~BaseVectors();
 
-	int addBase(string& base) {
-        bases.setAssociation(base, cur);
+	inline int addBase(const string& base) {
+        bases[base] = cur;
         return cur++;
     }
 
-	inline string getBaseString(int& index) {
-	   return bases.getKey(index);
+	inline int getIndex(const string& base) {
+	   return bases[base];
 	}
 
-	inline int getIndex(string& base) {
-	   return bases.getValue(base);
+	inline bool containsBase(const string& base) {
+		return bases.count(base) != 0;
 	}
-
-	inline bool containsBase(string& base) {
-	   return bases.containsKey(base);
-	}
-
-	inline bool containsIndex(int& index) {
-	   return bases.containsValue(index);
-	}
-
 
 };
 

@@ -13,22 +13,13 @@
 
 class BladeArray {
 private:
-	vector<Blade> blades;
+
 public:
+	vector<Blade> blades;
 	BladeArray();
 	virtual ~BladeArray();
 
-	inline vector<Blade> getBlades() const
-	{
-		return blades;
-	}
-
-	inline void setBlades(vector<Blade>& blades)
-	{
-		this->blades = blades;
-	}
-
-	inline void getBlade(int index, Blade& blade) {
+	inline void getBlade(const int index, Blade& blade) {
 		blade = blades[index];
 	}
 };

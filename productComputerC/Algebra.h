@@ -53,27 +53,27 @@ public:
         return mapToZeroInf;
     }
 
-	inline void setBase(vector<string>& base)
+	inline void setBase(const vector<string>& base)
     {
         this->base = base;
     }
 
-	inline void setBase2(vector<string>& base2)
+	inline void setBase2(const vector<string>& base2)
     {
         this->base2 = base2;
     }
 
-	inline void setBaseSquaresStr(BaseSquareMap& baseSquaresStr)
+	inline void setBaseSquaresStr(const BaseSquareMap& baseSquaresStr)
     {
         this->baseSquaresStr = baseSquaresStr;
     }
 
-	inline void setMapToPlusMinus(BaseChangeStrMap& mapToPlusMinus)
+	inline void setMapToPlusMinus(const BaseChangeStrMap& mapToPlusMinus)
     {
         this->mapToPlusMinus = mapToPlusMinus;
     }
 
-	inline void setMapToZeroInf(BaseChangeStrMap& mapToZeroInf)
+	inline void setMapToZeroInf(const BaseChangeStrMap& mapToZeroInf)
     {
         this->mapToZeroInf = mapToZeroInf;
     }

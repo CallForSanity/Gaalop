@@ -14,7 +14,7 @@
 
 class ListOfBlades {
 private:
-	vector<Blade> blades;
+	vector<Blade> blades; //TODO hier mit viel Aufwand optimieren?
 	unordered_map<intVector, int, hashIntVector> mapIndices;
 public:
 	ListOfBlades();
@@ -25,19 +25,17 @@ public:
 		return blades;
 	}
 
-	void setBlades(vector<Blade>& blades)
+	void setBlades(const vector<Blade>& blades)
 	{
 		this->blades = blades;
 		mapIndices.clear();
 		for (unsigned int i=0;i<blades.size();++i) {
-			intList list = blades[i].getBaseVectors();
-			intVector vec;
-			VectorMethods::intListToVector(list,vec);
+			const intVector& vec = blades[i].baseVectors;
 			mapIndices[vec]=i;
 		}
 	}
 
-	int getIndex(intVector& bases);
+	int getIndex(const intVector& bases);
 
 };
 

@@ -23,7 +23,7 @@ public:
      * @param blade2 The second blade
      * @return The product as sum of blades
      */
-	virtual void calculate(Blade& blade1, Blade& blade2, unordered_map<int,int>& baseSquares, SumOfBlades& result) = 0;
+	virtual void calculate(const Blade& blade1, const Blade& blade2, unordered_map<int,int>& baseSquares, SumOfBlades& result) = 0;
 
 };
 
