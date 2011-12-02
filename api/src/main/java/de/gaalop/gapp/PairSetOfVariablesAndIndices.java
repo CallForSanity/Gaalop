@@ -6,7 +6,7 @@ import de.gaalop.gapp.variables.GAPPSetOfVariables;
  * Stores a setOfVariable conntainer and a number of indices
  * @author Christian Steinmetz
  */
-public class PairSetOfVariablesAndIndices {
+public class PairSetOfVariablesAndIndices extends SetVectorArgument {
 
     private GAPPSetOfVariables setOfVariable;
     private Selectorset selectors;
@@ -35,6 +35,11 @@ public class PairSetOfVariablesAndIndices {
     @Override
     public String toString() {
         return setOfVariable.toString()+selectors.toString();
+    }
+
+    @Override
+    public boolean isConstant() {
+        return false;
     }
 
 }

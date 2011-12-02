@@ -7,6 +7,7 @@ import de.gaalop.gapp.PosSelector;
 import de.gaalop.gapp.PosSelectorset;
 import de.gaalop.gapp.Selector;
 import de.gaalop.gapp.Selectorset;
+import de.gaalop.gapp.SetVectorArgument;
 import de.gaalop.gapp.Variableset;
 import de.gaalop.gapp.importing.parallelObjects.Constant;
 import de.gaalop.gapp.importing.parallelObjects.DotProduct;
@@ -351,7 +352,7 @@ public class GAPPCreator implements ParallelObjectVisitor {
             slotNo++;
         }
         PairSetOfVariablesAndIndices pair = new PairSetOfVariablesAndIndices(source, selSet);
-        LinkedList<PairSetOfVariablesAndIndices> list = new LinkedList<PairSetOfVariablesAndIndices>();
+        LinkedList<SetVectorArgument> list = new LinkedList<SetVectorArgument>();
         list.add(pair);
 
         gapp.addInstruction(new GAPPSetVector(destination, list));
@@ -388,7 +389,7 @@ public class GAPPCreator implements ParallelObjectVisitor {
                 varMvDestSet));
 
         PairSetOfVariablesAndIndices pair = new PairSetOfVariablesAndIndices(mvTmp, createIncreasingSelectorset(vector.getSlots().size()));
-        LinkedList<PairSetOfVariablesAndIndices> list = new LinkedList<PairSetOfVariablesAndIndices>();
+        LinkedList<SetVectorArgument> list = new LinkedList<SetVectorArgument>();
         list.add(pair);
 
         gapp.addInstruction(new GAPPSetVector(
@@ -426,7 +427,7 @@ public class GAPPCreator implements ParallelObjectVisitor {
 
 
         PairSetOfVariablesAndIndices pair = new PairSetOfVariablesAndIndices(mvTmp, createIncreasingSelectorset(vector.getSlots().size()));
-        LinkedList<PairSetOfVariablesAndIndices> list = new LinkedList<PairSetOfVariablesAndIndices>();
+        LinkedList<SetVectorArgument> list = new LinkedList<SetVectorArgument>();
         list.add(pair);
 
         gapp.addInstruction(new GAPPSetVector(
@@ -499,7 +500,7 @@ public class GAPPCreator implements ParallelObjectVisitor {
                 varMvDestSet));
 
         PairSetOfVariablesAndIndices pair = new PairSetOfVariablesAndIndices(mvTmp, createIncreasingSelectorset(vector.getSlots().size()));
-        LinkedList<PairSetOfVariablesAndIndices> list = new LinkedList<PairSetOfVariablesAndIndices>();
+        LinkedList<SetVectorArgument> list = new LinkedList<SetVectorArgument>();
         list.add(pair);
 
         gapp.addInstruction(new GAPPSetVector(

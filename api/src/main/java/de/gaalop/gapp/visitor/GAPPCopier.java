@@ -1,10 +1,12 @@
 package de.gaalop.gapp.visitor;
 
+import de.gaalop.gapp.ConstantSetVectorArgument;
 import de.gaalop.gapp.PairSetOfVariablesAndIndices;
 import de.gaalop.gapp.PosSelectorset;
 import de.gaalop.gapp.Selector;
 import de.gaalop.gapp.PosSelector;
 import de.gaalop.gapp.Selectorset;
+import de.gaalop.gapp.SetVectorArgument;
 import de.gaalop.gapp.Variableset;
 import de.gaalop.gapp.instructionSet.GAPPAssignMv;
 import de.gaalop.gapp.instructionSet.GAPPAssignVector;
@@ -63,24 +65,30 @@ public class GAPPCopier implements GAPPVisitor {
     }
 
     /**
-     * Copies a PairSetOfVariablesAndIndices instance
-     * @param pair The pair
-     * @return The copied pair
+     * Copies a SetVectorArgument instance
+     * @param arg The argument
+     * @return The copied argument
      */
-    private PairSetOfVariablesAndIndices copyPair(PairSetOfVariablesAndIndices pair) {
-        return new PairSetOfVariablesAndIndices((GAPPSetOfVariables) GAPPValueHolderCopier.copyValueHolder(pair.getSetOfVariable()),
+    private SetVectorArgument copyArgument(SetVectorArgument arg) {
+        if (arg.isConstant()) {
+            ConstantSetVectorArgument c = (ConstantSetVectorArgument) arg;
+            return new ConstantSetVectorArgument(c.getValue());
+        } else {
+            PairSetOfVariablesAndIndices pair = (PairSetOfVariablesAndIndices) arg;
+            return new PairSetOfVariablesAndIndices((GAPPSetOfVariables) GAPPValueHolderCopier.copyValueHolder(pair.getSetOfVariable()),
                 copySelectorset(pair.getSelectors()));
+        }
     }
 
     /**
-     * Copies a list of PairSetOfVariablesAndIndices
+     * Copies a list of SetVectorArguments
      * @param list The list
      * @return The (deep) copy
      */
-    private LinkedList<PairSetOfVariablesAndIndices> copyListOfPair(LinkedList<PairSetOfVariablesAndIndices> list) {
-        LinkedList<PairSetOfVariablesAndIndices> result = new LinkedList<PairSetOfVariablesAndIndices>();
-        for (PairSetOfVariablesAndIndices cur: list)
-            result.add(copyPair(cur));
+    private LinkedList<SetVectorArgument> copyListOfArgs(LinkedList<SetVectorArgument> list) {
+        LinkedList<SetVectorArgument> result = new LinkedList<SetVectorArgument>();
+        for (SetVectorArgument cur: list)
+            result.add(copyArgument(cur));
         return result;
     }
 
@@ -149,7 +157,7 @@ public class GAPPCopier implements GAPPVisitor {
     public Object visitSetVector(GAPPSetVector gappSetVector, Object arg) {
         return new GAPPSetVector(
                 (GAPPVector) GAPPValueHolderCopier.copyValueHolder(gappSetVector.getDestination()),
-                copyListOfPair(gappSetVector.getEntries())
+                copyListOfArgs(gappSetVector.getEntries())
                 );
     }
 

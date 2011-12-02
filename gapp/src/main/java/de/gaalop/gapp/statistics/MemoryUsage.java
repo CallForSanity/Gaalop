@@ -2,6 +2,7 @@ package de.gaalop.gapp.statistics;
 
 import de.gaalop.cfg.ControlFlowGraph;
 import de.gaalop.gapp.PairSetOfVariablesAndIndices;
+import de.gaalop.gapp.SetVectorArgument;
 import de.gaalop.gapp.instructionSet.GAPPAssignMv;
 import de.gaalop.gapp.instructionSet.GAPPAssignVector;
 import de.gaalop.gapp.instructionSet.GAPPCalculateMv;
@@ -156,8 +157,12 @@ public class MemoryUsage extends CFGGAPPVisitor {
     public Object visitSetVector(GAPPSetVector gappSetVector, Object arg) {
         curLine++;
 
-        for (PairSetOfVariablesAndIndices pair: gappSetVector.getEntries())
-            access(pair.getSetOfVariable());
+        for (SetVectorArgument curArg: gappSetVector.getEntries())
+            if (!curArg.isConstant()) {
+                PairSetOfVariablesAndIndices p = (PairSetOfVariablesAndIndices) curArg;
+                access(p.getSetOfVariable());
+            }
+            
         
         return null;
     }

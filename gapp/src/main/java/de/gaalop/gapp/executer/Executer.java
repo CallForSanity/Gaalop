@@ -1,10 +1,12 @@
 package de.gaalop.gapp.executer;
 
+import de.gaalop.gapp.ConstantSetVectorArgument;
 import de.gaalop.gapp.PairSetOfVariablesAndIndices;
 import de.gaalop.gapp.PosSelector;
 import de.gaalop.gapp.PosSelectorset;
 import de.gaalop.gapp.Selector;
 import de.gaalop.gapp.Selectorset;
+import de.gaalop.gapp.SetVectorArgument;
 import de.gaalop.gapp.instructionSet.GAPPAssignMv;
 import de.gaalop.gapp.instructionSet.GAPPAssignVector;
 import de.gaalop.gapp.instructionSet.GAPPCalculateMv;
@@ -147,8 +149,15 @@ public class Executer extends CFGGAPPVisitor {
     public Object visitSetVector(GAPPSetVector gappSetVector, Object arg) {
         //estimiate size
         int size = 0;
-        for (PairSetOfVariablesAndIndices pair: gappSetVector.getEntries())
-            size += pair.getSelectors().size();
+        for (SetVectorArgument curArg: gappSetVector.getEntries()) {
+            if (curArg.isConstant()) {
+                //ConstantSetVectorArgument c = (ConstantSetVectorArgument) curArg;
+                size += 1;
+            } else {
+                PairSetOfVariablesAndIndices p = (PairSetOfVariablesAndIndices) curArg;
+                size += p.getSelectors().size();
+            }
+        }
 
         String destName = gappSetVector.getDestination().getName();
         createVector(destName, size);
@@ -156,12 +165,20 @@ public class Executer extends CFGGAPPVisitor {
 
         destination.setEntries(new float[size]);
         int i = 0;
-        for (PairSetOfVariablesAndIndices pair: gappSetVector.getEntries()) {
-            MultivectorWithValues source = getMultivector(pair.getSetOfVariable().getName());
-            for (Selector sel: pair.getSelectors()) {
-                destination.setEntry(i, sel.getSign() * source.getEntries()[sel.getIndex()]);
+        for (SetVectorArgument curArg: gappSetVector.getEntries()) {
+            if (curArg.isConstant()) {
+                ConstantSetVectorArgument c = (ConstantSetVectorArgument) curArg;
+                destination.setEntry(i, c.getValue());
                 i++;
+            } else {
+                PairSetOfVariablesAndIndices p = (PairSetOfVariablesAndIndices) curArg;
+                MultivectorWithValues source = getMultivector(p.getSetOfVariable().getName());
+                for (Selector sel: p.getSelectors()) {
+                    destination.setEntry(i, sel.getSign() * source.getEntries()[sel.getIndex()]);
+                    i++;
+                }
             }
+            
         }
         
         return null;
