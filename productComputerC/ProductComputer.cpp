@@ -103,7 +103,7 @@ ProductComputer::~ProductComputer() {
             for (listBlade::const_iterator ci2 = blades2.begin(); ci2 != endItBlades2;++ci2) {
             	calculator.calculate(*ci1, *ci2, baseSquares, product);
             }
-        //product.print();
+        product.checkIfSomeBladesAreZero();
 #ifdef TIMING
         Timing::timing.stopTime("1");
         Timing::timing.startTime("2");

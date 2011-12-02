@@ -75,6 +75,7 @@ public class ProductComputer {
             for (Blade blade2: blades2)
                 prodBlades.addAll(calculator.calculate(blade1, blade2, baseSquares).getBlades());
 
+        product.checkIfSomeBladesAreZero();
         //base change
         SumOfBlades blade = changeBaseOfBlade(product, mapBaseChangeToZeroInf);
 
