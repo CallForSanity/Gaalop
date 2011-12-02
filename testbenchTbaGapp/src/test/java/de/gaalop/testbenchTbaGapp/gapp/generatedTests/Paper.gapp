@@ -56,10 +56,6 @@ setVector ve28 = {inputsVector[0,-1]};
 setVector ve29 = {inputsVector[4,3]};
 dotVectors mv27[0] = <ve28,ve29>;
 setVector ve30 = {inputsVector[0,-1,2]};
-resetMv mv32[3];
-setMv mv32[1] = mv24[0];
-setMv mv32[0] = mv21[0];
-setMv mv32[2] = mv27[0];
-setVector ve31 = {mv32[0,1,2]};
+setVector ve31 = {mv21[0],mv24[0],mv27[0]};
 dotVectors f[16] = <ve30,ve31>;
 
