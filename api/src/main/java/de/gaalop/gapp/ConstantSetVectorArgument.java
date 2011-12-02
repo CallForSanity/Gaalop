@@ -1,7 +1,7 @@
 package de.gaalop.gapp;
 
 /**
- *
+ * Stores a constant which is an argument of setVectors
  * @author Christian Steinmetz
  */
 public class ConstantSetVectorArgument extends SetVectorArgument {

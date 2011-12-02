@@ -3,7 +3,7 @@ package de.gaalop.gapp;
 import de.gaalop.gapp.variables.GAPPSetOfVariables;
 
 /**
- * Stores a setOfVariable conntainer and a number of indices
+ * Stores a setOfVariable container and a number of indices
  * @author Christian Steinmetz
  */
 public class PairSetOfVariablesAndIndices extends SetVectorArgument {
