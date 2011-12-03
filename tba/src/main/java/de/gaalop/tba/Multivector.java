@@ -48,6 +48,31 @@ public class Multivector {
         return blades;
     }
 
-    
+    public String print() {
+        StringBuilder sb = new StringBuilder();
+        for (BladeRef ref: blades) {
+
+            switch (ref.getPrefactor()) {
+                case -1:
+                    sb.append("-E"+ref.getIndex());
+                    break;
+                case 0:
+                    break;
+                case 1:
+                    sb.append("+E"+ref.getIndex());
+                    break;
+                default:
+                    System.err.println("Only -1,0,1 allowed as prefactors in multivectors");
+                    break;
+            }
+
+
+        }
+        if (sb.length()==0) return "";
+        if (sb.charAt(0) == '+')
+            return sb.substring(1);
+        else
+            return sb.toString();
+    }
 
 }

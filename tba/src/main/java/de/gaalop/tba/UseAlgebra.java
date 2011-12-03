@@ -5,9 +5,9 @@ import de.gaalop.algebra.BladeArrayRoutines;
 import de.gaalop.algebra.TCBlade;
 import de.gaalop.cfg.AlgebraDefinitionFile;
 import de.gaalop.dfg.Expression;
-import de.gaalop.productComputer2.GeoProductCalculator;
-import de.gaalop.productComputer2.InnerProductCalculator;
-import de.gaalop.productComputer2.OuterProductCalculator;
+import de.gaalop.productComputer.GeoProductCalculator;
+import de.gaalop.productComputer.InnerProductCalculator;
+import de.gaalop.productComputer.OuterProductCalculator;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -241,39 +241,11 @@ public class UseAlgebra {
             for (int j=0;j<bladeCount;j++) {
                 out.print("E");out.print(i);out.print(";");
                 out.print("E");out.print(j);out.print(";");
-                out.print(printMultivector(tableInner.getProduct(i, j)));out.print(";");
-                out.print(printMultivector(tableOuter.getProduct(i, j)));out.print(";");
-                out.print(printMultivector(tableGeo.getProduct(i, j)));
+                out.print(tableInner.getProduct(i, j).print());out.print(";");
+                out.print(tableOuter.getProduct(i, j).print());out.print(";");
+                out.print(tableGeo.getProduct(i, j).print());
                 out.println();
             }
     }
-
-    private String printMultivector(Multivector m) {
-        StringBuilder sb = new StringBuilder();
-        for (BladeRef ref: m.getBlades()) {
-
-            switch (ref.getPrefactor()) {
-                case -1:
-                    sb.append("-E"+ref.getIndex());
-                    break;
-                case 0:
-                    break;
-                case 1:
-                    sb.append("+E"+ref.getIndex());
-                    break;
-                default:
-                    System.err.println("Only -1,0,1 allowed as prefactors in multivectors");
-                    break;
-            }
-
-
-        }
-        if (sb.length()==0) return "";
-        if (sb.charAt(0) == '+')
-            return sb.substring(1);
-        else
-            return sb.toString();
-    }
-
 
 }

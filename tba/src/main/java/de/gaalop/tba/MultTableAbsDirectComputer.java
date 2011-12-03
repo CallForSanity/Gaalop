@@ -2,9 +2,9 @@ package de.gaalop.tba;
 
 import de.gaalop.cfg.AlgebraDefinitionFile;
 import de.gaalop.tba.Multivector;
-import de.gaalop.productComputer2.AlgebraPC;
-import de.gaalop.productComputer2.ProductCalculator;
-import de.gaalop.productComputer2.ProductComputer;
+import de.gaalop.productComputer.AlgebraPC;
+import de.gaalop.productComputer.ProductCalculator;
+import de.gaalop.productComputer.ProductComputer;
 import de.gaalop.tba.IMultTable;
 
 /**
