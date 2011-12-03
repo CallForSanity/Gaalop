@@ -4,10 +4,12 @@
  */
 package de.gaalop.gappopencl;
 
+import de.gaalop.gapp.ConstantSetVectorArgument;
 import de.gaalop.gapp.PairSetOfVariablesAndIndices;
 import de.gaalop.gapp.PosSelector;
 import de.gaalop.gapp.Selector;
 import de.gaalop.gapp.SelectorIndex;
+import de.gaalop.gapp.SetVectorArgument;
 import de.gaalop.gapp.instructionSet.CalculationType;
 import de.gaalop.gapp.instructionSet.GAPPAssignMv;
 import de.gaalop.gapp.instructionSet.GAPPAssignVector;
@@ -89,8 +91,12 @@ public class GAPPOpenCLVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor
         
         // determine vector sizes
         int vectorSize = 0;
-        for(PairSetOfVariablesAndIndices pair : gappSetVector.getEntries())
-            vectorSize += pair.getSelectors().size();
+        for(SetVectorArgument setVectorArg : gappSetVector.getEntries()) {
+            if(setVectorArg.isConstant())
+                ++vectorSize;
+            else
+                vectorSize += ((PairSetOfVariablesAndIndices)setVectorArg).getSelectors().size();
+        }
         final int openCLVectorSize = getOpenCLVectorSize(vectorSize);
 
         // print declation
@@ -98,11 +104,11 @@ public class GAPPOpenCLVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor
         result.append(gappSetVector.getDestination().getName());
         result.append(" = make_float").append(openCLVectorSize).append("(");
 
-        Iterator<PairSetOfVariablesAndIndices> itPairs = gappSetVector.getEntries().iterator();
-        visitPairSetOfVariablesAndIndices(itPairs.next());    
-        while(itPairs.hasNext()) {
+        Iterator<SetVectorArgument> itSetVectorArg = gappSetVector.getEntries().iterator();
+        visitSetVectorArg(itSetVectorArg.next());    
+        while(itSetVectorArg.hasNext()) {
             result.append(",");
-            visitPairSetOfVariablesAndIndices(itPairs.next());    
+            visitSetVectorArg(itSetVectorArg.next());    
         }
         
         // fill remaining vector space with zeros
@@ -120,16 +126,21 @@ public class GAPPOpenCLVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor
         return null;
     }
 
-    protected void visitPairSetOfVariablesAndIndices(PairSetOfVariablesAndIndices pair) {
-        Iterator<Selector> itSel = pair.getSelectors().iterator();
-        visitSelector(itSel.next(), pair.getSetOfVariable().getName());
-        while(itSel.hasNext()) {
-            result.append(",");
+    protected void visitSetVectorArg(final SetVectorArgument setVectorArg) {
+        if(setVectorArg.isConstant())
+            result.append(((ConstantSetVectorArgument)setVectorArg).getValue());
+        else {
+            final PairSetOfVariablesAndIndices pair = (PairSetOfVariablesAndIndices)setVectorArg;
+            Iterator<Selector> itSel = pair.getSelectors().iterator();
             visitSelector(itSel.next(), pair.getSetOfVariable().getName());
+            while (itSel.hasNext()) {
+                result.append(",");
+                visitSelector(itSel.next(), pair.getSetOfVariable().getName());
+            }
         }
     }
 
-    protected void visitSelector(Selector sel, final String sourceName) {
+    protected void visitSelector(final Selector sel, final String sourceName) {
         if (sel.getSign() < 0)
             result.append("-");
         result.append(sourceName);
