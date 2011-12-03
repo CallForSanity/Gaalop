@@ -5,8 +5,6 @@ import de.gaalop.algebra.BladeArrayRoutines;
 import de.gaalop.algebra.TCBlade;
 import de.gaalop.cfg.AlgebraDefinitionFile;
 import de.gaalop.dfg.Expression;
-import de.gaalop.productComputer.AlgebraDefinitionTC;
-import de.gaalop.productComputer.exe.direct.MultTableAbsDirectComputer;
 import de.gaalop.productComputer2.GeoProductCalculator;
 import de.gaalop.productComputer2.InnerProductCalculator;
 import de.gaalop.productComputer2.OuterProductCalculator;

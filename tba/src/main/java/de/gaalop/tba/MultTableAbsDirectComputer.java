@@ -1,4 +1,4 @@
-package de.gaalop.productComputer.exe.direct;
+package de.gaalop.tba;
 
 import de.gaalop.cfg.AlgebraDefinitionFile;
 import de.gaalop.tba.Multivector;
