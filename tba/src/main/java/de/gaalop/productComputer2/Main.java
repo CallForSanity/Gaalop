@@ -1,10 +1,16 @@
 package de.gaalop.productComputer2;
 
+import de.gaalop.algebra.AlStrategy;
+import de.gaalop.cfg.AlgebraDefinitionFile;
 import de.gaalop.tba.BladeRef;
 import de.gaalop.tba.Multivector;
 import de.gaalop.tba.UseAlgebra;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -19,13 +25,26 @@ public class Main {
      */
     public static void main(String[] args) {
         correctness5d();
-        //performanceOn9d(args);
+        args = new String[]{"2","algebra/5d/definition.csv","true"}; //TODO chs rem
+        performanceOnArbitraryAlgebra(parseAlgebraDefinitionFile(args),Integer.parseInt(args[0]));
+    }
+
+    private static AlgebraDefinitionFile parseAlgebraDefinitionFile(String[] args) {
+        try {
+            InputStream inputStream = (Boolean.parseBoolean(args[2])) ? AlStrategy.class.getResourceAsStream(args[1]) : new FileInputStream(args[1]);
+            AlgebraDefinitionFile alFile = new AlgebraDefinitionFile();
+            alFile.loadFromFile(inputStream);
+            return alFile;
+        } catch (IOException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
 
     private static void correctness5d() {
         ProductComputer productComputer = new ProductComputer();
-        Algebra algebra = new Algebra5d();
-        algebra.create();
+        AlgebraDefinitionFile alFile = parseAlgebraDefinitionFile(new String[]{"1","algebra/5d/definition.csv","true"});
+        AlgebraPC algebra = new AlgebraPC(alFile);
         productComputer.initialize(algebra);
 
         UseAlgebra use = UseAlgebra.get5dConformalGALive();
@@ -45,24 +64,28 @@ public class Main {
             }
     }
 
-    private static void performanceOn9d(String[] args) {
+    private static void performanceOnArbitraryAlgebra(AlgebraDefinitionFile alFile, int threadCount) {
         try {
             long tick = System.currentTimeMillis();
             ProductComputer productComputer = new ProductComputer();
-            Algebra algebra = new Algebra9d();
-            algebra.create();
-            productComputer.initialize(algebra);
+            AlgebraPC algebraPC = new AlgebraPC(alFile);
+            productComputer.initialize(algebraPC);
 
-            int bladeCount = (int) Math.pow(2,algebra.base.length);
-            int n = Integer.parseInt(args[0]);
-            CalcThread[] threads = new CalcThread[n];
-            for (int i = 0; i < n; i++) {
-                threads[i] = new CalcThread((i * bladeCount) / n, ((i + 1) * bladeCount) / n, bladeCount);
+            int bladeCount = (int) Math.pow(2,algebraPC.base.length);
+            CalcThread[] threads = new CalcThread[threadCount];
+            for (int i = 0; i < threadCount; i++) {
+                int from = (i * bladeCount) / threadCount;
+                int to = ((i + 1) * bladeCount) / threadCount;
+
+                if (i == threadCount-1)
+                    to = bladeCount;
+                
+                threads[i] = new CalcThread(from, to, bladeCount, algebraPC);
             }
-            for (int i = 0; i < n; i++) {
+            for (int i = 0; i < threadCount; i++) {
                 threads[i].start();
             }
-            for (int i = 0; i < n; i++) {
+            for (int i = 0; i < threadCount; i++) {
                 threads[i].join();
             }
 
@@ -80,8 +103,20 @@ public class Main {
     };
 
     private static void test(Multivector m1, Multivector m2, char c, int i, int j) {
-        BladeRef[] blades1 = m1.getBlades().toArray(new BladeRef[0]);
-        BladeRef[] blades2 = m2.getBlades().toArray(new BladeRef[0]);
+        LinkedList<BladeRef> l1 = new LinkedList<BladeRef>();
+        LinkedList<BladeRef> l2 = new LinkedList<BladeRef>();
+
+        for (BladeRef r1: m1.getBlades())
+            if (r1.getPrefactor() != 0)
+                l1.add(r1);
+
+        for (BladeRef r2: m1.getBlades())
+            if (r2.getPrefactor() != 0)
+                l2.add(r2);
+
+
+        BladeRef[] blades1 = l1.toArray(new BladeRef[0]);
+        BladeRef[] blades2 = l2.toArray(new BladeRef[0]);
 
         if (blades1.length != blades2.length) {
             System.err.println(i+""+c+""+j+":"+m1+" != "+m2);

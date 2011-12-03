@@ -14,16 +14,12 @@ public class CalcThread extends Thread {
     private int to;
     private int bladeCount;
 
-    public CalcThread(int from, int to, int bladeCount) {
+    public CalcThread(int from, int to, int bladeCount, AlgebraPC algebraPC) {
         this.from = from;
         this.to = to;
         this.bladeCount = bladeCount;
         productComputer = new ProductComputer();
-
-        Algebra algebra = new Algebra9d();
-        algebra.create();
-
-        productComputer.initialize(algebra);
+        productComputer.initialize(algebraPC);
     }
 
 

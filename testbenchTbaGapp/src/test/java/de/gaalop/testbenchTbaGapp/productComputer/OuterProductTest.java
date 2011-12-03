@@ -1,15 +1,7 @@
 package de.gaalop.testbenchTbaGapp.productComputer;
 
-import de.gaalop.OptimizationException;
-import de.gaalop.cfg.AlgebraDefinitionFile;
-import de.gaalop.productComputer.AlgebraDefinitionTC;
-import de.gaalop.productComputer.exe.direct.MultTableOuterDirectComputer;
 import de.gaalop.tba.IMultTable;
 import de.gaalop.tba.UseAlgebra;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.antlr.runtime.RecognitionException;
 import org.junit.BeforeClass;
 import org.junit.Test;
 

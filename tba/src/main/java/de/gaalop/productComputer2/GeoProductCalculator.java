@@ -11,7 +11,7 @@ import java.util.List;
  */
 public class GeoProductCalculator implements ProductCalculator {
 
-    public SumOfBlades calculate(Blade blade1, Blade blade2, HashMap<Integer, Integer> baseSquares) {
+    public SumOfBlades calculate(Blade blade1, Blade blade2, HashMap<Integer, Byte> baseSquares) {
         //approach method from the dissertation: Daniel Fontijne, "Efficient Implementation of Geometric Algebra" (2007)
 
         LinkedList<Integer> list1 = new LinkedList(blade1.getBaseVectors());

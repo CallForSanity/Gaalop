@@ -9,7 +9,7 @@ import java.util.LinkedList;
  */
 public class OuterProductCalculator implements ProductCalculator {
 
-    public SumOfBlades calculate(Blade blade1, Blade blade2, HashMap<Integer, Integer> baseSquares) {
+    public SumOfBlades calculate(Blade blade1, Blade blade2, HashMap<Integer, Byte> baseSquares) {
         Blade result = new Blade(blade1.getPrefactor()*blade2.getPrefactor(), null);
 
 

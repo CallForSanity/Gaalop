@@ -14,7 +14,7 @@ public class ProductComputer {
     private HashMap<Integer, BladeArray> mapBaseChangeToZeroInf;
     private ListOfBlades listOfBlades;
     private SumOfBlades[] bladesPM;
-    private HashMap<Integer, Integer> baseSquares;
+    private HashMap<Integer, Byte> baseSquares;
 
     /**
      * Do initializations
@@ -23,7 +23,7 @@ public class ProductComputer {
      * @param mapToPlusMinus The map from ZeroInf base to PlusMinus base
      * @param mapToZeroInf The map from PlusMinus base to ZeroInf base
      */
-    public void initialize(Algebra algebra) {
+    public void initialize(AlgebraPC algebra) {
         //create blades in "blades"
         int[] intBase = new int[algebra.base.length];
         BaseVectors baseVectors = new BaseVectors();
@@ -39,7 +39,7 @@ public class ProductComputer {
                 baseVectors.addBase(algebra.base2[i]);
 
         //baseSquares to integer system
-        baseSquares = new HashMap<Integer, Integer>();
+        baseSquares = new HashMap<Integer, Byte>();
         for (String key: algebra.baseSquaresStr.keySet())
             baseSquares.put(baseVectors.getIndex(key), algebra.baseSquaresStr.get(key));
 

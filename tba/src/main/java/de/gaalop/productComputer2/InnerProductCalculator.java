@@ -10,9 +10,9 @@ import java.util.LinkedList;
  */
 public class InnerProductCalculator implements ProductCalculator {
 
-    private HashMap<Integer, Integer> baseSquares;
+    private HashMap<Integer, Byte> baseSquares;
 
-    public SumOfBlades calculate(Blade blade1, Blade blade2, HashMap<Integer, Integer> baseSquares) {
+    public SumOfBlades calculate(Blade blade1, Blade blade2, HashMap<Integer, Byte> baseSquares) {
         this.baseSquares = baseSquares;
         
         LinkedList<Integer> base1 = blade1.getBaseVectors();

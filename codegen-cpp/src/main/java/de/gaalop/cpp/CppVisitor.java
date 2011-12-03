@@ -13,7 +13,7 @@ import org.apache.commons.logging.LogFactory;
  * This visitor traverses the control and data flow graphs and generates C/C++ code.
  */
 public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
-    private int bladeCount = 512;
+
 	protected Log log = LogFactory.getLog(CppVisitor.class);
 
 	protected boolean standalone = true;
@@ -49,6 +49,7 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 	@Override
 	public void visit(StartNode node) {
 		graph = node.getGraph();
+                int bladeCount = graph.getAlgebraDefinitionFile().getBladeCount();
 
 		List<Variable> localVariables = sortVariables(graph.getLocalVariables());
 		if (standalone) {

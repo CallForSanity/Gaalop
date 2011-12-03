@@ -14,6 +14,6 @@ public interface ProductCalculator {
      * @param blade2 The second blade
      * @return The product as sum of blades
      */
-    public SumOfBlades calculate(Blade blade1, Blade blade2, HashMap<Integer, Integer> baseSquares);
+    public SumOfBlades calculate(Blade blade1, Blade blade2, HashMap<Integer, Byte> baseSquares);
 
 }

@@ -6,9 +6,10 @@ import de.gaalop.algebra.TCBlade;
 import de.gaalop.cfg.AlgebraDefinitionFile;
 import de.gaalop.dfg.Expression;
 import de.gaalop.productComputer.AlgebraDefinitionTC;
-import de.gaalop.productComputer.exe.direct.MultTableGeoDirectComputer;
-import de.gaalop.productComputer.exe.direct.MultTableInnerDirectComputer;
-import de.gaalop.productComputer.exe.direct.MultTableOuterDirectComputer;
+import de.gaalop.productComputer.exe.direct.MultTableAbsDirectComputer;
+import de.gaalop.productComputer2.GeoProductCalculator;
+import de.gaalop.productComputer2.InnerProductCalculator;
+import de.gaalop.productComputer2.OuterProductCalculator;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -45,15 +46,13 @@ public class UseAlgebra {
                 Logger.getLogger(UseAlgebra.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
-            AlgebraDefinitionTC algebraDefinitionTC = new AlgebraDefinitionTC(alFile);
-            MultTableInnerDirectComputer inner = new MultTableInnerDirectComputer(algebraDefinitionTC);
-            tableInner = inner;
+            tableInner = new MultTableAbsDirectComputer(alFile, new InnerProductCalculator());
             tableInner.createTable(0);
-            tableOuter = new MultTableOuterDirectComputer(algebraDefinitionTC);
+            tableOuter = new MultTableAbsDirectComputer(alFile, new OuterProductCalculator());
             tableOuter.createTable(0);
-            tableGeo = new MultTableGeoDirectComputer(algebraDefinitionTC);
+            tableGeo = new MultTableAbsDirectComputer(alFile, new GeoProductCalculator());
             tableGeo.createTable(0);
-            algebra = inner.getAlgebra();
+            algebra = new Algebra(alFile);
         }
     }
 
