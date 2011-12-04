@@ -54,6 +54,17 @@ public class AlStrategy implements AlgebraStrategy {
                     ? FunctionParser.parseFunctions(inputStream)
                     : new LinkedList<Function>();
 
+
+            //load user macros
+            if (!plugin.getUserMacroFilePath().trim().equals("")) {
+                File f = new File(plugin.userMacroFilePath);
+                if (f.exists()) {
+                     inputStream = new FileInputStream(f);
+                     functions.addAll(FunctionParser.parseFunctions(inputStream));
+                } else
+                    System.err.println("Algebra Plugin: User Macro File Path does not exist!");
+            }
+
             FunctionWrapper wrapper = new FunctionWrapper(functions);
             FunctionReplaceVisitor replacerF = new FunctionReplaceVisitor(wrapper);
             graph.accept(replacerF);

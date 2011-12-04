@@ -26,6 +26,9 @@ public class Plugin extends Observable implements AlgebraStrategyPlugin {
     @ConfigurationProperty(type = Type.TEXT)
     public String macrosFilePath = "algebra/5d/macros.csv";
 
+    @ConfigurationProperty(type = Type.TEXT)
+    public String userMacroFilePath = "";
+
     @ConfigurationProperty(type = Type.BOOLEAN)
     public boolean useBuiltInFiles = true;
 
@@ -72,6 +75,14 @@ public class Plugin extends Observable implements AlgebraStrategyPlugin {
 
     public String getMacrosFilePath() {
         return macrosFilePath;
+    }
+
+    public String getUserMacroFilePath() {
+        return userMacroFilePath;
+    }
+
+    public void setUserMacroFilePath(String userMacroFilePath) {
+        this.userMacroFilePath = userMacroFilePath;
     }
 
     public void setMacrosFilePath(String macrosFilePath) {
