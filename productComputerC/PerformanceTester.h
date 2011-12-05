@@ -11,11 +11,22 @@
 #include "Functions.h"
 
 class PerformanceTester: public Functions {
+private:
+	bool onlyInInterval;
+	int from;
+	int to;
+
 public:
 	PerformanceTester();
 	virtual ~PerformanceTester();
 
 	void performance(const string& outDir);
+
+	void setInterval(int from, int to) {
+		onlyInInterval = true;
+		this->from = from;
+		this->to = to;
+	}
 };
 
 #endif /* PERFORMANCETESTER_H_ */

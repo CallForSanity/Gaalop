@@ -15,19 +15,22 @@ Timing Timing::timing;
 #include "PerformanceTester.h"
 
 int main(int argc, char** argv) {
-	if (argc != 2) {
-            std::cout << "You have to specify an argument: algebraDirPath" << std::endl;
+	if (argc != 2 && argc != 4) {
+            std::cout << "You have to specify an argument: algebraDirPath " << std::endl
+            		<< "or 3 arguments: algebraDirPath from to" << std::endl;
             return -1;
         }
 	time_t start;
 	time(&start);
-	CorrectnessTester c;
-	c.correctness5d();
+	//CorrectnessTester c;
+	//c.correctness5d();
 
 #ifdef TIMING
 	Timing::timing.clear();
 #endif
 	PerformanceTester p;
+	if (argc == 4)
+		p.setInterval(atoi(argv[2]),atoi(argv[3]));
 	p.performance(argv[1]);
 #ifdef TIMING
 	Timing::timing.printAllTimes();

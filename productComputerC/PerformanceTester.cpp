@@ -8,7 +8,7 @@
 #include "PerformanceTester.h"
 
 PerformanceTester::PerformanceTester() {
-
+	onlyInInterval = false;
 
 }
 
@@ -34,14 +34,23 @@ void PerformanceTester::performance(const string& outDir) {
         GeoProductCalculator geo;
 
         std::ostringstream sOut;
-        sOut << outDir << "products.txt";
+        if (onlyInInterval)
+        	sOut << outDir << "products"<< from << ".txt";
+        else
+        	sOut << outDir << "products.txt";
         std::ofstream out(sOut.str().c_str());
 
         int bladeCount = (int) pow(2,algebra.getBase().size());
 #ifdef TIMING
         Timing::timing.startTime("Global");
 #endif
-        for (int i=0;i<bladeCount;i++) {
+
+        if (!onlyInInterval) {
+        	from = 0;
+        	to = bladeCount;
+        }
+
+        for (int i=from;i<to;i++) {
         	std::cout << i << std::endl;
             for (int j=0;j<bladeCount;j++) {
             	Multivector innerM;
