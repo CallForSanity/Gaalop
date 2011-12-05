@@ -12,7 +12,7 @@
 	    <!-- <useAllReactorProjects>true</useAllReactorProjects> -->
             <includes>
                 <include>de.gaalop:api</include>
-
+<include>de.gaalop:algebra</include>
                 <include>de.gaalop:clucalc</include>
 
                 <include>de.gaalop:maple</include>
