@@ -16,6 +16,7 @@ public:
 	virtual ~Algebra5d();
 
 	virtual void create();
+
 };
 
 #endif /* ALGEBRA5D_H_ */

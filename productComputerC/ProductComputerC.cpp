@@ -26,7 +26,7 @@ int main(int argc, char** argv) {
 #endif
 	PerformanceTester p;
 	//p.performanceOn9d(500,505);
-	p.performanceOn9d(atoi(argv[1]),atoi(argv[2]));
+	p.performance("/home/christian/algebra/5d/");
 #ifdef TIMING
 	Timing::timing.printAllTimes();
 #endif

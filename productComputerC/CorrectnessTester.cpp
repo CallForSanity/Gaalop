@@ -77,7 +77,7 @@ void CorrectnessTester::correctness5d() {
 	OuterProductCalculator outer;
 	GeoProductCalculator geo;
 
-	std::ifstream file("Jproducts.csv");
+	std::ifstream file("/home/christian/algebra/5d/Jproducts.csv");
 	int bladeCount = (int) pow(2,algebra.getBase().size());
 	string line;
 	for (int i=0;i<bladeCount;i++) {
@@ -131,4 +131,5 @@ void CorrectnessTester::correctness5d() {
 		}
 	}
 	std::cout<< "correct (passed 5d)" << std::endl;
+	file.close();
 }

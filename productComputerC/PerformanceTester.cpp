@@ -16,28 +16,32 @@ PerformanceTester::~PerformanceTester() {
 
 }
 
-#include "Algebra9d.h"
+#include "AlgebraFromFile.h"
 #include "Timing.h"
 
-void PerformanceTester::performanceOn9d(const int from, const int to) {
+void PerformanceTester::performance(const string& outDir) {
         ProductComputer productComputer;
-        Algebra9d algebra;
+        AlgebraFromFile algebra;
         algebra.create();
+        std::ostringstream sIn;
+        sIn << outDir << "definition.csv";
+        algebra.loadFromFile(sIn.str().c_str());
+
         productComputer.initialize(algebra);
 
         InnerProductCalculator inner;
         OuterProductCalculator outer;
         GeoProductCalculator geo;
 
-        std::ostringstream s;
-        s << "products" << from << "-" << (to-1) << ".txt";
-        std::ofstream out(s.str().c_str());
+        std::ostringstream sOut;
+        sOut << outDir << "products.txt";
+        std::ofstream out(sOut.str().c_str());
 
         int bladeCount = (int) pow(2,algebra.getBase().size());
 #ifdef TIMING
         Timing::timing.startTime("Global");
 #endif
-        for (int i=from;i<to;i++) {
+        for (int i=0;i<bladeCount;i++) {
         	std::cout << i << std::endl;
             for (int j=0;j<bladeCount;j++) {
             	Multivector innerM;

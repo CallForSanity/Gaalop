@@ -17,7 +17,13 @@ Functions::~Functions() {
 }
 
 void Functions::outputMultivector(const Multivector& m,  std::ostream& out) {
-	const vector<BladeRef>& blades = m.blades;
+
+	vector<BladeRef> blades;
+	for (vector<BladeRef>::const_iterator ci1=m.blades.begin();ci1 != m.blades.end(); ++ci1)
+		if ((*ci1).getPrefactor() != 0)
+			blades.push_back(*ci1);
+
+
 	int size = blades.size();
 	int cur = 0;
 	for (vector<BladeRef>::const_iterator ci=blades.begin();ci != blades.end(); ++ci) {
@@ -27,14 +33,18 @@ void Functions::outputMultivector(const Multivector& m,  std::ostream& out) {
 		case -1:
 			out << "-E" << bladeRef.getIndex();
 			cur++;
-			if (cur != size) out << ",";
-			break;
-		case 0:
+			if (cur != size) {
+				if (blades[cur].getPrefactor() == 1)
+					out << "+";
+			}
 			break;
 		case 1:
 			out << "E" << bladeRef.getIndex();
 			cur++;
-			if (cur != size) out << ",";
+			if (cur != size) {
+				if (blades[cur].getPrefactor() == 1)
+					out << "+";
+			}
 			break;
 		default:
 			out << "Prefactor is out of range [-1,1]";
@@ -44,6 +54,5 @@ void Functions::outputMultivector(const Multivector& m,  std::ostream& out) {
 
 
 	}
-	if (cur == 0)
-		out << "0";
+
 }

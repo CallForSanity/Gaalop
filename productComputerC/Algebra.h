@@ -78,6 +78,8 @@ public:
         this->mapToZeroInf = mapToZeroInf;
     }
 
+	void print();
+
 };
 
 #endif /* ALGEBRA_H_ */

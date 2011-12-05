@@ -7,6 +7,9 @@
 
 #include "BladeStr.h"
 
+BladeStr::BladeStr() {
+}
+
 BladeStr::~BladeStr() {
 }
 
@@ -32,4 +35,12 @@ BladeStr::BladeStr(const float prefactor, const vector<string>& baseVectors)
 {
 	this->prefactor = prefactor;
 	this->baseVectors = baseVectors;
+}
+
+void BladeStr::print() {
+	std::cout << prefactor << "[";
+	for (vector<string>::const_iterator it = baseVectors.begin(); it != baseVectors.end(); ++it)
+		std::cout << *it << ",";
+
+	std::cout << "]";
 }

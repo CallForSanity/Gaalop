@@ -19,6 +19,7 @@ public:
 	virtual ~BladeStr();
 
 
+	BladeStr();
     BladeStr(const string& baseVector);
     BladeStr(const vector<string>& baseVectors);
     BladeStr(const float prefactor, const string& baseVector);
@@ -33,6 +34,8 @@ public:
     {
         this->prefactor = prefactor;
     }
+
+    void print();
 
 };
 

@@ -15,7 +15,7 @@ public:
 	PerformanceTester();
 	virtual ~PerformanceTester();
 
-	void performanceOn9d(const int from, const int to);
+	void performance(const string& outDir);
 };
 
 #endif /* PERFORMANCETESTER_H_ */
