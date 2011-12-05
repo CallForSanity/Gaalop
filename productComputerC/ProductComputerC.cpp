@@ -15,7 +15,10 @@ Timing Timing::timing;
 #include "PerformanceTester.h"
 
 int main(int argc, char** argv) {
-	if (argc != 3) return -1;
+	if (argc != 2) {
+            std::cout << "You have to specify an argument: algebraDirPath" << std::endl;
+            return -1;
+        }
 	time_t start;
 	time(&start);
 	CorrectnessTester c;
@@ -25,13 +28,10 @@ int main(int argc, char** argv) {
 	Timing::timing.clear();
 #endif
 	PerformanceTester p;
-	//p.performanceOn9d(500,505);
-	p.performance("/home/christian/algebra/5d/");
+	p.performance(argv[1]);
 #ifdef TIMING
 	Timing::timing.printAllTimes();
 #endif
-    //performanceOn9d(args);
-
 	time_t ende;
 	time(&ende);
 	double dt = difftime(ende, start);
