@@ -1,5 +1,0 @@
-VecN3(x,y,z):=x*e1+y*e2+z*e3+0.5*(x*x+y*y+z*z)*einf+e0
-*(x):=x*(-e1^e2^e3^einf^e0)
-RotorN3(x,y,z,angle):=cos(angle/2)+sin(angle/2)*(-x*(e2^e3)+y*(e1^e3)-z*(e1^e2))/sqrt(x*x+y*y+z*z)
-SphereN3(center,r):=(center-0.5*r*r*einf)*(-e1^e2^e3^einf^e0)
-TranslatorN3(x,y,z):=1-0.5*((x*e1+y*e2+ze3)*einf)

@@ -135,7 +135,7 @@ public class TestCreator {
             de.gaalop.algebra.Plugin plugin = new de.gaalop.algebra.Plugin();
             plugin.definitionFilePath = "algebra/5d/definition.csv";
             plugin.productsFilePath = "algebra/5d/products.csv";
-            plugin.macrosFilePath = "algebra/5d/macros.txt";
+            plugin.macrosFilePath = "algebra/5d/macros.clu";
             plugin.useBuiltInFiles = true;
             plugin.usePrecalulatedTables = true;       
             AlgebraStrategy algebraStrategy = plugin.createAlgebraStrategy();

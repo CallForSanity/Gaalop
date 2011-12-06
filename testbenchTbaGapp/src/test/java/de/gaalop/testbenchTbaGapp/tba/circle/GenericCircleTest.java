@@ -25,9 +25,7 @@ public abstract class GenericCircleTest implements GenericTestable {
 
     @Override
     public String getCLUScript() {
-        return "DefVarsN3();" + "\n"
-                + ":IPNS;" + "\n"
-                + "//#pragma output m$1" + "\n"
+        return "//#pragma output m$1" + "\n"
                 + "//#pragma output m$2" + "\n"
                 + "//#pragma output r$0" + "\n"
                 + constantDefinition() + "\n"

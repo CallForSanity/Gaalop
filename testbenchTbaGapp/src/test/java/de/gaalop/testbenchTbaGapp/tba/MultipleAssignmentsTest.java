@@ -15,9 +15,7 @@ public class MultipleAssignmentsTest implements GenericTestable {
 
     @Override
     public String getCLUScript() {
-        return "DefVarsN3();" + "\n"
-                + ":IPNS;" + "\n"
-                + pragmaOutputMvAll("b")
+        return pragmaOutputMvAll("b")
                 + pragmaOutputMvAll("d")
                 + "a = e1;" + "\n"
                 + "b = a^e2;" + "\n"

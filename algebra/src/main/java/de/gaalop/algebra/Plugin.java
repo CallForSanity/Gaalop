@@ -24,7 +24,7 @@ public class Plugin extends Observable implements AlgebraStrategyPlugin {
     public String definitionFilePath = "algebra/5d/definition.csv";
 
     @ConfigurationProperty(type = Type.TEXT)
-    public String macrosFilePath = "algebra/5d/macros.txt";
+    public String macrosFilePath = "algebra/5d/macros.clu";
 
     @ConfigurationProperty(type = Type.TEXT)
     public String userMacroFilePath = "";

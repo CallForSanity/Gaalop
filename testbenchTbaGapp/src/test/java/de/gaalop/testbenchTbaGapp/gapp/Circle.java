@@ -22,9 +22,7 @@ public class Circle implements GAPPTestable {
 
     @Override
     public String getSource() {
-        return "DefVarsN3();" + "\n"
-                + ":IPNS;" + "\n"
-                + "//#pragma output m$1" + "\n"
+        return "//#pragma output m$1" + "\n"
                 + "//#pragma output m$2" + "\n"
                 + "//#pragma output m$4" + "\n"
                 + "//#pragma output m$5" + "\n"

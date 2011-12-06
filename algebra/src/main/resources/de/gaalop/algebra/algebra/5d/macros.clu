@@ -1,0 +1,42 @@
+//Creates a vector in N3 of three coordinates x,y,z
+//args:
+//x 
+//y 
+//z 
+VecN3 = {
+    _P(1)*e1+_P(2)*e2+_P(3)*e3+0.5*(_P(1)*_P(1)+_P(2)*_P(2)+_P(3)*_P(3))*einf+e0
+}
+
+//The dualization operator
+//args:
+//m 
+Dual = {
+    _P(1)*(-e1^e2^e3^einf^e0)
+}
+
+// Creates a rotor, that rotates along an axis (defined by x,y,z) with an angle
+//args:
+//x
+//y
+//z
+//angle
+RotorN3 = {
+    cos(_P(4)/2)+sin(_P(4)/2)*(-_P(1)*(e2^e3)+_P(2)*(e1^e3)-_P(3)*(e1^e2))/sqrt(_P(1)*_P(1)+_P(2)*_P(2)+_P(3)*_P(3))
+}
+
+// Creates a sphere, defined by a centre and a radius
+//args:
+//centre
+//r
+SphereN3 = {
+    *(_P(1)-0.5*_P(2)*_P(2)*einf)
+}
+
+// Creates a translator
+//args:
+//x
+//y
+//z
+TranslatorN3 = {
+    1-0.5*((_P(1)*e1+_P(2)*e2+_P(3)*e3)*einf)
+}

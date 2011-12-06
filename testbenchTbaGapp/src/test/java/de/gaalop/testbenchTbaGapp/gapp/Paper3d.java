@@ -21,9 +21,7 @@ public class Paper3d implements GAPPTestable {
 
     @Override
     public String getSource() {
-        return "//#pragma algebraDimension 3" + "\n"
-                + "\n"
-                + "?a=a1*e1+a2*e2+a3*e3;" + "\n"
+        return "?a=a1*e1+a2*e2+a3*e3;" + "\n"
                 + "?b=b1*e1+b2*e2+b3*e3;" + "\n"
                 + //"?f=a^(a+a*b);"+"\n";
                 "?c =a*b;" + "\n"

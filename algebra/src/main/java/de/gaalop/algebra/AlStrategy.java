@@ -1,18 +1,24 @@
 package de.gaalop.algebra;
 
 import de.gaalop.AlgebraStrategy;
+import de.gaalop.CodeParserException;
+import de.gaalop.InputFile;
 import de.gaalop.OptimizationException;
 import de.gaalop.cfg.AlgebraDefinitionFile;
 import de.gaalop.cfg.ControlFlowGraph;
+import de.gaalop.cfg.Macro;
 import de.gaalop.dfg.Expression;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Arrays;
-import java.util.LinkedList;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 
 /**
  * Sets the algebra on a Control Flow Graph
@@ -48,26 +54,29 @@ public class AlStrategy implements AlgebraStrategy {
             inputStream = (plugin.isUseBuiltInFiles())
                     ? getClass().getResourceAsStream(plugin.macrosFilePath)
                     : new FileInputStream(new File(plugin.macrosFilePath));
-
-
-            LinkedList<Function> functions = (inputStream != null) 
-                    ? FunctionParser.parseFunctions(inputStream)
-                    : new LinkedList<Function>();
-
+            
+            ControlFlowGraph macrosGraph = new de.gaalop.clucalc.input.Plugin().createCodeParser().parseFile(inputStreamToInputFile(inputStream, "macros"));
+            inputStream.close();
+            HashMap<String, Macro> macros = MacrosVisitor.getAllMacros(macrosGraph);
+            MacrosVisitor.getAllMacros(graph, macros);
+            macros.put("*", macros.get("Dual"));
+            macros.remove("Dual");
 
             //load user macros
             if (!plugin.getUserMacroFilePath().trim().equals("")) {
                 File f = new File(plugin.userMacroFilePath);
                 if (f.exists()) {
                      inputStream = new FileInputStream(f);
-                     functions.addAll(FunctionParser.parseFunctions(inputStream));
+                     ControlFlowGraph userMacrosGraph = new de.gaalop.clucalc.input.Plugin().createCodeParser().parseFile(inputStreamToInputFile(inputStream, "userMacros"));
+                     inputStream.close();
+                     MacrosVisitor.getAllMacros(userMacrosGraph, macros);
                 } else
                     System.err.println("Algebra Plugin: User Macro File Path does not exist!");
             }
 
-            FunctionWrapper wrapper = new FunctionWrapper(functions);
-            FunctionReplaceVisitor replacerF = new FunctionReplaceVisitor(wrapper);
-            graph.accept(replacerF);
+            //inline all macros
+            Inliner.inline(graph, macros);
+
             //replace Variables which are basevectors
             BaseVectorDefiner definer = new BaseVectorDefiner();
             definer.createFromAlBase(alFile.base);
@@ -76,6 +85,8 @@ public class AlStrategy implements AlgebraStrategy {
             //Update variable set
             UpdateLocalVariableSet.updateVariableSets(graph);
             RemoveDefVars.removeDefVars(graph);
+        } catch (CodeParserException ex) {
+            Logger.getLogger(AlStrategy.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(AlStrategy.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
@@ -96,6 +107,30 @@ public class AlStrategy implements AlgebraStrategy {
         alFile.blades = new Expression[blades.length];
         for (int i = 0; i < blades.length; i++) 
             alFile.blades[i] = blades[i].toExpression();
+    }
+
+    /**
+     * Puts an inputStream into an InputFile
+     * @param inputStream The inputStream
+     * @param cluName The cluName to use
+     * @return The InputFile
+     */
+    private InputFile inputStreamToInputFile(InputStream inputStream, String cluName) {
+        StringBuilder sb = new StringBuilder();
+        try {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                sb.append(line);
+                sb.append("\n");
+            }
+            reader.close();
+        } catch (IOException ex) {
+            Logger.getLogger(AlStrategy.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        sb.append("\n");
+        sb.append("?a=1;");
+        return new InputFile(cluName, sb.toString());
     }
 
 }

@@ -42,7 +42,7 @@ public class Base {
         alPlugin.usePrecalulatedTables = true;
         alPlugin.definitionFilePath = "algebra/5d/definition.csv";
         alPlugin.productsFilePath = "algebra/5d/products.csv";
-        alPlugin.macrosFilePath = "algebra/5d/macros.txt";
+        alPlugin.macrosFilePath = "algebra/5d/macros.clu";
         AlgebraStrategy algebraStrategy = alPlugin.createAlgebraStrategy();
         algebraStrategy.transform(graph);
         

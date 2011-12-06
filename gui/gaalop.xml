@@ -4,8 +4,9 @@
 <comment>Gaalop Configuration File</comment>
 <entry key="de.gaalop.gapp.Plugin.maximaCommand">/usr/bin/maxima</entry>
 <entry key="de.gaalop.algebra.Plugin.usePrecalulatedTables">false</entry>
+<entry key="de.gaalop.algebra.Plugin.userMacroFilePath"/>
 <entry key="de.gaalop.maple.Plugin.gaalopPath">/</entry>
-<entry key="de.gaalop.algebra.Plugin.macrosFilePath">algebra/5d/macros.txt</entry>
+<entry key="de.gaalop.algebra.Plugin.macrosFilePath">algebra/5d/macros.clu</entry>
 <entry key="de.gaalop.maple.Plugin.mapleJavaPath">/net/bifur/gaalop/maple/java/</entry>
 <entry key="de.gaalop.tba.Plugin.optUnusedAssignments">true</entry>
 <entry key="de.gaalop.cpp.Plugin.standalone">true</entry>
