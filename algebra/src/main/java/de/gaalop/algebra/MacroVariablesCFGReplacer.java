@@ -5,7 +5,6 @@ import de.gaalop.cfg.BlockEndNode;
 import de.gaalop.cfg.BreakNode;
 import de.gaalop.cfg.ColorNode;
 import de.gaalop.cfg.ControlFlowVisitor;
-import de.gaalop.cfg.EmptyControlFlowVisitor;
 import de.gaalop.cfg.EndNode;
 import de.gaalop.cfg.ExpressionStatement;
 import de.gaalop.cfg.IfThenElseNode;
@@ -40,7 +39,7 @@ public class MacroVariablesCFGReplacer implements ControlFlowVisitor {
             dfgReplacer.result = null;
         }
         if (replaceMap.containsKey(node.getVariable().getName()))
-            node.setValue(replaceMap.get(node.getVariable().getName()).copy());
+            node.setVariable((Variable) replaceMap.get(node.getVariable().getName()).copy());
 
     }
 
