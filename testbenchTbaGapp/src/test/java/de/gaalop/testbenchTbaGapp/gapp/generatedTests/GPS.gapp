@@ -275,75 +275,9 @@ dotVectors temp0[0] = <ve114,ve115>;
 resetMv temp1[32];
 calculateMv temp1 = ABS(temp0);
 
-//temp2 = sqrt(temp1)
-resetMv temp2[32];
-calculateMv temp2 = SQRT(temp1);
-
-//len[0] = temp2[0]
+//len = sqrt(temp1)
 resetMv len[32];
-setMv len[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31] = temp2[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31];
-
-//len[1] = temp2[1]
-
-//len[2] = temp2[2]
-
-//len[3] = temp2[3]
-
-//len[4] = temp2[4]
-
-//len[5] = temp2[5]
-
-//len[6] = temp2[6]
-
-//len[7] = temp2[7]
-
-//len[8] = temp2[8]
-
-//len[9] = temp2[9]
-
-//len[10] = temp2[10]
-
-//len[11] = temp2[11]
-
-//len[12] = temp2[12]
-
-//len[13] = temp2[13]
-
-//len[14] = temp2[14]
-
-//len[15] = temp2[15]
-
-//len[16] = temp2[16]
-
-//len[17] = temp2[17]
-
-//len[18] = temp2[18]
-
-//len[19] = temp2[19]
-
-//len[20] = temp2[20]
-
-//len[21] = temp2[21]
-
-//len[22] = temp2[22]
-
-//len[23] = temp2[23]
-
-//len[24] = temp2[24]
-
-//len[25] = temp2[25]
-
-//len[26] = temp2[26]
-
-//len[27] = temp2[27]
-
-//len[28] = temp2[28]
-
-//len[29] = temp2[29]
-
-//len[30] = temp2[30]
-
-//len[31] = temp2[31]
+calculateMv len = SQRT(temp1);
 
 //rcPpDual[6] = -(rcPp[25])
 resetMv rcPpDual[32];

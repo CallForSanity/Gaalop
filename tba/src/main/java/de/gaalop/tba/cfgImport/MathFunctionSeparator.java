@@ -103,7 +103,10 @@ public class MathFunctionSeparator extends EmptyControlFlowVisitor {
 
         node.getValue().accept(expressionVisitor);
         if (resultValue != null) {
-            node.setValue(resultValue);
+            //Direct MathFunctionCalls won't need an extra temporary variable,
+            //because they will be assigned to the AssignmentNode variable!
+            //For this optimization the variable must be removed from the toInsertVars list
+            toInsertVars.remove((Variable) resultValue);
             resultValue = null;
         }
         for (Variable var : toInsertVars) {

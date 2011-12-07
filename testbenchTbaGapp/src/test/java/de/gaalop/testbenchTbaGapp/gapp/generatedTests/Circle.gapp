@@ -330,11 +330,7 @@ dotVectors temp0[0] = <ve149,ve150>;
 resetMv temp1[32];
 calculateMv temp1 = ABS(temp0);
 
-//temp2 = sqrt(temp1)
-resetMv temp2[32];
-calculateMv temp2 = SQRT(temp1);
-
-//r[0] = temp2[0]
+//r = sqrt(temp1)
 resetMv r[32];
-setMv r[0] = temp2[0];
+calculateMv r = SQRT(temp1);
 
