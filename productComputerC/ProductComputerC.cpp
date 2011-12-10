@@ -1,4 +1,3 @@
-#define TIMING
 //============================================================================
 // Name        : ProductComputerC.cpp
 // Author      : Christian Steinmetz
@@ -6,35 +5,22 @@
 // Copyright   : Your copyright notice
 // Description : Hello World in C++, Ansi-style
 //============================================================================
-#ifdef TIMING
-#include "Timing.h"
-Timing Timing::timing;
-#endif
 
 #include "CorrectnessTester.h"
 #include "PerformanceTester.h"
+#include <boost/thread.hpp>
 
 int main(int argc, char** argv) {
-	if (argc != 2 && argc != 4) {
-            std::cout << "You have to specify an argument: algebraDirPath " << std::endl
-            		<< "or 3 arguments: algebraDirPath from to" << std::endl;
-            return -1;
-        }
+	if (argc != 3) {
+		std::cout << "You have to specify an 2 arguments: algebraDirPath nthreads" << std::endl;
+		return -1;
+	}
 	time_t start;
 	time(&start);
 	//CorrectnessTester c;
 	//c.correctness5d();
-
-#ifdef TIMING
-	Timing::timing.clear();
-#endif
 	PerformanceTester p;
-	if (argc == 4)
-		p.setInterval(atoi(argv[2]),atoi(argv[3]));
-	p.performance(argv[1]);
-#ifdef TIMING
-	Timing::timing.printAllTimes();
-#endif
+	p.performance(argv[1],atoi(argv[2]));
 	time_t ende;
 	time(&ende);
 	double dt = difftime(ende, start);
