@@ -13,7 +13,7 @@ import de.gaalop.dfg.Variable;
 import de.gaalop.gapp.GAPP;
 import de.gaalop.gapp.Variableset;
 import de.gaalop.gapp.importing.optimization.GAPPFurtherOptimizationsFacade;
-import de.gaalop.gapp.instructionSet.GAPPAssignVector;
+import de.gaalop.gapp.instructionSet.GAPPAssignInputsVector;
 import de.gaalop.gapp.variables.GAPPScalarVariable;
 import de.gaalop.gapp.variables.GAPPVector;
 import de.gaalop.tba.Plugin;
@@ -97,7 +97,7 @@ public class GAPPDecoratingMain {
 
         HashMap<Variable, MultivectorComponent> map = new HashMap<Variable, MultivectorComponent>();
 
-        GAPPVector inputsMv = new GAPPVector(createNameOfInputsVector(variables));
+        GAPPVector inputsMv = new GAPPVector("inputsVector");
 
         Variableset varSet = new Variableset();
         int slotNo = 0;
@@ -107,7 +107,7 @@ public class GAPPDecoratingMain {
             slotNo++;
         }
 
-        gappStart.addInstruction(new GAPPAssignVector(inputsMv, varSet));
+        gappStart.addInstruction(new GAPPAssignInputsVector(varSet));
 
 
         while (!toDo.isEmpty()) {

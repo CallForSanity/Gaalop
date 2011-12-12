@@ -9,7 +9,7 @@ import de.gaalop.gapp.Selectorset;
 import de.gaalop.gapp.SetVectorArgument;
 import de.gaalop.gapp.Variableset;
 import de.gaalop.gapp.instructionSet.GAPPAssignMv;
-import de.gaalop.gapp.instructionSet.GAPPAssignVector;
+import de.gaalop.gapp.instructionSet.GAPPAssignInputsVector;
 import de.gaalop.gapp.instructionSet.GAPPCalculateMv;
 import de.gaalop.gapp.instructionSet.GAPPCalculateMvCoeff;
 import de.gaalop.gapp.instructionSet.GAPPDotVectors;
@@ -170,10 +170,8 @@ public class GAPPCopier implements GAPPVisitor {
     }
 
     @Override
-    public Object visitAssignVector(GAPPAssignVector gappAssignVector, Object arg) {
-        return new GAPPAssignVector(
-                (GAPPVector) GAPPValueHolderCopier.copyValueHolder(gappAssignVector.getDestination()),
-                copyVariableset(gappAssignVector.getValues()));
+    public Object visitAssignInputsVector(GAPPAssignInputsVector gappAssignInputsVector, Object arg) {
+        return new GAPPAssignInputsVector(copyVariableset(gappAssignInputsVector.getValues()));
     }
 
     @Override

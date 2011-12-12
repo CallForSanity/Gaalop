@@ -3,8 +3,8 @@ package de.gaalop.gapp.statistics;
 import de.gaalop.cfg.ControlFlowGraph;
 import de.gaalop.gapp.PairSetOfVariablesAndIndices;
 import de.gaalop.gapp.SetVectorArgument;
+import de.gaalop.gapp.instructionSet.GAPPAssignInputsVector;
 import de.gaalop.gapp.instructionSet.GAPPAssignMv;
-import de.gaalop.gapp.instructionSet.GAPPAssignVector;
 import de.gaalop.gapp.instructionSet.GAPPCalculateMv;
 import de.gaalop.gapp.instructionSet.GAPPCalculateMvCoeff;
 import de.gaalop.gapp.instructionSet.GAPPDotVectors;
@@ -179,13 +179,6 @@ public class MemoryUsage extends CFGGAPPVisitor {
     }
 
     @Override
-    public Object visitAssignVector(GAPPAssignVector gappAssignVector, Object arg) {
-        curLine++;
-        access(gappAssignVector.getDestination());
-        return null;
-    }
-
-    @Override
     public Object visitCalculateMvCoeff(GAPPCalculateMvCoeff gappCalculateMvCoeff, Object arg) {
         curLine++;
         access(new GAPPMultivector(gappCalculateMvCoeff.getDestination().getName()));
@@ -193,6 +186,13 @@ public class MemoryUsage extends CFGGAPPVisitor {
         if (gappCalculateMvCoeff.getOperand2() != null) {
             access(gappCalculateMvCoeff.getOperand2());
         }
+        return null;
+    }
+
+    @Override
+    public Object visitAssignInputsVector(GAPPAssignInputsVector gAPPAssignInputsVector, Object arg) {
+        curLine++;
+        access(new GAPPMultivector("inputsVector"));
         return null;
     }
 }

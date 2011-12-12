@@ -8,7 +8,7 @@ import de.gaalop.gapp.Selector;
 import de.gaalop.gapp.Selectorset;
 import de.gaalop.gapp.SetVectorArgument;
 import de.gaalop.gapp.instructionSet.GAPPAssignMv;
-import de.gaalop.gapp.instructionSet.GAPPAssignVector;
+import de.gaalop.gapp.instructionSet.GAPPAssignInputsVector;
 import de.gaalop.gapp.instructionSet.GAPPCalculateMv;
 import de.gaalop.gapp.instructionSet.GAPPCalculateMvCoeff;
 import de.gaalop.gapp.instructionSet.GAPPDotVectors;
@@ -290,15 +290,15 @@ public class Executer extends CFGGAPPVisitor {
     }
 
     @Override
-    public Object visitAssignVector(GAPPAssignVector gappAssignVector, Object arg) {
-        int size = gappAssignVector.getValues().size();
-        String name = gappAssignVector.getDestination().getName();
+    public Object visitAssignInputsVector(GAPPAssignInputsVector gappAssignInputsVector, Object arg) {
+        int size = gappAssignInputsVector.getValues().size();
+        String name = "inputsVector";
 
         createVector(name, size);
         MultivectorWithValues destination = getMultivector(name);
 
         for (int sel = 0; sel < size; sel++) {
-            GAPPValueHolder scalarVar = gappAssignVector.getValues().get(sel);
+            GAPPValueHolder scalarVar = gappAssignInputsVector.getValues().get(sel);
             float value = (scalarVar.isVariable())
                     ? getVariableValue(((GAPPVariable) scalarVar).getName())
                     : ((GAPPConstant) scalarVar).getValue();

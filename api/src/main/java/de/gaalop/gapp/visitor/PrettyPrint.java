@@ -10,7 +10,7 @@ import de.gaalop.gapp.Selectorset;
 import de.gaalop.gapp.SetVectorArgument;
 import de.gaalop.gapp.Variableset;
 import de.gaalop.gapp.instructionSet.GAPPAssignMv;
-import de.gaalop.gapp.instructionSet.GAPPAssignVector;
+import de.gaalop.gapp.instructionSet.GAPPAssignInputsVector;
 import de.gaalop.gapp.instructionSet.GAPPCalculateMv;
 import de.gaalop.gapp.instructionSet.GAPPCalculateMvCoeff;
 import de.gaalop.gapp.instructionSet.GAPPDotVectors;
@@ -274,11 +274,9 @@ public class PrettyPrint extends CFGGAPPVisitor {
     }
 
     @Override
-    public Object visitAssignVector(GAPPAssignVector gappAssignVector, Object arg) {
-        result.append("assignVector ");
-        printVector(gappAssignVector.getDestination());
-        result.append(" = ");
-        printVariableSet(gappAssignVector.getValues());
+    public Object visitAssignInputsVector(GAPPAssignInputsVector gappAssignInputsVector, Object arg) {
+        result.append("assignVector inputsVector = ");
+        printVariableSet(gappAssignInputsVector.getValues());
         result.append(";\n");
         return null;
     }
