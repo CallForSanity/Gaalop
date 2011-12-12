@@ -54,15 +54,19 @@ public class Main {
         BufferedWriter outputFile = createFileOutputStringStream(outputFilePath);
         final BufferedReader inputFile = createFileInputStringStream(inputFilePath);
         StringBuffer commandBuffer = new StringBuffer();
+        String lineCommentAppend;
         Integer gaalopBlockCount = 0;
         Integer lineCount = 1;
         writeLinePragma(outputFile, lineCount++);
         while ((line = inputFile.readLine()) != null) {
             
             // handle line comments
-            int lineCommentPos = line.indexOf("//");
-            if(lineCommentPos >= 0)
-                line = line.substring(0,lineCommentPos-1);
+//            int lineCommentPos = line.indexOf("//");
+//            if(lineCommentPos >= 0 && line.indexOf("*/",lineCommentPos) < 0) {
+//                line = line.substring(0,lineCommentPos-1);
+//                lineCommentAppend = line.substring(lineCommentPos);
+//            } else
+//                lineCommentAppend = "";
             
             // parse line commands first
             if (line.indexOf("#include") >= 0 && line.indexOf('\"') >= 0) { // TODO parse this with ANTLR
@@ -110,7 +114,7 @@ public class Main {
                     String command = commandBuffer.toString();
                     
                     // search for command end
-                    final String[] commandEndTokens = {";", "}", "*/", "}"};
+                    final String[] commandEndTokens = {";","*/"};
                     int commandEndPos = -1;
                     for (final String commandEndToken : commandEndTokens) {
                         int foundPos = command.indexOf(commandEndToken);
@@ -127,6 +131,7 @@ public class Main {
                     
                     // extract command
                     command = command.substring(0,commandEndPos);                    
+                    System.out.println(command);
                     // special case handling
                     command = processMvGetBladeCoeff(command,mvComponents);
 
@@ -158,7 +163,7 @@ public class Main {
         // close output file
         outputFile.close();
     }
-
+    
     /*
      * Search for keywords in command and parse the command.
      * Handle mv_get_bladecoeff as a specieal case
@@ -199,7 +204,10 @@ public class Main {
     
     protected String getMvBladeCoeffArrayEntry(Map<String, Map<String, String>> mvComponents, final String mv, final String blade) {
         // get blade coeff array entry
-        String bladeCoeffArrayEntry = mvComponents.get(mv).get(blade);
+        String bladeCoeffArrayEntry = null;
+        Map<String,String> bladeMap = mvComponents.get(mv);
+        if(bladeMap != null)
+            bladeCoeffArrayEntry = bladeMap.get(blade);
         // handle the case that this blade coeff is zero
         if(bladeCoeffArrayEntry == null)
             bladeCoeffArrayEntry = gpcZero;
@@ -209,6 +217,8 @@ public class Main {
     protected void processMvToArray(final String command, BufferedWriter outputFile, Map<String, Map<String, String>> mvComponents) throws RecognitionException, IOException {        
         // parse assignment
         AssignmentNode assignment = parseAssignment(command);
+        if(assignment == null)
+            return;
         // get array name
         String array = assignment.getVariable().getName();
         // print array assignments
@@ -234,6 +244,8 @@ public class Main {
     protected void processMvToStridedArray(final String command, BufferedWriter outputFile, Map<String, Map<String, String>> mvComponents) throws RecognitionException, IOException {
         // parse assignment
         AssignmentNode assignment = parseAssignment(command);
+        if(assignment == null)
+            return;
         // get array expression
         final String array = assignment.getVariable().getName();
         // print array assignments
@@ -286,6 +298,8 @@ public class Main {
     protected void processMvToVec(final String command, BufferedWriter outputFile, Map<String, Map<String, String>> mvComponents) throws RecognitionException, IOException {
         // parse assignment
         AssignmentNode assignment = parseAssignment(command);
+        if(assignment == null)
+            return;
         // get array name
         final String vec = assignment.getVariable().getName();
         // print array assignments
@@ -309,6 +323,8 @@ public class Main {
     protected void processMvToVecArray(final String command, BufferedWriter outputFile, Map<String, Map<String, String>> mvComponents) throws RecognitionException, IOException {
         // parse assignment
         AssignmentNode assignment = parseAssignment(command);
+        if(assignment == null)
+            return;
         // get array name
         String vec = assignment.getVariable().getName();
         // print array assignments
@@ -330,15 +346,20 @@ public class Main {
     }
 
     protected AssignmentNode parseAssignment(final String line) throws RecognitionException {
-        ANTLRStringStream inputStream = new ANTLRStringStream(line);
-        GPCLexer lexer = new GPCLexer(inputStream);
-        CommonTokenStream tokenStream = new CommonTokenStream(lexer);
-        GPCParser parser = new GPCParser(tokenStream);
-        GPCParser.program_return parserResult = parser.program();
-        CommonTreeNodeStream treeNodeStream = new CommonTreeNodeStream(parserResult.getTree());
-        GPCTransformer transformer = new GPCTransformer(treeNodeStream);
-        AssignmentNode assignment = transformer.assignment();
-        return assignment;
+        try {
+            ANTLRStringStream inputStream = new ANTLRStringStream(line);
+            GPCLexer lexer = new GPCLexer(inputStream);
+            CommonTokenStream tokenStream = new CommonTokenStream(lexer);
+            GPCParser parser = new GPCParser(tokenStream);
+            GPCParser.program_return parserResult = parser.program();
+            CommonTreeNodeStream treeNodeStream = new CommonTreeNodeStream(parserResult.getTree());
+            GPCTransformer transformer = new GPCTransformer(treeNodeStream);
+            AssignmentNode assignment = transformer.assignment();
+            
+            return assignment;
+        } catch(Exception e) {
+            return null;
+        }
     }
 
     protected Vector<String> processOptimizationBlocks(List<String> gaalopInFileVector) throws Exception {
@@ -659,7 +680,8 @@ public class Main {
             if (plugin.getClass().getName().equals(optimizationStrategyPlugin)) {
                 if (externalOptimizerPath.length() != 0) {
                     if(plugin instanceof de.gaalop.maple.Plugin) {
-                        ((de.gaalop.maple.Plugin) plugin).setMaplePathsByMapleBinaryPath(externalOptimizerPath);
+                        ((de.gaalop.maple.Plugin) plugin).setMapleBinaryPath(externalOptimizerPath);
+                        ((de.gaalop.maple.Plugin) plugin).setMapleJavaPath(externalOptimizerPath + "/../java");
                     }
                     else if(plugin instanceof de.gaalop.tba.Plugin) {
                         ((de.gaalop.tba.Plugin) plugin).optMaxima = true;

@@ -46,8 +46,15 @@ options {
 script returns [Expression result]
         //: assignment
         //| expression
-        : assignment
+        : empty_script
+        | assignment
         ;
+
+empty_script returns [Expression result]
+	: EOF {
+            $result = null;
+	}
+	;
 
 assignment returns [AssignmentNode result]
 	: ^(EQUALS l=variable r=expression) {

@@ -5,6 +5,13 @@ lexer grammar GPCLexer;
 	package de.gaalop.gpc;
 }
 
+COMMENT
+    :   '/*' ( options {greedy=false;} : . )* '*/' {$channel=HIDDEN;}
+    ;
+
+LINE_COMMENT
+    : '//'~'#'  ~('\n'|'\r')* '\r'? ('\n'|EOF) {$channel=HIDDEN;}
+    ;
 
 IDENTIFIER
 	:	LETTER (LETTER|DIGIT)*

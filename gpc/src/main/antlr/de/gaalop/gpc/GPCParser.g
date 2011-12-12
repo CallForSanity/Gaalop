@@ -25,7 +25,8 @@ tokens {
 	Grammar Rules
 */
 program
-	: assignment_expression
+        : EOF
+	| assignment_expression
 	;
 
 assignment_expression
