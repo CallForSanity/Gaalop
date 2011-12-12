@@ -11,8 +11,8 @@ import de.gaalop.gapp.Selector;
 import de.gaalop.gapp.SelectorIndex;
 import de.gaalop.gapp.SetVectorArgument;
 import de.gaalop.gapp.instructionSet.CalculationType;
+import de.gaalop.gapp.instructionSet.GAPPAssignInputsVector;
 import de.gaalop.gapp.instructionSet.GAPPAssignMv;
-import de.gaalop.gapp.instructionSet.GAPPAssignVector;
 import de.gaalop.gapp.instructionSet.GAPPCalculateMv;
 import de.gaalop.gapp.instructionSet.GAPPCalculateMvCoeff;
 import de.gaalop.gapp.instructionSet.GAPPDotVectors;
@@ -37,14 +37,14 @@ import java.util.Map;
 public class GAPPOpenCLVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor
     implements de.gaalop.gapp.variables.GAPPVariableVisitor {
 
-    protected boolean gcdMetaInfo = true;
+    protected boolean gpcMetaInfo = true;
     protected Map<String,Map<Integer,Integer>> mvBladeMap = new HashMap<String,Map<Integer,Integer>>();
     protected StringBuilder result = new StringBuilder();
     
     @Override
     public Object visitResetMv(GAPPResetMv gappResetMv, Object arg) {
-        if(gcdMetaInfo)
-            result.append("//#pragma gcd multivector ").append(gappResetMv.getDestinationMv().getName()).append("\n");
+        if(gpcMetaInfo)
+            result.append("//#pragma gpc multivector ").append(gappResetMv.getDestinationMv().getName()).append("\n");
 
         result.append("float16 ").append(gappResetMv.getDestinationMv().getName()).append(";\n");
         mvBladeMap.put(gappResetMv.getDestinationMv().getName(),new HashMap<Integer,Integer>());
@@ -57,8 +57,8 @@ public class GAPPOpenCLVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor
         Integer thisMvSetCount = mvBladeMap.get(gappSetMv.getDestination().getName()).size();
 
         for(PosSelector sel : gappSetMv.getSelectorsDest()) {
-            if(gcdMetaInfo)
-                declareGCDMultivectorComponent(gappSetMv.getDestination().getName(), thisMvSetCount, sel);
+            if(gpcMetaInfo)
+                declareGPCMultivectorComponent(gappSetMv.getDestination().getName(), thisMvSetCount, sel);
 
             result.append(gappSetMv.getDestination().getName());
             result.append(".s").append(getOpenCLIndex(thisMvSetCount));
@@ -78,8 +78,8 @@ public class GAPPOpenCLVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor
         return null;
     }
 
-    protected void declareGCDMultivectorComponent(String mv, Integer blade, SelectorIndex sel) {
-        result.append("//#pragma gcd multivector_component ");
+    protected void declareGPCMultivectorComponent(String mv, Integer blade, SelectorIndex sel) {
+        result.append("//#pragma gpc multivector_component ");
         result.append(mv);
         result.append(".s").append(blade);
         result.append(" ").append(sel.getBladeName());
@@ -193,33 +193,6 @@ public class GAPPOpenCLVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor
     }
 
     @Override
-    public Object visitAssignVector(GAPPAssignVector gappAssignVector, Object arg) {
-        final int openCLVectorSize = getOpenCLVectorSize(gappAssignVector.getValues().size());
-
-        result.append("float");
-        result.append(openCLVectorSize);
-        result.append(" ");
-        result.append(gappAssignVector.getDestination().getName());
-        result.append(" = make_float");
-        result.append(openCLVectorSize);
-        result.append("(");
-
-        Map<Integer,Integer> bladeMap = new HashMap<Integer,Integer>();
-        Iterator<GAPPValueHolder> it = gappAssignVector.getValues().iterator();
-        result.append(it.next().prettyPrint());
-        bladeMap.put(bladeMap.size(), bladeMap.size());
-        while(it.hasNext()) {
-            result.append(",").append(it.next().prettyPrint());
-            bladeMap.put(bladeMap.size(), bladeMap.size());
-        }
-        result.append(");\n");
-
-        mvBladeMap.put(gappAssignVector.getDestination().getName(),bladeMap);
-
-        return null;
-    }
-
-    @Override
     public Object visitCalculateMvCoeff(GAPPCalculateMvCoeff gappCalculateMvCoeff, Object arg) {
         result.append(gappCalculateMvCoeff.getDestination().prettyPrint());
         result.append(" = ");
@@ -322,9 +295,9 @@ public class GAPPOpenCLVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor
     public Object visitDotVectors(GAPPDotVectors gappDotVectors, Object arg) {
         Integer thisMvSetCount = mvBladeMap.get(gappDotVectors.getDestination().getName()).size();
 
-        // print gcd meta info
-        if(gcdMetaInfo)
-            declareGCDMultivectorComponent(gappDotVectors.getDestination().getName(),
+        // print gpc meta info
+        if(gpcMetaInfo)
+            declareGPCMultivectorComponent(gappDotVectors.getDestination().getName(),
                                            thisMvSetCount,
                                            gappDotVectors.getDestSelector());
         
@@ -400,5 +373,31 @@ public class GAPPOpenCLVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor
     @Override
     public Object visitVector(GAPPVector gappVector, Object arg) {
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public Object visitAssignInputsVector(GAPPAssignInputsVector gappAssignInputsVector, Object arg) {
+        final int openCLVectorSize = getOpenCLVectorSize(gappAssignInputsVector.getValues().size());
+
+        result.append("float");
+        result.append(openCLVectorSize);
+        result.append(" inputsVector");
+        result.append(" = make_float");
+        result.append(openCLVectorSize);
+        result.append("(");
+
+        Map<Integer,Integer> bladeMap = new HashMap<Integer,Integer>();
+        Iterator<GAPPValueHolder> it = gappAssignInputsVector.getValues().iterator();
+        result.append(it.next().prettyPrint());
+        bladeMap.put(bladeMap.size(), bladeMap.size());
+        while(it.hasNext()) {
+            result.append(",").append(it.next().prettyPrint());
+            bladeMap.put(bladeMap.size(), bladeMap.size());
+        }
+        result.append(");\n");
+
+        mvBladeMap.put("inputsVector",bladeMap);
+
+        return null;
     }
 }
