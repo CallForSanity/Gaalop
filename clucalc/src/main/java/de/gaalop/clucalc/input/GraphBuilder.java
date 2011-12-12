@@ -145,8 +145,6 @@ public final class GraphBuilder {
 
 	private VariableScope currentScope = VariableScope.GLOBAL;
 
-        public static int algebraDimension;
-
 	public void beginNewScope() {
 		currentScope = new VariableScope(currentScope);
 	}
@@ -156,7 +154,6 @@ public final class GraphBuilder {
 	}
 
 	public GraphBuilder() {
-                algebraDimension = 0;
 		graph = new ControlFlowGraph();
 		lastNode = graph.getStartNode();
 		
@@ -182,19 +179,20 @@ public final class GraphBuilder {
 	/**
 	 * Adds a variable name to the control flow graph as Pragma output marked.
 	 * 
-	 * @param variable
+	 * @param variable The variable
 	 */
 	public void addPragmaOutputVariable(String variable) {
 		graph.addPragmaOutputVariable(variable);
 	}
 
         /**
-         * Sets the dimension of the used algebra
-         * @param dimension The dimension
-         */
-        public void setAlgebraDimension(int dimension) {
-                algebraDimension = dimension;
-        }
+	 * Adds a variable name to the control flow graph as Pragma onlyEvaluate marked.
+	 *
+	 * @param variable The variable
+	 */
+	public void addPragmaOnlyEvaluateVariable(String variable) {
+		graph.addPragmaOnlyEvaluateVariable(variable);
+	}
 
 	/**
 	 * Adds a pragma hint for a variable, which defines value range for it. The pragma must be set before the variable

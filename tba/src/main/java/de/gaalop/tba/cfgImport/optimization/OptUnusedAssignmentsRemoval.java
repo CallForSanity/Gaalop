@@ -13,7 +13,7 @@ import java.util.LinkedList;
  * @author Christian Steinmetz
  */
 public class OptUnusedAssignmentsRemoval implements OptimizationStrategyWithModifyFlag {
-
+//TODO chs here with pragma onlyEval
     @Override
     public boolean transform(ControlFlowGraph graph, UseAlgebra usedAlgebra) {
         // traverse the graph in the opposite direction

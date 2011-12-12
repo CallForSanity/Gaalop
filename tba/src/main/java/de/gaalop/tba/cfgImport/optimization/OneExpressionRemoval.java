@@ -52,6 +52,12 @@ public class OneExpressionRemoval extends EmptyControlFlowVisitor {
     public void visit(StartNode node) {
         // mark output vars as tabu
         tabuVariables.addAll(GetAllOutputBlades.getAllOutputBlades(node.getGraph(), usedAlgebra));
+        // mark only evaluation vars as tabu
+        int bladeCount = usedAlgebra.getBladeCount();
+        for (String var: node.getGraph().getPragmaOnlyEvaluateVariables()) 
+            for (int blade = 0; blade < bladeCount; blade++) 
+                tabuVariables.add(new VariableComponent(var, blade, null));
+        
         super.visit(node);
     }
 

@@ -54,6 +54,7 @@ public final class ControlFlowGraph {
 
 	/* store information about the pragmas */
 	private Set<String> pragmaOutputVariables = new HashSet<String>();
+	private Set<String> pragmaOnlyEvaluateVariables = new HashSet<String>();
 
 	private HashMap<String, String> pragmaMinValue = new HashMap<String, String>();
 	private HashMap<String, String> pragmaMaxValue = new HashMap<String, String>();
@@ -70,8 +71,16 @@ public final class ControlFlowGraph {
 		return pragmaOutputVariables;
 	}
 
+        public Set<String> getPragmaOnlyEvaluateVariables() {
+            return pragmaOnlyEvaluateVariables;
+        }
+
 	public void addPragmaOutputVariable(String name) {
 		pragmaOutputVariables.add(name);
+	}
+
+        public void addPragmaOnlyEvaluateVariable(String name) {
+		pragmaOnlyEvaluateVariables.add(name);
 	}
 
 	public void addScalarVariable(Variable tempVariable) {

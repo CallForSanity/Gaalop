@@ -22,7 +22,7 @@ RANGE_LITERAL : 'range';
 
 OUTPUT_LITERAL: 'output';
 
-ALGEBRA_LITERAL: 'algebraDimension';
+ONLY_EVAL_LITERAL: 'onlyEvaluate';
 
 UNROLL_LITERAL: 'unroll';
 

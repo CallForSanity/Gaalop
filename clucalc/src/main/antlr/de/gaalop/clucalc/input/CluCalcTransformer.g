@@ -137,8 +137,8 @@ pragma
      {  graphBuilder.addPragmaMinMaxValues($varname.text, min, max);}
    | PRAGMA OUTPUT_LITERAL varname=IDENTIFIER
      {  graphBuilder.addPragmaOutputVariable($varname.text);  }
-   | PRAGMA ALGEBRA_LITERAL varname=DECIMAL_LITERAL
-     {  graphBuilder.setAlgebraDimension(Integer.parseInt($varname.text));  }
+   | PRAGMA ONLY_EVAL_LITERAL varname=IDENTIFIER
+     {  graphBuilder.addPragmaOnlyEvaluateVariable($varname.text);  }
   ;
 
 assignment returns [Variable variable, Expression value]

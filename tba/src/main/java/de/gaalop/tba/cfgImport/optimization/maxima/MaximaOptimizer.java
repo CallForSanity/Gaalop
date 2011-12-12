@@ -158,8 +158,8 @@ public class MaximaOptimizer {
             node.getValue().accept(dfg);
             String value = dfg.getResultString() + ";";
             if (plugin.isOptInserting()) {
-
-                if (!collector.containsStoreResultVariableName(node.getVariable().getName())) { // see comment above
+                String name = node.getVariable().getName();
+                if (!graph.getPragmaOnlyEvaluateVariables().contains(name) && !collector.containsStoreResultVariableName(name)) { // see comment above
                     dfg = new DFGToMaximaCode();
                     node.getVariable().accept(dfg);
                     variable = dfg.getResultString() + "::";
