@@ -27,6 +27,9 @@ import de.gaalop.ConfigurationProperty;
 import de.gaalop.OptimizationStrategyPlugin;
 import de.gaalop.Plugin;
 import de.gaalop.Plugins;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 
 /**
  * This class represents the configuration panel.
@@ -124,6 +127,42 @@ public class ConfigurationPanel extends JPanel {
 						
 					});
 					fields.add(numberField);
+					break;
+                                case FILEPATH:
+                                        final JTextField textField2 = new JTextField(value);
+					textField2.addKeyListener(new KeyAdapter() {
+						@Override
+						public void keyReleased(KeyEvent e) {
+							try {
+								BeanUtils.setProperty(plugin, property.getName(), textField2.getText());
+							} catch (IllegalAccessException e1) {
+								e1.printStackTrace();
+							} catch (InvocationTargetException e1) {
+								e1.printStackTrace();
+							}
+						}
+					});
+                                        JPanel subPanel = new JPanel(new GridLayout(1, 3, 5, 5));
+                                        subPanel.add(textField2);
+					fields.add(subPanel);
+                                        final JButton button = new JButton("Choose Filepath");
+                                        subPanel.add(button);
+                                        button.addActionListener(new ActionListener() {
+                                            @Override
+                                            public void actionPerformed(ActionEvent e) {
+                                                JFileChooser jFC = new JFileChooser();
+                                                if (jFC.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+                                                    textField2.setText(jFC.getSelectedFile().getAbsolutePath());
+                                                    try {
+                                                            BeanUtils.setProperty(plugin, property.getName(), textField2.getText());
+                                                    } catch (IllegalAccessException e1) {
+                                                            e1.printStackTrace();
+                                                    } catch (InvocationTargetException e1) {
+                                                            e1.printStackTrace();
+                                                    }
+                                                }
+                                            }
+                                        });
 					break;
 				case TEXT:
 					// fall through to default
