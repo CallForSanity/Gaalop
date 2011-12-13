@@ -137,8 +137,11 @@ pragma
      {  graphBuilder.addPragmaMinMaxValues($varname.text, min, max);}
    | PRAGMA OUTPUT_LITERAL varname=IDENTIFIER
      {  graphBuilder.addPragmaOutputVariable($varname.text);  }
-   | PRAGMA ONLY_EVAL_LITERAL varname=IDENTIFIER
-     {  graphBuilder.addPragmaOnlyEvaluateVariable($varname.text);  }
+   | PRAGMA ONLY_EVAL_LITERAL eval_list
+  ;
+
+eval_list
+  : (arg=IDENTIFIER { graphBuilder.addPragmaOnlyEvaluateVariable($arg.text); })+ SEMICOLON
   ;
 
 assignment returns [Variable variable, Expression value]
