@@ -30,7 +30,7 @@ public class Plugin extends Observable implements OptimizationStrategyPlugin {
     public boolean optConstantPropagation = true;
     @ConfigurationProperty(type = Type.BOOLEAN)
     public boolean optUnusedAssignments = true;
-    @ConfigurationProperty(type = Type.TEXT)
+    @ConfigurationProperty(type = Type.FILEPATH)
     public String maximaCommand = ProcessBuilderMaximaConnection.CMD_MAXIMA_LINUX;
     @ConfigurationProperty(type = Type.BOOLEAN)
     public boolean optInserting = true;
