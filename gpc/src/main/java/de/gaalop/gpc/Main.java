@@ -60,14 +60,6 @@ public class Main {
         writeLinePragma(outputFile, lineCount++);
         while ((line = inputFile.readLine()) != null) {
             
-            // handle line comments
-//            int lineCommentPos = line.indexOf("//");
-//            if(lineCommentPos >= 0 && line.indexOf("*/",lineCommentPos) < 0) {
-//                line = line.substring(0,lineCommentPos-1);
-//                lineCommentAppend = line.substring(lineCommentPos);
-//            } else
-//                lineCommentAppend = "";
-            
             // parse line commands first
             if (line.indexOf("#include") >= 0 && line.indexOf('\"') >= 0) { // TODO parse this with ANTLR
                 // flush command buffer first
@@ -114,7 +106,7 @@ public class Main {
                     String command = commandBuffer.toString();
                     
                     // search for command end
-                    final String[] commandEndTokens = {";","*/"};
+                    final String[] commandEndTokens = {";","{","}"};
                     int commandEndPos = -1;
                     for (final String commandEndToken : commandEndTokens) {
                         int foundPos = command.indexOf(commandEndToken);
@@ -124,6 +116,11 @@ public class Main {
                                 || commandEndPos < 0)
                             commandEndPos = foundPos;
                     }
+
+                    // exit loop, if inside comment
+                    if(command.lastIndexOf("/*", commandEndPos) >
+                       command.lastIndexOf("*/", commandEndPos))
+                        break;
 
                     // exit loop, if no command end found
                     if(commandEndPos < 0)

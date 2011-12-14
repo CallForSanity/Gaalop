@@ -10,8 +10,8 @@
             <includes>
 		<include>org.kohsuke.args4j</include>
                 <include>de.gaalop:api</include>
-                <include>de.gaalop:cli</include>
                 <include>de.gaalop:clucalc</include>
+                <include>de.gaalop:algebra</include>
                 <include>de.gaalop:codegen-java</include>
                 <include>de.gaalop:codegen-cpp</include>
 		<include>de.gaalop:codegen-compressed</include>
