@@ -40,6 +40,17 @@ public class GAPPDecoratingMain {
      */
     public ControlFlowGraph decorateGraph(ControlFlowGraph graph, boolean optMaxima, String maximaCommand) throws OptimizationException {
 
+        //test if an variable inputsVector exists, if yes, throw an Exception,
+        //because inputsVector is used in the following conversion process.
+        Variable inputsVectorVar = new Variable("inputsVector");
+        if (
+                graph.getInputVariables().contains(inputsVectorVar) ||
+                graph.getScalarVariables().contains(inputsVectorVar) ||
+                graph.getLocalVariables().contains(inputsVectorVar)
+            )
+                throw new OptimizationException("The usage of 'inputsVector' as a variable is not allowed with using the GAPP optimization!\nPlease rename the 'inputsVector' variable definition and usages!", graph);
+
+
         boolean scalarFunctions = false;
 
         Plugin plugin = new Plugin();
