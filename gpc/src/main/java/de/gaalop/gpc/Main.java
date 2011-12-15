@@ -121,6 +121,11 @@ public class Main {
                     final int commentEnd = command.lastIndexOf("*/");
                     System.out.println("/*" + commentStart);
                     System.out.println("*/" + commentEnd);
+                    System.out.println("ca" + commandEndPos);
+                    if(commandEndPos >= 0)
+                        System.out.println(command.charAt(commandEndPos));
+                    if(commentEnd >= 0)
+                        System.out.println(command.charAt(commentEnd));
                     if((commentStart >= 0 && // we found comment start
                         commentStart < commandEndPos) && // comment start before command end
                        (commentEnd < 0 || // no comment end
