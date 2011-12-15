@@ -275,7 +275,7 @@ public class PrettyPrint extends CFGGAPPVisitor {
 
     @Override
     public Object visitAssignInputsVector(GAPPAssignInputsVector gappAssignInputsVector, Object arg) {
-        result.append("assignVector inputsVector = ");
+        result.append("assignInputsVector inputsVector = ");
         printVariableSet(gappAssignInputsVector.getValues());
         result.append(";\n");
         return null;
