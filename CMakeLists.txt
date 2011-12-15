@@ -35,7 +35,9 @@ add_custom_command(TARGET gaalop COMMAND ${MVN_BINARY} -DupdateOnly=true -Dmaven
 # copy
 COPY_DIRECTORY(include-copy include include)
 COPY_DIRECTORY(gaalop-copy "target/gaalop*" "share/gpc/gaalop")
+ADD_DEPENDENCIES(gaalop-copy gaalop)
 COPY_DIRECTORY(dependencies-copy dependencies "share/gpc/gaalop/plugins")
+ADD_DEPENDENCIES(dependencies-copy gaalop-copy)
 
 # find paths
 FILE(GLOB GAALOP_BUILD_TARGET_DIR_LIST "${CMAKE_CURRENT_SOURCE_DIR}/target/gaalop*")

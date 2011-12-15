@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Scanner;
 import java.util.Set;
+import java.util.StringTokenizer;
 import java.util.Vector;
 import org.antlr.runtime.ANTLRStringStream;
 import org.antlr.runtime.CommonTokenStream;
@@ -100,35 +101,38 @@ public class Main {
             } else { // non-line commands
                 // add line to command buffer
                 commandBuffer.append(line).append(LINE_END);
-                                
+                    
+                int commandEndPos = -1;
                 while(true) {
                     // get buffered command
                     String command = commandBuffer.toString();
+                    System.out.println(command);
                     
-                    // search for command end
-                    final String[] commandEndTokens = {";","{","}"};
-                    int commandEndPos = -1;
-                    for (final String commandEndToken : commandEndTokens) {
-                        int foundPos = command.indexOf(commandEndToken);
-
-                        if (foundPos >= 0
-                                && ((foundPos += commandEndToken.length()) < commandEndPos)
-                                || commandEndPos < 0)
-                            commandEndPos = foundPos;
-                    }
-
-                    // exit loop, if inside comment
-                    if(command.lastIndexOf("/*", commandEndPos) >
-                       command.lastIndexOf("*/", commandEndPos))
-                        break;
+                    // find command end pos
+                    commandEndPos = findCommandEndPos(command,
+                                                      Math.max(0,commandEndPos));
 
                     // exit loop, if no command end found
                     if(commandEndPos < 0)
                         break;
+
+                    // exit loop, if inside comment
+                    final int commentStart = command.lastIndexOf("/*");
+                    final int commentEnd = command.lastIndexOf("*/");
+                    System.out.println("/*" + commentStart);
+                    System.out.println("*/" + commentEnd);
+                    if((commentStart >= 0 && // we found comment start
+                        commentStart < commandEndPos) && // comment start before command end
+                       (commentEnd < 0 || // no comment end
+                        commentEnd > commandEndPos)) { // comment end after command end
+                        ++commandEndPos; // increment, so we do not find it again
+                        continue;
+                    }
+                    
+                    System.out.println("true");
                     
                     // extract command
                     command = command.substring(0,commandEndPos);                    
-                    System.out.println(command);
                     // special case handling
                     command = processMvGetBladeCoeff(command,mvComponents);
 
@@ -159,6 +163,21 @@ public class Main {
         outputFile.write(processMvGetBladeCoeff(commandBuffer.toString(),mvComponents));
         // close output file
         outputFile.close();
+    }
+
+    protected int findCommandEndPos(String command,int startPos) {
+        // search for command end
+        final String[] commandEndTokens = {";","{","}"};
+        int commandEndPos = -1;
+        for (final String commandEndToken : commandEndTokens) {
+            int foundPos = command.indexOf(commandEndToken,startPos);
+
+            if (foundPos >= 0
+                    && ((foundPos += commandEndToken.length()) < commandEndPos)
+                    || commandEndPos < 0)
+                commandEndPos = foundPos;
+        }
+        return commandEndPos;
     }
     
     /*
@@ -199,7 +218,19 @@ public class Main {
         return out.toString();
     }
     
-    protected String getMvBladeCoeffArrayEntry(Map<String, Map<String, String>> mvComponents, final String mv, final String blade) {
+    protected String getMvBladeCoeffArrayEntry(Map<String, Map<String, String>> mvComponents, final String mv, String blade) {
+        // remove whitespaces from blade
+        StringTokenizer tokenizer = new StringTokenizer(blade);
+        StringBuffer bladeBuffer = new StringBuffer();
+        while(tokenizer.hasMoreTokens())
+            bladeBuffer.append(tokenizer.nextToken());
+        blade = bladeBuffer.toString();
+        
+        // check for negation
+        boolean negated;
+        if(negated = (blade.charAt(0) == '-'))
+            blade = blade.substring(1);
+        
         // get blade coeff array entry
         String bladeCoeffArrayEntry = null;
         Map<String,String> bladeMap = mvComponents.get(mv);
@@ -208,7 +239,8 @@ public class Main {
         // handle the case that this blade coeff is zero
         if(bladeCoeffArrayEntry == null)
             bladeCoeffArrayEntry = gpcZero;
-        return bladeCoeffArrayEntry;
+        
+        return negated ? "-" + bladeCoeffArrayEntry : bladeCoeffArrayEntry;
     }
 
     protected void processMvToArray(final String command, BufferedWriter outputFile, Map<String, Map<String, String>> mvComponents) throws RecognitionException, IOException {        
