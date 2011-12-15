@@ -1,5 +1,5 @@
 //d[0] = (inputsVector[0] * (inputsVector[1] + inputsVector[2])) * (inputsVector[4] + inputsVector[3])
-assignVector inputsVector = [a,b,c,f,g];
+assignInputsVector inputsVector = [a,b,c,f,g];
 resetMv d[32];
 resetMv mv0[1];
 setVector ve1 = {inputsVector[1,2]};

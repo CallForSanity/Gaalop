@@ -1,5 +1,5 @@
 //sat1[1] = inputsVector[3]
-assignVector inputsVector = [d1,d2,d3,sat1x,sat1y,sat1z,sat2x,sat2y,sat2z,sat3x,sat3y,sat3z];
+assignInputsVector inputsVector = [d1,d2,d3,sat1x,sat1y,sat1z,sat2x,sat2y,sat2z,sat3x,sat3y,sat3z];
 resetMv sat1[32];
 setMv sat1[1,2,3] = inputsVector[3,4,5];
 

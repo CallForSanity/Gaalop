@@ -1,5 +1,5 @@
 //v1[1] = inputsVector[0]
-assignVector inputsVector = [x1,x2,x3,y1,y2,y3];
+assignInputsVector inputsVector = [x1,x2,x3,y1,y2,y3];
 resetMv v1[32];
 setMv v1[1,2] = inputsVector[0,3];
 

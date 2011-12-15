@@ -1,5 +1,5 @@
 //c[0] = ((inputsVector[0] * inputsVector[3]) + (inputsVector[1] * inputsVector[4])) + (inputsVector[2] * inputsVector[5])
-assignVector inputsVector = [a1,a2,a3,b1,b2,b3];
+assignInputsVector inputsVector = [a1,a2,a3,b1,b2,b3];
 resetMv c[32];
 setVector ve0 = {inputsVector[0,1,2]};
 setVector ve1 = {inputsVector[3,4,5]};
