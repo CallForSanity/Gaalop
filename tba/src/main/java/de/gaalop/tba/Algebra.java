@@ -1,5 +1,6 @@
 package de.gaalop.tba;
 
+import de.gaalop.algebra.TCBlade;
 import de.gaalop.cfg.AlgebraDefinitionFile;
 import de.gaalop.dfg.Expression;
 import java.io.BufferedReader;
@@ -36,6 +37,13 @@ public class Algebra {
         } catch (IOException ex) {
             Logger.getLogger(Algebra.class.getName()).log(Level.SEVERE, null, ex);
         }
+        dirty = true;
+    }
+
+    public Algebra(String[] base, TCBlade[] blades) {
+        this.base = base;
+        for (TCBlade b: blades)
+            this.blades.add(new Blade(b));
         dirty = true;
     }
 

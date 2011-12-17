@@ -1,5 +1,7 @@
 package de.gaalop.gappDebugger;
 
+import de.gaalop.algebra.BladeArrayRoutines;
+import de.gaalop.algebra.TCBlade;
 import de.gaalop.gapp.executer.Executer;
 import de.gaalop.gapp.instructionSet.GAPPAssignMv;
 import de.gaalop.gapp.instructionSet.GAPPAssignInputsVector;
@@ -19,6 +21,7 @@ import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import de.gaalop.gapp.instructionSet.GAPPBaseInstruction;
+import de.gaalop.productComputer.Blade;
 import de.gaalop.tba.Algebra;
 import de.gaalop.tba.UseAlgebra;
 import java.io.File;
@@ -42,7 +45,10 @@ public class Controller {
     private DefaultListModel modelVars = new DefaultListModel();
     private DefaultListModel modelSrc = new DefaultListModel();
 
+    private Algebra algebra;
+
     public Controller(UI ui1) {
+        setAlgebraBlades("1,e1,e2,e3,einf,e0");
         this.ui = ui1;
         ui.jListVariables.setModel(modelVars);
         ui.jListSrc.setModel(modelSrc);
@@ -138,6 +144,14 @@ public class Controller {
         return null;
     }
 
+    public void setAlgebraBlades(String algebraBlades) {
+        String[] base = algebraBlades.split(",");
+        for (int i=0;i<base.length;i++)
+            base[i] = base[i].trim();
+        
+        algebra = new Algebra(base, BladeArrayRoutines.createBlades(base));
+    }
+
     public void loadSource(File file) {
 
         try {
@@ -163,7 +177,7 @@ public class Controller {
             CommonTreeNodeStream treeNodeStream = new CommonTreeNodeStream(parserResult.getTree());
             GappTransformer transformer = new GappTransformer(treeNodeStream);
             GAPPBuilder graph = transformer.script();
-            Algebra algebra = UseAlgebra.get5dConformalGATable().getAlgebra(); //TODO chs change this to gui editable
+            
             LinkedList<GAPPBaseInstruction> instructions = graph.getInstructions(algebra);
             if (!parser.getErrors().isEmpty()) {
                 StringBuilder message = new StringBuilder();

@@ -7,6 +7,7 @@
 package de.gaalop.gappDebugger;
 
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -33,11 +34,12 @@ public class UI extends javax.swing.JFrame {
         jButSetVariableValue = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         jListVariables = new javax.swing.JList();
-        jButLoadSrc = new javax.swing.JButton();
+        jButSetAlgebra = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jListSrc = new javax.swing.JList();
         jButRestart = new javax.swing.JButton();
         jTextFieldInfo = new javax.swing.JTextField();
+        jButLoadSrc1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("GAPP Debugger");
@@ -51,7 +53,7 @@ public class UI extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jButNextInstruction);
-        jButNextInstruction.setBounds(730, 70, 200, 23);
+        jButNextInstruction.setBounds(730, 100, 200, 25);
 
         jButRun.setText("Run");
         jButRun.addActionListener(new java.awt.event.ActionListener() {
@@ -60,7 +62,7 @@ public class UI extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jButRun);
-        jButRun.setBounds(730, 100, 200, 23);
+        jButRun.setBounds(730, 130, 200, 25);
 
         jButSetVariableValue.setText("Set Variable Value");
         jButSetVariableValue.addActionListener(new java.awt.event.ActionListener() {
@@ -69,21 +71,21 @@ public class UI extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jButSetVariableValue);
-        jButSetVariableValue.setBounds(730, 40, 200, 23);
+        jButSetVariableValue.setBounds(730, 70, 200, 25);
 
         jScrollPane2.setViewportView(jListVariables);
 
         getContentPane().add(jScrollPane2);
-        jScrollPane2.setBounds(730, 160, 200, 410);
+        jScrollPane2.setBounds(730, 190, 200, 380);
 
-        jButLoadSrc.setText("Load source");
-        jButLoadSrc.addActionListener(new java.awt.event.ActionListener() {
+        jButSetAlgebra.setText("Set algebra");
+        jButSetAlgebra.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButLoadSrcActionPerformed(evt);
+                jButSetAlgebraActionPerformed(evt);
             }
         });
-        getContentPane().add(jButLoadSrc);
-        jButLoadSrc.setBounds(730, 10, 200, 23);
+        getContentPane().add(jButSetAlgebra);
+        jButSetAlgebra.setBounds(730, 10, 200, 25);
 
         jListSrc.setFont(new java.awt.Font("Arial", 0, 12));
         jScrollPane1.setViewportView(jListSrc);
@@ -98,11 +100,20 @@ public class UI extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jButRestart);
-        jButRestart.setBounds(730, 130, 200, 23);
+        jButRestart.setBounds(730, 160, 200, 25);
 
         jTextFieldInfo.setEditable(false);
         getContentPane().add(jTextFieldInfo);
-        jTextFieldInfo.setBounds(10, 580, 920, 20);
+        jTextFieldInfo.setBounds(10, 580, 920, 19);
+
+        jButLoadSrc1.setText("Load source");
+        jButLoadSrc1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButLoadSrc1ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jButLoadSrc1);
+        jButLoadSrc1.setBounds(730, 40, 200, 25);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -119,15 +130,21 @@ public class UI extends javax.swing.JFrame {
         controller.setVariableValue();
     }//GEN-LAST:event_jButSetVariableValueActionPerformed
 
-    private void jButLoadSrcActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButLoadSrcActionPerformed
-        JFileChooser jFC = new JFileChooser();
-        if (jFC.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) 
-            controller.loadSource(jFC.getSelectedFile());
-    }//GEN-LAST:event_jButLoadSrcActionPerformed
+    private void jButSetAlgebraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButSetAlgebraActionPerformed
+        String algebraBlades = JOptionPane.showInputDialog(null, "Please type in the algebra basis vectors, separated by \",\"!","1,e1,e2,e3,einf,e0");
+        if (algebraBlades != null && !algebraBlades.isEmpty())
+            controller.setAlgebraBlades(algebraBlades);
+    }//GEN-LAST:event_jButSetAlgebraActionPerformed
 
     private void jButRestartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButRestartActionPerformed
         controller.restart();
     }//GEN-LAST:event_jButRestartActionPerformed
+
+    private void jButLoadSrc1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButLoadSrc1ActionPerformed
+        JFileChooser jFC = new JFileChooser();
+        if (jFC.showOpenDialog(null) == JFileChooser.APPROVE_OPTION)
+            controller.loadSource(jFC.getSelectedFile());
+    }//GEN-LAST:event_jButLoadSrc1ActionPerformed
 
     /**
     * @param args the command line arguments
@@ -141,10 +158,11 @@ public class UI extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    public javax.swing.JButton jButLoadSrc;
+    public javax.swing.JButton jButLoadSrc1;
     public javax.swing.JButton jButNextInstruction;
     private javax.swing.JButton jButRestart;
     public javax.swing.JButton jButRun;
+    public javax.swing.JButton jButSetAlgebra;
     public javax.swing.JButton jButSetVariableValue;
     public javax.swing.JList jListSrc;
     public javax.swing.JList jListVariables;

@@ -1,5 +1,6 @@
 package de.gaalop.tba;
 
+import de.gaalop.algebra.TCBlade;
 import de.gaalop.dfg.BaseVector;
 import de.gaalop.dfg.Expression;
 import de.gaalop.dfg.ExpressionFactory;
@@ -27,6 +28,10 @@ public class Blade {
 
     public Blade(Vector<String> bases) {
         this.bases = bases;
+    }
+
+    public Blade(TCBlade b) {
+        this.bases = new Vector<String>(Arrays.asList(b.getBase()));
     }
 
     @Override
