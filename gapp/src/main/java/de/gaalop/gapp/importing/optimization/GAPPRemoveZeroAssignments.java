@@ -2,6 +2,7 @@ package de.gaalop.gapp.importing.optimization;
 
 import de.gaalop.gapp.PosSelector;
 import de.gaalop.gapp.PosSelectorset;
+import de.gaalop.gapp.Valueset;
 import de.gaalop.gapp.Variableset;
 import de.gaalop.gapp.instructionSet.GAPPAssignMv;
 import de.gaalop.gapp.variables.GAPPConstant;
@@ -25,13 +26,13 @@ public class GAPPRemoveZeroAssignments extends GAPPRemover {
         LinkedList<GAPPValueHolder> delVariables = new LinkedList<GAPPValueHolder>();
 
         PosSelectorset selSet = gappAssignMv.getSelectors();
-        Variableset varSet = gappAssignMv.getValues();
+        Valueset valSet = gappAssignMv.getValues();
 
         Iterator<PosSelector> selIt = selSet.listIterator();
-        Iterator<GAPPValueHolder> varIt = varSet.listIterator();
-        while (selIt.hasNext() && varIt.hasNext()) {
+        Iterator<GAPPConstant> valIt = valSet.listIterator();
+        while (selIt.hasNext() && valIt.hasNext()) {
             PosSelector curSel = selIt.next();
-            GAPPValueHolder curVar = varIt.next();
+            GAPPValueHolder curVar = valIt.next();
 
             if (!curVar.isVariable()) {
                 if (Math.abs(((GAPPConstant) curVar).getValue()) < 10E-04) {
@@ -47,7 +48,7 @@ public class GAPPRemoveZeroAssignments extends GAPPRemover {
         }
 
         for (GAPPValueHolder val : delVariables) {
-            varSet.remove(val);
+            valSet.remove(val);
         }
 
         // if selList is Empty remove the whole command

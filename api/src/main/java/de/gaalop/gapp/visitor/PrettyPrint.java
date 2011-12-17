@@ -8,6 +8,7 @@ import de.gaalop.gapp.Selector;
 import de.gaalop.gapp.PosSelector;
 import de.gaalop.gapp.Selectorset;
 import de.gaalop.gapp.SetVectorArgument;
+import de.gaalop.gapp.Valueset;
 import de.gaalop.gapp.Variableset;
 import de.gaalop.gapp.instructionSet.GAPPAssignMv;
 import de.gaalop.gapp.instructionSet.GAPPAssignInputsVector;
@@ -155,6 +156,20 @@ public class PrettyPrint extends CFGGAPPVisitor {
     }
 
     /**
+     * Pretty prints a valueset at the end of result
+     * @param valueset The valueset
+     */
+    private void printValueSet(Valueset valueset) {
+        result.append("[");
+        for (GAPPValueHolder cur : valueset) {
+            result.append(cur.prettyPrint());
+            result.append(",");
+        }
+        result.deleteCharAt(result.length() - 1);
+        result.append("]");
+    }
+
+    /**
      * Prints a SetVectorArgument instance
      * @param arg The argument
      */
@@ -207,7 +222,7 @@ public class PrettyPrint extends CFGGAPPVisitor {
         printMultivector(gappAssignMv.getDestinationMv());
         printPosSelectors(gappAssignMv.getSelectors());
         result.append(" = ");
-        printVariableSet(gappAssignMv.getValues());
+        printValueSet(gappAssignMv.getValues());
         result.append(";\n");
         return null;
     }

@@ -70,7 +70,7 @@ variableset
   : LSBRACKET multivector (COMMA multivector)* RSBRACKET
   ;
 
-variableset2
+valueset
   : LSBRACKET float_literal (COMMA float_literal)* RSBRACKET
   ;
 
@@ -118,7 +118,7 @@ gappcommand
   | SETMV_LITERAL multivector posSelectors EQUALS setOfVariables selectors
   | SETVECTOR_LITERAL vector EQUALS CLBRACKET listOfArguments CRBRACKET
   | DOTVECTORS_LITERAL multivector LSBRACKET selector RSBRACKET EQUALS dotproduct 
-  | ASSIGNMV_LITERAL multivector posSelectors EQUALS variableset2
+  | ASSIGNMV_LITERAL multivector posSelectors EQUALS valueset
   | CALCULATEMVCOEFF_LITERAL multivector LSBRACKET DECIMAL_LITERAL RSBRACKET EQUALS calcOperationType LBRACKET multivector (COMMA multivector)? RBRACKET
   | CALCULATEMV_LITERAL multivector EQUALS calcOperationType LBRACKET multivector (COMMA multivector)? RBRACKET 
   ;

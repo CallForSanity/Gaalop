@@ -9,6 +9,7 @@ import de.gaalop.gapp.PosSelectorset;
 import de.gaalop.gapp.Selector;
 import de.gaalop.gapp.Selectorset;
 import de.gaalop.gapp.SetVectorArgument;
+import de.gaalop.gapp.Valueset;
 import de.gaalop.gapp.Variableset;
 import de.gaalop.gapp.importing.parallelObjects.Constant;
 import de.gaalop.gapp.importing.parallelObjects.DotProduct;
@@ -195,10 +196,10 @@ public class GAPPCreator implements ParallelObjectVisitor {
         PosSelectorset selSet = new PosSelectorset();
         selSet.add(new PosSelector(destination.getBladeIndex(), algebra.getBlade(destination.getBladeIndex()).toString()));
 
-        Variableset varSet = new Variableset();
-        varSet.add(new GAPPConstant(((constant.isNegated()) ? -1 : 1) * constant.getValue()));
+        Valueset valSet = new Valueset();
+        valSet.add(new GAPPConstant(((constant.isNegated()) ? -1 : 1) * constant.getValue()));
 
-        gapp.addInstruction(new GAPPAssignMv(new GAPPMultivector(destination.getName()), selSet, varSet));
+        gapp.addInstruction(new GAPPAssignMv(new GAPPMultivector(destination.getName()), selSet, valSet));
 
         return null;
     }

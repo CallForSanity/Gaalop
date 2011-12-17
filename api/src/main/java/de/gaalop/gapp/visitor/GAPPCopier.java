@@ -7,6 +7,7 @@ import de.gaalop.gapp.Selector;
 import de.gaalop.gapp.PosSelector;
 import de.gaalop.gapp.Selectorset;
 import de.gaalop.gapp.SetVectorArgument;
+import de.gaalop.gapp.Valueset;
 import de.gaalop.gapp.Variableset;
 import de.gaalop.gapp.instructionSet.GAPPAssignMv;
 import de.gaalop.gapp.instructionSet.GAPPAssignInputsVector;
@@ -16,6 +17,7 @@ import de.gaalop.gapp.instructionSet.GAPPDotVectors;
 import de.gaalop.gapp.instructionSet.GAPPResetMv;
 import de.gaalop.gapp.instructionSet.GAPPSetMv;
 import de.gaalop.gapp.instructionSet.GAPPSetVector;
+import de.gaalop.gapp.variables.GAPPConstant;
 import de.gaalop.gapp.variables.GAPPMultivector;
 import de.gaalop.gapp.variables.GAPPSetOfVariables;
 import de.gaalop.gapp.variables.GAPPValueHolder;
@@ -97,6 +99,21 @@ public class GAPPCopier implements GAPPVisitor {
      * @param var The variableset to be copied
      * @return The copy
      */
+    private Valueset copyValueset(Valueset var) {
+        Valueset copy = new Valueset();
+
+        for (GAPPConstant cur : var) {
+            copy.add((GAPPConstant) GAPPValueHolderCopier.copyValueHolder(cur));
+        }
+
+        return copy;
+    }
+
+    /**
+     * Copies a variableset
+     * @param var The variableset to be copied
+     * @return The copy
+     */
     private Variableset copyVariableset(Variableset var) {
         Variableset copy = new Variableset();
 
@@ -125,7 +142,7 @@ public class GAPPCopier implements GAPPVisitor {
         return new GAPPAssignMv(
                 (GAPPMultivector) GAPPValueHolderCopier.copyValueHolder(gappAssignMv.getDestinationMv()),
                 copyPosSelectorset(gappAssignMv.getSelectors()),
-                copyVariableset(gappAssignMv.getValues()));
+                copyValueset(gappAssignMv.getValues()));
     }
 
     @Override

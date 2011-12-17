@@ -80,11 +80,10 @@ variableset returns [Variableset variableset]
         (COMMA m2=multivector { $variableset.add(new GAPPScalarVariable($m2.multivector.getName())); })* RSBRACKET
   ;
 
-/*TODO chs have to be modified, if API is changed (->todo api)*/
-variableset2 returns [Variableset variableset]
-  @init { $variableset = new Variableset(); }
-  : LSBRACKET m1=float_literal { $variableset.add(new GAPPConstant($m1.value)); }
-        (COMMA m2=float_literal { $variableset.add(new GAPPConstant($m2.value)); })* RSBRACKET
+valueset returns [Valueset valueset]
+  @init { $valueset = new Valueset(); }
+  : LSBRACKET m1=float_literal { $valueset.add(new GAPPConstant($m1.value)); }
+        (COMMA m2=float_literal { $valueset.add(new GAPPConstant($m2.value)); })* RSBRACKET
   ;
 
 posSelector returns [PosSelector selector]
@@ -150,8 +149,8 @@ gappcommand returns [GAPPBaseInstruction instruction]
   | DOTVECTORS_LITERAL dest3=multivector LSBRACKET sel1=selector RSBRACKET EQUALS dp=dotproduct
     { $instruction = new GAPPDotVectors($dest3.multivector,$sel1.selector,$dp.parts); }
 
-  | ASSIGNMV_LITERAL dest4=multivector sel2=posSelectors EQUALS varset=variableset2
-    { $instruction = new GAPPAssignMv($dest4.multivector,$sel2.selectors,$varset.variableset); }
+  | ASSIGNMV_LITERAL dest4=multivector sel2=posSelectors EQUALS valset=valueset
+    { $instruction = new GAPPAssignMv($dest4.multivector,$sel2.selectors,$valset.valueset); }
 
   | CALCULATEMVCOEFF_LITERAL dest5=multivector LSBRACKET destComp=DECIMAL_LITERAL RSBRACKET EQUALS type1=calcOperationType LBRACKET args2=oneOrTwoMultivectors RBRACKET
     { $instruction = new GAPPCalculateMvCoeff($type1.type,new GAPPMultivectorComponent($dest5.multivector.getName(),Integer.parseInt($destComp.text)),$args2.m1,$args2.m2); }
