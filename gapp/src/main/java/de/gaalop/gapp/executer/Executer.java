@@ -83,7 +83,7 @@ public class Executer extends CFGGAPPVisitor {
      * @param size The size
      */
     private void createVector(String name, int size) {
-        values.put(name, new MultivectorWithValues(size));
+        values.put(name, new MultivectorWithValues(size, false));
     }
 
     /**
@@ -97,7 +97,7 @@ public class Executer extends CFGGAPPVisitor {
 
     @Override
     public Object visitResetMv(GAPPResetMv gappResetMv, Object arg) {
-        MultivectorWithValues mv = new MultivectorWithValues(gappResetMv.getSize());
+        MultivectorWithValues mv = new MultivectorWithValues(gappResetMv.getSize(),true);
         values.put(gappResetMv.getDestinationMv().getName(), mv);
         mv.clear();
         return null;

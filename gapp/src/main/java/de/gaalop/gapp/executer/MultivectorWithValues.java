@@ -12,10 +12,20 @@ import java.util.Arrays;
 public class MultivectorWithValues {
 
     private float[] entries;
+    private boolean multivector;
 
-    public MultivectorWithValues(int bladeCount) {
+    public MultivectorWithValues(int bladeCount, boolean isMultivector) {
         entries = new float[bladeCount];
+        multivector = isMultivector;
         clear();
+    }
+
+    public boolean isMultivector() {
+        return multivector;
+    }
+
+    public void setMultivector(boolean multivector) {
+        this.multivector = multivector;
     }
 
     public float[] getEntries() {

@@ -3,6 +3,7 @@ package de.gaalop.gappDebugger;
 import de.gaalop.algebra.BladeArrayRoutines;
 import de.gaalop.algebra.TCBlade;
 import de.gaalop.gapp.executer.Executer;
+import de.gaalop.gapp.executer.MultivectorWithValues;
 import de.gaalop.gapp.instructionSet.GAPPAssignMv;
 import de.gaalop.gapp.instructionSet.GAPPAssignInputsVector;
 import de.gaalop.gapp.instructionSet.GAPPCalculateMv;
@@ -28,6 +29,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.LinkedList;
+import java.util.Vector;
+import javax.swing.table.DefaultTableModel;
 import org.antlr.runtime.ANTLRReaderStream;
 import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.RecognitionException;
@@ -48,21 +51,58 @@ public class Controller {
     private Algebra algebra;
 
     public Controller(UI ui1) {
-        setAlgebraBlades("1,e1,e2,e3,einf,e0");
+        setAlgebraBlades("e1,e2,e3,einf,e0");
         this.ui = ui1;
         ui.jListVariables.setModel(modelVars);
         ui.jListSrc.setModel(modelSrc);
         ListSelectionListener listener = new ListSelectionListener() {
 
             public void valueChanged(ListSelectionEvent e) {
-                String name = (String) ui.jListVariables.getSelectedValue();
-
-                if (name != null && !name.contains("="))
-                    ui.jTextFieldInfo.setText(executer.getValues().get(name).toString());
+                refreshValueTable();
             }
         };
 
         ui.jListVariables.addListSelectionListener(listener);
+    }
+
+    private void refreshValueTable() {
+        String name = (String) ui.jListVariables.getSelectedValue();
+
+        if (name != null && !name.contains("=")) {
+            String varName = name.split("=")[0].trim();
+  
+            DefaultTableModel model = (DefaultTableModel) ui.jTable1.getModel();
+            while (model.getRowCount()>0)
+                model.removeRow(0);
+
+            MultivectorWithValues v = executer.getValues().get(varName);
+            if (v.isMultivector()) {
+                int bladeCount = v.getEntries().length;
+                for (int blade=0;blade<bladeCount;blade++) {
+                    Vector row = new Vector();
+                    row.add(blade);
+                    row.add(algebra.getBlade(blade).toString());
+
+                    row.add(Float.toString(v.getEntry(blade)));
+                    model.addRow(row);
+                }
+            } else {
+                int entryCount = v.getEntries().length;
+                for (int entry=0;entry<entryCount;entry++) {
+                    Vector row = new Vector();
+                    row.add(entry);
+                    row.add("");
+                    row.add(Float.toString(v.getEntry(entry)));
+                    model.addRow(row);
+                }
+            }
+
+            model.fireTableDataChanged();
+            ui.jTable1.repaint();
+        }
+
+
+
     }
 
     private GAPPBaseInstruction[] instructions;

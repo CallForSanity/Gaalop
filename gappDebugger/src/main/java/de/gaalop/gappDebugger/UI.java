@@ -38,12 +38,13 @@ public class UI extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jListSrc = new javax.swing.JList();
         jButRestart = new javax.swing.JButton();
-        jTextFieldInfo = new javax.swing.JTextField();
         jButLoadSrc1 = new javax.swing.JButton();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("GAPP Debugger");
-        setMinimumSize(new java.awt.Dimension(955, 648));
+        setMinimumSize(new java.awt.Dimension(940, 600));
         getContentPane().setLayout(null);
 
         jButNextInstruction.setText("Next instruction");
@@ -53,7 +54,7 @@ public class UI extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jButNextInstruction);
-        jButNextInstruction.setBounds(730, 100, 200, 25);
+        jButNextInstruction.setBounds(430, 100, 180, 25);
 
         jButRun.setText("Run");
         jButRun.addActionListener(new java.awt.event.ActionListener() {
@@ -62,7 +63,7 @@ public class UI extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jButRun);
-        jButRun.setBounds(730, 130, 200, 25);
+        jButRun.setBounds(430, 130, 180, 25);
 
         jButSetVariableValue.setText("Set Variable Value");
         jButSetVariableValue.addActionListener(new java.awt.event.ActionListener() {
@@ -71,12 +72,12 @@ public class UI extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jButSetVariableValue);
-        jButSetVariableValue.setBounds(730, 70, 200, 25);
+        jButSetVariableValue.setBounds(430, 70, 180, 25);
 
         jScrollPane2.setViewportView(jListVariables);
 
         getContentPane().add(jScrollPane2);
-        jScrollPane2.setBounds(730, 190, 200, 380);
+        jScrollPane2.setBounds(430, 190, 180, 380);
 
         jButSetAlgebra.setText("Set algebra");
         jButSetAlgebra.addActionListener(new java.awt.event.ActionListener() {
@@ -85,13 +86,13 @@ public class UI extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jButSetAlgebra);
-        jButSetAlgebra.setBounds(730, 10, 200, 25);
+        jButSetAlgebra.setBounds(430, 10, 180, 25);
 
         jListSrc.setFont(new java.awt.Font("Arial", 0, 12));
         jScrollPane1.setViewportView(jListSrc);
 
         getContentPane().add(jScrollPane1);
-        jScrollPane1.setBounds(10, 10, 710, 560);
+        jScrollPane1.setBounds(10, 10, 410, 560);
 
         jButRestart.setText("Restart");
         jButRestart.addActionListener(new java.awt.event.ActionListener() {
@@ -100,11 +101,7 @@ public class UI extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jButRestart);
-        jButRestart.setBounds(730, 160, 200, 25);
-
-        jTextFieldInfo.setEditable(false);
-        getContentPane().add(jTextFieldInfo);
-        jTextFieldInfo.setBounds(10, 580, 920, 19);
+        jButRestart.setBounds(430, 160, 180, 25);
 
         jButLoadSrc1.setText("Load source");
         jButLoadSrc1.addActionListener(new java.awt.event.ActionListener() {
@@ -113,7 +110,44 @@ public class UI extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jButLoadSrc1);
-        jButLoadSrc1.setBounds(730, 40, 200, 25);
+        jButLoadSrc1.setBounds(430, 40, 180, 25);
+
+        jScrollPane3.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "No", "Blade", "Value"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane3.setViewportView(jTable1);
+        jTable1.getColumnModel().getColumn(0).setPreferredWidth(40);
+        jTable1.getColumnModel().getColumn(0).setMaxWidth(40);
+        jTable1.getColumnModel().getColumn(1).setMinWidth(0);
+        jTable1.getColumnModel().getColumn(1).setPreferredWidth(90);
+        jTable1.getColumnModel().getColumn(2).setMinWidth(0);
+        jTable1.getColumnModel().getColumn(2).setPreferredWidth(90);
+        jTable1.getColumnModel().getColumn(2).setMaxWidth(90);
+
+        getContentPane().add(jScrollPane3);
+        jScrollPane3.setBounds(620, 10, 310, 560);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -131,7 +165,7 @@ public class UI extends javax.swing.JFrame {
     }//GEN-LAST:event_jButSetVariableValueActionPerformed
 
     private void jButSetAlgebraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButSetAlgebraActionPerformed
-        String algebraBlades = JOptionPane.showInputDialog(null, "Please type in the algebra basis vectors, separated by \",\"!","1,e1,e2,e3,einf,e0");
+        String algebraBlades = JOptionPane.showInputDialog(null, "Please type in the algebra basis vectors, separated by \",\"!","e1,e2,e3,einf,e0");
         if (algebraBlades != null && !algebraBlades.isEmpty())
             controller.setAlgebraBlades(algebraBlades);
     }//GEN-LAST:event_jButSetAlgebraActionPerformed
@@ -168,7 +202,8 @@ public class UI extends javax.swing.JFrame {
     public javax.swing.JList jListVariables;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    public javax.swing.JTextField jTextFieldInfo;
+    private javax.swing.JScrollPane jScrollPane3;
+    public javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables
 
     public Controller controller;
