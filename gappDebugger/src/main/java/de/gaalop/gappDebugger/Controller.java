@@ -22,9 +22,7 @@ import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import de.gaalop.gapp.instructionSet.GAPPBaseInstruction;
-import de.gaalop.productComputer.Blade;
 import de.gaalop.tba.Algebra;
-import de.gaalop.tba.UseAlgebra;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -37,7 +35,7 @@ import org.antlr.runtime.RecognitionException;
 import org.antlr.runtime.tree.CommonTreeNodeStream;
 
 /**
- *
+ * The controller for the ui
  * @author christian
  */
 public class Controller {
@@ -65,6 +63,9 @@ public class Controller {
         ui.jListVariables.addListSelectionListener(listener);
     }
 
+    /**
+     * Refreshes the value table
+     */
     private void refreshValueTable() {
         String name = (String) ui.jListVariables.getSelectedValue();
 
@@ -192,10 +193,14 @@ public class Controller {
         algebra = new Algebra(base, BladeArrayRoutines.createBlades(base));
     }
 
+    /**
+     * Loads the source from a file
+     * @param file The file
+     */
     public void loadSource(File file) {
 
         try {
-            ANTLRReaderStream fileStream = new ANTLRReaderStream(new FileReader("/home/christian/gapp/Circle.gapp"));
+            ANTLRReaderStream fileStream = new ANTLRReaderStream(new FileReader(file));
             GappLexer lexer = new GappLexer(fileStream);
             CommonTokenStream tokenStream = new CommonTokenStream(lexer);
             GappParser parser = new GappParser(tokenStream);
