@@ -12,7 +12,7 @@ public class GAPPAssignMv extends GAPPBaseInstruction {
 
     private GAPPMultivector destinationMv;
     private PosSelectorset selectors;
-    private Variableset values;
+    private Variableset values; //TODO chs This can be facilitated to a LinkedList<Float>!
 
     public GAPPAssignMv(GAPPMultivector destinationMv, PosSelectorset selectors, Variableset values) {
         this.destinationMv = destinationMv;
