@@ -6,6 +6,7 @@
 package de.gaalop.gappDebugger;
 
 import de.gaalop.gapp.instructionSet.GAPPBaseInstruction;
+import de.gaalop.tba.Algebra;
 import java.util.LinkedList;
 
 /**
@@ -16,18 +17,22 @@ public class GAPPBuilder {
 
     private LinkedList<GAPPBaseInstruction> instructions = new LinkedList<GAPPBaseInstruction>();
 
-    public LinkedList<GAPPBaseInstruction> getInstructions() {
+    private boolean dirty = true;
+
+    public LinkedList<GAPPBaseInstruction> getInstructions(Algebra algebra) {
+        if (dirty) finish(algebra);
         return instructions;
     }
 
     public void add(GAPPBaseInstruction instruction) {
-        System.out.print(instruction);
+        dirty = true;
         instructions.add(instruction);
     }
 
-    public void finish() { //TODO chs
-        //GappSetMv sources sind hier GAPPMultivectors, können aber auch GAPPVectors sein!
-        //blade names of PosSelector and Selector! Uses algebra!
+    private void finish(Algebra algebra) {
+        SetOfVariablesUpdater.updateSetOfVariables(instructions);
+        BladeNameSetter.updateSetOfVariables(instructions, algebra);
+        dirty = false;
     }
 
 }

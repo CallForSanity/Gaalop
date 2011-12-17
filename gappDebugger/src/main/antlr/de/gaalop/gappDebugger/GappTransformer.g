@@ -34,7 +34,7 @@ options {
 script	returns [GAPPBuilder result]
 	@init {
 		gappBuilder = new GAPPBuilder();
-		result = gappBuilder;
+		$result = gappBuilder;
 	}
  	: statement*;
 

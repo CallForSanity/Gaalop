@@ -3,7 +3,6 @@ package de.gaalop.gappDebugger;
 import de.gaalop.gapp.executer.Executer;
 import de.gaalop.gapp.instructionSet.GAPPAssignMv;
 import de.gaalop.gapp.instructionSet.GAPPAssignInputsVector;
-import de.gaalop.gapp.instructionSet.GAPPBaseInstruction;
 import de.gaalop.gapp.instructionSet.GAPPCalculateMv;
 import de.gaalop.gapp.instructionSet.GAPPDotVectors;
 import de.gaalop.gapp.instructionSet.GAPPResetMv;
@@ -11,11 +10,6 @@ import de.gaalop.gapp.instructionSet.GAPPSetMv;
 import de.gaalop.gapp.instructionSet.GAPPSetVector;
 import de.gaalop.gapp.variables.GAPPMultivector;
 import de.gaalop.gapp.visitor.InstructionType;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.logging.Level;
@@ -24,6 +18,17 @@ import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import de.gaalop.gapp.instructionSet.GAPPBaseInstruction;
+import de.gaalop.tba.Algebra;
+import de.gaalop.tba.UseAlgebra;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.LinkedList;
+import org.antlr.runtime.ANTLRReaderStream;
+import org.antlr.runtime.CommonTokenStream;
+import org.antlr.runtime.RecognitionException;
+import org.antlr.runtime.tree.CommonTreeNodeStream;
 
 /**
  *
@@ -134,40 +139,52 @@ public class Controller {
     }
 
     public void loadSource(File file) {
+
         try {
-                ArrayList<GAPPBaseInstruction> instructionsList = new ArrayList<GAPPBaseInstruction>();
-                BufferedReader reader = new BufferedReader(new FileReader(file));
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    line = line.trim();
-                    if (!line.isEmpty()) {
-                        if (!line.startsWith("//")) {
-                         //   Parser parser = new Parser();
-                            //Parser parser = null;
-                            String cmd = line.split(" ")[0];
-                            GAPPBaseInstruction instruction = createBaseInstruction(cmd);
-                            String trimmed = line.substring(line.indexOf(" ")).trim();
-                            trimmed = trimmed.substring(0, trimmed.length()-1);
-                            instruction.accept(null, trimmed);
-                            instructionsList.add(instruction);
-                        }
-                    }
+            ANTLRReaderStream fileStream = new ANTLRReaderStream(new FileReader("/home/christian/gapp/Circle.gapp"));
+            GappLexer lexer = new GappLexer(fileStream);
+            CommonTokenStream tokenStream = new CommonTokenStream(lexer);
+            GappParser parser = new GappParser(tokenStream);
+            GappParser.script_return parserResult = parser.script();
+            if (!parser.getErrors().isEmpty()) {
+                StringBuilder message = new StringBuilder();
+                message.append("Unable to parse CluCalc file:\n");
+                for (String error : parser.getErrors()) {
+                    message.append(error);
+                    message.append('\n');
                 }
-
-                reader.close();
-
-                instructions = instructionsList.toArray(new GAPPBaseInstruction[0]);
-                modelSrc.clear();
-                
-                for (GAPPBaseInstruction instruction: instructions) {
-                    modelSrc.addElement(instruction.toString());
-                }
-    
-
-                ui.jListSrc.repaint();
-            } catch (IOException ex) {
-                Logger.getLogger(UI.class.getName()).log(Level.SEVERE, null, ex);
+                System.err.println(message);
+                return;
             }
+            if (parserResult.getTree() == null) {
+                System.out.println("The input file is empty.");
+                return;
+            }
+            CommonTreeNodeStream treeNodeStream = new CommonTreeNodeStream(parserResult.getTree());
+            GappTransformer transformer = new GappTransformer(treeNodeStream);
+            GAPPBuilder graph = transformer.script();
+            Algebra algebra = UseAlgebra.get5dConformalGATable().getAlgebra(); //TODO chs change this to gui editable
+            LinkedList<GAPPBaseInstruction> instructions = graph.getInstructions(algebra);
+            if (!parser.getErrors().isEmpty()) {
+                StringBuilder message = new StringBuilder();
+                message.append("Unable to parse CluCalc file:\n");
+                for (String error : parser.getErrors()) {
+                    message.append(error);
+                    message.append('\n');
+                }
+                return;
+            }
+            this.instructions = instructions.toArray(new GAPPBaseInstruction[0]);
+            modelSrc.clear();
+            for (GAPPBaseInstruction instruction : instructions) {
+                modelSrc.addElement(instruction.toString());
+            }
+            ui.jListSrc.repaint();
+        } catch (RecognitionException ex) {
+            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public void repaint() {
