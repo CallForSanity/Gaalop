@@ -16,15 +16,12 @@ import org.apache.commons.logging.LogFactory;
  */
 public class CompressedVisitor extends de.gaalop.gaalet.output.CppVisitor {
 
-    protected boolean gcdMetaInfo = true;
+    protected boolean gpcMetaInfo = true;
 
     public CompressedVisitor(boolean standalone) {
         super(standalone);
     }
 
-    /*
-     * disable gaalet comments
-     */
     @Override
     public void visit(StartNode node) {
         graph = node.getGraph();
@@ -81,9 +78,9 @@ public class CompressedVisitor extends de.gaalop.gaalet.output.CppVisitor {
                 continue;
 
             // GCD definition
-            if (gcdMetaInfo) {
+            if (gpcMetaInfo) {
                 appendIndentation();
-                code.append("//#pragma gcd multivector ");
+                code.append("//#pragma gpc multivector ");
                 code.append(var.getName());
                 code.append('\n');
             }
@@ -139,8 +136,8 @@ public class CompressedVisitor extends de.gaalop.gaalet.output.CppVisitor {
 
             // GCD definition
             final String componentName = name + '[' + pos + ']';
-            if (gcdMetaInfo) {
-                code.append("//#pragma gcd multivector_component ");
+            if (gpcMetaInfo) {
+                code.append("//#pragma gpc multivector_component ");
                 code.append(component.getName());                
                 code.append(' ');
                 code.append(component.getBladeName());

@@ -318,7 +318,8 @@ public class GAPPOpenCLVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor
 
         // parallel pyramid reduce
         while((openCLVectorSize >>= 1) > 1) {
-            result.append("dot").append(dotCount+1);
+            result.append("float").append(openCLVectorSize);
+            result.append(" dot").append(dotCount+1);
             result.append(" = ");
             result.append("dot").append(dotCount).append(".odd");
             result.append(" + ");
