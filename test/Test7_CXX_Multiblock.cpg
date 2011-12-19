@@ -2,13 +2,13 @@
 #include <gpc.h>
 
 int main() {
-#pragma gcd begin
+#pragma gpc begin
 	?a = 5;
-#pragma gcd end
+#pragma gpc end
 
-#pragma gcd begin
+#pragma gpc begin
 	?b = a + 5;
-#pragma gcd end
+#pragma gpc end
 
 	float array[1];
 

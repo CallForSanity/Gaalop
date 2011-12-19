@@ -30,7 +30,7 @@ program
 	;
 
 assignment_expression
-	: additive_expression EQUALS^ additive_expression SEMICOLON!
+	: (CONST_FLOATMV | CONST_TEMPMV)? additive_expression EQUALS^ additive_expression SEMICOLON!
 	;
 
 additive_expression

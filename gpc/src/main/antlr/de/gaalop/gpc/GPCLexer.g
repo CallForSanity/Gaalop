@@ -13,8 +13,16 @@ LINE_COMMENT
     : '//'~'#'  ~('\n'|'\r')* '\r'? ('\n'|EOF) {$channel=HIDDEN;}
     ;
 
+CONST_FLOATMV
+        : 'const' WS+ 'floatmv'
+        ;
+
+CONST_TEMPMV
+        : 'const' WS+ 'tempmv'
+        ;
+
 IDENTIFIER
-	:	LETTER (LETTER|DIGIT)*
+	:	LETTER (LETTER|DIGIT|'.')*
 	;
 
 fragment

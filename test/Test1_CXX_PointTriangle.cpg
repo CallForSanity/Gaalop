@@ -4,7 +4,7 @@ bool pointTriangleTest(const float t1x, const float t1y, const float t1z,
 		const float t2x, const float t2y, const float t2z, const float t3x,
 		const float t3y, const float t3z, const float px, const float py,
 		const float pz, const float h) {
-#pragma gcd begin
+#pragma gpc begin
 	// triangle properties
 	TrianglePoint1 = VecN3(t1x, t1y, t1z);
 	TrianglePoint2 = VecN3(t2x, t2y, t2z);
@@ -31,7 +31,7 @@ bool pointTriangleTest(const float t1x, const float t1y, const float t1z,
 	?d1 = side1 . TestPoint;
 	?d2 = side2 . TestPoint;
 	?d3 = side3 . TestPoint;
-#pragma gcd end
+#pragma gpc end
 
 	const float d_SCALAR = mv_get_bladecoeff(d,1);
 	const float d1_SCALAR = mv_get_bladecoeff(d1,1);
