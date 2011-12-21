@@ -2,8 +2,16 @@
 #include <gpc.h>
 
 int main() {
+	float in_array[5];
+
+	in_array[0] = 5;
+	in_array[3] = 5;
+
+	mv = mv_from_array(in_array,1,e1,e2,e3,e0);
+	mv_strided = mv_from_stridedarray(in_array,0,1,1,e1,e2,e3,e0);
 #pragma gpc begin
-	?a = 5;
+	?a = mv;
+	?a_ = mv_strided;
 #pragma gpc end
 
 #pragma gpc begin

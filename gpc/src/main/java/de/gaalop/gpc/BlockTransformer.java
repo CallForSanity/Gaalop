@@ -133,7 +133,7 @@ public class BlockTransformer {
         String line;
         while ((line = inStream.readLine()) != null) {
             for(Entry<String,String> entry : NameTable.getInstance().getTable().entrySet())
-                line = line.replace(entry.getKey(),entry.getValue());
+                line = line.replaceAll(entry.getKey(),entry.getValue());
             
             outStream.append(line).append(Main.LINE_END);
         }

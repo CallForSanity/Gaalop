@@ -94,22 +94,20 @@ public class OutputFileComposer {
             } else { // non-line commands
                 // add line to command buffer
                 commandBuffer.append(line).append(Main.LINE_END);
-                    
+
+                // process command buffer
                 int commandEndPos = -1;
                 while(true) {
                     // get buffered command
-                    String command = commandBuffer.toString();
-                    System.out.println(command);
-                    
+                    String command = commandBuffer.toString();                    
                     // find command end pos
-                    commandEndPos = findCommandEndPos(command,
-                                                      Math.max(0,commandEndPos));
+                    commandEndPos = Common.findCommandEndPos(command,
+                                                             commandEndPos);
 
                     // exit loop, if no command end found
                     if(commandEndPos < 0)
                         break;
-
-                    // exit loop, if inside comment
+                    // continue loop, if inside comment
                     final int commentStart = command.lastIndexOf("/*");
                     final int commentEnd = command.lastIndexOf("*/");
                     if((commentStart >= 0 && // we found comment start
@@ -126,13 +124,14 @@ public class OutputFileComposer {
                     command = processMvGetBladeCoeff(command,mvComponents);
 
                     // other commands are always exclusive and not embedded
-                    if (command.indexOf(Main.gpcMvFromArray) >= 0) {
-                        processMvFromArray(command, outputFile, mvComponents);
-                    } else if (command.indexOf(Main.gpcMvToArray) >= 0) {
+                    if (command.contains(Main.gpcMvFromArray)) {
+                    } else if (command.contains(Main.gpcMvFromStridedArray)) {
+                    } else if (command.contains(Main.gpcMvFromVector)) {
+                    } else if (command.contains(Main.gpcMvToArray)) {
                         processMvToArray(command, outputFile, mvComponents);
-                    } else if (command.indexOf(Main.gpcMvToStridedArray) >= 0) {
+                    } else if (command.contains(Main.gpcMvToStridedArray)) {
                         processMvToStridedArray(command, outputFile, mvComponents);
-                    } else if (command.indexOf(Main.gpcMvToVector) >= 0) {
+                    } else if (command.contains(Main.gpcMvToVector)) {
                         processMvToVector(command, outputFile, mvComponents);
                     } else {
                         // we found a comand, but it is not one of ours
@@ -152,21 +151,6 @@ public class OutputFileComposer {
         outputFile.write(processMvGetBladeCoeff(commandBuffer.toString(),mvComponents));
         // close output file
         outputFile.close();
-    }
-    
-    public static int findCommandEndPos(String command,int startPos) {
-        // search for command end
-        final String[] commandEndTokens = {";","{","}"};
-        int commandEndPos = -1;
-        for (final String commandEndToken : commandEndTokens) {
-            int foundPos = command.indexOf(commandEndToken,startPos);
-
-            if (foundPos >= 0
-                    && ((foundPos += commandEndToken.length()) < commandEndPos)
-                    || commandEndPos < 0)
-                commandEndPos = foundPos;
-        }
-        return commandEndPos;
     }
     
     /*
@@ -231,43 +215,10 @@ public class OutputFileComposer {
         
         return negated ? "-" + bladeCoeffArrayEntry : bladeCoeffArrayEntry;
     }
-    
-    public static void processMvFromArray(final String command, BufferedWriter outputFile, Map<String, Map<String, String>> mvComponents) throws RecognitionException, IOException {        
-        // parse assignment
-        AssignmentNode assignment = parseAssignment(command);
-        if(assignment == null)
-            return;
-        // get mv name
-        final String mv = assignment.getVariable().getName();
-        // print array assignments
-        Iterator<Expression> it = ((MacroCall)assignment.getValue()).getArguments().iterator();
-        final String array = it.next().toString();
-        Integer count = 0;
-        while(it.hasNext()) {
-            outputFile.write(mv);
-            outputFile.write("_");
-            outputFile.write(count.toString());
-            outputFile.write(" = ");
-            outputFile.write(array);
-            outputFile.write('[');
-            outputFile.write(count.toString());
-            outputFile.write(']');
-            outputFile.write(";\n");
-            outputFile.write(mv);
-            
-            ++count;
-        }
-        
-        // include in block
-        outputFile.write(Main.LINE_END);
-        outputFile.write(mv);
-        outputFile.write(" = ");
-        outputFile.write(Main.LINE_END);
-    }
 
     public static void processMvToArray(final String command, BufferedWriter outputFile, Map<String, Map<String, String>> mvComponents) throws RecognitionException, IOException {        
         // parse assignment
-        AssignmentNode assignment = parseAssignment(command);
+        AssignmentNode assignment = Common.parseAssignment(command);
         if(assignment == null)
             return;
         // get array name
@@ -294,7 +245,7 @@ public class OutputFileComposer {
 
     public static void processMvToStridedArray(final String command, BufferedWriter outputFile, Map<String, Map<String, String>> mvComponents) throws RecognitionException, IOException {
         // parse assignment
-        AssignmentNode assignment = parseAssignment(command);
+        AssignmentNode assignment = Common.parseAssignment(command);
         if(assignment == null)
             return;
         // get array expression
@@ -324,32 +275,10 @@ public class OutputFileComposer {
         }
         outputFile.write(Main.LINE_END);
     }
-    
-    public static String getOpenCLIndex(Integer index) {
-        if(index < 10)
-            return index.toString();
-        else switch(index) {
-            case 10:
-                return "a";
-            case 11:
-                return "b";
-            case 12:
-                return "c";
-            case 13:
-                return "d";
-            case 14:
-                return "e";
-            case 15:
-                return "f";
-        }
-        
-        assert(false);
-        return "fail";
-    }
 
     public static void processMvToVector(final String command, BufferedWriter outputFile, Map<String, Map<String, String>> mvComponents) throws RecognitionException, IOException {
         // parse assignment
-        AssignmentNode assignment = parseAssignment(command);
+        AssignmentNode assignment = Common.parseAssignment(command);
         if(assignment == null)
             return;
         // get array name
@@ -362,7 +291,7 @@ public class OutputFileComposer {
         while(it.hasNext()) {
             outputFile.write(vec);
             outputFile.write(".s"); // TODO recognize vector size and assign with make_float
-            outputFile.write(getOpenCLIndex(count++));
+            outputFile.write(Common.getOpenCLIndex(count++));
             outputFile.write(" = ");
             outputFile.write(getMvBladeCoeffArrayEntry(mvComponents,
                                                        mv,
@@ -370,23 +299,6 @@ public class OutputFileComposer {
             outputFile.write(";\n");
         }
         outputFile.write(Main.LINE_END);
-    }
-
-    public static AssignmentNode parseAssignment(final String line) throws RecognitionException {
-        try {
-            ANTLRStringStream inputStream = new ANTLRStringStream(line);
-            GPCLexer lexer = new GPCLexer(inputStream);
-            CommonTokenStream tokenStream = new CommonTokenStream(lexer);
-            GPCParser parser = new GPCParser(tokenStream);
-            GPCParser.program_return parserResult = parser.program();
-            CommonTreeNodeStream treeNodeStream = new CommonTreeNodeStream(parserResult.getTree());
-            GPCTransformer transformer = new GPCTransformer(treeNodeStream);
-            AssignmentNode assignment = transformer.assignment();
-            
-            return assignment;
-        } catch(Exception e) {
-            return null;
-        }
     }
     
     public static void writeLinePragma(BufferedWriter outputFile, Integer lineCount) throws IOException {
