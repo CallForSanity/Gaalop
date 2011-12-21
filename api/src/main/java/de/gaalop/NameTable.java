@@ -107,14 +107,14 @@ public class NameTable {
 	 * @param text
 	 * @return
 	 */
-	public String createKey(String text) {
-		Random r = new Random(text.hashCode());
-		String prefix = "hash";
-		String key = new String();
-		key += prefix; 
-		while(table.containsKey(key)) {
-			key = prefix + Math.abs(r.nextInt());
-		}	
+	private String createKey(String text) {
+		final String prefix = "hash";
+		final Random r = new Random(text.hashCode());
+                
+		String key = prefix + Math.abs(r.nextInt());
+		while(table.containsKey(key))
+                    key = prefix + Math.abs(r.nextInt());
+                
 		return key;
 	}
         
