@@ -27,130 +27,168 @@ import org.antlr.runtime.tree.CommonTreeNodeStream;
  * @author Patrick Charrier
  */
 public class OutputFileComposer {
+    private static Integer gaalopBlockCount = 0;
+    private static Integer lineCount = 1;
+    
     public static void composeOutputFile(Vector<String> gaalopOutFileVector) throws IOException, RecognitionException {
-        String line;
         // log
         System.out.println("writing");
-        // retrieve input file directory
-        String inputFileDir;
-        {
-            int pos = Main.inputFilePath.lastIndexOf('/');
-            if (pos <= 0) {
-                pos = Main.inputFilePath.lastIndexOf('\\');
-            }
-            assert (pos > 0);
-            inputFileDir = Main.inputFilePath.substring(0, pos + 1);
-        }
+        
+        // get input file dir
+        String inputFileDir = getInputFileDir();
+        
+        // open output file
+        BufferedWriter outputFile = Main.createFileOutputStringStream(Main.outputFilePath);
+        writeLinePragma(outputFile, lineCount++);
         
         // process line by line
         Map<String, Map<String,String>> mvComponents = new HashMap<String, Map<String,String>>();
-        BufferedWriter outputFile = Main.createFileOutputStringStream(Main.outputFilePath);
         final BufferedReader inputFile = Main.createFileInputStringStream(Main.inputFilePath);
-        StringBuffer commandBuffer = new StringBuffer();
-        String lineCommentAppend;
-        Integer gaalopBlockCount = 0;
-        Integer lineCount = 1;
-        writeLinePragma(outputFile, lineCount++);
+        String line;
         while ((line = inputFile.readLine()) != null) {
-            
-            // parse line commands first
-            if (line.contains("#include") && line.contains("\"")) { // TODO parse this with ANTLR
-                // flush command buffer first
-                outputFile.append(commandBuffer.toString());
-                commandBuffer = new StringBuffer();
-                
-                final int pos = line.indexOf('\"') + 1;
-                outputFile.write(line.substring(0, pos));
-                outputFile.write(inputFileDir);
-                outputFile.write(line.substring(pos));
+            if (line.contains("#include") && line.contains("\""))
+                processInclude(outputFile, line, inputFileDir);
+            else if (line.contains(Main.clucalcBegin))
+                processClucalcBlock(outputFile, gaalopOutFileVector, inputFile, mvComponents);
+            else if(line.contains(Main.gpcBegin))
+                processGPCBlock(inputFile, mvComponents, outputFile, gaalopOutFileVector);
+            else {
+                outputFile.write(line);
                 outputFile.write(Main.LINE_END);
-            } // found gaalop line - insert intermediate gaalop file
-            else if (line.contains(Main.gpcBegin)) {
-                // flush command buffer first
-                outputFile.append(commandBuffer.toString());
-                commandBuffer = new StringBuffer();
-
-                // line pragma for compile errors
-                writeLinePragma(outputFile, lineCount++); // we skipped gpc begin line
-
-                // merge optimized code
-                outputFile.write(gaalopOutFileVector.get(gaalopBlockCount));
-
-                // skip original code
-                while ((line = inputFile.readLine()) != null) {
-                    if (line.contains(Main.gpcEnd))
-                        break;
-                    ++lineCount;
-                }
-
-                // line pragma for compile errors
-                writeLinePragma(outputFile, lineCount++); // we skipped gpc end line
-
-                // scan block
-                Common.scanBlock(gaalopOutFileVector, gaalopBlockCount, mvComponents);
-                
-                // increment block count
-                ++gaalopBlockCount;
-            } else { // non-line commands
-                // add line to command buffer
-                commandBuffer.append(line).append(Main.LINE_END);
-
-                // process command buffer
-                int commandEndPos = -1;
-                while(true) {
-                    // get buffered command
-                    String command = commandBuffer.toString();                    
-                    // find command end pos
-                    commandEndPos = Common.findCommandEndPos(command,
-                                                             commandEndPos);
-
-                    // exit loop, if no command end found
-                    if(commandEndPos < 0)
-                        break;
-                    // continue loop, if inside comment
-                    final int commentStart = command.lastIndexOf("/*");
-                    final int commentEnd = command.lastIndexOf("*/");
-                    if((commentStart >= 0 && // we found comment start
-                        commentStart < commandEndPos) && // comment start before command end
-                       (commentEnd < 0 || // no comment end
-                        commentEnd >= commandEndPos)) { // comment end after command end (>= is important)
-                        ++commandEndPos; // increment, so we do not find it again
-                        continue;
-                    }
-                    
-                    // extract command
-                    command = command.substring(0,commandEndPos);                    
-                    // special case handling
-                    command = processMvGetBladeCoeff(command,mvComponents);
-
-                    // other commands are always exclusive and not embedded
-                    if (command.contains(Main.gpcMvFromArray)) {
-                    } else if (command.contains(Main.gpcMvFromStridedArray)) {
-                    } else if (command.contains(Main.gpcMvFromVector)) {
-                    } else if (command.contains(Main.gpcMvToArray)) {
-                        processMvToArray(command, outputFile, mvComponents);
-                    } else if (command.contains(Main.gpcMvToStridedArray)) {
-                        processMvToStridedArray(command, outputFile, mvComponents);
-                    } else if (command.contains(Main.gpcMvToVector)) {
-                        processMvToVector(command, outputFile, mvComponents);
-                    } else {
-                        // we found a comand, but it is not one of ours
-                        outputFile.write(command);
-                    }
-
-                    // we found a command end, remove command from buffer
-                    commandBuffer.delete(0, commandEndPos);
-                }
             }
             
             // we read one line
             ++lineCount;
         }
         
-        // flush command buffer
-        outputFile.write(processMvGetBladeCoeff(commandBuffer.toString(),mvComponents));
         // close output file
         outputFile.close();
+    }
+
+    protected static String getInputFileDir() {
+        // retrieve input file directory
+        String inputFileDir;
+        {
+            int pos = Main.inputFilePath.lastIndexOf('/');
+            if (pos <= 0)
+                pos = Main.inputFilePath.lastIndexOf('\\');
+            assert (pos > 0);
+            inputFileDir = Main.inputFilePath.substring(0, pos + 1);
+        }
+        return inputFileDir;
+    }
+
+    protected static void processClucalcBlock(BufferedWriter outputFile,
+                                              Vector<String> gaalopOutFileVector,
+                                              final BufferedReader inputFile,
+                                              Map<String, Map<String, String>> mvComponents) throws IOException {
+        // line pragma for compile errors
+        writeLinePragma(outputFile, lineCount++); // we skipped gpc begin line
+
+        // merge optimized code
+        outputFile.write(gaalopOutFileVector.get(gaalopBlockCount));
+        // skip original code
+        String line;
+        while ((line = inputFile.readLine()) != null) {
+            if (line.contains(Main.clucalcEnd))
+                break;
+            ++lineCount;
+        }
+
+        // line pragma for compile errors
+        writeLinePragma(outputFile, lineCount++); // we skipped gpc end line
+        
+        // scan block
+        Common.scanBlock(gaalopOutFileVector, gaalopBlockCount, mvComponents);
+        
+        // increment block count
+        ++gaalopBlockCount;
+    }
+
+    protected static void processGPCBlock(final BufferedReader inputFile,
+                                          Map<String, Map<String, String>> mvComponents,
+                                          BufferedWriter outputFile,
+                                          Vector<String> gaalopOutFileVector) throws IOException, RecognitionException {
+        StringBuffer commandBuffer = new StringBuffer();
+
+        String line;
+        while ((line = inputFile.readLine()) != null) {
+            if (line.contains(Main.clucalcBegin)) { // start clucalc block
+                // flush command buffer
+                outputFile.write(commandBuffer.toString());
+                // process clucalc block
+                processClucalcBlock(outputFile, gaalopOutFileVector,
+                                    inputFile, mvComponents);
+            } else if(line.contains(Main.gpcEnd)) // end gpc block
+                break;
+            
+            // append line to command buffer
+            commandBuffer.append(line).append(Main.LINE_END);
+            // process command buffer
+            processCommandBuffer(commandBuffer, mvComponents, outputFile);
+            // we read one line
+            ++lineCount;
+         }
+        
+        // flush command buffer
+        outputFile.write(commandBuffer.toString());
+    }
+
+    protected static void processCommandBuffer(StringBuffer commandBuffer, Map<String, Map<String, String>> mvComponents, BufferedWriter outputFile) throws RecognitionException, IOException {
+        int commandEndPos = -1;
+        while(true) {
+            // get buffered command
+            String command = commandBuffer.toString();                    
+            // find command end pos
+            commandEndPos = Common.findCommandEndPos(command,
+                                                     commandEndPos);
+
+            // exit loop, if no command end found
+            if(commandEndPos < 0)
+                break; // request new line
+            // continue loop, if inside comment
+            final int commentStart = command.lastIndexOf("/*");
+            final int commentEnd = command.lastIndexOf("*/");
+            if((commentStart >= 0 && // we found comment start
+                commentStart < commandEndPos) && // comment start before command end
+               (commentEnd < 0 || // no comment end
+                commentEnd >= commandEndPos)) { // comment end after command end (>= is important)
+                ++commandEndPos; // increment, so we do not find it again
+                continue;
+            }
+            
+            // extract command
+            command = command.substring(0,commandEndPos);
+            
+            // special case handling for mv_getbladecoeff
+            command = processMvGetBladeCoeff(command,mvComponents);
+            // other commands are always exclusive and not embedded
+            if (command.contains(Main.gpcMvFromArray) ||
+                command.contains(Main.gpcMvFromStridedArray) ||
+                command.contains(Main.gpcMvFromVector)) {
+                // just ignore import commands
+            } else if (command.contains(Main.gpcMvToArray))
+                processMvToArray(command, outputFile, mvComponents);
+            else if (command.contains(Main.gpcMvToStridedArray))
+                processMvToStridedArray(command, outputFile, mvComponents);
+            else if (command.contains(Main.gpcMvToVector))
+                processMvToVector(command, outputFile, mvComponents);
+            else // we found a comand, but it is not one of ours
+                outputFile.write(command);
+
+            // we found a command end, remove command from buffer
+            commandBuffer.delete(0, commandEndPos);
+        }
+    }
+
+    protected static void processInclude(BufferedWriter outputFile, String line, String inputFileDir) throws IOException {
+        // TODO parse this with ANTLR
+        
+        final int pos = line.indexOf('\"') + 1;
+        outputFile.write(line.substring(0, pos));
+        outputFile.write(inputFileDir);
+        outputFile.write(line.substring(pos));
+        outputFile.write(Main.LINE_END);
     }
     
     /*
@@ -160,8 +198,7 @@ public class OutputFileComposer {
      */
     public static String processMvGetBladeCoeff(String command,
             Map<String, Map<String,String>> mvComponents) throws IOException {
-        
-        StringBuffer out = new StringBuffer();
+        StringBuilder out = new StringBuilder();
         
         // replace step by step
         CommandFunctionReplacer cp = new CommandFunctionReplacer(
@@ -194,7 +231,7 @@ public class OutputFileComposer {
     public static String getMvBladeCoeffArrayEntry(Map<String, Map<String, String>> mvComponents, final String mv, String blade) {
         // remove whitespaces from blade
         StringTokenizer tokenizer = new StringTokenizer(blade);
-        StringBuffer bladeBuffer = new StringBuffer();
+        StringBuilder bladeBuffer = new StringBuilder();
         while(tokenizer.hasMoreTokens())
             bladeBuffer.append(tokenizer.nextToken());
         blade = bladeBuffer.toString();

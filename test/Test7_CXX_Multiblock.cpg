@@ -3,23 +3,23 @@
 
 int main() {
 	float in_array[5];
-
 	in_array[0] = 5;
 	in_array[3] = 5;
 
+#pragma gpc begin
 	mv = mv_from_array(in_array,1,e1,e2,e3,e0);
 	mv_strided = mv_from_stridedarray(in_array,0,1,1,e1,e2,e3,e0);
-#pragma gpc begin
+#pragma clucalc begin
 	?a = mv;
 	?a_ = mv_strided;
-#pragma gpc end
-
-#pragma gpc begin
-	?b = a + 5;
+#pragma clucalc end
 #pragma gpc end
 
 	float array[1];
-
+#pragma gpc begin
+#pragma clucalc begin
+	?b = a + 5;
+#pragma clucalc end
 /*	D0[0] = Din_SCALAR;
 	D0[1] = Din_E12;
 	D0[2] = Din_E13;
@@ -31,4 +31,5 @@ int main() {
 	array = mv_to_array(b,1);
 
 	return !(mv_get_bladecoeff(b,1) == 10.0f);
+#pragma gpc end
 }

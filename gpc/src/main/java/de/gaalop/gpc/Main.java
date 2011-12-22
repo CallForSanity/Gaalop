@@ -55,6 +55,8 @@ public class Main {
     
     public static final String gpcBegin = "#pragma gpc begin";
     public static final String gpcEnd = "#pragma gpc end";
+    public static final String clucalcBegin = "#pragma clucalc begin";
+    public static final String clucalcEnd = "#pragma clucalc end";
 
     public static final String gpcMvFromArray = "mv_from_array";
     public static final String gpcMvFromStridedArray = "mv_from_stridedarray";

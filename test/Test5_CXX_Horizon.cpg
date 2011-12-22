@@ -4,6 +4,7 @@
 int main()
 {
 #pragma gpc begin
+#pragma clucalc begin
   P = VecN3(1,1,0);
   r = 1;
   S = e0-0.5*r*r*einf;
@@ -11,8 +12,9 @@ int main()
   ?homogenCenter = C*einf*C;
   ?scale = -homogenCenter.einf;
   ?euclidCenter = homogenCenter / scale;
-#pragma gpc end
+#pragma clucalc end
   return !(mv_get_bladecoeff(euclidCenter,e1) == 0.5f &&
 	   mv_get_bladecoeff(euclidCenter,e2) == 0.5f &&
 	   mv_get_bladecoeff(euclidCenter,e3) == 0.0f);
+#pragma gpc end
 }
