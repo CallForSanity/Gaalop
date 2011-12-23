@@ -148,7 +148,7 @@ public class UseAlgebra {
      * @return The useAlgebra instance
      */
     public static UseAlgebra get3dGA() {
-        return loadInternalAlgebra(3, true);
+        return loadInternalAlgebra(3, false);
     }
 
     /**
