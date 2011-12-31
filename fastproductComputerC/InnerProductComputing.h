@@ -112,7 +112,7 @@ inline bool calcInnernProductn(SignedBlade& b1, SignedBlade& b2, SignedBlade& re
     }
 }
 
-void computeInnerOfTwoSignedBlades(SignedBlade& b1, SignedBlade& b2, SumOfBlades& innerProduct) {
+inline void computeInnerOfTwoSignedBlades(SignedBlade& b1, SignedBlade& b2, SumOfBlades& innerProduct) {
 	if (b1.any() && b2.any()) {
 		SignedBlade result;
 		if (b1.count() == 1) {

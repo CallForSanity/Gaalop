@@ -5,6 +5,7 @@
 // Computes ‘reordering sign’ to get into canonical order.
 // Arguments 'a' and 'b' are both bitmaps representing basis blades.
 // Copy a!
+// This method is taken from the dissertation of Daniel Fontijne - Efficient Implementation of Gemoetric Algebra
 float canonicalReorderingSign(Blade a, Blade& b)
 {
 	// Count the number of basis vector swaps required to

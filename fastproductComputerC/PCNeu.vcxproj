@@ -79,10 +79,8 @@
     <None Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Blade.cpp" />
     <ClCompile Include="PCNeu.cpp" />
     <ClCompile Include="Permutation.cpp" />
-    <ClCompile Include="SignedBlade.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AlgebraDefinition.h" />

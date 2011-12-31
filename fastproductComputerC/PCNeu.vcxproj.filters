@@ -21,12 +21,6 @@
     <ClCompile Include="PCNeu.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Blade.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="SignedBlade.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="Permutation.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>

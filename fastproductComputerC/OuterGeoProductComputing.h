@@ -2,6 +2,7 @@
 
 #include "SignedBlade.h"
 
+// The approach of this method is taken from the dissertation of Daniel Fontijne - Efficient Implementation of Gemoetric Algebra
 void computeOuterGeoOfTwoSignedBlades(SignedBlade& b1, SignedBlade& b2, SumOfBlades& outerProduct, SumOfBlades& geoProduct) {
 	if (!b1.anyDoubleTrueBit(b2)) {
 		//outer product is not null and geometric product is equal to outer product

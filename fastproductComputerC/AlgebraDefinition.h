@@ -152,11 +152,11 @@ void printBlade(Blade& blade, const char** arr, std::ostream& out) {
 }
 
 
-void printBladeZI(Blade& blade, std::ostream& out) {
+inline void printBladeZI(Blade& blade, std::ostream& out) {
 	printBlade(blade,BASE_ELEMENTS_ZI,out);
 }
 	
 
-void printBladePM(Blade& blade, std::ostream& out) {
+inline void printBladePM(Blade& blade, std::ostream& out) {
 	printBlade(blade,BASE_ELEMENTS_PM,out);
 }
