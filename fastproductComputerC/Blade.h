@@ -70,9 +70,19 @@ public:
 
 	/**
 		Clears a bit in a number
+		@param bits The number
 		@param bit The bit to clear
 	**/
-	inline void clearBit(int bit) {
+	inline void clearBit(Bitcon& bits, int bit) {
+		 bits &= ~(1 << bit);
+	}
+
+	/**
+		Flips a bit in a number
+		@param bits The number
+		@param bit The bit to flip
+	**/
+	inline void flipBit(Bitcon& bits, int bit) {
 		 bits ^= (1 << bit);
 	}
 
