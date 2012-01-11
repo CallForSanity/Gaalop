@@ -139,7 +139,7 @@ public class MvExpressionsBuilder extends EmptyControlFlowVisitor implements Exp
 
                         for (int bladeResult = 0; bladeResult < bladeCount; bladeResult++) {
                             if (Math.abs(prod[bladeResult]) > EPSILON) {
-                                Expression prodExpri = new Multiplication(prodExpr, new FloatConstant((float) prod[bladeResult]));
+                                Expression prodExpri = new Multiplication(prodExpr, new FloatConstant(prod[bladeResult]));
                                 if (result.bladeExpressions[bladeResult] == null) {
                                     result.bladeExpressions[bladeResult] = prodExpri;
                                 } else {

@@ -20,15 +20,15 @@ public class GPS implements GAPPTestable {
     protected Point3D sat2;
     protected Point3D sat3;
     //The three distances from each satellite to the GPS receiver
-    protected float d1;
-    protected float d2;
-    protected float d3;
+    protected double d1;
+    protected double d2;
+    protected double d3;
 
     public GPS() {
         this(new Point3D(1, 1, 1), new Point3D(0, 0, 1), new Point3D(0, 1, 0), 0.6f, 0.7f, 0.5f);
     }
 
-    public GPS(Point3D sat1, Point3D sat2, Point3D sat3, float d1, float d2, float d3) {
+    public GPS(Point3D sat1, Point3D sat2, Point3D sat3, double d1, double d2, double d3) {
         this.sat1 = sat1;
         this.sat2 = sat2;
         this.sat3 = sat3;
@@ -79,20 +79,20 @@ public class GPS implements GAPPTestable {
     }
 
     @Override
-    public HashMap<String, Float> getInputs() {
-        HashMap<String, Float> inputValues = new HashMap<String, Float>();
-        inputValues.put("sat1x", new Float(sat1.x));
-        inputValues.put("sat1y", new Float(sat1.y));
-        inputValues.put("sat1z", new Float(sat1.z));
-        inputValues.put("sat2x", new Float(sat2.x));
-        inputValues.put("sat2y", new Float(sat2.y));
-        inputValues.put("sat2z", new Float(sat2.z));
-        inputValues.put("sat3x", new Float(sat3.x));
-        inputValues.put("sat3y", new Float(sat3.y));
-        inputValues.put("sat3z", new Float(sat3.z));
-        inputValues.put("d1", new Float(d1));
-        inputValues.put("d2", new Float(d2));
-        inputValues.put("d3", new Float(d3));
+    public HashMap<String, Double> getInputs() {
+        HashMap<String, Double> inputValues = new HashMap<String, Double>();
+        inputValues.put("sat1x", new Double(sat1.x));
+        inputValues.put("sat1y", new Double(sat1.y));
+        inputValues.put("sat1z", new Double(sat1.z));
+        inputValues.put("sat2x", new Double(sat2.x));
+        inputValues.put("sat2y", new Double(sat2.y));
+        inputValues.put("sat2z", new Double(sat2.z));
+        inputValues.put("sat3x", new Double(sat3.x));
+        inputValues.put("sat3y", new Double(sat3.y));
+        inputValues.put("sat3z", new Double(sat3.z));
+        inputValues.put("d1", new Double(d1));
+        inputValues.put("d2", new Double(d2));
+        inputValues.put("d3", new Double(d3));
         return inputValues;
     }
 

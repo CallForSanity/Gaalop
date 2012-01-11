@@ -7,9 +7,9 @@ package de.gaalop.testbenchTbaGapp.tba;
 public class VariableValue {
 
     private String name;
-    private float value;
+    private double value;
 
-    public VariableValue(String name, float value) {
+    public VariableValue(String name, double value) {
         this.name = name;
         this.value = value;
     }
@@ -18,7 +18,7 @@ public class VariableValue {
         return name;
     }
 
-    public float getValue() {
+    public double getValue() {
         return value;
     }
 
@@ -26,7 +26,7 @@ public class VariableValue {
         this.name = name;
     }
 
-    public void setValue(float value) {
+    public void setValue(double value) {
         this.value = value;
     }
 }

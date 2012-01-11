@@ -50,7 +50,7 @@ public abstract class GenericCircleTest implements GenericTestable {
      * @return The distance
      */
     protected String getDistance(String p1x, String p1y, String p2x, String p2y) {
-        return "(float) Math.sqrt((" + p2x + "-" + p1x + ")*(" + p2x + "-" + p1x + ") + (" + p2y + "-" + p1y + ")*(" + p2y + "-" + p1y + "))";
+        return "(double) Math.sqrt((" + p2x + "-" + p1x + ")*(" + p2x + "-" + p1x + ") + (" + p2y + "-" + p1y + ")*(" + p2y + "-" + p1y + "))";
     }
 
     @Override

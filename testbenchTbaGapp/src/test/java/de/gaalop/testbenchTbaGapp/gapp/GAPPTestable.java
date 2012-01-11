@@ -22,7 +22,7 @@ public interface GAPPTestable {
      * Returns the input values for execution
      * @return A map with the variable names and according float values
      */
-    public HashMap<String, Float> getInputs();
+    public HashMap<String, Double> getInputs();
 
     /**
      * This method is called, when the programm was compiled and executed.

@@ -12,12 +12,12 @@ import static org.junit.Assert.*;
  */
 public class Paper implements GAPPTestable {
 
-    private float a1 = 3;
-    private float a2 = 5;
-    private float a3 = 2;
-    private float b1 = 4;
-    private float b2 = 6;
-    private float b3 = 7;
+    private double a1 = 3;
+    private double a2 = 5;
+    private double a3 = 2;
+    private double b1 = 4;
+    private double b2 = 6;
+    private double b3 = 7;
 
     @Override
     public String getSource() {
@@ -27,14 +27,14 @@ public class Paper implements GAPPTestable {
     }
 
     @Override
-    public HashMap<String, Float> getInputs() {
-        HashMap<String, Float> inputValues = new HashMap<String, Float>();
-        inputValues.put("a1", new Float(a1));
-        inputValues.put("a2", new Float(a2));
-        inputValues.put("a3", new Float(a3));
-        inputValues.put("b1", new Float(b1));
-        inputValues.put("b2", new Float(b2));
-        inputValues.put("b3", new Float(b3));
+    public HashMap<String, Double> getInputs() {
+        HashMap<String, Double> inputValues = new HashMap<String, Double>();
+        inputValues.put("a1", new Double(a1));
+        inputValues.put("a2", new Double(a2));
+        inputValues.put("a3", new Double(a3));
+        inputValues.put("b1", new Double(b1));
+        inputValues.put("b2", new Double(b2));
+        inputValues.put("b3", new Double(b3));
         return inputValues;
     }
 

@@ -4,50 +4,50 @@ import java.util.HashMap;
 
 public class Unused implements GAProgram {
 	// input variables
-	private float arw$0;
-	private float arx$0;
-	private float ary$0;
-	private float lpz$0;
-	private float arz$0;
-	private float lpx$0;
-	private float lpy$0;
+	private double arw$0;
+	private double arx$0;
+	private double ary$0;
+	private double lpz$0;
+	private double arz$0;
+	private double lpx$0;
+	private double lpy$0;
 
 	// output variables
-	private float Din$0;
-	private float Din$1;
-	private float Din$2;
-	private float Din$3;
-	private float Din$4;
-	private float Din$5;
-	private float Din$6;
-	private float Din$7;
-	private float Din$8;
-	private float Din$9;
-	private float Din$10;
-	private float Din$11;
-	private float Din$12;
-	private float Din$13;
-	private float Din$14;
-	private float Din$15;
-	private float Din$16;
-	private float Din$17;
-	private float Din$18;
-	private float Din$19;
-	private float Din$20;
-	private float Din$21;
-	private float Din$22;
-	private float Din$23;
-	private float Din$24;
-	private float Din$25;
-	private float Din$26;
-	private float Din$27;
-	private float Din$28;
-	private float Din$29;
-	private float Din$30;
-	private float Din$31;
+	private double Din$0;
+	private double Din$1;
+	private double Din$2;
+	private double Din$3;
+	private double Din$4;
+	private double Din$5;
+	private double Din$6;
+	private double Din$7;
+	private double Din$8;
+	private double Din$9;
+	private double Din$10;
+	private double Din$11;
+	private double Din$12;
+	private double Din$13;
+	private double Din$14;
+	private double Din$15;
+	private double Din$16;
+	private double Din$17;
+	private double Din$18;
+	private double Din$19;
+	private double Din$20;
+	private double Din$21;
+	private double Din$22;
+	private double Din$23;
+	private double Din$24;
+	private double Din$25;
+	private double Din$26;
+	private double Din$27;
+	private double Din$28;
+	private double Din$29;
+	private double Din$30;
+	private double Din$31;
 
 	@Override
-	public float getValue(String varName) {
+	public double getValue(String varName) {
 		if (varName.equals("Din$0")) return Din$0;
 		if (varName.equals("Din$1")) return Din$1;
 		if (varName.equals("Din$2")) return Din$2;
@@ -80,12 +80,12 @@ public class Unused implements GAProgram {
 		if (varName.equals("Din$29")) return Din$29;
 		if (varName.equals("Din$30")) return Din$30;
 		if (varName.equals("Din$31")) return Din$31;
-		return 0.0f;
+		return 0.0d;
 	}
 
 	@Override
-	public HashMap<String,Float> getValues() {
-		HashMap<String,Float> result = new HashMap<String,Float>();
+	public HashMap<String,Double> getValues() {
+		HashMap<String,Double> result = new HashMap<String,Double>();
 		result.put("Din$0",Din$0);
 		result.put("Din$1",Din$1);
 		result.put("Din$2",Din$2);
@@ -121,7 +121,7 @@ public class Unused implements GAProgram {
 		return result;
 	}
 	@Override
-	public boolean setValue(String varName, float value) {
+	public boolean setValue(String varName, double value) {
 		if (varName.equals("arw$0")) { arw$0 = value; return true; }
 		if (varName.equals("arx$0")) { arx$0 = value; return true; }
 		if (varName.equals("ary$0")) { ary$0 = value; return true; }
@@ -135,9 +135,9 @@ public class Unused implements GAProgram {
 	@Override
 	public void calculate() {
 		rotor$7 = (-ary$0); // e1 ^ e3;
-		translator$8 = (-((lpx$0 / 2.0f))); // e1 ^ einf;
-		translator$11 = (-((lpy$0 / 2.0f))); // e2 ^ einf;
-		translator$13 = (-((lpz$0 / 2.0f))); // e3 ^ einf;
+		translator$8 = (-((lpx$0 / 2.0d))); // e1 ^ einf;
+		translator$11 = (-((lpy$0 / 2.0d))); // e2 ^ einf;
+		translator$13 = (-((lpz$0 / 2.0d))); // e3 ^ einf;
 		Din$0 = arw$0; // 1.0;
 		Din$6 = arz$0; // e1 ^ e2;
 		Din$7 = rotor$7; // e1 ^ e3;
@@ -148,9 +148,9 @@ public class Unused implements GAProgram {
 		Din$26 = (((translator$8 * arx$0) + (-((translator$11 * rotor$7)))) + (translator$13 * arz$0)); // e1 ^ (e2 ^ (e3 ^ einf));
 	}
 
-	private float rotor$7;
-	private float translator$8;
-	private float translator$13;
-	private float translator$11;
+	private double rotor$7;
+	private double translator$8;
+	private double translator$13;
+	private double translator$11;
 
 }

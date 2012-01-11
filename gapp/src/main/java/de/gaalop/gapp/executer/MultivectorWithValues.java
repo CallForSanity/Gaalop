@@ -11,11 +11,11 @@ import java.util.Arrays;
  */
 public class MultivectorWithValues {
 
-    private float[] entries;
+    private double[] entries;
     private boolean multivector;
 
     public MultivectorWithValues(int bladeCount, boolean isMultivector) {
-        entries = new float[bladeCount];
+        entries = new double[bladeCount];
         multivector = isMultivector;
         clear();
     }
@@ -28,19 +28,19 @@ public class MultivectorWithValues {
         this.multivector = multivector;
     }
 
-    public float[] getEntries() {
+    public double[] getEntries() {
         return entries;
     }
 
-    public void setEntries(float[] entries) {
+    public void setEntries(double[] entries) {
         this.entries = entries;
     }
 
-    public float getEntry(int blade) {
+    public double getEntry(int blade) {
         return entries[blade];
     }
 
-    public void setEntry(int blade, float value) {
+    public void setEntry(int blade, double value) {
         entries[blade] = value;
     }
 

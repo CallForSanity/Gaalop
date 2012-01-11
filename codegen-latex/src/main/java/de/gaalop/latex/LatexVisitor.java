@@ -195,7 +195,7 @@ public class LatexVisitor implements ControlFlowVisitor, ExpressionVisitor {
         if (compare(floatConstant.getValue(), Math.floor(floatConstant.getValue())) == 0) {
             code.append((int) floatConstant.getValue());
         } else {
-            code.append(Float.toString(floatConstant.getValue()));
+            code.append(Double.toString(floatConstant.getValue()));
         }
     }
 

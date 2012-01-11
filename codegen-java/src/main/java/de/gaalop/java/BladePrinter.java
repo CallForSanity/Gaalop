@@ -104,7 +104,7 @@ public class BladePrinter implements ExpressionVisitor {
 
     @Override
     public void visit(FloatConstant floatConstant) {
-        code.append(Float.toString(floatConstant.getValue()));
+        code.append(Double.toString(floatConstant.getValue()));
     }
 
     @Override

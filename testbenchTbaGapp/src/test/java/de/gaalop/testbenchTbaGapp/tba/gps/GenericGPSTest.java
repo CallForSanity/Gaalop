@@ -15,11 +15,11 @@ public abstract class GenericGPSTest implements GenericTestable {
     protected Point3D sat1;
     protected Point3D sat2;
     protected Point3D sat3;
-    protected float d1;
-    protected float d2;
-    protected float d3;
+    protected double d1;
+    protected double d2;
+    protected double d3;
 
-    public GenericGPSTest(Point3D sat1, Point3D sat2, Point3D sat3, float d1, float d2, float d3) {
+    public GenericGPSTest(Point3D sat1, Point3D sat2, Point3D sat3, double d1, double d2, double d3) {
         this.sat1 = sat1;
         this.sat2 = sat2;
         this.sat3 = sat3;
@@ -79,7 +79,7 @@ public abstract class GenericGPSTest implements GenericTestable {
      * @return The distance
      */
     protected String getDistance(String p1x, String p1y, String p1z, String p2x, String p2y, String p2z) {
-        return "(float) Math.sqrt((" + p2x + "-" + p1x + ")*(" + p2x + "-" + p1x + ") + (" + p2y + "-" + p1y + ")*(" + p2y + "-" + p1y + ") + (" + p2z + "-" + p1z + ")*(" + p2z + "-" + p1z + "))";
+        return "Math.sqrt((" + p2x + "-" + p1x + ")*(" + p2x + "-" + p1x + ") + (" + p2y + "-" + p1y + ")*(" + p2y + "-" + p1y + ") + (" + p2z + "-" + p1z + ")*(" + p2z + "-" + p1z + "))";
     }
 
     protected String getChecksForAllInstances() {
@@ -96,18 +96,18 @@ public abstract class GenericGPSTest implements GenericTestable {
                 + "assertTrue(outputs.containsKey(\"z22$0\"));\n"
                 + "assertTrue(outputs.containsKey(\"z31$0\"));\n"
                 + "assertTrue(outputs.containsKey(\"z32$0\"));\n"
-                + "float rc1Nx = outputs.get(\"rc1N$1\");\n"
-                + "float rc1Ny = outputs.get(\"rc1N$2\");\n"
-                + "float rc1Nz = outputs.get(\"rc1N$3\");\n"
-                + "float rc2Nx = outputs.get(\"rc2N$1\");\n"
-                + "float rc2Ny = outputs.get(\"rc2N$2\");\n"
-                + "float rc2Nz = outputs.get(\"rc2N$3\");\n"
-                + "float z11 = outputs.get(\"z11$0\");\n"
-                + "float z12 = outputs.get(\"z12$0\");\n"
-                + "float z21 = outputs.get(\"z21$0\");\n"
-                + "float z22 = outputs.get(\"z22$0\");\n"
-                + "float z31 = outputs.get(\"z31$0\");\n"
-                + "float z32 = outputs.get(\"z32$0\");\n"
+                + "double rc1Nx = outputs.get(\"rc1N$1\");\n"
+                + "double rc1Ny = outputs.get(\"rc1N$2\");\n"
+                + "double rc1Nz = outputs.get(\"rc1N$3\");\n"
+                + "double rc2Nx = outputs.get(\"rc2N$1\");\n"
+                + "double rc2Ny = outputs.get(\"rc2N$2\");\n"
+                + "double rc2Nz = outputs.get(\"rc2N$3\");\n"
+                + "double z11 = outputs.get(\"z11$0\");\n"
+                + "double z12 = outputs.get(\"z12$0\");\n"
+                + "double z21 = outputs.get(\"z21$0\");\n"
+                + "double z22 = outputs.get(\"z22$0\");\n"
+                + "double z31 = outputs.get(\"z31$0\");\n"
+                + "double z32 = outputs.get(\"z32$0\");\n"
                 + "assertEquals(0,z11," + EPSILON + ");\n"
                 + "assertEquals(0,z12," + EPSILON + ");\n"
                 + "assertEquals(0,z21," + EPSILON + ");\n"

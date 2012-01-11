@@ -100,7 +100,7 @@ public class GAPPOpenCLVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor
         final int openCLVectorSize = getOpenCLVectorSize(vectorSize);
 
         // print declation
-        result.append("float").append(openCLVectorSize).append(" ");
+        result.append("double").append(openCLVectorSize).append(" ");
         result.append(gappSetVector.getDestination().getName());
         result.append(" = make_float").append(openCLVectorSize).append("(");
 
@@ -305,7 +305,7 @@ public class GAPPOpenCLVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor
         int openCLVectorSize = getOpenCLVectorSize(mvBladeMap.get(gappDotVectors.getParts().get(0).getName()).size());        
 
         // parallel multiply operation
-        result.append("float").append(openCLVectorSize).append(" ");
+        result.append("double").append(openCLVectorSize).append(" ");
         result.append("dot").append(dotCount);
         result.append(" = ");
         Iterator<GAPPVector> it = gappDotVectors.getParts().iterator();
@@ -318,7 +318,7 @@ public class GAPPOpenCLVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor
 
         // parallel pyramid reduce
         while((openCLVectorSize >>= 1) > 1) {
-            result.append("float").append(openCLVectorSize);
+            result.append("double").append(openCLVectorSize);
             result.append(" dot").append(dotCount+1);
             result.append(" = ");
             result.append("dot").append(dotCount).append(".odd");
@@ -380,7 +380,7 @@ public class GAPPOpenCLVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor
     public Object visitAssignInputsVector(GAPPAssignInputsVector gappAssignInputsVector, Object arg) {
         final int openCLVectorSize = getOpenCLVectorSize(gappAssignInputsVector.getValues().size());
 
-        result.append("float");
+        result.append("double");
         result.append(openCLVectorSize);
         result.append(" inputsVector");
         result.append(" = make_float");

@@ -6,41 +6,41 @@ public class OutputCount implements GAProgram {
 	// input variables
 
 	// output variables
-	private float a$0;
-	private float a$1;
-	private float a$2;
-	private float a$3;
-	private float a$4;
-	private float a$5;
-	private float a$6;
-	private float a$7;
-	private float a$8;
-	private float a$9;
-	private float a$10;
-	private float a$11;
-	private float a$12;
-	private float a$13;
-	private float a$14;
-	private float a$15;
-	private float a$16;
-	private float a$17;
-	private float a$18;
-	private float a$19;
-	private float a$20;
-	private float a$21;
-	private float a$22;
-	private float a$23;
-	private float a$24;
-	private float a$25;
-	private float a$26;
-	private float a$27;
-	private float a$28;
-	private float a$29;
-	private float a$30;
-	private float a$31;
+	private double a$0;
+	private double a$1;
+	private double a$2;
+	private double a$3;
+	private double a$4;
+	private double a$5;
+	private double a$6;
+	private double a$7;
+	private double a$8;
+	private double a$9;
+	private double a$10;
+	private double a$11;
+	private double a$12;
+	private double a$13;
+	private double a$14;
+	private double a$15;
+	private double a$16;
+	private double a$17;
+	private double a$18;
+	private double a$19;
+	private double a$20;
+	private double a$21;
+	private double a$22;
+	private double a$23;
+	private double a$24;
+	private double a$25;
+	private double a$26;
+	private double a$27;
+	private double a$28;
+	private double a$29;
+	private double a$30;
+	private double a$31;
 
 	@Override
-	public float getValue(String varName) {
+	public double getValue(String varName) {
 		if (varName.equals("a$0")) return a$0;
 		if (varName.equals("a$1")) return a$1;
 		if (varName.equals("a$2")) return a$2;
@@ -73,12 +73,12 @@ public class OutputCount implements GAProgram {
 		if (varName.equals("a$29")) return a$29;
 		if (varName.equals("a$30")) return a$30;
 		if (varName.equals("a$31")) return a$31;
-		return 0.0f;
+		return 0.0d;
 	}
 
 	@Override
-	public HashMap<String,Float> getValues() {
-		HashMap<String,Float> result = new HashMap<String,Float>();
+	public HashMap<String,Double> getValues() {
+		HashMap<String,Double> result = new HashMap<String,Double>();
 		result.put("a$0",a$0);
 		result.put("a$1",a$1);
 		result.put("a$2",a$2);
@@ -114,7 +114,7 @@ public class OutputCount implements GAProgram {
 		return result;
 	}
 	@Override
-	public boolean setValue(String varName, float value) {
+	public boolean setValue(String varName, double value) {
 		return false;
 	}
 	

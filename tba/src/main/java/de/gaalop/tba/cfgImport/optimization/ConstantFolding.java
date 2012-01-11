@@ -49,7 +49,7 @@ public class ConstantFolding implements ExpressionVisitor, ControlFlowVisitor {
 
     /* global visitor return variable */
     private Expression resultExpr;
-    private static final float EPSILON = (float) 10E-10;
+    private static final double EPSILON = (double) 10E-10; //TODO pre
     private boolean graphModified = false;
 
     public Expression getResultExpr() {
@@ -72,7 +72,7 @@ public class ConstantFolding implements ExpressionVisitor, ControlFlowVisitor {
      * @param val2 The second float
      * @return <value>true</value> if the given floats are equal, <value>false</value> otherwise
      */
-    private boolean floatEquals(float val1, float val2) {
+    private boolean doubleEquals(double val1, double val2) {
         return (Math.abs(val1 - val2) <= EPSILON);
     }
 
@@ -104,13 +104,13 @@ public class ConstantFolding implements ExpressionVisitor, ControlFlowVisitor {
             setGraphModified();
         } else if (isConstant(left)) {
             FloatConstant leftc = (FloatConstant) left;
-            if (floatEquals(leftc.getValue(), 0.0f)) {
+            if (doubleEquals(leftc.getValue(), 0.0f)) {
                 resultExpr = new Negation(right);
                 setGraphModified();
             }
         } else if (isConstant(right)) {
             FloatConstant rightc = (FloatConstant) right;
-            if (floatEquals(rightc.getValue(), 0.0f)) {
+            if (doubleEquals(rightc.getValue(), 0.0f)) {
                 resultExpr = left;
                 setGraphModified();
             }
@@ -132,13 +132,13 @@ public class ConstantFolding implements ExpressionVisitor, ControlFlowVisitor {
             setGraphModified();
         } else if (isConstant(left)) {
             FloatConstant leftc = (FloatConstant) left;
-            if (floatEquals(leftc.getValue(), 0.0f)) {
+            if (doubleEquals(leftc.getValue(), 0.0f)) {
                 resultExpr = right;
                 setGraphModified();
             }
         } else if (isConstant(right)) {
             FloatConstant rightc = (FloatConstant) right;
-            if (floatEquals(rightc.getValue(), 0.0f)) {
+            if (doubleEquals(rightc.getValue(), 0.0f)) {
                 resultExpr = left;
                 setGraphModified();
             }
@@ -161,7 +161,7 @@ public class ConstantFolding implements ExpressionVisitor, ControlFlowVisitor {
         } else if (isConstant(node.getRight())) {
             /* division by 1 gets canceled */
             FloatConstant floatConst = (FloatConstant) node.getRight();
-            if (floatEquals(floatConst.getValue(), 1.0f)) {
+            if (doubleEquals(floatConst.getValue(), 1.0f)) {
                 resultExpr = left;
                 setGraphModified();
             }
@@ -190,32 +190,32 @@ public class ConstantFolding implements ExpressionVisitor, ControlFlowVisitor {
         } else if (isConstant(right)) {
             /* mult by 1 gets canceled */
             FloatConstant floatConst = (FloatConstant) right;
-            if (floatEquals(floatConst.getValue(), 1.0f)) {
+            if (doubleEquals(floatConst.getValue(), 1.0f)) {
                 resultExpr = left;
                 setGraphModified();
-            } else if (floatEquals(floatConst.getValue(), 0.5f)) {
+            } else if (doubleEquals(floatConst.getValue(), 0.5f)) {
                 resultExpr = new Division(left, new FloatConstant(2.0f));
                 setGraphModified();
-            } else if (floatEquals(floatConst.getValue(), -1.0f)) {
+            } else if (doubleEquals(floatConst.getValue(), -1.0f)) {
                 resultExpr = new Negation(left);
                 setGraphModified();
-            } else if (floatEquals(floatConst.getValue(), 0.0f)) {
+            } else if (doubleEquals(floatConst.getValue(), 0.0f)) {
                 resultExpr = right;
                 setGraphModified();
             }
         } else if (isConstant(left)) {
             /* mult by 1 gets canceld */
             FloatConstant floatConst = (FloatConstant) left;
-            if (floatEquals(floatConst.getValue(), 1.0f)) {
+            if (doubleEquals(floatConst.getValue(), 1.0f)) {
                 resultExpr = right;
                 setGraphModified();
-            } else if (floatEquals(floatConst.getValue(), 0.5f)) {
+            } else if (doubleEquals(floatConst.getValue(), 0.5f)) {
                 resultExpr = new Division(right, new FloatConstant(2.0f));
                 setGraphModified();
-            } else if (floatEquals(floatConst.getValue(), -1.0f)) {
+            } else if (doubleEquals(floatConst.getValue(), -1.0f)) {
                 resultExpr = new Negation(right);
                 setGraphModified();
-            } else if (floatEquals(floatConst.getValue(), 0.0f)) {
+            } else if (doubleEquals(floatConst.getValue(), 0.0f)) {
                 resultExpr = left;
                 setGraphModified();
             }
@@ -246,7 +246,7 @@ public class ConstantFolding implements ExpressionVisitor, ControlFlowVisitor {
         if ((node.getFunction() == MathFunction.SQRT)
                 && isConstant(operandExpr)) {
             FloatConstant operand = (FloatConstant) operandExpr;
-            resultExpr = new FloatConstant((float) Math.sqrt(operand.getValue()));
+            resultExpr = new FloatConstant(Math.sqrt(operand.getValue()));
             setGraphModified();
         } else if ((node.getFunction() == MathFunction.ABS)
                 && (DFGNodeTypeGetter.getTypeOfDFGNode(operandExpr) == DFGNodeType.MathFunctionCall)) {
@@ -267,7 +267,7 @@ public class ConstantFolding implements ExpressionVisitor, ControlFlowVisitor {
         }*/ else if ((node.getFunction() == MathFunction.ABS)
                 && isConstant(operandExpr)) {
             FloatConstant operand = (FloatConstant) operandExpr;
-            resultExpr = new FloatConstant((float) Math.abs(operand.getValue()));
+            resultExpr = new FloatConstant(Math.abs(operand.getValue()));
             setGraphModified();
         }
 
@@ -296,29 +296,29 @@ public class ConstantFolding implements ExpressionVisitor, ControlFlowVisitor {
             FloatConstant rightc = (FloatConstant) right;
             resultExpr = new FloatConstant(new Float(Math.pow(leftc.getValue(), rightc.getValue())));
             setGraphModified();
-        } else if (isConstant(left) && floatEquals(((FloatConstant) left).getValue(), 0.0f)) {
+        } else if (isConstant(left) && doubleEquals(((FloatConstant) left).getValue(), 0.0f)) {
             // 0 ^ x => 0
             resultExpr = left;
             setGraphModified();
         } else if (isConstant(right)) {
             // x ^ const
             FloatConstant rightc = (FloatConstant) right;
-            boolean isSqrt = floatEquals(rightc.getValue() - (float) new Float(rightc.getValue()).intValue(), 0.5f);
-            if (isSqrt && !floatEquals(rightc.getValue(), 0.5f)) {
+            boolean isSqrt = doubleEquals(rightc.getValue() - (double) new Double(rightc.getValue()).intValue(), 0.5f);
+            if (isSqrt && !doubleEquals(rightc.getValue(), 0.5f)) {
                 MathFunctionCall newsqrt = new MathFunctionCall(new Exponentiation(
                         left, new FloatConstant(rightc.getValue() - 0.5f)), MathFunction.SQRT);
                 resultExpr = newsqrt;
                 setGraphModified();
             }
-            if (floatEquals(rightc.getValue(), 1.0f)) {
+            if (doubleEquals(rightc.getValue(), 1.0f)) {
                 // x ^ 1 => x
                 resultExpr = left;
                 setGraphModified();
-            } else if (floatEquals(rightc.getValue(), 0.5f)) {
+            } else if (doubleEquals(rightc.getValue(), 0.5f)) {
                 MathFunctionCall newsqrt = new MathFunctionCall(left, MathFunction.SQRT);
                 newsqrt.accept(this);
                 setGraphModified();
-            } else if (floatEquals(rightc.getValue(), 2.0f)) {
+            } else if (doubleEquals(rightc.getValue(), 2.0f)) {
                 resultExpr = new Multiplication(left, left);
                 setGraphModified();
             }
@@ -347,7 +347,7 @@ public class ConstantFolding implements ExpressionVisitor, ControlFlowVisitor {
         resultExpr = new Negation(resultExpr);
         if (isConstant(operandExpr)) {
             FloatConstant operand = (FloatConstant) operandExpr;
-            if (floatEquals(operand.getValue(), 0.0f)) {
+            if (doubleEquals(operand.getValue(), 0.0f)) {
                 resultExpr = new FloatConstant(0.0f);
             } else {
                 resultExpr = new FloatConstant(-operand.getValue());
@@ -374,21 +374,21 @@ public class ConstantFolding implements ExpressionVisitor, ControlFlowVisitor {
         resultExpr = new LogicalOr(left, right);
         if (isConstant(left)) {
             FloatConstant leftc = (FloatConstant) left;
-            if (floatEquals(leftc.getValue(), 0.0f)) {
+            if (doubleEquals(leftc.getValue(), 0.0f)) {
                 resultExpr = right;
                 setGraphModified();
             }
-            if (floatEquals(leftc.getValue(), 1.0f)) {
+            if (doubleEquals(leftc.getValue(), 1.0f)) {
                 resultExpr = left;
                 setGraphModified();
             }
         } else if (isConstant(right)) {
             FloatConstant rightc = (FloatConstant) right;
-            if (floatEquals(rightc.getValue(), 0.0f)) {
+            if (doubleEquals(rightc.getValue(), 0.0f)) {
                 resultExpr = left;
                 setGraphModified();
             }
-            if (floatEquals(rightc.getValue(), 1.0f)) {
+            if (doubleEquals(rightc.getValue(), 1.0f)) {
                 resultExpr = right;
                 setGraphModified();
             }
@@ -407,7 +407,7 @@ public class ConstantFolding implements ExpressionVisitor, ControlFlowVisitor {
             if (isConstant(right)) {
                 FloatConstant rightc = (FloatConstant) right;
 
-                if (floatEquals(leftc.getValue(), 1.0f) && floatEquals(rightc.getValue(), 1.0f)) {
+                if (doubleEquals(leftc.getValue(), 1.0f) && doubleEquals(rightc.getValue(), 1.0f)) {
                     resultExpr = left;
                 } else {
                     resultExpr = new FloatConstant(0.0f);
@@ -415,7 +415,7 @@ public class ConstantFolding implements ExpressionVisitor, ControlFlowVisitor {
 
                 setGraphModified();
             } else {
-                if (floatEquals(leftc.getValue(), 0.0f)) {
+                if (doubleEquals(leftc.getValue(), 0.0f)) {
                     resultExpr = left;
                     setGraphModified();
                 }
@@ -423,7 +423,7 @@ public class ConstantFolding implements ExpressionVisitor, ControlFlowVisitor {
 
         } else if (isConstant(right)) {
             FloatConstant rightc = (FloatConstant) right;
-            if (floatEquals(rightc.getValue(), 0.0f)) {
+            if (doubleEquals(rightc.getValue(), 0.0f)) {
                 resultExpr = right;
                 setGraphModified();
             }
@@ -440,7 +440,7 @@ public class ConstantFolding implements ExpressionVisitor, ControlFlowVisitor {
         if (isConstant(left) && isConstant(right)) {
             FloatConstant leftc = (FloatConstant) left;
             FloatConstant rightc = (FloatConstant) right;
-            if (floatEquals(leftc.getValue(), rightc.getValue())) {
+            if (doubleEquals(leftc.getValue(), rightc.getValue())) {
                 resultExpr = new FloatConstant(1.0f);
             } else {
                 resultExpr = new FloatConstant(0.0f);
@@ -459,7 +459,7 @@ public class ConstantFolding implements ExpressionVisitor, ControlFlowVisitor {
         if (isConstant(left) && isConstant(right)) {
             FloatConstant leftc = (FloatConstant) left;
             FloatConstant rightc = (FloatConstant) right;
-            if (floatEquals(leftc.getValue(), rightc.getValue())) {
+            if (doubleEquals(leftc.getValue(), rightc.getValue())) {
                 resultExpr = new FloatConstant(0.0f);
             } else {
                 resultExpr = new FloatConstant(1.0f);

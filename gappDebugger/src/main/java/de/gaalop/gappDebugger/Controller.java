@@ -84,7 +84,7 @@ public class Controller {
                     row.add(blade);
                     row.add(algebra.getBlade(blade).toString());
 
-                    row.add(Float.toString(v.getEntry(blade)));
+                    row.add(Double.toString(v.getEntry(blade)));
                     model.addRow(row);
                 }
             } else {
@@ -93,7 +93,7 @@ public class Controller {
                     Vector row = new Vector();
                     row.add(entry);
                     row.add("");
-                    row.add(Float.toString(v.getEntry(entry)));
+                    row.add(Double.toString(v.getEntry(entry)));
                     model.addRow(row);
                 }
             }

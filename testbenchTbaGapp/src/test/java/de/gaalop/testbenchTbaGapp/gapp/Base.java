@@ -56,7 +56,7 @@ public class Base {
         //printStatistics(graph);
 
         //Evaluate!
-        HashMap<String, Float> inputValues = testable.getInputs();
+        HashMap<String, Double> inputValues = testable.getInputs();
         Executer executer = new Executer(inputValues);
         graph.accept(executer);
         return executer;

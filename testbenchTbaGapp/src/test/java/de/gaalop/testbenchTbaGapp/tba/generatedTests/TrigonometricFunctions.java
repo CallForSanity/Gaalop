@@ -6,41 +6,41 @@ public class TrigonometricFunctions implements GAProgram {
 	// input variables
 
 	// output variables
-	private float r$0;
-	private float r$1;
-	private float r$2;
-	private float r$3;
-	private float r$4;
-	private float r$5;
-	private float r$6;
-	private float r$7;
-	private float r$8;
-	private float r$9;
-	private float r$10;
-	private float r$11;
-	private float r$12;
-	private float r$13;
-	private float r$14;
-	private float r$15;
-	private float r$16;
-	private float r$17;
-	private float r$18;
-	private float r$19;
-	private float r$20;
-	private float r$21;
-	private float r$22;
-	private float r$23;
-	private float r$24;
-	private float r$25;
-	private float r$26;
-	private float r$27;
-	private float r$28;
-	private float r$29;
-	private float r$30;
-	private float r$31;
+	private double r$0;
+	private double r$1;
+	private double r$2;
+	private double r$3;
+	private double r$4;
+	private double r$5;
+	private double r$6;
+	private double r$7;
+	private double r$8;
+	private double r$9;
+	private double r$10;
+	private double r$11;
+	private double r$12;
+	private double r$13;
+	private double r$14;
+	private double r$15;
+	private double r$16;
+	private double r$17;
+	private double r$18;
+	private double r$19;
+	private double r$20;
+	private double r$21;
+	private double r$22;
+	private double r$23;
+	private double r$24;
+	private double r$25;
+	private double r$26;
+	private double r$27;
+	private double r$28;
+	private double r$29;
+	private double r$30;
+	private double r$31;
 
 	@Override
-	public float getValue(String varName) {
+	public double getValue(String varName) {
 		if (varName.equals("r$0")) return r$0;
 		if (varName.equals("r$1")) return r$1;
 		if (varName.equals("r$2")) return r$2;
@@ -73,12 +73,12 @@ public class TrigonometricFunctions implements GAProgram {
 		if (varName.equals("r$29")) return r$29;
 		if (varName.equals("r$30")) return r$30;
 		if (varName.equals("r$31")) return r$31;
-		return 0.0f;
+		return 0.0d;
 	}
 
 	@Override
-	public HashMap<String,Float> getValues() {
-		HashMap<String,Float> result = new HashMap<String,Float>();
+	public HashMap<String,Double> getValues() {
+		HashMap<String,Double> result = new HashMap<String,Double>();
 		result.put("r$0",r$0);
 		result.put("r$1",r$1);
 		result.put("r$2",r$2);
@@ -114,13 +114,13 @@ public class TrigonometricFunctions implements GAProgram {
 		return result;
 	}
 	@Override
-	public boolean setValue(String varName, float value) {
+	public boolean setValue(String varName, double value) {
 		return false;
 	}
 	
 	@Override
 	public void calculate() {
-		r$0 = (float) Math.cos(0.0f); // 1.0;
+		r$0 = (double) Math.cos(0.0d); // 1.0;
 	}
 
 

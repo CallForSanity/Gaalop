@@ -8,11 +8,11 @@ import de.gaalop.testbenchTbaGapp.tba.gps.Point3D;
  */
 public class Vec3D {
 
-    private float x;
-    private float y;
-    private float z;
+    private double x;
+    private double y;
+    private double z;
 
-    public Vec3D(float x, float y, float z) {
+    public Vec3D(double x, double y, double z) {
         this.x = x;
         this.y = y;
         this.z = z;
@@ -22,15 +22,15 @@ public class Vec3D {
      * Returns the length of the vector
      * @return The length
      */
-    public float abs() {
-        return (float) Math.sqrt(x * x + y * y + z * z);
+    public double abs() {
+        return (double) Math.sqrt(x * x + y * y + z * z);
     }
 
     /**
      * Normalizes this vector
      */
     public void normalize() {
-        float ab = abs();
+        double ab = abs();
         x /= ab;
         y /= ab;
         z /= ab;
@@ -40,7 +40,7 @@ public class Vec3D {
      * Performs a scalar multiplication
      * @param scalar The scalar to multiplicate with
      */
-    public void scalarMultiplication(float scalar) {
+    public void scalarMultiplication(double scalar) {
         x *= scalar;
         y *= scalar;
         z *= scalar;
@@ -68,7 +68,7 @@ public class Vec3D {
      * @param v The other Vec3d object
      * @return The result of the dot product operation
      */
-    public float dotProduct(Vec3D v) {
+    public double dotProduct(Vec3D v) {
         return x * v.x + y * v.y + z * v.z;
     }
 }

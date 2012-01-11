@@ -375,7 +375,7 @@ public final class GraphBuilder {
 		return color;
 	}
 
-	private ColorNode getRBGColor(float r, float g, float b) {
+	private ColorNode getRBGColor(double r, double g, double b) {
 		return new ColorNode(graph, new FloatConstant(r), new FloatConstant(g), new FloatConstant(b));
 	}
 

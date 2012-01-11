@@ -36,7 +36,7 @@ public class Executer extends CFGGAPPVisitor {
     /**
      * Maps the scalar inputs to their values
      */
-    private HashMap<String, Float> inputValues;
+    private HashMap<String, Double> inputValues;
 
     /**
      * Returns the MultivectorWithValues object which stores the current values
@@ -52,7 +52,7 @@ public class Executer extends CFGGAPPVisitor {
         return values;
     }
 
-    public Executer(HashMap<String, Float> inputValues) {
+    public Executer(HashMap<String, Double> inputValues) {
         this.inputValues = inputValues;
     }
 
@@ -91,7 +91,7 @@ public class Executer extends CFGGAPPVisitor {
      * @param name The name of the scalar input variable
      * @return The value of the calar input variable with the given name
      */
-    private float getVariableValue(String name) {
+    private double getVariableValue(String name) {
         return inputValues.get(name);
     }
 
@@ -127,10 +127,10 @@ public class Executer extends CFGGAPPVisitor {
         MultivectorWithValues destination = getMultivector(gappDotVectors.getDestination().getName());
 
         // calculate the dot product
-        float sum = 0;
+        double sum = 0;
         int size = getMultivector(gappDotVectors.getParts().getFirst().getName()).getEntries().length;
         for (int slot = 0; slot < size; slot++) {
-            float prod = 1;
+            double prod = 1;
 
             for (GAPPVector part : gappDotVectors.getParts()) {
                 prod *= getMultivector(part.getName()).getEntry(slot);
@@ -163,7 +163,7 @@ public class Executer extends CFGGAPPVisitor {
         createVector(destName, size);
         MultivectorWithValues destination = getMultivector(destName);
 
-        destination.setEntries(new float[size]);
+        destination.setEntries(new double[size]);
         int i = 0;
         for (SetVectorArgument curArg: gappSetVector.getEntries()) {
             if (curArg.isConstant()) {
@@ -192,7 +192,7 @@ public class Executer extends CFGGAPPVisitor {
         int selCount = selector.size();
         for (int sel = 0; sel < selCount; sel++) {
             GAPPValueHolder scalarVar = gappAssignMv.getValues().get(sel);
-            float value = (scalarVar.isVariable())
+            double value = (scalarVar.isVariable())
                     ? getVariableValue(((GAPPVariable) scalarVar).getName())
                     : ((GAPPConstant) scalarVar).getValue();
             destination.getEntries()[selector.get(sel).getIndex()] = value;
@@ -205,10 +205,10 @@ public class Executer extends CFGGAPPVisitor {
     public Object visitCalculateMv(GAPPCalculateMv gappCalculate, Object arg) {
 
         MultivectorWithValues mv1 = getMultivector(gappCalculate.getOperand1().getName());
-        float op1 = mv1.getEntry(0);
+        double op1 = mv1.getEntry(0);
 
         MultivectorWithValues mv2 = null;
-        float op2 = 0;
+        double op2 = 0;
         if (gappCalculate.getOperand2() != null) {
             mv2 = getMultivector(gappCalculate.getOperand2().getName());
             op2 = mv2.getEntry(0);
@@ -216,35 +216,35 @@ public class Executer extends CFGGAPPVisitor {
 
         MultivectorWithValues target = getMultivector(gappCalculate.getDestination().getName());
 
-        float result;
+        double result;
 
         switch (gappCalculate.getType()) {
             case ABS:
                 result = Math.abs(op1);
                 break;
             case ACOS:
-                result = (float) Math.acos(op1);
+                result = Math.acos(op1);
                 break;
             case ASIN:
-                result = (float) Math.asin(op1);
+                result = Math.asin(op1);
                 break;
             case ATAN:
-                result = (float) Math.atan(op1);
+                result =  Math.atan(op1);
                 break;
             case CEIL:
-                result = (float) Math.ceil(op1);
+                result =  Math.ceil(op1);
                 break;
             case COS:
-                result = (float) Math.cos(op1);
+                result =  Math.cos(op1);
                 break;
             case DIVISION:
                 result = op1 / op2;
                 break;
             case EXP:
-                result = (float) Math.exp(op1);
+                result =  Math.exp(op1);
                 break;
             case EXPONENTIATION:
-                result = (float) Math.pow(op1, op2);
+                result =  Math.pow(op1, op2);
                 break;
             case FACT:
                 result = 1;
@@ -253,19 +253,19 @@ public class Executer extends CFGGAPPVisitor {
                 }
                 break;
             case FLOOR:
-                result = (float) Math.floor(op1);
+                result =  Math.floor(op1);
                 break;
             case LOG:
-                result = (float) Math.log(op1);
+                result =  Math.log(op1);
                 break;
             case SIN:
-                result = (float) Math.sin(op1);
+                result =  Math.sin(op1);
                 break;
             case SQRT:
-                result = (float) Math.sqrt(op1);
+                result =  Math.sqrt(op1);
                 break;
             case TAN:
-                result = (float) Math.tan(op1);
+                result =  Math.tan(op1);
                 break;
             default:
                 throw new UnsupportedOperationException("Executer: " + gappCalculate.getType() + " is not supported yet.");
@@ -299,7 +299,7 @@ public class Executer extends CFGGAPPVisitor {
 
         for (int sel = 0; sel < size; sel++) {
             GAPPValueHolder scalarVar = gappAssignInputsVector.getValues().get(sel);
-            float value = (scalarVar.isVariable())
+            double value = (scalarVar.isVariable())
                     ? getVariableValue(((GAPPVariable) scalarVar).getName())
                     : ((GAPPConstant) scalarVar).getValue();
             destination.getEntries()[sel] = value;
@@ -312,10 +312,10 @@ public class Executer extends CFGGAPPVisitor {
     public Object visitCalculateMvCoeff(GAPPCalculateMvCoeff gappCalculateCoeff, Object arg) {
 
         MultivectorWithValues mv1 = getMultivector(gappCalculateCoeff.getOperand1().getName());
-        float op1 = mv1.getEntry(0);
+        double op1 = mv1.getEntry(0);
 
         MultivectorWithValues mv2 = null;
-        float op2 = 0;
+        double op2 = 0;
         if (gappCalculateCoeff.getOperand2() != null) {
             mv2 = getMultivector(gappCalculateCoeff.getOperand2().getName());
             op2 = mv2.getEntry(0);
@@ -323,35 +323,35 @@ public class Executer extends CFGGAPPVisitor {
 
         MultivectorWithValues target = getMultivector(gappCalculateCoeff.getDestination().getName());
 
-        float result;
+        double result;
 
         switch (gappCalculateCoeff.getType()) {
             case ABS:
                 result = Math.abs(op1);
                 break;
             case ACOS:
-                result = (float) Math.acos(op1);
+                result =  Math.acos(op1);
                 break;
             case ASIN:
-                result = (float) Math.asin(op1);
+                result =  Math.asin(op1);
                 break;
             case ATAN:
-                result = (float) Math.atan(op1);
+                result =  Math.atan(op1);
                 break;
             case CEIL:
-                result = (float) Math.ceil(op1);
+                result =  Math.ceil(op1);
                 break;
             case COS:
-                result = (float) Math.cos(op1);
+                result =  Math.cos(op1);
                 break;
             case DIVISION:
                 result = op1 / op2;
                 break;
             case EXP:
-                result = (float) Math.exp(op1);
+                result =  Math.exp(op1);
                 break;
             case EXPONENTIATION:
-                result = (float) Math.pow(op1, op2);
+                result =  Math.pow(op1, op2);
                 break;
             case FACT:
                 result = 1;
@@ -360,19 +360,19 @@ public class Executer extends CFGGAPPVisitor {
                 }
                 break;
             case FLOOR:
-                result = (float) Math.floor(op1);
+                result =  Math.floor(op1);
                 break;
             case LOG:
-                result = (float) Math.log(op1);
+                result =  Math.log(op1);
                 break;
             case SIN:
-                result = (float) Math.sin(op1);
+                result =  Math.sin(op1);
                 break;
             case SQRT:
-                result = (float) Math.sqrt(op1);
+                result =  Math.sqrt(op1);
                 break;
             case TAN:
-                result = (float) Math.tan(op1);
+                result =  Math.tan(op1);
                 break;
             default:
                 throw new UnsupportedOperationException("Executer: " + gappCalculateCoeff.getType() + " is not supported yet.");

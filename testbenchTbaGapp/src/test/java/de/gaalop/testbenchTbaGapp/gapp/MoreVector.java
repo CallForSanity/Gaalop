@@ -18,13 +18,13 @@ public class MoreVector implements GAPPTestable {
     }
 
     @Override
-    public HashMap<String, Float> getInputs() {
-        HashMap<String, Float> result = new HashMap<String, Float>();
-        result.put("a", 2.0f);
-        result.put("b", 1.0f);
-        result.put("c", 3.0f);
-        result.put("g", 4.0f);
-        result.put("f", 2.0f);
+    public HashMap<String, Double> getInputs() {
+        HashMap<String, Double> result = new HashMap<String, Double>();
+        result.put("a", 2.0d);
+        result.put("b", 1.0d);
+        result.put("c", 3.0d);
+        result.put("g", 4.0d);
+        result.put("f", 2.0d);
         return result;
     }
 

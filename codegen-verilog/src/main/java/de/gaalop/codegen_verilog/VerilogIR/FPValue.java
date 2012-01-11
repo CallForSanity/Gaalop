@@ -27,7 +27,7 @@ public class FPValue {
 
 
 
-	public FPValue(float f, int length, int fraction) {
+	public FPValue(double f, int length, int fraction) {
 		this.fractionlength = fraction + 1;
 		this.wordlength = length;
 		this.binarypointposition = fraction + 1;
@@ -100,8 +100,8 @@ public class FPValue {
 	
 	
 		
-	public float getFloat() {
-		return (float) (binaryvalue / Math.pow(2, fractionlength));
+	public double getFloat() {
+		return (double) (binaryvalue / Math.pow(2, fractionlength));
 	}
 
 	

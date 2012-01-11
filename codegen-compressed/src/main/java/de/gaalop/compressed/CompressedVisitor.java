@@ -39,13 +39,13 @@ public class CompressedVisitor extends de.gaalop.gaalet.output.CppVisitor {
             // Input Parameters
             List<Variable> inputParameters = sortVariables(graph.getInputVariables());
             for (Variable var : inputParameters) {
-                code.append("float "); // The assumption here is that they all are normal scalars
+                code.append("double "); // The assumption here is that they all are normal scalars
                 printVarName(var.getName());
                 code.append(", ");
             }
 
             for (StoreResultNode var : findOutput.getNodes()) {
-                code.append("float **");
+                code.append("double **");
                 printVarName(outputNamesMap.get(var));
                 code.append(", ");
             }

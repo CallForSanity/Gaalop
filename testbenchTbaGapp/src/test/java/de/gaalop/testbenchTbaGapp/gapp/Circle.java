@@ -41,14 +41,14 @@ public class Circle implements GAPPTestable {
     }
 
     @Override
-    public HashMap<String, Float> getInputs() {
-        HashMap<String, Float> inputValues = new HashMap<String, Float>();
-        inputValues.put("x1", new Float(p1.x));
-        inputValues.put("y1", new Float(p1.y));
-        inputValues.put("x2", new Float(p2.x));
-        inputValues.put("y2", new Float(p2.y));
-        inputValues.put("x3", new Float(p3.x));
-        inputValues.put("y3", new Float(p3.y));
+    public HashMap<String, Double> getInputs() {
+        HashMap<String, Double> inputValues = new HashMap<String, Double>();
+        inputValues.put("x1", new Double(p1.x));
+        inputValues.put("y1", new Double(p1.y));
+        inputValues.put("x2", new Double(p2.x));
+        inputValues.put("y2", new Double(p2.y));
+        inputValues.put("x3", new Double(p3.x));
+        inputValues.put("y3", new Double(p3.y));
         return inputValues;
     }
 
@@ -61,8 +61,8 @@ public class Circle implements GAPPTestable {
         assertNotNull(valM);
         assertNotNull(valR);
 
-        Point2D.Float m = new Point2D.Float(valM.getEntry(1), valM.getEntry(2));
-        float r = valR.getEntry(0);
+        Point2D.Double m = new Point2D.Double(valM.getEntry(1), valM.getEntry(2));
+        double r = valR.getEntry(0);
 
         assertEquals(p1.distance(m), r, 10E-4);
         assertEquals(p2.distance(m), r, 10E-4);

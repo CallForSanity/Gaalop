@@ -100,7 +100,7 @@ public class DfgVisitor implements ExpressionVisitor {
 
 	@Override
 	public void visit(FloatConstant floatConstant) {
-		code.append(Float.toString(floatConstant.getValue()).replace('E', 'e'));
+		code.append(Double.toString(floatConstant.getValue()).replace('E', 'e'));
 	}
 
 	@Override

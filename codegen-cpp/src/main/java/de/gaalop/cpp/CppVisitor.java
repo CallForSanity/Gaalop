@@ -58,13 +58,13 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 			// Input Parameters
 			List<Variable> inputParameters = sortVariables(graph.getInputVariables());
 			for (Variable var : inputParameters) {
-				code.append("float "); // The assumption here is that they all are normal scalars
+				code.append("double "); // The assumption here is that they all are normal scalars
 				code.append(var.getName());
 				code.append(", ");
 			}
 
 			for (Variable var : localVariables) {
-				code.append("float ");
+				code.append("double ");
 				code.append(var.getName());
 				code.append("["+bladeCount+"], ");
 			}
@@ -78,15 +78,15 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 		} else {
 			for (Variable var : localVariables) {
 				appendIndentation();
-				code.append("float ");
+				code.append("double ");
 				code.append(var.getName());
-				code.append("["+bladeCount+"] = { 0.0f };\n");
+				code.append("["+bladeCount+"] = { 0.0d };\n");
 			}
 		}
 
 		if (graph.getScalarVariables().size() > 0) {
 			appendIndentation();
-			code.append("float ");
+			code.append("double ");
 			for (Variable tmp : graph.getScalarVariables()) {
 				code.append(tmp.getName());
 				code.append(", ");
@@ -348,8 +348,8 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 
 	@Override
 	public void visit(FloatConstant floatConstant) {
-		code.append(Float.toString(floatConstant.getValue()));
-		code.append('f');
+		code.append(Double.toString(floatConstant.getValue()));
+		code.append('d');
 	}
 
 	@Override

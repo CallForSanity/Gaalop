@@ -6,9 +6,9 @@ package de.gaalop.gapp;
  */
 public class ConstantSetVectorArgument extends SetVectorArgument {
 
-    private float value;
+    private double value;
 
-    public ConstantSetVectorArgument(float value) {
+    public ConstantSetVectorArgument(double value) {
         this.value = value;
     }
 
@@ -17,11 +17,11 @@ public class ConstantSetVectorArgument extends SetVectorArgument {
         return true;
     }
 
-    public float getValue() {
+    public double getValue() {
         return value;
     }
 
-    public void setValue(float value) {
+    public void setValue(double value) {
         this.value = value;
     }
 

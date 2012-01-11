@@ -12,7 +12,7 @@ import java.util.LinkedList;
  */
 public class ZeroAssignmentsCollector extends EmptyControlFlowVisitor {
 
-    private static final float EPSILON = (float) 10E-10;
+    private static final double EPSILON = (double) 10E-10; //TODO pre
 
     private LinkedList<SequentialNode> toRemove = new LinkedList<SequentialNode>();
 
@@ -26,7 +26,7 @@ public class ZeroAssignmentsCollector extends EmptyControlFlowVisitor {
     public void visit(AssignmentNode node) {
 
         if (node.getValue() instanceof FloatConstant) {
-            float value = ((FloatConstant) node.getValue()).getValue();
+            double value = ((FloatConstant) node.getValue()).getValue();
             if (Math.abs(value) <= EPSILON)
                 toRemove.add(node);
         }

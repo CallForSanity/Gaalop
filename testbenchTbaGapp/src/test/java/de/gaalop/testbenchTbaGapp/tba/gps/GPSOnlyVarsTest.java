@@ -12,7 +12,7 @@ import org.junit.Ignore;
 @Ignore
 public class GPSOnlyVarsTest extends GenericGPSTest {
 
-    public GPSOnlyVarsTest(Point3D sat1, Point3D sat2, Point3D sat3, float d1, float d2, float d3) {
+    public GPSOnlyVarsTest(Point3D sat1, Point3D sat2, Point3D sat3, double d1, double d2, double d3) {
         super(sat1, sat2, sat3, d1, d2, d3);
     }
 

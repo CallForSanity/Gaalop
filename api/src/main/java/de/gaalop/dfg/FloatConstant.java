@@ -8,7 +8,7 @@ package de.gaalop.dfg;
  */
 public final class FloatConstant extends Expression {
 
-	private final float value;
+	private final double value;
 
 	/**
 	 * String representation of the value. This is usefull in case it is an parsed value, that the number of post comma digits
@@ -33,7 +33,7 @@ public final class FloatConstant extends Expression {
 	 * 
 	 * @param value The encapsulated floating point value.
 	 */
-	public FloatConstant(float value) {
+	public FloatConstant(double value) {
 		super();
 		this.value = value;
 		valueString = null;
@@ -45,7 +45,7 @@ public final class FloatConstant extends Expression {
 	 * @param value The encapsulated floating point value.
 	 * @param the String representation of the value. Can be null
 	 */
-	public FloatConstant(float value, String valueStr) {
+	public FloatConstant(double value, String valueStr) {
 		super();
 		this.value = value;
 		this.valueString = valueStr;
@@ -84,17 +84,17 @@ public final class FloatConstant extends Expression {
 	 * 
 	 * @return The value encapsulated in this node.
 	 */
-	public float getValue() {
+	public double getValue() {
 		return value;
 	}
 
 	/**
 	 * Converts this node to a human readable string.
 	 * 
-	 * @return The result of {@link Float#toString(float)} for the value returned by <code>getValue</code>.
+	 * @return The result of {@link Double#toString(double)} for the value returned by <code>getValue</code>.
 	 */
 	public String toString() {
-		return (valueString == null) ? Float.toString(value) : valueString;
+		return (valueString == null) ? Double.toString(value) : valueString;
 	}
 
 	/**
@@ -113,13 +113,13 @@ public final class FloatConstant extends Expression {
 
 		FloatConstant that = (FloatConstant) o;
 
-		if (Float.compare(that.value, value) != 0) return false;
+		if (Double.compare(that.value, value) != 0) return false;
 
 		return true;
 	}
 
 	@Override
 	public int hashCode() {
-		return (value != +0.0f ? Float.floatToIntBits(value) : 0);
+		return (value != +0.0d ? (int) Double.doubleToLongBits(value) : 0);
 	}
 }

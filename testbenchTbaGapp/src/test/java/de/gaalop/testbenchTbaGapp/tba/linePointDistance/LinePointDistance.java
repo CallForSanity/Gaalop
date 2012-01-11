@@ -66,7 +66,7 @@ public class LinePointDistance implements GenericTestable {
                         + "assertTrue(outputs.containsKey(\"nor$1\"));\n"
                         + "assertTrue(outputs.containsKey(\"nor$2\"));\n"
                         + "assertTrue(outputs.containsKey(\"nor$3\"));\n"
-                        + "float abstand = outputs.get(\"abstand$0\");\n"
+                        + "double abstand = outputs.get(\"abstand$0\");\n"
                         + "Vec3D nor = new Vec3D(outputs.get(\"nor$1\"), outputs.get(\"nor$2\"), outputs.get(\"nor$3\"));\n"
                         + "nor.normalize();\n"
                         + "nor.scalarMultiplication(abstand);\n"
@@ -94,7 +94,7 @@ public class LinePointDistance implements GenericTestable {
                         + "Vec3D r = new Vec3D(" + (p2.x - p1.x) + "f," + (p2.y - p1.y) + "f," + (p2.z - p1.z) + "f);\n"
                         + "r.normalize();\n"
                         + "Vec3D xmpTest = new Vec3D(pBase.x-" + pTest.x + "f,pBase.y-" + pTest.y + "f,pBase.z-" + pTest.z + "f);\n"
-                        + "float dp = xmpTest.dotProduct(r);\n"
+                        + "double dp = xmpTest.dotProduct(r);\n"
                         + "assertEquals(0,dp,0.001);\n";
             }
 

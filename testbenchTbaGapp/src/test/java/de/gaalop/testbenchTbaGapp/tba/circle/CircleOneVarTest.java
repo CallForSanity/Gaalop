@@ -32,7 +32,7 @@ public class CircleOneVarTest extends GenericCircleTest {
                 + ((commented[5]) ? "// " : "") + "y3 = " + p3.y + ";" + "\n";
     }
     private int currentI;
-    private float currentValue;
+    private double currentValue;
 
     @Override
     public LinkedList<InputOutput> getInputOutputs() {
@@ -47,7 +47,7 @@ public class CircleOneVarTest extends GenericCircleTest {
             result.add(new InputOutput() {
 
                 int currentIs = currentI;
-                float currentValues = currentValue;
+                double currentValues = currentValue;
 
                 @Override
                 public LinkedList<VariableValue> getInputs() {
@@ -72,9 +72,9 @@ public class CircleOneVarTest extends GenericCircleTest {
                             + "assertTrue(outputs.containsKey(\"r$0\"));\n"
                             + "assertTrue(outputs.containsKey(\"m$1\"));\n"
                             + "assertTrue(outputs.containsKey(\"m$2\"));\n"
-                            + "float r$0 = outputs.get(\"r$0\");\n"
-                            + "float m$x = outputs.get(\"m$1\");\n"
-                            + "float m$y = outputs.get(\"m$2\");\n"
+                            + "double r$0 = outputs.get(\"r$0\");\n"
+                            + "double m$x = outputs.get(\"m$1\");\n"
+                            + "double m$y = outputs.get(\"m$2\");\n"
                             + "// check radius (should be equal to distance from m to p1,p2,p3)\n"
                             + "assertEquals(" + getDistance("m$x", "m$y", getCoordinate(0, currentValues) + "", getCoordinate(1, currentValues) + "") + ",r$0," + EPSILON + ");\n"
                             + "assertEquals(" + getDistance("m$x", "m$y", getCoordinate(2, currentValues) + "", getCoordinate(3, currentValues) + "") + ",r$0," + EPSILON + ");\n"
@@ -103,7 +103,7 @@ public class CircleOneVarTest extends GenericCircleTest {
      * @param currentValue The currentValue of the successive incrementation
      * @return The correct coordinate
      */
-    private float getCoordinate(int no, float currentValue) {
+    private double getCoordinate(int no, double currentValue) {
         if (commented[no]) {
             return currentValue;
         } else {

@@ -51,7 +51,7 @@ import java.util.HashSet;
  */
 public class ConstanKillCrawler implements ControlFlowVisitor, ExpressionVisitor {
 
-    HashMap<String, Float> oneset = new HashMap<String, Float>();
+    HashMap<String, Double> oneset = new HashMap<String, Double>();
     private AssignmentNode currAssignmentNode = null;
     private String currAssignString;
     private Expression resultExpr;
