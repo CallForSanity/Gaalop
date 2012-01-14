@@ -80,7 +80,7 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 				appendIndentation();
 				code.append("double ");
 				code.append(var.getName());
-				code.append("["+bladeCount+"] = { 0.0d };\n");
+				code.append("["+bladeCount+"] = { 0.0 };\n");
 			}
 		}
 
@@ -349,7 +349,7 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 	@Override
 	public void visit(FloatConstant floatConstant) {
 		code.append(Double.toString(floatConstant.getValue()));
-		code.append('d');
+		//code.append('d');
 	}
 
 	@Override
