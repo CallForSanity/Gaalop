@@ -1,5 +1,5 @@
 ds = {
-    _P(1).(e1^e2^e3^einfx^einfy^einfz^(e0x+e0y+ez))
+    _P(1).(e1^e2^e3^einfx^einfy^einfz^(e0x+e0y+e0z))
 }
 
 sd= {
