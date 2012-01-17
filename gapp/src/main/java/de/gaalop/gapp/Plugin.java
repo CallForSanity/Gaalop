@@ -15,7 +15,7 @@ import java.util.Observable;
  */
 public class Plugin extends Observable implements OptimizationStrategyPlugin {
 
-    @ConfigurationProperty(type = Type.TEXT)
+    @ConfigurationProperty(type = Type.FILEPATH)
     public String maximaCommand = ProcessBuilderMaximaConnection.CMD_MAXIMA_LINUX;
     
     /*
