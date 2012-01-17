@@ -2,9 +2,12 @@ package de.gaalop.algebra;
 
 import de.gaalop.dfg.Expression;
 import de.gaalop.dfg.FunctionArgument;
+import de.gaalop.dfg.MacroCall;
 import de.gaalop.dfg.Variable;
 import de.gaalop.visitors.ReplaceVisitor;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  *
@@ -31,6 +34,21 @@ public class MacroVariablesDFGReplacer extends ReplaceVisitor {
         result = replaceMap.get("_P("+node.getIndex()+")");
     }
 
+    @Override
+    public void visit(MacroCall node) {
+        ArrayList<Expression> newArgs = new ArrayList<Expression>(node.getArguments().size());
 
+        for (Expression arg: node.getArguments()) {
+            arg.accept(this);
+            if (result == null)
+                newArgs.add(arg);
+            else {
+                newArgs.add(result);
+                result = null;
+            }
+        }
+
+        node.setArgs(newArgs);
+    }
 
 }
