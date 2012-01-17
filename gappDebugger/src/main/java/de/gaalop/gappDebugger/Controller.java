@@ -41,7 +41,7 @@ import org.antlr.runtime.tree.CommonTreeNodeStream;
 public class Controller {
 
     private UI ui;
-    private HashMap<String, Float> inputValues = new HashMap<String, Float>();
+    private HashMap<String, Double> inputValues = new HashMap<String, Double>();
 
     private DefaultListModel modelVars = new DefaultListModel();
     private DefaultListModel modelSrc = new DefaultListModel();
@@ -154,7 +154,7 @@ public class Controller {
                 if (part.contains("=")) {
                     String[] parts = part.split("=");
                     String varname = parts[0].trim();
-                    Float value = Float.parseFloat(parts[1].trim());
+                    Double value = Double.parseDouble(parts[1].trim());
                     inputValues.put(varname, value);
                     changed = true;
                 }
