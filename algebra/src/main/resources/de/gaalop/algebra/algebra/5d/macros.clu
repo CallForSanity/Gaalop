@@ -32,6 +32,16 @@ SphereN3 = {
     *(_P(1)-0.5*_P(2)*_P(2)*einf)
 }
 
+// Creates a sphere, defined by the centre coordinates and a radius
+//args:
+//centre_x
+//centre_y
+//centre_z
+//r
+SphereN3 = {
+    SphereN3(VecN3(_P(1),_P(2),_P(3)),_P(4))
+}
+
 // Creates a translator
 //args:
 //x
