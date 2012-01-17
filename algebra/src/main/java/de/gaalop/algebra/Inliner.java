@@ -7,7 +7,6 @@ import de.gaalop.cfg.ExpressionStatement;
 import de.gaalop.cfg.Macro;
 import de.gaalop.cfg.SequentialNode;
 import de.gaalop.dfg.Expression;
-import de.gaalop.dfg.ExpressionVisitor;
 import de.gaalop.dfg.MacroCall;
 import de.gaalop.dfg.MathFunction;
 import de.gaalop.dfg.MathFunctionCall;
@@ -24,7 +23,7 @@ import java.util.LinkedList;
 public class Inliner extends EmptyControlFlowVisitor {
 
     private int count = 0;
-    private HashMap<String, Macro> macros;
+    private HashMap<StringIntContainer, Macro> macros;
     private ControlFlowGraph graph;
 
     private boolean containsMacroCall(Expression e) {
@@ -38,12 +37,12 @@ public class Inliner extends EmptyControlFlowVisitor {
         return !calls.isEmpty();
     }
 
-    private Inliner(HashMap<String, Macro> macros, ControlFlowGraph graph) {   //private constructor for making the usage of the static methods mandatory
+    private Inliner(HashMap<StringIntContainer, Macro> macros, ControlFlowGraph graph) {   //private constructor for making the usage of the static methods mandatory
         this.macros = macros;
         this.graph = graph;
     }
 
-    public static void inline(ControlFlowGraph graph, HashMap<String, Macro> macros) {
+    public static void inline(ControlFlowGraph graph, HashMap<StringIntContainer, Macro> macros) {
         Inliner inliner = new Inliner(macros, graph);
         while (!inliner.error && MacroCallCounter.countMacroCallsInGraph(graph)>0)
             graph.accept(inliner);
@@ -94,11 +93,12 @@ public class Inliner extends EmptyControlFlowVisitor {
                 }
             }
 
-            if (!macros.containsKey(macroCallName)) {
+            StringIntContainer container = new StringIntContainer(macroCallName, node.getArguments().size());
+            if (!macros.containsKey(container)) {
                 System.err.println("Macro "+macroCallName+" is not defined!");
                 error = true; //escape endless loop!
             }
-            Macro macro = macros.get(macroCallName);
+            Macro macro = macros.get(container);
 
             HashMap<String, Expression> replaceMap = new HashMap<String, Expression>();
             //fill replaceMap with macro call arguments

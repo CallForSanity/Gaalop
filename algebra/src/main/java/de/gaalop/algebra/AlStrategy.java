@@ -57,10 +57,13 @@ public class AlStrategy implements AlgebraStrategy {
             
             ControlFlowGraph macrosGraph = new de.gaalop.clucalc.input.Plugin().createCodeParser().parseFile(inputStreamToInputFile(inputStream, "macros"));
             inputStream.close();
-            HashMap<String, Macro> macros = MacrosVisitor.getAllMacros(macrosGraph);
+            HashMap<StringIntContainer, Macro> macros = MacrosVisitor.getAllMacros(macrosGraph);
             MacrosVisitor.getAllMacros(graph, macros);
-            macros.put("*", macros.get("Dual"));
-            macros.remove("Dual");
+            StringIntContainer dual = new StringIntContainer("Dual",1);
+            if (macros.containsKey(dual)) {
+                macros.put(new StringIntContainer("*",1), macros.get(dual));
+                macros.remove(dual);
+            }
 
             //load user macros
             if (!plugin.getUserMacroFilePath().trim().equals("")) {
