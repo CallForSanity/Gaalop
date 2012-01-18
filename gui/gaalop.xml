@@ -2,7 +2,7 @@
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
 <comment>Gaalop Configuration File</comment>
-<entry key="de.gaalop.gapp.Plugin.maximaCommand">/usr/bin/maxima</entry>
+<entry key="de.gaalop.gapp.Plugin.maximaCommand">C:\Program Files (x86)\Maxima-5.25.1\bin\maxima.bat</entry>
 <entry key="de.gaalop.algebra.Plugin.usePrecalulatedTables">false</entry>
 <entry key="de.gaalop.algebra.Plugin.userMacroFilePath"/>
 <entry key="de.gaalop.maple.Plugin.gaalopPath">/</entry>
@@ -18,7 +18,7 @@
 <entry key="de.gaalop.gappopencl.Plugin.standalone">true</entry>
 <entry key="de.gaalop.tba.Plugin.optOneExpressionRemoval">true</entry>
 <entry key="de.gaalop.maple.Plugin.constantFolding">false</entry>
-<entry key="de.gaalop.tba.Plugin.optMaxima">false</entry>
+<entry key="de.gaalop.tba.Plugin.optMaxima">true</entry>
 <entry key="de.gaalop.tba.Plugin.optInserting">true</entry>
 <entry key="de.gaalop.compressed.Plugin.standalone">false</entry>
 <entry key="de.gaalop.algebra.Plugin.definitionFilePath">algebra/5d/definition.csv</entry>

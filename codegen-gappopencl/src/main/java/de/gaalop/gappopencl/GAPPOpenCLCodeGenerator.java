@@ -49,7 +49,16 @@ public class GAPPOpenCLCodeGenerator implements CodeGenerator {
      * @return
      */
     private String generateCode(ControlFlowGraph in) {
-        GAPPOpenCLVisitor visitor = new GAPPOpenCLVisitor();
+        // determine sizes of multivectors
+        GAPPMvSizeVisitor mvSizeVisitor = new GAPPMvSizeVisitor();
+        try {
+        	in.accept(mvSizeVisitor);
+        } catch (Throwable error) {
+        	plugin.notifyError(error);
+        }        
+        
+        // generate code
+        GAPPOpenCLVisitor visitor = new GAPPOpenCLVisitor(mvSizeVisitor.getMvSizes());
         try {
         	in.accept(visitor);
         } catch (Throwable error) {
