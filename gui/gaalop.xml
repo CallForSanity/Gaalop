@@ -20,9 +20,10 @@
 <entry key="de.gaalop.maple.Plugin.constantFolding">false</entry>
 <entry key="de.gaalop.tba.Plugin.optMaxima">false</entry>
 <entry key="de.gaalop.tba.Plugin.optInserting">true</entry>
+<entry key="de.gaalop.compressed.Plugin.standalone">false</entry>
 <entry key="de.gaalop.algebra.Plugin.definitionFilePath">algebra/5d/definition.csv</entry>
 <entry key="de.gaalop.maple.Plugin.useCodeSegmenter">false</entry>
-<entry key="de.gaalop.tba.Plugin.maximaCommand">/usr/bin/maxima</entry>
+<entry key="de.gaalop.tba.Plugin.maximaCommand">C:\Program Files (x86)\Maxima-5.25.1\bin\maxima.bat</entry>
 <entry key="de.gaalop.algebra.Plugin.productsFilePath">algebra/5d/products.csv</entry>
 <entry key="de.gaalop.gapp.Plugin.optMaxima">false</entry>
 </properties>
