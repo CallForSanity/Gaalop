@@ -25,38 +25,47 @@ public class InputFilesComposer {
         // process input file
         // split into gaalop input files and save in memory
         List<String> gaalopInFileVector = new ArrayList<String>();
-        StringBuffer importBuffer = new StringBuffer();
+        StringBuffer globalImportBuffer = new StringBuffer();
         String line;
         final BufferedReader inputFile = Main.createFileInputStringStream(Main.inputFilePath);
         while ((line = inputFile.readLine()) != null) {
-            if (line.contains(Main.gpcBegin))
-                readGPCBlock(inputFile, importBuffer, gaalopInFileVector);
+            if (line.contains(Main.gpcBegin)) {
+                readGPCBlock(inputFile, globalImportBuffer, gaalopInFileVector);
+            }
             else if(line.contains(Main.clucalcBegin))
-                importBuffer = readClucalcBlock(importBuffer, inputFile, gaalopInFileVector);
+                globalImportBuffer = readClucalcBlock(globalImportBuffer,
+                                                      new StringBuffer(),
+                                                      inputFile,
+                                                      gaalopInFileVector);
         }
 
         return gaalopInFileVector;
     }
 
     protected static void readGPCBlock(final BufferedReader inputFile,
-                                        StringBuffer importBuffer,
+                                        StringBuffer globalImportBuffer,
                                         List<String> gaalopInFileVector) throws IOException, RecognitionException {
+        StringBuffer gpcBlockImportBuffer = new StringBuffer();
         StringBuilder commandBuffer = new StringBuilder();
         String line;
         while ((line = inputFile.readLine()) != null) {
             if (line.contains(Main.clucalcBegin)) // start clucalc block
-                readClucalcBlock(importBuffer, inputFile, gaalopInFileVector);
+                readClucalcBlock(globalImportBuffer,
+                                 gpcBlockImportBuffer,
+                                 inputFile,
+                                 gaalopInFileVector);
             else if(line.contains(Main.gpcEnd)) // end gpc block
                 break;
             
             // add line to command buffer
             commandBuffer.append(line).append(Main.LINE_END);
             // process command buffer
-            processCommandBuffer(commandBuffer, importBuffer);
+            processCommandBuffer(commandBuffer, gpcBlockImportBuffer);
         }
     }
 
-    protected static void processCommandBuffer(StringBuilder commandBuffer, StringBuffer importBuffer) throws RecognitionException, IOException {
+    protected static void processCommandBuffer(StringBuilder commandBuffer,
+                                               StringBuffer gpcBlockImportBuffer) throws RecognitionException, IOException {
         int commandEndPos = -1;
         while (true) {
             // get buffered command
@@ -82,11 +91,11 @@ public class InputFilesComposer {
             // extract command
             command = command.substring(0, commandEndPos);
             if (command.contains(Main.gpcMvFromArray)) {
-                processMvFromArray(command, importBuffer);
+                processMvFromArray(command, gpcBlockImportBuffer);
             } else if (command.contains(Main.gpcMvFromStridedArray)) {
-                processMvFromStridedArray(command, importBuffer);
+                processMvFromStridedArray(command, gpcBlockImportBuffer);
             } else if (command.contains(Main.gpcMvFromVector)) {
-                processMvFromVector(command, importBuffer);
+                processMvFromVector(command, gpcBlockImportBuffer);
             }
 
             // we found a command end, remove command from buffer
@@ -94,14 +103,15 @@ public class InputFilesComposer {
         }
     }
 
-    protected static StringBuffer readClucalcBlock(StringBuffer importBuffer,
+    protected static StringBuffer readClucalcBlock(StringBuffer globalImportBuffer,
+                                                    StringBuffer gpcBlockImportBuffer,
                                                     final BufferedReader inputFile,
                                                     List<String> gaalopInFileVector) throws IOException {
         // found gaalop line
         StringBuilder gaalopInFileStream = new StringBuilder();
-        // start with import statements and clear them
-        gaalopInFileStream.append(importBuffer.toString());
-        importBuffer = new StringBuffer();
+        // start with import statements
+        gaalopInFileStream.append(globalImportBuffer.toString());
+        gaalopInFileStream.append(gpcBlockImportBuffer.toString());
         // read until end of optimized file
         String line;
         while ((line = inputFile.readLine()) != null) {
@@ -111,15 +121,22 @@ public class InputFilesComposer {
             gaalopInFileStream.append(line);
             gaalopInFileStream.append(Main.LINE_END);
         }
-        // warning, if we reached end of file before gpc end
+        
+        // warning, if we reach something illegal before clucalc end
         if (line == null)
-            System.err.println("Warning: Reached end of file before +pragma clucalc end");
+            System.err.println("Warning: Reached end of file before #pragma clucalc end");
+        else if (line.contains(Main.gpcEnd))
+            System.err.println("Warning: Reached #pragma gpc end before #pragma clucalc end");
+        else if (line.contains(Main.gpcBegin))
+            System.err.println("Warning: Reached #pragma gpc end before #pragma clucalc end");
+        else if (line.contains(Main.clucalcBegin))
+            System.err.println("Warning: Reached #pragma clucalc begin before #pragma clucalc end");
 
         // add to vector
         gaalopInFileVector.add(gaalopInFileStream.toString());
         //System.out.println(gaalopInFileStream.toString());
         
-        return importBuffer;
+        return new StringBuffer(); //globalImportBuffer; TODO fixme
     }
 
     public static void processMvFromArray(final String command, StringBuffer output) throws RecognitionException, IOException {

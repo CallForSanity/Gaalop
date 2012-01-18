@@ -61,11 +61,12 @@ public class BlockTransformer {
 
                 System.out.println("compiling");
 
-                // Configure the compiler
+                // Configure the compiler TODO get this out of the loop
                 CompilerFacade compiler = createCompiler();
 
                 // Perform compilation
                 final InputFile inputFile = new InputFile("inputFile", inputFileStream.toString());
+                System.out.println(inputFileStream.toString());
                 Set<OutputFile> outputFiles = compiler.compile(inputFile);
 
                 StringBuffer gaalopOutFileStream = new StringBuffer();

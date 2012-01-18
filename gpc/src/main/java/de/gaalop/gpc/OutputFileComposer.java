@@ -15,6 +15,7 @@ import java.io.StringReader;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Scanner;
 import java.util.StringTokenizer;
 import java.util.Vector;
@@ -119,8 +120,19 @@ public class OutputFileComposer {
                 // process clucalc block
                 processClucalcBlock(outputFile, gaalopOutFileVector,
                                     inputFile, mvComponents);
-            } else if(line.contains(Main.gpcEnd)) // end gpc block
+                
+                // we read one line
+                ++lineCount;
+                // continue without appending to buffer
+                continue;
+            } else if(line.contains(Main.gpcEnd)) { // end gpc block
+                // flush command buffer
+                outputFile.write(commandBuffer.toString());
+                // we read one line
+                ++lineCount;
+                // we reached the end of this block, so exit loop.
                 break;
+            }
             
             // append line to command buffer
             commandBuffer.append(line).append(Main.LINE_END);
@@ -129,9 +141,6 @@ public class OutputFileComposer {
             // we read one line
             ++lineCount;
          }
-        
-        // flush command buffer
-        outputFile.write(commandBuffer.toString());
     }
 
     protected static void processCommandBuffer(StringBuffer commandBuffer, Map<String, Map<String, String>> mvComponents, BufferedWriter outputFile) throws RecognitionException, IOException {
@@ -228,9 +237,11 @@ public class OutputFileComposer {
         return out.toString();
     }
     
-    public static String getMvBladeCoeffArrayEntry(Map<String, Map<String, String>> mvComponents, final String mv, String blade) {
+    public static String getMvBladeCoeffArrayEntry(Map<String, Map<String, String>> mvComponents,
+                                                   final String mv,
+                                                   String blade) {
         // remove whitespaces from blade
-        StringTokenizer tokenizer = new StringTokenizer(blade);
+        StringTokenizer tokenizer = new StringTokenizer(blade," \t\n\r\f()");
         StringBuilder bladeBuffer = new StringBuilder();
         while(tokenizer.hasMoreTokens())
             bladeBuffer.append(tokenizer.nextToken());
@@ -246,6 +257,9 @@ public class OutputFileComposer {
         Map<String,String> bladeMap = mvComponents.get(mv);
         if(bladeMap != null)
             bladeCoeffArrayEntry = bladeMap.get(blade);
+        System.out.println("Searching blade " + blade + " in mv " + mv);
+        for(Entry<String,String> entry : bladeMap.entrySet())
+            System.out.println(entry.getKey() + " " + entry.getValue());
         // handle the case that this blade coeff is zero
         if(bladeCoeffArrayEntry == null)
             bladeCoeffArrayEntry = Main.gpcZero;
