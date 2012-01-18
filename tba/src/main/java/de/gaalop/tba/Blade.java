@@ -43,7 +43,7 @@ public class Blade {
         if (bases.size() > 0) {
             return sb.substring(1);
         } else {
-            return "";
+            return "1.0";
         }
     }
 
