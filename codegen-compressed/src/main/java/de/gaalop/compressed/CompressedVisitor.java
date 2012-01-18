@@ -120,6 +120,21 @@ public class CompressedVisitor extends de.gaalop.gaalet.output.CppVisitor {
 
         node.getSuccessor().accept(this);
     }
+    
+        @Override
+        public void visit(MultivectorComponent component) {
+            // get blade pos in array
+            final String name = component.getName().replace(suffix, "");
+            int pos = -1;
+            for (GaaletMultiVector vec : vectorSet) {
+                if (name.equals(vec.getName())) {
+                    pos = vec.getBladePosInArray(component.getBladeIndex());
+                }
+            }
+
+            // standard definition
+            code.append(name + '[' + pos + ']');
+        }
 
     protected class DetourVisitor implements de.gaalop.dfg.ExpressionVisitor {
 
