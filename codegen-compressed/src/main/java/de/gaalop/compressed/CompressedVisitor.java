@@ -124,8 +124,6 @@ public class CompressedVisitor extends de.gaalop.gaalet.output.CppVisitor {
 
     @Override
     public void visit(MultivectorComponent component) {
-        System.out.println("Test");
-
         // get blade pos in array
         final String name = component.getName().replace(suffix, "");
         int pos = -1;
