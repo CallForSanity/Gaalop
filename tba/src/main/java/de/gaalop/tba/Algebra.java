@@ -59,7 +59,10 @@ public class Algebra {
     }
 
     public Blade getBlade(int index) {
-        return blades.get(index);
+        if (index < blades.size()) {
+            return blades.get(index);
+        } else
+            return blades.get(0); //TODO chs search usages: inputsVector.bladeIndex can be greater then algebra bladecount
     }
 
     public void setBlade(int index, Blade bladeExpr) {
