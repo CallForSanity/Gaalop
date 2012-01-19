@@ -20,10 +20,6 @@ FLOATING_POINT_LITERAL
 
 RANGE_LITERAL : 'range';
 
-OUTPUT_LITERAL: 'output';
-
-ONLY_EVAL_LITERAL: 'onlyEvaluate';
-
 UNROLL_LITERAL: 'unroll';
 
 COUNT_LITERAL: 'count';

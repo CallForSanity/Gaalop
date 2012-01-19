@@ -5,7 +5,6 @@ import de.gaalop.CodeParserException;
 import de.gaalop.InputFile;
 import de.gaalop.cfg.ControlFlowGraph;
 import java.io.BufferedReader;
-import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.Arrays;
