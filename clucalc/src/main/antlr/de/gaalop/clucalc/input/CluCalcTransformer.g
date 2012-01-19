@@ -135,12 +135,15 @@ return_value returns [Expression result]
 pragma
   :  PRAGMA RANGE_LITERAL min=float_literal LESS_OR_EQUAL varname=IDENTIFIER LESS_OR_EQUAL max=float_literal
      {  graphBuilder.addPragmaMinMaxValues($varname.text, min, max);}
-   | PRAGMA OUTPUT_LITERAL varname=IDENTIFIER
-     {  graphBuilder.addPragmaOutputVariable($varname.text);  }
-   | PRAGMA ONLY_EVAL_LITERAL eval_list
+   | PRAGMA OUTPUT_LITERAL eval_list_output 
+   | PRAGMA ONLY_EVAL_LITERAL eval_list_onlyEvaluate
   ;
 
-eval_list
+eval_list_output
+  : arg=IDENTIFIER { String varname = $arg.text; } (arg2=expression { graphBuilder.addPragmaOutputVariable(varname+" "+$arg2.result.toString()); }) SEMICOLON
+  ;
+
+eval_list_onlyEvaluate
   : (arg=IDENTIFIER { graphBuilder.addPragmaOnlyEvaluateVariable($arg.text); })+ SEMICOLON
   ;
 

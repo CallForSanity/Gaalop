@@ -182,7 +182,7 @@ public final class GraphBuilder {
 	 * @param variable The variable
 	 */
 	public void addPragmaOutputVariable(String variable) {
-		graph.addPragmaOutputVariable(variable);
+            graph.addPragmaOutputVariable(variable);
 	}
 
         /**

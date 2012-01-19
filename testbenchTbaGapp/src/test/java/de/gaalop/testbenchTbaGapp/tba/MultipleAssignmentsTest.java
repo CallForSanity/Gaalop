@@ -82,13 +82,14 @@ public class MultipleAssignmentsTest implements GenericTestable {
      */
     private String pragmaOutputMvAll(String mvName) {
         StringBuilder result = new StringBuilder();
+        UseAlgebra use = UseAlgebra.get5dConformalGATable();
 
         for (int blade = 0; blade < 32; blade++) {
             result.append("//#pragma output ");
             result.append(mvName);
-            result.append("$");
-            result.append(Integer.toString(blade));
-            result.append("\n");
+            result.append(" ");
+            result.append(use.getAlgebra().getBlade(blade).toString());
+            result.append(";\n");
         }
 
         return result.toString();

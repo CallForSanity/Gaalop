@@ -15,9 +15,9 @@ public class ControlFlowTest implements GenericTestable {
 
     @Override
     public String getCLUScript() {
-        return "//#pragma output a$0\n"
-                + "//#pragma output b$0\n"
-                + "//#pragma output c$0\n"
+        return "//#pragma output a 1.0;\n"
+                + "//#pragma output b 1.0;\n"
+                + "//#pragma output c 1.0;\n"
                 + "\n"
                 + "a = 1\n;"
                 + "c = 4\n;"

@@ -16,6 +16,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -88,6 +90,21 @@ public class AlStrategy implements AlgebraStrategy {
             //Update variable set
             UpdateLocalVariableSet.updateVariableSets(graph);
             RemoveDefVars.removeDefVars(graph);
+
+            //update output blades
+            Set<String> set = graph.getPragmaOutputVariables();
+            HashSet<String> copySet = new HashSet<String>(set);
+            set.clear();
+            for (String str: copySet) {
+                String[] parts = str.split(" ");
+
+                FOR:
+                for (int index = 0;index<alFile.blades.length;index++)
+                    if (alFile.blades[index].toString().equals(parts[1])) {
+                        set.add(parts[0]+"$"+index);
+                        break FOR;
+                    }
+            }
         } catch (CodeParserException ex) {
             Logger.getLogger(AlStrategy.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
@@ -99,6 +116,8 @@ public class AlStrategy implements AlgebraStrategy {
                 Logger.getLogger(AlStrategy.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+
+        
     }
 
     /**
