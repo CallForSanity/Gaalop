@@ -140,7 +140,12 @@ pragma
   ;
 
 eval_list_output
-  : arg=IDENTIFIER { String varname = $arg.text; } (arg2=expression { graphBuilder.addPragmaOutputVariable(varname+" "+$arg2.result.toString()); }) SEMICOLON
+  : arg=IDENTIFIER { String varname = $arg.text; } arg1=blade { graphBuilder.addPragmaOutputVariable(varname+" "+$arg1.result.toString()); } ( arg2=blade { graphBuilder.addPragmaOutputVariable(varname+" "+$arg2.result.toString()); })* SEMICOLON
+  ;
+
+blade returns [String result]
+  : arg=IDENTIFIER { $result = $arg.text; }
+  | arg2=float_literal { $result = $arg2.result; }
   ;
 
 eval_list_onlyEvaluate

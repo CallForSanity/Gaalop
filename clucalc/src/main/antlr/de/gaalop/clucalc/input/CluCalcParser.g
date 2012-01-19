@@ -55,9 +55,19 @@ float_literal:
 */
 pragma
   : PRAGMA RANGE_LITERAL float_literal LESS_OR_EQUAL IDENTIFIER LESS_OR_EQUAL float_literal
-  | PRAGMA OUTPUT_LITERAL IDENTIFIER (outer_product_expression) SEMICOLON
+  | PRAGMA OUTPUT_LITERAL IDENTIFIER bladelist SEMICOLON
   | PRAGMA ONLY_EVAL_LITERAL IDENTIFIER+ SEMICOLON
   | PRAGMA IGNORE_LITERAL IDENTIFIER
+  ;
+
+fragment
+bladelist
+  : blade (WEDGE! blade)*
+  ;
+
+blade
+  : IDENTIFIER
+  | FLOATING_POINT_LITERAL
   ;
 
 /*
