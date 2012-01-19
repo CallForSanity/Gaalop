@@ -94,16 +94,19 @@ public class AlStrategy implements AlgebraStrategy {
             RemoveDefVars.removeDefVars(graph);
 
             //update output blades
-            HashMap<String, Integer> mapInidices = new HashMap<String, Integer>();
+            HashMap<String, Integer> mapIndices = new HashMap<String, Integer>();
             for (int index = 0;index<alFile.blades.length;index++) 
-                mapInidices.put(bladeToString(alFile.blades[index]), new Integer(index));
+                mapIndices.put(bladeToString(alFile.blades[index]), new Integer(index));
 
             Set<String> set = graph.getPragmaOutputVariables();
             HashSet<String> copySet = new HashSet<String>(set);
             set.clear();
             for (String str: copySet) {
                 String[] parts = str.split(" ");
-                set.add(parts[0]+"$"+mapInidices.get(parts[1]));
+                if (!mapIndices.containsKey(parts[1]))
+                    throw new OptimizationException("The bladename "+parts[1]+" is not found in the default blade list.", graph);
+                
+                set.add(parts[0]+"$"+mapIndices.get(parts[1]));
             }
         } catch (CodeParserException ex) {
             Logger.getLogger(AlStrategy.class.getName()).log(Level.SEVERE, null, ex);
