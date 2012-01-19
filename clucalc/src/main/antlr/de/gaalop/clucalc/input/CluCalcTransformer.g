@@ -140,7 +140,22 @@ pragma
   ;
 
 eval_list_output
-  : arg=IDENTIFIER { String varname = $arg.text; } (arg2=expression { graphBuilder.addPragmaOutputVariable(varname+" "+$arg2.result.toString()); }) SEMICOLON
+  : arg=IDENTIFIER (arg2=blade { graphBuilder.addPragmaOutputVariable($arg.text+" "+$arg2.result); })+ SEMICOLON
+  ;
+
+blade returns [String result]
+  : val=FLOATING_POINT_LITERAL { $result = $val.text; }
+  | arg=baselist { $result=$arg.result; }
+  ;
+
+baselist returns [String result]
+  @init { 
+    StringBuilder bases = new StringBuilder();
+  }
+  @after {
+    $result = bases.toString();
+  }
+  : arg1=IDENTIFIER { bases.append($arg1.text); } (WEDGE arg2=IDENTIFIER { bases.append(" ");bases.append($arg2.text); })*
   ;
 
 eval_list_onlyEvaluate
