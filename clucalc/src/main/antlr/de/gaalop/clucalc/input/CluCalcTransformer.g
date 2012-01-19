@@ -155,7 +155,7 @@ baselist returns [String result]
   @after {
     $result = bases.toString();
   }
-  : arg1=IDENTIFIER { bases.append($arg1.text); } (WEDGE arg2=IDENTIFIER { bases.append(" ");bases.append($arg2.text); })*
+  : arg1=IDENTIFIER { bases.append($arg1.text); } (WEDGE arg2=IDENTIFIER { bases.append("^");bases.append($arg2.text); })*
   ;
 
 eval_list_onlyEvaluate

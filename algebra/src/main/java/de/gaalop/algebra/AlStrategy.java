@@ -8,6 +8,8 @@ import de.gaalop.cfg.AlgebraDefinitionFile;
 import de.gaalop.cfg.ControlFlowGraph;
 import de.gaalop.cfg.Macro;
 import de.gaalop.dfg.Expression;
+import de.gaalop.dfg.FloatConstant;
+import de.gaalop.dfg.OuterProduct;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -92,18 +94,16 @@ public class AlStrategy implements AlgebraStrategy {
             RemoveDefVars.removeDefVars(graph);
 
             //update output blades
+            HashMap<String, Integer> mapInidices = new HashMap<String, Integer>();
+            for (int index = 0;index<alFile.blades.length;index++) 
+                mapInidices.put(bladeToString(alFile.blades[index]), new Integer(index));
+
             Set<String> set = graph.getPragmaOutputVariables();
             HashSet<String> copySet = new HashSet<String>(set);
             set.clear();
             for (String str: copySet) {
                 String[] parts = str.split(" ");
-
-                FOR:
-                for (int index = 0;index<alFile.blades.length;index++)
-                    if (alFile.blades[index].toString().equals(parts[1])) {
-                        set.add(parts[0]+"$"+index);
-                        break FOR;
-                    }
+                set.add(parts[0]+"$"+mapInidices.get(parts[1]));
             }
         } catch (CodeParserException ex) {
             Logger.getLogger(AlStrategy.class.getName()).log(Level.SEVERE, null, ex);
@@ -118,6 +118,12 @@ public class AlStrategy implements AlgebraStrategy {
         }
 
         
+    }
+
+    private String bladeToString(Expression blade) {
+        if (!blade.isComposite()) return blade.toString();
+        OuterProduct outerProduct = (OuterProduct) blade;
+        return bladeToString(outerProduct.getLeft())+"^"+bladeToString(outerProduct.getRight());
     }
 
     /**
