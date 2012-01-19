@@ -22,10 +22,7 @@ public class Circle implements GAPPTestable {
 
     @Override
     public String getSource() {
-        return "//#pragma output m e1;" + "\n"
-                + "//#pragma output m e2;" + "\n"
-                + "//#pragma output m einf;" + "\n"
-                + "//#pragma output m e0;" + "\n"
+        return "//#pragma output m e1 e2 einf e0;" + "\n"
                 + "//#pragma output r 1.0;" + "\n"
                 + "\n"
                 + "?v1 = x1*e1+y1*e2;" + "\n"

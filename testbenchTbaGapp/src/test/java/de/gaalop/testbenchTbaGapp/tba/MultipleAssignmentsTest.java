@@ -84,13 +84,15 @@ public class MultipleAssignmentsTest implements GenericTestable {
         StringBuilder result = new StringBuilder();
         UseAlgebra use = UseAlgebra.get5dConformalGATable();
 
+        
+        result.append("//#pragma output ");
+        result.append(mvName);
+           
         for (int blade = 0; blade < 32; blade++) {
-            result.append("//#pragma output ");
-            result.append(mvName);
             result.append(" ");
             result.append(use.getAlgebra().getBlade(blade).toString());
-            result.append(";\n");
         }
+        result.append(";\n");
 
         return result.toString();
     }

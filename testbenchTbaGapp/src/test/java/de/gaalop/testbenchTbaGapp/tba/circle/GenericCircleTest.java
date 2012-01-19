@@ -25,8 +25,7 @@ public abstract class GenericCircleTest implements GenericTestable {
 
     @Override
     public String getCLUScript() {
-        return "//#pragma output m e1;" + "\n"
-                + "//#pragma output m e2;" + "\n"
+        return "//#pragma output m e1 e2;" + "\n"
                 + "//#pragma output r 1.0;" + "\n"
                 + constantDefinition() + "\n"
                 + "v1 = x1*e1+y1*e2;" + "\n"

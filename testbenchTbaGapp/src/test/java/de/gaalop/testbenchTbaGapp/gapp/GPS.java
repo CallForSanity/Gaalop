@@ -39,12 +39,8 @@ public class GPS implements GAPPTestable {
 
     @Override
     public String getSource() {
-        return "//#pragma output rc1N e1;" + "\n"
-                + "//#pragma output rc1N e2;" + "\n"
-                + "//#pragma output rc1N e3;" + "\n"
-                + "//#pragma output rc2N e1;" + "\n"
-                + "//#pragma output rc2N e2;" + "\n"
-                + "//#pragma output rc2N e3;" + "\n"
+        return "//#pragma output rc1N e1 e2 e3;" + "\n"
+                + "//#pragma output rc2N e1 e2 e3;" + "\n"
                 + "//#pragma output z11 1.0;" + "\n"
                 + "//#pragma output z12 1.0;" + "\n"
                 + "//#pragma output z21 1.0;" + "\n"
