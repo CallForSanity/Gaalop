@@ -71,7 +71,7 @@ public class MultipleAssignmentsTest implements GenericTestable {
             result.append("\"),");
             result.append(Double.toString(EPSILON));
             result.append(")");
-            result.append(";\n");
+            result.append("\n");
         }
     }
 
@@ -92,7 +92,7 @@ public class MultipleAssignmentsTest implements GenericTestable {
             result.append(" ");
             result.append(use.getAlgebra().getBlade(blade).toString());
         }
-        result.append(";\n");
+        result.append("\n");
 
         return result.toString();
     }

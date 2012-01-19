@@ -4,7 +4,12 @@ import de.gaalop.CodeParser;
 import de.gaalop.CodeParserException;
 import de.gaalop.InputFile;
 import de.gaalop.cfg.ControlFlowGraph;
+import java.io.BufferedReader;
+import java.io.DataInputStream;
 import java.io.IOException;
+import java.io.StringReader;
+import java.util.Arrays;
+import java.util.LinkedList;
 import org.antlr.runtime.ANTLRStringStream;
 import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.RecognitionException;
@@ -48,7 +53,53 @@ public enum CluCalcCodeParser implements CodeParser {
     }
 
     private ControlFlowGraph parse(InputFile input) throws CodeParserException, RecognitionException, IOException {
-        ANTLRStringStream inputStream = new ANTLRStringStream(input.getContent());
+        LinkedList<String> onlyEvaluates = new LinkedList<String>();
+        LinkedList<String> outputs = new LinkedList<String>();
+
+
+        String content = input.getContent();
+        BufferedReader reader = new BufferedReader(new StringReader(content));
+        String line = null;
+        StringBuilder builder = new StringBuilder();
+        while ((line = reader.readLine()) != null) {
+            if (line.trim().startsWith("//#pragma")) {
+                String line2 = line.replaceAll("\t", " ");
+                while (line2.contains("  "))
+                    line2 = line2.replaceAll("  "," ");
+
+                String whichPragma = line2.substring(10,line2.indexOf(" ",10));
+                if (whichPragma.equals("range") || whichPragma.equals("unroll") || whichPragma.equals("count")) {
+                    builder.append(line);
+                    builder.append("\n");
+                } else {
+                    //process here
+                    String rest = line2.substring(line2.indexOf(" ",10)+1);
+                    if (whichPragma.equals("output")) {
+                        //IDENTIFIER blade+
+                        String[] parts = rest.split(" ");
+                        for (int i=1;i<parts.length;i++)
+                            outputs.add(parts[0]+" "+parts[i]);
+                        
+                    } else {
+                        if (whichPragma.equals("onlyEvaluate")) {
+                            //IDENTIFIER+
+                            String[] parts = rest.split(" ");
+                            onlyEvaluates.addAll(Arrays.asList(parts));
+                        } else 
+                            throw new CodeParserException(input, "pragma "+whichPragma+" is unknown.");
+                    }
+
+
+                }
+
+            } else {
+                builder.append(line);
+                builder.append("\n");
+            }
+        }
+
+
+        ANTLRStringStream inputStream = new ANTLRStringStream(builder.toString());
         CluCalcLexer lexer = new CluCalcLexer(inputStream);
         CommonTokenStream tokenStream = new CommonTokenStream(lexer);
         CluCalcParser parser = new CluCalcParser(tokenStream);
@@ -81,6 +132,12 @@ public enum CluCalcCodeParser implements CodeParser {
             }
             throw new CodeParserException(input,  message.toString());
         }
+
+        for (String output: outputs)
+            graph.getPragmaOutputVariables().add(output);
+
+        for (String onlyEval: onlyEvaluates)
+            graph.getPragmaOnlyEvaluateVariables().add(onlyEval);
 
         return graph;
     }
