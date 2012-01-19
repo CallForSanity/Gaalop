@@ -46,26 +46,38 @@ public class InputFilesComposer {
                                         StringBuffer globalImportBuffer,
                                         List<String> gaalopInFileVector) throws IOException, RecognitionException {
         StringBuffer gpcBlockImportBuffer = new StringBuffer();
+        StringBuffer pragmaOutputBuffer = new StringBuffer();
         StringBuilder commandBuffer = new StringBuilder();
         String line;
         while ((line = inputFile.readLine()) != null) {
-            if (line.contains(Main.clucalcBegin)) // start clucalc block
+            if (line.contains(Main.clucalcBegin)) { // start clucalc block
                 readClucalcBlock(globalImportBuffer,
                                  gpcBlockImportBuffer,
                                  inputFile,
                                  gaalopInFileVector);
-            else if(line.contains(Main.gpcEnd)) // end gpc block
+                // this line should not be part of the command buffer
+                continue;
+            } else if(line.contains(Main.gpcEnd)) // end gpc block
                 break;
             
             // add line to command buffer
             commandBuffer.append(line).append(Main.LINE_END);
             // process command buffer
-            processCommandBuffer(commandBuffer, gpcBlockImportBuffer);
+            processCommandBuffer(commandBuffer,
+                                 gpcBlockImportBuffer,
+                                 pragmaOutputBuffer);
         }
+        
+//        // add pragma outputs to InFile String
+//        final int lastIndex = gaalopInFileVector.size()-1;
+//        gaalopInFileVector.add(lastIndex,
+//                pragmaOutputBuffer.toString() +
+//                gaalopInFileVector.get(lastIndex));
     }
 
     protected static void processCommandBuffer(StringBuilder commandBuffer,
-                                               StringBuffer gpcBlockImportBuffer) throws RecognitionException, IOException {
+                                               StringBuffer gpcBlockImportBuffer,
+                                               StringBuffer pragmaOutputBuffer) throws RecognitionException, IOException {
         int commandEndPos = -1;
         while (true) {
             // get buffered command
@@ -96,6 +108,12 @@ public class InputFilesComposer {
                 processMvFromStridedArray(command, gpcBlockImportBuffer);
             } else if (command.contains(Main.gpcMvFromVector)) {
                 processMvFromVector(command, gpcBlockImportBuffer);
+            } else if (command.contains(Main.gpcMvToArray)) {
+                processMvToArray(command, pragmaOutputBuffer);
+            } else if (command.contains(Main.gpcMvToStridedArray)) {
+                processMvToStridedArray(command, pragmaOutputBuffer);
+            } else if (command.contains(Main.gpcMvToVector)) {
+                processMvToVector(command, pragmaOutputBuffer);
             }
 
             // we found a command end, remove command from buffer
@@ -212,5 +230,71 @@ public class InputFilesComposer {
             output.append(it.next().toString());
         }
         output.append(";\n");
+    }
+    
+    public static void processMvToArray(final String command,
+                                        StringBuffer pragmaOutputBuffer) throws RecognitionException {
+        // parse assignment
+        AssignmentNode assignment = Common.parseAssignment(command);
+        if (assignment == null) {
+            return;
+        }
+                
+        // print pragma output
+        Iterator<Expression> it = ((MacroCall) assignment.getValue()).getArguments().iterator();
+        pragmaOutputBuffer.append("//#pragma output ");
+        pragmaOutputBuffer.append(it.next().toString());
+        
+        // print blades
+        while (it.hasNext()) {
+            pragmaOutputBuffer.append(' ').
+                    append(Common.removeWhitespacesFromString(it.next().toString()));
+        }        
+        
+        pragmaOutputBuffer.append(Main.LINE_END);
+    }
+
+    public static void processMvToStridedArray(final String command,
+                                                StringBuffer pragmaOutputBuffer) throws RecognitionException {
+        // parse assignment
+        AssignmentNode assignment = Common.parseAssignment(command);
+        if (assignment == null) {
+            return;
+        }
+
+        // print pragma output
+        Iterator<Expression> it = ((MacroCall) assignment.getValue()).getArguments().iterator();
+        pragmaOutputBuffer.append("//#pragma output ");
+        pragmaOutputBuffer.append(it.next().toString());
+        it.next(); // index
+        it.next(); // stride
+        while (it.hasNext()) {
+            pragmaOutputBuffer.append(' ').
+                    append(Common.removeWhitespacesFromString(it.next().toString()));
+        }
+        
+        pragmaOutputBuffer.append(Main.LINE_END);
+    }
+
+    public static void processMvToVector(final String command,
+                                        StringBuffer pragmaOutputBuffer) throws RecognitionException {
+        // parse assignment
+        AssignmentNode assignment = Common.parseAssignment(command);
+        if (assignment == null) {
+            return;
+        }
+
+        // print pragma output
+        Iterator<Expression> it = ((MacroCall) assignment.getValue()).getArguments().iterator();
+        pragmaOutputBuffer.append("//#pragma output ");
+        pragmaOutputBuffer.append(it.next().toString());
+        
+        // print blades
+        while (it.hasNext()) {
+            pragmaOutputBuffer.append(' ').
+                    append(Common.removeWhitespacesFromString(it.next().toString()));
+        }
+        
+        pragmaOutputBuffer.append(Main.LINE_END);
     }
 }

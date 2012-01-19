@@ -32,12 +32,11 @@ import java.util.Vector;
  */
 public class BlockTransformer {
     public static Vector<String> processOptimizationBlocks(List<String> gaalopInFileVector) throws Exception {
-        String line;
-        
         // process gaalop files - call gaalop
         // imported multivector components
-        Map<String, Map<String,String>> mvComponents = new HashMap<String, Map<String,String>>();
+        Map<String, Map<String, String>> mvComponents = new HashMap<String, Map<String, String>>();
         Vector<String> gaalopOutFileVector = new Vector<String>();
+        String line;
         for (int gaalopFileCount = 0; gaalopFileCount < gaalopInFileVector.size(); ++gaalopFileCount) {
 
             // import declarations
@@ -54,19 +53,21 @@ public class BlockTransformer {
 
             // run Gaalop
             {
+                // log
+                System.out.println("compiling");
+                
                 // compose file
                 StringBuffer inputFileStream = new StringBuffer();
                 inputFileStream.append(variableDeclarations.toString()).append(Main.LINE_END);
                 inputFileStream.append(gaalopInFileVector.get(gaalopFileCount));
 
-                System.out.println("compiling");
-
-                // Configure the compiler TODO get this out of the loop
+                System.out.println(inputFileStream.toString());
+                
+                // Configure the compiler
                 CompilerFacade compiler = createCompiler();
 
                 // Perform compilation
                 final InputFile inputFile = new InputFile("inputFile", inputFileStream.toString());
-                System.out.println(inputFileStream.toString());
                 Set<OutputFile> outputFiles = compiler.compile(inputFile);
 
                 StringBuffer gaalopOutFileStream = new StringBuffer();

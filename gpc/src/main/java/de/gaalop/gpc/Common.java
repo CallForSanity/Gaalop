@@ -12,6 +12,7 @@ import java.io.StringReader;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.StringTokenizer;
 import java.util.Vector;
 import org.antlr.runtime.ANTLRStringStream;
 import org.antlr.runtime.CommonTokenStream;
@@ -23,6 +24,15 @@ import org.antlr.runtime.tree.CommonTreeNodeStream;
  */
 public class Common {
         
+    public static String removeWhitespacesFromString(final String string) {
+        // remove whitespaces from blade
+        StringTokenizer tokenizer = new StringTokenizer(string," \t\n\r\f()");
+        StringBuilder bladeBuffer = new StringBuilder();
+        while(tokenizer.hasMoreTokens())
+            bladeBuffer.append(tokenizer.nextToken());
+        return bladeBuffer.toString();
+    }
+    
     public static int findCommandEndPos(String command,int startPos) {
         startPos = Math.max(0, startPos);
         

@@ -241,11 +241,7 @@ public class OutputFileComposer {
                                                    final String mv,
                                                    String blade) {
         // remove whitespaces from blade
-        StringTokenizer tokenizer = new StringTokenizer(blade," \t\n\r\f()");
-        StringBuilder bladeBuffer = new StringBuilder();
-        while(tokenizer.hasMoreTokens())
-            bladeBuffer.append(tokenizer.nextToken());
-        blade = bladeBuffer.toString();
+        blade = Common.removeWhitespacesFromString(blade);
         
         // check for negation
         boolean negated;
@@ -257,9 +253,6 @@ public class OutputFileComposer {
         Map<String,String> bladeMap = mvComponents.get(mv);
         if(bladeMap != null)
             bladeCoeffArrayEntry = bladeMap.get(blade);
-        System.out.println("Searching blade " + blade + " in mv " + mv);
-        for(Entry<String,String> entry : bladeMap.entrySet())
-            System.out.println(entry.getKey() + " " + entry.getValue());
         // handle the case that this blade coeff is zero
         if(bladeCoeffArrayEntry == null)
             bladeCoeffArrayEntry = Main.gpcZero;
