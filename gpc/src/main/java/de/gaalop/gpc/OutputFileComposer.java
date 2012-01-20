@@ -241,7 +241,7 @@ public class OutputFileComposer {
                                                    final String mv,
                                                    String blade) {
         // remove whitespaces from blade
-        blade = Common.removeWhitespacesFromString(blade);
+        blade = Common.formatBladeName(blade);
         
         // check for negation
         boolean negated;

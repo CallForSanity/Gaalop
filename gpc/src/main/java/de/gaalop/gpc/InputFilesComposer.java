@@ -68,11 +68,12 @@ public class InputFilesComposer {
                                  pragmaOutputBuffer);
         }
         
-//        // add pragma outputs to InFile String
-//        final int lastIndex = gaalopInFileVector.size()-1;
-//        gaalopInFileVector.add(lastIndex,
-//                pragmaOutputBuffer.toString() +
-//                gaalopInFileVector.get(lastIndex));
+        // add pragma outputs to InFile String
+        final int lastIndex = gaalopInFileVector.size()-1;
+        if(lastIndex >= 0)
+            gaalopInFileVector.set(lastIndex,
+                    pragmaOutputBuffer.toString() +
+                    gaalopInFileVector.get(lastIndex));
     }
 
     protected static void processCommandBuffer(StringBuilder commandBuffer,
@@ -248,7 +249,7 @@ public class InputFilesComposer {
         // print blades
         while (it.hasNext()) {
             pragmaOutputBuffer.append(' ').
-                    append(Common.removeWhitespacesFromString(it.next().toString()));
+                    append(Common.formatBladeName(it.next().toString()));
         }        
         
         pragmaOutputBuffer.append(Main.LINE_END);
@@ -270,7 +271,7 @@ public class InputFilesComposer {
         it.next(); // stride
         while (it.hasNext()) {
             pragmaOutputBuffer.append(' ').
-                    append(Common.removeWhitespacesFromString(it.next().toString()));
+                    append(Common.formatBladeName(it.next().toString()));
         }
         
         pragmaOutputBuffer.append(Main.LINE_END);
@@ -292,7 +293,7 @@ public class InputFilesComposer {
         // print blades
         while (it.hasNext()) {
             pragmaOutputBuffer.append(' ').
-                    append(Common.removeWhitespacesFromString(it.next().toString()));
+                    append(Common.formatBladeName(it.next().toString()));
         }
         
         pragmaOutputBuffer.append(Main.LINE_END);

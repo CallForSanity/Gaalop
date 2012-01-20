@@ -24,9 +24,12 @@ import org.antlr.runtime.tree.CommonTreeNodeStream;
  */
 public class Common {
         
-    public static String removeWhitespacesFromString(final String string) {
+    public static String formatBladeName(final String bladeName) {
+        if(bladeName.equals("1.0") || bladeName.equals("1.0f"))
+            return "1";
+        
         // remove whitespaces from blade
-        StringTokenizer tokenizer = new StringTokenizer(string," \t\n\r\f()");
+        StringTokenizer tokenizer = new StringTokenizer(bladeName," \t\n\r\f()");
         StringBuilder bladeBuffer = new StringBuilder();
         while(tokenizer.hasMoreTokens())
             bladeBuffer.append(tokenizer.nextToken());
