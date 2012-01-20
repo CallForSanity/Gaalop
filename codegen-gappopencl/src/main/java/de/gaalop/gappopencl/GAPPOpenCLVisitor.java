@@ -37,9 +37,10 @@ import java.util.Map;
 public class GAPPOpenCLVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor
     implements de.gaalop.gapp.variables.GAPPVariableVisitor {
 
+    protected static Integer numInputsVectors = -1;
     protected Map<String,Integer> mvSizes;
     protected boolean gpcMetaInfo = true;
-    protected Map<String,Map<Integer,Integer>> mvBladeMap = new HashMap<String,Map<Integer,Integer>>();
+    protected Map<String,Map<Integer,String>> mvBladeMap = new HashMap<String,Map<Integer,String>>();
     protected StringBuilder result = new StringBuilder();
 
     public GAPPOpenCLVisitor(Map<String, Integer> mvSizes) {
@@ -55,7 +56,7 @@ public class GAPPOpenCLVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor
         result.append(getOpenCLVectorSize(mvSizes.get(gappResetMv.getDestinationMv().getName())));
         result.append(" ");
         result.append(gappResetMv.getDestinationMv().getName()).append(";\n");
-        mvBladeMap.put(gappResetMv.getDestinationMv().getName(),new HashMap<Integer,Integer>());
+        mvBladeMap.put(gappResetMv.getDestinationMv().getName(),new HashMap<Integer,String>());
 
         return null;
     }
@@ -64,21 +65,21 @@ public class GAPPOpenCLVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor
     public Object visitSetMv(GAPPSetMv gappSetMv, Object arg) {
         Integer thisMvSetCount = mvBladeMap.get(gappSetMv.getDestination().getName()).size();
 
+        int selCount = 0;
         for(PosSelector sel : gappSetMv.getSelectorsDest()) {
             if(gpcMetaInfo)
                 declareGPCMultivectorComponent(gappSetMv.getDestination().getName(), thisMvSetCount, sel);
 
-            result.append(gappSetMv.getDestination().getName());
-            result.append(".s").append(getOpenCLIndex(thisMvSetCount));
+            final String bladeCoeff = gappSetMv.getDestination().getName() + ".s" + getOpenCLIndex(thisMvSetCount);
+            
+            result.append(bladeCoeff);
             result.append(" = ");
             if(gappSetMv.getSelectorsSrc().get(0).getSign() < 0)
                 result.append("-");
-            result.append(gappSetMv.getSource().prettyPrint());
-            result.append(".s");
-            result.append(getOpenCLIndex(gappSetMv.getSelectorsSrc().get(0).getIndex()));
+            result.append(mvBladeMap.get(gappSetMv.getSource().getName()).get(gappSetMv.getSelectorsSrc().get(selCount++).getIndex()));
             result.append(";\n");
 
-            mvBladeMap.get(gappSetMv.getDestination().getName()).put(sel.getIndex(),thisMvSetCount);
+            mvBladeMap.get(gappSetMv.getDestination().getName()).put(sel.getIndex(),bladeCoeff);
 
             ++thisMvSetCount;
         }
@@ -126,9 +127,9 @@ public class GAPPOpenCLVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor
         result.append(");\n");
 
         // update blade map
-        Map<Integer,Integer> bladeMap = new HashMap<Integer,Integer>();
+        Map<Integer,String> bladeMap = new HashMap<Integer,String>();
         for(int blade = 0; blade < vectorSize; ++blade)
-            bladeMap.put(blade,blade);
+            bladeMap.put(blade,gappSetVector.getDestination().getName() + ".s" + blade);
         mvBladeMap.put(gappSetVector.getDestination().getName(),bladeMap);
 
         return null;
@@ -151,8 +152,11 @@ public class GAPPOpenCLVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor
     protected void visitSelector(final Selector sel, final String sourceName) {
         if (sel.getSign() < 0)
             result.append("-");
-        result.append(sourceName);
-        result.append(".s").append(mvBladeMap.get(sourceName).get(sel.getIndex()));
+        final String lookupBladeCoeff = mvBladeMap.get(sourceName).get(sel.getIndex());
+        if(lookupBladeCoeff == null)
+            result.append(sourceName);
+        else
+            result.append(lookupBladeCoeff);
     }
 
     @Override
@@ -202,11 +206,11 @@ public class GAPPOpenCLVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor
 
     @Override
     public Object visitCalculateMvCoeff(GAPPCalculateMvCoeff gappCalculateMvCoeff, Object arg) {
-        result.append(gappCalculateMvCoeff.getDestination().prettyPrint());
+        result.append(gappCalculateMvCoeff.getDestination().getName());
         result.append(" = ");
         printCalculateOp(gappCalculateMvCoeff.getType(),
-                         gappCalculateMvCoeff.getOperand1().prettyPrint(),
-                         gappCalculateMvCoeff.getOperand2().prettyPrint());
+                         gappCalculateMvCoeff.getOperand1().getName(),
+                         gappCalculateMvCoeff.getOperand2().getName());
         result.append(";\n");
 
         return null;
@@ -283,14 +287,15 @@ public class GAPPOpenCLVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor
     public Object visitAssignMv(GAPPAssignMv gappAssignMv, Object arg) {
         Integer thisMvSetCount = mvBladeMap.get(gappAssignMv.getDestinationMv().getName()).size();
 
+        int selCount = 0;
         for(GAPPValueHolder val : gappAssignMv.getValues()) {
-            result.append(gappAssignMv.getDestinationMv().getName());
-            result.append(".s").append(thisMvSetCount);
+            final String bladeCoeff = gappAssignMv.getDestinationMv().getName() + ".s" + thisMvSetCount.toString();
+            result.append(bladeCoeff);
             result.append(" = ");
-            result.append(val.prettyPrint());
+            result.append(val.toString());
             result.append(";\n");
 
-            mvBladeMap.get(gappAssignMv.getDestinationMv().getName()).put(gappAssignMv.getSelectors().get(0).getIndex(),thisMvSetCount);
+            mvBladeMap.get(gappAssignMv.getDestinationMv().getName()).put(gappAssignMv.getSelectors().get(selCount++).getIndex(),bladeCoeff);
             ++thisMvSetCount;
         }
 
@@ -309,20 +314,28 @@ public class GAPPOpenCLVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor
                                            thisMvSetCount,
                                            gappDotVectors.getDestSelector());
         
-        // determine vector size
-        int openCLVectorSize = getOpenCLVectorSize(mvBladeMap.get(gappDotVectors.getParts().get(0).getName()).size());        
+        // compute blade coeff name
+        final String bladeCoeff = gappDotVectors.getDestination().getName() + ".s" + getOpenCLIndex(thisMvSetCount);
+        // update blade map
+        mvBladeMap.get(gappDotVectors.getDestination().getName()).
+                put(gappDotVectors.getDestSelector().getIndex(),bladeCoeff);
+
+        // special case for operands of size 1
+        final int operandSize = mvBladeMap.get(gappDotVectors.getParts().get(0).getName()).size();
+        if(operandSize == 1) {
+            result.append(bladeCoeff).append(" = ");
+            visitDotVectorsParallelMultiply(gappDotVectors);
+            return null;
+        }
+        
+        // determine OpenCL vector size
+        int openCLVectorSize = getOpenCLVectorSize(operandSize);        
 
         // parallel multiply operation
         result.append("float").append(openCLVectorSize).append(" ");
         result.append("dot").append(dotCount);
         result.append(" = ");
-        Iterator<GAPPVector> it = gappDotVectors.getParts().iterator();
-        result.append(it.next().getName());
-        while(it.hasNext()) {
-            result.append(" * ");
-            result.append(it.next().getName());
-        }
-        result.append(";\n");
+        visitDotVectorsParallelMultiply(gappDotVectors);
 
         // parallel pyramid reduce
         while((openCLVectorSize >>= 1) > 1) {
@@ -338,21 +351,25 @@ public class GAPPOpenCLVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor
         }
 
         // last step directly assigns to destination
-        result.append(gappDotVectors.getDestination().getName());
-        result.append(".s").append(thisMvSetCount);
+        result.append(bladeCoeff);
         result.append(" = ");
         result.append("dot").append(dotCount).append(".odd");
         result.append(" + ");
         result.append("dot").append(dotCount).append(".even");
         result.append(";\n");
         ++dotCount;
-
-        // update blade map
-        mvBladeMap.get(gappDotVectors.getDestination().getName()).
-                put(thisMvSetCount,
-                    gappDotVectors.getDestSelector().getIndex());
         
         return null;
+    }
+    
+    public void visitDotVectorsParallelMultiply(GAPPDotVectors gappDotVectors) {
+        Iterator<GAPPVector> it = gappDotVectors.getParts().iterator();
+        result.append(it.next().getName());
+        while (it.hasNext()) {
+            result.append(" * ");
+            result.append(it.next().getName());
+        }
+        result.append(";\n");
     }
 
     String getCode() {
@@ -386,24 +403,24 @@ public class GAPPOpenCLVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor
 
     @Override
     public Object visitAssignInputsVector(GAPPAssignInputsVector gappAssignInputsVector, Object arg) {
-        final int openCLVectorSize = getOpenCLVectorSize(gappAssignInputsVector.getValues().size());
+        final String inputsArrayName = "inputsVector" + (++numInputsVectors).toString();
+        
+        result.append("float ");
+        result.append(inputsArrayName);
+        result.append("[");
+        result.append(gappAssignInputsVector.getValues().size());
+        result.append("];\n");
 
-        result.append("float");
-        result.append(openCLVectorSize);
-        result.append(" inputsVector");
-        result.append(" = make_float");
-        result.append(openCLVectorSize);
-        result.append("(");
-
-        Map<Integer,Integer> bladeMap = new HashMap<Integer,Integer>();
+        Map<Integer,String> bladeMap = new HashMap<Integer,String>();
         Iterator<GAPPValueHolder> it = gappAssignInputsVector.getValues().iterator();
-        result.append(it.next().prettyPrint());
-        bladeMap.put(bladeMap.size(), bladeMap.size());
         while(it.hasNext()) {
-            result.append(",").append(it.next().prettyPrint());
-            bladeMap.put(bladeMap.size(), bladeMap.size());
+            final String bladeCoeff = inputsArrayName + "[" + bladeMap.size() + "]";
+            
+            result.append(bladeCoeff).append(" = ");
+            result.append(it.next().prettyPrint());
+            result.append(";\n");
+            bladeMap.put(bladeMap.size(), bladeCoeff);
         }
-        result.append(");\n");
 
         mvBladeMap.put("inputsVector",bladeMap);
 
