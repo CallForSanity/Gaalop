@@ -1,6 +1,7 @@
 package de.gaalop.tba.cfgImport;
 
 import de.gaalop.OptimizationException;
+import de.gaalop.algebra.UpdateLocalVariableSet;
 import de.gaalop.cfg.ControlFlowGraph;
 import de.gaalop.tba.Plugin;
 import de.gaalop.tba.UseAlgebra;
@@ -104,6 +105,9 @@ public class CFGImporterFacade {
                 count++;
             } while (repeat);
         }
+
+        // update variable sets
+        UpdateLocalVariableSet.updateVariableSets(graph);
 
         return graph;
     }

@@ -8,10 +8,10 @@ public class LinePointDistance implements GAProgram {
 	private double p2y$0;
 	private double p2x$0;
 	private double p2z$0;
-	private double p1z$0;
 	private double pTsty$0;
-	private double p1y$0;
+	private double p1z$0;
 	private double pTstz$0;
+	private double p1y$0;
 	private double pTstx$0;
 
 	// output variables
@@ -416,10 +416,10 @@ public class LinePointDistance implements GAProgram {
 		if (varName.equals("p2y$0")) { p2y$0 = value; return true; }
 		if (varName.equals("p2x$0")) { p2x$0 = value; return true; }
 		if (varName.equals("p2z$0")) { p2z$0 = value; return true; }
-		if (varName.equals("p1z$0")) { p1z$0 = value; return true; }
 		if (varName.equals("pTsty$0")) { pTsty$0 = value; return true; }
-		if (varName.equals("p1y$0")) { p1y$0 = value; return true; }
+		if (varName.equals("p1z$0")) { p1z$0 = value; return true; }
 		if (varName.equals("pTstz$0")) { pTstz$0 = value; return true; }
+		if (varName.equals("p1y$0")) { p1y$0 = value; return true; }
 		if (varName.equals("pTstx$0")) { pTstx$0 = value; return true; }
 		return false;
 	}

@@ -1,5 +1,7 @@
 
 v1_opt = List(32);
+temp0_opt = List(32);
+temp1_opt = List(32);
 p3_opt = List(32);
 p2_opt = List(32);
 c_opt = List(32);
