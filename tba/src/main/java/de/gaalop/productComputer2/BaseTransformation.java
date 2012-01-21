@@ -3,11 +3,18 @@ package de.gaalop.productComputer2;
 import java.util.HashMap;
 
 /**
- *
- * @author christian
+ * Provides methods for transforming the base of a SumOfBlades instance
+ * @author Christian Steinmetz
  */
 public class BaseTransformation {
 
+    /**
+     * Transforms the base of a SumOfBlades instance
+     * @param s The SumOfBlades instance
+     * @param map The map, representing the base transformation map
+     * @param bitCount The maximum number of bits
+     * @return The new transformed SumOfBlades instance
+     */
     public static SumOfBlades transform(SumOfBlades s, HashMap<Integer, SumOfBlades> map, int bitCount) {
         SumOfBlades result = new SumOfBlades();
         for (SignedBlade blade: s) {

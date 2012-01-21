@@ -1,14 +1,20 @@
 package de.gaalop.productComputer2;
 
 /**
- *
+ * Provides Geometric Algebra methods
  * @author christian
  */
 public class GAMethods {
-    /** Computes ‘reordering sign’ to get into canonical order.
+    
+    /**
+     * Computes ‘reordering sign’ to get into canonical order.
      * Arguments 'a' and 'b' are both bitmaps representing basis blades.
      * Copy a!
      * This method is taken from the dissertation of Daniel Fontijne - Efficient Implementation of Gemoetric Algebra
+     * @param a_p The first blade
+     * @param b The second blade
+     * @param bitCount The maximum number of bits
+     * @returns The sign which is yielded while reordering
      */
     public static float canonicalReorderingSign(Blade a_p, Blade b, int bitCount)
     {

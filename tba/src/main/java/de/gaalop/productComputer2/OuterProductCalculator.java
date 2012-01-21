@@ -2,7 +2,7 @@ package de.gaalop.productComputer2;
 
 
 /**
- *
+ * Calculates the outer product of two blades
  * @author christian
  */
 public class OuterProductCalculator implements ProductCalculator2 {

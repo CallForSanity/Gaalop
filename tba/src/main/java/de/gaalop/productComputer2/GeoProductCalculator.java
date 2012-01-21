@@ -2,7 +2,7 @@ package de.gaalop.productComputer2;
 
 
 /**
- *
+ * Calculates the geometric product of two blades
  * @author christian
  */
 public class GeoProductCalculator implements ProductCalculator2 {

@@ -2,14 +2,23 @@ package de.gaalop.productComputer2;
 
 
 /**
- *
+ * Calculates the inner product of two blades
  * @author christian
  */
 public class InnerProductCalculator implements ProductCalculator2 {
 
-    public boolean calcInner1Product1(SignedBlade b1, SignedBlade b2, SignedBlade resultInner1, int bitCount, BitSet squareMask) {
-        resultInner1.clear();
-        resultInner1.coefficient = b1.coefficient * b2.coefficient;
+    /**
+     * Calculates the inner product of two one grade blades
+     * @param b1 The first blade
+     * @param b2 The second blade
+     * @param result The result of the inner product
+     * @param bitCount The maximum number of bits
+     * @param squareMask The signature
+     * @return true, if the result is not empty; false, otherwise
+     */
+    private boolean calcInner1Product1(SignedBlade b1, SignedBlade b2, SignedBlade result, int bitCount, BitSet squareMask) {
+        result.clear();
+        result.coefficient = b1.coefficient * b2.coefficient;
         Blade aAndB = new Blade(bitCount, b1);
         aAndB.and(b2);
         if (aAndB.isEmpty()) {
@@ -19,19 +28,28 @@ public class InnerProductCalculator implements ProductCalculator2 {
         aAndBMasked1.and(squareMask);
         if (!aAndBMasked1.isEmpty()) // if ((aAndBMasked1.count() % 2) == 1)  always true!
         {
-            resultInner1.coefficient *= -1;
+            result.coefficient *= -1;
         }
         return true;
     }
 
-    public boolean calcInner1Productn(SignedBlade b1, SignedBlade b2, SignedBlade resultInner2, int bitCount, BitSet squareMask) {
+    /**
+     * Calculates the inner product of one one-grade blade and one two-or-more-grade blade
+     * @param b1 The first blade (grade one)
+     * @param b2 The second blade (grade two-or-more)
+     * @param result The result of the inner product
+     * @param bitCount The maximum number of bits
+     * @param squareMask The signature
+     * @return true, if the result is not empty; false, otherwise
+     */
+    private boolean calcInner1Productn(SignedBlade b1, SignedBlade b2, SignedBlade result, int bitCount, BitSet squareMask) {
         Blade aAndBMasked2 = new Blade(bitCount, b1);
         aAndBMasked2.and(b2);
         if (!aAndBMasked2.isEmpty()) {
-            resultInner2.coefficient = b1.coefficient * b2.coefficient;
-            resultInner2.clear();
-            resultInner2.or(b1);
-            resultInner2.xor(b2);
+            result.coefficient = b1.coefficient * b2.coefficient;
+            result.clear();
+            result.or(b1);
+            result.xor(b2);
 
             boolean negate = false;
             int i = 0;
@@ -50,21 +68,30 @@ public class InnerProductCalculator implements ProductCalculator2 {
             }
 
             if (negate) {
-                resultInner2.coefficient *= -1;
+                result.coefficient *= -1;
             }
             return true;
         }
         return false;
     }
 
-    public boolean calcInnernProduct1(SignedBlade b1, SignedBlade b2, SignedBlade resultInner3, int bitCount, BitSet squareMask) {
+    /**
+     * Calculates the inner product of one two-or-more-grade blade and one one-grade blade
+     * @param b1 The first blade (grade two-or-more)
+     * @param b2 The second blade (grade one)
+     * @param result The result of the inner product
+     * @param bitCount The maximum number of bits
+     * @param squareMask The signature
+     * @return true, if the result is not empty; false, otherwise
+     */
+    private boolean calcInnernProduct1(SignedBlade b1, SignedBlade b2, SignedBlade result, int bitCount, BitSet squareMask) {
         Blade aAndBMasked3 = new Blade(bitCount, b1);
         aAndBMasked3.and(b2);
         if (!aAndBMasked3.isEmpty()) {
-            resultInner3.coefficient = b1.coefficient * b2.coefficient;
-            resultInner3.clear();
-            resultInner3.or(b1);
-            resultInner3.xor(b2);
+            result.coefficient = b1.coefficient * b2.coefficient;
+            result.clear();
+            result.or(b1);
+            result.xor(b2);
 
             boolean negate = false;
             int i = bitCount - 1;
@@ -82,14 +109,23 @@ public class InnerProductCalculator implements ProductCalculator2 {
             }
 
             if (negate) {
-                resultInner3.coefficient *= -1;
+                result.coefficient *= -1;
             }
             return true;
         }
         return false;
     }
 
-    public boolean calcInnernProductn(SignedBlade b1, SignedBlade b2, SignedBlade resultInner4, int bitCount, BitSet squareMask) {
+    /**
+     * Calculates the inner product of two two-or-more-grade blades
+     * @param b1 The first blade
+     * @param b2 The second blade
+     * @param result The result of the inner product
+     * @param bitCount The maximum number of bits
+     * @param squareMask The signature
+     * @return true, if the result is not empty; false, otherwise
+     */
+    private boolean calcInnernProductn(SignedBlade b1, SignedBlade b2, SignedBlade result, int bitCount, BitSet squareMask) {
         if (b1.cardinality() > b2.cardinality()) {
             // Bl*ak, k<l
 
@@ -109,9 +145,9 @@ public class InnerProductCalculator implements ProductCalculator2 {
 
             }
 
-            resultInner4.clear();
-            resultInner4.or(b1Cp);
-            resultInner4.coefficient *= b1Cp.coefficient*b2.coefficient;
+            result.clear();
+            result.or(b1Cp);
+            result.coefficient *= b1Cp.coefficient*b2.coefficient;
 
             return add;
         } else {
@@ -133,9 +169,9 @@ public class InnerProductCalculator implements ProductCalculator2 {
                     add = true;
                 }
             }
-            resultInner4.clear();
-            resultInner4.or(b2Cp);
-            resultInner4.coefficient *= b2Cp.coefficient*b1.coefficient;
+            result.clear();
+            result.or(b2Cp);
+            result.coefficient *= b2Cp.coefficient*b1.coefficient;
             return add;
         }
     }
@@ -147,26 +183,22 @@ public class InnerProductCalculator implements ProductCalculator2 {
             if (b1.cardinality() == 1) {
                 if (b2.cardinality() == 1) {
                     //length(b1) = 1 && length(b2) = 1
-                    if (calcInner1Product1(b1, b2, result, bitCount, squareMask)) {
+                    if (calcInner1Product1(b1, b2, result, bitCount, squareMask)) 
                         innerProduct.add(result);
-                    }
                 } else {
                     //length(b1) = 1 && length(b2) > 1
-                    if (calcInner1Productn(b1, b2, result, bitCount, squareMask)) {
+                    if (calcInner1Productn(b1, b2, result, bitCount, squareMask)) 
                         innerProduct.add(result);
-                    }
                 }
             } else {
                 if (b2.cardinality() == 1) {
                     //length(b1) > 1 && length(b2) = 1
-                    if (calcInnernProduct1(b1, b2, result, bitCount, squareMask)) {
+                    if (calcInnernProduct1(b1, b2, result, bitCount, squareMask)) 
                         innerProduct.add(result);
-                    }
                 } else {
                     //length(b1) > 1 && length(b2) > 1
-                    if (calcInnernProductn(b1, b2, result, bitCount, squareMask)) {
+                    if (calcInnernProductn(b1, b2, result, bitCount, squareMask)) 
                         innerProduct.add(result);
-                    }
                 }
             }
         }

@@ -1,7 +1,7 @@
 package de.gaalop.productComputer2;
 
 /**
- *
+ * Represents a blade
  * @author christian
  */
 public class Blade extends BitSet {

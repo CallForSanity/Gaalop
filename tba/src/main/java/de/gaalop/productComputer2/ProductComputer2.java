@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 
 /**
- *
+ * Computes the product of two blades
  * @author christian
  */
 public class ProductComputer2 {
@@ -187,9 +187,5 @@ public class ProductComputer2 {
         group(product);
         return product.toMultivector(mapBladeToIndex, bitCount);
     }
-
-
-
-
 
 }
