@@ -8,7 +8,6 @@ import de.gaalop.cfg.AlgebraDefinitionFile;
 import de.gaalop.cfg.ControlFlowGraph;
 import de.gaalop.cfg.Macro;
 import de.gaalop.dfg.Expression;
-import de.gaalop.dfg.FloatConstant;
 import de.gaalop.dfg.OuterProduct;
 import java.io.BufferedReader;
 import java.io.File;

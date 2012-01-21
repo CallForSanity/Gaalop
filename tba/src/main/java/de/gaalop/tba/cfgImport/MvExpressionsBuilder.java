@@ -1,7 +1,6 @@
 package de.gaalop.tba.cfgImport;
 
 import de.gaalop.cfg.AlgebraDefinitionFile;
-import de.gaalop.cfg.StartNode;
 import de.gaalop.dfg.ExpressionVisitor;
 import de.gaalop.cfg.AssignmentNode;
 import de.gaalop.cfg.EmptyControlFlowVisitor;

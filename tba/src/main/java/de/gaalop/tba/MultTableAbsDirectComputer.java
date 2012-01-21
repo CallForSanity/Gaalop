@@ -1,11 +1,9 @@
 package de.gaalop.tba;
 
 import de.gaalop.cfg.AlgebraDefinitionFile;
-import de.gaalop.tba.Multivector;
 import de.gaalop.productComputer.AlgebraPC;
 import de.gaalop.productComputer.ProductCalculator;
 import de.gaalop.productComputer.ProductComputer;
-import de.gaalop.tba.IMultTable;
 
 /**
  * Provides methods for direct computation of the product of two blades

@@ -12,6 +12,7 @@ public class InnerProductCalculator implements ProductCalculator {
 
     private HashMap<Integer, Byte> baseSquares;
 
+    @Override
     public SumOfBlades calculate(Blade blade1, Blade blade2, HashMap<Integer, Byte> baseSquares) {
         this.baseSquares = baseSquares;
         

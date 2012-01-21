@@ -1,7 +1,6 @@
 package de.gaalop.gappDebugger;
 
 import de.gaalop.algebra.BladeArrayRoutines;
-import de.gaalop.algebra.TCBlade;
 import de.gaalop.gapp.executer.Executer;
 import de.gaalop.gapp.executer.MultivectorWithValues;
 import de.gaalop.gapp.instructionSet.GAPPAssignMv;
@@ -54,7 +53,7 @@ public class Controller {
         ui.jListVariables.setModel(modelVars);
         ui.jListSrc.setModel(modelSrc);
         ListSelectionListener listener = new ListSelectionListener() {
-
+            @Override
             public void valueChanged(ListSelectionEvent e) {
                 refreshValueTable();
             }
@@ -223,7 +222,7 @@ public class Controller {
             GappTransformer transformer = new GappTransformer(treeNodeStream);
             GAPPBuilder graph = transformer.script();
             
-            LinkedList<GAPPBaseInstruction> instructions = graph.getInstructions(algebra);
+            LinkedList<GAPPBaseInstruction> instructionsLoc = graph.getInstructions(algebra);
             if (!parser.getErrors().isEmpty()) {
                 StringBuilder message = new StringBuilder();
                 message.append("Unable to parse CluCalc file:\n");
@@ -233,9 +232,9 @@ public class Controller {
                 }
                 return;
             }
-            this.instructions = instructions.toArray(new GAPPBaseInstruction[0]);
+            this.instructions = instructionsLoc.toArray(new GAPPBaseInstruction[0]);
             modelSrc.clear();
-            for (GAPPBaseInstruction instruction : instructions) {
+            for (GAPPBaseInstruction instruction : instructionsLoc) {
                 modelSrc.addElement(instruction.toString());
             }
             ui.jListSrc.repaint();

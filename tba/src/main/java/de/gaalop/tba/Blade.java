@@ -92,8 +92,6 @@ public class Blade {
         } else {
             throw new IllegalStateException("Blade: Blade contains no base element!");
         }
-
-
     }
 
     /**
@@ -107,7 +105,6 @@ public class Blade {
         } else {
             return new BaseVector(string.substring(1));
         }
-
     }
 
     public static Blade createBladeFromExpression(Expression expr) {

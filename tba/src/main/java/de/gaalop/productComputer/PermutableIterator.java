@@ -14,6 +14,7 @@ public class PermutableIterator implements Permutable {
 
     private int[] lengths;
 
+    @Override
     public void initialize(int[] lengths) {
         this.lengths = lengths;
         Integer[] array = new Integer[lengths.length];
@@ -25,6 +26,7 @@ public class PermutableIterator implements Permutable {
         cur = new IntArray(array);
     }
 
+    @Override
     public IntArray getNextPermutation() {
         IntArray result = cur;
         curNo++;
@@ -52,6 +54,7 @@ public class PermutableIterator implements Permutable {
         return result;
     }
 
+    @Override
     public boolean hasNextPermutation() {
         return (curNo<count);
     }

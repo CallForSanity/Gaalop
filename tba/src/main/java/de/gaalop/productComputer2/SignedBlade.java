@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package de.gaalop.productComputer2;
 
 /**
@@ -48,11 +43,4 @@ public class SignedBlade extends Blade {
     public String toString() {
         return coefficient+"["+super.toString()+"]";
     }
-
-
-
-
-
-
-
 }

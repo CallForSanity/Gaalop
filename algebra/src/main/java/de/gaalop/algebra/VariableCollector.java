@@ -53,8 +53,4 @@ public class VariableCollector extends EmptyControlFlowVisitor {
         node.getValue().accept(expressionVisitor);
         super.visit(node);
     }
-
-
-
-
 }

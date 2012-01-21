@@ -59,14 +59,8 @@ public class MacroVariablesCFGReplacer implements ControlFlowVisitor {
             Expression replacement = replaceMap.get(node.getValue().getName());
             if (replacement instanceof Variable) {
                 node.setValue((Variable) replacement.copy());
-            } else {
-                
-            }
-
-
-
+            } 
         }
-        
     }
 
     @Override

@@ -1,6 +1,5 @@
 package de.gaalop.productComputer;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -11,6 +10,7 @@ import java.util.List;
  */
 public class GeoProductCalculator implements ProductCalculator {
 
+    @Override
     public SumOfBlades calculate(Blade blade1, Blade blade2, HashMap<Integer, Byte> baseSquares) {
         //approach method from the dissertation: Daniel Fontijne, "Efficient Implementation of Geometric Algebra" (2007)
 

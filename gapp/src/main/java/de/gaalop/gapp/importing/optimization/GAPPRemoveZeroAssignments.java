@@ -3,7 +3,6 @@ package de.gaalop.gapp.importing.optimization;
 import de.gaalop.gapp.PosSelector;
 import de.gaalop.gapp.PosSelectorset;
 import de.gaalop.gapp.Valueset;
-import de.gaalop.gapp.Variableset;
 import de.gaalop.gapp.instructionSet.GAPPAssignMv;
 import de.gaalop.gapp.variables.GAPPConstant;
 import de.gaalop.gapp.variables.GAPPValueHolder;
@@ -23,7 +22,7 @@ public class GAPPRemoveZeroAssignments extends GAPPRemover {
     public Object visitAssignMv(GAPPAssignMv gappAssignMv, Object arg) {
         //Remove all zeros in AssignMv
         LinkedList<PosSelector> delSelectors = new LinkedList<PosSelector>();
-        LinkedList<GAPPValueHolder> delVariables = new LinkedList<GAPPValueHolder>();
+        LinkedList<GAPPConstant> delVariables = new LinkedList<GAPPConstant>();
 
         PosSelectorset selSet = gappAssignMv.getSelectors();
         Valueset valSet = gappAssignMv.getValues();
@@ -35,9 +34,10 @@ public class GAPPRemoveZeroAssignments extends GAPPRemover {
             GAPPValueHolder curVar = valIt.next();
 
             if (!curVar.isVariable()) {
-                if (Math.abs(((GAPPConstant) curVar).getValue()) < 10E-04) {
+                GAPPConstant constant = (GAPPConstant) curVar;
+                if (Math.abs(constant.getValue()) < 10E-04) {
                     delSelectors.add(curSel);
-                    delVariables.add(curVar);
+                    delVariables.add(constant);
                 }
             }
         }
@@ -47,7 +47,7 @@ public class GAPPRemoveZeroAssignments extends GAPPRemover {
             selSet.remove(sel);
         }
 
-        for (GAPPValueHolder val : delVariables) {
+        for (GAPPConstant val : delVariables) {
             valSet.remove(val);
         }
 

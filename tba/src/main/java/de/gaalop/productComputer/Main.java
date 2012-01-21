@@ -133,6 +133,7 @@ public class Main {
     }
 
     private static Comparator<BladeRef> comp = new Comparator<BladeRef>() {
+        @Override
         public int compare(BladeRef o1, BladeRef o2) {
             return o1.getIndex()-o2.getIndex();
         }
