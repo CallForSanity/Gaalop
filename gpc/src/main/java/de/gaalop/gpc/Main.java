@@ -65,7 +65,7 @@ public class Main {
     public static final String gpcMvGetBladeCoeff = "mv_get_bladecoeff";
     public static final String gpcMvToArray = "mv_to_array";
     public static final String gpcMvToStridedArray = "mv_to_stridedarray";
-    public static final String gpcMvToVector = "mv_to_vecarray";
+    public static final String gpcMvToVector = "mv_to_vector";
     public static final String gpcZero = "0.0f";
     
     public static final String mvSearchString = "//#pragma gpc multivector ";
