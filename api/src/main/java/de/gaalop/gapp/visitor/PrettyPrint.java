@@ -230,15 +230,10 @@ public class PrettyPrint extends CFGGAPPVisitor {
     @Override
     public Object visitDotVectors(GAPPDotVectors gappDotVectors, Object arg) {
         result.append("dotVectors ");
-        GAPPSetOfVariables destination = gappDotVectors.getDestination();
-        if (destination instanceof GAPPMultivector) {
-            printMultivector((GAPPMultivector) destination);
-            result.append("[");
-            printSelector(gappDotVectors.getDestSelector());
-            result.append("]");
-        } else {
-            printVector((GAPPVector) destination);
-        }
+        printMultivector(gappDotVectors.getDestination());
+        result.append("[");
+        printSelector(gappDotVectors.getDestSelector());
+        result.append("]");
         result.append(" = ");
         printDotProduct(gappDotVectors.getParts());
         result.append(";\n");
