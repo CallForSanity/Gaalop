@@ -38,12 +38,12 @@ public class GAPPMultivectorCreator implements ParallelObjectVisitor {
 
     @Override
     public Object visitVariable(ParVariable variable, Object arg) {
-        return gappCreator.createMv(bladeCount);
+        throw new IllegalStateException("Variables shouldn't appear in GAPP transformation!");
     }
 
     @Override
     public Object visitMvComponent(MvComponent mvComponent, Object arg) {
-        GAPPMultivector mvTmp = gappCreator.createMv(1);
+        GAPPMultivector mvTmp = gappCreator.createMv();
 
         PosSelectorset selDestSet = new PosSelectorset();
         selDestSet.add(new PosSelector(0, algebra.getBlade(0).toString()));
@@ -64,7 +64,7 @@ public class GAPPMultivectorCreator implements ParallelObjectVisitor {
 
     @Override
     public Object visitConstant(Constant constant, Object arg) {
-        GAPPMultivector mvTmp = gappCreator.createMv(1);
+        GAPPMultivector mvTmp = gappCreator.createMv();
 
         PosSelectorset selDestSet = new PosSelectorset();
         selDestSet.add(new PosSelector(0, algebra.getBlade(0).toString()));

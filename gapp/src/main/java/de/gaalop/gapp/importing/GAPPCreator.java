@@ -46,8 +46,9 @@ public class GAPPCreator implements ParallelObjectVisitor {
     private static final boolean USE_DOTPRODUCT_OPTIMIZER = false;
     public GAPP gapp;
     private int curTmp = -1;
-    private final String PREFIX_MV = "mv";
     private final String PREFIX_VE = "ve";
+    private final String PREFIX_TMPMV = "tempmv";
+
     private HashSet<String> variables;
     private int bladeCount;
     private Algebra algebra;
@@ -78,22 +79,22 @@ public class GAPPCreator implements ParallelObjectVisitor {
     }
 
     /**
-     * Creates a new GAPPMultivector and inserts a resetMv command in GAPP
+     * Creates a new temporary GAPPMultivector and inserts a resetMv command in GAPP
      * @param The number of entries in the new multivector
      * @return The new GAPPMultivector
      */
-    public GAPPMultivector createMv(int size) {
-        GAPPMultivector mv = new GAPPMultivector(createTMP(PREFIX_MV));
-        gapp.addInstruction(new GAPPResetMv(mv, size));
+    public GAPPMultivector createMv() {
+        GAPPMultivector mv = new GAPPMultivector(createTMP(PREFIX_TMPMV));
+        gapp.addInstruction(new GAPPResetMv(mv, 1));
         return mv;
     }
 
     /**
-     * Creates a multivector with one entry and returns the according GAPPMultivectorComponent
+     * Creates a temporary multivector with one entry and returns the according GAPPMultivectorComponent
      * @return The GAPPMultivectorComponent
      */
     public GAPPMultivectorComponent createMvComp() {
-        GAPPMultivector mv = new GAPPMultivector(createTMP(PREFIX_MV));
+        GAPPMultivector mv = new GAPPMultivector(createTMP(PREFIX_TMPMV));
         gapp.addInstruction(new GAPPResetMv(mv, 1));
         return new GAPPMultivectorComponent(mv.getName(), 0);
     }
@@ -135,7 +136,7 @@ public class GAPPCreator implements ParallelObjectVisitor {
         }
 
         if (!extCalculation.getOperand1().isTerminal()) {
-            GAPPMultivector mvTmp1 = createMv(1);
+            GAPPMultivector mvTmp1 = createMv();
             GAPPMultivectorComponent gMvC1 = new GAPPMultivectorComponent(mvTmp1.getName(), 0);
             extCalculation.getOperand1().accept(this, gMvC1);
             extCalculation.setOperand1(new MvComponent(new MultivectorComponent(mvTmp1.getName(), 0)));
@@ -143,7 +144,7 @@ public class GAPPCreator implements ParallelObjectVisitor {
 
         if (extCalculation.getOperand2() != null) {
             if (!extCalculation.getOperand2().isTerminal()) {
-                GAPPMultivector mvTmp2 = createMv(1);
+                GAPPMultivector mvTmp2 = createMv();
                 GAPPMultivectorComponent gMvC2 = new GAPPMultivectorComponent(mvTmp2.getName(), 0);
                 extCalculation.getOperand2().accept(this, gMvC2);
                 extCalculation.setOperand2(new MvComponent(new MultivectorComponent(mvTmp2.getName(), 0)));
@@ -234,7 +235,7 @@ public class GAPPCreator implements ParallelObjectVisitor {
             for (int col = 0; col < dotProduct.getWidth(); col++) {
                 if (!dotProduct.get(row, col).isTerminal()) {
                     ParallelObject nonTerminalObj = dotProduct.get(row, col);
-                    GAPPMultivector mvTmp = createMv(1);
+                    GAPPMultivector mvTmp = createMv();
                     GAPPMultivectorComponent gMvC = new GAPPMultivectorComponent(mvTmp.getName(), 0);
                     nonTerminalObj.accept(this, gMvC);
                     dotProduct.set(row, col, new MvComponent(new MultivectorComponent(mvTmp.getName(), 0)));
