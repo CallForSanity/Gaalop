@@ -4,6 +4,7 @@ import de.gaalop.gapp.Selector;
 import de.gaalop.gapp.visitor.GAPPVisitor;
 import de.gaalop.gapp.variables.GAPPMultivector;
 import de.gaalop.gapp.variables.GAPPMultivectorComponent;
+import de.gaalop.gapp.variables.GAPPSetOfVariables;
 import de.gaalop.gapp.variables.GAPPVector;
 import java.util.LinkedList;
 
@@ -12,8 +13,8 @@ import java.util.LinkedList;
  */
 public class GAPPDotVectors extends GAPPBaseInstruction {
 
-    private GAPPMultivector destination;
-    private Selector destSelector;
+    private GAPPSetOfVariables destination;
+    private Selector destSelector; //TODO chs allowing only PosSelector?
     private LinkedList<GAPPVector> parts;
 
     public GAPPDotVectors(GAPPMultivector destination, Selector destSelector,
@@ -29,6 +30,12 @@ public class GAPPDotVectors extends GAPPBaseInstruction {
         this.parts = parts;
     }
 
+    public GAPPDotVectors(GAPPVector destination, LinkedList<GAPPVector> parts) {
+        this.destination = destination;
+        this.destSelector = new Selector(0, (byte) 1, "1.0");
+        this.parts = parts;
+    }
+
     @Override
     public Object accept(GAPPVisitor visitor, Object arg) {
         return visitor.visitDotVectors(this, arg);
@@ -38,7 +45,7 @@ public class GAPPDotVectors extends GAPPBaseInstruction {
         return destSelector;
     }
 
-    public GAPPMultivector getDestination() {
+    public GAPPSetOfVariables getDestination() {
         return destination;
     }
 
@@ -52,6 +59,11 @@ public class GAPPDotVectors extends GAPPBaseInstruction {
 
     public void setDestination(GAPPMultivector destination) {
         this.destination = destination;
+    }
+
+    public void setDestination(GAPPVector destination) {
+        this.destination = destination;
+        this.destSelector = new Selector(0, (byte) 1, "1.0");
     }
 
     public void setParts(LinkedList<GAPPVector> parts) {
