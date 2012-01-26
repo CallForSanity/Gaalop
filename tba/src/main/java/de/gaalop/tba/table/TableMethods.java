@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package de.gaalop.tba.table;
 
 import de.gaalop.tba.IMultTable;
@@ -15,11 +10,19 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * Provides methods for tables
  * @author Christian Steinmetz
  */
 public class TableMethods {
 
+    /**
+     * Converts the format of a table
+     * @param dimension The dimension of the algebra
+     * @param fromFormat The format of the source table
+     * @param fromFile The file of the source table
+     * @param toFormat The format of the destination table
+     * @param toFile The file of the destination table
+     */
     public static void convertFormat(int dimension, TableReaderIO fromFormat, File fromFile, TableReaderIO toFormat, File toFile) {
         
         int bladeCount = (int) Math.pow(2, dimension);

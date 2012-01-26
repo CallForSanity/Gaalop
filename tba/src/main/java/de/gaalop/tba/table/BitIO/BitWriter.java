@@ -8,7 +8,8 @@ package de.gaalop.tba.table.BitIO;
 import java.io.IOException;
 
 /**
- *
+ * Implements a bit writes which produces no padding bits,
+ * except at the end of the file.
  * @author christian
  */
 public class BitWriter extends AbsBitWriter {

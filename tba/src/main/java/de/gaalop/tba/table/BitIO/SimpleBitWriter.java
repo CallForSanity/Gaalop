@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package de.gaalop.tba.table.BitIO;
 
 import java.io.IOException;
@@ -10,7 +5,9 @@ import java.io.IOException;
 
 
 /**
- *
+ * Implements a bit writer, that stores all values as a datatype,
+ * which has at least the number of bits to be used.
+ * The data types are java (unsigned) byte, char and int
  * @author christian
  */
 public class SimpleBitWriter extends AbsBitWriter {

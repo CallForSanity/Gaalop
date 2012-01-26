@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package de.gaalop.tba.table;
 
 import de.gaalop.tba.table.BitIO.AbsBitWriter;
@@ -19,7 +14,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * Stores the product tables in a compressed format
  * @author christian
  */
 public class TableCompressed implements TableReaderIO {
@@ -60,6 +55,14 @@ public class TableCompressed implements TableReaderIO {
         }
     }
 
+    /**
+     * Reads a multivector
+     * @param in The reader to be used
+     * @param dimension The dimension of the algebra
+     * @param bitCount The bit count
+     * @return The read multivector
+     * @throws IOException
+     */
     private Multivector readMultivector(AbsBitReader in, int dimension, int bitCount) throws IOException {
         Multivector result = new Multivector();
         int size = in.read(bitCount);
@@ -71,6 +74,14 @@ public class TableCompressed implements TableReaderIO {
         return result;
     }
 
+    /**
+     * Writes a multivector
+     * @param product The multivector to be written
+     * @param dimension The dimension of the algebra
+     * @param out The writer to be used
+     * @param bitCount The bit count
+     * @throws IOException
+     */
     private void writeMultivector(Multivector product, int dimension, AbsBitWriter out, int bitCount) throws IOException {
         int size = product.getBlades().size();
         out.write(size, bitCount);
@@ -80,6 +91,14 @@ public class TableCompressed implements TableReaderIO {
         }
     }
 
+    /**
+     * Determines the maximum number of summands
+     * @param bladeCount The number of blades
+     * @param innerTable The inner product table
+     * @param outerTable The outer product table
+     * @param geoTable The geometric product table
+     * @return The maximum number of summands
+     */
     private int getMaximalNumberOfSummands(int bladeCount, IMultTable innerTable, IMultTable outerTable, IMultTable geoTable) {
         int maxNumber = 0;
         for (int i=0;i<bladeCount;i++)

@@ -1,15 +1,10 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package de.gaalop.tba.table.BitIO;
 
 import java.io.IOException;
-import java.util.LinkedList;
 
 /**
- *
+ * Implements a bit reader which reads no padding bits,
+ * except at the end of the file.
  * @author christian
  */
 public class BitReader extends AbsBitReader {

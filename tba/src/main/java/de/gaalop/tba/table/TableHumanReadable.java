@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package de.gaalop.tba.table;
 
 import de.gaalop.tba.BladeRef;
@@ -17,7 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * Stores the product tables in a human readable format
  * @author christian
  */
 public class TableHumanReadable implements TableReaderIO {
