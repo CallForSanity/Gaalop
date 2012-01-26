@@ -1,5 +1,8 @@
-package de.gaalop.tba;
+package de.gaalop.tba.table;
 
+import de.gaalop.tba.Blade;
+import de.gaalop.tba.BladeRef;
+import de.gaalop.tba.Multivector;
 import java.util.Vector;
 
 /**

@@ -3,16 +3,8 @@ package de.gaalop.tba;
 import de.gaalop.algebra.TCBlade;
 import de.gaalop.cfg.AlgebraDefinitionFile;
 import de.gaalop.dfg.Expression;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Defines an algebra by storing the base elements and the blades
@@ -28,15 +20,6 @@ public class Algebra {
     
 
     public Algebra() {
-        dirty = true;
-    }
-
-    public Algebra(String filename_blades, boolean useAsRessource) {
-        try {
-            load(filename_blades, useAsRessource);
-        } catch (IOException ex) {
-            Logger.getLogger(Algebra.class.getName()).log(Level.SEVERE, null, ex);
-        }
         dirty = true;
     }
 
@@ -91,40 +74,6 @@ public class Algebra {
 
     public void setBase(String[] base) {
         this.base = base;
-    }
-
-    /**
-     * Loads blades from a file, which is a ressource
-     * @param filename_blades The filename of the file
-     * @param useAsRessource true, if filename_products is a ressource
-     * @throws IOException
-     */
-    public void load(String filename_blades, boolean useAsRessource) throws IOException {
-        InputStream resourceAsStream;
-        if (useAsRessource) {
-            resourceAsStream = getClass().getResourceAsStream(filename_blades);
-        } else {
-            resourceAsStream = new FileInputStream(new File(filename_blades));
-        }
-
-        BufferedReader d = new BufferedReader(new InputStreamReader(resourceAsStream));
-
-        String readed = d.readLine();
-
-        base = readed.split(";");
-
-
-        int line = 0;
-        while (d.ready()) {
-            readed = d.readLine();
-            Blade b = Parser.parseBlade(readed);
-            setBlade(line, b);
-
-            line++;
-        }
-
-
-        d.close();
     }
 
     /**

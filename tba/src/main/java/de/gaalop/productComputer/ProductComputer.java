@@ -1,194 +1,191 @@
 package de.gaalop.productComputer;
 
+import de.gaalop.productComputer.AlgebraPC;
+import de.gaalop.productComputer.BladeStr;
+import de.gaalop.productComputer.BubbleSort;
 import de.gaalop.tba.Multivector;
 import java.util.HashMap;
 import java.util.LinkedList;
 
 /**
- * This class computes products
+ * Computes the product of two blades
  * @author christian
  */
 public class ProductComputer {
 
-    private HashMap<Integer, BladeArray> mapBaseChangeToZeroInf;
-    private ListOfBlades listOfBlades;
-    private SumOfBlades[] bladesPM;
-    private HashMap<Integer, Byte> baseSquares;
+    private int bitCount;
+    private BitSet squareMask;
+    private HashMap<Integer, SumOfBlades> mapZIToPM;
+    private HashMap<Integer, SumOfBlades> mapPMToZI;
+
+    private SumOfBlades[] bladeListPM;
+    private HashMap<Blade, Integer> mapBladeToIndex;
+
+    // ============================ INITIALIZATION ============================
 
     /**
-     * Do initializations
-     * @param base The ZeroInf Base to use
-     * @param base2 The PlusMinus Base to use (here are the products easily defined)
-     * @param mapToPlusMinus The map from ZeroInf base to PlusMinus base
-     * @param mapToZeroInf The map from PlusMinus base to ZeroInf base
+     * Returns the index of an element in an array
+     * @param element The element to search
+     * @param arr The array to search in
+     * @return The index of the element
      */
-    public void initialize(AlgebraPC algebra) {
-        //create blades in "blades"
-        int[] intBase = new int[algebra.base.length];
-        BaseVectors baseVectors = new BaseVectors();
-        baseVectors.addBase("1");
-        for (int i=0;i<algebra.base.length;i++)
-            intBase[i] = baseVectors.addBase(algebra.base[i]);
+    private int getIndex(String element, String[] arr) {
+        for (int i = 0;i<arr.length;i++)
+            if (element.equals(arr[i]))
+                return i;
+        return -1;
+    }
 
-        Blade[] bladesZI = BladeArrayRoutines.createBlades(intBase);
-        listOfBlades = new ListOfBlades(bladesZI);
-        //add base2
-        for (int i=0;i<algebra.base2.length;i++)
-            if (!baseVectors.containsBase(algebra.base2[i]))
-                baseVectors.addBase(algebra.base2[i]);
-
-        //baseSquares to integer system
-        baseSquares = new HashMap<Integer, Byte>();
-        for (String key: algebra.baseSquaresStr.keySet())
-            baseSquares.put(baseVectors.getIndex(key), algebra.baseSquaresStr.get(key));
-
-        //base change of blades to plus minus
-        HashMap<Integer, BladeArray> mapBaseChangeToPlusMinus = convertMap(algebra.mapToPlusMinus, baseVectors);
-        mapBaseChangeToZeroInf = convertMap(algebra.mapToZeroInf, baseVectors);
-        bladesPM = new SumOfBlades[bladesZI.length];
-        for (int i=0;i<bladesZI.length;i++)
-            bladesPM[i] = changeBaseOfBlade(bladesZI[i], mapBaseChangeToPlusMinus);
-
-        //checking if some blades are zero
-        for (int i=0;i<bladesZI.length;i++) {
-            bladesPM[i].checkIfSomeBladesAreZero();
-            bladesPM[i].normalize();
-            bladesPM[i].group();
+    /**
+     * Converts a BladeStr instance into an SignedBlade
+     * @param bladeStr The bladeStr instance
+     * @param base The base of the underlying algebra
+     * @return The created SignedBlade
+     */
+    private SignedBlade bladeStrToSignedBlade(BladeStr bladeStr, String[] base) {
+        SignedBlade sBlade = new SignedBlade(bitCount, bladeStr.getPrefactor());
+        Integer[] arr = new Integer[bladeStr.getBaseVectors().length];
+        int i=0;
+        for (String baseVector: bladeStr.getBaseVectors()) {
+            int index = getIndex(baseVector, base);
+            arr[i] = index;
+            sBlade.set(index);
+            i++;
         }
-
-        //test printing
-        //for (int i=0;i<blades.length;i++)
-        //    System.out.println(blades[i].print(baseVectors)+" = "+bladesPM[i].print(baseVectors));
-    }
-
-    public Multivector calcProduct(int i, int j, ProductCalculator calculator) {
-        //use bladesPM and mapBaseChangeToZeroInf
-
-        //calculate real product
-        SumOfBlades product = new SumOfBlades(new LinkedList<Blade>());
-        LinkedList<Blade> blades1 = bladesPM[i].getBlades();
-        LinkedList<Blade> blades2 = bladesPM[j].getBlades();
-        LinkedList<Blade> prodBlades = product.getBlades();
-
-        for (Blade blade1: blades1)
-            for (Blade blade2: blades2)
-                prodBlades.addAll(calculator.calculate(blade1, blade2, baseSquares).getBlades());
-
-        product.checkIfSomeBladesAreZero();
-        //base change
-        SumOfBlades blade = changeBaseOfBlade(product, mapBaseChangeToZeroInf);
-
-        //checking if some blades are zero
-        blade.checkIfSomeBladesAreZero();
-        //normalise blades
-        blade.normalize();
-         //group blades
-        blade.group();
-
-        //merge to multivector
-        return blade.toMultivector(listOfBlades);
-    }
-
-    /**
-     * Converts a map from a user-friendly format in a efficient format for accesses
-     * @param mapBaseChangeStr The map to convert
-     * @param baseVectors The initialized BaseVectors object for finding indices
-     * @return The new map
-     */
-    private static HashMap<Integer, BladeArray> convertMap(HashMap<String, LinkedList<BladeStr>> mapBaseChangeStr, BaseVectors baseVectors) {
-        HashMap<Integer, BladeArray> mapBaseChange = new HashMap<Integer, BladeArray>();
-        for (String key: mapBaseChangeStr.keySet()) {
-            LinkedList<BladeStr> listOfStrBlade = mapBaseChangeStr.get(key);
-            Blade[] blades = new Blade[listOfStrBlade.size()];
-            int i=0;
-            for (BladeStr bladeStr: listOfStrBlade)
-                blades[i++] = convertBladeStrToBlade(bladeStr, baseVectors);
-            mapBaseChange.put(baseVectors.getIndex(key), new BladeArray(blades));
-        }
-        return mapBaseChange;
-    }
-
-    /**
-     * Converts a BladeStr object to a Blade object
-     * @param bladeStr The BladeStr object
-     * @param baseVectors The baseVectors for finding indices
-     * @return The new Blade object
-     */
-    private static Blade convertBladeStrToBlade(BladeStr bladeStr, BaseVectors baseVectors) {
-        String[] baseVectorsStr = bladeStr.getBaseVectors();
-
-        LinkedList<Integer> baseV = new LinkedList<Integer>();
-        for (int i=0;i<baseVectorsStr.length;i++) 
-            baseV.add(baseVectors.getIndex(baseVectorsStr[i]));
-
-        return new Blade(bladeStr.getPrefactor(), baseV);
-    }
-
-    /**
-     * Changes the base for a sum of blades and saves the result in a SumOfBlades object
-     * e1^einf^e3 -> e1^em^e3 + e1^ep^e3
-     * @param sumOfBlades The sum of blades
-     * @param map The map to use for the basechange
-     * @return The new SumOfBlades object
-     */
-    private static SumOfBlades changeBaseOfBlade(SumOfBlades sumOfBlades, HashMap<Integer, BladeArray> map) {
-        LinkedList<Blade> result = new LinkedList<Blade>();
-        for (Blade blade: sumOfBlades.getBlades()) 
-            result.addAll(changeBaseOfBlade(blade, map).getBlades());
-        return new SumOfBlades(result);
-    }
-
-    /**
-     * Changes the base for a blade and saves the result in a SumOfBlades object
-     * e1^einf^e3 -> e1^em^e3 + e1^ep^e3
-     * @param blade The blade
-     * @param map The map to use for the basechange
-     * @return The new SumOfBlades object
-     */
-    private static SumOfBlades changeBaseOfBlade(Blade blade, HashMap<Integer, BladeArray> map) {
-        LinkedList<Integer> baseVectors = blade.getBaseVectors();
-        if (baseVectors.size() == 0) return new SumOfBlades(blade);
-
-        //find the lengths for creating a permutation
-        int[] lengths = new int[baseVectors.size()];
-        int j = 0;
-        for (Integer i: baseVectors) {
-            lengths[j] = map.containsKey(i)
-                    ? map.get(i).getBlades().length
-                    : 1;
-            j++;
-        }
-
-
-        //create the permutations
-        Permutable iterator = new PermutableIterator();
-        iterator.initialize(lengths);
-
-        //apply permutations
-        LinkedList<Blade> result = new LinkedList<Blade>();
-
-        while (iterator.hasNextPermutation()) {
-            IntArray permutation = iterator.getNextPermutation();
-            //build current permutation in baseList
-            LinkedList<Integer> baseList = new LinkedList<Integer>();
-
-            float prefactor = 1;
-            j=0;
-            for (Integer i: baseVectors) {
-                if (map.containsKey(i)) {
-                    Blade b = map.get(i).getBlades()[permutation.getArray()[j]];
-                    prefactor *= b.getPrefactor();
-                    baseList.addAll(b.getBaseVectors());
-                } else {
-                    baseList.add(i);
-                }
-                j++;
-            }
-
-            result.add(new Blade(prefactor*blade.getPrefactor(), baseList));
-        }
+        if ((BubbleSort.doBubbleSort(arr) % 2) == 1) 
+            sBlade.coefficient *= -1;
         
-        return new SumOfBlades(result);
+        return sBlade;
+    }
+
+    /**
+     * Initializes a transformation map
+     * @param base The base of the underlying algebra
+     * @param source The map of the algebra definition
+     * @param dest The destination map
+     */
+    private void initializeMap(String[] base, String[] base2, HashMap<String, LinkedList<BladeStr>> source, HashMap<Integer, SumOfBlades> dest) {
+        for (String baseElement: source.keySet()) {
+            LinkedList<BladeStr> list = source.get(baseElement);
+            SumOfBlades sumOfBlades = new SumOfBlades();
+            for (BladeStr element: list) 
+                sumOfBlades.add(bladeStrToSignedBlade(element, base));
+            
+            dest.put(getIndex(baseElement, base2), sumOfBlades);
+        }
+    }
+    
+   /**
+    * Helper function for createBlades.
+    * @param arrTrailing The trailing array to be inserted before each combination
+    * @param startPos The start position in the base array
+    * @param k The number of base elements to be inserted
+    */
+    private void createBladesHelp(Blade arrTrailing, int startPos, int k, LinkedList<SumOfBlades> bladelist) {
+        if (k == 1) {
+            for (int s=startPos;s<bitCount;++s) {
+                Blade nbase = new Blade(bitCount, arrTrailing);
+                nbase.set(s);
+                SumOfBlades su = new SumOfBlades();
+                su.add(new SignedBlade(bitCount, nbase));
+                bladelist.add(su);
+            }
+	} else {
+            for (int s=startPos;s<bitCount-1;++s) {
+                Blade nbase = new Blade(bitCount, arrTrailing);
+                nbase.set(s);
+                createBladesHelp(nbase, s+1, k-1, bladelist);
+            }
+	}
+    }
+
+    /**
+     * Initializes the ProductComputer using an AlgebraPC instance
+     * @param algebraPC The AlgebraPC instance
+     */
+    public void initialize(AlgebraPC algebraPC) {
+        bitCount = algebraPC.base.length;
+
+        //set square mask
+        squareMask = new BitSet(bitCount);
+        for (String baseElement: algebraPC.baseSquaresStr.keySet()) 
+            if (algebraPC.baseSquaresStr.get(baseElement) == -1) 
+                squareMask.set(getIndex(baseElement, algebraPC.base2));
+        
+        //initialise map Zeroinf to Plusminus
+        mapZIToPM = new HashMap<Integer, SumOfBlades>();
+        initializeMap(algebraPC.base2, algebraPC.base, algebraPC.mapToPlusMinus, mapZIToPM);
+
+        //initialise map Zeroinf to Plusminus
+        mapPMToZI = new HashMap<Integer, SumOfBlades>();
+        initializeMap(algebraPC.base, algebraPC.base2, algebraPC.mapToZeroInf, mapPMToZI);
+
+        //initialize blade list in zero inf base
+        LinkedList<SumOfBlades> bladeListZI = new LinkedList<SumOfBlades>();
+        SumOfBlades s1 = new SumOfBlades();
+        s1.add(new SignedBlade(bitCount));
+        bladeListZI.add(s1);
+        for (int k=1;k<=bitCount;k++) {
+            Blade list1 = new Blade(bitCount);
+            createBladesHelp(list1, 0, k, bladeListZI);
+        }
+
+        //fill indices map and convert blade list to plus minus base
+        bladeListPM = new SumOfBlades[bladeListZI.size()];
+        mapBladeToIndex = new HashMap<Blade, Integer>();
+        int i=0;
+        for (SumOfBlades s: bladeListZI) {
+            SignedBlade sb = s.getFirst();
+            mapBladeToIndex.put(new Blade(bitCount, sb), new Integer(i));
+            bladeListPM[i] = BaseTransformation.transform(s, mapZIToPM, bitCount);
+            i++;
+        }
+
+    }
+
+    // ============================ COMPUTATION OF PRODUCTS ============================
+
+    /**
+     * Merges equal blades to one blade
+     * @param sumOfBlades
+     */
+    private void group(SumOfBlades sumOfBlades) {
+        HashMap<Blade, Float> map = new HashMap<Blade, Float>();
+        for (SignedBlade sb: sumOfBlades) {
+            Blade b = new Blade(bitCount, sb);
+            if (map.containsKey(b))
+                map.put(b, map.get(b)+sb.coefficient);
+            else
+                map.put(b, sb.coefficient);
+        }
+        sumOfBlades.clear();
+        for (Blade b: map.keySet()) {
+            float prefactor = map.get(b);
+            if (Math.abs(prefactor) > 10E-4) 
+                sumOfBlades.add(new SignedBlade(bitCount, b, prefactor));
+        }
+    }
+
+    /**
+     * Computes a product of two blades
+     * @param factor1 The index of the first blade
+     * @param factor2 The index of the second blade
+     * @param calculator The calculator to be used
+     * @return The product of the two blades
+     */
+    public Multivector calcProduct(Integer factor1, Integer factor2, ProductCalculator calculator) {
+        SumOfBlades s1 = bladeListPM[factor1];
+        SumOfBlades s2 = bladeListPM[factor2];
+
+        SumOfBlades product = new SumOfBlades();
+        
+        for (SignedBlade b1: s1)
+            for (SignedBlade b2: s2) 
+                calculator.calcProduct(b1,b2,product,bitCount,squareMask);
+            
+        product = BaseTransformation.transform(product, mapPMToZI, bitCount);
+        group(product);
+        return product.toMultivector(mapBladeToIndex, bitCount);
     }
 
 }

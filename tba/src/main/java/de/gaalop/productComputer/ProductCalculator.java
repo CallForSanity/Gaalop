@@ -1,19 +1,19 @@
 package de.gaalop.productComputer;
 
-import java.util.HashMap;
-
 /**
- * Defines methods for calculating a product of two blades
+ * Defines an interface for calculating a product of two blades
  * @author christian
  */
 public interface ProductCalculator {
 
     /**
-     * Calculates the product of two blades in PlusMinus base
-     * @param blade1 The first blade
-     * @param blade2 The second blade
-     * @return The product as sum of blades
+     * Calculates the product of two blades
+     * @param b1 The first blade
+     * @param b2 The second blade
+     * @param result The result of the product
+     * @param bitCount The maximum number of bits
+     * @param squareMask The signature
      */
-    public SumOfBlades calculate(Blade blade1, Blade blade2, HashMap<Integer, Byte> baseSquares);
+    public void calcProduct(SignedBlade b1, SignedBlade b2, SumOfBlades result, int bitCount, BitSet squareMask);
 
 }

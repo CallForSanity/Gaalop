@@ -41,23 +41,11 @@ public class UseAlgebra {
                 Logger.getLogger(UseAlgebra.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
-
-            if (alFile.base.length<9) {
-                //First product computer (BaseElement lists) is faster
-                tableInner = new MultTableAbsDirectComputer(alFile, new de.gaalop.productComputer.InnerProductCalculator());
-                tableInner.createTable(0);
-                tableOuter = new MultTableAbsDirectComputer(alFile, new de.gaalop.productComputer.OuterProductCalculator());
-                tableOuter.createTable(0);
-                tableGeo = new MultTableAbsDirectComputer(alFile, new de.gaalop.productComputer.GeoProductCalculator());
-            } else {
-                //Second product computer (Bitset) is faster
-                tableInner = new MultTableAbsDirectComputer2(alFile, new de.gaalop.productComputer2.InnerProductCalculator());
-                tableInner.createTable(0);
-                tableOuter = new MultTableAbsDirectComputer2(alFile, new de.gaalop.productComputer2.OuterProductCalculator());
-                tableOuter.createTable(0);
-                tableGeo = new MultTableAbsDirectComputer2(alFile, new de.gaalop.productComputer2.GeoProductCalculator());
-
-            }
+            tableInner = new MultTableAbsDirectComputer(alFile, new de.gaalop.productComputer.InnerProductCalculator());
+            tableInner.createTable(0);
+            tableOuter = new MultTableAbsDirectComputer(alFile, new de.gaalop.productComputer.OuterProductCalculator());
+            tableOuter.createTable(0);
+            tableGeo = new MultTableAbsDirectComputer(alFile, new de.gaalop.productComputer.GeoProductCalculator());
             tableGeo.createTable(0);
             algebra = new Algebra(alFile);
         }

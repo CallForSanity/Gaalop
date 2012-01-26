@@ -1,9 +1,9 @@
 package de.gaalop.tba;
 
+import de.gaalop.productComputer.ProductComputer;
+import de.gaalop.productComputer.ProductCalculator;
 import de.gaalop.cfg.AlgebraDefinitionFile;
 import de.gaalop.productComputer.AlgebraPC;
-import de.gaalop.productComputer.ProductCalculator;
-import de.gaalop.productComputer.ProductComputer;
 
 /**
  * Provides methods for direct computation of the product of two blades
