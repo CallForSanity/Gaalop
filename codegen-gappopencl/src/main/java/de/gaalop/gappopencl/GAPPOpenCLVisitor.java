@@ -36,10 +36,7 @@ import java.util.Map;
  */
 public class GAPPOpenCLVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor
     implements de.gaalop.gapp.variables.GAPPVariableVisitor {
-    protected static final String dot = "dot";
 
-    protected static Integer numBlocks = -1;
-    protected static final String tempMv = "tempmv";
     protected static int dotCount = 0;
     protected Map<String,Integer> mvSizes;
     protected boolean gpcMetaInfo = true;
@@ -50,15 +47,11 @@ public class GAPPOpenCLVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor
         this.mvSizes = mvSizes;
     }
     
-    protected String getVarName(final String mvName) {
-        return mvName + "_" + numBlocks;
-    }
-    
     @Override
     public Object visitResetMv(GAPPResetMv gappResetMv, Object arg) {
-        final String destMv = getVarName(gappResetMv.getDestination().getName());
+        final String destMv = GAPPOpenCLCodeGenerator.getVarName(gappResetMv.getDestination().getName());
         
-        if(gpcMetaInfo && !destMv.startsWith(tempMv))
+        if(gpcMetaInfo && !destMv.startsWith(GAPPOpenCLCodeGenerator.tempMv))
             result.append("//#pragma gpc multivector ").append(destMv).append("\n");
 
         visitOpenCLVectorType(getOpenCLVectorSize(mvSizes.get(destMv)));
@@ -71,13 +64,12 @@ public class GAPPOpenCLVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor
 
     @Override
     public Object visitSetMv(GAPPSetMv gappSetMv, Object arg) {
-        final String destMv = getVarName(gappSetMv.getDestination().getName());
+        final String destMv = GAPPOpenCLCodeGenerator.getVarName(gappSetMv.getDestination().getName());
         Integer thisMvSetCount = mvBladeMap.get(destMv).size();
 
         int selCount = 0;
         for(PosSelector sel : gappSetMv.getSelectorsDest()) {
-            if(gpcMetaInfo && !destMv.startsWith(tempMv))
-                declareGPCMultivectorComponent(destMv, thisMvSetCount, sel);
+            declareGPCMultivectorComponent(destMv, thisMvSetCount, sel);
 
             final String bladeCoeff = getBladeCoeff(destMv,thisMvSetCount);
             
@@ -85,7 +77,7 @@ public class GAPPOpenCLVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor
             result.append(" = ");
             if(gappSetMv.getSelectorsSrc().get(0).getSign() < 0)
                 result.append("-");
-            result.append(mvBladeMap.get(getVarName(gappSetMv.getSource().getName())).get(gappSetMv.getSelectorsSrc().get(selCount++).getIndex()));
+            result.append(mvBladeMap.get(GAPPOpenCLCodeGenerator.getVarName(gappSetMv.getSource().getName())).get(gappSetMv.getSelectorsSrc().get(selCount++).getIndex()));
             result.append(";\n");
 
             mvBladeMap.get(destMv).put(sel.getIndex(),bladeCoeff);
@@ -97,10 +89,13 @@ public class GAPPOpenCLVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor
     }
 
     protected String getBladeCoeff(String mv,int blade) {
-        return mv + (mvSizes.get(mv) == 1 ? "" : ".s" + getOpenCLIndex(blade));
+        return mv + ((mvSizes.get(mv) == 1) ? "" : (".s" + getOpenCLIndex(blade)));
     }
     
     protected void declareGPCMultivectorComponent(String mv, Integer blade, SelectorIndex sel) {
+        if(!gpcMetaInfo || mv.startsWith(GAPPOpenCLCodeGenerator.tempMv))
+            return;
+        
         result.append("//#pragma gpc multivector_component ");
         result.append(mv);
         result.append(" ").append(sel.getBladeName());
@@ -110,7 +105,7 @@ public class GAPPOpenCLVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor
 
     @Override
     public Object visitSetVector(GAPPSetVector gappSetVector, Object arg) {
-        final String destVec = getVarName(gappSetVector.getDestination().getName());
+        final String destVec = GAPPOpenCLCodeGenerator.getVarName(gappSetVector.getDestination().getName());
 
         // determine vector sizes
         int vectorSize = 0;
@@ -153,7 +148,10 @@ public class GAPPOpenCLVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor
     }
     
     protected void visitOpenCLVectorType(final int openCLVectorSize) {
-        result.append("float").append(openCLVectorSize == 1 ? "" : openCLVectorSize);
+        result.append("float");
+        
+        if(openCLVectorSize != 1)
+            result.append(openCLVectorSize);
     }
 
     protected void visitSetVectorArg(final SetVectorArgument setVectorArg) {
@@ -162,10 +160,10 @@ public class GAPPOpenCLVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor
         else {
             final PairSetOfVariablesAndIndices pair = (PairSetOfVariablesAndIndices)setVectorArg;
             Iterator<Selector> itSel = pair.getSelectors().iterator();
-            visitSelector(itSel.next(), pair.getSetOfVariable().getName());
+            visitSelector(itSel.next(), GAPPOpenCLCodeGenerator.getVarName(pair.getSetOfVariable().getName()));
             while (itSel.hasNext()) {
                 result.append(",");
-                visitSelector(itSel.next(), pair.getSetOfVariable().getName());
+                visitSelector(itSel.next(), GAPPOpenCLCodeGenerator.getVarName(pair.getSetOfVariable().getName()));
             }
         }
     }
@@ -227,18 +225,17 @@ public class GAPPOpenCLVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor
 
     @Override
     public Object visitCalculateMvCoeff(GAPPCalculateMvCoeff gappCalculateMvCoeff, Object arg) {
-        final String destMv = getVarName(gappCalculateMvCoeff.getDestination().getName());
-        Integer thisMvSetCount = mvBladeMap.get(destMv).size();
+        final String destMv = GAPPOpenCLCodeGenerator.getVarName(gappCalculateMvCoeff.getDestination().getName());
+        final Integer thisMvSetCount = mvBladeMap.get(destMv).size();
+        final String bladeCoeff = getBladeCoeff(destMv,thisMvSetCount);
 
-        result.append(destMv).append(".s");
-        result.append(thisMvSetCount);
+        result.append(bladeCoeff);
         result.append(" = ");
         visitCalculateOp(gappCalculateMvCoeff.getType(),
-                         gappCalculateMvCoeff.getOperand1().getName(),
-                         gappCalculateMvCoeff.getOperand2().getName());
+                         GAPPOpenCLCodeGenerator.getVarName(gappCalculateMvCoeff.getOperand1().getName()),
+                         GAPPOpenCLCodeGenerator.getVarName(gappCalculateMvCoeff.getOperand2().getName()));
         result.append(";\n");
 
-        final String bladeCoeff = getBladeCoeff(destMv,thisMvSetCount);
         mvBladeMap.get(destMv).put(gappCalculateMvCoeff.getDestination().getBladeIndex(),bladeCoeff);
 
         return null;
@@ -313,7 +310,7 @@ public class GAPPOpenCLVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor
     
     @Override
     public Object visitAssignMv(GAPPAssignMv gappAssignMv, Object arg) {
-        final String destMv = getVarName(gappAssignMv.getDestination().getName());
+        final String destMv = GAPPOpenCLCodeGenerator.getVarName(gappAssignMv.getDestination().getName());
         Integer thisMvSetCount = mvBladeMap.get(destMv).size();
 
         int selCount = 0;
@@ -334,14 +331,13 @@ public class GAPPOpenCLVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor
 
     @Override
     public Object visitDotVectors(GAPPDotVectors gappDotVectors, Object arg) {
-        final String destMv = getVarName(gappDotVectors.getDestination().getName());
+        final String destMv = GAPPOpenCLCodeGenerator.getVarName(gappDotVectors.getDestination().getName());
         Integer thisMvSetCount = mvBladeMap.get(destMv).size();
 
         // print gpc meta info
-        if(gpcMetaInfo && !destMv.startsWith(tempMv))
-            declareGPCMultivectorComponent(destMv,
-                                           thisMvSetCount,
-                                           gappDotVectors.getDestSelector());
+        declareGPCMultivectorComponent(destMv,
+                                       thisMvSetCount,
+                                       gappDotVectors.getDestSelector());
         
         // compute blade coeff name
         final String bladeCoeff = getBladeCoeff(destMv,thisMvSetCount);
@@ -350,7 +346,7 @@ public class GAPPOpenCLVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor
                 put(gappDotVectors.getDestSelector().getIndex(),bladeCoeff);
 
         // special case for operands of size 1
-        final int operandSize = mvBladeMap.get(gappDotVectors.getParts().get(0).getName()).size();
+        final int operandSize = mvBladeMap.get(GAPPOpenCLCodeGenerator.getVarName(gappDotVectors.getParts().get(0).getName())).size();
         if(operandSize == 1) {
             result.append(bladeCoeff).append(" = ");
             visitDotVectorsParallelMultiply(gappDotVectors);
@@ -362,18 +358,18 @@ public class GAPPOpenCLVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor
 
         // parallel multiply operation
         visitOpenCLVectorType(openCLVectorSize);
-        result.append(" ").append(dot).append(dotCount);
+        result.append(" ").append(GAPPOpenCLCodeGenerator.dot).append(dotCount);
         result.append(" = ");
         visitDotVectorsParallelMultiply(gappDotVectors);
 
         // parallel pyramid reduce
         while((openCLVectorSize >>= 1) > 1) {
             visitOpenCLVectorType(openCLVectorSize);
-            result.append(" ").append(dot).append(dotCount+1);
+            result.append(" ").append(GAPPOpenCLCodeGenerator.dot).append(dotCount+1);
             result.append(" = ");
-            result.append(dot).append(dotCount).append(".odd");
+            result.append(GAPPOpenCLCodeGenerator.dot).append(dotCount).append(".odd");
             result.append(" + ");
-            result.append(dot).append(dotCount).append(".even");
+            result.append(GAPPOpenCLCodeGenerator.dot).append(dotCount).append(".even");
             result.append(";\n");
 
             ++dotCount;
@@ -382,9 +378,9 @@ public class GAPPOpenCLVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor
         // last step directly assigns to destination
         result.append(bladeCoeff);
         result.append(" = ");
-        result.append(dot).append(dotCount).append(".odd");
+        result.append(GAPPOpenCLCodeGenerator.dot).append(dotCount).append(".odd");
         result.append(" + ");
-        result.append(dot).append(dotCount).append(".even");
+        result.append(GAPPOpenCLCodeGenerator.dot).append(dotCount).append(".even");
         result.append(";\n");
         ++dotCount;
         
@@ -432,7 +428,7 @@ public class GAPPOpenCLVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor
 
     @Override
     public Object visitAssignInputsVector(GAPPAssignInputsVector gappAssignInputsVector, Object arg) {
-        final String inputsArrayName = "inputsVector" + (++numBlocks).toString();
+        final String inputsArrayName = GAPPOpenCLCodeGenerator.getVarName(GAPPOpenCLCodeGenerator.inputsVector);
         
         result.append("float ");
         result.append(inputsArrayName);
@@ -451,7 +447,7 @@ public class GAPPOpenCLVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor
             bladeMap.put(bladeMap.size(), bladeCoeff);
         }
 
-        mvBladeMap.put("inputsVector",bladeMap);
+        mvBladeMap.put(inputsArrayName,bladeMap);
 
         return null;
     }

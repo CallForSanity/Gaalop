@@ -13,10 +13,21 @@ import java.nio.charset.Charset;
  */
 public class GAPPOpenCLCodeGenerator implements CodeGenerator {
     
+    public static Integer numBlocks = -1;
+    public static final String inputsVector = "inputsVector";
+    public static final String tempMv = "tempmv";
+    public static final String dot = "dot";
     private final Plugin plugin;
     
     GAPPOpenCLCodeGenerator(Plugin plugin) {
     	this.plugin = plugin;
+    }
+    
+    public static String getVarName(final String mvName) {
+        if(mvName.startsWith(tempMv) || mvName.startsWith(dot) || mvName.startsWith(inputsVector))          
+            return mvName + "_" + numBlocks;
+        else
+            return mvName;
     }
 
     @Override
@@ -49,6 +60,9 @@ public class GAPPOpenCLCodeGenerator implements CodeGenerator {
      * @return
      */
     private String generateCode(ControlFlowGraph in) {
+        // new block
+        ++numBlocks;
+        
         // determine sizes of multivectors
         GAPPMvSizeVisitor mvSizeVisitor = new GAPPMvSizeVisitor();
         try {

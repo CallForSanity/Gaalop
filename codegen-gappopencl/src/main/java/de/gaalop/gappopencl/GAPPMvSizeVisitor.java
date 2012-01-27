@@ -31,19 +31,19 @@ public class GAPPMvSizeVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor {
 
     @Override
     public Object visitDotVectors(GAPPDotVectors gappDotVectors, Object arg) {
-        incrementSize(gappDotVectors.getDestination().getName(),1);        
+        incrementSize(GAPPOpenCLCodeGenerator.getVarName(gappDotVectors.getDestination().getName()),1);        
         return null;
     }
 
     @Override
     public Object visitResetMv(GAPPResetMv gappResetMv, Object arg) {
-        getMvSizes().put(gappResetMv.getDestination().getName(), 0);
+        getMvSizes().put(GAPPOpenCLCodeGenerator.getVarName(gappResetMv.getDestination().getName()), 0);
         return null;
     }
 
     @Override
     public Object visitSetMv(GAPPSetMv gappSetMv, Object arg) {
-        incrementSize(gappSetMv.getDestination().getName(),
+        incrementSize(GAPPOpenCLCodeGenerator.getVarName(gappSetMv.getDestination().getName()),
                       gappSetMv.getSelectorsDest().size());        
         return null;
     }
@@ -64,7 +64,7 @@ public class GAPPMvSizeVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor {
 
     @Override
     public Object visitCalculateMvCoeff(GAPPCalculateMvCoeff gappCalculateMvCoeff, Object arg) {
-        incrementSize(gappCalculateMvCoeff.getDestination().getName(),1);        
+        incrementSize(GAPPOpenCLCodeGenerator.getVarName(gappCalculateMvCoeff.getDestination().getName()),1);        
         return null;
     }
 
