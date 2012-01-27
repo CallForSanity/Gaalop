@@ -240,8 +240,10 @@ public class OutputFileComposer {
     public static String getMvBladeCoeffArrayEntry(Map<String, Map<String, String>> mvComponents,
                                                    final String mv,
                                                    String blade) {
-        // remove whitespaces from blade
+        // format blade
         blade = Common.formatBladeName(blade);
+        if(blade.equals("1"))
+            blade = "1.0";
         
         // check for negation
         boolean negated;
