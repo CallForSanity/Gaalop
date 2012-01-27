@@ -20,8 +20,10 @@ import java.io.InputStream;
 public class Main {
 
     public static void main(String[] args) throws IOException {
+        int[] dimensions = {2,3,4,5,6,9};
+        for (int dimension: dimensions) {
             ProductComputer productComputer = new ProductComputer();
-            InputStream inputStream = AlStrategy.class.getResourceAsStream("algebra/9d/definition.csv");
+            InputStream inputStream = AlStrategy.class.getResourceAsStream("algebra/"+dimension+"d/definition.csv");
             AlgebraDefinitionFile alFile = new AlgebraDefinitionFile();
             alFile.loadFromFile(inputStream);
             AlgebraPC algebraPC = new AlgebraPC(alFile);
@@ -57,8 +59,9 @@ public class Main {
                     inner,
                     outer,
                     geo,
-                    new FileOutputStream("products.csv")
+                    new FileOutputStream("products"+dimension+".csv")
                     );
+        }
 
     }
 

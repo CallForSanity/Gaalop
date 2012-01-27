@@ -22,20 +22,22 @@ public class BitWriter extends AbsBitWriter {
         cache <<= bitCount;
         cache |= data;
         cachedBits += bitCount;
-        while (cachedBits>=16) {
-            int toWrite = (int) ((cache >> (cachedBits-16)) & 0xFFFF);
-            out.writeChar(toWrite);
-            cachedBits -= 16;
-            cache &= ~(0xFFFF << cachedBits);
+        while (cachedBits>=8) {
+            int toWrite = (int) ((cache >> (cachedBits-8)) & 0xFF);
+            if (toWrite > 127) toWrite -= 256;
+            out.writeByte(toWrite);
+            cachedBits -= 8;
+            cache &= ~(0xFF << cachedBits);
         }
     }
 
     @Override
     public void finish() throws IOException {
         if (cachedBits > 0) {
-            cache <<= 16-cachedBits;
-            int toWrite = (int) (cache & 0xFFFF);
-            out.writeChar(toWrite);
+            cache <<= 8-cachedBits;
+            int toWrite = (int) (cache & 0xFF);
+            if (toWrite > 127) toWrite -= 256;
+            out.writeByte(toWrite);
             cache = 0;
             cachedBits = 0;
         }

@@ -16,10 +16,11 @@ public class BitReader extends AbsBitReader {
     public int read(int bitCount) throws IOException {
 
         while (cachedBits < bitCount) {
-            int data = (int) in.readChar();
-            cache <<= 16;
+            int data = (int) in.readByte();
+            if (data < 0) data += 256;
+            cache <<= 8;
             cache |= data;
-            cachedBits += 16;
+            cachedBits += 8;
         }
 
         cachedBits -= bitCount;
