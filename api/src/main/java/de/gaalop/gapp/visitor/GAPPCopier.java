@@ -140,7 +140,7 @@ public class GAPPCopier implements GAPPVisitor {
     @Override
     public Object visitAssignMv(GAPPAssignMv gappAssignMv, Object arg) {
         return new GAPPAssignMv(
-                (GAPPMultivector) GAPPValueHolderCopier.copyValueHolder(gappAssignMv.getDestinationMv()),
+                (GAPPMultivector) GAPPValueHolderCopier.copyValueHolder(gappAssignMv.getDestination()),
                 copyPosSelectorset(gappAssignMv.getSelectors()),
                 copyValueset(gappAssignMv.getValues()));
     }
@@ -157,7 +157,7 @@ public class GAPPCopier implements GAPPVisitor {
     public Object visitResetMv(GAPPResetMv gappResetMv, Object arg) {
         return new GAPPResetMv(
                 (GAPPMultivector) GAPPValueHolderCopier.copyValueHolder(
-                gappResetMv.getDestinationMv()),
+                gappResetMv.getDestination()),
                 gappResetMv.getSize());
     }
 

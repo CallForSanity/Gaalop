@@ -33,7 +33,7 @@ public class GAPPAssignMv extends GAPPBaseInstruction {
         return visitor.visitAssignMv(this, arg);
     }
 
-    public GAPPMultivector getDestinationMv() {
+    public GAPPMultivector getDestination() {
         return destinationMv;
     }
 

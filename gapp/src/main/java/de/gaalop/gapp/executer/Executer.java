@@ -98,7 +98,7 @@ public class Executer extends CFGGAPPVisitor {
     @Override
     public Object visitResetMv(GAPPResetMv gappResetMv, Object arg) {
         MultivectorWithValues mv = new MultivectorWithValues(gappResetMv.getSize(),true);
-        values.put(gappResetMv.getDestinationMv().getName(), mv);
+        values.put(gappResetMv.getDestination().getName(), mv);
         mv.clear();
         return null;
     }
@@ -186,7 +186,7 @@ public class Executer extends CFGGAPPVisitor {
 
     @Override
     public Object visitAssignMv(GAPPAssignMv gappAssignMv, Object arg) {
-        MultivectorWithValues destination = getMultivector(gappAssignMv.getDestinationMv().getName());
+        MultivectorWithValues destination = getMultivector(gappAssignMv.getDestination().getName());
 
         PosSelectorset selector = gappAssignMv.getSelectors();
         int selCount = selector.size();

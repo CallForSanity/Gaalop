@@ -126,7 +126,7 @@ public class MemoryUsage extends CFGGAPPVisitor {
     @Override
     public Object visitAssignMv(GAPPAssignMv gappAssignMv, Object arg) {
         curLine++;
-        access(gappAssignMv.getDestinationMv());
+        access(gappAssignMv.getDestination());
         return null;
     }
 
@@ -140,7 +140,7 @@ public class MemoryUsage extends CFGGAPPVisitor {
     @Override
     public Object visitResetMv(GAPPResetMv gappResetMv, Object arg) {
         curLine++;
-        liveStatistics.put(gappResetMv.getDestinationMv().getName(),
+        liveStatistics.put(gappResetMv.getDestination().getName(),
                 new LiveStatistics(curLine, gappResetMv.getSize()));
         return null;
     }

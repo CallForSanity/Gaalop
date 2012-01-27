@@ -24,7 +24,7 @@ public class GAPPResetMv extends GAPPBaseInstruction {
         return visitor.visitResetMv(this, arg);
     }
 
-    public GAPPMultivector getDestinationMv() {
+    public GAPPMultivector getDestination() {
         return destinationMv;
     }
 

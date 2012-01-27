@@ -37,7 +37,7 @@ public class GAPPMvSizeVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor {
 
     @Override
     public Object visitResetMv(GAPPResetMv gappResetMv, Object arg) {
-        getMvSizes().put(gappResetMv.getDestinationMv().getName(), 0);
+        getMvSizes().put(gappResetMv.getDestination().getName(), 0);
         return null;
     }
 
