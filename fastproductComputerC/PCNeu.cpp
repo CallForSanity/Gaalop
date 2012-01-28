@@ -4,7 +4,6 @@
 #include "Definitions.h"
 #include "SignedBlade.h"
 #include "GAMethods.h"
-#include "Basetransformation.h"
 #include <iostream>
 
 #include "BladelistCreator.h"
@@ -18,6 +17,9 @@
 
 #include <time.h>
 #include <fstream>
+
+#include "BitWriter.h"
+#include "BitReader.h"
 
 #define COMPUTE_INNER_PRODUCT
 #define COMPUTE_OUTER_AND_GEO_PRODUCT
@@ -36,6 +38,31 @@ void printBladelist(Bladelist& list, void (*printer) (Blade&, std::ostream&)) {
 	}
 	out.close();
 }
+
+#include "CalcThread.h"
+
+#include <boost\thread.hpp>
+
+void write(int count, int bitCount1, int bitCount2, BitWriter& rewriter, Bladelist& bladelistPM, FILE* out2, const char* filename) {
+	FILE* in = fopen(filename,"rb");
+	fputc(1,out2); //format
+	fputc(DIMENSION,out2); //dimension
+	fputc(bitCount2,out2); //bitCount
+	int bladeCount = bladelistPM.size();
+	BitReader reader;
+	
+	for (int i=0;i<count;++i)
+		for (int j=0;j<bladeCount;++j) {
+			trafo(reader, rewriter, in, out2, bitCount1, bitCount2);
+			trafo(reader, rewriter, in, out2, bitCount1, bitCount2);
+			trafo(reader, rewriter, in, out2, bitCount1, bitCount2);
+		}
+
+		
+	fclose(in);
+}
+
+#define max(x,y) (((x)>(y)) ? (x) : (y))
 
 int main(int argc, char* argv[])
 {
@@ -57,76 +84,69 @@ int main(int argc, char* argv[])
 		index++;
 	}
 
-#ifdef PRINT_TO_FILE
-	std::fstream out("E:\\products.csv",std::fstream::out);
-#endif
-
+	// calculate products
+	
 	time_t start;
 	time(&start);
-	// calculate products
-	int i1 = 0;
-	int i2 = 0;
-	for (Bladelist::iterator sblade1=bladelistPM.begin(); sblade1 != bladelistPM.end(); ++sblade1) {
-		//std::cout << i1 << std::endl;
-		for (Bladelist::iterator sblade2=bladelistPM.begin(); sblade2 != bladelistPM.end(); ++sblade2) {
-			SumOfBlades innerProduct;
-			SumOfBlades outerProduct;
-			SumOfBlades geoProduct;
 
-			SumOfBlades& s1 = *sblade1;
-		    SumOfBlades& s2 = *sblade2;
-			for (SumOfBlades::iterator blade1=s1.begin(); blade1 != s1.end(); ++blade1)
-				for (SumOfBlades::iterator blade2=s2.begin(); blade2 != s2.end(); ++blade2) {
-					SignedBlade& b1 = *blade1;
-					SignedBlade& b2 = *blade2;
+	int bitCount1 = 31;
 
-					//calculate inner product in plusminus base
-					computeInnerOfTwoSignedBlades(b1,b2,innerProduct);
+	int max1=0;
+	int max2=0;
+	int max3=0;
+	int max4=0;
 
-					//calculate outer and geo product in plusminus base
-					computeOuterGeoOfTwoSignedBlades(b1,b2,outerProduct,geoProduct);		
-			}
+	CalcThread c1(0,128,"products0.csv",bladelistPM, mapBladesToIndex, bitCount1,&max1);
+	CalcThread c2(128,256,"products1.csv",bladelistPM, mapBladesToIndex, bitCount1,&max2);
+	CalcThread c3(256,384,"products2.csv",bladelistPM, mapBladesToIndex, bitCount1,&max3);
+	CalcThread c4(384,512,"products3.csv",bladelistPM, mapBladesToIndex, bitCount1,&max4);
 
-				
-			// Base transformation to zero inf base
-			SumOfBlades innerProductZI;
-			basetransformationPlusMinusToZeroInf(innerProduct,innerProductZI);
-			SumOfBlades outerProductZI;
-			basetransformationPlusMinusToZeroInf(outerProduct,outerProductZI);
-			SumOfBlades geoProductZI;
-			basetransformationPlusMinusToZeroInf(geoProduct,geoProductZI);
+	boost::thread t1(c1);
+	boost::thread t2(c2);
+	boost::thread t3(c3);
+	boost::thread t4(c4);
 
-			// group
-			group(innerProductZI);
-			group(outerProductZI);
-			group(geoProductZI);
+	t1.join();
+	t2.join();
+	t3.join();
+	t4.join();
 
-#ifdef PRINT_TO_FILE
-			// output (to file)
-			out << "E" << i1 << ";E" << i2 << ";";
-			outputExBr(innerProductZI,&printBladeZI,mapBladesToIndex,out,i1,i2,'.');
-			out << ";";
-			outputExBr(outerProductZI,&printBladeZI,mapBladesToIndex,out,i1,i2,'^');
-			out << ";";
-			outputExBr(geoProductZI,&printBladeZI,mapBladesToIndex,out,i1,i2,'*');
-			out << std::endl;
-#endif
+	int maxNumber = max(max(max1,max2),max(max3,max4));
+	//std::cout << maxNumber <<std::endl;
 
-			i2++;
-		}
-		i1++;
-		i2 = 0;
-	}
 
-#ifdef PRINT_TO_FILE
-	out.close();
-#endif
+	// komprimieren
+	int number = 2;
+    int bitCount2 = 1;
+    while (number < maxNumber+1) {
+        bitCount2++;
+        number *= 2;
+    }
+
+	int count = 128;
+
+	FILE* out2 = fopen("products.csv","w+b");
+	BitWriter rewriter;
+	
+	write(count,bitCount1,bitCount2,rewriter,bladelistPM,out2,"products0.csv");
+	write(count,bitCount1,bitCount2,rewriter,bladelistPM,out2,"products1.csv");
+	write(count,bitCount1,bitCount2,rewriter,bladelistPM,out2,"products2.csv");
+	write(count,bitCount1,bitCount2,rewriter,bladelistPM,out2,"products3.csv");
+
+	remove("products0.csv");
+	remove("products1.csv");
+	remove("products2.csv");
+	remove("products3.csv");
+
+	rewriter.finish(out2);
+	fclose(out2);
 
 	time_t ende;
 	time(&ende);
 
 	std::cout << "Ready in " << difftime(ende, start) << " seconds" << std::endl;
-	getchar();
+	//getchar();
 	return 0;
 }
+
 

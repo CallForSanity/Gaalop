@@ -1,5 +1,6 @@
 #pragma once
 
+#include "AlgebraDefinition.h"
 #include "SignedBlade.h"
 
 inline bool calcInner1Product1(SignedBlade& b1, SignedBlade& b2, SignedBlade& resultInner1) {

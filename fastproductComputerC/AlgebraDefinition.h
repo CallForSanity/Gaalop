@@ -9,6 +9,8 @@
 #ifdef ALGEBRA_5D
 	//== 5d ==
 
+#define DIMENSION 5
+
 #define EINF 8
 #define E0 16
 #define EP 8
@@ -53,6 +55,8 @@
 
 #ifdef ALGEBRA_9D
 	//== 9d ==
+
+	#define DIMENSION 9
 
 	#define EINFX 8
 	#define EINFY 16
