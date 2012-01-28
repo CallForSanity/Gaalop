@@ -42,7 +42,7 @@ public class SetOfVariablesUpdater implements GAPPVisitor {
 
     @Override
     public Object visitAssignMv(GAPPAssignMv gappAssignMv, Object arg) {
-        multivectors.add(gappAssignMv.getDestinationMv().getName());
+        multivectors.add(gappAssignMv.getDestination().getName());
         return null;
     }
 
@@ -54,7 +54,7 @@ public class SetOfVariablesUpdater implements GAPPVisitor {
 
     @Override
     public Object visitResetMv(GAPPResetMv gappResetMv, Object arg) {
-        multivectors.add(gappResetMv.getDestinationMv().getName());
+        multivectors.add(gappResetMv.getDestination().getName());
         return null;
     }
 
