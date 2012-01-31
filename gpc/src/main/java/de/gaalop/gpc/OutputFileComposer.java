@@ -242,8 +242,6 @@ public class OutputFileComposer {
                                                    String blade) {
         // format blade
         blade = Common.formatBladeName(blade);
-        if(blade.equals("1"))
-            blade = "1.0";
         
         // check for negation
         boolean negated;
