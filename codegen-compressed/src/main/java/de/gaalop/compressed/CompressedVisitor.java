@@ -29,7 +29,7 @@ public class CompressedVisitor extends de.gaalop.gaalet.output.CppVisitor {
         FindStoreOutputNodes findOutput = new FindStoreOutputNodes();
         graph.accept(findOutput);
         for (StoreResultNode var : findOutput.getNodes()) {
-            String outputName = var.getValue().getName() + "_out";
+            String outputName = var.getValue().getName() + suffix;
 
             outputNamesMap.put(var, outputName);
         }

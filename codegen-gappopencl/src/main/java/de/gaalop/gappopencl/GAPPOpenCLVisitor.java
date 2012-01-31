@@ -28,6 +28,7 @@ import de.gaalop.gapp.variables.GAPPVector;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.StringTokenizer;
 
 
 /**
@@ -38,6 +39,8 @@ public class GAPPOpenCLVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor
     implements de.gaalop.gapp.variables.GAPPVariableVisitor {
 
     protected static int dotCount = 0;
+    protected static final String lo = ".lo";
+    protected static final String hi = ".hi";
     protected Map<String,Integer> mvSizes;
     protected boolean gpcMetaInfo = true;
     protected Map<String,Map<Integer,String>> mvBladeMap = new HashMap<String,Map<Integer,String>>();
@@ -92,13 +95,25 @@ public class GAPPOpenCLVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor
         return mv + ((mvSizes.get(mv) == 1) ? "" : (".s" + getOpenCLIndex(blade)));
     }
     
+    protected static String formatBladeName(final String bladeName) {
+        if(bladeName.equals("1.0") || bladeName.equals("1.0f"))
+            return "1";
+        
+        // remove whitespaces from blade
+        StringTokenizer tokenizer = new StringTokenizer(bladeName," \t\n\r\f()");
+        StringBuilder bladeBuffer = new StringBuilder();
+        while(tokenizer.hasMoreTokens())
+            bladeBuffer.append(tokenizer.nextToken());
+        return bladeBuffer.toString();
+    }
+        
     protected void declareGPCMultivectorComponent(String mv, Integer blade, SelectorIndex sel) {
         if(!gpcMetaInfo || mv.startsWith(GAPPOpenCLCodeGenerator.tempMv))
             return;
         
         result.append("//#pragma gpc multivector_component ");
         result.append(mv);
-        result.append(" ").append(sel.getBladeName());
+        result.append(" ").append(formatBladeName(sel.getBladeName()));
         result.append(" ").append(mv).append(".s").append(blade);
         result.append("\n");
     }
@@ -367,9 +382,9 @@ public class GAPPOpenCLVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor
             visitOpenCLVectorType(openCLVectorSize);
             result.append(" ").append(GAPPOpenCLCodeGenerator.dot).append(dotCount+1);
             result.append(" = ");
-            result.append(GAPPOpenCLCodeGenerator.dot).append(dotCount).append(".odd");
+            result.append(GAPPOpenCLCodeGenerator.dot).append(dotCount).append(lo);
             result.append(" + ");
-            result.append(GAPPOpenCLCodeGenerator.dot).append(dotCount).append(".even");
+            result.append(GAPPOpenCLCodeGenerator.dot).append(dotCount).append(hi);
             result.append(";\n");
 
             ++dotCount;
@@ -378,9 +393,9 @@ public class GAPPOpenCLVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor
         // last step directly assigns to destination
         result.append(bladeCoeff);
         result.append(" = ");
-        result.append(GAPPOpenCLCodeGenerator.dot).append(dotCount).append(".odd");
+        result.append(GAPPOpenCLCodeGenerator.dot).append(dotCount).append(lo);
         result.append(" + ");
-        result.append(GAPPOpenCLCodeGenerator.dot).append(dotCount).append(".even");
+        result.append(GAPPOpenCLCodeGenerator.dot).append(dotCount).append(hi);
         result.append(";\n");
         ++dotCount;
         

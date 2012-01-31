@@ -27,9 +27,16 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 	protected int indentation = 0;
 
 	protected Set<String> assigned = new HashSet<String>();
+        
+        protected String variableType = "float";
 	
 	public CppVisitor(boolean standalone) {
 		this.standalone = standalone;
+	}
+        
+	public CppVisitor(String variableType) {
+		this.standalone = false;
+		this.variableType = variableType;
 	}
 	
 	public void setStandalone(boolean standalone) {
@@ -58,13 +65,13 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 			// Input Parameters
 			List<Variable> inputParameters = sortVariables(graph.getInputVariables());
 			for (Variable var : inputParameters) {
-				code.append("double "); // The assumption here is that they all are normal scalars
+				code.append(variableType).append(" "); // The assumption here is that they all are normal scalars
 				code.append(var.getName());
 				code.append(", ");
 			}
 
 			for (Variable var : localVariables) {
-				code.append("double ");
+				code.append(variableType).append(" ");
 				code.append(var.getName());
 				code.append("["+bladeCount+"], ");
 			}
@@ -78,7 +85,7 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 		} else {
 			for (Variable var : localVariables) {
 				appendIndentation();
-				code.append("double ");
+				code.append(variableType).append(" ");
 				code.append(var.getName());
 				code.append("["+bladeCount+"] = { 0.0 };\n");
 			}
@@ -86,7 +93,7 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 
 		if (graph.getScalarVariables().size() > 0) {
 			appendIndentation();
-			code.append("double ");
+			code.append(variableType).append(" ");
 			for (Variable tmp : graph.getScalarVariables()) {
 				code.append(tmp.getName());
 				code.append(", ");
