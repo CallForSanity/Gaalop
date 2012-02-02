@@ -20,7 +20,7 @@ import java.io.InputStream;
 public class Main {
 
     public static void main(String[] args) throws IOException {
-        int[] dimensions = {2,3,4,5,6,9};
+        int[] dimensions = {8};
         for (int dimension: dimensions) {
             ProductComputer productComputer = new ProductComputer();
             InputStream inputStream = AlStrategy.class.getResourceAsStream("algebra/"+dimension+"d/definition.csv");
