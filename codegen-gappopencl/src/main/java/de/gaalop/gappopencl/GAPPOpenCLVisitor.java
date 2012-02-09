@@ -187,8 +187,12 @@ public class GAPPOpenCLVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor
         if (sel.getSign() < 0)
             result.append("-");
         final String lookupBladeCoeff = mvBladeMap.get(sourceName).get(sel.getIndex());
-        if(lookupBladeCoeff == null)
-            result.append(sourceName);
+        if(lookupBladeCoeff == null) {
+            if(sourceName.equals("1.0"))
+                result.append("1");
+            else
+                result.append(sourceName);
+        }
         else
             result.append(lookupBladeCoeff);
     }
@@ -374,6 +378,7 @@ public class GAPPOpenCLVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor
         // parallel multiply operation
         visitOpenCLVectorType(openCLVectorSize);
         result.append(" ").append(GAPPOpenCLCodeGenerator.dot).append(dotCount);
+        //visitWriteMask(operandSize);
         result.append(" = ");
         visitDotVectorsParallelMultiply(gappDotVectors);
 
@@ -410,6 +415,12 @@ public class GAPPOpenCLVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor
             result.append(it.next().getName());
         }
         result.append(";\n");
+    }
+    
+    public void visitWriteMask(int operandSize) {
+        result.append(".s");
+        for(int counter = 0; counter < operandSize; ++counter)
+            result.append(getOpenCLIndex(counter));
     }
 
     String getCode() {
