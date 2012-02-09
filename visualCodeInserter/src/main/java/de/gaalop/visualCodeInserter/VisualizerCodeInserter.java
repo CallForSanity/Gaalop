@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package de.gaalop.visualCodeInserter;
 
 import de.gaalop.OptimizationException;
@@ -10,6 +5,7 @@ import de.gaalop.VisualizerStrategy;
 import de.gaalop.cfg.AssignmentNode;
 import de.gaalop.cfg.ControlFlowGraph;
 import de.gaalop.cfg.ExpressionStatement;
+import de.gaalop.cfg.StoreResultNode;
 import de.gaalop.dfg.Expression;
 import de.gaalop.dfg.InnerProduct;
 import de.gaalop.dfg.MacroCall;
@@ -57,6 +53,10 @@ public class VisualizerCodeInserter implements VisualizerStrategy {
                 AssignmentNode renderNode = new AssignmentNode(graph, new Variable(prefix+"PRODUCT"+i), new InnerProduct(s.getExpression(), visualizationPoint));
                 graph.addLocalVariable(new Variable(prefix+"PRODUCT"+i));
                 s.insertAfter(renderNode);
+
+                StoreResultNode outputRenderNode = new StoreResultNode(graph, new Variable(prefix+"PRODUCT"+i));
+                graph.addLocalVariable(new Variable(prefix+"PRODUCT"+i));
+                renderNode.insertAfter(outputRenderNode);
                 i++;
             }
 
