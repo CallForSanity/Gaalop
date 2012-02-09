@@ -7,6 +7,15 @@ VecN3 = {
     _P(1)*e1+_P(2)*e2+_P(3)*e3+0.5*(_P(1)*_P(1)+_P(2)*_P(2)+_P(3)*_P(3))*einf+e0
 }
 
+//Creates a point in N3 of three coordinates x,y,z
+//args:
+//x
+//y
+//z
+createPoint = {
+    _P(1)*e1+_P(2)*e2+_P(3)*e3+0.5*(_P(1)*_P(1)+_P(2)*_P(2)+_P(3)*_P(3))*einf+e0
+}
+
 //The dualization operator
 //args:
 //m 

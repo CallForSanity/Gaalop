@@ -82,6 +82,7 @@ public final class CompilerFacade extends Observable {
         notifyObservers("Optimizing...");  //FIXME thomas
         optimizationStrategy.transform(graph);
         setChanged();
+        
         notifyObservers("Generating Code...");
         Set<OutputFile> output = codeGenerator.generate(graph);  
         setChanged();

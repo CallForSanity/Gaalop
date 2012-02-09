@@ -9,6 +9,7 @@ import de.gaalop.CodeGenerator;
 import de.gaalop.CodeGeneratorException;
 import de.gaalop.OutputFile;
 import de.gaalop.cfg.ControlFlowGraph;
+import java.nio.charset.Charset;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -27,7 +28,10 @@ public class VisualizerCodeGenerator implements CodeGenerator {
     @Override
     public Set<OutputFile> generate(ControlFlowGraph in) throws CodeGeneratorException {
         //TODO chs visualize
-        return new HashSet<OutputFile>();
+        
+        HashSet<OutputFile> out = new HashSet<OutputFile>(); //only for debugging
+        out.add(new OutputFile(in.getSource().getName(), in.toString(), Charset.forName("UTF-8")));
+        return out;
     }
 
 }

@@ -487,8 +487,9 @@ public final class GraphBuilder {
 		FindStoreOutputNodes outputNodes = new FindStoreOutputNodes();
 		graph.accept(outputNodes);
 		if (outputNodes.getNodes().isEmpty()) {
-			throw new RuntimeException("There are no lines marked for optimization ('?')");
+			//TODO chs throw new RuntimeException("There are no lines marked for optimization ('?')");
 		}
+                
 		
 		SetCallerVisitor visitor = new SetCallerVisitor();
 		graph.accept(visitor);
