@@ -17,6 +17,8 @@ public final class CompilerFacade extends Observable {
 
     private final CodeParser codeParser;
 
+    private final VisualizerStrategy visualizerStrategy;
+
     private final AlgebraStrategy algebraStrategy;
 
     private final OptimizationStrategy optimizationStrategy;
@@ -40,8 +42,9 @@ public final class CompilerFacade extends Observable {
      * @param optimizationStrategy The optimization strategy used to process the graph before generating code.
      * @param codeGenerator The code generator used to generate code from the previously optimized graph.
      */
-    public CompilerFacade(CodeParser codeParser, AlgebraStrategy algebraStrategy, OptimizationStrategy optimizationStrategy, CodeGenerator codeGenerator) {
+    public CompilerFacade(CodeParser codeParser, VisualizerStrategy visualizerStrategy, AlgebraStrategy algebraStrategy, OptimizationStrategy optimizationStrategy, CodeGenerator codeGenerator) {
         this.codeParser = codeParser;
+        this.visualizerStrategy = visualizerStrategy;
         this.algebraStrategy = algebraStrategy;
         this.optimizationStrategy = optimizationStrategy;
         this.codeGenerator = codeGenerator;
@@ -66,6 +69,10 @@ public final class CompilerFacade extends Observable {
     	setChanged();
     	notifyObservers("Parsing...");
         ControlFlowGraph graph = codeParser.parseFile(input);
+        setChanged();
+
+        notifyObservers("Inserting code for visualization...");
+        visualizerStrategy.transform(graph);
         setChanged();
 
         notifyObservers("Algebra inserting...");  

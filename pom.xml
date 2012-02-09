@@ -16,6 +16,8 @@
 	<!-- front end -->
         <module>clucalc</module>
 
+        <module>visualCodeInserter</module>
+
         <!-- algebra -->
         <module>algebra</module>
 
@@ -33,6 +35,7 @@
         <module>codegen-compressed</module>
         <module>codegen-verilog</module>
         <module>codegen-latex</module>
+        <module>codegen-visualizer</module>
         <module>gaalet</module>
 
 	<!-- interface -->

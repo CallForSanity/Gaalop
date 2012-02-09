@@ -19,6 +19,8 @@ public final class Plugins {
 
     private static Set<CodeParserPlugin> codeParserPlugins;
 
+    private static Set<VisualizerStrategyPlugin> visualizerStrategyPlugins;
+
     private static Set<AlgebraStrategyPlugin> algebraStrategyPlugins;
 
     private static Set<CodeGeneratorPlugin> codeGeneratorPlugins;
@@ -27,6 +29,7 @@ public final class Plugins {
 
     static {
         codeParserPlugins = loadServices(CodeParserPlugin.class);
+        visualizerStrategyPlugins = loadServices(VisualizerStrategyPlugin.class);
         algebraStrategyPlugins = loadServices(AlgebraStrategyPlugin.class);
         codeGeneratorPlugins = loadServices(CodeGeneratorPlugin.class);
         optimizationStrategyPlugins = loadServices(OptimizationStrategyPlugin.class);
@@ -87,6 +90,14 @@ public final class Plugins {
      */
     public static Set<AlgebraStrategyPlugin> getAlgebraStrategyPlugins() {
         return Collections.unmodifiableSet(algebraStrategyPlugins);
+    }
+
+    /**
+     * Gets the available visualizer strategy plugins.
+     * @return An unmodifiable set of visualizer strategy plugins.
+     */
+    public static Set<VisualizerStrategyPlugin> getVisualizerStrategyPlugins() {
+        return Collections.unmodifiableSet(visualizerStrategyPlugins);
     }
 
 }

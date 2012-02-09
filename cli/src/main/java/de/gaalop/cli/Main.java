@@ -1,6 +1,7 @@
 package de.gaalop.cli;
 
 import de.gaalop.*;
+import de.gaalop.cfg.ControlFlowGraph;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.kohsuke.args4j.CmdLineException;
@@ -37,6 +38,9 @@ public class Main {
 
   @Option(name = "-algebra", required = false, usage = "Sets the class name of the algebra strategy plugin that should be used.")
   private String algebraStrategyPlugin = "de.gaalop.algebra.Plugin";
+
+  @Option(name = "-visualizer", required = false, usage = "Sets the class name of the visualizer strategy plugin that should be used.")
+  private String visualizerStrategyPlugin = "de.gaalop.visualCodeInserter.Plugin";
 
   /**
    * Starts the command line interface of Gaalop.
@@ -99,11 +103,13 @@ public class Main {
 
     AlgebraStrategy algebraStrategy = createAlgebraStrategy();
 
+    VisualizerStrategy visualizerStrategy = createVisualizerStrategy();
+
     OptimizationStrategy optimizationStrategy = createOptimizationStrategy();
 
     CodeGenerator codeGenerator = createCodeGenerator();
 
-    return new CompilerFacade(codeParser, algebraStrategy, optimizationStrategy, codeGenerator);
+    return new CompilerFacade(codeParser, visualizerStrategy, algebraStrategy, optimizationStrategy, codeGenerator);
   }
 
   private CodeParser createCodeParser() {
@@ -132,6 +138,19 @@ public class Main {
     return null;
   }
 
+  private VisualizerStrategy createVisualizerStrategy() {
+    Set<VisualizerStrategyPlugin> plugins = Plugins.getVisualizerStrategyPlugins();
+    for (VisualizerStrategyPlugin plugin : plugins) {
+      if (plugin.getClass().getName().equals(visualizerStrategyPlugin)) {
+        return plugin.createVisualizerStrategy();
+      }
+    }
+
+    System.err.println("Unknown visualizer strategy plugin: " + algebraStrategyPlugin);
+    System.exit(-4);
+    return null;
+  }
+
   private OptimizationStrategy createOptimizationStrategy() {
     Set<OptimizationStrategyPlugin> plugins = Plugins.getOptimizationStrategyPlugins();
     for (OptimizationStrategyPlugin plugin : plugins) {
@@ -141,7 +160,7 @@ public class Main {
     }
 
     System.err.println("Unknown optimization strategy plugin: " + optimizationStrategyPlugin);
-    System.exit(-4);
+    System.exit(-5);
     return null;
   }
 
@@ -154,7 +173,7 @@ public class Main {
     }
 
     System.err.println("Unknown code generator plugin: " + codeGeneratorPlugin);
-    System.exit(-5);
+    System.exit(-6);
     return null;
   }
 

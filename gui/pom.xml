@@ -104,5 +104,10 @@
             <artifactId>algebra</artifactId>
             <version>1.0.0</version>
         </dependency>
+        <dependency>
+            <groupId>de.gaalop</groupId>
+            <artifactId>visualCodeInserter</artifactId>
+            <version>1.0.0</version>
+        </dependency>
     </dependencies>
 </project>

@@ -40,6 +40,14 @@ public class CompileAction extends AbstractAction {
     public void actionPerformed(ActionEvent e) {
     	statusBar.reset();
 
+        VisualizerStrategyPlugin visualizerPlugin = getVisualizerStrategy();
+
+        if (visualizerPlugin == null) {
+            JOptionPane.showMessageDialog(null, "No visualizer strategy is available. Please install " +
+                    "an appropiate plugin.", "No Visualizer Strategy Available", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
         AlgebraStrategyPlugin algebraPlugin = getAlgebraStrategy();
 
         if (algebraPlugin == null) {
@@ -59,6 +67,7 @@ public class CompileAction extends AbstractAction {
         CodeParserPlugin parserPlugin = sourcePanel.getParserPlugin();
 
         final CompilerFacade facade = new CompilerFacade(parserPlugin.createCodeParser(),
+                visualizerPlugin.createVisualizerStrategy(),
                 algebraPlugin.createAlgebraStrategy(),
                 optimizationPlugin.createOptimizationStrategy(),
                 codeGeneratorPlugin.createCodeGenerator());
@@ -99,6 +108,25 @@ public class CompileAction extends AbstractAction {
         if (Plugins.getAlgebraStrategyPlugins().size() > 0) 
             return Plugins.getAlgebraStrategyPlugins().iterator().next();
         
+
+        return null;
+    }
+
+    private VisualizerStrategyPlugin getVisualizerStrategy() {
+        Preferences prefs = Preferences.userNodeForPackage(getClass());
+        String preferredVisualizerPlugin = prefs.get("preferredVisualizerPlugin", "");
+        log.debug("Preferred visualizer plugin is " + preferredVisualizerPlugin);
+
+        for (VisualizerStrategyPlugin plugin : Plugins.getVisualizerStrategyPlugins()) {
+            String name = plugin.getClass().getName();
+            if (name.equals(preferredVisualizerPlugin)) {
+                return plugin;
+            }
+        }
+
+        if (Plugins.getVisualizerStrategyPlugins().size() > 0)
+            return Plugins.getVisualizerStrategyPlugins().iterator().next();
+
 
         return null;
     }
