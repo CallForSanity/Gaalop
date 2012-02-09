@@ -155,7 +155,7 @@ public class MaximaOptimizer {
 
             dfg = new DFGToMaximaCode();
             node.getValue().accept(dfg);
-            String value = dfg.getResultString() + ";";
+            String value = "ratsimp("+dfg.getResultString() + ");";
             if (plugin.isOptInserting()) {
                 String name = node.getVariable().getName();
                 if (!graph.getPragmaOnlyEvaluateVariables().contains(name) && !collector.containsStoreResultVariableName(name)) { // see comment above
