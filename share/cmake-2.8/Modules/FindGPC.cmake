@@ -2,6 +2,14 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 
 # options
 OPTION(GPC_WITH_MAPLE "wether to use the maple plugin or not." OFF)
+OPTION(GPC_USE_GAPP "wether to use Geometric Algebra Parallelism Programs (GAPP) language or not." OFF)
+
+OPTION(GPC_ALGEBRA_USEPRECALCUTEDTABLES "wether to use precalculated algebra tables or not." ON)
+OPTION(GPC_ALGEBRA_USEBUILTINTABLES "wether to use built-in algebra tables or not." ON)
+SET(GPC_ALGEBRA_PRODUCTSFILEPATH "algebra/5d/products.csv" CACHE FILEPATH "products file path")
+SET(GPC_ALGEBRA_DEFINITIONFILEPATH "algebra/5d/definition.csv" CACHE FILEPATH "definition file path")
+SET(GPC_ALGEBRA_MACROSFILEPATH "algebra/5d/macros.clu" CACHE FILEPATH "macros file path")
+SET(GPC_ALGEBRA_USERMACROFILEPATH "" CACHE FILEPATH "user macro file path")
 
 # find java
 FIND_PACKAGE(Java COMPONENTS Runtime REQUIRED)
@@ -35,10 +43,27 @@ ELSE(GPC_WITH_MAPLE)
 SET(GPC_COMMON_ARGS -optimizer "de.gaalop.tba.Plugin")
 ENDIF(GPC_WITH_MAPLE)
 
+IF(GPC_ALGEBRA_USEPRECALCUTEDTABLES)
+SET(GPC_COMMON_ARGS ${GPC_COMMON_ARGS} -algebra_usePrecalulatedTables)
+ENDIF(GPC_ALGEBRA_USEPRECALCUTEDTABLES)
+IF(GPC_ALGEBRA_USEBUILTINTABLES)
+SET(GPC_COMMON_ARGS ${GPC_COMMON_ARGS} -algebra_useBuiltInFiles)
+ENDIF(GPC_ALGEBRA_USEBUILTINTABLES)
+SET(GPC_COMMON_ARGS ${GPC_COMMON_ARGS} -algebra_productsFilePath "${GPC_ALGEBRA_PRODUCTSFILEPATH}")
+SET(GPC_COMMON_ARGS ${GPC_COMMON_ARGS} -algebra_definitionFilePath "${GPC_ALGEBRA_DEFINITIONFILEPATH}")
+SET(GPC_COMMON_ARGS ${GPC_COMMON_ARGS} -algebra_macrosFilePath "${GPC_ALGEBRA_MACROSFILEPATH}")
+IF(NOT GPC_ALGEBRA_USERMACROFILEPATH STREQUAL "")
+SET(GPC_COMMON_ARGS ${GPC_COMMON_ARGS} -algebra_userMacroFilePath "${GPC_ALGEBRA_USERMACROFILEPATH}")
+ENDIF(NOT GPC_ALGEBRA_USERMACROFILEPATH STREQUAL "")
+
 # define specific args
 SET(GPC_CXX_ARGS ${GPC_COMMON_ARGS} -generator "de.gaalop.compressed.Plugin")
 SET(GPC_CUDA_ARGS ${GPC_COMMON_ARGS} -generator "de.gaalop.compressed.Plugin")
+IF(GPC_USE_GAPP)
 SET(GPC_OPENCL_ARGS ${GPC_EXTOPT_ARGS} -optimizer "de.gaalop.gapp.Plugin" -generator "de.gaalop.gappopencl.Plugin")
+ELSE(GPC_USE_GAPP)
+SET(GPC_OPENCL_ARGS ${GPC_COMMON_ARGS} -generator "de.gaalop.compressed.Plugin")
+ENDIF(GPC_USE_GAPP)
 SET(GPC_JAVA_ARGS ${GPC_COMMON_ARGS} -generator "de.gaalop.compressed.Plugin")
 
 # configure compile script

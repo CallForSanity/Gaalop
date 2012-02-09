@@ -346,6 +346,9 @@ public class OutputFileComposer {
     }
     
     public static void writeLinePragma(BufferedWriter outputFile, Integer lineCount) throws IOException {
+        if(!Main.writeLinePragmas)
+            return;
+        
         // line pragma for compile errors
         outputFile.write("#line ");
         outputFile.write(lineCount.toString());

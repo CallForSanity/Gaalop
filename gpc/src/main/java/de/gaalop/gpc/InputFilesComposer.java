@@ -14,6 +14,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import antlr.RecognitionException;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 /**
  *
@@ -46,7 +51,7 @@ public class InputFilesComposer {
                                         StringBuffer globalImportBuffer,
                                         List<String> gaalopInFileVector) throws IOException, RecognitionException {
         StringBuffer gpcBlockImportBuffer = new StringBuffer();
-        StringBuffer pragmaOutputBuffer = new StringBuffer();
+        Map<String,Set<String>> mvBladeOutput = new HashMap<String,Set<String>>();
         StringBuilder commandBuffer = new StringBuilder();
         String line;
         while ((line = inputFile.readLine()) != null) {
@@ -65,20 +70,32 @@ public class InputFilesComposer {
             // process command buffer
             processCommandBuffer(commandBuffer,
                                  gpcBlockImportBuffer,
-                                 pragmaOutputBuffer);
+                                 mvBladeOutput);
         }
         
         // add pragma outputs to InFile String
         final int lastIndex = gaalopInFileVector.size()-1;
-        if(lastIndex >= 0)
-            gaalopInFileVector.set(lastIndex,
-                    pragmaOutputBuffer.toString() +
-                    gaalopInFileVector.get(lastIndex));
+        if(lastIndex >= 0) {
+            StringBuffer finalInFile = new StringBuffer();
+            
+            // append mv blade outputs
+            for(Entry<String,Set<String>> entry : mvBladeOutput.entrySet()) {
+                finalInFile.append("//#pragma output ").append(entry.getKey());
+                for(String bladeName : entry.getValue())
+                    finalInFile.append(" ").append(bladeName);
+                finalInFile.append(Main.LINE_END);
+            }
+            
+            // append original file
+            finalInFile.append(gaalopInFileVector.get(lastIndex));
+            
+            gaalopInFileVector.set(lastIndex,finalInFile.toString());
+        }
     }
 
     protected static void processCommandBuffer(StringBuilder commandBuffer,
                                                StringBuffer gpcBlockImportBuffer,
-                                               StringBuffer pragmaOutputBuffer) throws RecognitionException, IOException {
+                                               Map<String,Set<String>> mvBladeOutput) throws RecognitionException, IOException {
         int commandEndPos = -1;
         while (true) {
             // get buffered command
@@ -103,6 +120,8 @@ public class InputFilesComposer {
 
             // extract command
             command = command.substring(0, commandEndPos);
+            
+            processMvGetBladeCoeff(command,mvBladeOutput);
             if (command.contains(Main.gpcMvFromArray)) {
                 processMvFromArray(command, gpcBlockImportBuffer);
             } else if (command.contains(Main.gpcMvFromStridedArray)) {
@@ -110,11 +129,11 @@ public class InputFilesComposer {
             } else if (command.contains(Main.gpcMvFromVector)) {
                 processMvFromVector(command, gpcBlockImportBuffer);
             } else if (command.contains(Main.gpcMvToArray)) {
-                processMvToArray(command, pragmaOutputBuffer);
+                processMvToArray(command, mvBladeOutput);
             } else if (command.contains(Main.gpcMvToStridedArray)) {
-                processMvToStridedArray(command, pragmaOutputBuffer);
+                processMvToStridedArray(command, mvBladeOutput);
             } else if (command.contains(Main.gpcMvToVector)) {
-                processMvToVector(command, pragmaOutputBuffer);
+                processMvToVector(command, mvBladeOutput);
             }
 
             // we found a command end, remove command from buffer
@@ -233,30 +252,61 @@ public class InputFilesComposer {
         output.append(";\n");
     }
     
+    public static Set<String> getMvBladeOutputSet(Map<String,Set<String>> mvBladeOutput,
+                                        String mv) {
+        Set<String> set = mvBladeOutput.get(mv);
+        if(set == null)
+            set = new HashSet<String>();
+        
+        return set;
+    }
+    
+    /*
+     * Search for keywords in command and parse the command.
+     * Handle mv_get_bladecoeff as a specieal case
+     * because it may be embedded anywhere.
+     */
+    public static void processMvGetBladeCoeff(String command,
+            Map<String,Set<String>> mvBladeOutput) throws IOException {
+        // replace step by step
+        CommandFunctionReplacer cp = new CommandFunctionReplacer(
+                command,
+                Main.gpcMvGetBladeCoeff);
+        while (cp.isFound()) {
+            final String mv = cp.getCommandParams()[0];
+            Set<String> set = getMvBladeOutputSet(mvBladeOutput,mv);
+            set.add(cp.getCommandParams()[1]);
+            mvBladeOutput.put(mv, set);
+            
+            // search for further occurences
+            cp = new CommandFunctionReplacer(
+                    cp.getCleanedLineEnd(),
+                    Main.gpcMvGetBladeCoeff);
+        }
+    }
+    
     public static void processMvToArray(final String command,
-                                        StringBuffer pragmaOutputBuffer) throws RecognitionException {
+                                        Map<String,Set<String>> mvBladeOutput) throws RecognitionException {
         // parse assignment
         AssignmentNode assignment = Common.parseAssignment(command);
         if (assignment == null) {
             return;
         }
                 
-        // print pragma output
         Iterator<Expression> it = ((MacroCall) assignment.getValue()).getArguments().iterator();
-        pragmaOutputBuffer.append("//#pragma output ");
-        pragmaOutputBuffer.append(it.next().toString());
+        final String mv = it.next().toString();
+        Set<String> set = getMvBladeOutputSet(mvBladeOutput,mv);
         
-        // print blades
+        // add blades
         while (it.hasNext()) {
-            pragmaOutputBuffer.append(' ').
-                    append(Common.formatBladeName(it.next().toString()));
-        }        
+            set.add(Common.formatBladeName(it.next().toString()));
+        }
         
-        pragmaOutputBuffer.append(Main.LINE_END);
+        mvBladeOutput.put(mv, set);
     }
 
     public static void processMvToStridedArray(final String command,
-                                                StringBuffer pragmaOutputBuffer) throws RecognitionException {
+                                                Map<String,Set<String>> mvBladeOutput) throws RecognitionException {
         // parse assignment
         AssignmentNode assignment = Common.parseAssignment(command);
         if (assignment == null) {
@@ -265,37 +315,36 @@ public class InputFilesComposer {
 
         // print pragma output
         Iterator<Expression> it = ((MacroCall) assignment.getValue()).getArguments().iterator();
-        pragmaOutputBuffer.append("//#pragma output ");
-        pragmaOutputBuffer.append(it.next().toString());
+        final String mv = it.next().toString();
+        Set<String> set = getMvBladeOutputSet(mvBladeOutput,mv);
         it.next(); // index
         it.next(); // stride
+
+        // add blades
         while (it.hasNext()) {
-            pragmaOutputBuffer.append(' ').
-                    append(Common.formatBladeName(it.next().toString()));
+            set.add(Common.formatBladeName(it.next().toString()));
         }
         
-        pragmaOutputBuffer.append(Main.LINE_END);
+        mvBladeOutput.put(mv, set);
     }
 
     public static void processMvToVector(final String command,
-                                        StringBuffer pragmaOutputBuffer) throws RecognitionException {
+                                        Map<String,Set<String>> mvBladeOutput) throws RecognitionException {
         // parse assignment
         AssignmentNode assignment = Common.parseAssignment(command);
         if (assignment == null) {
             return;
         }
 
-        // print pragma output
         Iterator<Expression> it = ((MacroCall) assignment.getValue()).getArguments().iterator();
-        pragmaOutputBuffer.append("//#pragma output ");
-        pragmaOutputBuffer.append(it.next().toString());
+        final String mv = it.next().toString();
+        Set<String> set = getMvBladeOutputSet(mvBladeOutput,mv);
         
-        // print blades
+        // add blades
         while (it.hasNext()) {
-            pragmaOutputBuffer.append(' ').
-                    append(Common.formatBladeName(it.next().toString()));
+            set.add(Common.formatBladeName(it.next().toString()));
         }
         
-        pragmaOutputBuffer.append(Main.LINE_END);
+        mvBladeOutput.put(mv, set);
     }
 }

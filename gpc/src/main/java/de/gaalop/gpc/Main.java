@@ -49,9 +49,25 @@ public class Main {
     public static String optimizationStrategyPlugin = "de.gaalop.maple.Plugin";
     @Option(name = "-algebra", required = false, usage = "Sets the class name of the algebra strategy plugin that should be used.")
     public static String algebraStrategyPlugin = "de.gaalop.algebra.Plugin";
+    @Option(name = "-pragmas", required = false, usage = "Wether or not to write line pragmas for compile errors.")
+    public static boolean writeLinePragmas = false;
 
-    public static String PATH_SEP = "/";
-    public static char LINE_END = '\n';
+    // Algebra options
+    @Option(name = "-algebra_usePrecalulatedTables", required = false, usage = "wether to use precalculated algebra tables or not.")
+    public static boolean usePrecalulatedTables = true;
+    @Option(name = "-algebra_productsFilePath", required = false, usage = "products file path")
+    public static String productsFilePath = "algebra/5d/products.csv";
+    @Option(name = "-algebra_definitionFilePath", required = false, usage = "definition file path")
+    public static String definitionFilePath = "algebra/5d/definition.csv";
+    @Option(name = "-algebra_macrosFilePath", required = false, usage = "macros file path")
+    public static String macrosFilePath = "algebra/5d/macros.clu";
+    @Option(name = "-algebra_userMacroFilePath", required = false, usage = "user macro file path")
+    public static String userMacroFilePath = "";
+    @Option(name = "-algebra_useBuiltInFiles", required = false, usage = "wether to use built-in algebra tables or not.")
+    public static boolean useBuiltInFiles = true;
+
+    public static final String PATH_SEP = "/";
+    public static final char LINE_END = '\n';
     
     public static final String gpcBegin = "#pragma gpc begin";
     public static final String gpcEnd = "#pragma gpc end";
