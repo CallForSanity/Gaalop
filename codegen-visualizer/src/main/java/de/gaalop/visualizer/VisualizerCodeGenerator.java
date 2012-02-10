@@ -1,10 +1,12 @@
 package de.gaalop.visualizer;
 
+import de.gaalop.visualizer.engines.RenderingEngine;
 import de.gaalop.CodeGenerator;
 import de.gaalop.CodeGeneratorException;
 import de.gaalop.OutputFile;
 import de.gaalop.cfg.ControlFlowGraph;
 import de.gaalop.dfg.MultivectorComponent;
+import de.gaalop.visualizer.engines.java3d.Java3dRenderingEngine;
 import java.awt.Color;
 import java.nio.charset.Charset;
 import java.util.HashMap;
@@ -28,8 +30,7 @@ public class VisualizerCodeGenerator implements CodeGenerator {
     @Override
     public Set<OutputFile> generate(ControlFlowGraph in) throws CodeGeneratorException {
         HashMap<MultivectorComponent, Double> globalValues = new HashMap<MultivectorComponent, Double>(); //Sliders, ...
-
-        //TODO chs visualize
+        
         HashMap<String, Color> colors = ColorEvaluater.getColors(in);
 
         LinkedList<Point3d> pointsToTest = new LinkedList<Point3d>();
@@ -63,8 +64,12 @@ public class VisualizerCodeGenerator implements CodeGenerator {
                 }
         }
 
-        RenderingEngine engine = null; //TODO chs 
-        engine.render(colors, pointsToRender);
+        RenderingEngine engine = new Java3dRenderingEngine();
+        HashMap<String, PointCloud> clouds = new HashMap<String, PointCloud>();
+        for (String key: pointsToRender.keySet()) 
+            clouds.put(key, new PointCloud(colors.get(key), pointsToRender.get(key)));
+        
+        engine.render(clouds);
         
         HashSet<OutputFile> out = new HashSet<OutputFile>(); //only for debugging
         out.add(new OutputFile(in.getSource().getName(), in.toString(), Charset.forName("UTF-8")));
