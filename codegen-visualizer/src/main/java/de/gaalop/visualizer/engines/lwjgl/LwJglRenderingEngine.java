@@ -78,7 +78,7 @@ public abstract class LwJglRenderingEngine extends RenderingEngine {
 
             pollInput();
             Display.update();
-            Display.sync(20); // cap fps to 60fps
+            Display.sync(1); // cap fps to 60fps
         }
 
         Display.destroy();
