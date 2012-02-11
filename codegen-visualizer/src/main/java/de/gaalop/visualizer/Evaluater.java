@@ -57,6 +57,12 @@ public class Evaluater extends EmptyControlFlowVisitor implements ExpressionVisi
     }
 
     @Override
+    public void visit(Negation node) {
+        node.getOperand().accept(this);
+        result = -result;
+    }
+
+    @Override
     public void visit(MathFunctionCall node) {
         node.getOperand().accept(this);
         switch (node.getFunction()) {
@@ -131,7 +137,10 @@ public class Evaluater extends EmptyControlFlowVisitor implements ExpressionVisi
         super.visit(node);
     }
 
-    
+    @Override
+    public void visit(Variable node) {
+        result = values.get(new MultivectorComponent(node.getName(), 0));
+    }
 
     // ====================== Illegal methods ======================
 
@@ -145,10 +154,7 @@ public class Evaluater extends EmptyControlFlowVisitor implements ExpressionVisi
         throw new UnsupportedOperationException("BaseVectors should have been removed by TBA.");
     }
 
-    @Override
-    public void visit(Negation node) {
-        throw new UnsupportedOperationException("Negations should have been removed by TBA.");
-    }
+
 
     @Override
     public void visit(Reverse node) {
@@ -198,11 +204,6 @@ public class Evaluater extends EmptyControlFlowVisitor implements ExpressionVisi
     @Override
     public void visit(InnerProduct node) {
         throw new UnsupportedOperationException("Inner products should have been removed by TBA.");
-    }
-
-    @Override
-    public void visit(Variable node) {
-        throw new UnsupportedOperationException("Variables should have been removed by TBA.");
     }
 
 }

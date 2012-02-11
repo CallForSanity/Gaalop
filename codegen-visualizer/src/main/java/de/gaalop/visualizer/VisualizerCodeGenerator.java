@@ -22,7 +22,7 @@ import java.util.Set;
 public class VisualizerCodeGenerator implements CodeGenerator {
 
     private Plugin plugin;
-    private static final double EPSILON = 1E-3;
+    private static final double EPSILON = 1E-2;
 
     public VisualizerCodeGenerator(Plugin plugin) {
         this.plugin = plugin;
@@ -31,50 +31,68 @@ public class VisualizerCodeGenerator implements CodeGenerator {
     @Override
     public Set<OutputFile> generate(ControlFlowGraph in) throws CodeGeneratorException {
         HashMap<MultivectorComponent, Double> globalValues = new HashMap<MultivectorComponent, Double>(); //Sliders, ...
-        
-        HashMap<String, Color> colors = ColorEvaluater.getColors(in);
 
-        LinkedList<Point3d> pointsToTest = new LinkedList<Point3d>();
+        HashMap<String, Color> colors = ColorEvaluater.getColors(in);
 
         HashMap<String, LinkedList<Point3d>> pointsToRender = new HashMap<String, LinkedList<Point3d>>();
 
-        for (Point3d p: pointsToTest) {
-            HashMap<MultivectorComponent, Double> values = new HashMap<MultivectorComponent, Double>(globalValues);
-            values.put(new MultivectorComponent("_V_X", 0),p.x);
-            values.put(new MultivectorComponent("_V_Y", 0),p.y);
-            values.put(new MultivectorComponent("_V_Z", 0),p.z);
+        int a = 5;
+        float dist = 0.1f;
 
-            Evaluater evaluater = new Evaluater(values);
-            in.accept(evaluater);
+        Point3d p = new Point3d(0, 0, 0);
+        for (float x = -a; x <= a; x += dist) {
+            for (float y = -a; y <= a; y += dist) {
+                for (float z = -a; z <= a; z += dist) {
 
-            HashMap<String, Double> squaredAndSummedValues = new HashMap<String, Double>();
-            for (MultivectorComponent mvC: values.keySet()) {
-                String name = mvC.getName();
-                if (!squaredAndSummedValues.containsKey(name)) 
-                    squaredAndSummedValues.put(name, new Double(0));
+                    p.x = x;
+                    p.y = y;
+                    p.z = z;
 
-                double value = values.get(mvC);
-                squaredAndSummedValues.put(name, squaredAndSummedValues.get(name) + value*value);
-            }
-            for (String key: squaredAndSummedValues.keySet()) 
-                if (Math.sqrt(squaredAndSummedValues.get(key)) <= EPSILON) {
-                    //output point!
-                    if (!pointsToRender.containsKey(key))
-                        pointsToRender.put(key, new LinkedList<Point3d>());
-                    pointsToRender.get(key).add(p);
+                    HashMap<MultivectorComponent, Double> values = new HashMap<MultivectorComponent, Double>(globalValues);
+                    values.put(new MultivectorComponent("_V_X", 0), p.x);
+                    values.put(new MultivectorComponent("_V_Y", 0), p.y);
+                    values.put(new MultivectorComponent("_V_Z", 0), p.z);
+
+                    Evaluater evaluater = new Evaluater(values);
+                    in.accept(evaluater);
+
+                    HashMap<String, Double> squaredAndSummedValues = new HashMap<String, Double>();
+                    for (MultivectorComponent mvC : values.keySet()) {
+
+                        String name = mvC.getName();
+                        if (name.startsWith("_V_PRODUCT")) {
+                            if (!squaredAndSummedValues.containsKey(name)) {
+                                squaredAndSummedValues.put(name, new Double(0));
+                            }
+
+                            double value = values.get(mvC);
+                            squaredAndSummedValues.put(name, squaredAndSummedValues.get(name) + value * value);
+                        }
+                    }
+                    for (String key : squaredAndSummedValues.keySet()) {
+                        if (Math.sqrt(squaredAndSummedValues.get(key)) <= EPSILON) {
+                            //output point!
+                            if (!pointsToRender.containsKey(key)) {
+                                pointsToRender.put(key, new LinkedList<Point3d>());
+                            }
+                            pointsToRender.get(key).add(new Point3d(p));
+                        }
+                    }
                 }
+            }
         }
 
         RenderingEngine engine = new SimpleLwJglRenderingEngine();
         HashMap<String, PointCloud> clouds = new HashMap<String, PointCloud>();
-        for (String key: pointsToRender.keySet()) 
+        for (String key : pointsToRender.keySet()) {
+            System.out.println(pointsToRender.get(key).size());
             clouds.put(key, new PointCloud(colors.get(key), pointsToRender.get(key)));
-        
+        }
+
         engine.render(clouds);
-        
+
         HashSet<OutputFile> out = new HashSet<OutputFile>(); //only for debugging
         out.add(new OutputFile(in.getSource().getName(), in.toString(), Charset.forName("UTF-8")));
         return out;
     }
-
 }
