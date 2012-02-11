@@ -6,7 +6,7 @@ import de.gaalop.CodeGeneratorException;
 import de.gaalop.OutputFile;
 import de.gaalop.cfg.ControlFlowGraph;
 import de.gaalop.dfg.MultivectorComponent;
-import de.gaalop.visualizer.engines.java3d.Java3dRenderingEngine;
+import de.gaalop.visualizer.engines.lwjgl.LwJglRenderingEngine;
 import java.awt.Color;
 import java.nio.charset.Charset;
 import java.util.HashMap;
@@ -64,7 +64,7 @@ public class VisualizerCodeGenerator implements CodeGenerator {
                 }
         }
 
-        RenderingEngine engine = new Java3dRenderingEngine();
+        RenderingEngine engine = new LwJglRenderingEngine();
         HashMap<String, PointCloud> clouds = new HashMap<String, PointCloud>();
         for (String key: pointsToRender.keySet()) 
             clouds.put(key, new PointCloud(colors.get(key), pointsToRender.get(key)));
