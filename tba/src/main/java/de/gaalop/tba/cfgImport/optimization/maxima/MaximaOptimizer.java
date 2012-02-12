@@ -51,11 +51,9 @@ public class MaximaOptimizer {
 
         MaximaOutput output = connection.optimizeWithMaxima(input);
 
-
-
         //connect in and output
         LinkedList<String> connected = new LinkedList<String>();
-        groupMaximaInAndOutputs(connected, output);
+        MaximaRoutines.groupMaximaInAndOutputs(connected, output);
 
         connected.removeFirst(); // remove display2d
         connected.removeFirst(); // remove ratsimp
@@ -63,7 +61,7 @@ public class MaximaOptimizer {
 
         ListIterator<AssignmentNode> listIterator = assignmentNodeCollector.getAssignmentNodes().listIterator();
         for (String io : connected) {
-            Expression exp = getExpressionFromMaximaOutput(io);
+            Expression exp = MaximaRoutines.getExpressionFromMaximaOutput(io);
             listIterator.next().setValue(exp);
         }
 /*
@@ -71,60 +69,6 @@ public class MaximaOptimizer {
             removeUnusedAssignments(graph, collector.getVariables());
         }
 */
-
-    }
-
-    /**
-     * Returns an expression from a maxima output string.
-     * @param maximaOut The maxima output string
-     * @return The according expression
-     * @throws RecognitionException
-     */
-    public static Expression getExpressionFromMaximaOutput(String maximaOut) throws RecognitionException {
-        ANTLRStringStream inputStream = new ANTLRStringStream(maximaOut);
-        MaximaLexer lexer = new MaximaLexer(inputStream);
-        CommonTokenStream tokenStream = new CommonTokenStream(lexer);
-        MaximaParser parser = new MaximaParser(tokenStream);
-        MaximaParser.program_return parserResult = parser.program();
-
-        CommonTreeNodeStream treeNodeStream = new CommonTreeNodeStream(parserResult.getTree());
-        MaximaTransformer transformer = new MaximaTransformer(treeNodeStream);
-
-        return transformer.expression();
-    }
-
-    /**
-     * Fills a given list of MaximaInOut from an output of maxima
-     * @param connected The list of MaximaInOut to be filled
-     * @param output The output of maxima
-     */
-    private void groupMaximaInAndOutputs(LinkedList<String> connected, MaximaOutput output) {
-
-        StringBuilder sb = new StringBuilder();
-
-        boolean input = false;
-        for (String o : output) {
-            if (o.startsWith("(%i")) {
-                input = false;
-                if (sb.length() != 0) {
-                    connected.add(sb.toString());
-                    sb.setLength(0);
-                }
-            } else {
-                if (o.startsWith("(%o")) {
-                    sb.append(o.substring(o.indexOf(")") + 2));
-                    input = true;
-                } else {
-                    if (input) {
-                        sb.append(o);
-                    }
-                }
-            }
-        }
-
-        if (input && sb.length() > 0) {
-            connected.add(sb.toString());
-        }
 
     }
 

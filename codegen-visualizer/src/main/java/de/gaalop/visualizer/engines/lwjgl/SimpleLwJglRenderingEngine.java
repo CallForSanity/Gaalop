@@ -13,6 +13,12 @@ import org.lwjgl.util.glu.Sphere;
  * @author Christian Steinmetz
  */
 public class SimpleLwJglRenderingEngine extends LwJglRenderingEngine {
+
+    public SimpleLwJglRenderingEngine() {
+        super();
+    }
+    
+    
     
     public static void main(String[] args) {
         LwJglRenderingEngine engine = new SimpleLwJglRenderingEngine();
@@ -36,6 +42,7 @@ public class SimpleLwJglRenderingEngine extends LwJglRenderingEngine {
    @Override
    public void draw(HashMap<String, PointCloud> clouds) {
        Sphere s = new Sphere();
+       
        for (String cloud: clouds.keySet()) {
             PointCloud pointCloud = clouds.get(cloud);
 
@@ -45,7 +52,7 @@ public class SimpleLwJglRenderingEngine extends LwJglRenderingEngine {
             for (Point3d p: pointCloud.points) {
                 GL11.glPushMatrix();
                 GL11.glTranslated(p.x,p.y,p.z);
-                s.draw(0.04f, 10, 10);
+                s.draw(0.04f, 3, 3);
                 GL11.glPopMatrix();
            }
 

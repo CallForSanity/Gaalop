@@ -2,6 +2,7 @@ package de.gaalop.testbenchTbaGapp.tba.maxima;
 
 import de.gaalop.dfg.Expression;
 import de.gaalop.tba.cfgImport.optimization.maxima.MaximaOptimizer;
+import de.gaalop.tba.cfgImport.optimization.maxima.MaximaRoutines;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.antlr.runtime.RecognitionException;
@@ -22,7 +23,7 @@ public class Maxima {
      */
     private void test(String str) {
         try {
-            Expression expr = MaximaOptimizer.getExpressionFromMaximaOutput(str);
+            Expression expr = MaximaRoutines.getExpressionFromMaximaOutput(str);
 
             System.out.println(str + " -> " + expr);
 

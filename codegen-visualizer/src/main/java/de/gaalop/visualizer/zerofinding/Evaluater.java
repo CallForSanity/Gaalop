@@ -1,4 +1,4 @@
-package de.gaalop.visualizer;
+package de.gaalop.visualizer.zerofinding;
 
 import de.gaalop.cfg.AssignmentNode;
 import de.gaalop.cfg.EmptyControlFlowVisitor;

@@ -30,6 +30,12 @@ public abstract class LwJglRenderingEngine extends RenderingEngine {
     private boolean[] buttonDown = new boolean[]{false, false, false};
     private static final int STATE_DOWN = 1;
     private static final int STATE_UP = 2;
+
+    public LwJglRenderingEngine() {
+        System.setProperty("org.lwjgl.librarypath","C:\\lwjgl\\native\\windows");
+    }
+    
+    
     
     @Override
     public void render(HashMap<String, PointCloud> clouds) {
@@ -60,7 +66,10 @@ public abstract class LwJglRenderingEngine extends RenderingEngine {
         GLU.gluPerspective((float) 65.0, (float) width / (float) height, (float) 0.1, 100);
         GL11.glMatrixMode(GL11.GL_MODELVIEW);
 
+        //long start = System.currentTimeMillis();
         while (!Display.isCloseRequested()) {
+            //System.out.println(System.currentTimeMillis()-start);
+            //start = System.currentTimeMillis();
             GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT); // clear the screen
             GL11.glLoadIdentity(); // apply camPos before rotation
 
@@ -78,7 +87,7 @@ public abstract class LwJglRenderingEngine extends RenderingEngine {
 
             pollInput();
             Display.update();
-            Display.sync(1); // cap fps to 60fps
+            Display.sync(60); // cap fps to 60fps
         }
 
         Display.destroy();
@@ -156,12 +165,6 @@ public abstract class LwJglRenderingEngine extends RenderingEngine {
             Display.destroy();
             System.exit(0);
 
-        }
-
-        if (Keyboard.isKeyDown(Keyboard.KEY_V)) {
-            camPos.set(0.0f, 2.0f, -10.0f);
-            camAngleX = 180.0f;
-            camAngleY = 0.0f;
         }
 
         int x = Mouse.getX();
