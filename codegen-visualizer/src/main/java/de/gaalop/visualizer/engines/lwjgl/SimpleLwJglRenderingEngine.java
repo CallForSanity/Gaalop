@@ -14,14 +14,14 @@ import org.lwjgl.util.glu.Sphere;
  */
 public class SimpleLwJglRenderingEngine extends LwJglRenderingEngine {
 
-    public SimpleLwJglRenderingEngine() {
-        super();
+    public SimpleLwJglRenderingEngine(String lwJglNativePath) {
+        super(lwJglNativePath);
     }
     
     
     
     public static void main(String[] args) {
-        LwJglRenderingEngine engine = new SimpleLwJglRenderingEngine();
+        LwJglRenderingEngine engine = new SimpleLwJglRenderingEngine("/usr/lib/jni/");
         HashMap<String, PointCloud> clouds = new HashMap<String, PointCloud>();
         LinkedList<Point3d> points = new LinkedList<Point3d>();
         points.add(new Point3d(0,0,0));

@@ -31,8 +31,8 @@ public abstract class LwJglRenderingEngine extends RenderingEngine {
     private static final int STATE_DOWN = 1;
     private static final int STATE_UP = 2;
 
-    public LwJglRenderingEngine() {
-        System.setProperty("org.lwjgl.librarypath","C:\\lwjgl\\native\\windows");
+    public LwJglRenderingEngine(String lwJglNativePath) {
+        System.setProperty("org.lwjgl.librarypath", lwJglNativePath);
     }
     
     

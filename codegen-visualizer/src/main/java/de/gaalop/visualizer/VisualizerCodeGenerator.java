@@ -1,6 +1,5 @@
 package de.gaalop.visualizer;
 
-import de.gaalop.visualizer.zerofinding.DiscreteCubeMethod;
 import de.gaalop.visualizer.zerofinding.ZeroFinder;
 import de.gaalop.visualizer.engines.RenderingEngine;
 import de.gaalop.CodeGenerator;
@@ -8,14 +7,11 @@ import de.gaalop.CodeGeneratorException;
 import de.gaalop.OutputFile;
 import de.gaalop.cfg.ControlFlowGraph;
 import de.gaalop.dfg.MultivectorComponent;
-import de.gaalop.tba.cfgImport.optimization.maxima.ProcessBuilderMaximaConnection;
-import de.gaalop.visualizer.engines.lwjgl.LwJglRenderingEngine;
 import de.gaalop.visualizer.engines.lwjgl.SimpleLwJglRenderingEngine;
 import de.gaalop.visualizer.zerofinding.RayMethod;
 import java.awt.Color;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -24,8 +20,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -51,7 +45,7 @@ public class VisualizerCodeGenerator implements CodeGenerator {
 
         HashMap<String, Color> colors = ColorEvaluater.getColors(in);
 
-        ZeroFinder finder = new RayMethod(ProcessBuilderMaximaConnection.CMD_MAXIMA_WINDOWS);
+        ZeroFinder finder = new RayMethod(plugin.maximaCommand);
         HashMap<String, LinkedList<Point3d>> pointsToRender = finder.findZeroLocations(in, globalValues);
 
         HashMap<String, PointCloud> clouds = new HashMap<String, PointCloud>();
@@ -60,6 +54,7 @@ public class VisualizerCodeGenerator implements CodeGenerator {
             clouds.put(key, new PointCloud(colors.get(key.substring(0, key.length()-2)), pointsToRender.get(key)));
         }
 
+        /*
         FileOutputStream outStream;
         try {
             outStream = new FileOutputStream("E:\\out.xml");
@@ -70,9 +65,9 @@ public class VisualizerCodeGenerator implements CodeGenerator {
         } catch (IOException ex) {
             Logger.getLogger(VisualizerCodeGenerator.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+        */
 
-        RenderingEngine engine = new SimpleLwJglRenderingEngine();
+        RenderingEngine engine = new SimpleLwJglRenderingEngine(plugin.lwJglNativePath);
         engine.render(clouds);
 
         HashSet<OutputFile> out = new HashSet<OutputFile>(); //only for debugging
@@ -84,7 +79,7 @@ public class VisualizerCodeGenerator implements CodeGenerator {
         FileInputStream inStream = new FileInputStream("E:\\out.xml");
         HashMap<String, PointCloud> clouds = new HashMap<String, PointCloud>();
         loadClouds(clouds,inStream);
-        RenderingEngine engine = new SimpleLwJglRenderingEngine();
+        RenderingEngine engine = new SimpleLwJglRenderingEngine("/usr/lib/jni/");
         engine.render(clouds);
         inStream.close();
     }

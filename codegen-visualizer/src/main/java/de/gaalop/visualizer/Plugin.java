@@ -5,6 +5,7 @@ import de.gaalop.CodeGeneratorPlugin;
 import de.gaalop.ConfigurationProperty;
 import de.gaalop.ConfigurationProperty.Type;
 import de.gaalop.Notifications;
+import de.gaalop.tba.cfgImport.optimization.maxima.ProcessBuilderMaximaConnection;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -20,12 +21,15 @@ import java.util.Observable;
  */
 public class Plugin extends Observable implements CodeGeneratorPlugin {
 
+    @ConfigurationProperty(type = Type.FILEPATH)
+    public String maximaCommand = ProcessBuilderMaximaConnection.CMD_MAXIMA_LINUX;
+
+    @ConfigurationProperty(type = Type.FILEPATH)
+    public String lwJglNativePath = "/usr/lib/jni/";
+
     private Log log = LogFactory.getLog(Plugin.class);
 
     private Image icon;
-    
-    @ConfigurationProperty(type = Type.BOOLEAN)
-    public boolean standalone = true;
 
     public Plugin() {
         URL url = getClass().getResource("icon.png");
@@ -39,14 +43,6 @@ public class Plugin extends Observable implements CodeGeneratorPlugin {
             log.warn("Unable to find plugin icon!");
         }
     }
-    
-    public void setStandalone(boolean standalone) {
-		this.standalone = standalone;
-	}
-    
-    public boolean getStandalone() {
-		return standalone;
-	}
 
     @Override
     public CodeGenerator createCodeGenerator() {
@@ -71,5 +67,21 @@ public class Plugin extends Observable implements CodeGeneratorPlugin {
     void notifyError(Throwable error) {
     	setChanged();
     	notifyObservers(new Notifications.Error(error));
+    }
+
+    public String getMaximaCommand() {
+        return maximaCommand;
+    }
+
+    public void setMaximaCommand(String maximaCommand) {
+        this.maximaCommand = maximaCommand;
+    }
+
+    public String getLwJglNativePath() {
+        return lwJglNativePath;
+    }
+
+    public void setLwJglNativePath(String lwJglNativePath) {
+        this.lwJglNativePath = lwJglNativePath;
     }
 }
