@@ -46,7 +46,7 @@ public class Plugin extends Observable implements CodeGeneratorPlugin {
 
     @Override
     public CodeGenerator createCodeGenerator() {
-        return new VisualizerCodeGenerator(this);
+        return new DrawSettingsCodeGen(this);
     }
 
     @Override

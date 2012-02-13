@@ -46,6 +46,7 @@ public abstract class LwJglRenderingEngine extends RenderingEngine {
         try {
             Display.setDisplayMode(new DisplayMode(width, height));
             Display.setFullscreen(false);
+            Display.setTitle("Gaalop Visualization Window");
 
             Display.create();
         } catch (LWJGLException e) {

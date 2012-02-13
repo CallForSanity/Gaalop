@@ -30,7 +30,7 @@ import org.jdom.output.XMLOutputter;
  * This class visualizes the graph
  * @author Christian Steinmetz
  */
-public class VisualizerCodeGenerator implements CodeGenerator {
+public class VisualizerCodeGenerator {
 
     private Plugin plugin;
     
@@ -39,8 +39,7 @@ public class VisualizerCodeGenerator implements CodeGenerator {
         this.plugin = plugin;
     }
 
-    @Override
-    public Set<OutputFile> generate(ControlFlowGraph in) throws CodeGeneratorException {        
+    public void generate(ControlFlowGraph in) throws CodeGeneratorException {        
         HashMap<MultivectorComponent, Double> globalValues = new HashMap<MultivectorComponent, Double>(); //Sliders, ...
 
         HashMap<String, Color> colors = ColorEvaluater.getColors(in);
@@ -70,12 +69,10 @@ public class VisualizerCodeGenerator implements CodeGenerator {
         RenderingEngine engine = new SimpleLwJglRenderingEngine(plugin.lwJglNativePath);
         engine.render(clouds);
 
-        HashSet<OutputFile> out = new HashSet<OutputFile>(); //only for debugging
-        out.add(new OutputFile(in.getSource().getName(), in.toString(), Charset.forName("UTF-8")));
-        return out;
     }
 
-    public static void main(String[] args) throws FileNotFoundException, IOException, JDOMException {
+    //direct rendering
+    public static void main1(String[] args) throws FileNotFoundException, IOException, JDOMException {
         FileInputStream inStream = new FileInputStream("E:\\out.xml");
         HashMap<String, PointCloud> clouds = new HashMap<String, PointCloud>();
         loadClouds(clouds,inStream);

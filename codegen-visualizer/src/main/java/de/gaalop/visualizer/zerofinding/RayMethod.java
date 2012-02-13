@@ -29,6 +29,8 @@ public class RayMethod implements ZeroFinder {
     private HashMap<String, LinkedList<Point3d>> points;
     
     private String maximaCommand;
+    
+    private LinkedList<AssignmentNode> nodes;
 
     public RayMethod(String maximaCommand) {
         this.maximaCommand = maximaCommand;
@@ -42,28 +44,27 @@ public class RayMethod implements ZeroFinder {
         
         points = new HashMap<String, LinkedList<Point3d>>();
         
-        //prepare graph (understand _V_X=ox+t)
-        
-        LinkedList<AssignmentNode> products = prepareGraph(in);
-
         int a = 5;
         float dist = 0.1f;
-        
-        RealInterval t = new RealInterval(0, 2*a);
-        
+
         float ox = -a;
+        globalValuesI.put(new MultivectorComponent("_V_ox", 0), new RealInterval(ox));
         
-        for (float oy = -a; oy <= a; oy += dist) 
-            for (float oz = -a; oz <= a; oz += dist) 
-                for (AssignmentNode product: products) 
-                    isolation(new RealInterval(ox), new RealInterval(oy), new RealInterval(oz), t, globalValuesI, in, product.getVariable().getName());
-            
+        for (float oy = -a; oy <= a; oy += dist) {
+            globalValuesI.put(new MultivectorComponent("_V_oy", 0), new RealInterval(oy));
+            for (float oz = -a; oz <= a; oz += dist) {
+                globalValuesI.put(new MultivectorComponent("_V_oz", 0), new RealInterval(oz));
+                for (AssignmentNode node: nodes) 
+                    isolation(new RealInterval(0, 2*a),globalValuesI, in, node.getVariable().getName());
+            }
+        }
         return points;
     }
     
     
     //return PRODUCT_S Multivector names
-    private LinkedList<AssignmentNode> prepareGraph(ControlFlowGraph graph) {
+    @Override
+    public void prepareGraph(ControlFlowGraph graph) {
         //replace x=ox+t,y=oy,z=oz
         CFGReplaceVisitor replacer = new CFGReplaceVisitor(new ReplaceVisitor() {
 
@@ -92,7 +93,7 @@ public class RayMethod implements ZeroFinder {
         //search _V_PRODUCT and apply the sum of the squares = _V_PRODUCT_S
         HashMap<String, LinkedList<AssignmentNode>> collect = MultivectorNodeCollector.collect(graph);
         
-        LinkedList<AssignmentNode> toDerive = new LinkedList<AssignmentNode>();
+        nodes = new LinkedList<AssignmentNode>();
         for (String s: collect.keySet()) 
             if (s.startsWith("_V_PRODUCT")) {
                 Expression sumOfSquares = null; 
@@ -107,7 +108,7 @@ public class RayMethod implements ZeroFinder {
                 }
                 
                 AssignmentNode newNode = new AssignmentNode(graph, new MultivectorComponent(s+"_S", 0), sumOfSquares);
-                toDerive.add(newNode);
+                nodes.add(newNode);
                 collect.get(s).getFirst().insertBefore(newNode);
 
                 for (AssignmentNode node: collect.get(s)) 
@@ -118,8 +119,8 @@ public class RayMethod implements ZeroFinder {
         MaximaDifferentiater differentiater = new MaximaDifferentiater();
         LinkedList<AssignmentNode> derived;
         try {
-            derived = differentiater.differentiate(toDerive, maximaCommand);
-            ListIterator<AssignmentNode> listIt = toDerive.listIterator();
+            derived = differentiater.differentiate(nodes, maximaCommand);
+            ListIterator<AssignmentNode> listIt = nodes.listIterator();
             for (AssignmentNode d: derived) {
                 d.setVariable(new MultivectorComponent(d.getVariable().getName()+"D", 0));
                 listIt.next().insertAfter(d);
@@ -129,20 +130,11 @@ public class RayMethod implements ZeroFinder {
         } catch (RecognitionException ex) {
             Logger.getLogger(RayMethod.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-
-        return toDerive;
     }
     
     
-    private void isolation(RealInterval ox, RealInterval oy, RealInterval oz, RealInterval t, HashMap<MultivectorComponent, RealInterval> globalValuesI, ControlFlowGraph graph, String product) {
-        HashMap<MultivectorComponent, RealInterval> values = new HashMap<MultivectorComponent, RealInterval>(globalValuesI);
-
-        values.put(new MultivectorComponent("_V_ox", 0), ox);
-        values.put(new MultivectorComponent("_V_oy", 0), oy);
-        values.put(new MultivectorComponent("_V_oz", 0), oz);
+    private void isolation(RealInterval t, HashMap<MultivectorComponent, RealInterval> values, ControlFlowGraph graph, String product) {
         values.put(new MultivectorComponent("_V_t", 0), t);
-        
         IntervalEvaluater evaluater = new IntervalEvaluater(values);
         graph.accept(evaluater);
         
@@ -152,53 +144,50 @@ public class RayMethod implements ZeroFinder {
             if (df.lo() <= 0 && 0 <= df.hi()) {
                 if (t.hi()-t.lo() > 0.05) {
                     double center = (t.lo()+t.hi())/2.0d;
-                    isolation(ox, oy, oz, new RealInterval(t.lo(), center), globalValuesI, graph, product);
-                    isolation(ox, oy, oz, new RealInterval(center, t.hi()), globalValuesI, graph, product);
+                    isolation(new RealInterval(t.lo(), center), values, graph, product);
+                    isolation(new RealInterval(center, t.hi()), values, graph, product);
                 } else {
                     
                         if (!points.containsKey(product))
                             points.put(product, new LinkedList<Point3d>());
-
-                        points.get(product).add(new Point3d(ox.lo()+(t.lo()+t.hi())/2.0d, oy.lo(), oz.lo()));
+                        
+                        points.get(product).add(new Point3d(
+                                values.get(new MultivectorComponent("_V_ox", 0)).lo()+(t.lo()+t.hi())/2.0d, 
+                                values.get(new MultivectorComponent("_V_oy", 0)).lo(), 
+                                values.get(new MultivectorComponent("_V_oz", 0)).lo()
+                                ));
                     
                      }
             } else {
-                refinement(ox,oy,oz,t, globalValuesI, graph, product);
+                refinement(t, values, graph, product);
             }
         }
 
     }
 
-    private void refinement(RealInterval ox, RealInterval oy, RealInterval oz, RealInterval t, HashMap<MultivectorComponent, RealInterval> globalValuesI, ControlFlowGraph graph, String product) {
+    private void refinement(RealInterval t, HashMap<MultivectorComponent, RealInterval> values, ControlFlowGraph graph, String product) {
         MultivectorComponent pr = new MultivectorComponent(product, 0);
         boolean refine = true;
         while (refine) {
             
             double center = (t.lo()+t.hi())/2.0d;
-            HashMap<MultivectorComponent, RealInterval> values = new HashMap<MultivectorComponent, RealInterval>(globalValuesI);
-
-            values.put(new MultivectorComponent("_V_ox", 0), ox);
-            values.put(new MultivectorComponent("_V_oy", 0), oy);
-            values.put(new MultivectorComponent("_V_oz", 0), oz);
+            
             values.put(new MultivectorComponent("_V_t", 0), new RealInterval(t.lo()));
             
             IntervalEvaluater evaluater = new IntervalEvaluater(values);
             graph.accept(evaluater);
+            double lo = values.get(pr).lo();
             
-            HashMap<MultivectorComponent, RealInterval> values2 = new HashMap<MultivectorComponent, RealInterval>(globalValuesI);
-
-            values2.put(new MultivectorComponent("_V_ox", 0), ox);
-            values2.put(new MultivectorComponent("_V_oy", 0), oy);
-            values2.put(new MultivectorComponent("_V_oz", 0), oz);
-            values2.put(new MultivectorComponent("_V_t", 0), new RealInterval(center));  
             
-            evaluater = new IntervalEvaluater(values2);
+            values.put(new MultivectorComponent("_V_t", 0), new RealInterval(center));  
+            
             graph.accept(evaluater);
+            double ce = values.get(pr).lo();
             
-            if (Math.abs(values2.get(pr).lo()) <= 0.01) refine = false;
+            if (Math.abs(ce) <= 0.01) refine = false;
             if (t.hi()-t.lo() < 0.001) return;
         
-            if (values.get(pr).lo()*values2.get(pr).lo() < 0) 
+            if (ce*lo < 0) 
                 t = new RealInterval(t.lo(),center);
             else
                 t = new RealInterval(center,t.hi());
@@ -208,8 +197,22 @@ public class RayMethod implements ZeroFinder {
         if (!points.containsKey(product))
             points.put(product, new LinkedList<Point3d>());
 
-        points.get(product).add(new Point3d(ox.lo()+(t.lo()+t.hi())/2.0d, oy.lo(), oz.lo()));
+        points.get(product).add(new Point3d(
+                values.get(new MultivectorComponent("_V_ox", 0)).lo()+(t.lo()+t.hi())/2.0d, 
+                values.get(new MultivectorComponent("_V_oy", 0)).lo(), 
+                values.get(new MultivectorComponent("_V_oz", 0)).lo()
+                ));
 
+    }
+
+    @Override
+    public boolean isPositionVariable(String name) {
+        if (name.equals("_V_ox")) return true;
+        if (name.equals("_V_oy")) return true;
+        if (name.equals("_V_oz")) return true;
+        if (name.equals("_V_t")) return true;
+        
+        return false;
     }
     
 }

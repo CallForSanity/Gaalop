@@ -80,7 +80,8 @@ public class CompileAction extends AbstractAction {
 				try {
 					Set<OutputFile> output;
 					output = facade.compile(sourcePanel.getInputFile());
-					displayOutput(output);
+                                        if (!output.isEmpty())
+                                            displayOutput(output);
 				} catch (CompilationException ex) {
 					log.error("Compilation exception", ex);
 					statusBar.displayError(ex);

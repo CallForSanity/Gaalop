@@ -4,6 +4,7 @@
  */
 package de.gaalop.visualizer.zerofinding;
 
+import de.gaalop.cfg.AssignmentNode;
 import de.gaalop.visualizer.zerofinding.ZeroFinder;
 import de.gaalop.cfg.ControlFlowGraph;
 import de.gaalop.dfg.MultivectorComponent;
@@ -71,5 +72,18 @@ public class DiscreteCubeMethod implements ZeroFinder {
         
         return points;
     }
+
+    @Override
+    public void prepareGraph(ControlFlowGraph in) {
+        //Do nothing
+    }
     
+    @Override
+    public boolean isPositionVariable(String name) {
+        if (name.equals("_V_X")) return true;
+        if (name.equals("_V_Y")) return true;
+        if (name.equals("_V_Z")) return true;
+        
+        return false;
+    }
 }

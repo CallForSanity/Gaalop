@@ -89,6 +89,9 @@ public class MainForm {
             prefs.put("preferredOptimizationPlugin",(String) strategyComboBox.getSelectedItem());
         }
         
+        //make TBA to preferred OptimizationStrategy
+        strategyComboBox.setSelectedItem("de.gaalop.tba.Plugin");
+        
         configureButton.addActionListener(new ActionListener() {
           
           @Override
