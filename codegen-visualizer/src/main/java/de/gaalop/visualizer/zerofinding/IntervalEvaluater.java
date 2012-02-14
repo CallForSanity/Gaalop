@@ -125,7 +125,14 @@ public class IntervalEvaluater extends EmptyControlFlowVisitor implements Expres
         node.getLeft().accept(this);
         RealInterval left = result;
         node.getRight().accept(this);
-        result = IAMath.power(left,result);
+        
+        double hi = result.hi();
+        if (Math.abs(hi-result.lo()) < 0.001 && Math.abs(hi-((int) hi)) < 0.001 && hi>=0) {
+            result = new RealInterval(1);
+            for (int i=0;i<((int) hi);i++) 
+                result = IAMath.mul(result, left);
+        } else
+            result = IAMath.power(left, result);
     }
 
     @Override
