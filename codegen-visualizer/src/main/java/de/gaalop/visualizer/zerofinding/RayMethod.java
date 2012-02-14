@@ -38,26 +38,38 @@ public class RayMethod implements ZeroFinder {
 
     @Override
     public HashMap<String, LinkedList<Point3d>> findZeroLocations(ControlFlowGraph in, HashMap<MultivectorComponent, Double> globalValues) {
-        HashMap<MultivectorComponent, RealInterval> globalValuesI = new HashMap<MultivectorComponent, RealInterval>();
-                for (MultivectorComponent mvC: globalValues.keySet())
-                    globalValuesI.put(mvC, new RealInterval(globalValues.get(mvC)));        
-        
         points = new HashMap<String, LinkedList<Point3d>>();
         
         int a = 5;
         float dist = 0.1f;
-
-        float ox = -a;
-        globalValuesI.put(new MultivectorComponent("_V_ox", 0), new RealInterval(ox));
         
-        for (float oy = -a; oy <= a; oy += dist) {
-            globalValuesI.put(new MultivectorComponent("_V_oy", 0), new RealInterval(oy));
-            for (float oz = -a; oz <= a; oz += dist) {
-                globalValuesI.put(new MultivectorComponent("_V_oz", 0), new RealInterval(oz));
-                for (AssignmentNode node: nodes) 
-                    isolation(new RealInterval(0, 2*a),globalValuesI, in, node.getVariable().getName());
+        int processorCount = Runtime.getRuntime().availableProcessors();
+        
+        RayMethodThread[] threads = new RayMethodThread[processorCount];
+        for (int i=0;i<processorCount;i++) {
+            float from = (i*2*a)/((float) processorCount) - a;
+            float to = ((i != processorCount-1) ? ((i+1)*2*a)/((float) processorCount) : 2*a) - a; 
+
+            threads[i] = new RayMethodThread(from, to, a, dist, in, globalValues, nodes);
+            threads[i].start();
+        }
+
+        
+        for (int i=0;i<threads.length;i++) {
+            try {
+                threads[i].join();
+                for (String point: threads[i].points.keySet()) {
+                    if (!points.containsKey(point))
+                        points.put(point, threads[i].points.get(point));
+                    else 
+                        points.get(point).addAll(threads[i].points.get(point));
+                }
+            } catch (InterruptedException ex) {
+                Logger.getLogger(DiscreteCubeMethod.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        
+        
         return points;
     }
     
@@ -132,79 +144,6 @@ public class RayMethod implements ZeroFinder {
         }
     }
     
-    
-    private void isolation(RealInterval t, HashMap<MultivectorComponent, RealInterval> values, ControlFlowGraph graph, String product) {
-        values.put(new MultivectorComponent("_V_t", 0), t);
-        IntervalEvaluater evaluater = new IntervalEvaluater(values);
-        graph.accept(evaluater);
-        
-        RealInterval f = values.get(new MultivectorComponent(product,0));
-        if (f.lo() <= 0 && 0 <= f.hi()) {
-            RealInterval df = values.get(new MultivectorComponent(product+"D",0));
-            if (df.lo() <= 0 && 0 <= df.hi()) {
-                if (t.hi()-t.lo() > 0.05) {
-                    double center = (t.lo()+t.hi())/2.0d;
-                    isolation(new RealInterval(t.lo(), center), values, graph, product);
-                    isolation(new RealInterval(center, t.hi()), values, graph, product);
-                } else {
-                    
-                        if (!points.containsKey(product))
-                            points.put(product, new LinkedList<Point3d>());
-                        
-                        points.get(product).add(new Point3d(
-                                values.get(new MultivectorComponent("_V_ox", 0)).lo()+(t.lo()+t.hi())/2.0d, 
-                                values.get(new MultivectorComponent("_V_oy", 0)).lo(), 
-                                values.get(new MultivectorComponent("_V_oz", 0)).lo()
-                                ));
-                    
-                     }
-            } else {
-                refinement(t, values, graph, product);
-            }
-        }
-
-    }
-
-    private void refinement(RealInterval t, HashMap<MultivectorComponent, RealInterval> values, ControlFlowGraph graph, String product) {
-        MultivectorComponent pr = new MultivectorComponent(product, 0);
-        boolean refine = true;
-        while (refine) {
-            
-            double center = (t.lo()+t.hi())/2.0d;
-            
-            values.put(new MultivectorComponent("_V_t", 0), new RealInterval(t.lo()));
-            
-            IntervalEvaluater evaluater = new IntervalEvaluater(values);
-            graph.accept(evaluater);
-            double lo = values.get(pr).lo();
-            
-            
-            values.put(new MultivectorComponent("_V_t", 0), new RealInterval(center));  
-            
-            graph.accept(evaluater);
-            double ce = values.get(pr).lo();
-            
-            if (Math.abs(ce) <= 0.01) refine = false;
-            if (t.hi()-t.lo() < 0.001) return;
-        
-            if (ce*lo < 0) 
-                t = new RealInterval(t.lo(),center);
-            else
-                t = new RealInterval(center,t.hi());
-
-        }
-            
-        if (!points.containsKey(product))
-            points.put(product, new LinkedList<Point3d>());
-
-        points.get(product).add(new Point3d(
-                values.get(new MultivectorComponent("_V_ox", 0)).lo()+(t.lo()+t.hi())/2.0d, 
-                values.get(new MultivectorComponent("_V_oy", 0)).lo(), 
-                values.get(new MultivectorComponent("_V_oz", 0)).lo()
-                ));
-
-    }
-
     @Override
     public boolean isPositionVariable(String name) {
         if (name.equals("_V_ox")) return true;

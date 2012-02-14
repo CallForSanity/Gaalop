@@ -11,6 +11,8 @@ import de.gaalop.dfg.MultivectorComponent;
 import de.gaalop.visualizer.Point3d;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -26,47 +28,29 @@ public class DiscreteCubeMethod implements ZeroFinder {
 
         int a = 5;
         float dist = 0.1f;
+        
+        int processorCount = Runtime.getRuntime().availableProcessors();
+        
+        DiscreteCubeMethodThread[] threads = new DiscreteCubeMethodThread[processorCount];
+        for (int i=0;i<processorCount;i++) {
+            int from = (i*2*a)/processorCount - a;
+            int to = ((i != processorCount-1) ? ((i+1)*2*a)/processorCount : 2*a) - a; 
 
-        Point3d p = new Point3d(0, 0, 0);
-        for (float x = -a; x <= a; x += dist) {
-            for (float y = -a; y <= a; y += dist) {
-                for (float z = -a; z <= a; z += dist) {
-
-                    p.x = x;
-                    p.y = y;
-                    p.z = z;
-
-                    HashMap<MultivectorComponent, Double> values = new HashMap<MultivectorComponent, Double>(globalValues);
-                    values.put(new MultivectorComponent("_V_X", 0), p.x);
-                    values.put(new MultivectorComponent("_V_Y", 0), p.y);
-                    values.put(new MultivectorComponent("_V_Z", 0), p.z);
-
-                    Evaluater evaluater = new Evaluater(values);
-                    in.accept(evaluater);
-
-                    HashMap<String, Double> squaredAndSummedValues = new HashMap<String, Double>();
-                    for (MultivectorComponent mvC : values.keySet()) {
-
-                        String name = mvC.getName();
-                        if (name.startsWith("_V_PRODUCT")) {
-                            if (!squaredAndSummedValues.containsKey(name)) {
-                                squaredAndSummedValues.put(name, new Double(0));
-                            }
-
-                            double value = values.get(mvC);
-                            squaredAndSummedValues.put(name, squaredAndSummedValues.get(name) + value * value);
-                        }
-                    }
-                    for (String key : squaredAndSummedValues.keySet()) {
-                        if (Math.sqrt(squaredAndSummedValues.get(key)) <= EPSILON) {
-                            //output point!
-                            if (!points.containsKey(key)) {
-                                points.put(key, new LinkedList<Point3d>());
-                            }
-                            points.get(key).add(new Point3d(p));
-                        }
-                    }
+            threads[i] = new DiscreteCubeMethodThread(from, to, a, dist, globalValues, in);
+            threads[i].start();
+        }
+        
+        for (int i=0;i<threads.length;i++) {
+            try {
+                threads[i].join();
+                for (String point: threads[i].points.keySet()) {
+                    if (!points.containsKey(point))
+                        points.put(point, threads[i].points.get(point));
+                    else 
+                        points.get(point).addAll(threads[i].points.get(point));
                 }
+            } catch (InterruptedException ex) {
+                Logger.getLogger(DiscreteCubeMethod.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         

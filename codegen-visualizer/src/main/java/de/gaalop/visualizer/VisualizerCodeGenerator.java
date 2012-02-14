@@ -8,6 +8,7 @@ import de.gaalop.OutputFile;
 import de.gaalop.cfg.ControlFlowGraph;
 import de.gaalop.dfg.MultivectorComponent;
 import de.gaalop.visualizer.engines.lwjgl.SimpleLwJglRenderingEngine;
+import de.gaalop.visualizer.zerofinding.DiscreteCubeMethod;
 import de.gaalop.visualizer.zerofinding.RayMethod;
 import java.awt.Color;
 import java.io.FileInputStream;
