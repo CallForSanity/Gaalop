@@ -1,11 +1,5 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package de.gaalop.visualizer.zerofinding;
 
-import de.gaalop.cfg.AssignmentNode;
-import de.gaalop.visualizer.zerofinding.ZeroFinder;
 import de.gaalop.cfg.ControlFlowGraph;
 import de.gaalop.dfg.MultivectorComponent;
 import de.gaalop.visualizer.Point3d;
@@ -15,12 +9,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * Implements a zero finder method, which samples a cube
  * @author christian
  */
 public class DiscreteCubeMethod implements ZeroFinder {
-    
-    private static final double EPSILON = 1E-1;
 
     @Override
     public HashMap<String, LinkedList<Point3d>> findZeroLocations(ControlFlowGraph in, HashMap<MultivectorComponent, Double> globalValues) {

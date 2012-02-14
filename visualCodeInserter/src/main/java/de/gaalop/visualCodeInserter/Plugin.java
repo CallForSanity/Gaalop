@@ -14,7 +14,7 @@ public class Plugin extends Observable implements VisualizerStrategyPlugin {
 
     @Override
     public VisualizerStrategy createVisualizerStrategy() {
-        return new VisualizerCodeInserter(this);
+        return new VisualizerCodeInserter();
     }
 
     @Override

@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package de.gaalop.visualizer;
 
 import de.gaalop.CodeGenerator;
@@ -12,20 +8,20 @@ import de.gaalop.dfg.MultivectorComponent;
 import de.gaalop.dfg.Variable;
 import de.gaalop.visualizer.engines.RenderingEngine;
 import de.gaalop.visualizer.engines.lwjgl.SimpleLwJglRenderingEngine;
-import de.gaalop.visualizer.zerofinding.DiscreteCubeMethod;
 import de.gaalop.visualizer.zerofinding.RayMethod;
 import de.gaalop.visualizer.zerofinding.ZeroFinder;
 import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Set;
 import javax.swing.JSpinner;
 
 /**
- *
+ * Implements a frame-facade for all drawing operations
  * @author christian
  */
 public class DrawSettingsCodeGen extends DrawSettings implements CodeGenerator {
@@ -79,6 +75,9 @@ public class DrawSettingsCodeGen extends DrawSettings implements CodeGenerator {
         return new HashSet<OutputFile>();
     }
     
+    /**
+     * Repaint the visualization window
+     */
     private void repaintCommand() {
         HashMap<MultivectorComponent, Double> globalValues = new HashMap<MultivectorComponent, Double>(); //Sliders, ...
         //fill global values

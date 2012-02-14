@@ -3,7 +3,6 @@ package de.gaalop.visualizer.engines.lwjgl;
 import de.gaalop.visualizer.PointCloud;
 import de.gaalop.visualizer.engines.RenderingEngine;
 import java.util.HashMap;
-
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;

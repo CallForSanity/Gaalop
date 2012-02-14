@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package de.gaalop.visualizer.zerofinding;
 
 import de.gaalop.OptimizationException;
@@ -12,7 +8,6 @@ import de.gaalop.tba.cfgImport.optimization.maxima.MaximaDifferentiater;
 import de.gaalop.visitors.CFGReplaceVisitor;
 import de.gaalop.visitors.ReplaceVisitor;
 import de.gaalop.visualizer.Point3d;
-import de.gaalop.visualizer.ia_math.RealInterval;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.ListIterator;
@@ -21,7 +16,7 @@ import java.util.logging.Logger;
 import org.antlr.runtime.RecognitionException;
 
 /**
- *
+ * Implements a zero finder method, which uses rays
  * @author christian
  */
 public class RayMethod implements ZeroFinder {

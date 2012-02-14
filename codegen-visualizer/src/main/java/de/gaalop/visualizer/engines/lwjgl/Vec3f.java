@@ -1,12 +1,7 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package de.gaalop.visualizer.engines.lwjgl;
 
 /**
- *
+ * Represents a 3-vector in float precision
  * @author Christian Steinmetz
  */
 public class Vec3f {

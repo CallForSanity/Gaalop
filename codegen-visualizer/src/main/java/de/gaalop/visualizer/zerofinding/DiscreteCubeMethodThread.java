@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package de.gaalop.visualizer.zerofinding;
 
 import de.gaalop.cfg.ControlFlowGraph;
@@ -11,7 +7,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 
 /**
- *
+ * Implements a zero finder thread, which samples a cube
  * @author christian
  */
 public class DiscreteCubeMethodThread extends Thread {

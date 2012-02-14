@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package de.gaalop.visualizer.zerofinding;
 
 import de.gaalop.cfg.AssignmentNode;
@@ -12,7 +8,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 
 /**
- *
+ * Collects all nodes in a control flow graph, which contain multivectors
  * @author christian
  */
 public class MultivectorNodeCollector extends EmptyControlFlowVisitor {

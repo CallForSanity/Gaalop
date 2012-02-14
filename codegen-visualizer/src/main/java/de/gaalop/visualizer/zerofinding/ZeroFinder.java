@@ -1,6 +1,5 @@
 package de.gaalop.visualizer.zerofinding;
 
-import de.gaalop.cfg.AssignmentNode;
 import de.gaalop.cfg.ControlFlowGraph;
 import de.gaalop.dfg.MultivectorComponent;
 import de.gaalop.visualizer.Point3d;
@@ -8,7 +7,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 
 /**
- *
+ * Definies an interface for an zero finding method
  * @author christian
  */
 public interface ZeroFinder {

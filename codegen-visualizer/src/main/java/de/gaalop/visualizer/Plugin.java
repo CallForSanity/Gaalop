@@ -6,15 +6,13 @@ import de.gaalop.ConfigurationProperty;
 import de.gaalop.ConfigurationProperty.Type;
 import de.gaalop.Notifications;
 import de.gaalop.tba.cfgImport.optimization.maxima.ProcessBuilderMaximaConnection;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import javax.imageio.ImageIO;
-import java.awt.*;
+import java.awt.Image;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Observable;
+import javax.imageio.ImageIO;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * This class implements the Plugin interface for Gaalop.

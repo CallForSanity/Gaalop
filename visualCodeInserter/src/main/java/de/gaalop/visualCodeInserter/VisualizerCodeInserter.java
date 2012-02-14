@@ -13,16 +13,10 @@ import de.gaalop.dfg.Variable;
 import java.util.LinkedList;
 
 /**
- *
+ * Implements a strategy that inserts draw code in the cluscript
  * @author Christian Steinmetz
  */
 public class VisualizerCodeInserter implements VisualizerStrategy {
-
-    private Plugin plugin;
-
-    public VisualizerCodeInserter(Plugin plugin) {
-        this.plugin = plugin;
-    }
 
     @Override
     public void transform(ControlFlowGraph graph) throws OptimizationException {

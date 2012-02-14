@@ -2,12 +2,12 @@ package de.gaalop.visualizer.zerofinding;
 
 import de.gaalop.cfg.AssignmentNode;
 import de.gaalop.cfg.EmptyControlFlowVisitor;
-import java.util.HashMap;
 import de.gaalop.dfg.*;
+import java.util.HashMap;
 
 
 /**
- * Evaluates the control flow graph
+ * Evaluates the control flow graph in double precision
  * @author Christian Steinmetz
  */
 public class Evaluater extends EmptyControlFlowVisitor implements ExpressionVisitor {
