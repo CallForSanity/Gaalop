@@ -14,11 +14,13 @@ import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;
 import javax.swing.JSpinner;
+import javax.swing.ScrollPaneLayout;
 
 /**
  * Implements a frame-facade for all drawing operations
@@ -67,17 +69,19 @@ public class DrawSettingsCodeGen extends DrawSettings implements CodeGenerator {
             if (!finder.isPositionVariable(inputVar.getName()))
                 inputs.add(inputVar.getName());
         
-        jPanelInputs.setLayout(new GridLayout(2, 1, 5, 5));
-        jPanelInputs.add(new JSpinner());
-        jPanelInputs.add(new JSpinner());
-        jPanelInputs.add(new JSpinner());
-        jPanelInputs.add(new JSpinner());
+        Collections.sort(inputs);
         
-        jPanelInputs.setLayout(new GridLayout(4, 1, 5, 5));
-        
-        
-        
-        
+        jPanelInputs.setSize(jPanelInputs.getWidth(),25*inputs.size());
+        jPanelInputs.setLayout(new GridLayout((inputs.size() < 8) ? 8-inputs.size(): inputs.size(), 1, 5, 5));
+        for (String input: inputs) {
+            JSpinner spinner = new JSpinner();
+            jPanelInputs.add(spinner);
+            spinner.setToolTipText(input);
+        }
+
+        setSize(getSize().width+1, getSize().height);
+        setSize(getSize().width-1, getSize().height);
+ 
         return new HashSet<OutputFile>();
     }
     

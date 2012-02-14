@@ -27,6 +27,8 @@ public class DrawSettings extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
+        jPanel2 = new javax.swing.JPanel();
+        jScrollPane_Inputs = new javax.swing.JScrollPane();
         jPanelInputs = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
 
@@ -51,21 +53,26 @@ public class DrawSettings extends javax.swing.JFrame {
         getContentPane().add(jPanel1);
         jPanel1.setBounds(240, 10, 220, 340);
 
-        jPanelInputs.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Inputs", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION));
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Inputs", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION));
+        jPanel2.setLayout(new javax.swing.BoxLayout(jPanel2, javax.swing.BoxLayout.LINE_AXIS));
 
         javax.swing.GroupLayout jPanelInputsLayout = new javax.swing.GroupLayout(jPanelInputs);
         jPanelInputs.setLayout(jPanelInputsLayout);
         jPanelInputsLayout.setHorizontalGroup(
             jPanelInputsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 210, Short.MAX_VALUE)
+            .addGap(0, 207, Short.MAX_VALUE)
         );
         jPanelInputsLayout.setVerticalGroup(
             jPanelInputsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 345, Short.MAX_VALUE)
+            .addGap(0, 342, Short.MAX_VALUE)
         );
 
-        getContentPane().add(jPanelInputs);
-        jPanelInputs.setBounds(10, 11, 220, 370);
+        jScrollPane_Inputs.setViewportView(jPanelInputs);
+
+        jPanel2.add(jScrollPane_Inputs);
+
+        getContentPane().add(jPanel2);
+        jPanel2.setBounds(10, 11, 220, 370);
 
         jButton1.setText("Repaint");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -127,6 +134,8 @@ public class DrawSettings extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     protected javax.swing.JButton jButton1;
     private javax.swing.JPanel jPanel1;
-    protected javax.swing.JPanel jPanelInputs;
+    protected javax.swing.JPanel jPanel2;
+    public javax.swing.JPanel jPanelInputs;
+    public javax.swing.JScrollPane jScrollPane_Inputs;
     // End of variables declaration//GEN-END:variables
 }

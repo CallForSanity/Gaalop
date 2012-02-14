@@ -141,10 +141,9 @@ public class RayMethod implements ZeroFinder {
     
     @Override
     public boolean isPositionVariable(String name) {
-        if (name.equals("_V_ox")) return true;
-        if (name.equals("_V_oy")) return true;
-        if (name.equals("_V_oz")) return true;
-        if (name.equals("_V_t")) return true;
+        if (name.equals("_V_X")) return true;
+        if (name.equals("_V_Y")) return true;
+        if (name.equals("_V_Z")) return true;
         
         return false;
     }
