@@ -195,7 +195,8 @@ public class ConfigurationPanel extends JPanel {
 		panel.setLayout(new BorderLayout());
 		panel.add(configPanel, BorderLayout.NORTH);
 		panel.add(new JPanel(), BorderLayout.CENTER);
-		pluginPanes.add(plugin.getName(), panel);
+                if (!properties.isEmpty()) //Hide panels with none parameters
+                    pluginPanes.add(plugin.getName(), panel);
 	}
 
 	private List<Field> getConfigurationProperties(Plugin plugin) {
