@@ -8,7 +8,7 @@ import java.util.HashMap;
  * which is able to render point clouds.
  * @author Christian Steinmetz
  */
-public abstract class RenderingEngine {
+public abstract class RenderingEngine extends Thread {
 
     /**
      * Renders point clouds

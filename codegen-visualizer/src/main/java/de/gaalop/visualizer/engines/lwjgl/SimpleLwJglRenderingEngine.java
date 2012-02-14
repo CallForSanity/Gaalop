@@ -41,6 +41,8 @@ public class SimpleLwJglRenderingEngine extends LwJglRenderingEngine {
 
    @Override
    public void draw(HashMap<String, PointCloud> clouds) {
+       if (clouds == null) return;
+       
        Sphere s = new Sphere();
        
        for (String cloud: clouds.keySet()) {

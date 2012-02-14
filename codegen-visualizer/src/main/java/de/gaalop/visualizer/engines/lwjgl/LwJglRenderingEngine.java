@@ -11,6 +11,7 @@ import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.GLU;
 
+
 /**
  * Implements a rendering engine based on LwJgl
  * @author Christian Steinmetz
@@ -29,6 +30,8 @@ public abstract class LwJglRenderingEngine extends RenderingEngine {
     private boolean[] buttonDown = new boolean[]{false, false, false};
     private static final int STATE_DOWN = 1;
     private static final int STATE_UP = 2;
+    
+    protected HashMap<String, PointCloud> clouds;
 
     public LwJglRenderingEngine(String lwJglNativePath) {
         System.setProperty("org.lwjgl.librarypath", lwJglNativePath);
@@ -38,7 +41,12 @@ public abstract class LwJglRenderingEngine extends RenderingEngine {
     
     @Override
     public void render(HashMap<String, PointCloud> clouds) {
+        this.clouds = clouds;
 
+    }
+
+    @Override
+    public void run() {
         int width = 800;
         int height = 600;
 
@@ -92,7 +100,7 @@ public abstract class LwJglRenderingEngine extends RenderingEngine {
 
         Display.destroy();
     }
-
+    
     void mouseMoved(int x, int y) {
         switch (mouseButton) {
             // 1 => rotate

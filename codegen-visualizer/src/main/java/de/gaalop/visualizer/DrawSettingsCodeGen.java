@@ -35,6 +35,9 @@ public class DrawSettingsCodeGen extends DrawSettings implements CodeGenerator {
     private HashMap<String, Color> colors;
     
     private LinkedList<String> inputs;
+    
+    private RenderingEngine engine;
+        
 
     public DrawSettingsCodeGen(Plugin plugin) {
         super();
@@ -46,6 +49,9 @@ public class DrawSettingsCodeGen extends DrawSettings implements CodeGenerator {
             }
         });
         setVisible(true);
+        System.out.println("hier");
+        engine = new SimpleLwJglRenderingEngine(plugin.lwJglNativePath);
+        engine.start();
     }
 
     @Override
@@ -91,8 +97,7 @@ public class DrawSettingsCodeGen extends DrawSettings implements CodeGenerator {
             clouds.put(key, new PointCloud(colors.get(myKey), pointsToRender.get(key)));
         }
 
-        RenderingEngine engine = new SimpleLwJglRenderingEngine(plugin.lwJglNativePath);
-        engine.render(clouds);     
+        engine.render(clouds);   
     }    
     
 }
