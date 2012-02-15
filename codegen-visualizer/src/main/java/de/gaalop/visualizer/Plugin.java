@@ -22,7 +22,7 @@ public class Plugin extends Observable implements CodeGeneratorPlugin {
     @ConfigurationProperty(type = Type.FILEPATH)
     public String maximaCommand = ProcessBuilderMaximaConnection.CMD_MAXIMA_LINUX;
 
-    @ConfigurationProperty(type = Type.FILEPATH)
+    @ConfigurationProperty(type = Type.DIRPATH)
     public String lwJglNativePath = "/usr/lib/jni/";
 
     private Log log = LogFactory.getLog(Plugin.class);

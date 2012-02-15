@@ -128,6 +128,43 @@ public class ConfigurationPanel extends JPanel {
 					});
 					fields.add(numberField);
 					break;
+                                case DIRPATH:
+                                        final JTextField textField3 = new JTextField(value);
+					textField3.addKeyListener(new KeyAdapter() {
+						@Override
+						public void keyReleased(KeyEvent e) {
+							try {
+								BeanUtils.setProperty(plugin, property.getName(), textField3.getText());
+							} catch (IllegalAccessException e1) {
+								e1.printStackTrace();
+							} catch (InvocationTargetException e1) {
+								e1.printStackTrace();
+							}
+						}
+					});
+                                        JPanel subPanel2 = new JPanel(new GridLayout(1, 3, 5, 5));
+                                        subPanel2.add(textField3);
+					fields.add(subPanel2);
+                                        final JButton button3 = new JButton("Choose Directory path");
+                                        subPanel2.add(button3);
+                                        button3.addActionListener(new ActionListener() {
+                                            @Override
+                                            public void actionPerformed(ActionEvent e) {
+                                                JFileChooser jFC = new JFileChooser();
+                                                jFC.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+                                                if (jFC.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+                                                    textField3.setText(jFC.getSelectedFile().getAbsolutePath());
+                                                    try {
+                                                            BeanUtils.setProperty(plugin, property.getName(), textField3.getText());
+                                                    } catch (IllegalAccessException e1) {
+                                                            e1.printStackTrace();
+                                                    } catch (InvocationTargetException e1) {
+                                                            e1.printStackTrace();
+                                                    }
+                                                }
+                                            }
+                                        });
+					break;
                                 case FILEPATH:
                                         final JTextField textField2 = new JTextField(value);
 					textField2.addKeyListener(new KeyAdapter() {
@@ -163,7 +200,7 @@ public class ConfigurationPanel extends JPanel {
                                                 }
                                             }
                                         });
-					break;
+					break;    
 				case TEXT:
 					// fall through to default
 				default:

@@ -32,6 +32,9 @@ public @interface ConfigurationProperty {
 		BOOLEAN,
 
                 /** File chooser */
-                FILEPATH
+                FILEPATH,
+
+                /** Directory chooser */
+                DIRPATH
 	}
 }
