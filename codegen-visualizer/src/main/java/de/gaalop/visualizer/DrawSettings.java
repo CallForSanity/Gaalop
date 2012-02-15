@@ -31,10 +31,11 @@ public class DrawSettings extends javax.swing.JFrame {
         jScrollPane_Inputs = new javax.swing.JScrollPane();
         jPanelInputs = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
+        jLabel_Info = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Gaalop Visualization Settings");
-        setMinimumSize(new java.awt.Dimension(485, 430));
+        setMinimumSize(new java.awt.Dimension(485, 470));
         getContentPane().setLayout(null);
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Settings", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION));
@@ -82,6 +83,8 @@ public class DrawSettings extends javax.swing.JFrame {
         });
         getContentPane().add(jButton1);
         jButton1.setBounds(300, 350, 90, 30);
+        getContentPane().add(jLabel_Info);
+        jLabel_Info.setBounds(20, 390, 430, 20);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -133,6 +136,7 @@ public class DrawSettings extends javax.swing.JFrame {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     protected javax.swing.JButton jButton1;
+    public javax.swing.JLabel jLabel_Info;
     private javax.swing.JPanel jPanel1;
     protected javax.swing.JPanel jPanel2;
     public javax.swing.JPanel jPanelInputs;

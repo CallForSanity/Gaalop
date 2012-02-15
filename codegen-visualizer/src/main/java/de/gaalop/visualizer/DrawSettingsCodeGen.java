@@ -14,11 +14,7 @@ import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Set;
+import java.util.*;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
@@ -29,19 +25,19 @@ import javax.swing.JSpinner;
  */
 public class DrawSettingsCodeGen extends DrawSettings implements CodeGenerator, Rendering {
     
-    private ControlFlowGraph graph;
+    public ControlFlowGraph graph;
     
     private Plugin plugin;
     
-    private ZeroFinder finder;
+    public ZeroFinder finder;
     
-    private HashMap<String, Color> colors;
+    public HashMap<String, Color> colors;
     
     private LinkedList<String> inputs;
     
-    private boolean available = false;
+    public boolean available = false;
         
-    private HashMap<String, PointCloud> dataSet = null;
+    public HashMap<String, PointCloud> dataSet = null;
 
     public DrawSettingsCodeGen(Plugin plugin) {
         super();
@@ -96,19 +92,13 @@ public class DrawSettingsCodeGen extends DrawSettings implements CodeGenerator, 
      * Repaint the visualization window
      */
     private void repaintCommand() {
+        jLabel_Info.setText("Please wait while rendering ...");
+        jLabel_Info.repaint();
         HashMap<MultivectorComponent, Double> globalValues = new HashMap<MultivectorComponent, Double>(); //Sliders, ...
         //fill global values
         
-        HashMap<String, LinkedList<Point3d>> pointsToRender = finder.findZeroLocations(graph, globalValues);
-        
-        dataSet = new HashMap<String, PointCloud>();
-        for (String key : pointsToRender.keySet()) {
-            System.out.println(pointsToRender.get(key).size());
-            String myKey = (key.endsWith("_S"))? key.substring(0, key.length()-2): key; 
-            dataSet.put(key, new PointCloud(colors.get(myKey), pointsToRender.get(key)));
-        }
-
-        available = true;  
+        FindPointsThread thread = new FindPointsThread(globalValues,this);
+        thread.start();
     }
 
     @Override
