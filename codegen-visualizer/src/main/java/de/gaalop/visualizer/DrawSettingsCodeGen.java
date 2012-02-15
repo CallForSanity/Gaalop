@@ -59,8 +59,8 @@ public class DrawSettingsCodeGen extends DrawSettings implements CodeGenerator, 
         panel1Inside.setSize(panel1Inside.getWidth(),3*25);
         autoRendering = new JCheckBox("Automatic Rendering");
         autoRendering.setSelected(false);
-        getjPanel1().setLayout(new GridLayout(1,1));
-        getjPanel1().add(panel1Inside);
+        jPanel1.setLayout(new GridLayout(1,1));
+        jPanel1.add(panel1Inside);
         
         panel1Inside.add(autoRendering);
         
@@ -77,15 +77,13 @@ public class DrawSettingsCodeGen extends DrawSettings implements CodeGenerator, 
         panelDensity.add(jTF_density, BorderLayout.CENTER);  
         
         
-        setVisible(true);
-        SimpleLwJglRenderingEngine engine = new SimpleLwJglRenderingEngine(plugin.lwJglNativePath, this);
-        
-        engine.start();
+
         
     }
     
     @Override
     public Set<OutputFile> generate(ControlFlowGraph in) throws CodeGeneratorException {
+
         this.graph = in;
         finder = new RayMethod(plugin.maximaCommand);
         colors = ColorEvaluater.getColors(graph);
@@ -115,10 +113,14 @@ public class DrawSettingsCodeGen extends DrawSettings implements CodeGenerator, 
             mapSpinners.put(spinner, input);
             spinner.addChangeListener(this);
         }
-
+        setVisible(true);
         setSize(getSize().width+1, getSize().height);
         setSize(getSize().width-1, getSize().height);
- 
+        
+       
+        SimpleLwJglRenderingEngine engine = new SimpleLwJglRenderingEngine(plugin.lwJglNativePath, this);
+        
+        engine.start();
         return new HashSet<OutputFile>();
     }
     

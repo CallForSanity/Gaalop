@@ -44,11 +44,11 @@ public class DrawSettings extends javax.swing.JFrame {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 210, Short.MAX_VALUE)
+            .addGap(0, 208, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 315, Short.MAX_VALUE)
+            .addGap(0, 317, Short.MAX_VALUE)
         );
 
         getContentPane().add(jPanel1);
@@ -137,14 +137,10 @@ public class DrawSettings extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     protected javax.swing.JButton jButton1;
     public javax.swing.JLabel jLabel_Info;
-    private javax.swing.JPanel jPanel1;
+    protected javax.swing.JPanel jPanel1;
     protected javax.swing.JPanel jPanel2;
     public javax.swing.JPanel jPanelInputs;
     public javax.swing.JScrollPane jScrollPane_Inputs;
     // End of variables declaration//GEN-END:variables
-    
-    protected javax.swing.JPanel getjPanel1() {
-        return jPanel1;
-    }
     
 }
