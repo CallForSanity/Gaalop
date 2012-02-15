@@ -15,15 +15,16 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.*;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JSpinner;
+import javax.swing.*;
+import javax.swing.colorchooser.AbstractColorChooserPanel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 /**
  * Implements a frame-facade for all drawing operations
  * @author christian
  */
-public class DrawSettingsCodeGen extends DrawSettings implements CodeGenerator, Rendering {
+public class DrawSettingsCodeGen extends DrawSettings implements CodeGenerator, Rendering, ChangeListener {
     
     public ControlFlowGraph graph;
     
@@ -38,6 +39,11 @@ public class DrawSettingsCodeGen extends DrawSettings implements CodeGenerator, 
     public boolean available = false;
         
     public HashMap<String, PointCloud> dataSet = null;
+    
+    private HashMap<JSpinner, String> mapSpinners = new HashMap<JSpinner, String>();
+    
+    private JCheckBox autoRendering;
+    private JTextField jTF_cubeLength, jTF_density;
 
     public DrawSettingsCodeGen(Plugin plugin) {
         super();
@@ -48,12 +54,36 @@ public class DrawSettingsCodeGen extends DrawSettings implements CodeGenerator, 
                 repaintCommand();
             }
         });
+        
+        JPanel panel1Inside = new JPanel(new GridLayout(6,1,5,5));
+        panel1Inside.setSize(panel1Inside.getWidth(),3*25);
+        autoRendering = new JCheckBox("Automatic Rendering");
+        autoRendering.setSelected(false);
+        getjPanel1().setLayout(new GridLayout(1,1));
+        getjPanel1().add(panel1Inside);
+        
+        panel1Inside.add(autoRendering);
+        
+        JPanel panelCubeLength = new JPanel(new BorderLayout(5,5));
+        panel1Inside.add(panelCubeLength);
+        panelCubeLength.add(new JLabel("length"),BorderLayout.WEST);
+        jTF_cubeLength = new JTextField("5");
+        panelCubeLength.add(jTF_cubeLength, BorderLayout.CENTER);
+        
+        JPanel panelDensity = new JPanel(new BorderLayout(5,5));
+        panel1Inside.add(panelDensity);
+        panelDensity.add(new JLabel("density"),BorderLayout.WEST);
+        jTF_density = new JTextField("0.1");
+        panelDensity.add(jTF_density, BorderLayout.CENTER);  
+        
+        
         setVisible(true);
         SimpleLwJglRenderingEngine engine = new SimpleLwJglRenderingEngine(plugin.lwJglNativePath, this);
+        
         engine.start();
         
     }
-
+    
     @Override
     public Set<OutputFile> generate(ControlFlowGraph in) throws CodeGeneratorException {
         this.graph = in;
@@ -71,15 +101,19 @@ public class DrawSettingsCodeGen extends DrawSettings implements CodeGenerator, 
         
         jPanelInputs.setSize(jPanelInputs.getWidth(),25*inputs.size());
         jPanelInputs.setLayout(new GridLayout((inputs.size() < 8) ? 8-inputs.size(): inputs.size(), 1, 5, 5));
+        
+        mapSpinners.clear();
         for (String input: inputs) {
             JPanel p = new JPanel(new BorderLayout(5,5));
             jPanelInputs.add(p);
             JLabel label = new JLabel(input+":");
             p.add(label, BorderLayout.WEST);
-            JSpinner spinner = new JSpinner();
+            JSpinner spinner = new JSpinner(new SpinnerNumberModel());
             label.setLabelFor(spinner);
             p.add(spinner, BorderLayout.CENTER);
             spinner.setToolTipText(input);
+            mapSpinners.put(spinner, input);
+            spinner.addChangeListener(this);
         }
 
         setSize(getSize().width+1, getSize().height);
@@ -92,10 +126,17 @@ public class DrawSettingsCodeGen extends DrawSettings implements CodeGenerator, 
      * Repaint the visualization window
      */
     private void repaintCommand() {
+        finder.cubeEdgeLength = Float.parseFloat(jTF_cubeLength.getText());
+        finder.density = Float.parseFloat(jTF_density.getText());
         jLabel_Info.setText("Please wait while rendering ...");
         jLabel_Info.repaint();
         HashMap<MultivectorComponent, Double> globalValues = new HashMap<MultivectorComponent, Double>(); //Sliders, ...
         //fill global values
+        for (JSpinner spinner: mapSpinners.keySet()) {
+            String variable = mapSpinners.get(spinner);
+            Number value = (Number) spinner.getValue();
+            globalValues.put(new MultivectorComponent(variable, 0), value.doubleValue());
+        }
         
         FindPointsThread thread = new FindPointsThread(globalValues,this);
         thread.start();
@@ -111,5 +152,12 @@ public class DrawSettingsCodeGen extends DrawSettings implements CodeGenerator, 
         available = false;
         return dataSet;
     }
+
+    @Override
+    public void stateChanged(ChangeEvent e) {
+        if (autoRendering.isSelected()) repaintCommand();
+    }
+
+
     
 }

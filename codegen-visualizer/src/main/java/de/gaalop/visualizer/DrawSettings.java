@@ -142,4 +142,9 @@ public class DrawSettings extends javax.swing.JFrame {
     public javax.swing.JPanel jPanelInputs;
     public javax.swing.JScrollPane jScrollPane_Inputs;
     // End of variables declaration//GEN-END:variables
+    
+    protected javax.swing.JPanel getjPanel1() {
+        return jPanel1;
+    }
+    
 }

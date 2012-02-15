@@ -19,8 +19,8 @@ import org.antlr.runtime.RecognitionException;
  * Implements a zero finder method, which uses rays
  * @author christian
  */
-public class RayMethod implements ZeroFinder {
-    
+public class RayMethod extends ZeroFinder {
+
     private HashMap<String, LinkedList<Point3d>> points;
     
     private String maximaCommand;
@@ -35,8 +35,8 @@ public class RayMethod implements ZeroFinder {
     public HashMap<String, LinkedList<Point3d>> findZeroLocations(ControlFlowGraph in, HashMap<MultivectorComponent, Double> globalValues) {
         points = new HashMap<String, LinkedList<Point3d>>();
         
-        int a = 5;
-        float dist = 0.1f;
+        float a = cubeEdgeLength;
+        float dist = density;
         
         int processorCount = Runtime.getRuntime().availableProcessors();
         

@@ -17,7 +17,7 @@ public class RayMethodThread extends Thread {
     private float fromOY_Incl;
     private float toOY_Excl;
     
-    private int a ;
+    private float a ;
     private float dist;
     private ControlFlowGraph graph;
     
@@ -28,7 +28,7 @@ public class RayMethodThread extends Thread {
     
     public HashMap<String, LinkedList<Point3d>> points = new HashMap<String, LinkedList<Point3d>>();
 
-    public RayMethodThread(float fromOY_Incl, float toOY_Excl, int a, float dist, ControlFlowGraph graph, HashMap<MultivectorComponent, Double> globalValues, LinkedList<AssignmentNode> nodes) {
+    public RayMethodThread(float fromOY_Incl, float toOY_Excl, float a, float dist, ControlFlowGraph graph, HashMap<MultivectorComponent, Double> globalValues, LinkedList<AssignmentNode> nodes) {
         this.fromOY_Incl = fromOY_Incl;
         this.toOY_Excl = toOY_Excl;
         this.a = a;

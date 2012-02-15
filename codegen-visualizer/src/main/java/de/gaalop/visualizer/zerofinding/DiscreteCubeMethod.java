@@ -12,14 +12,14 @@ import java.util.logging.Logger;
  * Implements a zero finder method, which samples a cube
  * @author christian
  */
-public class DiscreteCubeMethod implements ZeroFinder {
+public class DiscreteCubeMethod extends ZeroFinder {
 
     @Override
     public HashMap<String, LinkedList<Point3d>> findZeroLocations(ControlFlowGraph in, HashMap<MultivectorComponent, Double> globalValues) {
         HashMap<String, LinkedList<Point3d>> points = new HashMap<String, LinkedList<Point3d>>();
 
-        int a = 5;
-        float dist = 0.1f;
+        int a = (int) cubeEdgeLength;
+        float dist = density;
         
         int processorCount = Runtime.getRuntime().availableProcessors();
         
