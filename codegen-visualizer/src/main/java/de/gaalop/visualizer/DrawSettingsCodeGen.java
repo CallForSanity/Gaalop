@@ -10,6 +10,7 @@ import de.gaalop.visualizer.engines.RenderingEngine;
 import de.gaalop.visualizer.engines.lwjgl.SimpleLwJglRenderingEngine;
 import de.gaalop.visualizer.zerofinding.RayMethod;
 import de.gaalop.visualizer.zerofinding.ZeroFinder;
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -19,6 +20,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.ScrollPaneLayout;
 
@@ -74,8 +77,13 @@ public class DrawSettingsCodeGen extends DrawSettings implements CodeGenerator {
         jPanelInputs.setSize(jPanelInputs.getWidth(),25*inputs.size());
         jPanelInputs.setLayout(new GridLayout((inputs.size() < 8) ? 8-inputs.size(): inputs.size(), 1, 5, 5));
         for (String input: inputs) {
+            JPanel p = new JPanel(new BorderLayout(5,5));
+            jPanelInputs.add(p);
+            JLabel label = new JLabel(input+":");
+            p.add(label, BorderLayout.WEST);
             JSpinner spinner = new JSpinner();
-            jPanelInputs.add(spinner);
+            label.setLabelFor(spinner);
+            p.add(spinner, BorderLayout.CENTER);
             spinner.setToolTipText(input);
         }
 
