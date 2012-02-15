@@ -36,7 +36,7 @@ public class FindPointsThread extends Thread {
         long sum = 0;
         for (String key : pointsToRender.keySet()) {
             sum += pointsToRender.get(key).size();
-            System.out.println(pointsToRender.get(key).size());
+            //System.out.println(pointsToRender.get(key).size());
             String myKey = (key.endsWith("_S"))? key.substring(0, key.length()-2): key; 
             draw.dataSet.put(key, new PointCloud(draw.colors.get(myKey), pointsToRender.get(key)));
         }
