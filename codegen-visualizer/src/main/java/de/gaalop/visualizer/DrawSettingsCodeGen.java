@@ -6,7 +6,6 @@ import de.gaalop.OutputFile;
 import de.gaalop.cfg.ControlFlowGraph;
 import de.gaalop.dfg.MultivectorComponent;
 import de.gaalop.dfg.Variable;
-import de.gaalop.visualizer.engines.RenderingEngine;
 import de.gaalop.visualizer.engines.lwjgl.SimpleLwJglRenderingEngine;
 import de.gaalop.visualizer.zerofinding.RayMethod;
 import de.gaalop.visualizer.zerofinding.ZeroFinder;
@@ -23,13 +22,12 @@ import java.util.Set;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
-import javax.swing.ScrollPaneLayout;
 
 /**
  * Implements a frame-facade for all drawing operations
  * @author christian
  */
-public class DrawSettingsCodeGen extends DrawSettings implements CodeGenerator {
+public class DrawSettingsCodeGen extends DrawSettings implements CodeGenerator, Rendering {
     
     private ControlFlowGraph graph;
     
@@ -41,8 +39,9 @@ public class DrawSettingsCodeGen extends DrawSettings implements CodeGenerator {
     
     private LinkedList<String> inputs;
     
-    private RenderingEngine engine;
+    private boolean available = false;
         
+    private HashMap<String, PointCloud> dataSet = null;
 
     public DrawSettingsCodeGen(Plugin plugin) {
         super();
@@ -54,9 +53,9 @@ public class DrawSettingsCodeGen extends DrawSettings implements CodeGenerator {
             }
         });
         setVisible(true);
-        System.out.println("hier");
-        engine = new SimpleLwJglRenderingEngine(plugin.lwJglNativePath);
+        SimpleLwJglRenderingEngine engine = new SimpleLwJglRenderingEngine(plugin.lwJglNativePath, this);
         engine.start();
+        
     }
 
     @Override
@@ -101,15 +100,26 @@ public class DrawSettingsCodeGen extends DrawSettings implements CodeGenerator {
         //fill global values
         
         HashMap<String, LinkedList<Point3d>> pointsToRender = finder.findZeroLocations(graph, globalValues);
-
-        HashMap<String, PointCloud> clouds = new HashMap<String, PointCloud>();
+        
+        dataSet = new HashMap<String, PointCloud>();
         for (String key : pointsToRender.keySet()) {
             System.out.println(pointsToRender.get(key).size());
             String myKey = (key.endsWith("_S"))? key.substring(0, key.length()-2): key; 
-            clouds.put(key, new PointCloud(colors.get(myKey), pointsToRender.get(key)));
+            dataSet.put(key, new PointCloud(colors.get(myKey), pointsToRender.get(key)));
         }
 
-        engine.render(clouds);   
-    }    
+        available = true;  
+    }
+
+    @Override
+    public boolean isNewDataSetAvailable() {
+        return available;
+    }
+
+    @Override
+    public HashMap<String, PointCloud> getDataSet() {
+        available = false;
+        return dataSet;
+    }
     
 }

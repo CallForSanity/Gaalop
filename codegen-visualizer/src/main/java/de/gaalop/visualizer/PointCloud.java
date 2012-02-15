@@ -1,7 +1,5 @@
 package de.gaalop.visualizer;
 
-import de.gaalop.visualizer.engines.RenderingEngine;
-import de.gaalop.visualizer.engines.lwjgl.SimpleLwJglRenderingEngine;
 import java.awt.Color;
 import java.io.*;
 import java.util.HashMap;
@@ -113,8 +111,7 @@ public class PointCloud {
     public static void loadCloudsFromFileAndDraw() throws FileNotFoundException, IOException, JDOMException {
         FileInputStream inStream = new FileInputStream("E:\\out.xml");
         HashMap<String, PointCloud> clouds = loadClouds(inStream);
-        RenderingEngine engine = new SimpleLwJglRenderingEngine("/usr/lib/jni/");
-        engine.render(clouds);
+        //TODO render
         inStream.close();
     }
             

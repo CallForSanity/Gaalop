@@ -1,7 +1,7 @@
 package de.gaalop.visualizer.engines.lwjgl;
 
 import de.gaalop.visualizer.PointCloud;
-import de.gaalop.visualizer.engines.RenderingEngine;
+import de.gaalop.visualizer.Rendering;
 import java.util.HashMap;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
@@ -16,7 +16,7 @@ import org.lwjgl.util.glu.GLU;
  * Implements a rendering engine based on LwJgl
  * @author Christian Steinmetz
  */
-public abstract class LwJglRenderingEngine extends RenderingEngine {
+public abstract class LwJglRenderingEngine extends Thread {
 
     private double near = 0.1, far = 30;
     // Camera information
@@ -31,25 +31,20 @@ public abstract class LwJglRenderingEngine extends RenderingEngine {
     private static final int STATE_DOWN = 1;
     private static final int STATE_UP = 2;
     
-    protected HashMap<String, PointCloud> clouds;
+    protected Rendering rendering;
+    
+    private int list = -1;
 
-    public LwJglRenderingEngine(String lwJglNativePath) {
+    public LwJglRenderingEngine(String lwJglNativePath, Rendering rendering) {
+        this.rendering = rendering;
         System.setProperty("org.lwjgl.librarypath", lwJglNativePath);
-    }
-    
-    
-    
-    @Override
-    public void render(HashMap<String, PointCloud> clouds) {
-        this.clouds = clouds;
-
+        
     }
 
-    @Override
-    public void run() {
+    public void startEngine() {
         int width = 800;
         int height = 600;
-
+        
         try {
             Display.setDisplayMode(new DisplayMode(width, height));
             Display.setFullscreen(false);
@@ -60,7 +55,7 @@ public abstract class LwJglRenderingEngine extends RenderingEngine {
             e.printStackTrace();
             System.exit(0);
         }
-
+        
         GL11.glEnable(GL11.GL_DEPTH_TEST);
         GL11.glShadeModel(GL11.GL_SMOOTH);
         changeSize(width, height);
@@ -73,11 +68,27 @@ public abstract class LwJglRenderingEngine extends RenderingEngine {
         GL11.glLoadIdentity();
         GLU.gluPerspective((float) 65.0, (float) width / (float) height, (float) 0.1, 100);
         GL11.glMatrixMode(GL11.GL_MODELVIEW);
+        
+        
+    }
 
+    @Override
+    public void run() {
+        startEngine();
         //long start = System.currentTimeMillis();
         while (!Display.isCloseRequested()) {
             //System.out.println(System.currentTimeMillis()-start);
             //start = System.currentTimeMillis();
+            
+            if (rendering.isNewDataSetAvailable()) {
+                if (list != -1) GL11.glDeleteLists(list, 1);
+                list = GL11.glGenLists(1);
+                GL11.glNewList(list, GL11.GL_COMPILE);
+                draw(rendering.getDataSet());
+                GL11.glEndList();
+            }
+            
+            
             GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT); // clear the screen
             GL11.glLoadIdentity(); // apply camPos before rotation
 
@@ -91,7 +102,7 @@ public abstract class LwJglRenderingEngine extends RenderingEngine {
             GL11.glRotatef(camAngleY, 1, 0, 0); // window y axis rotates around x
 
             //Render the scene
-            draw(clouds);
+            if (list != -1) GL11.glCallList(list);
 
             pollInput();
             Display.update();

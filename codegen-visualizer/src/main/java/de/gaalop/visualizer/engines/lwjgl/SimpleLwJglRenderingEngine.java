@@ -2,6 +2,7 @@ package de.gaalop.visualizer.engines.lwjgl;
 
 import de.gaalop.visualizer.Point3d;
 import de.gaalop.visualizer.PointCloud;
+import de.gaalop.visualizer.Rendering;
 import java.awt.Color;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -13,37 +14,15 @@ import org.lwjgl.util.glu.Sphere;
  * @author Christian Steinmetz
  */
 public class SimpleLwJglRenderingEngine extends LwJglRenderingEngine {
-
-    public SimpleLwJglRenderingEngine(String lwJglNativePath) {
-        super(lwJglNativePath);
-    }
     
-    
-    
-    public static void main(String[] args) {
-        LwJglRenderingEngine engine = new SimpleLwJglRenderingEngine("/usr/lib/jni/");
-        HashMap<String, PointCloud> clouds = new HashMap<String, PointCloud>();
-        LinkedList<Point3d> points = new LinkedList<Point3d>();
-        points.add(new Point3d(0,0,0));
-        points.add(new Point3d(1,0,0));
-        points.add(new Point3d(0,1,0));
-        points.add(new Point3d(0,0,1));
-        clouds.put("1", new PointCloud(Color.GREEN, points));
-
-        LinkedList<Point3d> points2 = new LinkedList<Point3d>();
-        points2.add(new Point3d(0.5,0,0));
-        points2.add(new Point3d(0,0.5,0));
-        points2.add(new Point3d(0,0,0.5));
-        clouds.put("2", new PointCloud(Color.RED, points2));
-
-        engine.render(clouds);
+    public SimpleLwJglRenderingEngine(String lwJglNativePath, Rendering rendering) {
+        super(lwJglNativePath, rendering);
     }
 
    @Override
    public void draw(HashMap<String, PointCloud> clouds) {
        if (clouds == null) return;
-       
-       Sphere s = new Sphere();
+              Sphere s = new Sphere();
        
        for (String cloud: clouds.keySet()) {
             PointCloud pointCloud = clouds.get(cloud);
@@ -61,5 +40,4 @@ public class SimpleLwJglRenderingEngine extends LwJglRenderingEngine {
             
        }
     }
-
 }
