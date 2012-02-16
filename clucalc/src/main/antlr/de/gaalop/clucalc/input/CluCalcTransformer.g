@@ -63,7 +63,7 @@ statement returns [ArrayList<SequentialNode> nodes]
 	| OPNS { graphBuilder.handleNullSpace(NullSpace.OPNS); }
 	
 	// Displayed assignment (ignore the display part)
-	| ^(COLON assignment) { $nodes.add(graphBuilder.handleAssignment($assignment.variable, $assignment.value)); }
+	| ^(COLON assignment) { $nodes.add(graphBuilder.handleAssignment($assignment.variable, $assignment.value)); $nodes.add(graphBuilder.processExpressionStatement($assignment.variable)); }
 	
 	| ^(COLON id=variableOrConstant) { $nodes.add(graphBuilder.processExpressionStatement($id.result)); }
 	
