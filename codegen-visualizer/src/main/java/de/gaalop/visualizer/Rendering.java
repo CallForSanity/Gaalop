@@ -1,6 +1,7 @@
 package de.gaalop.visualizer;
 
 import java.util.HashMap;
+import java.util.HashSet;
 
 
 /**
@@ -12,5 +13,7 @@ public interface Rendering {
     public boolean isNewDataSetAvailable();
     
     public HashMap<String, PointCloud> getDataSet();
+    
+    public HashSet<String> getVisibleObjects();
     
 }

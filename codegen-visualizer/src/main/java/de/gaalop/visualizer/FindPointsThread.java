@@ -43,6 +43,7 @@ public class FindPointsThread extends Thread {
 
         draw.available = true;  
         draw.jLabel_Info.setText(sum + " points, time = "+(System.currentTimeMillis()-start)/1000f+" s");
+        draw.findingComplete();
     }
 
 }

@@ -10,6 +10,7 @@ import de.gaalop.dfg.Expression;
 import de.gaalop.dfg.InnerProduct;
 import de.gaalop.dfg.MacroCall;
 import de.gaalop.dfg.Variable;
+import java.util.HashMap;
 import java.util.LinkedList;
 
 /**
@@ -41,16 +42,19 @@ public class VisualizerCodeInserter implements VisualizerStrategy {
 
             AssignmentNode pointNode = new AssignmentNode(graph, visualizationPoint, new MacroCall("createPoint", args));
             graph.getStartNode().insertAfter(pointNode);
-
+            
+            HashMap<String, Expression> renderingExpressions = graph.getRenderingExpressions();
             int i=0;
             for (ExpressionStatement s: statements) {
-                AssignmentNode renderNode = new AssignmentNode(graph, new Variable(prefix+"PRODUCT"+i), new InnerProduct(s.getExpression(), visualizationPoint));
-                graph.addLocalVariable(new Variable(prefix+"PRODUCT"+i));
+                String productName = prefix+"PRODUCT"+i;
+                AssignmentNode renderNode = new AssignmentNode(graph, new Variable(productName), new InnerProduct(s.getExpression(), visualizationPoint));
+                graph.addLocalVariable(new Variable(productName));
                 s.insertAfter(renderNode);
 
-                StoreResultNode outputRenderNode = new StoreResultNode(graph, new Variable(prefix+"PRODUCT"+i));
-                graph.addLocalVariable(new Variable(prefix+"PRODUCT"+i));
+                StoreResultNode outputRenderNode = new StoreResultNode(graph, new Variable(productName));
+                graph.addLocalVariable(new Variable(productName));
                 renderNode.insertAfter(outputRenderNode);
+                renderingExpressions.put(productName, s.getExpression());
                 i++;
             }
 

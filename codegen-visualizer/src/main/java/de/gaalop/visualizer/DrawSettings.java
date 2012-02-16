@@ -26,72 +26,96 @@ public class DrawSettings extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
+        jPanel_Settings = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane_Inputs = new javax.swing.JScrollPane();
-        jPanelInputs = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
+        jPanel_Inputs = new javax.swing.JPanel();
+        jButton_Repaint = new javax.swing.JButton();
         jLabel_Info = new javax.swing.JLabel();
+        jPanel3 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jPanel_Visible = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Gaalop Visualization Settings");
         setMinimumSize(new java.awt.Dimension(485, 470));
         getContentPane().setLayout(null);
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Settings", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION));
+        jPanel_Settings.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Settings", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION));
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        javax.swing.GroupLayout jPanel_SettingsLayout = new javax.swing.GroupLayout(jPanel_Settings);
+        jPanel_Settings.setLayout(jPanel_SettingsLayout);
+        jPanel_SettingsLayout.setHorizontalGroup(
+            jPanel_SettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 208, Short.MAX_VALUE)
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 317, Short.MAX_VALUE)
+        jPanel_SettingsLayout.setVerticalGroup(
+            jPanel_SettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 127, Short.MAX_VALUE)
         );
 
-        getContentPane().add(jPanel1);
-        jPanel1.setBounds(240, 10, 220, 340);
+        getContentPane().add(jPanel_Settings);
+        jPanel_Settings.setBounds(240, 10, 220, 150);
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Inputs", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION));
         jPanel2.setLayout(new javax.swing.BoxLayout(jPanel2, javax.swing.BoxLayout.LINE_AXIS));
 
-        javax.swing.GroupLayout jPanelInputsLayout = new javax.swing.GroupLayout(jPanelInputs);
-        jPanelInputs.setLayout(jPanelInputsLayout);
-        jPanelInputsLayout.setHorizontalGroup(
-            jPanelInputsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        javax.swing.GroupLayout jPanel_InputsLayout = new javax.swing.GroupLayout(jPanel_Inputs);
+        jPanel_Inputs.setLayout(jPanel_InputsLayout);
+        jPanel_InputsLayout.setHorizontalGroup(
+            jPanel_InputsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 207, Short.MAX_VALUE)
         );
-        jPanelInputsLayout.setVerticalGroup(
-            jPanelInputsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        jPanel_InputsLayout.setVerticalGroup(
+            jPanel_InputsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 342, Short.MAX_VALUE)
         );
 
-        jScrollPane_Inputs.setViewportView(jPanelInputs);
+        jScrollPane_Inputs.setViewportView(jPanel_Inputs);
 
         jPanel2.add(jScrollPane_Inputs);
 
         getContentPane().add(jPanel2);
         jPanel2.setBounds(10, 11, 220, 370);
 
-        jButton1.setText("Repaint");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        jButton_Repaint.setText("Repaint");
+        jButton_Repaint.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                jButton_RepaintActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton1);
-        jButton1.setBounds(300, 350, 90, 30);
+        getContentPane().add(jButton_Repaint);
+        jButton_Repaint.setBounds(300, 350, 90, 30);
         getContentPane().add(jLabel_Info);
         jLabel_Info.setBounds(20, 390, 430, 20);
+
+        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Visible Objects", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION));
+        jPanel3.setLayout(new javax.swing.BoxLayout(jPanel3, javax.swing.BoxLayout.LINE_AXIS));
+
+        javax.swing.GroupLayout jPanel_VisibleLayout = new javax.swing.GroupLayout(jPanel_Visible);
+        jPanel_Visible.setLayout(jPanel_VisibleLayout);
+        jPanel_VisibleLayout.setHorizontalGroup(
+            jPanel_VisibleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 206, Short.MAX_VALUE)
+        );
+        jPanel_VisibleLayout.setVerticalGroup(
+            jPanel_VisibleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 155, Short.MAX_VALUE)
+        );
+
+        jScrollPane1.setViewportView(jPanel_Visible);
+
+        jPanel3.add(jScrollPane1);
+
+        getContentPane().add(jPanel3);
+        jPanel3.setBounds(240, 160, 220, 180);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void jButton_RepaintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_RepaintActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_jButton_RepaintActionPerformed
 
     /**
      * @param args the command line arguments
@@ -135,11 +159,14 @@ public class DrawSettings extends javax.swing.JFrame {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    protected javax.swing.JButton jButton1;
+    protected javax.swing.JButton jButton_Repaint;
     public javax.swing.JLabel jLabel_Info;
-    protected javax.swing.JPanel jPanel1;
     protected javax.swing.JPanel jPanel2;
-    public javax.swing.JPanel jPanelInputs;
+    private javax.swing.JPanel jPanel3;
+    public javax.swing.JPanel jPanel_Inputs;
+    protected javax.swing.JPanel jPanel_Settings;
+    protected javax.swing.JPanel jPanel_Visible;
+    private javax.swing.JScrollPane jScrollPane1;
     public javax.swing.JScrollPane jScrollPane_Inputs;
     // End of variables declaration//GEN-END:variables
     

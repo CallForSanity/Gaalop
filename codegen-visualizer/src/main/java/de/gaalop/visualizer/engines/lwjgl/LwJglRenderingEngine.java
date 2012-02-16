@@ -3,6 +3,7 @@ package de.gaalop.visualizer.engines.lwjgl;
 import de.gaalop.visualizer.PointCloud;
 import de.gaalop.visualizer.Rendering;
 import java.util.HashMap;
+import java.util.HashSet;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -84,7 +85,7 @@ public abstract class LwJglRenderingEngine extends Thread {
                 if (list != -1) GL11.glDeleteLists(list, 1);
                 list = GL11.glGenLists(1);
                 GL11.glNewList(list, GL11.GL_COMPILE);
-                draw(rendering.getDataSet());
+                draw(rendering.getDataSet(), rendering.getVisibleObjects());
                 GL11.glEndList();
             }
             
@@ -240,6 +241,6 @@ public abstract class LwJglRenderingEngine extends Thread {
      * Draws the concrete scene
      * @param clouds The point clouds
      */
-    public abstract void draw(HashMap<String, PointCloud> clouds);
+    public abstract void draw(HashMap<String, PointCloud> clouds, HashSet<String> visibleObjects);
 
 }

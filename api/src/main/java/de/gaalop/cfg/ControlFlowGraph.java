@@ -58,6 +58,16 @@ public final class ControlFlowGraph {
 
 	private HashMap<String, String> pragmaMinValue = new HashMap<String, String>();
 	private HashMap<String, String> pragmaMaxValue = new HashMap<String, String>();
+        
+        private HashMap<String, Expression> renderingExpressions = new HashMap<String, Expression>();
+
+        public HashMap<String, Expression> getRenderingExpressions() {
+            return renderingExpressions;
+        }
+    
+        public void setRenderingExpressions(HashMap<String, Expression> renderingExpressions) {
+            this.renderingExpressions = renderingExpressions;
+        }
 
 	public HashMap<String, String> getPragmaMaxValue() {
 		return pragmaMaxValue;
