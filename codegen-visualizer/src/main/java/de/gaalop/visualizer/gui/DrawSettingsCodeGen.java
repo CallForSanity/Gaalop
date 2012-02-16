@@ -1,4 +1,4 @@
-package de.gaalop.visualizer;
+package de.gaalop.visualizer.gui;
 
 import de.gaalop.CodeGenerator;
 import de.gaalop.CodeGeneratorException;
@@ -6,6 +6,11 @@ import de.gaalop.OutputFile;
 import de.gaalop.cfg.ControlFlowGraph;
 import de.gaalop.dfg.MultivectorComponent;
 import de.gaalop.dfg.Variable;
+import de.gaalop.visualizer.ColorEvaluater;
+import de.gaalop.visualizer.FindPointsThread;
+import de.gaalop.visualizer.Plugin;
+import de.gaalop.visualizer.PointCloud;
+import de.gaalop.visualizer.Rendering;
 import de.gaalop.visualizer.engines.lwjgl.SimpleLwJglRenderingEngine;
 import de.gaalop.visualizer.zerofinding.RayMethod;
 import de.gaalop.visualizer.zerofinding.ZeroFinder;
@@ -28,7 +33,6 @@ public class DrawSettingsCodeGen extends DrawSettings implements CodeGenerator, 
     public ZeroFinder finder;
     
     public HashMap<String, Color> colors;
-   
     
     public boolean available = false;
         
@@ -91,6 +95,10 @@ public class DrawSettingsCodeGen extends DrawSettings implements CodeGenerator, 
         return new HashSet<OutputFile>();
     }
     
+    /**
+     * Is called, when finding is finished.
+     * Shows all visible objects in the VisiblePanel
+     */
     public void findingComplete() {
         visiblePanel.setObjects(dataSet.keySet(), graph.getRenderingExpressions());
     }
@@ -135,7 +143,5 @@ public class DrawSettingsCodeGen extends DrawSettings implements CodeGenerator, 
     public HashSet<String> getVisibleObjects() {
         return visiblePanel.getVisibleObjects();
     }
-    
-    
-    
+ 
 }

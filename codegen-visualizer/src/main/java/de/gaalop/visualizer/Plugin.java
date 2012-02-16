@@ -1,5 +1,6 @@
 package de.gaalop.visualizer;
 
+import de.gaalop.visualizer.gui.DrawSettingsCodeGen;
 import de.gaalop.CodeGenerator;
 import de.gaalop.CodeGeneratorPlugin;
 import de.gaalop.ConfigurationProperty;

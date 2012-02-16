@@ -100,19 +100,5 @@ public class PointCloud {
 
         XMLOutputter outputter = new XMLOutputter();
         outputter.output(doc, outStream);
-    }
-
-    /**
-     * Load clouds from a file and draw the clouds (using LINUX NATIVES)
-     * @throws FileNotFoundException
-     * @throws IOException
-     * @throws JDOMException 
-     */
-    public static void loadCloudsFromFileAndDraw() throws FileNotFoundException, IOException, JDOMException {
-        FileInputStream inStream = new FileInputStream("E:\\out.xml");
-        HashMap<String, PointCloud> clouds = loadClouds(inStream);
-        //TODO render
-        inStream.close();
-    }
-            
+    }            
 }

@@ -1,8 +1,4 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-package de.gaalop.visualizer;
+package de.gaalop.visualizer.gui;
 
 import de.gaalop.dfg.Expression;
 import java.awt.GridLayout;
@@ -11,11 +7,10 @@ import java.util.HashSet;
 import java.util.Set;
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
-import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 /**
- *
+ * Contains a panel which shows all visible objects
  * @author Christian
  */
 public abstract class VisiblePanel implements ChangeListener {
@@ -28,6 +23,11 @@ public abstract class VisiblePanel implements ChangeListener {
         this.panel = panel;
     }
 
+    /**
+     * Sets all objects
+     * @param names The names of the objects
+     * @param renderingExpressions The expressions of the objects
+     */
     public void setObjects(Set<String> names, HashMap<String, Expression> renderingExpressions) {
         panel.removeAll();
         
@@ -43,6 +43,10 @@ public abstract class VisiblePanel implements ChangeListener {
         }
     }
     
+    /**
+     * Returns the set of visible objects
+     * @return The set of visible objects
+     */
     public HashSet<String> getVisibleObjects() {
         HashSet<String> result = new HashSet<String>();
         for (JCheckBox box: boxes.keySet()) 

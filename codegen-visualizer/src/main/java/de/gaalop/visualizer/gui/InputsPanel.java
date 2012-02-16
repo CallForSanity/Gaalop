@@ -1,22 +1,15 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-package de.gaalop.visualizer;
+package de.gaalop.visualizer.gui;
 
-import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.util.HashMap;
 import java.util.LinkedList;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
-import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 /**
- *
+ * Contains a panel which shows inputs
  * @author Christian
  */
 public abstract class InputsPanel implements ChangeListener {
@@ -29,6 +22,10 @@ public abstract class InputsPanel implements ChangeListener {
         this.panel = panel;
     }
     
+    /**
+     * Sets the inputs
+     * @param inputs The inputs
+     */
     public void setInputs(LinkedList<String> inputs) {
         panel.removeAll();
         
@@ -44,6 +41,10 @@ public abstract class InputsPanel implements ChangeListener {
         }
     }
     
+    /**
+     * Returns all input values
+     * @return The input values
+     */
     public HashMap<String, Double> getValues() {
         HashMap<String, Double> result = new HashMap<String, Double>();
         for (JSpinner spinner: mapSpinners.keySet()) 

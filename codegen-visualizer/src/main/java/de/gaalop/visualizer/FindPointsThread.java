@@ -1,17 +1,12 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package de.gaalop.visualizer;
 
-import de.gaalop.cfg.ControlFlowGraph;
+import de.gaalop.visualizer.gui.DrawSettingsCodeGen;
 import de.gaalop.dfg.MultivectorComponent;
-import de.gaalop.visualizer.zerofinding.ZeroFinder;
 import java.util.HashMap;
 import java.util.LinkedList;
 
 /**
- *
+ * Implemtns a facade thread for finding points
  * @author christian
  */
 public class FindPointsThread extends Thread {

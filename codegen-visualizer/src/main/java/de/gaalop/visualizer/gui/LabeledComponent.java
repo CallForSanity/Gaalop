@@ -1,8 +1,4 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-package de.gaalop.visualizer;
+package de.gaalop.visualizer.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -10,7 +6,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 /**
- *
+ * Implements a JPanel, which contains a label left to a arbitrary component
  * @author Christian
  */
 public class LabeledComponent extends JPanel {
@@ -22,7 +18,4 @@ public class LabeledComponent extends JPanel {
         add(label, BorderLayout.WEST);
         add(component, BorderLayout.CENTER);  
     }
-    
-    
-    
 }

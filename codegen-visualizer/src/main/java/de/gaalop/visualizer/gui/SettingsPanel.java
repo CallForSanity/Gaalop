@@ -1,8 +1,4 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-package de.gaalop.visualizer;
+package de.gaalop.visualizer.gui;
 
 import java.awt.GridLayout;
 import javax.swing.JCheckBox;
@@ -21,21 +17,31 @@ public class SettingsPanel {
 
     public SettingsPanel(JPanel panel) {
         panel.setLayout(new GridLayout(3,1,5,5));
-        
-        
         panel.add(autoRendering);
         panel.add(new LabeledComponent("cube length", jTF_cubeLength));
         panel.add(new LabeledComponent("density", jTF_density));
     }
     
+    /**
+     * Return the half length of the cube to render
+     * @return The half length of the cube to render
+     */
     public float getCubeLength() {
         return Float.parseFloat(jTF_cubeLength.getText());
     }
     
+    /**
+     * Returns the density of the rendering
+     * @return The density
+     */
     public float getDensity() {
         return Float.parseFloat(jTF_density.getText());
     }
     
+    /**
+     * Determines, if automatic rendering is active
+     * @return <value>true</value> if automatic rendering is active, otherwise <value>false</value>
+     */
     public boolean isAutoRendering() {
         return autoRendering.isSelected();
     }
