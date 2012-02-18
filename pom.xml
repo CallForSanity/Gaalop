@@ -14,6 +14,7 @@
     <modules>
         <module>api</module>
 	<module>algebra</module>
+	<module>visualCodeInserter</module>
 
 	<module>clucalc</module>
 

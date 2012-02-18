@@ -12,6 +12,7 @@
                 <include>de.gaalop:api</include>
                 <include>de.gaalop:clucalc</include>
                 <include>de.gaalop:algebra</include>
+                <include>de.gaalop:visualCodeInserter</include>
                 <include>de.gaalop:codegen-java</include>
                 <include>de.gaalop:codegen-cpp</include>
 		<include>de.gaalop:codegen-compressed</include>

@@ -49,6 +49,8 @@ public class Main {
     public static String optimizationStrategyPlugin = "de.gaalop.maple.Plugin";
     @Option(name = "-algebra", required = false, usage = "Sets the class name of the algebra strategy plugin that should be used.")
     public static String algebraStrategyPlugin = "de.gaalop.algebra.Plugin";
+    @Option(name = "-visualizer", required = false, usage = "Sets the class name of the visualizer strategy plugin that should be used.")
+    public static String visualizerStrategyPlugin = "de.gaalop.visualCodeInserter.Plugin";
     @Option(name = "-pragmas", required = false, usage = "Wether or not to write line pragmas for compile errors.")
     public static boolean writeLinePragmas = false;
 

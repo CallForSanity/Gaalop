@@ -4,19 +4,7 @@
  */
 package de.gaalop.gpc;
 
-import de.gaalop.CodeGenerator;
-import de.gaalop.AlgebraStrategy;
-import de.gaalop.AlgebraStrategyPlugin;
-import de.gaalop.CodeGeneratorPlugin;
-import de.gaalop.CodeParser;
-import de.gaalop.CodeParserPlugin;
-import de.gaalop.CompilerFacade;
-import de.gaalop.InputFile;
-import de.gaalop.NameTable;
-import de.gaalop.OptimizationStrategy;
-import de.gaalop.OptimizationStrategyPlugin;
-import de.gaalop.OutputFile;
-import de.gaalop.Plugins;
+import de.gaalop.*;
 import java.io.BufferedReader;
 import java.io.StringReader;
 import java.util.HashMap;
@@ -146,10 +134,12 @@ public class BlockTransformer {
     public static CompilerFacade createCompiler() {
         CodeParser codeParser = createCodeParser();
         AlgebraStrategy algebraStrategy = createAlgebraStrategy();
+	VisualizerStrategy visualizerStrategy = createVisualizerStrategy();
         OptimizationStrategy optimizationStrategy = createOptimizationStrategy();
         CodeGenerator codeGenerator = createCodeGenerator();
 
-        return new CompilerFacade(codeParser, algebraStrategy, optimizationStrategy, codeGenerator);
+        return new CompilerFacade(codeParser, algebraStrategy,
+				  visualizerStrategy, optimizationStrategy, codeGenerator);
     }
 
     public static CodeParser createCodeParser() {
@@ -176,6 +166,19 @@ public class BlockTransformer {
         System.err.println("Unknown algebra strategy plugin: " + Main.algebraStrategyPlugin);
         System.exit(-3);
         return null;
+    }
+
+   public static VisualizerStrategy createVisualizerStrategy() {
+     Set<VisualizerStrategyPlugin> plugins = Plugins.getVisualizerStrategyPlugins();
+     for (VisualizerStrategyPlugin plugin : plugins) {
+       if (plugin.getClass().getName().equals(Main.visualizerStrategyPlugin)) {
+         return plugin.createVisualizerStrategy();
+       }
+     }
+
+     System.err.println("Unknown visualizer strategy plugin: " + Main.visualizerStrategyPlugin);
+     System.exit(-4);
+     return null;
     }
 
     public static OptimizationStrategy createOptimizationStrategy() {
