@@ -138,8 +138,8 @@ public class BlockTransformer {
         OptimizationStrategy optimizationStrategy = createOptimizationStrategy();
         CodeGenerator codeGenerator = createCodeGenerator();
 
-        return new CompilerFacade(codeParser, algebraStrategy,
-				  visualizerStrategy, optimizationStrategy, codeGenerator);
+        return new CompilerFacade(codeParser, visualizerStrategy, algebraStrategy,
+				  optimizationStrategy, codeGenerator);
     }
 
     public static CodeParser createCodeParser() {
