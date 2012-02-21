@@ -49,7 +49,13 @@ public class CompressedCodeGenerator implements CodeGenerator {
      * @return
      */
     private String generateCode(ControlFlowGraph in) {
-        CompressedVisitor visitor = new CompressedVisitor(plugin.getStandalone());
+        MvSizeVisitor mvSizeVisitor = new MvSizeVisitor();
+        try {
+        	in.accept(mvSizeVisitor);
+        } catch (Throwable error) {
+        	plugin.notifyError(error);
+        }
+        CompressedVisitor visitor = new CompressedVisitor(mvSizeVisitor.getMvSizes(),plugin.getStandalone());
         try {
         	in.accept(visitor);
         } catch (Throwable error) {
