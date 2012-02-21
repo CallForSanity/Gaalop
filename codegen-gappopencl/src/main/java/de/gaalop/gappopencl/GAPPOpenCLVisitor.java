@@ -217,7 +217,7 @@ public class GAPPOpenCLVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor
             return 16;
 
         assert(false);
-        return -2;
+        return -1;
     }
 
     protected String getOpenCLIndex(Integer index) {
@@ -456,10 +456,21 @@ public class GAPPOpenCLVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor
     public Object visitAssignInputsVector(GAPPAssignInputsVector gappAssignInputsVector, Object arg) {
         final String inputsArrayName = GAPPOpenCLCodeGenerator.getVarName(GAPPOpenCLCodeGenerator.inputsVector);
         
+        result.append("float ");
+        result.append(inputsArrayName);
+        result.append("[");
+        result.append(gappAssignInputsVector.getValues().size());
+        result.append("];\n");
+
         Map<Integer,String> bladeMap = new HashMap<Integer,String>();
         Iterator<GAPPValueHolder> it = gappAssignInputsVector.getValues().iterator();
         while(it.hasNext()) {
-            bladeMap.put(bladeMap.size(), it.next().prettyPrint());
+            final String bladeCoeff = inputsArrayName + "[" + bladeMap.size() + "]";
+            
+            result.append(bladeCoeff).append(" = ");
+            result.append(it.next().prettyPrint());
+            result.append(";\n");
+            bladeMap.put(bladeMap.size(), bladeCoeff);
         }
 
         mvBladeMap.put(inputsArrayName,bladeMap);
