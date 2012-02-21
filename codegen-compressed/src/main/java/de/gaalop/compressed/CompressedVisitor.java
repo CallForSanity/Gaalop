@@ -49,10 +49,19 @@ public class CompressedVisitor extends de.gaalop.cpp.CppVisitor {
             indentation++;
         } else {
             for (Variable var : localVariables) {
+                // GPC definition
+                if (gpcMetaInfo) {
+                    appendIndentation();
+                    code.append("//#pragma gpc multivector ");
+                    code.append(var.getName());
+                    code.append('\n');
+                }
+                
+                // standard definition
                 appendIndentation();
                 code.append(variableType).append(" ");
                 code.append(var.getName());
-                code.append("[" + mvSizes.get(var.getName()).toString() + "] = { 0.0 };\n");
+                code.append("[" + mvSizes.get(var.getName()).toString() + "];\n");
             }
         }
 
