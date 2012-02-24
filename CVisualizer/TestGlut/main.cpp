@@ -13,6 +13,8 @@
 #include <fstream>
 #include <iostream>
 
+#include <vector>
+#include "PointCloud.h"
 
 // Window size information
 float wRatio;
@@ -31,15 +33,23 @@ float mouseSensitivy = 1.0f;
 // Button information
 bool b_r = false;
 
-std::vector<Point3f> points;
+std::vector<PointCloud> pointClouds;
 
-float isovalue = 0.6; 
+int objectCount;
 
 bool drawn = false;
 bool list_in_use = false;
 
 void calculatePoints() {
-	findZeroLocations(0, points);
+	objectCount = getOutputCount();
+
+	for (int i=0;i<objectCount;++i) {
+		pointClouds.push_back(PointCloud());
+		PointCloud& cloud = pointClouds[i];
+		findZeroLocations(i, cloud.points);
+		getOutputAttributes(i, cloud.name, cloud.colR, cloud.colG, cloud.colB, cloud.colA);
+	}
+	
 	drawn = false;
 	list_in_use = false;
 }
@@ -55,14 +65,11 @@ void drawPoints() {
 		list = glGenLists(1);
 		list_in_use = true;
 		glNewList(list, GL_COMPILE);
-		glPointSize(2.0);
-		glColor3f(1,0,0);
-		glBegin(GL_POINTS);
-		for (std::vector<Point3f>::iterator it = points.begin(); it != points.end(); ++it) {
-			Point3f& p = *it;
-			glVertex3f(p.x,p.y,p.z);
-		}
-		glEnd();
+		
+		for (int i=0;i<objectCount;++i) 
+			pointClouds[i].draw();
+
+
 		glEndList();
 		drawn = true;
 
@@ -125,7 +132,7 @@ void initialize() {
 void changeSize(int w, int h) {
   // Prevent a division by zero, when window is too short
   if(h == 0) h = 1;
-  float wRatio = 1.0* w / h;
+  float wRatio = 1.0f* w / h;
   // Reset the coordinate system before modifying
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();	
@@ -168,7 +175,7 @@ void renderScene(void) {
 
 void keyPressed(unsigned char key, int x, int y) {
 
-  float increment = 0.05;
+  float increment = 0.05f;
   switch (key) {
     // esc => exit
     case 27:
@@ -180,14 +187,6 @@ void keyPressed(unsigned char key, int x, int y) {
       camPos.set(0.0f, 2.0f, -10.0f);
       camAngleX = 180.0f;
       camAngleY = 0.0f;
-      break;
-	case '-':
-      isovalue -= increment;
-      if (isovalue < 0) isovalue = 0;
-      break;
-    case '+': 
-      isovalue += increment;
-      if (isovalue > 1) isovalue = 1;
       break;
   }
   glutPostRedisplay();

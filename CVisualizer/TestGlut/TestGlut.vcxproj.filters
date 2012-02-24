@@ -18,15 +18,6 @@
     <None Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="stdafx.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="targetver.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="dualpointslist.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="main.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
@@ -34,9 +25,6 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="FromGaalop.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="incH.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Point3f.h">
@@ -48,11 +36,14 @@
     <ClInclude Include="RayTracer.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
+    <ClInclude Include="PointCloud.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Definitions.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="stdafx.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>

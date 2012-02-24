@@ -1,12 +1,10 @@
 #pragma once
 
 #include <vector>
-#include "incH.h"
+#include "Definitions.h"
 #include "FromGaalop.h"
 
 #include "Point3f.h"
-
-#define center(x) ((x).lower()+(x).upper())/2.0f
 
 class RayMethodThread
 {

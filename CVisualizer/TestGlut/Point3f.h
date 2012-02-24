@@ -1,4 +1,5 @@
 #pragma once
+
 class Point3f
 {
 public:
