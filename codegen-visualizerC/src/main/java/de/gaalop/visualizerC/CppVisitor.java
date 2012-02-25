@@ -29,16 +29,19 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 	protected Set<String> assigned = new HashSet<String>();
         
         protected String variableType = "float";
+       
+        private HashMap<String, Integer> outputNames;
 	
-	public CppVisitor(boolean standalone) {
+	public CppVisitor(boolean standalone, LinkedList<AssignmentNode> nodes) {
 		this.standalone = standalone;
+                outputNames = new HashMap<String, Integer>();
+                int i=0;
+                for (AssignmentNode node: nodes) {
+                    outputNames.put(node.getVariable().getName(), new Integer(i));
+                    i++;
+                }
 	}
-        
-	public CppVisitor(String variableType) {
-		this.standalone = false;
-		this.variableType = variableType;
-	}
-	
+
 	public void setStandalone(boolean standalone) {
 		this.standalone = standalone;
 	}
@@ -328,10 +331,40 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 
 	@Override
 	public void visit(MultivectorComponent component) {
-		code.append(component.getName().replace(suffix, ""));
-		code.append('[');
-		code.append(component.getBladeIndex());
-		code.append(']');
+            String name = component.getName();
+            if (name.equals("_V_ox")) {
+                code.append("ox");
+                return;
+            }
+            if (name.equals("_V_oy")) {
+                code.append("oy");
+                return;
+            }
+            if (name.equals("_V_oz")) {
+                code.append("oz");
+                return;
+            }
+            if (name.equals("_V_t")) {
+                code.append("t");
+                return;
+            }
+            
+            if (name.endsWith("_S")) {
+                Integer i = outputNames.get(name);
+                code.append("outputsF["+i+"]");
+                return;
+            }
+            
+            if (name.endsWith("_SD")) {
+                Integer i = outputNames.get(name.substring(0, name.length()-1));
+                code.append("outputsDF["+i+"]");
+                return;
+            }
+            
+            code.append(component.getName().replace(suffix, ""));
+            code.append('[');
+            code.append(component.getBladeIndex());
+            code.append(']');
 	}
 
 	@Override

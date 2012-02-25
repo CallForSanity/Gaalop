@@ -61,18 +61,20 @@ public class VisCCodeGenerator implements CodeGenerator {
             "#include \"Definitions.h\"\n"+
             "\n"+
             "void getOutputAttributes(int outputNo, std::string& name, float& colorR,float& colorG,float& colorB,float& colorA) {\n"+
-            "	switch (outputNo) {\n"+
+            ((getOutputCount()>0) ? 
+            ("	switch (outputNo) {\n"+
             getOutputAttributesCode()+
-            "   }\n"+
+            "   }\n") : "") +
             "}\n"+
             "\n"+
             "int getInputCount() {\n"+
             "	return "+getInputCount()+";\n"+
             "}\n"+
             "void getInputName(int inputNo, std::string& name) {\n"+
-            "	switch (inputNo) {\n"+
+            ((getInputCount()>0) ? 
+            ("	switch (inputNo) {\n"+
             getInputNameCode()+
-            "   }\n"+
+            "   }\n") : "") +
             "}\n"+
             "\n"+
             "int getOutputCount() {\n"+
@@ -88,13 +90,13 @@ public class VisCCodeGenerator implements CodeGenerator {
         StringBuilder sb = new StringBuilder("");
         int count = getOutputCount();
         for (int output=0;output<count;output++) {
-            Color color = getColorOfOutput(count);
+            Color color = getColorOfOutput(output);
             sb.append("		case ");sb.append(Integer.toString(output));sb.append(": \n");
             sb.append("		colorR = ");sb.append(Float.toString(color.getRed()/255.0f));sb.append("f; ");
-            sb.append("		colorG = ");sb.append(Float.toString(color.getGreen()/255.0f));sb.append("f; ");
-            sb.append("		colorB = ");sb.append(Float.toString(color.getBlue()/255.0f));sb.append("f; ");
-            sb.append("		colorA = ");sb.append(Float.toString(color.getAlpha()/255.0f));sb.append("f;\n");
-            sb.append("		colorA = ");sb.append(getNameOfOutput(output));sb.append(";\n");
+            sb.append("	colorG = ");sb.append(Float.toString(color.getGreen()/255.0f));sb.append("f; ");
+            sb.append("	colorB = ");sb.append(Float.toString(color.getBlue()/255.0f));sb.append("f; ");
+            sb.append("	colorA = ");sb.append(Float.toString(color.getAlpha()/255.0f));sb.append("f;\n");
+            sb.append("             name = \"");sb.append(getNameOfOutput(output));sb.append("\";\n");
             sb.append("		break;\n");
         }
         return sb.toString();
@@ -190,6 +192,8 @@ public class VisCCodeGenerator implements CodeGenerator {
                 nodes.add(newNode);
                 listOutputNames.add(s);
                 collect.get(s).getFirst().insertBefore(newNode);
+                
+                graph.getLocalVariablesModifiable().remove(new Variable(s));
 
                 for (AssignmentNode node: collect.get(s)) 
                     graph.removeNode(node);
@@ -212,6 +216,7 @@ public class VisCCodeGenerator implements CodeGenerator {
         } catch (RecognitionException ex) {
             Logger.getLogger(VisCCodeGenerator.class.getName()).log(Level.SEVERE, null, ex);
         }
+
     }
     
     private int getOutputCount() {
@@ -227,7 +232,7 @@ public class VisCCodeGenerator implements CodeGenerator {
     }
 
     private String getFPDFCode() {//TODO
-        CppVisitor visitor = new CppVisitor(true);
+        CppVisitor visitor = new CppVisitor(false, nodes);
         graph.accept(visitor);
         return visitor.getCode();
     }

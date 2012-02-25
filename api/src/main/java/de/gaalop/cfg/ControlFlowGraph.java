@@ -215,6 +215,10 @@ public final class ControlFlowGraph {
 	public Set<Variable> getLocalVariables() {
 		return Collections.unmodifiableSet(localVariables);
 	}
+        
+        public Set<Variable> getLocalVariablesModifiable() {
+		return localVariables;
+	}
 
 	/**
 	 * Gets the set of variables that are expected as input parameters for the algorithm modeled by this graph.

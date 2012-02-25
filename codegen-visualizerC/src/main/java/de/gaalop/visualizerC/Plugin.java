@@ -20,10 +20,7 @@ import org.apache.commons.logging.LogFactory;
 public class Plugin extends Observable implements CodeGeneratorPlugin {
 
     @ConfigurationProperty(type = Type.FILEPATH)
-    public String maximaCommand = ProcessBuilderMaximaConnection.CMD_MAXIMA_LINUX;
-
-    @ConfigurationProperty(type = Type.DIRPATH)
-    public String lwJglNativePath = "/usr/lib/jni/";
+    public String maximaCommand = ProcessBuilderMaximaConnection.CMD_MAXIMA_WINDOWS;
 
     private Log log = LogFactory.getLog(Plugin.class);
 
@@ -49,12 +46,12 @@ public class Plugin extends Observable implements CodeGeneratorPlugin {
 
     @Override
     public String getName() {
-        return "Visualizer";
+        return "VisualizerC";
     }
 
     @Override
     public String getDescription() {
-        return "This plugin visualizes cluscript code.";
+        return "This plugin visualizes cluscript code in an external C++ program";
     }
 
     @Override
@@ -73,13 +70,5 @@ public class Plugin extends Observable implements CodeGeneratorPlugin {
 
     public void setMaximaCommand(String maximaCommand) {
         this.maximaCommand = maximaCommand;
-    }
-
-    public String getLwJglNativePath() {
-        return lwJglNativePath;
-    }
-
-    public void setLwJglNativePath(String lwJglNativePath) {
-        this.lwJglNativePath = lwJglNativePath;
     }
 }
