@@ -68,12 +68,7 @@
             <groupId>de.gaalop</groupId>
             <artifactId>codegen-verilog</artifactId>
             <version>1.0.0</version>
-        </dependency>
-         <dependency>
-            <groupId>de.gaalop</groupId>
-            <artifactId>gaalet</artifactId>
-            <version>1.0.0</version>
-        </dependency>        
+        </dependency>  
         <dependency>
             <groupId>commons-beanutils</groupId>
             <artifactId>commons-beanutils</artifactId>
@@ -112,6 +107,11 @@
         <dependency>
             <groupId>de.gaalop</groupId>
             <artifactId>codegen-visualizer</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>de.gaalop</groupId>
+            <artifactId>codegen-visualizerC</artifactId>
             <version>1.0.0</version>
         </dependency>
     </dependencies>
