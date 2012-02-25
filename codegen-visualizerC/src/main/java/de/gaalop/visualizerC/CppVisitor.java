@@ -270,13 +270,12 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 	}
 
 	protected void addChild(Expression parent, Expression child) {
-		if (OperatorPriority.hasLowerPriority(parent, child)) {
-			code.append('(');
-			child.accept(this);
-			code.append(')');
-		} else {
-			child.accept(this);
-		}
+            if (child.isComposite()) {
+                code.append('(');
+                child.accept(this);
+                code.append(')');
+            } else
+                child.accept(this);
 	}
 
 	@Override
@@ -389,7 +388,7 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 	@Override
 	public void visit(FloatConstant floatConstant) {
 		code.append(Double.toString(floatConstant.getValue()));
-		//code.append('d');
+		code.append('f');
 	}
 
 	@Override

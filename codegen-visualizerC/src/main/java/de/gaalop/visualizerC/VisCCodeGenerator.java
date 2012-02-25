@@ -81,7 +81,7 @@ public class VisCCodeGenerator implements CodeGenerator {
             "	return "+getOutputCount()+";\n"+
             "}\n"+
             "\n"+
-            "void fpdf(I& ox, I& oy, I& oz, I& t, double inputs[], I "+NAME_F+"[], I "+NAME_DF+"[]) {\n"+
+            "void fpdf(I& ox, I& oy, I& oz, I& t, float inputs[], I "+NAME_F+"[], I "+NAME_DF+"[]) {\n"+
             getFPDFCode()+
             "}\n";
     }
@@ -200,7 +200,7 @@ public class VisCCodeGenerator implements CodeGenerator {
             }
   
         outputNames = listOutputNames.toArray(new String[0]);
-        
+
         //differentiate with respect to t with the help of maxima = _V_PRODUCT_SD
         MaximaDifferentiater differentiater = new MaximaDifferentiater();
         LinkedList<AssignmentNode> derived;
@@ -216,7 +216,6 @@ public class VisCCodeGenerator implements CodeGenerator {
         } catch (RecognitionException ex) {
             Logger.getLogger(VisCCodeGenerator.class.getName()).log(Level.SEVERE, null, ex);
         }
-
     }
     
     private int getOutputCount() {
@@ -231,7 +230,7 @@ public class VisCCodeGenerator implements CodeGenerator {
         return graph.getRenderingExpressions().get(outputNames[no]).toString();
     }
 
-    private String getFPDFCode() {//TODO
+    private String getFPDFCode() {
         CppVisitor visitor = new CppVisitor(false, nodes);
         graph.accept(visitor);
         return visitor.getCode();
