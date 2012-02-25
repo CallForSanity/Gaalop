@@ -270,12 +270,13 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 	}
 
 	protected void addChild(Expression parent, Expression child) {
-            if (child.isComposite()) {
-                code.append('(');
-                child.accept(this);
-                code.append(')');
-            } else
-                child.accept(this);
+		if (OperatorPriority.hasLowerPriority(parent, child)) {
+			code.append('(');
+			child.accept(this);
+			code.append(')');
+		} else {
+			child.accept(this);
+		}
 	}
 
 	@Override
