@@ -30,7 +30,8 @@ public class VisCCodeGenerator implements CodeGenerator {
     
     private ControlFlowGraph graph;
     
-    private String[] inputNames;
+    private HashMap<String,Integer> mapInputNameToNr;
+    private HashMap<Integer, String> mapInputNrToName;
     
     private LinkedList<AssignmentNode> nodes;
     
@@ -46,9 +47,10 @@ public class VisCCodeGenerator implements CodeGenerator {
     public Set<OutputFile> generate(ControlFlowGraph graph) throws CodeGeneratorException {
         this.graph = graph;
         colors = ColorEvaluater.getColors(graph);
+        analyzeInputs();
         prepareGraph();
         
-        analyzeInputs();
+        
         HashSet<OutputFile> result = new HashSet<OutputFile>();
         result.add(new OutputFile("FromGaalop.h", writePattern(), Charset.forName("UTF-8")));
         return result;
@@ -106,18 +108,19 @@ public class VisCCodeGenerator implements CodeGenerator {
         StringBuilder sb = new StringBuilder("");
         int count = getInputCount();
         for (int input=0;input<count;input++) {
-            sb.append("		name = \"");sb.append(getNameOfInput(input));sb.append("\"");
+            sb.append("		case ");sb.append(Integer.toString(input));sb.append(": \n");
+            sb.append("		name = \"");sb.append(getNameOfInput(input));sb.append("\";\n");
             sb.append("		break;\n");
         }
         return sb.toString();
     }
     
     private int getInputCount() {
-        return inputNames.length;
+        return mapInputNameToNr.size();
     }
     
     private String getNameOfInput(int no) {
-        return inputNames[no];
+        return mapInputNrToName.get(no);
     }
 
     private void analyzeInputs() {
@@ -133,10 +136,12 @@ public class VisCCodeGenerator implements CodeGenerator {
             }
         });
         
-        inputNames = new String[inputVariables.size()];
+        mapInputNameToNr = new HashMap<String, Integer>();
+        mapInputNrToName = new HashMap<Integer, String>();
         int i=0;
         for (Variable v: inputVariables) {
-            inputNames[i] = v.getName();
+            mapInputNameToNr.put(v.getName(), new Integer(i));
+            mapInputNrToName.put(new Integer(i), v.getName());
             i++;
         }
     }
@@ -154,6 +159,8 @@ public class VisCCodeGenerator implements CodeGenerator {
                     result = new MultivectorComponent("_V_oy", 0);
                 if (node.getName().equals("_V_Z"))
                     result = new MultivectorComponent("_V_oz", 0);
+                if (mapInputNameToNr.containsKey(node.getName()))
+                    result = new MultivectorComponent("inputs", mapInputNameToNr.get(node.getName()));
             }
             
             @Override

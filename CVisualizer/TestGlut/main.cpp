@@ -43,10 +43,13 @@ bool list_in_use = false;
 void calculatePoints() {
 	objectCount = getOutputCount();
 
+	float inputs[1];
+	inputs[0] = 3;
+
 	for (int i=0;i<objectCount;++i) {
 		pointClouds.push_back(PointCloud());
 		PointCloud& cloud = pointClouds[i];
-		findZeroLocations(i, cloud.points);
+		findZeroLocations(i, cloud.points, inputs);
 		getOutputAttributes(i, cloud.name, cloud.colR, cloud.colG, cloud.colB, cloud.colA);
 	}
 	

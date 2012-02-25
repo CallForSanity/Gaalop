@@ -9,7 +9,7 @@
 
 #include <iostream>
 
-void findZeroLocations(int objectNo, std::vector<Point3f>& points) {
+void findZeroLocations(int objectNo, std::vector<Point3f>& points, float* inputs) {
 	float a = 5.0f; // cubeEdgeLength
 	float dist = 0.1f; //density
 
@@ -25,6 +25,7 @@ void findZeroLocations(int objectNo, std::vector<Point3f>& points) {
 		threads[i].dist = dist;
 		threads[i].objectNo = objectNo;
 		threads[i].points = &pointsThreads[i];
+		threads[i].inputs = inputs;
 	}
 
 	boost::thread thread0(threads[0]);
