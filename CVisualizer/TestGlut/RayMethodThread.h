@@ -17,6 +17,7 @@ public:
 	float a;
 	float dist;
 	int objectNo;
+	float* inputs;
 
 	std::vector<Point3f>* points;
 
@@ -32,9 +33,10 @@ public:
             center = center(t);
 
             I outputsf[2];
-			f(I(ox),I(oy),I(oz),I(t.lower()),outputsf);
+			I outputsdf[2];
+			fpdf(I(ox),I(oy),I(oz),I(t.lower()),inputs,outputsf,outputsdf);
             double lo = outputsf[objectNo].lower();
-			f(I(ox),I(oy),I(oz),I(center),outputsf);
+			fpdf(I(ox),I(oy),I(oz),I(center),inputs,outputsf,outputsdf);
 
             double ce = outputsf[objectNo].lower();
             
@@ -56,7 +58,7 @@ public:
 		I outputsf[2];
 		I outputsdf[2];
 
-		fpdf(I(ox),I(oy),I(oz),t,outputsf,outputsdf);
+		fpdf(I(ox),I(oy),I(oz),t,inputs,outputsf,outputsdf);
 
 		if (zero_in(outputsf[objectNo])) {
             if (zero_in(outputsdf[objectNo])) {

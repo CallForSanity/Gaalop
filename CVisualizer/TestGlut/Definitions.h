@@ -1,5 +1,8 @@
 #pragma once
 
+
+#include <string>
+
 #include <boost/numeric/interval.hpp>
 
 typedef boost::numeric::interval<float> I;

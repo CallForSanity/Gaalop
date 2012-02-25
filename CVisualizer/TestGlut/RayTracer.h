@@ -11,7 +11,7 @@
 
 void findZeroLocations(int objectNo, std::vector<Point3f>& points) {
 	float a = 5.0f; // cubeEdgeLength
-	float dist = 0.05f; //density
+	float dist = 0.1f; //density
 
 	std::cout << "#Rays: " << (4*a*a)/(dist*dist) << std::endl;
 

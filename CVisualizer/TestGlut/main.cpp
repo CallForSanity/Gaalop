@@ -64,7 +64,7 @@ void drawPoints() {
 		
 		list = glGenLists(1);
 		list_in_use = true;
-		glNewList(list, GL_COMPILE);
+		glNewList(list, GL_COMPILE_AND_EXECUTE);
 		
 		for (int i=0;i<objectCount;++i) 
 			pointClouds[i].draw();
