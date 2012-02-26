@@ -9,9 +9,12 @@
 
 #include <iostream>
 
+float cubeEdgeLength = 5.0f;
+float density = 0.1f;
+
 void findZeroLocations(int objectNo, std::vector<Vec3f>& points, float* inputs) {
-	float a = 5.0f; // cubeEdgeLength
-	float dist = 0.1f; //density
+	float a = cubeEdgeLength; // cubeEdgeLength
+	float dist = density; //density
 
 	std::cout << "#Rays: " << (4*a*a)/(dist*dist) << std::flush;
 

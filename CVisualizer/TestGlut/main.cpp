@@ -49,6 +49,17 @@ void drawPoints() {
 		list = glGenLists(1);
 		list_in_use = true;
 		glNewList(list, GL_COMPILE_AND_EXECUTE);
+
+		// draw coordinate space
+		glColor3f(0,0,0); //black
+		glBegin(GL_LINES);
+		glVertex3f(1,0,0);glVertex3f(0,0,0);
+		glVertex3f(0,0,0);glVertex3f(0,1,0);
+		glVertex3f(0,0,0);glVertex3f(0,0,1);
+		glEnd();
+		glRasterPos3f(1.1f,0,0); glutBitmapString(GLUT_BITMAP_TIMES_ROMAN_10,(const unsigned char*) "x");
+		glRasterPos3f(0,1.1f,0); glutBitmapString(GLUT_BITMAP_TIMES_ROMAN_10,(const unsigned char*) "y");
+		glRasterPos3f(0,0,1.1f); glutBitmapString(GLUT_BITMAP_TIMES_ROMAN_10,(const unsigned char*) "z");
 		
 		int objectCount = pointClouds.size();
 
@@ -85,13 +96,13 @@ int main(int argc, char **argv) {
   
   glutDisplayFunc(renderScene);
   glutReshapeFunc(changeSize);
-  
+
+  std::cout << "CVisualizer from Gaalop\n";
+  std::cout << "Usage:\nesc: exit program\nC/c: adjust cubeEdgeLength\nD/d: adjust density\nS/s: adjust step size\na: toggle autodraw\nr: repaint\n\n";
+  std::cout << "Arrows:\nup/down: switch current input\nleft/right: increase/decrease current input value with step size\n";
+  std::cout << "mouse left: rotate\nmouse middle: move (pan)\nmouse right: zoom\n" << std::endl;
+
   initialize();
-
-  std::cout << "(Simple) Volume Data Visualization\n";
-  std::cout << "Usage:\nesc: exit program\n  -: decrease threshold (isovalue)\n  +: increase threshold (isovalue) \n\n";
-  std::cout << "mouse left: rotate\nmouse middle: move (pan)\nmouse right: zoom" << std::endl;
-
 
   glutMainLoop();
 
@@ -188,50 +199,64 @@ void printText(const char* text, float x, float y) {
 	if (!textMode) {
 		setToTextMode();
 		glRasterPos2f(x, y);
-		glutBitmapString(GLUT_BITMAP_HELVETICA_18, (const unsigned char*) text);
+		glutBitmapString(GLUT_BITMAP_HELVETICA_12, (const unsigned char*) text);
 		restoreFromTextMode();
 	} else {
 		glRasterPos2f(x, y);
-		glutBitmapString(GLUT_BITMAP_HELVETICA_18, (const unsigned char*) text);
+		glutBitmapString(GLUT_BITMAP_HELVETICA_12, (const unsigned char*) text);
 	}
 }
 
 inline void printRow(const char* text, int y) {
-	printText(text,0,wSizeH-(y+1)*23);
+	printText(text,0,wSizeH-(y+1)*17);
+}
+
+inline void printPropertyRow(const char* name, float value, int y) {
+	 std::stringstream s;
+	 s << name << " = " << value;
+	 printRow(s.str().c_str(),y);
+}
+
+void printMenu() {
+	int inputCount = getInputCount();
+	setToTextMode();
+	glColor3f(0,0,0);
+	printRow("Properties:",0);
+	printPropertyRow("cubeEdgeLength",cubeEdgeLength,1);
+	printPropertyRow("density",density,2);
+	printPropertyRow("step size",curStepWidth,3);
+	if (autoDraw)
+		printRow("autodraw",4);
+	else
+		printRow("No autodraw",4);
+
+	printRow("Inputs:",6);
+
+	for (int i=0;i<inputCount;++i) {
+		if (selectedInput == i) 
+			glColor3f(1,0,0);
+		else
+			glColor3f(0,0,0);
+
+		std::string name;
+		getInputName(i,name);
+		printPropertyRow(name.c_str(),inputs[i],i+7);
+	}
+	restoreFromTextMode();
 }
 
 void renderScene(void) {
   // clear the screen
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); 
 
-  
-
-  int inputCount = getInputCount();
-  setToTextMode();
-  glColor3f(0,0,0);
-  std::stringstream s1;
-  s1 << "Step size = " << curStepWidth;
-  printRow(s1.str().c_str(),0);
-
-  for (int i=0;i<inputCount;++i) {
-	  if (selectedInput == i) 
-		  glColor3f(1,0,0);
-	  else
-		  glColor3f(0,0,0);
-
-	  std::string name;
-	  getInputName(i,name);
-	  std::stringstream s;
-	  s << name << " = " << inputs[i];
-	  printRow(s.str().c_str(),i+1);
-  }
-  restoreFromTextMode();
+  printMenu();
 
   // apply camPos before rotation
   glLoadIdentity();  
   gluLookAt(camPos.x,             camPos.y,             camPos.z,               // Position
             camPos.x + camDir.x,  camPos.y + camDir.y,  camPos.z + camDir.z,    // Lookat
 	    camUp.x,              camUp.y,              camUp.z);               // Up-direction
+  
   // apply rotation
   glRotatef(camAngleX,0,1,0); // window x axis rotates around up vector
   glRotatef(camAngleY,1,0,0); // window y axis rotates around x
@@ -262,12 +287,34 @@ void keyPressed(unsigned char key, int x, int y) {
       camAngleX = 180.0f;
       camAngleY = 0.0f;
       break;
-	case '+':
+	case 'C':
+		cubeEdgeLength += curStepWidth;
+		calcAndDraw();
+		break;
+	case 'c':
+		cubeEdgeLength -= curStepWidth;
+		calcAndDraw();
+		break;
+	case 'D':
+		density *= 2;
+		calcAndDraw();
+		break;
+	case 'd':
+		density /= 2;
+		calcAndDraw();
+		break;
+	case 'S':
 		curStepWidth *= 10;
 		break;
-	case '-':
+	case 's':
 		curStepWidth /= 10;
 		break;
+	case 'a':
+		autoDraw = !autoDraw;
+		break;
+	case 'r':
+		calcAndDraw();
+		return;
   }
   glutPostRedisplay();
 }
@@ -278,12 +325,12 @@ void specialPressed(int key, int x, int y) {
 	case GLUT_KEY_LEFT:
 		if (selectedInput < getInputCount())
 			inputs[selectedInput] -= curStepWidth;
-		if (autoDraw) calcAndDraw();
+		if (autoDraw) calcAndDraw(); else glutPostRedisplay();
 		break;
 	case GLUT_KEY_RIGHT:
 		if (selectedInput < getInputCount())
 			inputs[selectedInput] += curStepWidth;
-		if (autoDraw) calcAndDraw();
+		if (autoDraw) calcAndDraw(); else glutPostRedisplay();
 		break;
 	case GLUT_KEY_UP:
 		selectedInput--;
