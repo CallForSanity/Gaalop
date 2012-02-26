@@ -11,6 +11,8 @@ import de.gaalop.tba.cfgImport.optimization.maxima.MaximaDifferentiater;
 import de.gaalop.visitors.CFGReplaceVisitor;
 import de.gaalop.visitors.ReplaceVisitor;
 import java.awt.Color;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.nio.charset.Charset;
 import java.util.*;
 import java.util.logging.Level;
@@ -26,8 +28,6 @@ public class VisCCodeGenerator implements CodeGenerator {
     private String NAME_F = "outputsF";
     private String NAME_DF = "outputsDF";
     
-    private String maximaCommand;
-    
     private ControlFlowGraph graph;
     
     private HashMap<String,Integer> mapInputNameToNr;
@@ -38,9 +38,11 @@ public class VisCCodeGenerator implements CodeGenerator {
     public HashMap<String, Color> colors;
     
     private String[] outputNames;
+    
+    private Plugin plugin;
 
-    public VisCCodeGenerator(String maximaCommand) {
-        this.maximaCommand = maximaCommand;
+    public VisCCodeGenerator(Plugin plugin) {
+        this.plugin = plugin;
     }
  
     @Override
@@ -52,7 +54,21 @@ public class VisCCodeGenerator implements CodeGenerator {
         
         
         HashSet<OutputFile> result = new HashSet<OutputFile>();
-        result.add(new OutputFile("FromGaalop.h", writePattern(), Charset.forName("UTF-8")));
+        String outContents = writePattern();
+        result.add(new OutputFile("FromGaalop.h", outContents, Charset.forName("UTF-8")));
+        if (!plugin.autoStorage.isEmpty()) {
+            PrintWriter writer;
+            try {
+                writer = new PrintWriter(plugin.autoStorage);
+                writer.print(outContents);
+                
+                writer.close();
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(VisCCodeGenerator.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+            
+        }
         return result;
     }
 
@@ -212,7 +228,7 @@ public class VisCCodeGenerator implements CodeGenerator {
         MaximaDifferentiater differentiater = new MaximaDifferentiater();
         LinkedList<AssignmentNode> derived;
         try {
-            derived = differentiater.differentiate(nodes, maximaCommand);
+            derived = differentiater.differentiate(nodes, plugin.maximaCommand);
             ListIterator<AssignmentNode> listIt = nodes.listIterator();
             for (AssignmentNode d: derived) {
                 d.setVariable(new MultivectorComponent(d.getVariable().getName()+"D", 0));

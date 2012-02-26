@@ -10,11 +10,8 @@
 // ========================================================================= //
 
 #include "main.h"
-#include <fstream>
-#include <iostream>
 
-#include <vector>
-#include "PointCloud.h"
+#include <string>
 
 // Window size information
 float wRatio;
@@ -33,29 +30,13 @@ float mouseSensitivy = 1.0f;
 // Button information
 bool b_r = false;
 
-std::vector<PointCloud> pointClouds;
-
-int objectCount;
-
 bool drawn = false;
 bool list_in_use = false;
 
-void calculatePoints() {
-	objectCount = getOutputCount();
-
-	float inputs[1];
-	inputs[0] = 3;
-
-	for (int i=0;i<objectCount;++i) {
-		pointClouds.push_back(PointCloud());
-		PointCloud& cloud = pointClouds[i];
-		findZeroLocations(i, cloud.points, inputs);
-		getOutputAttributes(i, cloud.name, cloud.colR, cloud.colG, cloud.colB, cloud.colA);
-	}
-	
-	drawn = false;
-	list_in_use = false;
-}
+//menue
+bool autoDraw = true;
+int selectedInput = 0;
+float curStepWidth = 1;
 
 GLuint list;
 
@@ -69,9 +50,10 @@ void drawPoints() {
 		list_in_use = true;
 		glNewList(list, GL_COMPILE_AND_EXECUTE);
 		
-		for (int i=0;i<objectCount;++i) 
-			pointClouds[i].draw();
+		int objectCount = pointClouds.size();
 
+		for (std::vector<PointCloud>::iterator it = pointClouds.begin(); it != pointClouds.end(); ++it)
+			it->draw();
 
 		glEndList();
 		drawn = true;
@@ -83,14 +65,21 @@ void drawPoints() {
 }
 
 int main(int argc, char **argv) {
+  int inputCount = getInputCount();
+  inputs = new float[inputCount];
+  for (int i=0;i<inputCount;++i)
+	  inputs[i] = 1;
+
+
   glutInit(&argc, argv);
   glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
   glutInitWindowPosition(200,200);
   glutInitWindowSize(wSizeH,wSizeW);
-  glutCreateWindow("Volume Visualization");
+  glutCreateWindow("CVisualizer of Gaalop");
   
   glutIgnoreKeyRepeat(1);
   glutKeyboardFunc(keyPressed);
+  glutSpecialFunc(specialPressed);
   glutMouseFunc(mousePressed);
   glutMotionFunc(mouseMoved);
   
@@ -105,8 +94,17 @@ int main(int argc, char **argv) {
 
 
   glutMainLoop();
-  
+
+  delete[] inputs;
+  inputs = 0;
   return 0;
+}
+
+void calcAndDraw() {
+	calculatePoints();
+	drawn = false;
+	drawPoints();
+	glutPostRedisplay();
 }
 
 void initialize() {
@@ -129,6 +127,8 @@ void initialize() {
 
   // load a volume data set
   calculatePoints();
+  drawn = false;
+  list_in_use = false;
 
 }
 
@@ -151,10 +151,82 @@ void changeSize(int w, int h) {
 }
 
 // Rendering
+bool textMode = false;
+
+void setToTextMode() {
+    // backup current modelview matrix
+    glPushMatrix();
+    // reset modelview matrix
+    glLoadIdentity();
+
+    // set to 2D orthogonal projection =======
+    // switch to projection matrix
+    glMatrixMode(GL_PROJECTION);
+    // backup projection matrix
+    glPushMatrix();
+    // reset projection matrix
+    glLoadIdentity();
+    // set to orthogonal projection
+	glOrtho(0, wSizeW, 0, wSizeH, -1.0, 1.0);
+
+	textMode = true;
+}
+
+void restoreFromTextMode() {
+	textMode = false;
+    // restore previous projection matrix
+    glPopMatrix();
+
+    // restore previous modelview matrix
+    glMatrixMode(GL_MODELVIEW);
+    glPopMatrix();
+}
+
+
+
+void printText(const char* text, float x, float y) {
+	if (!textMode) {
+		setToTextMode();
+		glRasterPos2f(x, y);
+		glutBitmapString(GLUT_BITMAP_HELVETICA_18, (const unsigned char*) text);
+		restoreFromTextMode();
+	} else {
+		glRasterPos2f(x, y);
+		glutBitmapString(GLUT_BITMAP_HELVETICA_18, (const unsigned char*) text);
+	}
+}
+
+inline void printRow(const char* text, int y) {
+	printText(text,0,wSizeH-(y+1)*23);
+}
 
 void renderScene(void) {
   // clear the screen
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); 
+
+  
+
+  int inputCount = getInputCount();
+  setToTextMode();
+  glColor3f(0,0,0);
+  std::stringstream s1;
+  s1 << "Step size = " << curStepWidth;
+  printRow(s1.str().c_str(),0);
+
+  for (int i=0;i<inputCount;++i) {
+	  if (selectedInput == i) 
+		  glColor3f(1,0,0);
+	  else
+		  glColor3f(0,0,0);
+
+	  std::string name;
+	  getInputName(i,name);
+	  std::stringstream s;
+	  s << name << " = " << inputs[i];
+	  printRow(s.str().c_str(),i+1);
+  }
+  restoreFromTextMode();
+
   // apply camPos before rotation
   glLoadIdentity();  
   gluLookAt(camPos.x,             camPos.y,             camPos.z,               // Position
@@ -177,7 +249,6 @@ void renderScene(void) {
 // Callbacks
 
 void keyPressed(unsigned char key, int x, int y) {
-
   float increment = 0.05f;
   switch (key) {
     // esc => exit
@@ -191,8 +262,40 @@ void keyPressed(unsigned char key, int x, int y) {
       camAngleX = 180.0f;
       camAngleY = 0.0f;
       break;
+	case '+':
+		curStepWidth *= 10;
+		break;
+	case '-':
+		curStepWidth /= 10;
+		break;
   }
   glutPostRedisplay();
+}
+
+void specialPressed(int key, int x, int y) {
+	switch (key) {
+    // esc => exit
+	case GLUT_KEY_LEFT:
+		if (selectedInput < getInputCount())
+			inputs[selectedInput] -= curStepWidth;
+		if (autoDraw) calcAndDraw();
+		break;
+	case GLUT_KEY_RIGHT:
+		if (selectedInput < getInputCount())
+			inputs[selectedInput] += curStepWidth;
+		if (autoDraw) calcAndDraw();
+		break;
+	case GLUT_KEY_UP:
+		selectedInput--;
+		if (selectedInput < 0) selectedInput = 0;
+		glutPostRedisplay();
+		break;
+	case GLUT_KEY_DOWN:
+		selectedInput++;
+		if (selectedInput >= getInputCount()) selectedInput = getInputCount()-1;
+		glutPostRedisplay();
+		break;
+	}
 }
 
 void mousePressed(int button, int state, int x, int y) {

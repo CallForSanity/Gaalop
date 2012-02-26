@@ -2,9 +2,9 @@
 
 #include <vector>
 #include "Definitions.h"
-#include "FromGaalop.h"
+#include <FromGaalop.h>
 
-#include "Point3f.h"
+#include "Vec3.h"
 
 class RayMethodThread
 {
@@ -19,7 +19,7 @@ public:
 	int objectNo;
 	float* inputs;
 
-	std::vector<Point3f>* points;
+	std::vector<Vec3f>* points;
 
 	float ox;
 	float oy;
@@ -50,7 +50,7 @@ public:
 
         }
 
-        points->push_back(Point3f(ox+center,oy,oz));
+        points->push_back(Vec3f(ox+center,oy,oz));
     }
 
 	void isolation(I& t) {
@@ -67,7 +67,7 @@ public:
                     isolation(I(t.lower(), center));
                     isolation(I(center, t.upper()));
                 } else 
-					points->push_back(Point3f(ox+center,oy,oz));
+					points->push_back(Vec3f(ox+center,oy,oz));
                 
             } else 
                 refinement(t);

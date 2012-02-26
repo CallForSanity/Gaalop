@@ -3,20 +3,20 @@
 #include <vector>
 #include <boost/thread.hpp>
 
-#include "FromGaalop.h"
+#include <FromGaalop.h>
 #include "RayMethodThread.h"
-#include "Point3f.h"
+#include "Vec3.h"
 
 #include <iostream>
 
-void findZeroLocations(int objectNo, std::vector<Point3f>& points, float* inputs) {
+void findZeroLocations(int objectNo, std::vector<Vec3f>& points, float* inputs) {
 	float a = 5.0f; // cubeEdgeLength
 	float dist = 0.1f; //density
 
-	std::cout << "#Rays: " << (4*a*a)/(dist*dist) << std::endl;
+	std::cout << "#Rays: " << (4*a*a)/(dist*dist) << std::flush;
 
     RayMethodThread threads[4];
-	std::vector<Point3f> pointsThreads[4];
+	std::vector<Vec3f> pointsThreads[4];
 
 	for (int i=0;i<4;i++) {
         threads[i].fromOY_Incl = (i*2*a)/4.0f - a;
@@ -40,9 +40,9 @@ void findZeroLocations(int objectNo, std::vector<Point3f>& points, float* inputs
 
 	//copy all points of the threads to point list points
 	for (int i=0;i<4;++i) 
-		for (std::vector<Point3f>::iterator it = pointsThreads[i].begin(); it != pointsThreads[i].end(); ++it) 
+		for (std::vector<Vec3f>::iterator it = pointsThreads[i].begin(); it != pointsThreads[i].end(); ++it) 
 			points.push_back(*it);
 	
 		
-	std::cout << points.size() << std::endl;
+	std::cout << ", #Points: " << points.size() << std::endl;
 }

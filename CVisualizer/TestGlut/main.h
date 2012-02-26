@@ -12,13 +12,14 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <vector>
-
-
 #include <openglut.h>
-#include "Vec3.h"
+#include <fstream>
+#include <iostream>
 
-#include "FromGaalop.h"
-#include "RayTracer.h"
+
+#include "PointCloud.h"
+#include "CalculatePoints.h"
+#include "Vec3.h"
 
 // Basics
 
@@ -35,6 +36,8 @@ void renderScene(void);
 // Callbacks
 
 void keyPressed(unsigned char key, int x, int y);
+
+void specialPressed(int key, int x, int y);
 
 void mousePressed(int button, int state, int x, int y);
 

@@ -2,12 +2,12 @@
 
 #include <vector>
 
-#include "Point3f.h"
+#include "Vec3.h"
 
 class PointCloud
 {
 public:
-	std::vector<Point3f> points;
+	std::vector<Vec3f> points;
 	float colR;
 	float colG;
 	float colB;
@@ -21,8 +21,8 @@ public:
 		glPointSize(2.0);
 		glColor4f(colR, colG, colB, colA);
 		glBegin(GL_POINTS);
-		for (std::vector<Point3f>::iterator it = points.begin(); it != points.end(); ++it) {
-			Point3f& p = *it;
+		for (std::vector<Vec3f>::iterator it = points.begin(); it != points.end(); ++it) {
+			Vec3f& p = *it;
 			glVertex3f(p.x,p.y,p.z);
 		}
 		glEnd();

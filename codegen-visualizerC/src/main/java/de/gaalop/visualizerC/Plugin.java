@@ -21,6 +21,9 @@ public class Plugin extends Observable implements CodeGeneratorPlugin {
 
     @ConfigurationProperty(type = Type.FILEPATH)
     public String maximaCommand = ProcessBuilderMaximaConnection.CMD_MAXIMA_WINDOWS;
+    
+    @ConfigurationProperty(type = Type.FILEPATH)
+    public String autoStorage = "D:\\fromGaalop.h";
 
     private Log log = LogFactory.getLog(Plugin.class);
 
@@ -41,7 +44,7 @@ public class Plugin extends Observable implements CodeGeneratorPlugin {
 
     @Override
     public CodeGenerator createCodeGenerator() {
-        return new VisCCodeGenerator(maximaCommand);
+        return new VisCCodeGenerator(this);
     }
 
     @Override
@@ -71,4 +74,13 @@ public class Plugin extends Observable implements CodeGeneratorPlugin {
     public void setMaximaCommand(String maximaCommand) {
         this.maximaCommand = maximaCommand;
     }
+
+    public String getAutoStorage() {
+        return autoStorage;
+    }
+
+    public void setAutoStorage(String autoStorage) {
+        this.autoStorage = autoStorage;
+    }
+
 }

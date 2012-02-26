@@ -24,12 +24,6 @@
     <ClInclude Include="Vec3.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="FromGaalop.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Point3f.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="RayMethodThread.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
@@ -40,6 +34,9 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Definitions.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="CalculatePoints.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

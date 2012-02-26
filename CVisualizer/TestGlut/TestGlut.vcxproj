@@ -44,7 +44,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSdkDir)include;$(FrameworkSDKDir)\include;D:\OpenGLUT\;C:\Libs\Boost\</IncludePath>
+    <IncludePath>$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSdkDir)include;$(FrameworkSDKDir)\include;D:\OpenGLUT\;C:\Libs\Boost\;D:\</IncludePath>
     <LibraryPath>$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSdkDir)lib;$(FrameworkSDKDir)\lib;D:\OpenGLUT\;C:\Libs\Boost\stage\lib</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -81,10 +81,9 @@
     <None Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="FromGaalop.h" />
+    <ClInclude Include="CalculatePoints.h" />
     <ClInclude Include="Definitions.h" />
     <ClInclude Include="main.h" />
-    <ClInclude Include="Point3f.h" />
     <ClInclude Include="PointCloud.h" />
     <ClInclude Include="RayMethodThread.h" />
     <ClInclude Include="RayTracer.h" />
