@@ -10,10 +10,9 @@ std::vector<PointCloud> pointClouds;
 float* inputs;
 
 void calculatePoints() {
-	int outputCount = getOutputCount();
 	pointClouds.clear();
 
-	for (int i=0;i<outputCount;++i) {
+	for (int i=0;i<OUTPUTCOUNT;++i) {
 		pointClouds.push_back(PointCloud());
 		PointCloud& cloud = pointClouds[i];
 		findZeroLocations(i, cloud.points, inputs);

@@ -32,13 +32,15 @@ public:
             
             center = center(t);
 
-            I outputsf[2];
-			I outputsdf[2];
+			I* outputsf = new I[OUTPUTCOUNT];
+			I* outputsdf = new I[OUTPUTCOUNT];
+
 			fpdf(I(ox),I(oy),I(oz),I(t.lower()),inputs,outputsf,outputsdf);
             double lo = outputsf[objectNo].lower();
 			fpdf(I(ox),I(oy),I(oz),I(center),inputs,outputsf,outputsdf);
-
             double ce = outputsf[objectNo].lower();
+			delete[] outputsf;
+			delete[] outputsdf;
             
             if (abs(ce) <= 0.01) refine = false;
             if (width(t) < 0.001) return;
@@ -55,13 +57,18 @@ public:
 
 	void isolation(I& t) {
 
-		I outputsf[2];
-		I outputsdf[2];
+		I* outputsf = new I[OUTPUTCOUNT];
+		I* outputsdf = new I[OUTPUTCOUNT];
 
 		fpdf(I(ox),I(oy),I(oz),t,inputs,outputsf,outputsdf);
 
-		if (zero_in(outputsf[objectNo])) {
-            if (zero_in(outputsdf[objectNo])) {
+		bool zeroInF = zero_in(outputsf[objectNo]);
+		bool zeroInDF = zero_in(outputsdf[objectNo]);
+		delete[] outputsf;
+		delete[] outputsdf;
+
+		if (zeroInF) {
+            if (zeroInDF) {
 				float center = center(t);
                 if (width(t) > 0.05) {
                     isolation(I(t.lower(), center));

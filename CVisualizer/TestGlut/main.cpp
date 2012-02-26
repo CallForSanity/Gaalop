@@ -76,9 +76,8 @@ void drawPoints() {
 }
 
 int main(int argc, char **argv) {
-  int inputCount = getInputCount();
-  inputs = new float[inputCount];
-  for (int i=0;i<inputCount;++i)
+  inputs = new float[INPUTCOUNT];
+  for (int i=0;i<INPUTCOUNT;++i)
 	  inputs[i] = 1;
 
 
@@ -218,7 +217,6 @@ inline void printPropertyRow(const char* name, float value, int y) {
 }
 
 void printMenu() {
-	int inputCount = getInputCount();
 	setToTextMode();
 	glColor3f(0,0,0);
 	printRow("Properties:",0);
@@ -232,7 +230,7 @@ void printMenu() {
 
 	printRow("Inputs:",6);
 
-	for (int i=0;i<inputCount;++i) {
+	for (int i=0;i<INPUTCOUNT;++i) {
 		if (selectedInput == i) 
 			glColor3f(1,0,0);
 		else
@@ -323,12 +321,12 @@ void specialPressed(int key, int x, int y) {
 	switch (key) {
     // esc => exit
 	case GLUT_KEY_LEFT:
-		if (selectedInput < getInputCount())
+		if (selectedInput < INPUTCOUNT)
 			inputs[selectedInput] -= curStepWidth;
 		if (autoDraw) calcAndDraw(); else glutPostRedisplay();
 		break;
 	case GLUT_KEY_RIGHT:
-		if (selectedInput < getInputCount())
+		if (selectedInput < INPUTCOUNT)
 			inputs[selectedInput] += curStepWidth;
 		if (autoDraw) calcAndDraw(); else glutPostRedisplay();
 		break;
@@ -339,7 +337,7 @@ void specialPressed(int key, int x, int y) {
 		break;
 	case GLUT_KEY_DOWN:
 		selectedInput++;
-		if (selectedInput >= getInputCount()) selectedInput = getInputCount()-1;
+		if (selectedInput >= INPUTCOUNT) selectedInput = INPUTCOUNT-1;
 		glutPostRedisplay();
 		break;
 	}

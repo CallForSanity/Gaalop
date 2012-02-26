@@ -24,10 +24,7 @@ import org.antlr.runtime.RecognitionException;
  * @author Christian Steinmetz
  */
 public class VisCCodeGenerator implements CodeGenerator {
-    
-    private String NAME_F = "outputsF";
-    private String NAME_DF = "outputsDF";
-    
+
     private ControlFlowGraph graph;
     
     private HashMap<String,Integer> mapInputNameToNr;
@@ -78,6 +75,9 @@ public class VisCCodeGenerator implements CodeGenerator {
             "\n"+
             "#include \"Definitions.h\"\n"+
             "\n"+
+            "#define INPUTCOUNT "+getInputCount()+"\n"+
+            "#define OUTPUTCOUNT "+getOutputCount()+"\n"+
+            "\n"+
             "void getOutputAttributes(int outputNo, std::string& name, float& colorR,float& colorG,float& colorB,float& colorA) {\n"+
             ((getOutputCount()>0) ? 
             ("	switch (outputNo) {\n"+
@@ -85,9 +85,6 @@ public class VisCCodeGenerator implements CodeGenerator {
             "   }\n") : "") +
             "}\n"+
             "\n"+
-            "int getInputCount() {\n"+
-            "	return "+getInputCount()+";\n"+
-            "}\n"+
             "void getInputName(int inputNo, std::string& name) {\n"+
             ((getInputCount()>0) ? 
             ("	switch (inputNo) {\n"+
@@ -95,11 +92,7 @@ public class VisCCodeGenerator implements CodeGenerator {
             "   }\n") : "") +
             "}\n"+
             "\n"+
-            "int getOutputCount() {\n"+
-            "	return "+getOutputCount()+";\n"+
-            "}\n"+
-            "\n"+
-            "void fpdf(I& ox, I& oy, I& oz, I& t, float inputs[], I "+NAME_F+"[], I "+NAME_DF+"[]) {\n"+
+            "void fpdf(I& ox, I& oy, I& oz, I& t, float inputs[], I outputsF[], I outputsDF[]) {\n"+
             getFPDFCode()+
             "}\n";
     }
