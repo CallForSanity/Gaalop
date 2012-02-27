@@ -46,7 +46,8 @@
 
         <!-- testbenches -->
         <module>testbenchTbaGapp</module>
-  </modules>
+        <module>codegen-visualizerC</module>
+    </modules>
 
     <!--
              All submodules should be built for the Java 6 platform.
