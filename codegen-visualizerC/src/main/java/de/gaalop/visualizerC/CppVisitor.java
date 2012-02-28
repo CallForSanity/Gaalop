@@ -375,7 +375,7 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 		} else {
 			code.append("pow(");
 			exponentiation.getLeft().accept(this);
-			code.append(',');
+			code.append(", (int) ");
 			exponentiation.getRight().accept(this);
 			code.append(')');
 		}
