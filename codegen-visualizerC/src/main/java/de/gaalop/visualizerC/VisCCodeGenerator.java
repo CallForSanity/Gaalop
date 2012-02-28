@@ -92,6 +92,14 @@ public class VisCCodeGenerator implements CodeGenerator {
             "   }\n") : "") +
             "}\n"+
             "\n"+
+            "void f(float& ox, float& oy, float& oz, float& t, float inputs[], float outputsF[]) {\n"+
+            getFCode()+
+            "}\n"+
+            "\n"+  
+            "void df(float& ox, float& oy, float& oz, float& t, float inputs[], float outputsDF[]) {\n"+
+            getDFCode()+
+            "}\n"+
+            "\n"+  
             "void fpdf(I& ox, I& oy, I& oz, I& t, float inputs[], I outputsF[], I outputsDF[]) {\n"+
             getFPDFCode()+
             "}\n";
@@ -248,6 +256,20 @@ public class VisCCodeGenerator implements CodeGenerator {
 
     private String getFPDFCode() {
         CppVisitor visitor = new CppVisitor(false, nodes);
+        graph.accept(visitor);
+        return visitor.getCode();
+    }
+
+    private String getFCode() {
+        CppVisitor visitor = new CppVisitor(false, nodes);
+        visitor.ignoreAssignments("_SD");
+        graph.accept(visitor);
+        return visitor.getCode();
+    }
+
+    private String getDFCode() {
+        CppVisitor visitor = new CppVisitor(false, nodes);
+        visitor.ignoreAssignments("_S");
         graph.accept(visitor);
         return visitor.getCode();
     }

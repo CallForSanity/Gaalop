@@ -31,6 +31,12 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
         protected String variableType = "float";
        
         private HashMap<String, Integer> outputNames;
+        
+        private String ignore;
+        
+        public void ignoreAssignments(String ignore) {
+            this.ignore = ignore;
+        }
 	
 	public CppVisitor(boolean standalone, LinkedList<AssignmentNode> nodes) {
 		this.standalone = standalone;
@@ -135,6 +141,12 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 	@Override
 	public void visit(AssignmentNode node) {
 		String variable = node.getVariable().getName();
+                
+                if (ignore != null && variable.endsWith(ignore)) {
+                    node.getSuccessor().accept(this);
+                    return;
+                }
+                
 		if (assigned.contains(variable)) {
 			String message = "Variable " + variable + " has been reset for reuse.";
 			log.warn(message);
@@ -460,4 +472,6 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 	public void visit(MacroCall node) {
 		throw new IllegalStateException("Macros should have been inlined and no macro calls should be in the graph.");
 	}
+
+
 }

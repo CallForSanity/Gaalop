@@ -207,7 +207,7 @@ void printText(const char* text, float x, float y) {
 }
 
 inline void printRow(const char* text, int y) {
-	printText(text,0,wSizeH-(y+1)*17);
+	printText(text,0,(float) (wSizeH-(y+1)*17));
 }
 
 inline void printPropertyRow(const char* name, float value, int y) {
@@ -385,13 +385,13 @@ void mouseMoved(int x, int y) {
     break;
   // 2 => zoom
   case 2: 
-    camPos -= Vec3f(0.0f,0.0f,0.1f)*(y-mouseY)*mouseSensitivy;
+    camPos -= Vec3f(0.0f,0.0f,0.1f)*((float) (y-mouseY))*mouseSensitivy;
     break;
   // 3 => translate 
   case 3:
     // update camPos
-    camPos += Vec3f(0.1f,0.0f,0.0f)*(x-mouseX)*mouseSensitivy;
-    camPos += Vec3f(0.0f,0.1f,0.0f)*(y-mouseY)*mouseSensitivy;
+    camPos += Vec3f(0.1f,0.0f,0.0f)*((float) (x-mouseX))*mouseSensitivy;
+    camPos += Vec3f(0.0f,0.1f,0.0f)*((float) (y-mouseY))*mouseSensitivy;
     break;
   default: break;
   }  

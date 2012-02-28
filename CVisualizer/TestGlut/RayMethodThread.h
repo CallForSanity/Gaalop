@@ -25,25 +25,63 @@ public:
 	float oy;
 	float oz;
 
-	void refinement(I& t) {
+	void refinementRegulaFalsi(I& t) {
+        bool refine = true;
+		float c;
+
+        while (refine) {
+			//if (width(t) < 0.001) return; // TODO why?
+			if (width(t) < 0.001) refine = false;  // TODO maybe this change to direct return if (width(t) < 0.001) return
+			else {
+				float* outputsf = new float[OUTPUTCOUNT];
+
+				float a = t.lower();
+				float b = t.upper();
+
+				f(ox,oy,oz,a,inputs,outputsf);
+				float fa = outputsf[objectNo];
+				f(ox,oy,oz,b,inputs,outputsf);
+				float fb = outputsf[objectNo];
+				c = (float) ((a*fb-b*fa)/(fb-fa));
+				f(ox,oy,oz,c,inputs,outputsf);
+				float fc = outputsf[objectNo];
+
+				delete[] outputsf;
+
+				if (fa*fc > 0) 
+					t.set(c,t.upper());
+				else
+					t.set(t.lower(),c);
+
+            
+				if (abs(fc) <= 0.01) refine = false;
+			}
+
+        }
+
+        points->push_back(Vec3f(ox+c,oy,oz));
+    }
+
+	void refinementBisection(I& t) {
         bool refine = true;
 		float center;
         while (refine) {
-            
+            if (width(t) < 0.001) return;
+
             center = center(t);
 
-			I* outputsf = new I[OUTPUTCOUNT];
-			I* outputsdf = new I[OUTPUTCOUNT];
+			float* outputsf = new float[OUTPUTCOUNT];
 
-			fpdf(I(ox),I(oy),I(oz),I(t.lower()),inputs,outputsf,outputsdf);
-            double lo = outputsf[objectNo].lower();
-			fpdf(I(ox),I(oy),I(oz),I(center),inputs,outputsf,outputsdf);
-            double ce = outputsf[objectNo].lower();
+			float a = t.lower();
+			float b = t.upper();
+
+			f(ox,oy,oz,a,inputs,outputsf);
+            double lo = outputsf[objectNo];
+			f(ox,oy,oz,center,inputs,outputsf);
+            double ce = outputsf[objectNo];
 			delete[] outputsf;
-			delete[] outputsdf;
             
             if (abs(ce) <= 0.01) refine = false;
-            if (width(t) < 0.001) return;
         
             if (ce*lo < 0) 
 				t.set(t.lower(),center);
@@ -77,7 +115,7 @@ public:
 					points->push_back(Vec3f(ox+center,oy,oz));
                 
             } else 
-                refinement(t);
+                refinementRegulaFalsi(t);
         }
 
     }
