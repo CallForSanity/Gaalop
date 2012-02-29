@@ -15,7 +15,9 @@ void calculatePoints() {
 	for (int i=0;i<OUTPUTCOUNT;++i) {
 		pointClouds.push_back(PointCloud());
 		PointCloud& cloud = pointClouds[i];
-		findZeroLocations(i, cloud.points, inputs);
 		getOutputAttributes(i, cloud.name, cloud.colR, cloud.colG, cloud.colB, cloud.colA);
+		std::cout << cloud.name << ": ";
+		findZeroLocations(i, cloud.points, inputs);
+		
 	}
 }

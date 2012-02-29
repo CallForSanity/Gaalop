@@ -36,7 +36,11 @@ bool list_in_use = false;
 //menue
 bool autoDraw = true;
 int selectedInput = 0;
+int selectedOutput = 0;
 float curStepWidth = 1;
+bool* visible;
+
+bool chooseInput = false;
 
 GLuint list;
 
@@ -63,8 +67,12 @@ void drawPoints() {
 		
 		int objectCount = pointClouds.size();
 
-		for (std::vector<PointCloud>::iterator it = pointClouds.begin(); it != pointClouds.end(); ++it)
-			it->draw();
+		int i=0;
+		for (std::vector<PointCloud>::iterator it = pointClouds.begin(); it != pointClouds.end(); ++it) {
+			if (visible[i])
+				it->draw();
+			i++;
+		}
 
 		glEndList();
 		drawn = true;
@@ -75,11 +83,19 @@ void drawPoints() {
 
 }
 
+void changeVisibility() {
+	drawn = false;
+	drawPoints();
+	glutPostRedisplay();
+}
+
 int main(int argc, char **argv) {
   inputs = new float[INPUTCOUNT];
   for (int i=0;i<INPUTCOUNT;++i)
 	  inputs[i] = 1;
-
+  visible = new bool[OUTPUTCOUNT];
+  for (int i=0;i<OUTPUTCOUNT;++i)
+	  visible[i] = true;
 
   glutInit(&argc, argv);
   glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
@@ -97,8 +113,8 @@ int main(int argc, char **argv) {
   glutReshapeFunc(changeSize);
 
   std::cout << "CVisualizer from Gaalop\n";
-  std::cout << "Usage:\nesc: exit program\nC/c: adjust cubeEdgeLength\nD/d: adjust density\nS/s: adjust step size\na: toggle autodraw\nr: repaint\n\n";
-  std::cout << "Arrows:\nup/down: switch current input\nleft/right: increase/decrease current input value with step size\n";
+  std::cout << "Usage:\nesc: exit program\nC/c: adjust cubeEdgeLength\nD/d: adjust density\nS/s: adjust step size\na: toggle autodraw\nr: repaint\ni/o:change selection to inputs/outputs\nv:toggle visible of selected object\n\n";
+  std::cout << "Arrows:\nup/down: switch current input\nleft/right: increase/decrease current input value with step size\n\n";
   std::cout << "mouse left: rotate\nmouse middle: move (pan)\nmouse right: zoom\n" << std::endl;
 
   initialize();
@@ -107,6 +123,8 @@ int main(int argc, char **argv) {
 
   delete[] inputs;
   inputs = 0;
+  delete[] visible;
+  visible = 0;
   return 0;
 }
 
@@ -231,7 +249,7 @@ void printMenu() {
 	printRow("Inputs:",6);
 
 	for (int i=0;i<INPUTCOUNT;++i) {
-		if (selectedInput == i) 
+		if (chooseInput && (selectedInput == i)) 
 			glColor3f(1,0,0);
 		else
 			glColor3f(0,0,0);
@@ -240,6 +258,20 @@ void printMenu() {
 		getInputName(i,name);
 		printPropertyRow(name.c_str(),inputs[i],i+7);
 	}
+
+	int startOutputs = INPUTCOUNT+10;
+
+	printRow("Outputs:",startOutputs-1);
+	for (int i=0;i<OUTPUTCOUNT;++i) {
+		if ((!chooseInput) && (selectedOutput == i)) 
+			glColor3f(1,0,0);
+		else
+			glColor3f(0,0,0);
+
+		printRow(pointClouds[i].name.c_str(),i+startOutputs);
+	}
+
+
 	restoreFromTextMode();
 }
 
@@ -278,8 +310,7 @@ void keyPressed(unsigned char key, int x, int y) {
     case 27:
       exit(0);
       break;
-    // v => reset view
-    case 'v':
+    // V => reset view
     case 'V':
       camPos.set(0.0f, 2.0f, -10.0f);
       camAngleX = 180.0f;
@@ -313,6 +344,19 @@ void keyPressed(unsigned char key, int x, int y) {
 	case 'r':
 		calcAndDraw();
 		return;
+	case 'i':
+		chooseInput = true;
+		break;
+	case 'o':
+		chooseInput = false;
+		break;
+	case 'v':
+		if (!chooseInput) {
+			if (selectedOutput>=0 && selectedOutput<OUTPUTCOUNT)
+				visible[selectedOutput] = !visible[selectedOutput];
+			changeVisibility();
+		}
+		return;
   }
   glutPostRedisplay();
 }
@@ -321,23 +365,37 @@ void specialPressed(int key, int x, int y) {
 	switch (key) {
     // esc => exit
 	case GLUT_KEY_LEFT:
-		if (selectedInput < INPUTCOUNT)
-			inputs[selectedInput] -= curStepWidth;
-		if (autoDraw) calcAndDraw(); else glutPostRedisplay();
+		if (chooseInput) {
+			if (selectedInput < INPUTCOUNT)
+				inputs[selectedInput] -= curStepWidth;
+			if (autoDraw) calcAndDraw(); else glutPostRedisplay();
+		}
 		break;
 	case GLUT_KEY_RIGHT:
-		if (selectedInput < INPUTCOUNT)
-			inputs[selectedInput] += curStepWidth;
-		if (autoDraw) calcAndDraw(); else glutPostRedisplay();
+		if (chooseInput) {
+			if (selectedInput < INPUTCOUNT)
+				inputs[selectedInput] += curStepWidth;
+			if (autoDraw) calcAndDraw(); else glutPostRedisplay();
+		}
 		break;
 	case GLUT_KEY_UP:
-		selectedInput--;
-		if (selectedInput < 0) selectedInput = 0;
+		if (chooseInput) {
+			selectedInput--;
+			if (selectedInput < 0) selectedInput = 0;
+		} else {
+			selectedOutput--;
+			if (selectedOutput < 0) selectedOutput = 0;
+		}
 		glutPostRedisplay();
 		break;
 	case GLUT_KEY_DOWN:
-		selectedInput++;
-		if (selectedInput >= INPUTCOUNT) selectedInput = INPUTCOUNT-1;
+		if (chooseInput) {
+			selectedInput++;
+			if (selectedInput >= INPUTCOUNT) selectedInput = INPUTCOUNT-1;
+		} else {
+			selectedOutput++;
+			if (selectedOutput >= OUTPUTCOUNT) selectedOutput = OUTPUTCOUNT-1;
+		}
 		glutPostRedisplay();
 		break;
 	}
