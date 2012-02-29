@@ -25,70 +25,77 @@ public:
 	float oy;
 	float oz;
 
-	void refinementRegulaFalsi(I& t) {
+	void refinementRegulaFalsi(float a, float b) {
         bool refine = true;
 		float c;
 
+		float* outputsf = new float[OUTPUTCOUNT];
+
+		f(ox,oy,oz,a,inputs,outputsf);
+		float fa = outputsf[objectNo];
+		f(ox,oy,oz,b,inputs,outputsf);
+		float fb = outputsf[objectNo];
+		c = (float) ((a*fb-b*fa)/(fb-fa));
+		f(ox,oy,oz,c,inputs,outputsf);
+		float fc = outputsf[objectNo];
+
         while (refine) {
-			//if (width(t) < 0.001) return; // TODO why?
-			if (width(t) < 0.001) refine = false;  // TODO maybe this change to direct return if (width(t) < 0.001) return
+			//if (width(t) < 0.001) { return; delete[] outputsf; } // TODO why?
+			if ((b-a) < 0.001) refine = false;  // TODO maybe this change to direct return if (width(t) < 0.001) return
 			else {
-				float* outputsf = new float[OUTPUTCOUNT];
+				if (fa*fc > 0) {
+					a = c;
+					fa = fc;
+				} else {
+					b = c;
+					fb = fc;
+				}
 
-				float a = t.lower();
-				float b = t.upper();
-
-				f(ox,oy,oz,a,inputs,outputsf);
-				float fa = outputsf[objectNo];
-				f(ox,oy,oz,b,inputs,outputsf);
-				float fb = outputsf[objectNo];
 				c = (float) ((a*fb-b*fa)/(fb-fa));
 				f(ox,oy,oz,c,inputs,outputsf);
-				float fc = outputsf[objectNo];
-
-				delete[] outputsf;
-
-				if (fa*fc > 0) 
-					t.set(c,t.upper());
-				else
-					t.set(t.lower(),c);
+				fc = outputsf[objectNo];
 
             
 				if (abs(fc) <= 0.01) refine = false;
 			}
 
         }
+		delete[] outputsf;
 
         points->push_back(Vec3f(ox+c,oy,oz));
     }
 
-	void refinementBisection(I& t) {
+	void refinementBisection(float a, float b) {
         bool refine = true;
 		float center;
+
+		float* outputsf = new float[OUTPUTCOUNT];
+		f(ox,oy,oz,a,inputs,outputsf);
+        double lo = outputsf[objectNo];
+		f(ox,oy,oz,center,inputs,outputsf);
+        double ce = outputsf[objectNo];
+
         while (refine) {
-            if (width(t) < 0.001) return;
+            if ((b-a) < 0.001) {
+				delete[] outputsf;
+				return;
+			}
 
-            center = center(t);
+            center = (a+b)/2.0f;
 
-			float* outputsf = new float[OUTPUTCOUNT];
-
-			float a = t.lower();
-			float b = t.upper();
-
-			f(ox,oy,oz,a,inputs,outputsf);
-            double lo = outputsf[objectNo];
-			f(ox,oy,oz,center,inputs,outputsf);
-            double ce = outputsf[objectNo];
-			delete[] outputsf;
-            
             if (abs(ce) <= 0.01) refine = false;
         
-            if (ce*lo < 0) 
-				t.set(t.lower(),center);
-			else
-                t.set(center,t.upper());
-
+            if (ce*lo < 0) {
+				b = center;
+			}
+			else {
+				a = center;
+				lo = ce;
+			}
+			f(ox,oy,oz,center,inputs,outputsf);
+			ce = outputsf[objectNo];
         }
+		delete[] outputsf;
 
         points->push_back(Vec3f(ox+center,oy,oz));
     }
@@ -115,7 +122,8 @@ public:
 					points->push_back(Vec3f(ox+center,oy,oz));
                 
             } else 
-                refinementRegulaFalsi(t);
+                refinementRegulaFalsi(t.lower(),t.upper());
+				//refinementBisection(t.lower(),t.upper());
         }
 
     }
