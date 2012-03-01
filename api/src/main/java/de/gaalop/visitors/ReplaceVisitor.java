@@ -20,6 +20,7 @@ public class ReplaceVisitor extends ExpressionTypeVisitor {
      * @return The new expression, if modified
      */
     public Expression replace(Expression expression) {
+        result = null;
         expression.accept(this);
         return (result != null) ? result : expression;
     }
