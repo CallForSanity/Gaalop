@@ -346,7 +346,7 @@ public final class GraphBuilder {
 	}
 	
 	public ColorNode handleColor(String name) {
-		ColorNode color = COLORS.get(name);
+		ColorNode color = (ColorNode) COLORS.get(name).copy();
 		if (color == null) {
 			throw new IllegalArgumentException("Color " + name + " is not known.");
 		}
