@@ -43,11 +43,13 @@ public class AlStrategy implements AlgebraStrategy {
             AlgebraDefinitionFile alFile = graph.getAlgebraDefinitionFile();
             alFile.setUsePrecalculatedTable(plugin.usePrecalulatedTables);
             alFile.setUseAsRessource(plugin.useBuiltInFiles);
-            alFile.setProductsFilePath(plugin.productsFilePath);
+            String baseDir = plugin.getBaseDirectory();
+            if (!baseDir.endsWith("/")) baseDir += "/";
+            alFile.setProductsFilePath(baseDir+"products.csv");
 
             inputStream = (plugin.isUseBuiltInFiles())
-                    ? getClass().getResourceAsStream(plugin.definitionFilePath)
-                    : new FileInputStream(new File(plugin.definitionFilePath));
+                    ? getClass().getResourceAsStream(baseDir+"definition.csv")
+                    : new FileInputStream(new File(baseDir+"definition.csv"));
             alFile.loadFromFile(inputStream);
             
             createBlades(alFile);
@@ -55,8 +57,8 @@ public class AlStrategy implements AlgebraStrategy {
             //replace all functions / macros
 
             inputStream = (plugin.isUseBuiltInFiles())
-                    ? getClass().getResourceAsStream(plugin.macrosFilePath)
-                    : new FileInputStream(new File(plugin.macrosFilePath));
+                    ? getClass().getResourceAsStream(baseDir+"macros.clu")
+                    : new FileInputStream(new File(baseDir+"macros.clu"));
             
             ControlFlowGraph macrosGraph = new de.gaalop.clucalc.input.Plugin().createCodeParser().parseFile(inputStreamToInputFile(inputStream, "macros"));
             inputStream.close();

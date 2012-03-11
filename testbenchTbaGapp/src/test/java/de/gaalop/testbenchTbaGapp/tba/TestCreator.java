@@ -133,9 +133,7 @@ public class TestCreator {
             //writeFile(new OutputFile("test",testable.getCLUScript(), Charset.forName("UTF-8")));
 
             de.gaalop.algebra.Plugin plugin = new de.gaalop.algebra.Plugin();
-            plugin.definitionFilePath = "algebra/5d/definition.csv";
-            plugin.productsFilePath = "algebra/5d/products.csv";
-            plugin.macrosFilePath = "algebra/5d/macros.clu";
+            plugin.baseDirectory = "algebra/5d/";
             plugin.useBuiltInFiles = true;
             plugin.usePrecalulatedTables = true;       
             AlgebraStrategy algebraStrategy = plugin.createAlgebraStrategy();

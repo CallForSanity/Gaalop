@@ -40,9 +40,7 @@ public class Base {
         de.gaalop.algebra.Plugin alPlugin = new de.gaalop.algebra.Plugin();
         alPlugin.useBuiltInFiles = true;
         alPlugin.usePrecalulatedTables = true;
-        alPlugin.definitionFilePath = "algebra/5d/definition.csv";
-        alPlugin.productsFilePath = "algebra/5d/products.csv";
-        alPlugin.macrosFilePath = "algebra/5d/macros.clu";
+        alPlugin.baseDirectory = "algebra/5d/";
         AlgebraStrategy algebraStrategy = alPlugin.createAlgebraStrategy();
         algebraStrategy.transform(graph);
         
