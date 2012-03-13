@@ -2,8 +2,17 @@ package de.gaalop.visualizer.engines.lwjgl;
 
 import de.gaalop.visualizer.PointCloud;
 import de.gaalop.visualizer.Rendering;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileFilter;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -33,6 +42,8 @@ public abstract class LwJglRenderingEngine extends Thread {
     private static final int STATE_UP = 2;
     
     protected Rendering rendering;
+    
+    public boolean recording = false;
     
     private int list = -1;
 
@@ -107,7 +118,12 @@ public abstract class LwJglRenderingEngine extends Thread {
 
             pollInput();
             Display.update();
-            Display.sync(60); // cap fps to 60fps
+            if (recording) {
+                makeScreenshot();
+                Display.sync(25); // cap fps to 60fps
+            }
+            else 
+                Display.sync(60); 
         }
 
         Display.destroy();
@@ -181,6 +197,23 @@ public abstract class LwJglRenderingEngine extends Thread {
     }
 
     private void pollInput() {
+        
+        if (Keyboard.isKeyDown(Keyboard.KEY_F3)) {
+            //Start recording
+            if (!recording) {
+                startRecording();
+                recording = true;
+            }
+        }
+        
+        if (Keyboard.isKeyDown(Keyboard.KEY_F4)) {
+            //Stop recording
+            if (recording) {
+                recording = false;
+                stopRecording();
+            }
+        }
+        
         if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
             Display.destroy();
             System.exit(0);
@@ -242,5 +275,114 @@ public abstract class LwJglRenderingEngine extends Thread {
      * @param clouds The point clouds
      */
     public abstract void draw(HashMap<String, PointCloud> clouds, HashSet<String> visibleObjects);
+
+    private ByteBuffer screenBuffer;
+    
+    /**
+     * Code from pc
+     */
+    private void makeScreenshot() {
+        if (screenBuffer == null)
+            screenBuffer = ByteBuffer.allocateDirect(Display.getDisplayMode().getWidth() * Display.getDisplayMode().getHeight() * 3);
+        
+        // publish
+        try {
+                GL11.glReadBuffer(GL11.GL_BACK);
+                GL11.glPixelStorei(GL11.GL_PACK_ALIGNMENT, 1);
+                GL11.glReadPixels(0, 0, Display.getDisplayMode().getWidth(),
+                                Display.getDisplayMode().getHeight(), GL11.GL_RGB,
+                                GL11.GL_UNSIGNED_BYTE, screenBuffer);
+                final BufferedImage image = transformPixelsRGBBuffer2ARGB_ByHand(screenBuffer);
+
+                encoder.addFrame(image);
+        } catch (Exception e) {
+                System.out.println("Streaming exception.");
+                e.printStackTrace();
+        }
+    }
+    
+    /**
+     * Code from pc
+     * @param pixelsRGB
+     * @return 
+     */
+    private BufferedImage transformPixelsRGBBuffer2ARGB_ByHand(
+			ByteBuffer pixelsRGB) {
+            int width = Display.getDisplayMode().getWidth();
+            int height = Display.getDisplayMode().getHeight();
+
+            // Transform the ByteBuffer and get it as pixeldata.
+
+            int[] pixelInts = new int[width * height];
+
+            // Convert RGB bytes to ARGB ints with no transparency.
+            // Flip image vertically by reading the
+            // rows of pixels in the byte buffer in reverse
+            // - (0,0) is at bottom left in OpenGL.
+            //
+            // Points to first byte (red) in each row.
+            int p = width * height * 3;
+            int q; // Index into ByteBuffer
+            int i = 0; // Index into target int[]
+            int w3 = width * 3; // Number of bytes in each row
+            for (int row = 0; row < height; row++) {
+                    p -= w3;
+                    q = p;
+                    for (int col = 0; col < width; col++) {
+                            int iR = pixelsRGB.get(q++);
+                            int iG = pixelsRGB.get(q++);
+                            int iB = pixelsRGB.get(q++);
+                            pixelInts[i++] = 0xFF000000 | ((iR & 0x000000FF) << 16)
+                                            | ((iG & 0x000000FF) << 8) | (iB & 0x000000FF);
+                    }
+            }
+
+            // Create a new BufferedImage from the pixeldata.
+            BufferedImage bufferedImage = new BufferedImage(width, height,
+                            BufferedImage.TYPE_INT_ARGB);
+            bufferedImage.setRGB(0, 0, width, height, pixelInts, 0, width);
+
+            return bufferedImage;
+    }
+    
+    private AnimatedGifEncoder encoder;
+   
+    private void startRecording() {
+        try {
+            encoder = new AnimatedGifEncoder();
+            
+            JFileChooser chooser = new JFileChooser();
+            chooser.setFileFilter(new FileFilter() {
+
+                @Override
+                public boolean accept(File f) {
+                    if (f.getName().toLowerCase().endsWith(".gif")) 
+                        return true;
+                    if (f.isDirectory()) return true;
+                    return false;
+                }
+
+                @Override
+                public String getDescription() {
+                    return "GIF files";
+                }
+            });
+            if (chooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+                encoder.start(new FileOutputStream(chooser.getSelectedFile()));
+                encoder.setDelay(40);
+                System.out.println("Started recording");
+            }
+            
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(LwJglRenderingEngine.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void stopRecording() {
+        System.out.println("Stopped recording");
+        encoder.finish();
+        System.out.println("Written recording");
+        encoder = null;
+    }
 
 }
