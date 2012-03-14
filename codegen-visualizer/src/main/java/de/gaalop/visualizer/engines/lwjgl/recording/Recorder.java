@@ -6,7 +6,9 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 
 /**
- *
+ * Implements a basic recorder. Provides the startRecording() and stopRecording() method,
+ * as well as the makeScreenshot method
+ * 
  * @author Christian Steinmetz
  */
 public abstract class Recorder {
@@ -17,6 +19,7 @@ public abstract class Recorder {
     private TransformationThread thread;
     
     /**
+     * Make a screenshot from the current LWJGL Display
      * Code from pc
      */
     public void makeScreenshot() {
@@ -33,7 +36,7 @@ public abstract class Recorder {
                 
                 long delay = (lastTime == -1) ? 0: curTime-lastTime;
                 lastTime = curTime;
-                thread.store(screenBuffer, delay);
+                thread.addFrame(screenBuffer, delay);
                 
         } catch (Exception e) {
                 System.out.println("Streaming exception.");
@@ -41,21 +44,38 @@ public abstract class Recorder {
         }
     }
     
+    /**
+     * Adds the frame as image
+     * @param image The image
+     * @param delay The delay in ms between this and last image
+     */
     public abstract void _addFrame(BufferedImage image, long delay);
 
+    /**
+     * Starts the recording
+     */
     public void startRecording() {
         thread = new TransformationThread(this);
         _startRecording();
         thread.start();
     }
 
+    /**
+     * Stops the recording
+     */
     public void stopRecording() {
         System.out.println("Stopped recording");
         thread.terminate();
     }
     
+    /**
+     * This method is called when starting recording
+     */
     protected abstract void _startRecording();
     
+    /**
+     * This method is called when finishing recording
+     */
     public abstract void _finish();
 
 }

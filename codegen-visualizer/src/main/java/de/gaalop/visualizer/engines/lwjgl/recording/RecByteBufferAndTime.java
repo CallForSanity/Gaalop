@@ -3,7 +3,7 @@ package de.gaalop.visualizer.engines.lwjgl.recording;
 import java.nio.ByteBuffer;
 
 /**
- *
+ * Stores a byte buffer and a delay time
  * @author Christian Steinmetz
  */
 public class RecByteBufferAndTime {

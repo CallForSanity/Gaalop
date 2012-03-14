@@ -6,7 +6,8 @@ import java.util.LinkedList;
 import org.lwjgl.opengl.Display;
 
 /**
- *
+ * Implements a thread that transforms a bytebuffer to an image.
+ * After transforming, the storage process is started
  * @author Christian Steinmetz
  */
 public class TransformationThread extends Thread {
@@ -21,11 +22,20 @@ public class TransformationThread extends Thread {
         this.recorder = recorder;
     }
 
+    /**
+     * Terminates the transformation.
+     * This method does not stop the transformation of posted images
+     */
     public void terminate() {
         terminate = true;
     }
 
-    public void store(ByteBuffer buffer, long delay) {
+    /**
+     * Adds a frame
+     * @param buffer The ByteBuffer of the frame
+     * @param delay The delay between the last frame and this frame in ms
+     */
+    public void addFrame(ByteBuffer buffer, long delay) {
         RecByteBufferAndTime b = new RecByteBufferAndTime(buffer, delay);
         synchronized (list) {
             list.add(b);
@@ -46,9 +56,10 @@ public class TransformationThread extends Thread {
     }
     
     /**
+     * Transforms an rgb pixel array to an argb BufferedImage
      * Code from pc
-     * @param pixelsRGB
-     * @return 
+     * @param pixelsRGB The rgb pixel array
+     * @return The created image
      */
     private BufferedImage transformPixelsRGBBuffer2ARGB_ByHand(
 			ByteBuffer pixelsRGB) {

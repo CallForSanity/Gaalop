@@ -11,7 +11,7 @@ import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
 
 /**
- *
+ * Implements a recorder that outputs a GIF file
  * @author Christian Steinmetz
  */
 public class GIFRecorder extends Recorder {

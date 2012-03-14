@@ -32,7 +32,6 @@ import java.io.OutputStream;
  * @version 1.03 November 2003
  * 
  */
-
 public class AnimatedGifEncoder {
 
   protected int width; // image size
