@@ -1,4 +1,4 @@
-package de.gaalop.visualizer.engines.lwjgl;
+package de.gaalop.visualizer.engines.lwjgl.recording;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
