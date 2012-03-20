@@ -57,12 +57,8 @@ public class Main {
     // Algebra options
     @Option(name = "-algebra_usePrecalulatedTables", required = false, usage = "wether to use precalculated algebra tables or not.")
     public static boolean algebra_usePrecalulatedTables = true;
-    @Option(name = "-algebra_productsFilePath", required = false, usage = "products file path")
-    public static String algebra_productsFilePath = "algebra/5d/products.csv";
-    @Option(name = "-algebra_definitionFilePath", required = false, usage = "definition file path")
-    public static String algebra_definitionFilePath = "algebra/5d/definition.csv";
-    @Option(name = "-algebra_macrosFilePath", required = false, usage = "macros file path")
-    public static String algebra_macrosFilePath = "algebra/5d/macros.clu";
+    @Option(name = "-algebra_baseDirectory", required = false, usage = "algebra base directory")
+    public static String algebra_baseDirectory = "algebra/5d/";
     @Option(name = "-algebra_userMacroFilePath", required = false, usage = "user macro file path")
     public static String algebra_userMacroFilePath = "";
     @Option(name = "-algebra_useBuiltInFiles", required = false, usage = "wether to use built-in algebra tables or not.")

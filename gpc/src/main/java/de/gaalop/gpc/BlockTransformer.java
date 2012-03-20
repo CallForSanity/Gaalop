@@ -162,9 +162,7 @@ public class BlockTransformer {
                 de.gaalop.algebra.Plugin algebraPlugin = (de.gaalop.algebra.Plugin)plugin;
                 if(algebraPlugin != null) {
                     algebraPlugin.useBuiltInFiles = Main.algebra_usePrecalulatedTables;
-                    algebraPlugin.productsFilePath = Main.algebra_productsFilePath;
-                    algebraPlugin.definitionFilePath = Main.algebra_definitionFilePath;
-                    algebraPlugin.macrosFilePath = Main.algebra_macrosFilePath;
+                    algebraPlugin.baseDirectory = Main.algebra_baseDirectory;
                     algebraPlugin.userMacroFilePath = Main.algebra_userMacroFilePath;
                     algebraPlugin.useBuiltInFiles = Main.algebra_useBuiltInFiles;
                 }
