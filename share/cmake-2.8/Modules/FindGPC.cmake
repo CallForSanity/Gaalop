@@ -6,8 +6,8 @@ OPTION(GPC_USE_GAPP "wether to use Geometric Algebra Parallelism Programs (GAPP)
 
 OPTION(GPC_ALGEBRA_USEPRECALCUTEDTABLES "wether to use precalculated algebra tables or not." ON)
 OPTION(GPC_ALGEBRA_USEBUILTINTABLES "wether to use built-in algebra tables or not." ON)
-SET(GPC_ALGEBRA_BASEDIRECTORY "algebra/5d/" CACHE FILEPATH "algebra base directory")
-SET(GPC_ALGEBRA_USERMACROFILEPATH "" CACHE FILEPATH "user macro file path")
+SET(GPC_ALGEBRA_BASEDIRECTORY "algebra/5d/" CACHE STRING "algebra base directory")
+SET(GPC_ALGEBRA_USERMACROFILEPATH "" CACHE STRING "user macro file path")
 
 # find java
 FIND_PACKAGE(Java COMPONENTS Runtime REQUIRED)
