@@ -35,10 +35,12 @@ public class DrawSettings extends javax.swing.JFrame {
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jPanel_Visible = new javax.swing.JPanel();
+        jButton_LoadPointCloud = new javax.swing.JButton();
+        jButton_SavePointCloud = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Gaalop Visualization Settings");
-        setMinimumSize(new java.awt.Dimension(485, 470));
+        setMinimumSize(new java.awt.Dimension(485, 500));
         getContentPane().setLayout(null);
 
         jPanel_Settings.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Settings", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION));
@@ -86,6 +88,8 @@ public class DrawSettings extends javax.swing.JFrame {
         });
         getContentPane().add(jButton_Repaint);
         jButton_Repaint.setBounds(300, 350, 90, 30);
+
+        jLabel_Info.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         getContentPane().add(jLabel_Info);
         jLabel_Info.setBounds(20, 390, 430, 20);
 
@@ -109,6 +113,14 @@ public class DrawSettings extends javax.swing.JFrame {
 
         getContentPane().add(jPanel3);
         jPanel3.setBounds(240, 160, 220, 180);
+
+        jButton_LoadPointCloud.setText("Load Pointcloud");
+        getContentPane().add(jButton_LoadPointCloud);
+        jButton_LoadPointCloud.setBounds(20, 420, 130, 23);
+
+        jButton_SavePointCloud.setText("Save Pointcloud");
+        getContentPane().add(jButton_SavePointCloud);
+        jButton_SavePointCloud.setBounds(180, 420, 140, 23);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -159,7 +171,9 @@ public class DrawSettings extends javax.swing.JFrame {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    public javax.swing.JButton jButton_LoadPointCloud;
     protected javax.swing.JButton jButton_Repaint;
+    public javax.swing.JButton jButton_SavePointCloud;
     public javax.swing.JLabel jLabel_Info;
     protected javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;

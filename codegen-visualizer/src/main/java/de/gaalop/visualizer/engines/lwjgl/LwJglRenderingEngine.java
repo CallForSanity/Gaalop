@@ -1,5 +1,6 @@
 package de.gaalop.visualizer.engines.lwjgl;
 
+import de.gaalop.visualizer.Point3d;
 import de.gaalop.visualizer.engines.lwjgl.recording.AnimatedGifEncoder;
 import de.gaalop.visualizer.PointCloud;
 import de.gaalop.visualizer.Rendering;
@@ -12,6 +13,7 @@ import java.io.FileOutputStream;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
@@ -45,6 +47,8 @@ public abstract class LwJglRenderingEngine extends Thread {
     private static final int STATE_UP = 2;
     
     protected Rendering rendering;
+    
+    public LinkedList<Point3d> points;
     
     public Recorder recorder;
     

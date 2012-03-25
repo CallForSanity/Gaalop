@@ -6,19 +6,22 @@ import de.gaalop.OutputFile;
 import de.gaalop.cfg.ControlFlowGraph;
 import de.gaalop.dfg.MultivectorComponent;
 import de.gaalop.dfg.Variable;
-import de.gaalop.visualizer.ColorEvaluater;
-import de.gaalop.visualizer.FindPointsThread;
-import de.gaalop.visualizer.Plugin;
-import de.gaalop.visualizer.PointCloud;
-import de.gaalop.visualizer.Rendering;
+import de.gaalop.visualizer.*;
+import de.gaalop.visualizer.engines.lwjgl.LwJglRenderingEngine;
 import de.gaalop.visualizer.engines.lwjgl.SimpleLwJglRenderingEngine;
+import de.gaalop.visualizer.engines.lwjgl.recording.AnimatedGifEncoder;
 import de.gaalop.visualizer.zerofinding.RayMethod;
 import de.gaalop.visualizer.zerofinding.ZeroFinder;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.*;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JFileChooser;
 import javax.swing.event.ChangeEvent;
+import javax.swing.filechooser.FileFilter;
 
 /**
  * Implements a frame-facade for all drawing operations
@@ -41,6 +44,8 @@ public class DrawSettingsCodeGen extends DrawSettings implements CodeGenerator, 
     private InputsPanel inputsPanel;
     private SettingsPanel settingsPanel;
     private VisiblePanel visiblePanel;
+    
+    public LinkedList<Point3d> points = new LinkedList<Point3d>();
 
     public DrawSettingsCodeGen(Plugin plugin) {
         super();
@@ -65,6 +70,62 @@ public class DrawSettingsCodeGen extends DrawSettings implements CodeGenerator, 
                repaintCommand();
             }
         };
+        
+        jButton_LoadPointCloud.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser chooser = new JFileChooser();
+                if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+                    BufferedReader reader = null;
+                    try {
+                        reader = new BufferedReader(new FileReader(chooser.getSelectedFile()));
+                        points.clear();
+                        String line;
+                        try {
+                            while ((line = reader.readLine()) != null) {
+                                String[] parts = line.split(",");
+                                points.add(new Point3d(Double.parseDouble(parts[0]), Double.parseDouble(parts[1]), Double.parseDouble(parts[2])));
+                            }
+                            reader.close();
+                        } catch (IOException ex) {
+                            Logger.getLogger(DrawSettingsCodeGen.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                        recalculateCommand();
+                    } catch (FileNotFoundException ex) {
+                        Logger.getLogger(DrawSettingsCodeGen.class.getName()).log(Level.SEVERE, null, ex);
+                    } finally {
+                        try {
+                            reader.close();
+                        } catch (IOException ex) {
+                            Logger.getLogger(DrawSettingsCodeGen.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                }
+            }
+        });
+        
+        jButton_SavePointCloud.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser chooser = new JFileChooser();
+                if (chooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+                    PrintWriter writer = null;
+                    try {
+                        writer = new PrintWriter(chooser.getSelectedFile());
+                        for (String key: dataSet.keySet()) {
+                            PointCloud cloud = dataSet.get(key);
+                            cloud.print(writer);
+                        }
+                    } catch (FileNotFoundException ex) {
+                        Logger.getLogger(DrawSettingsCodeGen.class.getName()).log(Level.SEVERE, null, ex);
+                    } finally {
+                        writer.close();
+                    }
+                }
+            }
+        });
     }
     
     @Override
@@ -90,6 +151,7 @@ public class DrawSettingsCodeGen extends DrawSettings implements CodeGenerator, 
         
         // start engine
         SimpleLwJglRenderingEngine engine = new SimpleLwJglRenderingEngine(plugin.lwJglNativePath, this);
+        engine.points = points;
         
         engine.start();
         return new HashSet<OutputFile>();

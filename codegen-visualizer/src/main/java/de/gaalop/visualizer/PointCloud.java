@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.io.*;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -100,5 +102,12 @@ public class PointCloud {
 
         XMLOutputter outputter = new XMLOutputter();
         outputter.output(doc, outStream);
-    }            
+    }
+
+    public void print(PrintWriter writer) {
+        writer.println(color.toString());
+        for (Point3d point: points) 
+            writer.println(point.toString());
+        writer.println();
+    }
 }
