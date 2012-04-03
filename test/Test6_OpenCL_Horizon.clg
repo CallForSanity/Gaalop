@@ -6,7 +6,8 @@ __kernel void horizonKernel(__global float* circleCenters,__global const float* 
 	const float py = points[3*id+1];
 	const float pz = points[3*id+2];
 
-#pragma gcd begin
+#pragma gpc begin
+#pragma clucalc begin
 	P = VecN3(px,py,pz);
 	r = 1;
 	S = e0-0.5*r*r*einf;
@@ -14,9 +15,10 @@ __kernel void horizonKernel(__global float* circleCenters,__global const float* 
 	?homogenCenter = C*einf*C;
 	?scale = -homogenCenter.einf;
 	?euclidCenter = homogenCenter / scale;
-#pragma gcd end
+#pragma clucalc end
 
 	circleCenters[3*id+0] = mv_get_bladecoeff(euclidCenter,e1);
 	circleCenters[3*id+1] = mv_get_bladecoeff(euclidCenter,e2);
 	circleCenters[3*id+2] = mv_get_bladecoeff(euclidCenter,e3);
+#pragma gpc end
 }

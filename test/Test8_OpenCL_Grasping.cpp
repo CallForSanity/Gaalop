@@ -69,9 +69,9 @@ int main(int argc, char **argv)
 
 	// read the OpenCL program from source file
 	std::string sourceString;
-	readFile(sourceString, "Test8_OpenCL_Grasping.gcl.cl");
+	readFile(sourceString, "Test8_OpenCL_Grasping.clg.cl");
 	if(sourceString.empty())
-		readFile(sourceString, "test/Test8_OpenCL_Grasping.gcl.cl");
+		readFile(sourceString, "test/Test8_OpenCL_Grasping.clg.cl");
 	cl::Program::Sources clsource(1, std::make_pair(
 			sourceString.c_str(), sourceString.length()));
 	cl::Program program(context, clsource);

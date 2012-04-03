@@ -1,60 +1,3 @@
-enum MV_BLADE_INDEX
-{
-SCALAR,
-
-E1,
-E2,
-E3,
-EINF,
-E0,
-
-E12,
-E13,
-E1INF,
-E10,
-E23,
-E2INF,
-E20,
-E3INF,
-E30,
-EINF0,
-
-E123,
-E12INF,
-E120,
-E13INF,
-E130,
-E1INF0,
-E23INF,
-E230,
-E2INF0,
-E3INF0,
-
-E123INF,
-E1230,
-E12INF0,
-E13INF0,
-E23INF0,
-
-E123INF0
-};
-
-float getMvComp(const float* mv,const unsigned int usageDescriptor,const unsigned int idx)
-{
-	unsigned int cnt = 0;
-	for(unsigned int counter = 0; counter <= idx; ++counter)
-	{
-		if(usageDescriptor & (1 << counter))
-		{
-			if(idx == counter)
-				return mv[cnt];
-			++cnt;
-		}
-	}
-
-	return 0.0f;
-}
-
 __kernel void pointTriangleTest(__global bool* collision,
 			    	__global const float* triangles,
 			    	__global const float* point,
@@ -78,7 +21,8 @@ __kernel void pointTriangleTest(__global bool* collision,
 	const float py = point[1];
 	const float pz = point[2];
 
-#pragma gcd begin
+#pragma gpc begin
+#pragma clucalc begin
 	// triangle properties
 	TrianglePoint1 = VecN3(t1x,t1y,t1z);
 	TrianglePoint2 = VecN3(t2x,t2y,t2z);
@@ -105,7 +49,7 @@ __kernel void pointTriangleTest(__global bool* collision,
 	?d1 = side1 . TestPoint;
 	?d2 = side2 . TestPoint;
 	?d3 = side3 . TestPoint;
-#pragma gcd end
+#pragma clucalc end
 	collision[id] = true;
 
 	const float d_ = mv_get_bladecoeff(d,1);
@@ -118,4 +62,5 @@ __kernel void pointTriangleTest(__global bool* collision,
   		collision[id] = true;
 	else
 		collision[id] = false;
+#pragma gpc end
 }
