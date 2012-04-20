@@ -48,3 +48,8 @@ GPC_OPENCL_ADD_EXECUTABLE(test8 "Test8_OpenCL_Grasping.cpp" "Test8_OpenCL_Graspi
 ADD_DEPENDENCIES(test8 gaalop-copy)
 ADD_TEST(NAME "Test8_OpenCL_Grasping" COMMAND test8)
 ENDIF(BUILD_WITH_OPENCL)
+
+GPC_CXX_ADD_EXECUTABLE(test9 "Test9_CXX_AllOut.cpg")
+ADD_DEPENDENCIES(test9 gaalop-copy)
+ADD_TEST(NAME "Test9_CXX_AllOut" COMMAND test9)
+

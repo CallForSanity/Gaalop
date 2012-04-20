@@ -289,13 +289,62 @@ public class InputFilesComposer {
                                         Map<String,Set<String>> mvBladeOutput) throws RecognitionException {
         // parse assignment
         AssignmentNode assignment = Common.parseAssignment(command);
-        if (assignment == null) {
+        if (assignment == null)
             return;
-        }
-                
+        
         Iterator<Expression> it = ((MacroCall) assignment.getValue()).getArguments().iterator();
         final String mv = it.next().toString();
         Set<String> set = getMvBladeOutputSet(mvBladeOutput,mv);
+        
+        Iterator<Expression> it_copy = it;
+        if(((MacroCall) assignment.getValue()).getArguments().size() == 2
+           && it_copy.next().equals("_")) {
+            
+            set.add("1");
+            
+            set.add("e1");
+            set.add("e2");
+            set.add("e3");
+            set.add("einf");
+            set.add("e0");
+
+            set.add("e1^e2");
+            set.add("e1^e3");
+            set.add("e1^einf");
+            set.add("e1^e0");
+            
+            set.add("e2^e3");
+            set.add("e2^einf");
+            set.add("e2^e0");
+            
+            set.add("e3^einf");
+            set.add("e3^e0");
+
+            set.add("einf^e0");
+
+            set.add("e1^e2^e3");
+            set.add("e1^e2^einf");
+            set.add("e1^e2^e0");
+            set.add("e1^e3^einf");
+            set.add("e1^e3^e0");
+            set.add("e1^einf^e0");
+
+            set.add("e2^e3^einf");
+            set.add("e2^e3^e0");
+            set.add("e2^einf^e0");
+            set.add("e3^einf^e0");
+
+            set.add("e1^e2^e3^einf");
+            set.add("e1^e2^e3^e0");
+            set.add("e1^e2^einf^e0");
+            set.add("e1^e3^einf^e0");
+            set.add("e2^e3^einf^e0");
+
+            set.add("e1^e2^e3^einf^e0");
+            
+            mvBladeOutput.put(mv, set);
+            return;
+        }
         
         // add blades
         while (it.hasNext()) {
