@@ -60,7 +60,7 @@ public class AlStrategy implements AlgebraStrategy {
                     ? getClass().getResourceAsStream(baseDir+"macros.clu")
                     : new FileInputStream(new File(baseDir+"macros.clu"));
             
-            ControlFlowGraph macrosGraph = new de.gaalop.clucalc.input.Plugin().createCodeParser().parseFile(inputStreamToInputFile(inputStream, "macros"));
+            ControlFlowGraph macrosGraph = new de.gaalop.clucalc.input.Plugin().createCodeParser().parseFile(inputStreamToInputFile(inputStream, "macros", null));
             inputStream.close();
             HashMap<StringIntContainer, Macro> macros = MacrosVisitor.getAllMacros(macrosGraph);
             MacrosVisitor.getAllMacros(graph, macros);
@@ -75,7 +75,7 @@ public class AlStrategy implements AlgebraStrategy {
                 File f = new File(plugin.userMacroFilePath);
                 if (f.exists()) {
                      inputStream = new FileInputStream(f);
-                     ControlFlowGraph userMacrosGraph = new de.gaalop.clucalc.input.Plugin().createCodeParser().parseFile(inputStreamToInputFile(inputStream, "userMacros"));
+                     ControlFlowGraph userMacrosGraph = new de.gaalop.clucalc.input.Plugin().createCodeParser().parseFile(inputStreamToInputFile(inputStream, "userMacros", f.getParentFile()));
                      inputStream.close();
                      MacrosVisitor.getAllMacros(userMacrosGraph, macros);
                 } else
@@ -146,24 +146,43 @@ public class AlStrategy implements AlgebraStrategy {
      * Puts an inputStream into an InputFile
      * @param inputStream The inputStream
      * @param cluName The cluName to use
+     * @param parent The parent file object
      * @return The InputFile
      */
-    private InputFile inputStreamToInputFile(InputStream inputStream, String cluName) {
+    private InputFile inputStreamToInputFile(InputStream inputStream, String cluName, File parent) {
         StringBuilder sb = new StringBuilder();
+        readIn(inputStream, sb, parent);
+        sb.append("\n");
+        //sb.append("?a=1;"); //TODO häh?
+        return new InputFile(cluName, sb.toString());
+    }
+    
+    /**
+     * Reads an inputStream in a stringbuilder object
+     * @param inputStream The inputStream
+     * @param sb The stringbuilder object to use
+     * @param parent The parent file object
+     */
+    private void readIn(InputStream inputStream, StringBuilder sb, File parent) {
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
             String line;
             while ((line = reader.readLine()) != null) {
-                sb.append(line);
+                if (line.trim().startsWith("#include")) {
+                    line = line.trim();
+                    String filename = line.substring(line.indexOf(" ")+1).trim();
+                    File newParent = new File(parent, filename);
+                    FileInputStream inp = new FileInputStream(newParent);
+                    readIn(inp, sb, newParent);
+                    inp.close();
+                } else 
+                    sb.append(line);
                 sb.append("\n");
             }
             reader.close();
         } catch (IOException ex) {
             Logger.getLogger(AlStrategy.class.getName()).log(Level.SEVERE, null, ex);
         }
-        sb.append("\n");
-        sb.append("?a=1;");
-        return new InputFile(cluName, sb.toString());
     }
 
 }
