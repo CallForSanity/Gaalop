@@ -126,7 +126,7 @@ public class MvExpressionsBuilder extends EmptyControlFlowVisitor implements Exp
     private MvExpressions calculateUsingMultTable(Products typeProduct, MvExpressions left, MvExpressions right) {
         MvExpressions result = createNewMvExpressions();
         Algebra algebra = usedAlgebra.getAlgebra();
-
+        boolean set = false;
         for (int bladeL = 0; bladeL < bladeCount; bladeL++) {
             if (left.bladeExpressions[bladeL] != null) {
                 for (int bladeR = 0; bladeR < bladeCount; bladeR++) {
@@ -140,7 +140,8 @@ public class MvExpressionsBuilder extends EmptyControlFlowVisitor implements Exp
                             if (Math.abs(prod[bladeResult]) > EPSILON) {
                                 Expression prodExpri = new Multiplication(prodExpr, new FloatConstant(prod[bladeResult]));
                                 if (result.bladeExpressions[bladeResult] == null) {
-                                    result.bladeExpressions[bladeResult] = prodExpri;
+                                    set = true; 
+                                   result.bladeExpressions[bladeResult] = prodExpri;
                                 } else {
                                     result.bladeExpressions[bladeResult] = new Addition(result.bladeExpressions[bladeResult], prodExpri);
                                 }
@@ -150,6 +151,8 @@ public class MvExpressionsBuilder extends EmptyControlFlowVisitor implements Exp
                 }
             }
         }
+        if (!set) 
+            result.bladeExpressions[0] = new FloatConstant(0); //Without this, e.g. ?r = sqrt(a.b); fails.
         return result;
     }
 
