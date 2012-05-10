@@ -1,23 +1,13 @@
 package de.gaalop.visualizer.engines.lwjgl;
 
 import de.gaalop.visualizer.Point3d;
-import de.gaalop.visualizer.engines.lwjgl.recording.AnimatedGifEncoder;
 import de.gaalop.visualizer.PointCloud;
 import de.gaalop.visualizer.Rendering;
 import de.gaalop.visualizer.engines.lwjgl.recording.GIFRecorder;
 import de.gaalop.visualizer.engines.lwjgl.recording.Recorder;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.JFileChooser;
-import javax.swing.filechooser.FileFilter;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -280,4 +270,20 @@ public abstract class LwJglRenderingEngine extends Thread {
                 camUp.x, camUp.y, camUp.z);               // Up-direction}
     }
 
-    private float fmod(float value, float 
+    private float fmod(float value, float modulo) {
+        while (value < 0) {
+            value += modulo;
+        }
+        while (value > modulo) {
+            value -= modulo;
+        }
+        return value;
+    }
+
+    /**
+     * Draws the concrete scene
+     * @param clouds The point clouds
+     */
+    public abstract void draw(HashMap<String, PointCloud> clouds, HashSet<String> visibleObjects);
+    
+}

@@ -3,13 +3,8 @@ package de.gaalop.visualizer.engines.lwjgl;
 import de.gaalop.visualizer.Point3d;
 import de.gaalop.visualizer.PointCloud;
 import de.gaalop.visualizer.Rendering;
-import java.awt.Color;
-import java.io.*;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.Sphere;
 
@@ -63,4 +58,9 @@ public class SimpleLwJglRenderingEngine extends LwJglRenderingEngine {
 
             for (Point3d p: points) {
                 GL11.glPushMatrix();
-       
+                GL11.glTranslated(p.x,p.y,p.z);
+                s.draw(0.1f, 3, 3);
+                GL11.glPopMatrix();
+            }
+    }
+}
