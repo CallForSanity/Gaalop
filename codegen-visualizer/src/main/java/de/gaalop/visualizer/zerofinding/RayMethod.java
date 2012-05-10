@@ -32,7 +32,7 @@ public class RayMethod extends ZeroFinder {
     }
 
     @Override
-    public HashMap<String, LinkedList<Point3d>> findZeroLocations(ControlFlowGraph in, HashMap<MultivectorComponent, Double> globalValues) {
+    public HashMap<String, LinkedList<Point3d>> findZeroLocations(ControlFlowGraph in, HashMap<MultivectorComponent, Double> globalValues, boolean findOnlyIn2d) {
         points = new HashMap<String, LinkedList<Point3d>>();
         
         float a = cubeEdgeLength;
@@ -45,7 +45,7 @@ public class RayMethod extends ZeroFinder {
             float from = (i*2*a)/((float) processorCount) - a;
             float to = ((i != processorCount-1) ? ((i+1)*2*a)/((float) processorCount) : 2*a) - a; 
 
-            threads[i] = new RayMethodThread(from, to, a, dist, in, globalValues, nodes);
+            threads[i] = new RayMethodThread(from, to, a, dist, in, globalValues, nodes, findOnlyIn2d);
             threads[i].start();
         }
 

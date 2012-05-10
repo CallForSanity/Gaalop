@@ -206,4 +206,8 @@ public class DrawSettingsCodeGen extends DrawSettings implements CodeGenerator, 
         return visiblePanel.getVisibleObjects();
     }
  
+    public boolean isRendering2dActive() {
+        return settingsPanel.getRender2d();
+    }
+    
 }

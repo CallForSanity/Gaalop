@@ -25,10 +25,11 @@ public class RayMethodThread extends Thread {
     
     private LinkedList<AssignmentNode> nodes;
             
-    
     public HashMap<String, LinkedList<Point3d>> points = new HashMap<String, LinkedList<Point3d>>();
+    
+    private boolean findOnlyIn2d;
 
-    public RayMethodThread(float fromOY_Incl, float toOY_Excl, float a, float dist, ControlFlowGraph graph, HashMap<MultivectorComponent, Double> globalValues, LinkedList<AssignmentNode> nodes) {
+    public RayMethodThread(float fromOY_Incl, float toOY_Excl, float a, float dist, ControlFlowGraph graph, HashMap<MultivectorComponent, Double> globalValues, LinkedList<AssignmentNode> nodes, boolean findOnlyIn2d) {
         this.fromOY_Incl = fromOY_Incl;
         this.toOY_Excl = toOY_Excl;
         this.a = a;
@@ -36,6 +37,7 @@ public class RayMethodThread extends Thread {
         this.graph = graph;
         this.globalValues = globalValues;
         this.nodes = nodes;
+        this.findOnlyIn2d = findOnlyIn2d;
     }
 
 
@@ -49,9 +51,19 @@ public class RayMethodThread extends Thread {
         float ox = -a;
         globalValuesI.put(new MultivectorComponent("_V_ox", 0), new RealInterval(ox));
         
-        for (float oy = fromOY_Incl; oy <= toOY_Excl; oy += dist) {
-            globalValuesI.put(new MultivectorComponent("_V_oy", 0), new RealInterval(oy));
-            for (float oz = -a; oz <= a; oz += dist) {
+        if (!findOnlyIn2d) {
+            for (float oy = fromOY_Incl; oy <= toOY_Excl; oy += dist) {
+                globalValuesI.put(new MultivectorComponent("_V_oy", 0), new RealInterval(oy));
+                for (float oz = -a; oz <= a; oz += dist) {
+                    globalValuesI.put(new MultivectorComponent("_V_oz", 0), new RealInterval(oz));
+                    for (AssignmentNode node: nodes) 
+                        isolation(new RealInterval(0, 2*a),globalValuesI, graph, node.getVariable().getName());
+                }
+            }
+        } else {
+            for (float oy = fromOY_Incl; oy <= toOY_Excl; oy += dist) {
+                globalValuesI.put(new MultivectorComponent("_V_oy", 0), new RealInterval(oy));
+                float oz = 0;
                 globalValuesI.put(new MultivectorComponent("_V_oz", 0), new RealInterval(oz));
                 for (AssignmentNode node: nodes) 
                     isolation(new RealInterval(0, 2*a),globalValuesI, graph, node.getVariable().getName());

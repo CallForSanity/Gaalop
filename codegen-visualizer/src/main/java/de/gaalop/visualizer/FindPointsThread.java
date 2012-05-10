@@ -25,7 +25,7 @@ public class FindPointsThread extends Thread {
     @Override
     public void run() {
         long start = System.currentTimeMillis();
-        pointsToRender = draw.finder.findZeroLocations(draw.graph, globalValues);
+        pointsToRender = draw.finder.findZeroLocations(draw.graph, globalValues, draw.isRendering2dActive());
 
         draw.dataSet = new HashMap<String, PointCloud>();
         long sum = 0;

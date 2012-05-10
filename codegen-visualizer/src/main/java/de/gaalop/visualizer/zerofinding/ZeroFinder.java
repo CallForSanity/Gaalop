@@ -17,7 +17,7 @@ public abstract class ZeroFinder {
 
     public abstract void prepareGraph(ControlFlowGraph in);
     
-    public abstract HashMap<String, LinkedList<Point3d>> findZeroLocations(ControlFlowGraph in, HashMap<MultivectorComponent, Double> globalValues);
+    public abstract HashMap<String, LinkedList<Point3d>> findZeroLocations(ControlFlowGraph in, HashMap<MultivectorComponent, Double> globalValues, boolean findOnlyIn2d);
 
     public abstract boolean isPositionVariable(String name);
 
