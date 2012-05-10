@@ -63,9 +63,4 @@ public class SimpleLwJglRenderingEngine extends LwJglRenderingEngine {
 
             for (Point3d p: points) {
                 GL11.glPushMatrix();
-                GL11.glTranslated(p.x,p.y,p.z);
-                s.draw(0.1f, 3, 3);
-                GL11.glPopMatrix();
-            }
-    }
-}
+       

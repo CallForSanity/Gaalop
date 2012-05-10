@@ -1,37 +1,26 @@
 package de.gaalop.visualizer.engines.lwjgl;
 
 import de.gaalop.visualizer.Point3d;
-import de.gaalop.visualizer.engines.lwjgl.recording.AnimatedGifEncoder;
 import de.gaalop.visualizer.PointCloud;
 import de.gaalop.visualizer.Rendering;
 import de.gaalop.visualizer.engines.lwjgl.recording.GIFRecorder;
 import de.gaalop.visualizer.engines.lwjgl.recording.Recorder;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.JFileChooser;
-import javax.swing.filechooser.FileFilter;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.glu.GLU;
 
 
 /**
  * Implements a rendering engine based on LwJgl
  * @author Christian Steinmetz
  */
-public abstract class LwJglRenderingEngine extends Thread {
+public class LwJglRenderingEngine2 extends Thread {
 
     private double near = 0.1, far = 30;
     // Camera information
@@ -57,7 +46,7 @@ public abstract class LwJglRenderingEngine extends Thread {
     
     private int list = -1;
 
-    public LwJglRenderingEngine(String lwJglNativePath, Rendering rendering) {
+    public LwJglRenderingEngine2(String lwJglNativePath, Rendering rendering) {
         this.rendering = rendering;
         System.setProperty("org.lwjgl.librarypath", lwJglNativePath);
         
@@ -79,18 +68,16 @@ public abstract class LwJglRenderingEngine extends Thread {
         }
         
         GL11.glEnable(GL11.GL_DEPTH_TEST);
-        GL11.glShadeModel(GL11.GL_SMOOTH);
-        changeSize(width, height);
-        GL11.glDisable(GL11.GL_LIGHTING);
+        GL11.glDepthFunc(GL11.GL_ALWAYS);
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
 
 
         // init OpenGL
-        GL11.glViewport(0, 0, width, height);
-        GL11.glMatrixMode(GL11.GL_PROJECTION);
-        GL11.glLoadIdentity();
-        GLU.gluPerspective((float) 65.0, (float) width / (float) height, (float) 0.1, 100);
-        GL11.glMatrixMode(GL11.GL_MODELVIEW);
-        
+
+            GL11.glMatrixMode(GL11.GL_PROJECTION);
+            GL11.glLoadIdentity();
+            GL11.glViewport(0,0,width,height);
+            GL11.glOrtho(0, width, 0, height, 0, 128);
         
     }
 
@@ -102,6 +89,24 @@ public abstract class LwJglRenderingEngine extends Thread {
             //System.out.println(System.currentTimeMillis()-start);
             //start = System.currentTimeMillis();
             
+
+            
+            
+            GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
+
+
+
+            GL11.glMatrixMode(GL11.GL_MODELVIEW);
+            GL11.glLoadIdentity();
+
+            GL11.glTranslatef(320, 240, 0);
+            
+            GL11.glTranslatef(camPos.x, camPos.y, 0);
+            
+            GL11.glScalef(camPos.z, camPos.z, 1);
+
+            GL11.glDisable(GL11.GL_BLEND);
+        
             if (rendering.isNewDataSetAvailable()) {
                 if (list != -1) GL11.glDeleteLists(list, 1);
                 list = GL11.glGenLists(1);
@@ -111,19 +116,6 @@ public abstract class LwJglRenderingEngine extends Thread {
                 changed = true;
             }
             
-            
-            GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT); // clear the screen
-            GL11.glLoadIdentity(); // apply camPos before rotation
-
-            GL11.glTranslatef(0.0f, 0.0f, -5.0f);
-            // draw
-            GLU.gluLookAt(camPos.x, camPos.y, camPos.z, // Position
-                    camPos.x + camDir.x, camPos.y + camDir.y, camPos.z + camDir.z, // Lookat
-                    camUp.x, camUp.y, camUp.z);               // Up-direction
-            // apply rotation
-            GL11.glRotatef(camAngleX, 0, 1, 0); // window x axis rotates around up vector
-            GL11.glRotatef(camAngleY, 1, 0, 0); // window y axis rotates around x
-
             //Render the scene
             if (list != -1) GL11.glCallList(list);
 
@@ -164,14 +156,16 @@ public abstract class LwJglRenderingEngine extends Thread {
                 break;
             // 2 => zoom
             case 2:
+                float old = camPos.z;
                 camPos.z -= 0.1f * (y - mouseY) * mouseSensitivy;
+                if (camPos.z >= 0) camPos.z = old;
                 changed = true;
                 break;
             // 3 => translate
             case 3:
                 // update camPos
-                camPos.x += 0.1f * (x - mouseX) * mouseSensitivy;
-                camPos.y -= 0.1f * (y - mouseY) * mouseSensitivy;
+                camPos.x += 5 * (x - mouseX) * mouseSensitivy;
+                camPos.y += 5 * (y - mouseY) * mouseSensitivy;
                 changed = true;
                 break;
             default:
@@ -260,24 +254,39 @@ public abstract class LwJglRenderingEngine extends Thread {
         }
     }
 
-    private void changeSize(float w, float h) {
-        // Prevent a division by zero, when window is too short
-        if (h == 0) {
-            h = 1;
+    
+
+    private float fmod(float value, float modulo) {
+        while (value < 0) {
+            value += modulo;
         }
-        float wRatio = 1.0f * w / h;
-        // Reset the coordinate system before modifying
-        GL11.glMatrixMode(GL11.GL_PROJECTION);
-        GL11.glLoadIdentity();
-        // Set the viewport to be the entire window
-        GL11.glViewport(0, 0, (int) w, (int) h);
-        // Set the correct perspective.
-        GLU.gluPerspective(45.0f, wRatio, (float) near, (float) far);
-        GL11.glMatrixMode(GL11.GL_MODELVIEW);
-        GL11.glLoadIdentity();
-        GLU.gluLookAt(camPos.x, camPos.y, camPos.z, // Position
-                camPos.x + camDir.x, camPos.y + camDir.y, camPos.z + camDir.z, // Lookat
-                camUp.x, camUp.y, camUp.z);               // Up-direction}
+        while (value > modulo) {
+            value -= modulo;
+        }
+        return value;
     }
 
-    private float fmod(float value, float 
+    /**
+     * Draws the concrete scene
+     * @param clouds The point clouds
+     */
+    public void draw(HashMap<String, PointCloud> clouds, HashSet<String> visibleObjects) {
+        for (String obj: visibleObjects) {
+            PointCloud cloud = clouds.get(obj);
+            GL11.glColor4f(cloud.color.getRed(),cloud.color.getGreen(),cloud.color.getBlue(),cloud.color.getAlpha());
+            for (Point3d p: cloud.points) 
+                drawPoint((float) (p.x*10),(float) (p.y*10));
+        }
+    }
+    
+    private void drawPoint(float x, float y) {
+        GL11.glBegin(GL11.GL_QUADS);
+        GL11.glVertex3f(x-1, y-1, 0);
+        GL11.glVertex3f(x+1, y-1, 0);
+        GL11.glVertex3f(x+1, y+1, 0);
+        GL11.glVertex3f(x-1, y+1, 0);
+        GL11.glEnd();
+    }
+    
+    
+}
