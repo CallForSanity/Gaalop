@@ -14,14 +14,14 @@ public class SettingsPanel {
     private JCheckBox autoRendering = new JCheckBox("Automatic Rendering", false);
     private JTextField jTF_cubeLength = new JTextField("5"); 
     private JTextField jTF_density = new JTextField("0.1");
-    private JCheckBox render2d = new JCheckBox("Render2d", false);
+    private JCheckBox render2d = new JCheckBox("render2d", false);
 
     public SettingsPanel(JPanel panel) {
-        panel.setLayout(new GridLayout(3,1,5,5));
+        panel.setLayout(new GridLayout(4,1,5,5));
         panel.add(autoRendering);
         panel.add(new LabeledComponent("cube length", jTF_cubeLength));
         panel.add(new LabeledComponent("density", jTF_density));
-        panel.add(new LabeledComponent("render2d", render2d));
+        panel.add(render2d);
     }
     
     /**

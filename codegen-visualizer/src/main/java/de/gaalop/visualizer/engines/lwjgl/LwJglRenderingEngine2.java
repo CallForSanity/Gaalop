@@ -5,6 +5,7 @@ import de.gaalop.visualizer.PointCloud;
 import de.gaalop.visualizer.Rendering;
 import de.gaalop.visualizer.engines.lwjgl.recording.GIFRecorder;
 import de.gaalop.visualizer.engines.lwjgl.recording.Recorder;
+import java.awt.Color;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -22,12 +23,9 @@ import org.lwjgl.opengl.GL11;
  */
 public class LwJglRenderingEngine2 extends Thread {
 
-    private double near = 0.1, far = 30;
     // Camera information
-    private Vec3f camPos = new Vec3f(0.0f, 2.0f, -10.0f);       // camera position
-    private Vec3f camDir = new Vec3f(0.0f, 0.0f, 1.0f);         // camera lookat (always Z)
-    private Vec3f camUp = new Vec3f(0.0f, 1.0f, 0.0f);          // camera up direction (always Y)
-    private float camAngleX = 0.0f, camAngleY = 0.0f;   // camera angles
+    private Vec3f camPos = new Vec3f(0.0f, 2.0f, 2.25f);       // camera position
+    //private float camAngleX = 0.0f, camAngleY = 0.0f;   // camera angles
     // Mouse information
     private int mouseX, mouseY, mouseButton;
     private float mouseSensitivy = 1.0f;
@@ -111,6 +109,7 @@ public class LwJglRenderingEngine2 extends Thread {
                 if (list != -1) GL11.glDeleteLists(list, 1);
                 list = GL11.glGenLists(1);
                 GL11.glNewList(list, GL11.GL_COMPILE);
+                drawKOS();
                 draw(rendering.getDataSet(), rendering.getVisibleObjects());
                 GL11.glEndList();
                 changed = true;
@@ -138,27 +137,11 @@ public class LwJglRenderingEngine2 extends Thread {
     
     void mouseMoved(int x, int y) {
         switch (mouseButton) {
-            // 1 => rotate
-            case 1:
-                // update angle with relative movement
-                camAngleX = fmod(camAngleX + (x - mouseX) * mouseSensitivy, 360.0f);
-
-
-                camAngleY -= (y - mouseY) * mouseSensitivy;
-                // limit y angle by 85 degree
-                if (camAngleY > 85) {
-                    camAngleY = 85;
-                }
-                if (camAngleY < -85) {
-                    camAngleY = -85;
-                }
-                changed = true;
-                break;
             // 2 => zoom
             case 2:
                 float old = camPos.z;
                 camPos.z -= 0.1f * (y - mouseY) * mouseSensitivy;
-                if (camPos.z >= 0) camPos.z = old;
+                if (camPos.z <= 0) camPos.z = old;
                 changed = true;
                 break;
             // 3 => translate
@@ -275,17 +258,76 @@ public class LwJglRenderingEngine2 extends Thread {
             PointCloud cloud = clouds.get(obj);
             GL11.glColor4f(cloud.color.getRed(),cloud.color.getGreen(),cloud.color.getBlue(),cloud.color.getAlpha());
             for (Point3d p: cloud.points) 
-                drawPoint((float) (p.x*10),(float) (p.y*10));
+                drawPoint(trX(p.x), trY(p.y));
         }
     }
     
+    private float trX(double x) {
+        return (float) (x*10);
+    }
+    
+    private float trY(double y) {
+        return (float) (y*10);
+    }
+    
     private void drawPoint(float x, float y) {
+        final float size = 1.0f;
         GL11.glBegin(GL11.GL_QUADS);
-        GL11.glVertex3f(x-1, y-1, 0);
-        GL11.glVertex3f(x+1, y-1, 0);
-        GL11.glVertex3f(x+1, y+1, 0);
-        GL11.glVertex3f(x-1, y+1, 0);
+        GL11.glVertex3f(x-size, y-size, 0);
+        GL11.glVertex3f(x+size, y-size, 0);
+        GL11.glVertex3f(x+size, y+size, 0);
+        GL11.glVertex3f(x-size, y+size, 0);
         GL11.glEnd();
+    }
+    
+    public static void main(String[] args) {
+        Rendering r = new Rendering() {
+
+            @Override
+            public boolean isNewDataSetAvailable() {
+                return true;
+            }
+
+            @Override
+            public HashMap<String, PointCloud> getDataSet() {
+                HashMap<String, PointCloud> map = new HashMap<String, PointCloud>();
+                LinkedList<Point3d> points = new LinkedList<Point3d>();
+                points.add(new Point3d(0, 0, 0));points.add(new Point3d(0, 1, 0));points.add(new Point3d(2, 0, 0));
+                
+                map.put("test", new PointCloud(Color.green, points));
+                return map;
+            }
+
+            @Override
+            public HashSet<String> getVisibleObjects() {
+                HashSet<String> set = new HashSet<String>();
+                set.add("test");
+                return set;
+            }
+        };
+        LwJglRenderingEngine2 engine = new LwJglRenderingEngine2("C:\\Libs\\lwjgl\\native\\windows\\", r);
+        engine.start();
+    }
+
+    private void drawKOS() {
+        GL11.glColor3f(0.2f,0.2f,0.2f);
+        for (int i=1;i<=10;i++) {
+            GL11.glBegin(GL11.GL_LINES);
+            GL11.glVertex2f(trX(-10), trY(-i)); GL11.glVertex2f(trX(10), trY(-i));
+            GL11.glVertex2f(trX(-10), trY(i)); GL11.glVertex2f(trX(10), trY(i));
+            GL11.glVertex2f(trX(-i), trY(-10)); GL11.glVertex2f(trX(-i), trY(10));
+            GL11.glVertex2f(trX(i), trY(-10)); GL11.glVertex2f(trX(i), trY(10));
+            GL11.glEnd();
+        }
+        
+        GL11.glColor3f(1,1,1);
+        GL11.glBegin(GL11.GL_LINES);
+        GL11.glVertex2f(trX(-10), trY(0));
+        GL11.glVertex2f(trX(10), trY(0));
+        GL11.glVertex2f(trX(0), trY(-10));
+        GL11.glVertex2f(trX(0), trY(10));
+        GL11.glEnd();
+        
     }
     
     
