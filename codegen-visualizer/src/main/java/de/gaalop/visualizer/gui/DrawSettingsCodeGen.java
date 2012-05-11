@@ -8,6 +8,7 @@ import de.gaalop.dfg.MultivectorComponent;
 import de.gaalop.dfg.Variable;
 import de.gaalop.visualizer.*;
 import de.gaalop.visualizer.engines.lwjgl.LwJglRenderingEngine2;
+import de.gaalop.visualizer.engines.lwjgl.RenderingEngine;
 import de.gaalop.visualizer.engines.lwjgl.SimpleLwJglRenderingEngine;
 import de.gaalop.visualizer.zerofinding.RayMethod;
 import de.gaalop.visualizer.zerofinding.ZeroFinder;
@@ -46,6 +47,8 @@ public class DrawSettingsCodeGen extends DrawSettings implements CodeGenerator, 
     public LinkedList<Point3d> points = new LinkedList<Point3d>();
     
     public boolean engineStarted = false;
+    
+    private RenderingEngine engine;
 
     public DrawSettingsCodeGen(Plugin plugin) {
         super();
@@ -160,22 +163,18 @@ public class DrawSettingsCodeGen extends DrawSettings implements CodeGenerator, 
      */
     public void findingComplete() {
         if (!engineStarted) {
-            if (settingsPanel.getRender2d()) {
-                // start engine
-                LwJglRenderingEngine2 engine = new LwJglRenderingEngine2(plugin.lwJglNativePath, this);
-                        //new SimpleLwJglRenderingEngine(plugin.lwJglNativePath, this);
-                engine.points = points;
-
-                engine.start();
-            } else {
-                // start engine
-                SimpleLwJglRenderingEngine engine = new SimpleLwJglRenderingEngine(plugin.lwJglNativePath, this);
-                engine.points = points;
-
-                engine.start();
-            }
+            
+            if (settingsPanel.getRender2d()) 
+                engine = new LwJglRenderingEngine2(plugin.lwJglNativePath, this);
+            else 
+                engine = new SimpleLwJglRenderingEngine(plugin.lwJglNativePath, this);
+            
+            engine.points = points;
+            engine.start();
             engineStarted = true;
         }
+        
+        engine.pointSize = settingsPanel.getPointSize();
         
         
         visiblePanel.setObjects(dataSet.keySet(), graph.getRenderingExpressions());

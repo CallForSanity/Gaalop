@@ -40,7 +40,7 @@ public class DrawSettings extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Gaalop Visualization Settings");
-        setMinimumSize(new java.awt.Dimension(485, 500));
+        setMinimumSize(new java.awt.Dimension(485, 541));
         getContentPane().setLayout(null);
 
         jPanel_Settings.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Settings", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION));
@@ -53,11 +53,11 @@ public class DrawSettings extends javax.swing.JFrame {
         );
         jPanel_SettingsLayout.setVerticalGroup(
             jPanel_SettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 127, Short.MAX_VALUE)
+            .addGap(0, 167, Short.MAX_VALUE)
         );
 
         getContentPane().add(jPanel_Settings);
-        jPanel_Settings.setBounds(240, 10, 220, 150);
+        jPanel_Settings.setBounds(240, 10, 220, 190);
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Inputs", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION));
         jPanel2.setLayout(new javax.swing.BoxLayout(jPanel2, javax.swing.BoxLayout.LINE_AXIS));
@@ -70,7 +70,7 @@ public class DrawSettings extends javax.swing.JFrame {
         );
         jPanel_InputsLayout.setVerticalGroup(
             jPanel_InputsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 342, Short.MAX_VALUE)
+            .addGap(0, 378, Short.MAX_VALUE)
         );
 
         jScrollPane_Inputs.setViewportView(jPanel_Inputs);
@@ -78,7 +78,7 @@ public class DrawSettings extends javax.swing.JFrame {
         jPanel2.add(jScrollPane_Inputs);
 
         getContentPane().add(jPanel2);
-        jPanel2.setBounds(10, 11, 220, 370);
+        jPanel2.setBounds(10, 11, 220, 420);
 
         jButton_Repaint.setText("Repaint");
         jButton_Repaint.addActionListener(new java.awt.event.ActionListener() {
@@ -87,11 +87,11 @@ public class DrawSettings extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jButton_Repaint);
-        jButton_Repaint.setBounds(300, 350, 90, 30);
+        jButton_Repaint.setBounds(300, 400, 90, 30);
 
         jLabel_Info.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         getContentPane().add(jLabel_Info);
-        jLabel_Info.setBounds(20, 390, 430, 20);
+        jLabel_Info.setBounds(20, 440, 430, 20);
 
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Visible Objects", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION));
         jPanel3.setLayout(new javax.swing.BoxLayout(jPanel3, javax.swing.BoxLayout.LINE_AXIS));
@@ -112,15 +112,15 @@ public class DrawSettings extends javax.swing.JFrame {
         jPanel3.add(jScrollPane1);
 
         getContentPane().add(jPanel3);
-        jPanel3.setBounds(240, 160, 220, 180);
+        jPanel3.setBounds(240, 210, 220, 180);
 
         jButton_LoadPointCloud.setText("Load Pointcloud");
         getContentPane().add(jButton_LoadPointCloud);
-        jButton_LoadPointCloud.setBounds(20, 420, 130, 23);
+        jButton_LoadPointCloud.setBounds(20, 470, 130, 23);
 
         jButton_SavePointCloud.setText("Save Pointcloud");
         getContentPane().add(jButton_SavePointCloud);
-        jButton_SavePointCloud.setBounds(180, 420, 140, 23);
+        jButton_SavePointCloud.setBounds(180, 470, 140, 23);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents

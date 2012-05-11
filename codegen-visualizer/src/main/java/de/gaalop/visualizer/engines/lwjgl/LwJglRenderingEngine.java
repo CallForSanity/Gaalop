@@ -21,7 +21,7 @@ import org.lwjgl.util.glu.GLU;
  * Implements a rendering engine based on LwJgl
  * @author Christian Steinmetz
  */
-public abstract class LwJglRenderingEngine extends Thread {
+public abstract class LwJglRenderingEngine extends RenderingEngine {
 
     private double near = 0.1, far = 30;
     // Camera information
@@ -37,8 +37,6 @@ public abstract class LwJglRenderingEngine extends Thread {
     private static final int STATE_UP = 2;
     
     protected Rendering rendering;
-    
-    public LinkedList<Point3d> points;
     
     public Recorder recorder;
     

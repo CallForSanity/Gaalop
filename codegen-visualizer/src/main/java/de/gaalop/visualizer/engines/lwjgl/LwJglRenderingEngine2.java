@@ -21,7 +21,7 @@ import org.lwjgl.opengl.GL11;
  * Implements a rendering engine based on LwJgl
  * @author Christian Steinmetz
  */
-public class LwJglRenderingEngine2 extends Thread {
+public class LwJglRenderingEngine2 extends RenderingEngine {
 
     // Camera information
     private Vec3f camPos = new Vec3f(0.0f, 2.0f, 2.25f);       // camera position
@@ -35,7 +35,7 @@ public class LwJglRenderingEngine2 extends Thread {
     
     protected Rendering rendering;
     
-    public LinkedList<Point3d> points;
+    
     
     public Recorder recorder;
     
@@ -271,12 +271,11 @@ public class LwJglRenderingEngine2 extends Thread {
     }
     
     private void drawPoint(float x, float y) {
-        final float size = 1.0f;
         GL11.glBegin(GL11.GL_QUADS);
-        GL11.glVertex3f(x-size, y-size, 0);
-        GL11.glVertex3f(x+size, y-size, 0);
-        GL11.glVertex3f(x+size, y+size, 0);
-        GL11.glVertex3f(x-size, y+size, 0);
+        GL11.glVertex3f(x-pointSize, y-pointSize, 0);
+        GL11.glVertex3f(x+pointSize, y-pointSize, 0);
+        GL11.glVertex3f(x+pointSize, y+pointSize, 0);
+        GL11.glVertex3f(x-pointSize, y+pointSize, 0);
         GL11.glEnd();
     }
     
