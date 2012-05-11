@@ -1,0 +1,21 @@
+The versioning scheme for packages consists of four numbers separated by a dot.
+
+Definitions:
+Packages are here defined as archives for release on the homepage or otherwise.
+A subpackage is hereby defined as a "Maven module".
+The interface of a subpackage are all those "Java classes and interfaces" that are directly accessed from other subpackages other than its own subpackage.
+
+Rules:
+The least significant digit is the SVN revision number.
+
+The third most significant digit is counted up on every minor change or bugfix, which does not change any interfaces of a subpackage.
+
+The second most significant digit is counted up on every change of the interface of a subpackage. Counting it up resets the third most significant digit to 0.
+
+The most significant digit is counted up on major architecture changes of the whole package. Counting it up resets all other digits to 0 except the revision number.
+
+Example:
+1.2.4.r1022
+
+means Revision 1022, has had 4 bugfixes or minor changes since the last interface change, of which it had 2.
+The product is currently in its first major version.
