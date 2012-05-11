@@ -1,0 +1,36 @@
+e0 = {
+    e0x + e0y + e0z
+}
+
+einf = {
+    (einfx + einfy + einfz)/3
+}
+
+ds = {
+    _P(1).(e1^e2^e3^einfx^einfy^einfz^e0())
+}
+
+sd= {
+    _P(1).(e1^e2^e3^e0x^e0y^e0z^einf())
+}
+
+createPoint = {
+    _P(1)*e1 + _P(2)*e2 + _P(3)*e3 + 0.5*(_P(1)*_P(1)*einfx + _P(2)*_P(2)*einfy + _P(3)*_P(3)*einfz) + e0()
+}
+
+createEllipsoid = {
+    aSq = _P(1)*_P(1);
+    bSq = _P(2)*_P(2);
+    cSq = _P(3)*_P(3);
+    _P(4)/aSq*e1+_P(5)/bSq*e2+_P(6)/cSq*e3+0.5*((_P(4)*_P(4))/aSq+(_P(5)*_P(5))/bSq+(_P(6)*_P(6))/cSq-1)*einf()+1/aSq*e0x+1/bSq*e0y+1/cSq*e0z
+}
+
+createSphere = {
+    _P(1)*e1+_P(2)*e2+_P(3)*e3+0.5*(_P(1)*_P(1)+_P(2)*_P(2)+_P(3)*_P(3)-_P(4)*_P(4))*einf()+e0()
+}
+
+createCylinder = {
+    aSq = _P(1)*_P(1);
+    bSq = _P(2)*_P(2);
+    _P(3)/aSq*e1+_P(4)/bSq*e2+0.5*((_P(3)*_P(3))/aSq+(_P(4)*_P(4))/bSq-1)*einf()+1/aSq*e0x+1/bSq*e0y
+}

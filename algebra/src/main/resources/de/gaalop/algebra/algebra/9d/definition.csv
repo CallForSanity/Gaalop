@@ -1,0 +1,5 @@
+1,e1,e2,e3,einfx,einfy,einfz,e0x,e0y,e0z
+e4=0.5*einfx-e0x,e5=0.5*einfy-e0y,e6=0.5*einfz-e0z,e7=0.5*einfx+e0x,e8=0.5*einfy+e0y,e9=0.5*einfz+e0z
+1,e1,e2,e3,e4,e5,e6,e7,e8,e9
+e1=1,e2=1,e3=1,e4=1,e5=1,e6=1,e7=-1,e8=-1,e9=-1
+e0x=0.5*e7-0.5*e4,e0y=0.5*e8-0.5*e5,e0z=0.5*e9-0.5*e6,einfx=e4+e7,einfy=e5+e8,einfz=e6+e9

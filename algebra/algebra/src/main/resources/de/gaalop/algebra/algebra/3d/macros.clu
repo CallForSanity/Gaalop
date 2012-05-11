@@ -1,0 +1,7 @@
+//The dualization operator
+//args:
+//m
+Dual = {
+    _P(1)*(-e1^e2^e3)
+}
+
