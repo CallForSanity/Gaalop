@@ -37,6 +37,7 @@
         <module>codegen-latex</module>
         <module>codegen-visualizer</module>
         <module>gaalet</module>
+        <module>codegen-visualizerC</module>
 
 	<!-- interface -->
         <module>starter</module>
@@ -46,8 +47,7 @@
 
         <!-- testbenches -->
         <module>testbenchTbaGapp</module>
-        <module>codegen-visualizerC</module>
-        <module>codegen-vis2d</module>
+
     </modules>
 
     <!--
