@@ -1,5 +1,7 @@
 package de.gaalop.visualCodeInserter;
 
+import de.gaalop.ConfigurationProperty;
+import de.gaalop.ConfigurationProperty.Type;
 import de.gaalop.Notifications;
 import de.gaalop.VisualizerStrategy;
 import de.gaalop.VisualizerStrategyPlugin;
@@ -11,10 +13,13 @@ import java.util.Observable;
  * @author Christian Steinmetz
  */
 public class Plugin extends Observable implements VisualizerStrategyPlugin {
+    
+    @ConfigurationProperty(type=Type.BOOLEAN)
+    public boolean visualizeIn2d = true;
 
     @Override
     public VisualizerStrategy createVisualizerStrategy() {
-        return new VisualizerCodeInserter();
+        return new VisualizerCodeInserter(this);
     }
 
     @Override
