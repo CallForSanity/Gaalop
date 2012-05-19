@@ -12,10 +12,17 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  *
@@ -50,6 +57,17 @@ public class Vis2dCodeGen implements CodeGenerator, KeyListener, MouseMotionList
         for (String s: in.getRenderingExpressions().keySet()) {
             interpret(mapMv.get(s), colors.get(s));
         }
+        
+        File f = new File("D:\\drawing.png");
+        DrawVisitorBufferedImage imageVisitor = new DrawVisitorBufferedImage(world, 500, 500);
+                    drawing.draw(imageVisitor);
+                    try {
+                        ImageIO.write(imageVisitor.getImage(),"png",f);
+                    } catch (IOException ex) {
+                        Logger.getLogger(Vis2dCodeGen.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+        
+        
 
         vis2dUI = new Vis2dUI();
         
@@ -178,7 +196,20 @@ public class Vis2dCodeGen implements CodeGenerator, KeyListener, MouseMotionList
                 world.x += world.width/2;
                 world.y += world.height/2;
                 break;
-                
+            case KeyEvent.VK_S:
+                JFileChooser jFC = new JFileChooser();
+                jFC.setFileFilter(new FileNameExtensionFilter("PNG-Dateien", "png"));
+                if (jFC.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+                    File f = jFC.getSelectedFile();
+                    DrawVisitorBufferedImage imageVisitor = new DrawVisitorBufferedImage(world, 500, 500);
+                    drawing.draw(imageVisitor);
+                    try {
+                        ImageIO.write(imageVisitor.getImage(),"png",f);
+                    } catch (IOException ex) {
+                        Logger.getLogger(Vis2dCodeGen.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                break;
         }
         repaintDrawing();
         updateLabelPosition();

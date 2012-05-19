@@ -30,6 +30,7 @@ public class Vis2dUI extends javax.swing.JFrame {
         laPosition = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Gaalop Vis2d");
         getContentPane().setLayout(null);
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
@@ -51,7 +52,7 @@ public class Vis2dUI extends javax.swing.JFrame {
         laPosition.setBounds(10, 520, 500, 20);
 
         java.awt.Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
-        setBounds((screenSize.width-610)/2, (screenSize.height-579)/2, 610, 579);
+        setBounds((screenSize.width-545)/2, (screenSize.height-579)/2, 545, 579);
     }// </editor-fold>//GEN-END:initComponents
 
     /**

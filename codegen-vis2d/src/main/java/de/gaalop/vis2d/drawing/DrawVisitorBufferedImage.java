@@ -13,7 +13,7 @@ public class DrawVisitorBufferedImage extends DrawVisitorGraphics {
 
     public DrawVisitorBufferedImage(Rectangle2D world, int width, int height) {
         super(world, width, height);
-        image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        image = new BufferedImage(width+1, height+1, BufferedImage.TYPE_INT_ARGB);
         setGraphics(image.getGraphics());
     }
     
