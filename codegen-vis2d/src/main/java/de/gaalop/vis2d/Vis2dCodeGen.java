@@ -8,23 +8,20 @@ import de.gaalop.vis2d.drawing.*;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
+import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.imageio.ImageIO;
 import javax.swing.JFrame;
-import javax.swing.WindowConstants;
 
 /**
  *
  * @author Christian Steinmetz
  */
-public class Vis2dCodeGen implements CodeGenerator, KeyListener {
+public class Vis2dCodeGen implements CodeGenerator, KeyListener, MouseMotionListener {
     
     private static final double EPSILON = 10E-4;
     
@@ -33,6 +30,13 @@ public class Vis2dCodeGen implements CodeGenerator, KeyListener {
     private Rectangle2D.Double world = new Rectangle2D.Double(-5, -5, 10, 10);
 
     private MyPanel panel;
+    
+    private DrawVisitorBufferedImage visitor;
+    
+    private Vis2dUI vis2dUI;
+    
+    private int lastMouseX = 0;
+    private int lastMouseY = 0;
     
     @Override
     public Set<OutputFile> generate(ControlFlowGraph in) throws CodeGeneratorException {
@@ -46,9 +50,10 @@ public class Vis2dCodeGen implements CodeGenerator, KeyListener {
             interpret(mapMv.get(s), colors.get(s));
         }
 
-        Vis2dUI vis2dUI = new Vis2dUI();
+        vis2dUI = new Vis2dUI();
         vis2dUI.addKeyListener(this);
         panel = (MyPanel) vis2dUI.jPanel1;
+        panel.addMouseMotionListener(this);
         
         vis2dUI.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         vis2dUI.setVisible(true);
@@ -57,7 +62,7 @@ public class Vis2dCodeGen implements CodeGenerator, KeyListener {
     }
     
     private void repaintDrawing() {
-        DrawVisitorBufferedImage visitor = new DrawVisitorBufferedImage(world, 500,500);
+        visitor = new DrawVisitorBufferedImage(world, 500,500);
         
         drawing.draw(visitor);
         panel.image = visitor.getImage();
@@ -147,16 +152,16 @@ public class Vis2dCodeGen implements CodeGenerator, KeyListener {
     public void keyPressed(KeyEvent e) {
         switch (e.getKeyCode()) {
             case KeyEvent.VK_LEFT:
-                world.x--;
+                world.x-=world.getWidth()/10;
                 break;
             case KeyEvent.VK_RIGHT:
-                world.x++;
+                world.x+=world.getWidth()/10;
                 break;
             case KeyEvent.VK_UP:
-                world.y++;
+                world.y+=world.getHeight()/10;
                 break;
             case KeyEvent.VK_DOWN:
-                world.y--;
+                world.y-=world.getHeight()/10;
                 break;
             case KeyEvent.VK_MINUS:
                 world.x -= world.width/2;
@@ -173,11 +178,36 @@ public class Vis2dCodeGen implements CodeGenerator, KeyListener {
                 
         }
         repaintDrawing();
+        updateLabelPosition();
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
     }
 
+    @Override
+    public void mouseDragged(MouseEvent e) {
+    }
+
+    @Override
+    public void mouseMoved(MouseEvent e) {
+        lastMouseX = e.getX();
+        lastMouseY = e.getY();
+        updateLabelPosition();
+    }
+
+    public double round(double val) {
+        double f = panel.getWidth()/world.width;
+        int v = (int) Math.round(val * f);
+        return v / f;
+    }
+
+    private void updateLabelPosition() {
+        Point2D.Double p = visitor.transformPointBack(lastMouseX, lastMouseY);
+        vis2dUI.laPosition.setText(round(p.x)+" | "+round(p.y));
+    }
+    
+
+    
 
 }

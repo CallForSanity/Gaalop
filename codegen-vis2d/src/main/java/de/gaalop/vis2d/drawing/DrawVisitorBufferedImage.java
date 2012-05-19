@@ -1,21 +1,13 @@
 package de.gaalop.vis2d.drawing;
 
-import de.gaalop.vis2d.Multivector;
-import de.gaalop.vis2d.MultivectorBuilder;
-import de.gaalop.vis2d.Vis2dCodeGen;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.geom.Line2D;
+import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.imageio.ImageIO;
 
 /**
  *
@@ -49,6 +41,13 @@ public class DrawVisitorBufferedImage implements DrawVisitor {
     
     private double transformLength(double length) {
         return transformPoint(0, 0).distance(transformPoint(0, length));
+    }
+    
+    public Point2D.Double transformPointBack(int x, int y) {
+        return new Point2D.Double(
+                world.getMinX() + x/scale,
+                world.getMinY() - (y-dimension)/scale 
+                );
     }
 
     @Override
@@ -88,16 +87,29 @@ public class DrawVisitorBufferedImage implements DrawVisitor {
 
     @Override
     public void drawKOS() {
-        for (int x=(int) world.getMinX();x<=(int) world.getMaxX();x++) {
+        double dx = world.getWidth()/10;
+        double dy = world.getHeight()/10;        
+        
+        for (double x=0;x>=world.getMinX();x-=dx) {
             visitGerade2d(new Gerade2d(x, 0, 0, 1, Color.lightGray));
             visitText2d(new Text2d(x,0,x+"", Color.lightGray));
         }
         
-        for (int y=(int) world.getMinY();y<=(int) world.getMaxY();y++) {
+        for (double x=0;x<=world.getMaxX();x+=dx) {
+            visitGerade2d(new Gerade2d(x, 0, 0, 1, Color.lightGray));
+            visitText2d(new Text2d(x,0,x+"", Color.lightGray));
+        }
+        
+        for (double y=0;y>=world.getMinY();y-=dy) {
             visitGerade2d(new Gerade2d(0, y, 1, 0, Color.lightGray));
             visitText2d(new Text2d(0,y,y+"", Color.lightGray));
         }
         
+        for (double y=0;y<=world.getMaxY();y+=dy) {
+            visitGerade2d(new Gerade2d(0, y, 1, 0, Color.lightGray));
+            visitText2d(new Text2d(0,y,y+"", Color.lightGray));
+        }
+         
         visitGerade2d(new Gerade2d(0, 0, 0, 1, Color.darkGray));
         visitGerade2d(new Gerade2d(0, 0, 1, 0, Color.darkGray));
         

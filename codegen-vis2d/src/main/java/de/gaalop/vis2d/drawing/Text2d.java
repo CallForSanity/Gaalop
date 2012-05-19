@@ -8,11 +8,11 @@ import java.awt.Color;
  */
 public class Text2d extends DrawObject {
     
-    public int x;
-    public int y;
+    public double x;
+    public double y;
     public String text;
 
-    public Text2d(int x, int y, String text, Color color) {
+    public Text2d(double x, double y, String text, Color color) {
         super(color);
         this.x = x;
         this.y = y;

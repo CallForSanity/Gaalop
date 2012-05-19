@@ -27,6 +27,7 @@ public class Vis2dUI extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new MyPanel();
+        laPosition = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(null);
@@ -46,6 +47,8 @@ public class Vis2dUI extends javax.swing.JFrame {
 
         getContentPane().add(jPanel1);
         jPanel1.setBounds(10, 10, 500, 500);
+        getContentPane().add(laPosition);
+        laPosition.setBounds(10, 520, 500, 20);
 
         java.awt.Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
         setBounds((screenSize.width-610)/2, (screenSize.height-579)/2, 610, 579);
@@ -94,5 +97,6 @@ public class Vis2dUI extends javax.swing.JFrame {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     protected javax.swing.JPanel jPanel1;
+    public javax.swing.JLabel laPosition;
     // End of variables declaration//GEN-END:variables
 }
