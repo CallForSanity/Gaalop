@@ -4,6 +4,7 @@ import de.gaalop.vis2d.Multivector;
 import de.gaalop.vis2d.MultivectorBuilder;
 import de.gaalop.vis2d.Vis2dCodeGen;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.geom.Line2D;
@@ -35,6 +36,7 @@ public class DrawVisitorBufferedImage implements DrawVisitor {
         dimension = (int) Math.round(world.getWidth()*scale);
         image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         graphics = image.getGraphics();
+        graphics.setFont(new Font("Arial", Font.PLAIN, 12));
     }
     
     public BufferedImage getImage() {
@@ -61,9 +63,11 @@ public class DrawVisitorBufferedImage implements DrawVisitor {
     public void visitGerade2d(Gerade2d gerade2d) {
         graphics.setColor(gerade2d.color);
         Line2D line = gerade2d.getLineOnRectangle(world);
-        Point start = transformPoint(line.getX1(), line.getY1());
-        Point end = transformPoint(line.getX2(), line.getY2());
-        graphics.drawLine(start.x,start.y,end.x,end.y);
+        if (line != null) {
+            Point start = transformPoint(line.getX1(), line.getY1());
+            Point end = transformPoint(line.getX2(), line.getY2());
+            graphics.drawLine(start.x,start.y,end.x,end.y);
+        }
     }
 
     @Override
@@ -84,14 +88,26 @@ public class DrawVisitorBufferedImage implements DrawVisitor {
 
     @Override
     public void drawKOS() {
-        for (int x=(int) world.getMinX();x<=(int) world.getMaxX();x++) 
+        for (int x=(int) world.getMinX();x<=(int) world.getMaxX();x++) {
             visitGerade2d(new Gerade2d(x, 0, 0, 1, Color.lightGray));
-        for (int y=(int) world.getMinY();y<=(int) world.getMaxY();y++) 
+            visitText2d(new Text2d(x,0,x+"", Color.lightGray));
+        }
+        
+        for (int y=(int) world.getMinY();y<=(int) world.getMaxY();y++) {
             visitGerade2d(new Gerade2d(0, y, 1, 0, Color.lightGray));
+            visitText2d(new Text2d(0,y,y+"", Color.lightGray));
+        }
         
         visitGerade2d(new Gerade2d(0, 0, 0, 1, Color.darkGray));
         visitGerade2d(new Gerade2d(0, 0, 1, 0, Color.darkGray));
         
+    }
+
+    @Override
+    public void visitText2d(Text2d text2d) {
+        graphics.setColor(text2d.color);
+        Point p = transformPoint(text2d.x, text2d.y);
+        graphics.drawString(text2d.text, p.x, p.y);
     }
 
 }

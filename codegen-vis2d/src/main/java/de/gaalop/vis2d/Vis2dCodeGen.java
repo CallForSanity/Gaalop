@@ -6,6 +6,8 @@ import de.gaalop.OutputFile;
 import de.gaalop.cfg.ControlFlowGraph;
 import de.gaalop.vis2d.drawing.*;
 import java.awt.Color;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.geom.Rectangle2D;
 import java.io.File;
 import java.io.IOException;
@@ -22,38 +24,44 @@ import javax.swing.WindowConstants;
  *
  * @author Christian Steinmetz
  */
-public class Vis2dCodeGen implements CodeGenerator {
+public class Vis2dCodeGen implements CodeGenerator, KeyListener {
     
     private static final double EPSILON = 10E-4;
     
     private Drawing drawing = new Drawing();
+    
+    private Rectangle2D.Double world = new Rectangle2D.Double(-5, -5, 10, 10);
 
+    private MyPanel panel;
+    
     @Override
     public Set<OutputFile> generate(ControlFlowGraph in) throws CodeGeneratorException {
         HashMap<String, Color> colors = ColorEvaluater.getColors(in);
         
-        
         drawing.objects.clear();
+        
         HashMap<String, Multivector> mapMv = MultivectorBuilder.buildMultivectors(in);
         
         for (String s: in.getRenderingExpressions().keySet()) {
             interpret(mapMv.get(s), colors.get(s));
         }
 
-        
-        
-        DrawVisitorBufferedImage visitor = new DrawVisitorBufferedImage(new Rectangle2D.Double(-5, -5, 10, 10), 500,500);
-        drawing.draw(visitor);
-        
         Vis2dUI vis2dUI = new Vis2dUI();
-        MyPanel panel = (MyPanel) vis2dUI.jPanel1;
-        panel.image = visitor.getImage();
+        vis2dUI.addKeyListener(this);
+        panel = (MyPanel) vis2dUI.jPanel1;
         
         vis2dUI.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         vis2dUI.setVisible(true);
-        panel.repaint();
-       
+        repaintDrawing();
         return new HashSet<OutputFile>();
+    }
+    
+    private void repaintDrawing() {
+        DrawVisitorBufferedImage visitor = new DrawVisitorBufferedImage(world, 500,500);
+        
+        drawing.draw(visitor);
+        panel.image = visitor.getImage();
+        panel.repaint();
     }
     
     private void interpret(Multivector mv, Color c) {
@@ -129,6 +137,46 @@ public class Vis2dCodeGen implements CodeGenerator {
 	double y2 = (b[7] * Math.sqrt(Math.abs((2.0 * b[8] * b[9] + 2.0 * b[6] * b[7]) - b[5] * b[5] + b[10] * b[10])) + b[10] * b[9] + b[5] * b[7]) / (b[9] * b[9] + b[7] * b[7]); // e2
     
         drawing.objects.add(new Pointpair2d(x1, y1, x2, y2, c));
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        switch (e.getKeyCode()) {
+            case KeyEvent.VK_LEFT:
+                world.x--;
+                break;
+            case KeyEvent.VK_RIGHT:
+                world.x++;
+                break;
+            case KeyEvent.VK_UP:
+                world.y++;
+                break;
+            case KeyEvent.VK_DOWN:
+                world.y--;
+                break;
+            case KeyEvent.VK_MINUS:
+                world.x -= world.width/2;
+                world.y -= world.height/2;
+                world.width *= 2;
+                world.height *= 2;
+                break;
+            case KeyEvent.VK_PLUS:
+                world.width /= 2;
+                world.height /= 2;
+                world.x += world.width/2;
+                world.y += world.height/2;
+                break;
+                
+        }
+        repaintDrawing();
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
     }
 
 

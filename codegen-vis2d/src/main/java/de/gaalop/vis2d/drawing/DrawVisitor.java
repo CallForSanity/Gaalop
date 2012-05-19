@@ -16,4 +16,6 @@ public interface DrawVisitor {
     
     public void drawKOS();
 
+    public void visitText2d(Text2d text2d);
+
 }
