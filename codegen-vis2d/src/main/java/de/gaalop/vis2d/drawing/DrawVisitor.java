@@ -13,5 +13,7 @@ public interface DrawVisitor {
     public void visitPoint2d(Point2d point2d);
 
     public void visitPointpair2d(Pointpair2d pointpair2d);
+    
+    public void drawKOS();
 
 }

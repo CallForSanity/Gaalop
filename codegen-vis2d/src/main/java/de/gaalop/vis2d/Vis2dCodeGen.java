@@ -30,14 +30,18 @@ public class Vis2dCodeGen implements CodeGenerator {
 
     @Override
     public Set<OutputFile> generate(ControlFlowGraph in) throws CodeGeneratorException {
+        HashMap<String, Color> colors = ColorEvaluater.getColors(in);
+        
+        
         drawing.objects.clear();
         HashMap<String, Multivector> mapMv = MultivectorBuilder.buildMultivectors(in);
         
         for (String s: in.getRenderingExpressions().keySet()) {
-            interpret(mapMv.get(s));
+            interpret(mapMv.get(s), colors.get(s));
         }
 
-        drawing.printOut();
+        
+        
         DrawVisitorBufferedImage visitor = new DrawVisitorBufferedImage(new Rectangle2D.Double(-5, -5, 10, 10), 500,500);
         drawing.draw(visitor);
         
@@ -52,13 +56,13 @@ public class Vis2dCodeGen implements CodeGenerator {
         return new HashSet<OutputFile>();
     }
     
-    private void interpret(Multivector mv) {
+    private void interpret(Multivector mv, Color c) {
         boolean[] nonZero = getNonZeroComponents(mv.entries);
         
         
         if (hasBivecParts16(nonZero)) {
             //Point pair
-            interpretPointPair(mv);
+            interpretPointPair(mv, c);
         } else {
             //Vector
             double e0 = mv.entries[4];
@@ -78,7 +82,7 @@ public class Vis2dCodeGen implements CodeGenerator {
                     oy = mv.entries[3]/mv.entries[2];
                 }
                 
-                drawing.objects.add(new Gerade2d(ox, oy, dx, dy, Color.red));
+                drawing.objects.add(new Gerade2d(ox, oy, dx, dy, c));
            
             } else {
                 //Circle or point
@@ -87,9 +91,9 @@ public class Vis2dCodeGen implements CodeGenerator {
                 double r = Math.sqrt(Math.abs(2.0 * mv.entries[3] * mv.entries[4] - mv.entries[2] * mv.entries[2] - mv.entries[1] * mv.entries[1])) / Math.abs(mv.entries[4]);
 
                 if (r < EPSILON) {
-                    drawing.objects.add(new Point2d(x, y, Color.red));
+                    drawing.objects.add(new Point2d(x, y, c));
                 } else {
-                    drawing.objects.add(new Circle2d(x, y, r, Color.red));
+                    drawing.objects.add(new Circle2d(x, y, r, c));
                 }
             }
             
@@ -115,7 +119,7 @@ public class Vis2dCodeGen implements CodeGenerator {
         return false;
     }
 
-    private void interpretPointPair(Multivector mv) {
+    private void interpretPointPair(Multivector mv, Color c) {
         double[] b = mv.entries;
         
         double x1 = (b[9] * Math.sqrt(Math.abs((2.0 * b[8] * b[9] + 2.0 * b[6] * b[7]) - b[5] * b[5] + b[10] * b[10])) - b[5] * b[9] + b[10] * b[7]) / (b[9] * b[9] + b[7] * b[7]); // e1
@@ -124,7 +128,8 @@ public class Vis2dCodeGen implements CodeGenerator {
 	double x2 = (-(((b[9] * Math.sqrt(Math.abs((2.0 * b[8] * b[9] + 2.0 * b[6] * b[7]) - b[5] * b[5] + b[10] * b[10])) + b[5] * b[9]) - b[10] * b[7]) / (b[9] * b[9] + b[7] * b[7]))); // e1
 	double y2 = (b[7] * Math.sqrt(Math.abs((2.0 * b[8] * b[9] + 2.0 * b[6] * b[7]) - b[5] * b[5] + b[10] * b[10])) + b[10] * b[9] + b[5] * b[7]) / (b[9] * b[9] + b[7] * b[7]); // e2
     
-        drawing.objects.add(new Pointpair2d(x1, y1, x2, y2, Color.red));
+        drawing.objects.add(new Pointpair2d(x1, y1, x2, y2, c));
     }
+
 
 }

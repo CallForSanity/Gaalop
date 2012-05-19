@@ -81,21 +81,17 @@ public class DrawVisitorBufferedImage implements DrawVisitor {
         Point p2 = transformPoint(pointpair2d.p2X, pointpair2d.p2Y);
         graphics.fillOval(p2.x-3,p2.y-3,6,6);
     }
-    
-    public static void main(String[] args) {
-        Drawing drawing = new Drawing();
-        drawing.objects.add(new Point2d(1, 1, Color.red));
-        drawing.objects.add(new Point2d(2, 3, Color.red));
-        drawing.objects.add(new Gerade2d(1, 1, 1, 2, Color.red));
 
-        drawing.printOut();
-        DrawVisitorBufferedImage visitor = new DrawVisitorBufferedImage(new Rectangle2D.Double(-5, -5, 10, 10), 1000,1000);
-        drawing.draw(visitor);
-        try {
-            ImageIO.write(visitor.getImage(),"png",new File("D:\\drawing.png"));
-        } catch (IOException ex) {
-            Logger.getLogger(Vis2dCodeGen.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    @Override
+    public void drawKOS() {
+        for (int x=(int) world.getMinX();x<=(int) world.getMaxX();x++) 
+            visitGerade2d(new Gerade2d(x, 0, 0, 1, Color.lightGray));
+        for (int y=(int) world.getMinY();y<=(int) world.getMaxY();y++) 
+            visitGerade2d(new Gerade2d(0, y, 1, 0, Color.lightGray));
+        
+        visitGerade2d(new Gerade2d(0, 0, 0, 1, Color.darkGray));
+        visitGerade2d(new Gerade2d(0, 0, 1, 0, Color.darkGray));
+        
     }
 
 }

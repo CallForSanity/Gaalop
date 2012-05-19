@@ -11,6 +11,7 @@ public class Drawing {
     public LinkedList<DrawObject> objects = new LinkedList<DrawObject>();
     
     public void draw(DrawVisitor visitor) {
+        visitor.drawKOS();
         for (DrawObject obj: objects)
             obj.accept(visitor);
     }
