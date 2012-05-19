@@ -2,28 +2,31 @@
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
 <comment>Gaalop Configuration File</comment>
-<entry key="de.gaalop.gapp.Plugin.maximaCommand">C:\Program Files (x86)\Maxima-5.25.1\bin\maxima.bat</entry>
+<entry key="de.gaalop.gapp.Plugin.maximaCommand">C:\Program Files (x86)\Maxima\bin\maxima.bat</entry>
+<entry key="de.gaalop.algebra.Plugin.baseDirectory">algebra/cr4d/</entry>
 <entry key="de.gaalop.algebra.Plugin.usePrecalulatedTables">false</entry>
 <entry key="de.gaalop.algebra.Plugin.userMacroFilePath"/>
 <entry key="de.gaalop.maple.Plugin.gaalopPath">/</entry>
-<entry key="de.gaalop.algebra.Plugin.macrosFilePath">algebra/5d/macros.clu</entry>
 <entry key="de.gaalop.maple.Plugin.mapleJavaPath">/net/bifur/gaalop/maple/java/</entry>
 <entry key="de.gaalop.tba.Plugin.optUnusedAssignments">true</entry>
 <entry key="de.gaalop.cpp.Plugin.standalone">true</entry>
 <entry key="de.gaalop.gaalet.output.Plugin.useNameTable">false</entry>
 <entry key="de.gaalop.maple.Plugin.mapleBinaryPath">/net/bifur/gaalop/maple/bin.IBM_INTEL_LINUX/</entry>
 <entry key="de.gaalop.tba.Plugin.optConstantPropagation">true</entry>
+<entry key="de.gaalop.visualizer.Plugin.maximaCommand">C:\Program Files (x86)\Maxima\bin\maxima.bat</entry>
 <entry key="de.gaalop.algebra.Plugin.useBuiltInFiles">true</entry>
 <entry key="de.gaalop.clucalc.output.Plugin.suffix">_opt</entry>
-<entry key="de.gaalop.gappopencl.Plugin.standalone">true</entry>
+<entry key="de.gaalop.visualizerC.Plugin.maximaCommand">C:\Program Files (x86)\Maxima\bin\maxima.bat</entry>
 <entry key="de.gaalop.tba.Plugin.optOneExpressionRemoval">true</entry>
+<entry key="de.gaalop.visualizer.Plugin.lwJglNativePath">C:\Libs\lwjgl\native\windows</entry>
+<entry key="de.gaalop.visualizerC.Plugin.autoStorage">D:\fromGaalop.h</entry>
+<entry key="de.gaalop.gappopencl.Plugin.standalone">true</entry>
 <entry key="de.gaalop.maple.Plugin.constantFolding">false</entry>
-<entry key="de.gaalop.tba.Plugin.optMaxima">true</entry>
 <entry key="de.gaalop.tba.Plugin.optInserting">true</entry>
+<entry key="de.gaalop.tba.Plugin.optMaxima">true</entry>
 <entry key="de.gaalop.compressed.Plugin.standalone">false</entry>
-<entry key="de.gaalop.algebra.Plugin.definitionFilePath">algebra/5d/definition.csv</entry>
+<entry key="de.gaalop.tba.Plugin.maximaCommand">C:\Program Files (x86)\Maxima\bin\maxima.bat</entry>
 <entry key="de.gaalop.maple.Plugin.useCodeSegmenter">false</entry>
-<entry key="de.gaalop.tba.Plugin.maximaCommand">C:\Program Files (x86)\Maxima-5.25.1\bin\maxima.bat</entry>
-<entry key="de.gaalop.algebra.Plugin.productsFilePath">algebra/5d/products.csv</entry>
 <entry key="de.gaalop.gapp.Plugin.optMaxima">true</entry>
+<entry key="de.gaalop.vis2d.Plugin.lwJglNativePath">C:\Libs\lwjgl\native\windows</entry>
 </properties>

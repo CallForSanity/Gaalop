@@ -31,7 +31,7 @@ public class Vis2dCodeGen implements CodeGenerator, KeyListener, MouseMotionList
 
     private MyPanel panel;
     
-    private DrawVisitorBufferedImage visitor;
+    private DrawVisitorGraphics visitor;
     
     private Vis2dUI vis2dUI;
     
@@ -40,6 +40,7 @@ public class Vis2dCodeGen implements CodeGenerator, KeyListener, MouseMotionList
     
     @Override
     public Set<OutputFile> generate(ControlFlowGraph in) throws CodeGeneratorException {
+        
         HashMap<String, Color> colors = ColorEvaluater.getColors(in);
         
         drawing.objects.clear();
@@ -51,9 +52,11 @@ public class Vis2dCodeGen implements CodeGenerator, KeyListener, MouseMotionList
         }
 
         vis2dUI = new Vis2dUI();
+        
         vis2dUI.addKeyListener(this);
         panel = (MyPanel) vis2dUI.jPanel1;
         panel.addMouseMotionListener(this);
+        
         
         vis2dUI.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         vis2dUI.setVisible(true);
@@ -63,9 +66,9 @@ public class Vis2dCodeGen implements CodeGenerator, KeyListener, MouseMotionList
     
     private void repaintDrawing() {
         visitor = new DrawVisitorBufferedImage(world, 500,500);
-        
+        panel.set(drawing, visitor);
         drawing.draw(visitor);
-        panel.image = visitor.getImage();
+        
         panel.repaint();
     }
     
