@@ -15,6 +15,8 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
+import javax.swing.JFrame;
+import javax.swing.WindowConstants;
 
 /**
  *
@@ -36,13 +38,16 @@ public class Vis2dCodeGen implements CodeGenerator {
         }
 
         drawing.printOut();
-        DrawVisitorBufferedImage visitor = new DrawVisitorBufferedImage(new Rectangle2D.Double(-5, -5, 10, 10), 1000,1000);
+        DrawVisitorBufferedImage visitor = new DrawVisitorBufferedImage(new Rectangle2D.Double(-5, -5, 10, 10), 500,500);
         drawing.draw(visitor);
-        try {
-            ImageIO.write(visitor.getImage(),"png",new File("D:\\drawing.png"));
-        } catch (IOException ex) {
-            Logger.getLogger(Vis2dCodeGen.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        
+        Vis2dUI vis2dUI = new Vis2dUI();
+        MyPanel panel = (MyPanel) vis2dUI.jPanel1;
+        panel.image = visitor.getImage();
+        
+        vis2dUI.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        vis2dUI.setVisible(true);
+        panel.repaint();
        
         return new HashSet<OutputFile>();
     }
