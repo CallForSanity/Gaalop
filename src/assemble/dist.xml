@@ -27,6 +27,7 @@
                 <include>de.gaalop:codegen-latex</include>
                 <include>de.gaalop:codegen-gapp</include>
 		<include>de.gaalop:codegen-visualizer</include>
+		<include>de.gaalop:codegen-vis2d</include>
                 <!--<include>de.gaalop:codegen-gappopencl</include>-->
                 <include>de.gaalop:gaalet</include>
 
