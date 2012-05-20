@@ -38,6 +38,7 @@
         <module>codegen-visualizer</module>
         <module>gaalet</module>
         <module>codegen-visualizerC</module>
+        <module>codegen-vis2d</module>
 
 	<!-- interface -->
         <module>starter</module>
