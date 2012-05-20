@@ -5,14 +5,8 @@ import de.gaalop.CodeGeneratorException;
 import de.gaalop.OutputFile;
 import de.gaalop.cfg.ControlFlowGraph;
 import de.gaalop.vis2d.drawing.*;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.PrintJob;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionListener;
+import java.awt.*;
+import java.awt.event.*;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.print.PrinterException;
@@ -33,7 +27,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  *
  * @author Christian Steinmetz
  */
-public class Vis2dCodeGen implements CodeGenerator, KeyListener, MouseMotionListener {
+public class Vis2dCodeGen implements CodeGenerator, KeyListener, MouseMotionListener, MouseListener, MouseWheelListener {
     
     private static final double EPSILON = 10E-4;
     
@@ -79,6 +73,8 @@ public class Vis2dCodeGen implements CodeGenerator, KeyListener, MouseMotionList
         vis2dUI.addKeyListener(this);
         panel = (MyPanel) vis2dUI.jPanel1;
         panel.addMouseMotionListener(this);
+        panel.addMouseListener(this);
+        panel.addMouseWheelListener(this);
         
         
         vis2dUI.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -234,15 +230,24 @@ public class Vis2dCodeGen implements CodeGenerator, KeyListener, MouseMotionList
         repaintDrawing();
         updateLabelPosition();
     }
-//TODO Mouse Navigation
+
     @Override
     public void keyReleased(KeyEvent e) {
     }
 
     @Override
     public void mouseDragged(MouseEvent e) {
+        Point2D.Double pFrom = visitor.transformPointBack(from.x,from.y);
+        Point to = e.getPoint();
+        Point2D.Double pTo = visitor.transformPointBack(to.x,to.y);
+        world.x -= pTo.x-pFrom.x;
+        world.y -= pTo.y-pFrom.y;
+        from = to;
+        repaintDrawing();
+        updateLabelPosition();
     }
 
+  
     @Override
     public void mouseMoved(MouseEvent e) {
         lastMouseX = e.getX();
@@ -259,6 +264,53 @@ public class Vis2dCodeGen implements CodeGenerator, KeyListener, MouseMotionList
     private void updateLabelPosition() {
         Point2D.Double p = visitor.transformPointBack(lastMouseX, lastMouseY);
         vis2dUI.laPosition.setText(round(p.x)+" | "+round(p.y));
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+        from = new Point(e.getPoint());
+    }
+    
+    private Point from;
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseWheelMoved(MouseWheelEvent e) {
+        int wheelRotation = e.getWheelRotation();
+        if (wheelRotation >= 0) {
+            for (int i=0;i<wheelRotation;i++) {
+                world.x -= world.width/2;
+                world.y -= world.height/2;
+                world.width *= 2;
+                world.height *= 2;
+            }
+        } else {
+            for (int i=-wheelRotation;i>0;i--) {
+                world.width /= 2;
+                world.height /= 2;
+                world.x += world.width/2;
+                world.y += world.height/2;
+            }
+        }
+        repaintDrawing();
     }
     
 
