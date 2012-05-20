@@ -63,7 +63,7 @@ public class Vis2dCodeGen implements CodeGenerator {
 
         if (hasBivecParts16(nonZero)) {
             //Point pair
-            interpretPointPair(mv, c);
+            interpretPointPair(mv, c, nonZero);
         } else {
             //Vector
             double e0 = mv.entries[4];
@@ -115,15 +115,21 @@ public class Vis2dCodeGen implements CodeGenerator {
         return false;
     }
 
-    private void interpretPointPair(Multivector mv, Color c) {
+    private void interpretPointPair(Multivector mv, Color c, boolean[] nonZero) {
         double[] b = mv.entries;
+        if (nonZero[7]) {
+            //2 conformal points
+            double x1 = (b[9] * Math.sqrt(Math.abs((2.0 * b[8] * b[9] + 2.0 * b[6] * b[7]) - b[5] * b[5] + b[10] * b[10])) - b[5] * b[9] + b[10] * b[7]) / (b[9] * b[9] + b[7] * b[7]); // e1
+            double y1 = (-((b[7] * Math.sqrt(Math.abs((2.0 * b[8] * b[9] + 2.0 * b[6] * b[7]) - b[5] * b[5] + b[10] * b[10])) - b[10] * b[9] - b[5] * b[7]) / (b[9] * b[9] + b[7] * b[7]))); // e2
 
-        double x1 = (b[9] * Math.sqrt(Math.abs((2.0 * b[8] * b[9] + 2.0 * b[6] * b[7]) - b[5] * b[5] + b[10] * b[10])) - b[5] * b[9] + b[10] * b[7]) / (b[9] * b[9] + b[7] * b[7]); // e1
-        double y1 = (-((b[7] * Math.sqrt(Math.abs((2.0 * b[8] * b[9] + 2.0 * b[6] * b[7]) - b[5] * b[5] + b[10] * b[10])) - b[10] * b[9] - b[5] * b[7]) / (b[9] * b[9] + b[7] * b[7]))); // e2
+            double x2 = (-(((b[9] * Math.sqrt(Math.abs((2.0 * b[8] * b[9] + 2.0 * b[6] * b[7]) - b[5] * b[5] + b[10] * b[10])) + b[5] * b[9]) - b[10] * b[7]) / (b[9] * b[9] + b[7] * b[7]))); // e1
+            double y2 = (b[7] * Math.sqrt(Math.abs((2.0 * b[8] * b[9] + 2.0 * b[6] * b[7]) - b[5] * b[5] + b[10] * b[10])) + b[10] * b[9] + b[5] * b[7]) / (b[9] * b[9] + b[7] * b[7]); // e2
 
-        double x2 = (-(((b[9] * Math.sqrt(Math.abs((2.0 * b[8] * b[9] + 2.0 * b[6] * b[7]) - b[5] * b[5] + b[10] * b[10])) + b[5] * b[9]) - b[10] * b[7]) / (b[9] * b[9] + b[7] * b[7]))); // e1
-        double y2 = (b[7] * Math.sqrt(Math.abs((2.0 * b[8] * b[9] + 2.0 * b[6] * b[7]) - b[5] * b[5] + b[10] * b[10])) + b[10] * b[9] + b[5] * b[7]) / (b[9] * b[9] + b[7] * b[7]); // e2
-
-        drawing.objects.add(new Pointpair2d(x1, y1, x2, y2, c));
+            drawing.objects.add(new Pointpair2d(x1, y1, x2, y2, c));
+        } else {
+            //One conformal point and einf
+            if (nonZero[5])
+                drawing.objects.add(new Point2d(-(b[8] / b[5]), b[6] / b[5], c));
+        }
     }
 }
