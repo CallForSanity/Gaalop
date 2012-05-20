@@ -6,12 +6,17 @@ import de.gaalop.OutputFile;
 import de.gaalop.cfg.ControlFlowGraph;
 import de.gaalop.vis2d.drawing.*;
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.PrintJob;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.awt.print.PrinterException;
+import java.awt.print.PrinterJob;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
@@ -196,7 +201,21 @@ public class Vis2dCodeGen implements CodeGenerator, KeyListener, MouseMotionList
                 world.x += world.width/2;
                 world.y += world.height/2;
                 break;
+            case KeyEvent.VK_P:
+                //Print
+                PrinterJob job = PrinterJob.getPrinterJob();
+                if ( job.printDialog() == false )
+                    return;
+                job.setPrintable( new DrawVisitorPrintable(drawing, world) );
+                try {
+                    job.print();
+                } catch (PrinterException ex) {
+                    Logger.getLogger(Vis2dCodeGen.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
+                break;
             case KeyEvent.VK_S:
+                //Save as PNG-File
                 JFileChooser jFC = new JFileChooser();
                 jFC.setFileFilter(new FileNameExtensionFilter("PNG-Dateien", "png"));
                 if (jFC.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
@@ -210,11 +229,12 @@ public class Vis2dCodeGen implements CodeGenerator, KeyListener, MouseMotionList
                     }
                 }
                 break;
+                
         }
         repaintDrawing();
         updateLabelPosition();
     }
-
+//TODO Mouse Navigation
     @Override
     public void keyReleased(KeyEvent e) {
     }

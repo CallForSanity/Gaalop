@@ -22,7 +22,7 @@ public class DrawVisitorGraphics implements DrawVisitor {
 
     public DrawVisitorGraphics(Rectangle2D world, int width, int height) {
         this.world = world;
-        scale = Math.max(width/world.getWidth(),height/world.getHeight());
+        scale = Math.min(width/world.getWidth(),height/world.getHeight());
         dimension = (int) Math.round(world.getWidth()*scale);
     }
 
