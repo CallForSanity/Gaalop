@@ -4,7 +4,6 @@ import de.gaalop.vis2d.drawing.DrawVisitorGraphics;
 import de.gaalop.vis2d.drawing.Drawing;
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.image.BufferedImage;
 import javax.swing.JPanel;
 
 /**
@@ -15,7 +14,7 @@ public class MyPanel extends JPanel {
     
     private Drawing drawing;
     private DrawVisitorGraphics visitor;
-
+    
     public void set(Drawing drawing, DrawVisitorGraphics visitor) {
         this.drawing = drawing;
         this.visitor = visitor;
@@ -31,5 +30,5 @@ public class MyPanel extends JPanel {
             drawing.draw(visitor);
         }
     }
-    
+  
 }
