@@ -24,7 +24,7 @@ public class Plugin extends Observable implements VisualizerStrategyPlugin {
 
     @Override
     public String getName() {
-        return "Visualizer";
+        return "Visual Code Inserter";
     }
 
     @Override
@@ -40,6 +40,14 @@ public class Plugin extends Observable implements VisualizerStrategyPlugin {
     void notifyError(Throwable error) {
         setChanged();
         notifyObservers(new Notifications.Error(error));
+    }
+
+    public boolean isVisualizeIn2d() {
+        return visualizeIn2d;
+    }
+
+    public void setVisualizeIn2d(boolean visualizeIn2d) {
+        this.visualizeIn2d = visualizeIn2d;
     }
 
 }

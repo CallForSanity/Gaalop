@@ -1,6 +1,6 @@
 package de.gaalop.gui;
 
-import de.gaalop.AlgebraStrategyPlugin;
+import de.gaalop.*;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -21,12 +21,6 @@ import javax.swing.JTextField;
 
 import org.apache.commons.beanutils.BeanUtils;
 
-import de.gaalop.CodeGeneratorPlugin;
-import de.gaalop.CodeParserPlugin;
-import de.gaalop.ConfigurationProperty;
-import de.gaalop.OptimizationStrategyPlugin;
-import de.gaalop.Plugin;
-import de.gaalop.Plugins;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -56,11 +50,13 @@ public class ConfigurationPanel extends JPanel {
 		add(pluginPanes, BorderLayout.CENTER);
                 for (CodeParserPlugin parser: Plugins.getCodeParserPlugins())
                     addPluginConfig(parser);
+                for (VisualizerStrategyPlugin visStrat: Plugins.getVisualizerStrategyPlugins())
+                    addPluginConfig(visStrat);
                 for (AlgebraStrategyPlugin algebra: Plugins.getAlgebraStrategyPlugins())
                     addPluginConfig(algebra);
-		for (OptimizationStrategyPlugin strategy : Plugins.getOptimizationStrategyPlugins()) {
-			addPluginConfig(strategy);
-		}
+		for (OptimizationStrategyPlugin strategy : Plugins.getOptimizationStrategyPlugins()) 
+                    addPluginConfig(strategy);
+		
 		List<CodeGeneratorPlugin> sortedPlugins = new ArrayList<CodeGeneratorPlugin>(Plugins.getCodeGeneratorPlugins());
 		Collections.sort(sortedPlugins, new PluginSorter());
 		for (CodeGeneratorPlugin generator : sortedPlugins) {
