@@ -18,9 +18,6 @@ import org.apache.commons.logging.LogFactory;
  */
 public class Plugin extends Observable implements CodeGeneratorPlugin {
 
-    @ConfigurationProperty(type = Type.DIRPATH)
-    public String lwJglNativePath = "/usr/lib/jni/";
-
     private Log log = LogFactory.getLog(Plugin.class);
 
     private Image icon;
@@ -61,13 +58,5 @@ public class Plugin extends Observable implements CodeGeneratorPlugin {
     void notifyError(Throwable error) {
     	setChanged();
     	notifyObservers(new Notifications.Error(error));
-    }
-
-    public String getLwJglNativePath() {
-        return lwJglNativePath;
-    }
-
-    public void setLwJglNativePath(String lwJglNativePath) {
-        this.lwJglNativePath = lwJglNativePath;
     }
 }
