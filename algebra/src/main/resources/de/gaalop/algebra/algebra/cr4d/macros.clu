@@ -32,3 +32,19 @@ createPoint = {
 Dual = {
     _P(1)*(-e1^e2^einf^e0)
 }
+
+//arguments: 
+//pp Pointpair
+//returns the first point of the point pair
+extractPoint1 = {
+	ppd = *(_P(1));
+	(ppd+sqrt(ppd.ppd))/(e0.ppd)
+}
+
+//arguments: 
+//pp Pointpair
+//returns the first point of the point pair
+extractPoint2 = {
+	ppd = *(_P(1));
+	(ppd-sqrt(ppd.ppd))/(e0.ppd)
+}
