@@ -16,7 +16,7 @@ public class ColorEvaluater extends EmptyControlFlowVisitor {
 
     private HashMap<String, Color> colors = new HashMap<String, Color>();
 
-    private Color currentColor = Color.white;
+    private Color currentColor = Color.black;
 
     private ColorEvaluater() {
     }
