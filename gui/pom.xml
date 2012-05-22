@@ -119,5 +119,10 @@
             <artifactId>codegen-vis2d</artifactId>
             <version>1.0.0</version>
         </dependency>
+        <dependency>
+            <groupId>de.gaalop</groupId>
+            <artifactId>globalSettings</artifactId>
+            <version>1.0.0</version>
+        </dependency>
     </dependencies>
 </project>

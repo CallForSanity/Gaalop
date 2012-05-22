@@ -39,6 +39,14 @@ public class CompileAction extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
     	statusBar.reset();
+        
+        GlobalSettingsPlugin globalSettingsPlugin = getGlobalSettingsStrategy();
+
+        if (globalSettingsPlugin == null) {
+            JOptionPane.showMessageDialog(null, "No globalSettings strategy is available. Please install " +
+                    "an appropiate plugin.", "No globalSettings Strategy Available", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
 
         VisualizerStrategyPlugin visualizerPlugin = getVisualizerStrategy();
 
@@ -67,6 +75,7 @@ public class CompileAction extends AbstractAction {
         CodeParserPlugin parserPlugin = sourcePanel.getParserPlugin();
 
         final CompilerFacade facade = new CompilerFacade(parserPlugin.createCodeParser(),
+                globalSettingsPlugin.createGlobalSettingsStrategy(),
                 visualizerPlugin.createVisualizerStrategy(),
                 algebraPlugin.createAlgebraStrategy(),
                 optimizationPlugin.createOptimizationStrategy(),
@@ -109,6 +118,25 @@ public class CompileAction extends AbstractAction {
         if (Plugins.getAlgebraStrategyPlugins().size() > 0) 
             return Plugins.getAlgebraStrategyPlugins().iterator().next();
         
+
+        return null;
+    }
+    
+    private GlobalSettingsPlugin getGlobalSettingsStrategy() {
+        Preferences prefs = Preferences.userNodeForPackage(getClass());
+        String preferredGlobalSettingsPlugin = prefs.get("preferredGlobalSettingsPlugin", "");
+        log.debug("Preferred GlobalSettings plugin is " + preferredGlobalSettingsPlugin);
+
+        for (GlobalSettingsPlugin plugin : Plugins.getGlobalSettingsStrategyPlugins()) {
+            String name = plugin.getClass().getName();
+            if (name.equals(preferredGlobalSettingsPlugin)) {
+                return plugin;
+            }
+        }
+
+        if (Plugins.getGlobalSettingsStrategyPlugins().size() > 0)
+            return Plugins.getGlobalSettingsStrategyPlugins().iterator().next();
+
 
         return null;
     }

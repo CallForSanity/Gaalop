@@ -12,7 +12,7 @@
      -->
     <modules>
         <module>api</module>
-
+        <module>globalSettings</module>
 	<!-- front end -->
         <module>clucalc</module>
 

@@ -54,11 +54,8 @@ public class GAPPDecoratingMain {
         boolean scalarFunctions = false;
 
         Plugin plugin = new Plugin();
-        plugin.setMaximaCommand(maximaCommand);
-        
         plugin.setInvertTransformation(true);
         plugin.setScalarFunctions(scalarFunctions);
-        plugin.setOptMaxima(optMaxima);
         plugin.setOptInserting(optMaxima);
         plugin.setMaximaExpand(optMaxima);
         
