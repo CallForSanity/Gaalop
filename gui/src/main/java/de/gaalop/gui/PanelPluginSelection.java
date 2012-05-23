@@ -1,17 +1,13 @@
 package de.gaalop.gui;
 
 import de.gaalop.*;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.GridLayout;
+import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.LinkedList;
-import java.util.Set;
 import javax.swing.*;
-import javax.swing.event.ListDataListener;
+import javax.swing.colorchooser.AbstractColorChooserPanel;
 
 /**
  *
@@ -80,10 +76,17 @@ public class PanelPluginSelection extends JPanel {
             public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
                 if (value == null) return super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
                 String valueStr = ((Plugin) value).getName();
-                return super.getListCellRendererComponent(list, valueStr, index, isSelected, cellHasFocus);
+                JLabel label = (JLabel) super.getListCellRendererComponent(list, valueStr, index, isSelected, cellHasFocus);
+                Image icon = (((Plugin) value).getIcon());
+                if (icon != null)
+                    label.setIcon(new ImageIcon(((Plugin) value).getIcon()));
+                return label ;
             }
         };
         add(new JPanel());
+        
+        PluginSorter comparator = new PluginSorter();
+        
         VisualCodeInserterStrategyPlugin[] visPlugins = Plugins.getVisualizerStrategyPlugins().toArray(new VisualCodeInserterStrategyPlugin[0]);
         Arrays.sort(visPlugins, comparator);
         visualCodeInserter = new JComboBox<VisualCodeInserterStrategyPlugin>(visPlugins);
@@ -121,13 +124,6 @@ public class PanelPluginSelection extends JPanel {
         add(errorTextArea);
         defaultColor = generator.getBackground();
     }
-    
-    private Comparator<Plugin> comparator = new Comparator<Plugin>() {
-            @Override
-            public int compare(Plugin o1, Plugin o2) {
-                return o1.getName().compareToIgnoreCase(o2.getName());
-            }
-        };
     
     private void addLabeledComponent(String label, JComboBox c) {
         JPanel panel = new JPanel(new GridLayout(2,1));
