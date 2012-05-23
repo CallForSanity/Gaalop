@@ -1,4 +1,4 @@
-package de.gaalop.visualCodeInserter;
+package de.gaalop.visualCodeInserter2d;
 
 import de.gaalop.ConfigurationProperty;
 import de.gaalop.ConfigurationProperty.Type;
@@ -16,17 +16,17 @@ public class Plugin extends Observable implements VisualCodeInserterStrategyPlug
 
     @Override
     public VisualCodeInserterStrategy createVisualizerStrategy() {
-        return new VisualizerCodeInserter(this);
+        return new VisualizerCodeInserter2d();
     }
 
     @Override
     public String getName() {
-        return "Visual Code Inserter";
+        return "Visual Code Inserter 2d";
     }
 
     @Override
     public String getDescription() {
-        return "This plugin sets the visualizing commands";
+        return "This plugin sets the 2d visualizing commands";
     }
 
     @Override

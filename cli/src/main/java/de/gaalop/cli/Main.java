@@ -29,10 +29,7 @@ public class Main {
 
   @Option(name = "-parser", required = false, usage = "Sets the class name of the code parser plugin that should be used.")
   private String codeParserPlugin = "de.gaalop.clucalc.input.Plugin";
-  
-  @Option(name = "-globalSettings", required = false, usage = "Sets the class name of the global settings plugin that should be used.")
-  private String globalSettingsStrategyPlugin = "de.gaalop.globalSettings.Plugin";
-  
+
   @Option(name = "-generator", required = false, usage = "Sets the class name of the code generator plugin that should be used.")
   private String codeGeneratorPlugin = "de.gaalop.clucalc.output.Plugin";
 
@@ -103,18 +100,16 @@ public class Main {
 
   private CompilerFacade createCompiler() {
     CodeParser codeParser = createCodeParser();
-    
-    GlobalSettingsStrategy globalSettingsStrategy = createGlobalSettingsStrategy();
 
     AlgebraStrategy algebraStrategy = createAlgebraStrategy();
 
-    VisualizerStrategy visualizerStrategy = createVisualizerStrategy();
+    VisualCodeInserterStrategy visualizerStrategy = createVisualizerStrategy();
 
     OptimizationStrategy optimizationStrategy = createOptimizationStrategy();
 
     CodeGenerator codeGenerator = createCodeGenerator();
 
-    return new CompilerFacade(codeParser, globalSettingsStrategy, visualizerStrategy, algebraStrategy, optimizationStrategy, codeGenerator);
+    return new CompilerFacade(codeParser, visualizerStrategy, algebraStrategy, optimizationStrategy, codeGenerator);
   }
 
   private CodeParser createCodeParser() {
@@ -127,19 +122,6 @@ public class Main {
 
     System.err.println("Unknown code parser plugin: " + codeParserPlugin);
     System.exit(-2);
-    return null;
-  }
-  
-  private GlobalSettingsStrategy createGlobalSettingsStrategy() {
-    Set<GlobalSettingsPlugin> plugins = Plugins.getGlobalSettingsStrategyPlugins();
-    for (GlobalSettingsPlugin plugin : plugins) {
-      if (plugin.getClass().getName().equals(globalSettingsStrategyPlugin)) {
-        return plugin.createGlobalSettingsStrategy();
-      }
-    }
-
-    System.err.println("Unknown globalSettings strategy plugin: " + globalSettingsStrategyPlugin);
-    System.exit(-3);
     return null;
   }
 
@@ -156,9 +138,9 @@ public class Main {
     return null;
   }
 
-  private VisualizerStrategy createVisualizerStrategy() {
-    Set<VisualizerStrategyPlugin> plugins = Plugins.getVisualizerStrategyPlugins();
-    for (VisualizerStrategyPlugin plugin : plugins) {
+  private VisualCodeInserterStrategy createVisualizerStrategy() {
+    Set<VisualCodeInserterStrategyPlugin> plugins = Plugins.getVisualizerStrategyPlugins();
+    for (VisualCodeInserterStrategyPlugin plugin : plugins) {
       if (plugin.getClass().getName().equals(visualizerStrategyPlugin)) {
         return plugin.createVisualizerStrategy();
       }
