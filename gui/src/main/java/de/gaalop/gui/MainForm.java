@@ -41,8 +41,8 @@ public class MainForm {
     private JButton saveFileButton;
     private JButton closeButton;
     private StatusBar statusBar;
-
-    private JComboBox strategyComboBox;
+    
+    private PanelPluginSelection panelPluginSelection;
 
     private Log log = LogFactory.getLog(MainForm.class);
 
@@ -57,41 +57,12 @@ public class MainForm {
             public void actionPerformed(ActionEvent event) {
                 if (tabbedPane.getSelectedComponent() instanceof SourceFilePanel) {
                     SourceFilePanel sourcePanel = (SourceFilePanel) tabbedPane.getSelectedComponent();
-
-                    JPopupMenu menu = new JPopupMenu();
-                    List<CodeGeneratorPlugin> plugins = new ArrayList<CodeGeneratorPlugin>();
-                    plugins.addAll(Plugins.getCodeGeneratorPlugins());
-                    Collections.sort(plugins, new PluginSorter());
-                    for (CodeGeneratorPlugin plugin : plugins) {
-                        menu.add(new CompileAction(sourcePanel, statusBar, plugin));
-                    }
-                    menu.show(optimizeButton, 0, optimizeButton.getBounds().height);
+                    CompileAction action = new CompileAction(sourcePanel, statusBar, panelPluginSelection);
+                    action.actionPerformed(event);
                 }
             }
         });
 
-        List<OptimizationStrategyPlugin> strategies = new ArrayList<OptimizationStrategyPlugin>();
-        strategies.addAll(Plugins.getOptimizationStrategyPlugins());
-        for (OptimizationStrategyPlugin strategy: strategies)
-            strategyComboBox.addItem(strategy.getClass().getName());
-        strategyComboBox.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-               Preferences prefs = Preferences.userNodeForPackage(MainForm.class);
-
-               prefs.put("preferredOptimizationPlugin",(String) strategyComboBox.getSelectedItem());
-
-            }
-        });
-
-        if (strategyComboBox.getSelectedItem() != null) {
-            Preferences prefs = Preferences.userNodeForPackage(MainForm.class);
-            prefs.put("preferredOptimizationPlugin",(String) strategyComboBox.getSelectedItem());
-        }
-        
-        //make TBA to preferred OptimizationStrategy
-        strategyComboBox.setSelectedItem("de.gaalop.tba.Plugin");
-        
         configureButton.addActionListener(new ActionListener() {
           
           @Override
@@ -212,15 +183,6 @@ public class MainForm {
 
         sourceFilePanel.setFile(toFile);
         sourceFilePanel.setSaved();
-    }
-
-    private ComboBoxModel createOptimizationStrategyModel() {
-        return new PluginModel<OptimizationStrategyPlugin>(OptimizationStrategyPlugin.class,
-                Plugins.getOptimizationStrategyPlugins());
-    }
-
-    private ComboBoxModel createCodeParserModel() {
-        return new PluginModel<CodeParserPlugin>(CodeParserPlugin.class, Plugins.getCodeParserPlugins());
     }
 
     public Container getContentPane() {
@@ -369,11 +331,6 @@ public class MainForm {
         configureButton.setDisplayedMnemonicIndex(3);
         toolBar1.add(configureButton);
 
-        strategyComboBox = new JComboBox();
-        strategyComboBox.setEnabled(true);
-        strategyComboBox.setToolTipText("Choose here the OptimizationStrategy to be used for optimization.");
-        toolBar1.add(strategyComboBox);
-
         final JToolBar.Separator toolBar$Separator1 = new JToolBar.Separator();
         toolBar1.add(toolBar$Separator1);
         optimizeButton = new JButton();
@@ -385,6 +342,8 @@ public class MainForm {
         toolBar1.add(optimizeButton);
         tabbedPane = new JTabbedPane();
         contentPane.add(tabbedPane, BorderLayout.CENTER);
+        panelPluginSelection = new PanelPluginSelection();
+        contentPane.add(panelPluginSelection, BorderLayout.EAST);
         final JPanel panel2 = new JPanel();
         panel2.setLayout(new BorderLayout(0, 0));
         tabbedPane.addTab("Welcome", panel2);

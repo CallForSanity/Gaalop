@@ -17,6 +17,7 @@
         <module>clucalc</module>
 
         <module>visualCodeInserter</module>
+        <module>visualCodeInserter2d</module>
 
         <!-- algebra -->
         <module>algebra</module>

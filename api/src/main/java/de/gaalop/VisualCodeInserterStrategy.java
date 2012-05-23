@@ -7,7 +7,7 @@ import de.gaalop.cfg.ControlFlowGraph;
  * consists of a simple graph to graph transformation on the control flow graph
  * that has been produced by the frontend.
  */
-public interface VisualizerStrategy {
+public interface VisualCodeInserterStrategy {
 
     /**
      * Transforms a graph by applying optimization or analysis operations.
