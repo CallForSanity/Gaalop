@@ -3,8 +3,8 @@ package de.gaalop.visualCodeInserter;
 import de.gaalop.ConfigurationProperty;
 import de.gaalop.ConfigurationProperty.Type;
 import de.gaalop.Notifications;
-import de.gaalop.VisualCodeInserterStrategy;
-import de.gaalop.VisualCodeInserterStrategyPlugin;
+import de.gaalop.VisualizerStrategy;
+import de.gaalop.VisualizerStrategyPlugin;
 import java.awt.Image;
 import java.util.Observable;
 
@@ -12,10 +12,13 @@ import java.util.Observable;
  * Sets the algebra on the Control Flow Graph
  * @author Christian Steinmetz
  */
-public class Plugin extends Observable implements VisualCodeInserterStrategyPlugin {
+public class Plugin extends Observable implements VisualizerStrategyPlugin {
+    
+    @ConfigurationProperty(type=Type.BOOLEAN)
+    public boolean visualizeIn2d = true;
 
     @Override
-    public VisualCodeInserterStrategy createVisualizerStrategy() {
+    public VisualizerStrategy createVisualizerStrategy() {
         return new VisualizerCodeInserter(this);
     }
 
@@ -37,6 +40,14 @@ public class Plugin extends Observable implements VisualCodeInserterStrategyPlug
     void notifyError(Throwable error) {
         setChanged();
         notifyObservers(new Notifications.Error(error));
+    }
+
+    public boolean isVisualizeIn2d() {
+        return visualizeIn2d;
+    }
+
+    public void setVisualizeIn2d(boolean visualizeIn2d) {
+        this.visualizeIn2d = visualizeIn2d;
     }
 
 }

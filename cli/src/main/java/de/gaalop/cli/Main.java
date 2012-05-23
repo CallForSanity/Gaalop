@@ -103,7 +103,7 @@ public class Main {
 
     AlgebraStrategy algebraStrategy = createAlgebraStrategy();
 
-    VisualCodeInserterStrategy visualizerStrategy = createVisualizerStrategy();
+    VisualizerStrategy visualizerStrategy = createVisualizerStrategy();
 
     OptimizationStrategy optimizationStrategy = createOptimizationStrategy();
 
@@ -138,9 +138,9 @@ public class Main {
     return null;
   }
 
-  private VisualCodeInserterStrategy createVisualizerStrategy() {
-    Set<VisualCodeInserterStrategyPlugin> plugins = Plugins.getVisualizerStrategyPlugins();
-    for (VisualCodeInserterStrategyPlugin plugin : plugins) {
+  private VisualizerStrategy createVisualizerStrategy() {
+    Set<VisualizerStrategyPlugin> plugins = Plugins.getVisualizerStrategyPlugins();
+    for (VisualizerStrategyPlugin plugin : plugins) {
       if (plugin.getClass().getName().equals(visualizerStrategyPlugin)) {
         return plugin.createVisualizerStrategy();
       }

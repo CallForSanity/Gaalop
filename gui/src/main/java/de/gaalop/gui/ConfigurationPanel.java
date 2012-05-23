@@ -50,7 +50,7 @@ public class ConfigurationPanel extends JPanel {
 		add(pluginPanes, BorderLayout.CENTER);
                 for (CodeParserPlugin parser: Plugins.getCodeParserPlugins())
                     addPluginConfig(parser);
-                for (VisualCodeInserterStrategyPlugin visStrat: Plugins.getVisualizerStrategyPlugins())
+                for (VisualizerStrategyPlugin visStrat: Plugins.getVisualizerStrategyPlugins())
                     addPluginConfig(visStrat);
                 for (AlgebraStrategyPlugin algebra: Plugins.getAlgebraStrategyPlugins())
                     addPluginConfig(algebra);

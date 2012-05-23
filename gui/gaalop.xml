@@ -28,4 +28,5 @@
 <entry key="de.gaalop.tba.Plugin.maximaCommand">C:\Program Files (x86)\Maxima\bin\maxima.bat</entry>
 <entry key="de.gaalop.maple.Plugin.useCodeSegmenter">false</entry>
 <entry key="de.gaalop.gapp.Plugin.optMaxima">true</entry>
+<entry key="de.gaalop.vis2d.Plugin.lwJglNativePath">C:\Libs\lwjgl\native\windows</entry>
 </properties>

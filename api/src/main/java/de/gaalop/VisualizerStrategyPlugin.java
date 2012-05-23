@@ -9,13 +9,13 @@ import java.util.Observer;
  *
  * All implementing classes <em>MUST</em> be thread-safe.
  */
-public interface VisualCodeInserterStrategyPlugin extends Plugin {
+public interface VisualizerStrategyPlugin extends Plugin {
 
     /**
      * Creates a new instance of this plugins optimization strategy.
      * @return A new OptimizationStrategy instance. This instance can be shared only if it is thread-safe.
      */
-    VisualCodeInserterStrategy createVisualizerStrategy();
+    VisualizerStrategy createVisualizerStrategy();
 
     /**
      * Wrapper method for {@link Observable#addObserver(Observer)}. Since interfaces cannot extend {@link Observer}, this method

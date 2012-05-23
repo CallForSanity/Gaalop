@@ -106,11 +106,6 @@
         </dependency>
         <dependency>
             <groupId>de.gaalop</groupId>
-            <artifactId>visualCodeInserter2d</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>de.gaalop</groupId>
             <artifactId>codegen-visualizer</artifactId>
             <version>1.0.0</version>
         </dependency>

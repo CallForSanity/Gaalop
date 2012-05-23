@@ -17,7 +17,7 @@ public final class CompilerFacade extends Observable {
 
     private final CodeParser codeParser;
 
-    private final VisualCodeInserterStrategy visualizerStrategy;
+    private final VisualizerStrategy visualizerStrategy;
 
     private final AlgebraStrategy algebraStrategy;
 
@@ -42,7 +42,7 @@ public final class CompilerFacade extends Observable {
      * @param optimizationStrategy The optimization strategy used to process the graph before generating code.
      * @param codeGenerator The code generator used to generate code from the previously optimized graph.
      */
-    public CompilerFacade(CodeParser codeParser, VisualCodeInserterStrategy visualizerStrategy, AlgebraStrategy algebraStrategy, OptimizationStrategy optimizationStrategy, CodeGenerator codeGenerator) {
+    public CompilerFacade(CodeParser codeParser, VisualizerStrategy visualizerStrategy, AlgebraStrategy algebraStrategy, OptimizationStrategy optimizationStrategy, CodeGenerator codeGenerator) {
         this.codeParser = codeParser;
         this.visualizerStrategy = visualizerStrategy;
         this.algebraStrategy = algebraStrategy;

@@ -23,15 +23,15 @@ public class CompileAction extends AbstractAction {
 
 	private Log log = LogFactory.getLog(CompileAction.class);
 
+    private final CodeGeneratorPlugin codeGeneratorPlugin;
+
     private final SourceFilePanel sourcePanel;
 
 	private final StatusBar statusBar;
-        
-        private PanelPluginSelection panelPluginSelection;
 
-    public CompileAction(SourceFilePanel sourcePanel, StatusBar statusBar, PanelPluginSelection panelPluginSelection) {
-        super("To " + panelPluginSelection.getCodeGeneratorPlugin().getName(), PluginIconUtil.getSmallIcon(panelPluginSelection.getCodeGeneratorPlugin()));
-        this.panelPluginSelection = panelPluginSelection;
+    public CompileAction(SourceFilePanel sourcePanel, StatusBar statusBar, CodeGeneratorPlugin codeGeneratorPlugin) {
+        super("To " + codeGeneratorPlugin.getName(), PluginIconUtil.getSmallIcon(codeGeneratorPlugin));
+        this.codeGeneratorPlugin = codeGeneratorPlugin;
         this.sourcePanel = sourcePanel;
         this.statusBar = statusBar;
     }
@@ -40,7 +40,7 @@ public class CompileAction extends AbstractAction {
     public void actionPerformed(ActionEvent e) {
     	statusBar.reset();
 
-        VisualCodeInserterStrategyPlugin visualizerPlugin = panelPluginSelection.getVisualizerStrategyPlugin();
+        VisualizerStrategyPlugin visualizerPlugin = getVisualizerStrategy();
 
         if (visualizerPlugin == null) {
             JOptionPane.showMessageDialog(null, "No visualizer strategy is available. Please install " +
@@ -48,7 +48,7 @@ public class CompileAction extends AbstractAction {
             return;
         }
 
-        AlgebraStrategyPlugin algebraPlugin = panelPluginSelection.getAlgebraStrategyPlugin();
+        AlgebraStrategyPlugin algebraPlugin = getAlgebraStrategy();
 
         if (algebraPlugin == null) {
             JOptionPane.showMessageDialog(null, "No algebra strategy is available. Please install " +
@@ -56,7 +56,7 @@ public class CompileAction extends AbstractAction {
             return;
         }
 
-        OptimizationStrategyPlugin optimizationPlugin = panelPluginSelection.getOptimizationStrategyPlugin();
+        OptimizationStrategyPlugin optimizationPlugin = getOptimizationStrategy();
 
         if (optimizationPlugin == null) {
             JOptionPane.showMessageDialog(null, "No optimization strategy is available. Please install " +
@@ -70,7 +70,7 @@ public class CompileAction extends AbstractAction {
                 visualizerPlugin.createVisualizerStrategy(),
                 algebraPlugin.createAlgebraStrategy(),
                 optimizationPlugin.createOptimizationStrategy(),
-                panelPluginSelection.getCodeGeneratorPlugin().createCodeGenerator());
+                codeGeneratorPlugin.createCodeGenerator());
         facade.addObserver(statusBar);
 
         // start new thread in order to see status changes in main thread (GUI)
@@ -92,6 +92,58 @@ public class CompileAction extends AbstractAction {
 			}
 		});
 		compiler.start();
+    }
+
+    private AlgebraStrategyPlugin getAlgebraStrategy() {
+        Preferences prefs = Preferences.userNodeForPackage(getClass());
+        String preferredAlgebraPlugin = prefs.get("preferredAlgebraPlugin", "");
+        log.debug("Preferred algebra plugin is " + preferredAlgebraPlugin);
+
+        for (AlgebraStrategyPlugin plugin : Plugins.getAlgebraStrategyPlugins()) {
+            String name = plugin.getClass().getName();
+            if (name.equals(preferredAlgebraPlugin)) {
+                return plugin;
+            }
+        }
+
+        if (Plugins.getAlgebraStrategyPlugins().size() > 0) 
+            return Plugins.getAlgebraStrategyPlugins().iterator().next();
+        
+
+        return null;
+    }
+
+    private VisualizerStrategyPlugin getVisualizerStrategy() {
+        Preferences prefs = Preferences.userNodeForPackage(getClass());
+        String preferredVisualizerPlugin = prefs.get("preferredVisualizerPlugin", "");
+        log.debug("Preferred visualizer plugin is " + preferredVisualizerPlugin);
+
+        for (VisualizerStrategyPlugin plugin : Plugins.getVisualizerStrategyPlugins()) {
+            String name = plugin.getClass().getName();
+            if (name.equals(preferredVisualizerPlugin)) {
+                return plugin;
+            }
+        }
+
+        if (Plugins.getVisualizerStrategyPlugins().size() > 0)
+            return Plugins.getVisualizerStrategyPlugins().iterator().next();
+
+
+        return null;
+    }
+
+    private OptimizationStrategyPlugin getOptimizationStrategy() {
+        Preferences prefs = Preferences.userNodeForPackage(getClass());
+        String preferredOptimizationPlugin = prefs.get("preferredOptimizationPlugin", "");
+        log.debug("Preferred optimization plugin is " + preferredOptimizationPlugin);
+
+        for (OptimizationStrategyPlugin plugin : Plugins.getOptimizationStrategyPlugins()) {
+            String name = plugin.getClass().getName();
+            if (name.equals(preferredOptimizationPlugin)) {
+                return plugin;
+            }
+        }
+        return null;
     }
 
     private void displayOutput(Set<OutputFile> output) {

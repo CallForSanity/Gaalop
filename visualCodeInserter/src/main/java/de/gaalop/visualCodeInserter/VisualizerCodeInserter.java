@@ -1,7 +1,7 @@
 package de.gaalop.visualCodeInserter;
 
 import de.gaalop.OptimizationException;
-import de.gaalop.VisualCodeInserterStrategy;
+import de.gaalop.VisualizerStrategy;
 import de.gaalop.cfg.AssignmentNode;
 import de.gaalop.cfg.ControlFlowGraph;
 import de.gaalop.cfg.ExpressionStatement;
@@ -15,10 +15,9 @@ import java.util.LinkedList;
 
 /**
  * Implements a strategy that inserts draw code in the cluscript
- *
  * @author Christian Steinmetz
  */
-public class VisualizerCodeInserter implements VisualCodeInserterStrategy {
+public class VisualizerCodeInserter implements VisualizerStrategy {
 
     private Plugin plugin;
 
@@ -32,28 +31,14 @@ public class VisualizerCodeInserter implements VisualCodeInserterStrategy {
         LinkedList<ExpressionStatement> statements = ExpressionStatementCollector.collectAllStatements(graph);
 
         String prefix = "_V_";
-
-        if (statements.size() > 0) {
-            LinkedList<Expression> args = new LinkedList<Expression>();
-
-            args.add(new Variable(prefix + "X"));
-            args.add(new Variable(prefix + "Y"));
-            args.add(new Variable(prefix + "Z"));
-            graph.addInputVariable(new Variable(prefix + "X"));
-            graph.addInputVariable(new Variable(prefix + "Y"));
-            graph.addInputVariable(new Variable(prefix + "Z"));
-
-            Variable visualizationPoint = new Variable(prefix + "POINT");
-            graph.addLocalVariable(new Variable(prefix + "POINT"));
-
-            AssignmentNode pointNode = new AssignmentNode(graph, visualizationPoint, new MacroCall("createPoint", args));
-            graph.getStartNode().insertAfter(pointNode);
-
+        
+        if (plugin.visualizeIn2d) {
+            //2d
             HashMap<String, Expression> renderingExpressions = graph.getRenderingExpressions();
             int i = 0;
             for (ExpressionStatement s : statements) {
                 String productName = prefix + "PRODUCT" + i;
-                AssignmentNode renderNode = new AssignmentNode(graph, new Variable(productName), new InnerProduct(s.getExpression(), visualizationPoint));
+                AssignmentNode renderNode = new AssignmentNode(graph, new Variable(productName), s.getExpression());
                 graph.addLocalVariable(new Variable(productName));
                 s.insertAfter(renderNode);
 
@@ -62,6 +47,40 @@ public class VisualizerCodeInserter implements VisualCodeInserterStrategy {
                 renderNode.insertAfter(outputRenderNode);
                 renderingExpressions.put(productName, s.getExpression());
                 i++;
+            }
+            
+            
+        } else {
+            if (statements.size() > 0) {
+                LinkedList<Expression> args = new LinkedList<Expression>();
+
+                args.add(new Variable(prefix + "X"));
+                args.add(new Variable(prefix + "Y"));
+                args.add(new Variable(prefix + "Z"));
+                graph.addInputVariable(new Variable(prefix + "X"));
+                graph.addInputVariable(new Variable(prefix + "Y"));
+                graph.addInputVariable(new Variable(prefix + "Z"));
+
+                Variable visualizationPoint = new Variable(prefix + "POINT");
+                graph.addLocalVariable(new Variable(prefix + "POINT"));
+
+                AssignmentNode pointNode = new AssignmentNode(graph, visualizationPoint, new MacroCall("createPoint", args));
+                graph.getStartNode().insertAfter(pointNode);
+
+                HashMap<String, Expression> renderingExpressions = graph.getRenderingExpressions();
+                int i = 0;
+                for (ExpressionStatement s : statements) {
+                    String productName = prefix + "PRODUCT" + i;
+                    AssignmentNode renderNode = new AssignmentNode(graph, new Variable(productName), new InnerProduct(s.getExpression(), visualizationPoint));
+                    graph.addLocalVariable(new Variable(productName));
+                    s.insertAfter(renderNode);
+
+                    StoreResultNode outputRenderNode = new StoreResultNode(graph, new Variable(productName));
+                    graph.addLocalVariable(new Variable(productName));
+                    renderNode.insertAfter(outputRenderNode);
+                    renderingExpressions.put(productName, s.getExpression());
+                    i++;
+                }
             }
         }
     }
