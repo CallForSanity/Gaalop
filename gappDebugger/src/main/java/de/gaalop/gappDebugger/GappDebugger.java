@@ -1,0 +1,30 @@
+package de.gaalop.gappDebugger;
+
+import de.gaalop.CodeGenerator;
+import de.gaalop.CodeGeneratorException;
+import de.gaalop.OutputFile;
+import de.gaalop.cfg.ControlFlowGraph;
+import java.util.HashSet;
+import java.util.Set;
+import javax.swing.JFrame;
+import javax.swing.WindowConstants;
+
+/**
+ *
+ * @author Christian Steinmetz
+ */
+public class GappDebugger implements CodeGenerator {
+
+    @Override
+    public Set<OutputFile> generate(ControlFlowGraph in) throws CodeGeneratorException {
+        UI ui = new UI();
+        ui.controller = new Controller(ui);
+        ui.setVisible(true);
+        ui.controller.loadSource(in);
+        ui.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        ui.controller.restart();
+        
+        return new HashSet<OutputFile>();
+    }
+
+}

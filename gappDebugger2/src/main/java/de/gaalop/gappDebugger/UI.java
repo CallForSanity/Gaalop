@@ -38,6 +38,7 @@ public class UI extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jListSrc = new javax.swing.JList();
         jButRestart = new javax.swing.JButton();
+        jButLoadSrc1 = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
 
@@ -53,7 +54,7 @@ public class UI extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jButNextInstruction);
-        jButNextInstruction.setBounds(430, 70, 180, 23);
+        jButNextInstruction.setBounds(430, 100, 180, 25);
 
         jButRun.setText("Run");
         jButRun.addActionListener(new java.awt.event.ActionListener() {
@@ -62,7 +63,7 @@ public class UI extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jButRun);
-        jButRun.setBounds(430, 100, 180, 23);
+        jButRun.setBounds(430, 130, 180, 25);
 
         jButSetVariableValue.setText("Set Variable Value");
         jButSetVariableValue.addActionListener(new java.awt.event.ActionListener() {
@@ -71,12 +72,12 @@ public class UI extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jButSetVariableValue);
-        jButSetVariableValue.setBounds(430, 40, 180, 23);
+        jButSetVariableValue.setBounds(430, 70, 180, 25);
 
         jScrollPane2.setViewportView(jListVariables);
 
         getContentPane().add(jScrollPane2);
-        jScrollPane2.setBounds(430, 160, 180, 410);
+        jScrollPane2.setBounds(430, 190, 180, 380);
 
         jButSetAlgebra.setText("Set algebra");
         jButSetAlgebra.addActionListener(new java.awt.event.ActionListener() {
@@ -85,9 +86,9 @@ public class UI extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jButSetAlgebra);
-        jButSetAlgebra.setBounds(430, 10, 180, 23);
+        jButSetAlgebra.setBounds(430, 10, 180, 25);
 
-        jListSrc.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        jListSrc.setFont(new java.awt.Font("Arial", 0, 12));
         jScrollPane1.setViewportView(jListSrc);
 
         getContentPane().add(jScrollPane1);
@@ -100,7 +101,16 @@ public class UI extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jButRestart);
-        jButRestart.setBounds(430, 130, 180, 23);
+        jButRestart.setBounds(430, 160, 180, 25);
+
+        jButLoadSrc1.setText("Load source");
+        jButLoadSrc1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButLoadSrc1ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jButLoadSrc1);
+        jButLoadSrc1.setBounds(430, 40, 180, 25);
 
         jScrollPane3.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
@@ -154,16 +164,21 @@ public class UI extends javax.swing.JFrame {
         controller.setVariableValue();
     }//GEN-LAST:event_jButSetVariableValueActionPerformed
 
+    private void jButSetAlgebraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButSetAlgebraActionPerformed
+        String algebraBlades = JOptionPane.showInputDialog(null, "Please type in the algebra basis vectors, separated by \",\"!","e1,e2,e3,einf,e0");
+        if (algebraBlades != null && !algebraBlades.isEmpty())
+            controller.setAlgebraBlades(algebraBlades);
+    }//GEN-LAST:event_jButSetAlgebraActionPerformed
+
     private void jButRestartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButRestartActionPerformed
         controller.restart();
     }//GEN-LAST:event_jButRestartActionPerformed
 
-    private void jButSetAlgebraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButSetAlgebraActionPerformed
-        String algebraBlades = JOptionPane.showInputDialog(null, "Please type in the algebra basis vectors, separated by \",\"!", "e1,e2,e3,einf,e0");
-        if (algebraBlades != null && !algebraBlades.isEmpty()) {
-            controller.setAlgebraBlades(algebraBlades);
-        }
-    }//GEN-LAST:event_jButSetAlgebraActionPerformed
+    private void jButLoadSrc1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButLoadSrc1ActionPerformed
+        JFileChooser jFC = new JFileChooser();
+        if (jFC.showOpenDialog(null) == JFileChooser.APPROVE_OPTION)
+            controller.loadSource(jFC.getSelectedFile());
+    }//GEN-LAST:event_jButLoadSrc1ActionPerformed
 
     /**
     * @param args the command line arguments
@@ -177,10 +192,11 @@ public class UI extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    public javax.swing.JButton jButLoadSrc1;
     public javax.swing.JButton jButNextInstruction;
     private javax.swing.JButton jButRestart;
     public javax.swing.JButton jButRun;
-    private javax.swing.JButton jButSetAlgebra;
+    public javax.swing.JButton jButSetAlgebra;
     public javax.swing.JButton jButSetVariableValue;
     public javax.swing.JList jListSrc;
     public javax.swing.JList jListVariables;

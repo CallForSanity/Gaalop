@@ -129,5 +129,10 @@
             <artifactId>globalSettings</artifactId>
             <version>1.0.0</version>
         </dependency>
+        <dependency>
+            <groupId>de.gaalop</groupId>
+            <artifactId>gappDebugger</artifactId>
+            <version>1.0.0</version>
+        </dependency>
     </dependencies>
 </project>

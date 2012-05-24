@@ -42,7 +42,7 @@
         <module>gaalet</module>
         <module>codegen-visualizerC</module>
         <module>codegen-vis2d</module>
-
+        <module>gappDebugger</module>
 	<!-- interface -->
         <module>starter</module>
         <module>setup</module>
