@@ -16,6 +16,8 @@
 	<!-- front end -->
         <module>clucalc</module>
 
+        <module>globalSettings</module>
+
         <module>visualCodeInserter</module>
         <module>visualCodeInserter2d</module>
 

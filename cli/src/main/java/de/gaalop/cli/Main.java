@@ -100,6 +100,8 @@ public class Main {
 
   private CompilerFacade createCompiler() {
     CodeParser codeParser = createCodeParser();
+    
+    GlobalSettingsStrategy globalSettingsStrategy = createGlobalSettingsStrategy();
 
     AlgebraStrategy algebraStrategy = createAlgebraStrategy();
 
@@ -109,7 +111,7 @@ public class Main {
 
     CodeGenerator codeGenerator = createCodeGenerator();
 
-    return new CompilerFacade(codeParser, visualizerStrategy, algebraStrategy, optimizationStrategy, codeGenerator);
+    return new CompilerFacade(codeParser, globalSettingsStrategy, visualizerStrategy, algebraStrategy, optimizationStrategy, codeGenerator);
   }
 
   private CodeParser createCodeParser() {
@@ -122,6 +124,19 @@ public class Main {
 
     System.err.println("Unknown code parser plugin: " + codeParserPlugin);
     System.exit(-2);
+    return null;
+  }
+  
+  private GlobalSettingsStrategy createGlobalSettingsStrategy() {
+    Set<GlobalSettingsStrategyPlugin> plugins = Plugins.getGlobalSettingsStrategyPlugins();
+    for (GlobalSettingsStrategyPlugin plugin : plugins) {
+      if (plugin.getClass().getName().equals(algebraStrategyPlugin)) {
+        return plugin.createGlobalSettingsStrategy();
+      }
+    }
+
+    System.err.println("Unknown algebra strategy plugin: " + algebraStrategyPlugin);
+    System.exit(-3);
     return null;
   }
 

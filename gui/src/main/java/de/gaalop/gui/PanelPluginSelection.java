@@ -15,6 +15,7 @@ import javax.swing.colorchooser.AbstractColorChooserPanel;
  */
 public class PanelPluginSelection extends JPanel {
     
+    private JComboBox<GlobalSettingsStrategyPlugin> globalSettings; 
     private JComboBox<VisualCodeInserterStrategyPlugin> visualCodeInserter; 
     private JComboBox<AlgebraStrategyPlugin> algebra; 
     private JComboBox<OptimizationStrategyPlugin> optimization;
@@ -69,7 +70,7 @@ public class PanelPluginSelection extends JPanel {
     }
     
     public PanelPluginSelection() {
-        setLayout(new GridLayout(6,1,5,5));
+        setLayout(new GridLayout(7,1,5,5));
         
         ListCellRenderer c = new DefaultListCellRenderer() {
             @Override
@@ -87,13 +88,24 @@ public class PanelPluginSelection extends JPanel {
         
         PluginSorter comparator = new PluginSorter();
         
+        
+        GlobalSettingsStrategyPlugin[] globalPlugins = Plugins.getGlobalSettingsStrategyPlugins().toArray(new GlobalSettingsStrategyPlugin[0]);
+        Arrays.sort(globalPlugins, comparator);
+        globalSettings = new JComboBox<GlobalSettingsStrategyPlugin>(globalPlugins);
+        globalSettings.setSelectedItem(search(globalPlugins, "de.gaalop.globalSettings.Plugin"));
+        globalSettings.addItemListener(itemListener);
+        globalSettings.setRenderer(c);
+        if (Plugins.getGlobalSettingsStrategyPlugins().size() > 1)
+            addLabeledComponent("Global Settings Plugin:", globalSettings);
+        
         VisualCodeInserterStrategyPlugin[] visPlugins = Plugins.getVisualizerStrategyPlugins().toArray(new VisualCodeInserterStrategyPlugin[0]);
         Arrays.sort(visPlugins, comparator);
         visualCodeInserter = new JComboBox<VisualCodeInserterStrategyPlugin>(visPlugins);
         visualCodeInserter.setSelectedItem(search(visPlugins, "de.gaalop.visualCodeInserter.Plugin"));
         visualCodeInserter.addItemListener(itemListener);
         visualCodeInserter.setRenderer(c);
-        addLabeledComponent("VisualCodeInserter:", visualCodeInserter);
+        if (Plugins.getVisualizerStrategyPlugins().size() > 1)
+            addLabeledComponent("VisualCodeInserter:", visualCodeInserter);
         
         AlgebraStrategyPlugin[] algPlugins = Plugins.getAlgebraStrategyPlugins().toArray(new AlgebraStrategyPlugin[0]);
         Arrays.sort(algPlugins, comparator);
@@ -101,7 +113,8 @@ public class PanelPluginSelection extends JPanel {
         algebra.setSelectedItem(search(algPlugins, "de.gaalop.algebra.Plugin"));
         algebra.addItemListener(itemListener);
         algebra.setRenderer(c);
-        addLabeledComponent("Algebra:", algebra);
+        if (Plugins.getAlgebraStrategyPlugins().size() > 1)
+            addLabeledComponent("Algebra:", algebra);
         
         OptimizationStrategyPlugin[] optPlugins = Plugins.getOptimizationStrategyPlugins().toArray(new OptimizationStrategyPlugin[0]);
         Arrays.sort(optPlugins, comparator);
@@ -109,7 +122,8 @@ public class PanelPluginSelection extends JPanel {
         optimization.setSelectedItem(search(optPlugins, "de.gaalop.tba.Plugin"));
         optimization.addItemListener(itemListener);
         optimization.setRenderer(c);
-        addLabeledComponent("Optimization:", optimization);
+        if (Plugins.getOptimizationStrategyPlugins().size() > 1)
+            addLabeledComponent("Optimization:", optimization);
         
         CodeGeneratorPlugin[] codegenPlugins = Plugins.getCodeGeneratorPlugins().toArray(new CodeGeneratorPlugin[0]);
         Arrays.sort(codegenPlugins, comparator);
@@ -117,7 +131,9 @@ public class PanelPluginSelection extends JPanel {
         generator.setSelectedItem(search(codegenPlugins, "de.gaalop.cpp.Plugin"));
         generator.addItemListener(itemListener);
         generator.setRenderer(c);
-        addLabeledComponent("CodeGenerator:", generator);
+        if (Plugins.getCodeGeneratorPlugins().size() > 1)
+            addLabeledComponent("CodeGenerator:", generator);
+        
         errorTextArea.setLineWrap(true);
         errorTextArea.setWrapStyleWord(true);
         errorTextArea.setBackground(getBackground());
@@ -130,6 +146,10 @@ public class PanelPluginSelection extends JPanel {
         panel.add(new JLabel(label));
         panel.add(c);
         add(panel);
+    }
+    
+    public GlobalSettingsStrategyPlugin getGlobalSettingsStrategyPlugin() {
+        return (GlobalSettingsStrategyPlugin) globalSettings.getSelectedItem();
     }
     
     public VisualCodeInserterStrategyPlugin getVisualizerStrategyPlugin() {

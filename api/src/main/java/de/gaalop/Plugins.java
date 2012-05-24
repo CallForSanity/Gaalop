@@ -18,6 +18,8 @@ public final class Plugins {
     private static Log log = LogFactory.getLog(Plugins.class);
 
     private static Set<CodeParserPlugin> codeParserPlugins;
+    
+    private static Set<GlobalSettingsStrategyPlugin> globalSettingsStrategyPlugins;
 
     private static Set<VisualCodeInserterStrategyPlugin> visualizerStrategyPlugins;
 
@@ -29,6 +31,7 @@ public final class Plugins {
 
     static {
         codeParserPlugins = loadServices(CodeParserPlugin.class);
+        globalSettingsStrategyPlugins = loadServices(GlobalSettingsStrategyPlugin.class);
         visualizerStrategyPlugins = loadServices(VisualCodeInserterStrategyPlugin.class);
         algebraStrategyPlugins = loadServices(AlgebraStrategyPlugin.class);
         codeGeneratorPlugins = loadServices(CodeGeneratorPlugin.class);
@@ -66,6 +69,15 @@ public final class Plugins {
      */
     public static Set<CodeParserPlugin> getCodeParserPlugins() {
         return Collections.unmodifiableSet(codeParserPlugins);
+    }
+    
+    /**
+     * Gets the available globalSettings plugins.
+     *
+     * @return An unmodifiable set that contains all registered code parser plugins.
+     */
+    public static Set<GlobalSettingsStrategyPlugin> getGlobalSettingsStrategyPlugins() {
+        return Collections.unmodifiableSet(globalSettingsStrategyPlugins);
     }
 
     /**

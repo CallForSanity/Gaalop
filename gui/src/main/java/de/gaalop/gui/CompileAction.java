@@ -40,6 +40,14 @@ public class CompileAction extends AbstractAction {
     public void actionPerformed(ActionEvent e) {
     	statusBar.reset();
 
+        GlobalSettingsStrategyPlugin globalSettingsPlugin = panelPluginSelection.getGlobalSettingsStrategyPlugin();
+
+        if (globalSettingsPlugin == null) {
+            JOptionPane.showMessageDialog(null, "No GlobalSettings strategy is available. Please install " +
+                    "an appropiate plugin.", "No GlobalSettings Strategy Available", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
         VisualCodeInserterStrategyPlugin visualizerPlugin = panelPluginSelection.getVisualizerStrategyPlugin();
 
         if (visualizerPlugin == null) {
@@ -67,6 +75,7 @@ public class CompileAction extends AbstractAction {
         CodeParserPlugin parserPlugin = sourcePanel.getParserPlugin();
 
         final CompilerFacade facade = new CompilerFacade(parserPlugin.createCodeParser(),
+                globalSettingsPlugin.createGlobalSettingsStrategy(),
                 visualizerPlugin.createVisualizerStrategy(),
                 algebraPlugin.createAlgebraStrategy(),
                 optimizationPlugin.createOptimizationStrategy(),

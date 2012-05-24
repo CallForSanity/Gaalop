@@ -46,7 +46,7 @@ public class Base {
         
 
         GAPPDecoratingMain importer = new GAPPDecoratingMain();
-        importer.decorateGraph(graph, false, "");
+        importer.decorateGraph(graph);
 
         outputPlugin(new de.gaalop.codegenGapp.Plugin(), graph);
         outputPlugin(new de.gaalop.clucalc.output.Plugin(), graph);

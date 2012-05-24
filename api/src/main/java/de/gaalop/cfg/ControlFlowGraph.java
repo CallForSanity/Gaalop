@@ -61,6 +61,8 @@ public final class ControlFlowGraph {
         
         private HashMap<String, Expression> renderingExpressions = new HashMap<String, Expression>();
 
+        public GlobalSettings globalSettings = new GlobalSettings();
+        
         public HashMap<String, Expression> getRenderingExpressions() {
             return renderingExpressions;
         }

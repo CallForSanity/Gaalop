@@ -38,7 +38,7 @@ public class GAPPDecoratingMain {
      * @return The same graph object (which is now decorated with GAPP instructions)
      * @throws OptimizationException
      */
-    public ControlFlowGraph decorateGraph(ControlFlowGraph graph, boolean optMaxima, String maximaCommand) throws OptimizationException {
+    public ControlFlowGraph decorateGraph(ControlFlowGraph graph) throws OptimizationException {
 
         //test if an variable inputsVector exists, if yes, throw an Exception,
         //because inputsVector is used in the following conversion process.
@@ -54,13 +54,11 @@ public class GAPPDecoratingMain {
         boolean scalarFunctions = false;
 
         Plugin plugin = new Plugin();
-        plugin.setMaximaCommand(maximaCommand);
         
         plugin.setInvertTransformation(true);
         plugin.setScalarFunctions(scalarFunctions);
-        plugin.setOptMaxima(optMaxima);
-        plugin.setOptInserting(optMaxima);
-        plugin.setMaximaExpand(optMaxima);
+        plugin.setOptInserting(graph.globalSettings.isOptMaxima());
+        plugin.setMaximaExpand(graph.globalSettings.isOptMaxima());
         
         CFGImporterFacade facade = new CFGImporterFacade(plugin);
         facade.importGraph(graph);
