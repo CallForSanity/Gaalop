@@ -1,9 +1,6 @@
 package de.gaalop.gui;
 
-import de.gaalop.CodeGeneratorPlugin;
-import de.gaalop.CodeParserPlugin;
-import de.gaalop.OptimizationStrategyPlugin;
-import de.gaalop.Plugins;
+import de.gaalop.*;
 import java.awt.event.ItemEvent;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -56,9 +53,13 @@ public class MainForm {
             @Override
             public void actionPerformed(ActionEvent event) {
                 if (tabbedPane.getSelectedComponent() instanceof SourceFilePanel) {
-                    SourceFilePanel sourcePanel = (SourceFilePanel) tabbedPane.getSelectedComponent();
-                    CompileAction action = new CompileAction(sourcePanel, statusBar, panelPluginSelection);
-                    action.actionPerformed(event);
+                    if (panelPluginSelection.areConstraintsFulfilled()) {
+                        SourceFilePanel sourcePanel = (SourceFilePanel) tabbedPane.getSelectedComponent();
+                        CompileAction action = new CompileAction(sourcePanel, statusBar, panelPluginSelection);
+                        action.actionPerformed(event);
+                    } else {
+                        ErrorDialog.show(new CompilationException(panelPluginSelection.getErrorMessage()));
+                    }
                 }
             }
         });

@@ -4,6 +4,7 @@ import de.gaalop.CodeGenerator;
 import de.gaalop.CodeGeneratorException;
 import de.gaalop.OutputFile;
 import de.gaalop.cfg.ControlFlowGraph;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import javax.swing.JFrame;
@@ -22,6 +23,8 @@ public class GappDebugger implements CodeGenerator {
         ui.setVisible(true);
         ui.controller.loadSource(in);
         ui.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        String[] base = in.getAlgebraDefinitionFile().base;
+        ui.controller.setAlgebraBlades(Arrays.copyOfRange(base, 1, base.length));
         ui.controller.restart();
         
         return new HashSet<OutputFile>();

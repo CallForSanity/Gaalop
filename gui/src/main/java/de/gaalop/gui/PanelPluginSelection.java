@@ -213,7 +213,12 @@ public class PanelPluginSelection extends JPanel {
                 "The Visualizer plugin needs the visualCodeInserter plugin!",
                 plugins)) 
             return false;
-        
+        if (!depends(
+                "de.gaalop.gappDebugger.Plugin",
+                "de.gaalop.gapp.Plugin",
+                "The GAPP debugger needs the GAPP Optimizer!",
+                plugins)) 
+            return false;
         return true;
     }
 
@@ -234,6 +239,10 @@ public class PanelPluginSelection extends JPanel {
                 return false;
             }
         return true;
+    }
+
+    public String getErrorMessage() {
+        return errorMessage;
     }
 
 }

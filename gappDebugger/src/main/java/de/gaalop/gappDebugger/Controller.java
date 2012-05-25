@@ -11,24 +11,14 @@ import de.gaalop.gapp.variables.GAPPMultivector;
 import de.gaalop.gapp.visitor.InstructionType;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import de.gaalop.gapp.visitor.CFGGAPPVisitor;
 import de.gaalop.tba.Algebra;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Vector;
 import javax.swing.table.DefaultTableModel;
-import org.antlr.runtime.ANTLRReaderStream;
-import org.antlr.runtime.CommonTokenStream;
-import org.antlr.runtime.RecognitionException;
-import org.antlr.runtime.tree.CommonTreeNodeStream;
 
 /**
  * The controller for the ui
@@ -44,7 +34,6 @@ public class Controller {
     private Algebra algebra;
 
     public Controller(UI ui1) {
-        setAlgebraBlades("e1,e2,e3,einf,e0");
         this.ui = ui1;
         ui.jListVariables.setModel(modelVars);
         ui.jListSrc.setModel(modelSrc);
@@ -182,8 +171,7 @@ public class Controller {
         return null;
     }
 
-    public void setAlgebraBlades(String algebraBlades) {
-        String[] base = algebraBlades.split(",");
+    public void setAlgebraBlades(String[] base) {
         for (int i = 0; i < base.length; i++) {
             base[i] = base[i].trim();
         }
