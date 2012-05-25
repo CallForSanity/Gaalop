@@ -40,7 +40,6 @@
         <module>codegen-latex</module>
         <module>codegen-visualizer</module>
         <module>gaalet</module>
-        <module>codegen-visualizerC</module>
         <module>codegen-vis2d</module>
         <module>gappDebugger</module>
 	<!-- interface -->
