@@ -2,6 +2,7 @@ package de.gaalop.algebra;
 
 import de.gaalop.cfg.*;
 import de.gaalop.dfg.Expression;
+import de.gaalop.dfg.FloatConstant;
 import de.gaalop.dfg.MacroCall;
 import de.gaalop.dfg.MathFunction;
 import de.gaalop.dfg.MathFunctionCall;
@@ -51,7 +52,7 @@ public class Inliner extends EmptyControlFlowVisitor {
         curNode = node;
         //make all non-variable arguments to variables
         Expression c = node.getR();
-        if (!(c instanceof Variable)) {
+        if (!((c instanceof Variable) || (c instanceof FloatConstant))) {
             Variable newVariable = createNewVariable();
             AssignmentNode assignmentNode = new AssignmentNode(graph, newVariable, c);
             curNode.insertBefore(assignmentNode); 
@@ -61,7 +62,7 @@ public class Inliner extends EmptyControlFlowVisitor {
         } 
         
         c = node.getG();
-        if (!(c instanceof Variable)) {
+        if (!((c instanceof Variable) || (c instanceof FloatConstant))) {
             Variable newVariable = createNewVariable();
             AssignmentNode assignmentNode = new AssignmentNode(graph, newVariable, c);
             curNode.insertBefore(assignmentNode); 
@@ -71,7 +72,7 @@ public class Inliner extends EmptyControlFlowVisitor {
         } 
 
         c = node.getB();
-        if (!(c instanceof Variable)) {
+        if (!((c instanceof Variable) || (c instanceof FloatConstant))) {
             Variable newVariable = createNewVariable();
             AssignmentNode assignmentNode = new AssignmentNode(graph, newVariable, c);
             curNode.insertBefore(assignmentNode); 
@@ -81,7 +82,7 @@ public class Inliner extends EmptyControlFlowVisitor {
         } 
         
         c = node.getAlpha();
-        if (!(c instanceof Variable)) {
+        if (!((c instanceof Variable) || (c instanceof FloatConstant))) {
             Variable newVariable = createNewVariable();
             AssignmentNode assignmentNode = new AssignmentNode(graph, newVariable, c);
             curNode.insertBefore(assignmentNode); 
@@ -161,7 +162,7 @@ public class Inliner extends EmptyControlFlowVisitor {
                 //make all non-variable arguments to variables
                 ArrayList<Expression> newArgs = new ArrayList<Expression>(node.getArguments().size());
                 for (Expression arg: node.getArguments()) {
-                    if (!(arg instanceof Variable)) {
+                    if (!((arg instanceof Variable) || (arg instanceof FloatConstant))) {
                         Variable newVariable = createNewVariable();
                         AssignmentNode assignmentNode = new AssignmentNode(graph, newVariable, arg);
                         curNode.insertBefore(assignmentNode); 
