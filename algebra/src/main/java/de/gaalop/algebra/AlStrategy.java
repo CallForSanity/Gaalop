@@ -92,7 +92,7 @@ public class AlStrategy implements AlgebraStrategy {
             graph.accept(replacerB);
             //Update variable set
             UpdateLocalVariableSet.updateVariableSets(graph);
-            RemoveDefVars.removeDefVars(graph);
+            //RemoveDefVars.removeDefVars(graph);
 
             //update output blades
             HashMap<String, Integer> mapIndices = new HashMap<String, Integer>();

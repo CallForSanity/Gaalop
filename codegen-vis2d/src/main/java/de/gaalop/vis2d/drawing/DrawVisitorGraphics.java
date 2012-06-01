@@ -1,5 +1,6 @@
 package de.gaalop.vis2d.drawing;
 
+import de.gaalop.vis2d.Stretch2d;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -116,6 +117,14 @@ public class DrawVisitorGraphics implements DrawVisitor {
         graphics.setColor(text2d.color);
         Point p = transformPoint(text2d.x, text2d.y);
         graphics.drawString(text2d.text, p.x, p.y);
+    }
+
+    @Override
+    public void visitStretch2d(Stretch2d stretch2d) {
+        graphics.setColor(stretch2d.color);
+        Point start = transformPoint(stretch2d.x1, stretch2d.y1);
+        Point end = transformPoint(stretch2d.x2, stretch2d.y2);
+        graphics.drawLine(start.x,start.y,end.x,end.y);
     }
 
 }

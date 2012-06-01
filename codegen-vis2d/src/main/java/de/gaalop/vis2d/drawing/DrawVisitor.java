@@ -1,5 +1,7 @@
 package de.gaalop.vis2d.drawing;
 
+import de.gaalop.vis2d.Stretch2d;
+
 /**
  *
  * @author Christian Steinmetz
@@ -17,5 +19,7 @@ public interface DrawVisitor {
     public void drawKOS();
 
     public void visitText2d(Text2d text2d);
+
+    public void visitStretch2d(Stretch2d stretch2d);
 
 }

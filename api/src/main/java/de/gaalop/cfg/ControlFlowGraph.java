@@ -12,7 +12,9 @@ import org.apache.commons.logging.LogFactory;
 
 import de.gaalop.InputFile;
 import de.gaalop.dfg.Expression;
+import de.gaalop.dfg.MacroCall;
 import de.gaalop.dfg.Variable;
+import java.util.*;
 
 /**
  * This class models a control dataflow graph.
@@ -62,6 +64,8 @@ public final class ControlFlowGraph {
         private HashMap<String, Expression> renderingExpressions = new HashMap<String, Expression>();
 
         public GlobalSettings globalSettings = new GlobalSettings();
+        
+        public LinkedList<UnknownMacroCall> unknownMacros = new LinkedList<UnknownMacroCall>();
         
         public HashMap<String, Expression> getRenderingExpressions() {
             return renderingExpressions;
