@@ -1,6 +1,6 @@
 package de.gaalop.clucalc.output;
 
-import de.gaalop.cfg.AlgebraSignature;
+import de.gaalop.cfg.AlgebraDefinitionFile;
 import de.gaalop.dfg.*;
 
 /**
@@ -11,13 +11,10 @@ public class DfgVisitor implements ExpressionVisitor {
 	private StringBuilder code = new StringBuilder();
 	private final String optSuffix;
 	private final String suffix;
-
-        private AlgebraSignature signature;
         
-	public DfgVisitor(String suffix, String optSuffix, AlgebraSignature signature) {
+	public DfgVisitor(String suffix, String optSuffix) {
 		this.suffix = suffix;
 		this.optSuffix = optSuffix;
-                this.signature = signature;
 	}
 
 	public String getCode() {
@@ -103,7 +100,7 @@ public class DfgVisitor implements ExpressionVisitor {
 
 	@Override
 	public void visit(FloatConstant floatConstant) {
-		code.append(Float.toString(floatConstant.getValue()).replace('E', 'e'));
+		code.append(Double.toString(floatConstant.getValue()).replace('E', 'e'));
 	}
 
 	@Override
@@ -113,7 +110,7 @@ public class DfgVisitor implements ExpressionVisitor {
 
 	@Override
 	public void visit(BaseVector baseVector) {
-		code.append(signature.printBaseVector(baseVector));
+		code.append(baseVector.toString());
 	}
 
 	@Override

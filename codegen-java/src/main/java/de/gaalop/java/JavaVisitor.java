@@ -105,7 +105,7 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
             // Remind that only variables can be outputted, no MultivectorComponents!
             if (!known.contains(name)) {
                 known.add(name);
-                int bladeCount = (int) Math.pow(2, graph.getSignature().getDimension());
+                int bladeCount = graph.getAlgebraDefinitionFile().getBladeCount();
                 for (int blade = 0; blade < bladeCount; blade++) {
                     String bladeName = name + "$" + blade;
                     outputs.add(bladeName);
@@ -138,7 +138,7 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
             String variableName = getVarName(inputVar);
             declared.add(variableName);
             appendIndentation();
-            append("private float " + variableName + ";\n");
+            append("private double " + variableName + ";\n");
         }
         append("\n");
 
@@ -148,7 +148,7 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
         append("// output variables\n");
         for (String curOutput : outputs) {
             appendIndentation();
-            append("private float " + curOutput + ";\n");
+            append("private double " + curOutput + ";\n");
         }
         append("\n");
 
@@ -156,7 +156,7 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
         appendIndentation();
         append("@Override\n");
         appendIndentation();
-        append("public float getValue(String varName) {\n");
+        append("public double getValue(String varName) {\n");
         indentation++;
 
         for (String curOutput : outputs) {
@@ -165,7 +165,7 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
         }
 
         appendIndentation();
-        append("return 0.0f;\n");
+        append("return 0.0d;\n");
 
         indentation--;
         appendIndentation();
@@ -176,11 +176,11 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
         appendIndentation();
         append("@Override\n");
         appendIndentation();
-        append("public HashMap<String,Float> getValues() {\n");
+        append("public HashMap<String,Double> getValues() {\n");
         indentation++;
 
         appendIndentation();
-        append("HashMap<String,Float> result = new HashMap<String,Float>();\n");
+        append("HashMap<String,Double> result = new HashMap<String,Double>();\n");
 
         for (String curOutput : outputs) {
             appendIndentation();
@@ -199,7 +199,7 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
         appendIndentation();
         append("@Override\n");
         appendIndentation();
-        append("public boolean setValue(String varName, float value) {\n");
+        append("public boolean setValue(String varName, double value) {\n");
         indentation++;
 
         for (Variable inputVar : graph.getInputVariables()) {
@@ -272,11 +272,7 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
             append(" // ");
 
             MultivectorComponent component = (MultivectorComponent) node.getVariable();
-            Expression[] bladeList = node.getGraph().getBladeList();
-
-            BladePrinter bladeVisitor = new BladePrinter(node.getGraph().getSignature());
-            bladeList[component.getBladeIndex()].accept(bladeVisitor);
-            append(bladeVisitor.getCode());
+            append(node.getGraph().getAlgebraDefinitionFile().getBladeString(component.getBladeIndex()));
         }
         append(";\n");
         node.getSuccessor().accept(this);
@@ -375,10 +371,10 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
 
         if (implementFactorial) {
             appendIndentation();
-            append("private float fact(int n) {\n");
+            append("private double fact(int n) {\n");
             indentation++;
             appendIndentation();
-            append("float result = 1;\n");
+            append("double result = 1;\n");
             appendIndentation();
             append("for (int i=2;i<=n;i++)\n");
             indentation++;
@@ -395,7 +391,7 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
         // print all members that are used for calculating
         for (String decl : toDeclare) {
             appendIndentation();
-            append("private float " + decl + ";\n");
+            append("private double " + decl + ";\n");
         }
 
         append("\n");
@@ -455,7 +451,7 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
 
     @Override
     public void visit(MathFunctionCall mathFunctionCall) {
-        String funcName = "(float) Math." + mathFunctionCall.getFunction().toString().toLowerCase();
+        String funcName = "(double) Math." + mathFunctionCall.getFunction().toString().toLowerCase();
         if (mathFunctionCall.getFunction() == MathFunction.FACT) {
             funcName = "fact";
             implementFactorial = true;
@@ -502,8 +498,8 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
 
     @Override
     public void visit(FloatConstant floatConstant) {
-        append(Float.toString(floatConstant.getValue()));
-        append('f');
+        append(Double.toString(floatConstant.getValue()));
+        append('d');
     }
 
     @Override

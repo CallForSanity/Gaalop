@@ -9,12 +9,10 @@ import java.util.Vector;
  */
 public class Multivector {
 
-    private Algebra algebra;
     private Vector<BladeRef> blades;
 
-    public Multivector(Algebra algebra) {
+    public Multivector() {
         blades = new Vector<BladeRef>();
-        this.algebra = algebra;
     }
 
     /**
@@ -29,8 +27,8 @@ public class Multivector {
      * Returns the values of all blades in this multivector
      * @return The values of all blades
      */
-    public byte[] getValueArr() {
-        int size = algebra.getBlades().size();
+    public byte[] getValueArr(Algebra algebra) {
+        int size = algebra.getBladeCount();
         byte[] result = new byte[size];
         Arrays.fill(result, (byte) 0);
 
@@ -41,34 +39,40 @@ public class Multivector {
         return result;
     }
 
-    /**
-     * Fills this multivector with values from an array
-     * @param arr The array
-     */
-    public void fromValueArr(byte[] arr) {
-        blades.clear();
-
-        for (int i = 0; i < arr.length; i++) {
-            if (Math.abs(arr[i]) >= 10E-7) {
-                BladeRef b = new BladeRef((byte) arr[i], i);
-                blades.add(b);
-            }
-        }
-
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj instanceof Multivector) {
-            Multivector comp = (Multivector) obj;
-
-            return Arrays.equals(getValueArr(), comp.getValueArr());
-        }
-        return false;
-    }
-
     @Override
     public String toString() {
         return blades.toString();
     }
+
+    public Vector<BladeRef> getBlades() {
+        return blades;
+    }
+
+    public String print() {
+        StringBuilder sb = new StringBuilder();
+        for (BladeRef ref: blades) {
+
+            switch (ref.getPrefactor()) {
+                case -1:
+                    sb.append("-E"+ref.getIndex());
+                    break;
+                case 0:
+                    break;
+                case 1:
+                    sb.append("+E"+ref.getIndex());
+                    break;
+                default:
+                    System.err.println("Only -1,0,1 allowed as prefactors in multivectors");
+                    break;
+            }
+
+
+        }
+        if (sb.length()==0) return "";
+        if (sb.charAt(0) == '+')
+            return sb.substring(1);
+        else
+            return sb.toString();
+    }
+
 }

@@ -1,6 +1,5 @@
 package de.gaalop.java;
 
-import de.gaalop.cfg.AlgebraSignature;
 import de.gaalop.dfg.*;
 
 /**
@@ -9,11 +8,6 @@ import de.gaalop.dfg.*;
 public class BladePrinter implements ExpressionVisitor {
 
     private StringBuilder code = new StringBuilder();
-    private AlgebraSignature signature;
-
-    public BladePrinter(AlgebraSignature signature) {
-        this.signature = signature;
-    }
 
     public String getCode() {
         return code.toString();
@@ -110,7 +104,7 @@ public class BladePrinter implements ExpressionVisitor {
 
     @Override
     public void visit(FloatConstant floatConstant) {
-        code.append(Float.toString(floatConstant.getValue()));
+        code.append(Double.toString(floatConstant.getValue()));
     }
 
     @Override
@@ -120,7 +114,7 @@ public class BladePrinter implements ExpressionVisitor {
 
     @Override
     public void visit(BaseVector baseVector) {
-        code.append(signature.printBaseVector(baseVector));
+        code.append(baseVector.toString());
     }
 
     @Override

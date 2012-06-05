@@ -87,6 +87,12 @@ public class PluginConfigurator {
             register(plugin, o);
         }
 
+        plugins = Plugins.getAlgebraStrategyPlugins();
+        for (Plugin plugin : plugins) {
+            configure(plugin);
+            register(plugin, o);
+        }
+
         plugins = Plugins.getCodeParserPlugins();
         for (Plugin plugin : plugins) {
             configure(plugin);
@@ -115,6 +121,11 @@ public class PluginConfigurator {
         Set<? extends Plugin> plugins;
 
         plugins = Plugins.getOptimizationStrategyPlugins();
+        for (Plugin plugin : plugins) {
+            readConfiguration(plugin);
+        }
+
+        plugins = Plugins.getAlgebraStrategyPlugins();
         for (Plugin plugin : plugins) {
             readConfiguration(plugin);
         }

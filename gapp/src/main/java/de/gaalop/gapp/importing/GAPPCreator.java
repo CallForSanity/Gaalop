@@ -1,11 +1,15 @@
 package de.gaalop.gapp.importing;
 
 import de.gaalop.dfg.MultivectorComponent;
+import de.gaalop.gapp.ConstantSetVectorArgument;
 import de.gaalop.gapp.GAPP;
+import de.gaalop.gapp.PairSetOfVariablesAndIndices;
 import de.gaalop.gapp.PosSelector;
 import de.gaalop.gapp.PosSelectorset;
 import de.gaalop.gapp.Selector;
 import de.gaalop.gapp.Selectorset;
+import de.gaalop.gapp.SetVectorArgument;
+import de.gaalop.gapp.Valueset;
 import de.gaalop.gapp.Variableset;
 import de.gaalop.gapp.importing.parallelObjects.Constant;
 import de.gaalop.gapp.importing.parallelObjects.DotProduct;
@@ -26,7 +30,6 @@ import de.gaalop.gapp.instructionSet.GAPPSetVector;
 import de.gaalop.gapp.variables.GAPPConstant;
 import de.gaalop.gapp.variables.GAPPMultivector;
 import de.gaalop.gapp.variables.GAPPMultivectorComponent;
-import de.gaalop.gapp.variables.GAPPValueHolder;
 import de.gaalop.gapp.variables.GAPPVector;
 import de.gaalop.tba.Algebra;
 import java.util.HashSet;
@@ -43,8 +46,9 @@ public class GAPPCreator implements ParallelObjectVisitor {
     private static final boolean USE_DOTPRODUCT_OPTIMIZER = false;
     public GAPP gapp;
     private int curTmp = -1;
-    private final String PREFIX_MV = "mv";
     private final String PREFIX_VE = "ve";
+    private final String PREFIX_TMPMV = "tempmv";
+
     private HashSet<String> variables;
     private int bladeCount;
     private Algebra algebra;
@@ -75,22 +79,22 @@ public class GAPPCreator implements ParallelObjectVisitor {
     }
 
     /**
-     * Creates a new GAPPMultivector and inserts a resetMv command in GAPP
+     * Creates a new temporary GAPPMultivector and inserts a resetMv command in GAPP
      * @param The number of entries in the new multivector
      * @return The new GAPPMultivector
      */
-    public GAPPMultivector createMv(int size) {
-        GAPPMultivector mv = new GAPPMultivector(createTMP(PREFIX_MV));
-        gapp.addInstruction(new GAPPResetMv(mv, size));
+    public GAPPMultivector createMv() {
+        GAPPMultivector mv = new GAPPMultivector(createTMP(PREFIX_TMPMV));
+        gapp.addInstruction(new GAPPResetMv(mv, 1));
         return mv;
     }
 
     /**
-     * Creates a multivector with one entry and returns the according GAPPMultivectorComponent
+     * Creates a temporary multivector with one entry and returns the according GAPPMultivectorComponent
      * @return The GAPPMultivectorComponent
      */
     public GAPPMultivectorComponent createMvComp() {
-        GAPPMultivector mv = new GAPPMultivector(createTMP(PREFIX_MV));
+        GAPPMultivector mv = new GAPPMultivector(createTMP(PREFIX_TMPMV));
         gapp.addInstruction(new GAPPResetMv(mv, 1));
         return new GAPPMultivectorComponent(mv.getName(), 0);
     }
@@ -132,7 +136,7 @@ public class GAPPCreator implements ParallelObjectVisitor {
         }
 
         if (!extCalculation.getOperand1().isTerminal()) {
-            GAPPMultivector mvTmp1 = createMv(1);
+            GAPPMultivector mvTmp1 = createMv();
             GAPPMultivectorComponent gMvC1 = new GAPPMultivectorComponent(mvTmp1.getName(), 0);
             extCalculation.getOperand1().accept(this, gMvC1);
             extCalculation.setOperand1(new MvComponent(new MultivectorComponent(mvTmp1.getName(), 0)));
@@ -140,7 +144,7 @@ public class GAPPCreator implements ParallelObjectVisitor {
 
         if (extCalculation.getOperand2() != null) {
             if (!extCalculation.getOperand2().isTerminal()) {
-                GAPPMultivector mvTmp2 = createMv(1);
+                GAPPMultivector mvTmp2 = createMv();
                 GAPPMultivectorComponent gMvC2 = new GAPPMultivectorComponent(mvTmp2.getName(), 0);
                 extCalculation.getOperand2().accept(this, gMvC2);
                 extCalculation.setOperand2(new MvComponent(new MultivectorComponent(mvTmp2.getName(), 0)));
@@ -193,10 +197,10 @@ public class GAPPCreator implements ParallelObjectVisitor {
         PosSelectorset selSet = new PosSelectorset();
         selSet.add(new PosSelector(destination.getBladeIndex(), algebra.getBlade(destination.getBladeIndex()).toString()));
 
-        Variableset varSet = new Variableset();
-        varSet.add(new GAPPConstant(((constant.isNegated()) ? -1 : 1) * constant.getValue()));
+        Valueset valSet = new Valueset();
+        valSet.add(new GAPPConstant(((constant.isNegated()) ? -1 : 1) * constant.getValue()));
 
-        gapp.addInstruction(new GAPPAssignMv(new GAPPMultivector(destination.getName()), selSet, varSet));
+        gapp.addInstruction(new GAPPAssignMv(new GAPPMultivector(destination.getName()), selSet, valSet));
 
         return null;
     }
@@ -231,7 +235,7 @@ public class GAPPCreator implements ParallelObjectVisitor {
             for (int col = 0; col < dotProduct.getWidth(); col++) {
                 if (!dotProduct.get(row, col).isTerminal()) {
                     ParallelObject nonTerminalObj = dotProduct.get(row, col);
-                    GAPPMultivector mvTmp = createMv(1);
+                    GAPPMultivector mvTmp = createMv();
                     GAPPMultivectorComponent gMvC = new GAPPMultivectorComponent(mvTmp.getName(), 0);
                     nonTerminalObj.accept(this, gMvC);
                     dotProduct.set(row, col, new MvComponent(new MultivectorComponent(mvTmp.getName(), 0)));
@@ -299,229 +303,44 @@ public class GAPPCreator implements ParallelObjectVisitor {
         // - MvComponent
         // - Constant
 
-        // distinguish four cases:
-        //1. only MvComponents from one multivector (using setVector (one operation))
-        //2. only Constants (using assignMv and then setVector (three operations))
-        //3. only MvComponents from more than one multivector (using setMv and then setVector (> three operations))
-        //4. a mix of all two types (using assignMv,setMv and then setVector (> three operations))
-
-        int numberOfMvComponents = countTypeInParallelVector(vector, ParallelObjectType.mvComponent);
-
-        if (numberOfMvComponents == 0) {
-            case2(destination, vector);
-        } else {
-            int numberOfConstants = countTypeInParallelVector(vector, ParallelObjectType.constant);
-
-            HashSet<String> multivectors = getMultivectors(vector);
-
-            if (numberOfConstants == 0) {
-                // case 1 or 3
-
-                if (multivectors.size() == 1) {
-                    case1(destination, vector);
-                } else {
-                    case3(destination, vector, multivectors);
-                }
-
-            } else {
-                case4(destination, vector, multivectors);
-            }
-        }
-
-        return destination;
-    }
-
-    /**
-     * Handles case 1 in creation of a GAPPVector from a ParallelVector.
-     * Case 1: Only MvComponents from one multivector (using setVector (one operation))
-     * @param destination The destination GAPPVector
-     * @param vector The ParallelVector
-     */
-    private void case1(GAPPVector destination, ParallelVector vector) {
-        Selectorset selSet = new Selectorset();
-        GAPPMultivector source = null;
-        int slotNo = 0;
-        for (ParallelObject slot : vector.getSlots()) {
-            MultivectorComponent mvC = ((MvComponent) slot).getMultivectorComponent();
-            if (slotNo == 0) {
-                source = new GAPPMultivector(mvC.getName());
-            }
-            selSet.add(new Selector(mvC.getBladeIndex(), slot.isNegated() ? (byte) -1 : (byte) 1, algebra.getBlade(mvC.getBladeIndex()).toString()));
-            slotNo++;
-        }
-
-        gapp.addInstruction(new GAPPSetVector(destination, source, selSet));
-    }
-
-    /**
-     * Handles case 2 in creation of a GAPPVector from a ParallelVector.
-     * Case 2: Only Constants (using assignMv and then setVector (three operations))
-     * @param destination The destination GAPPVector
-     * @param vector The ParallelVector
-     */
-    private void case2(GAPPVector destination, ParallelVector vector) {
-        GAPPMultivector mvTmp = createMv(vector.getSlots().size());
-        Variableset varMvDestSet = new Variableset();
-
-        PosSelectorset selSet = new PosSelectorset();
-        int slotNo = 0;
-        for (ParallelObject obj : vector.getSlots()) {
-            GAPPValueHolder valueHolder = null;
-            switch (ParallelObjectType.getType(obj)) {
+        LinkedList<SetVectorArgument> list = new LinkedList<SetVectorArgument>();
+        SetVectorArgument last = null;
+        for (ParallelObject object : vector.getSlots()) {
+            switch (ParallelObjectType.getType(object)) {
                 case constant:
-                    valueHolder = new GAPPConstant(((obj.isNegated()) ? -1 : 1) * ((Constant) obj).getValue());
+                    last = new ConstantSetVectorArgument(((object.isNegated()) ? -1 : 1) * ((Constant) object).getValue());
+                    list.add(last);
                     break;
-            }
-            varMvDestSet.add(valueHolder);
-            selSet.add(new PosSelector(slotNo, algebra.getBlade(slotNo).toString()));
-            slotNo++;
-        }
-
-
-        gapp.addInstruction(new GAPPAssignMv(
-                mvTmp,
-                selSet,
-                varMvDestSet));
-
-        gapp.addInstruction(new GAPPSetVector(
-                destination,
-                mvTmp,
-                createIncreasingSelectorset(vector.getSlots().size())));
-    }
-
-    /**
-     * Creates a Selectorset which consists of an increasing series of slots.
-     * The sign of all slots is +1
-     * @param numberOfSlots The number of slots that should be created
-     * @return The Selectorset
-     */
-    private Selectorset createIncreasingSelectorset(int numberOfSlots) {
-        Selectorset result = new Selectorset();
-        for (int slot = 0; slot < numberOfSlots; slot++) {
-            result.add(new Selector(slot, (byte) 1, algebra.getBlade(slot).toString()));
-        }
-        return result;
-    }
-
-    /**
-     * Handles case 3 in creation of a GAPPVector from a ParallelVector.
-     * Case 3: Only MvComponents from more than one multivector (using setMv and then setVector (> three operations))
-     * #GAPPInstructions: multivectors.size() + 2
-     * 
-     * @param destination The destination GAPPVector
-     * @param vector The ParallelVector
-     * @param multivectors The multivector names in the vector
-     */
-    private void case3(GAPPVector destination, ParallelVector vector, HashSet<String> multivectors) {
-        GAPPMultivector mvTmp = createMv(vector.getSlots().size());
-
-        copyFromManyMultivectors(mvTmp, vector, multivectors);
-
-        gapp.addInstruction(new GAPPSetVector(
-                destination,
-                mvTmp,
-                createIncreasingSelectorset(vector.getSlots().size())));
-    }
-
-    /**
-     * Copies the mvComponents from a ParallelVector to a GAPPMultivector
-     * @param mvDest The destination GAPPMultivector
-     * @param vector The ParallelVector
-     * @param multivectors The names of the multivectors in the vector
-     */
-    private void copyFromManyMultivectors(GAPPMultivector mvDest, ParallelVector vector, HashSet<String> multivectors) {
-        for (String mv : multivectors) {
-            PosSelectorset selSetDest = new PosSelectorset();
-            Selectorset selSetSrc = new Selectorset();
-
-            int slotNo = 0;
-            for (ParallelObject object : vector.getSlots()) {
-                if (ParallelObjectType.getType(object) == ParallelObjectType.mvComponent) {
+                case mvComponent:
                     MultivectorComponent mvC = ((MvComponent) object).getMultivectorComponent();
-                    if (mvC.getName().equals(mv)) {
-                        selSetSrc.add(new Selector(mvC.getBladeIndex(), object.isNegated() ? (byte) -1 : (byte) 1, algebra.getBlade(mvC.getBladeIndex()).toString()));
-                        selSetDest.add(new PosSelector(slotNo, algebra.getBlade(slotNo).toString()));
+                    Selector sel = new Selector(mvC.getBladeIndex(), object.isNegated() ? (byte) -1 : (byte) 1, algebra.getBlade(mvC.getBladeIndex()).toString());
+                    if (last != null && !last.isConstant()) {
+                        PairSetOfVariablesAndIndices pair = (PairSetOfVariablesAndIndices) last;
+                        
+                        if (pair.getSetOfVariable().getName().equals(mvC.getName())) {
+                            //merge
+                            pair.getSelectors().add(sel);
+                        } else {
+                            Selectorset selSet = new Selectorset();
+                            selSet.add(sel);
+                            last = new PairSetOfVariablesAndIndices(new GAPPMultivector(mvC.getName()), selSet);
+                            list.add(last);
+                        }
+                    } else {
+                        Selectorset selSet = new Selectorset();
+                        selSet.add(sel);
+                        last = new PairSetOfVariablesAndIndices(new GAPPMultivector(mvC.getName()), selSet);
+                        list.add(last);
                     }
-                }
-
-                slotNo++;
-            }
-
-
-            gapp.addInstruction(new GAPPSetMv(mvDest, new GAPPMultivector(mv), selSetDest, selSetSrc));
-        }
-    }
-
-    /**
-     * Handles case 4 in creation of a GAPPVector from a ParallelVector.
-     * Case 4: A mix of all two types (using assignMv,setMv and then setVector (> three operations))
-     * #GAPPInstructions: multivectors.size() + 3
-     *
-     * @param destination The destination GAPPVector
-     * @param vector The ParallelVector
-     * @param multivectors The multivector names in the vector
-     */
-    private void case4(GAPPVector destination, ParallelVector vector, HashSet<String> multivectors) {
-        GAPPMultivector mvTmp = createMv(vector.getSlots().size());
-        Variableset varMvDestSet = new Variableset();
-        PosSelectorset selSet = new PosSelectorset();
-
-        int slotNo = 0;
-        for (ParallelObject obj : vector.getSlots()) {
-            GAPPValueHolder valueHolder = null;
-            switch (ParallelObjectType.getType(obj)) {
-                case constant:
-                    valueHolder = new GAPPConstant((obj.isNegated() ? -1 : 1) * ((Constant) obj).getValue());
-                    selSet.add(new PosSelector(slotNo, algebra.getBlade(slotNo).toString()));
-                    varMvDestSet.add(valueHolder);
                     break;
-            }
-            slotNo++;
-        }
+                default:
+                    System.err.println("createVectorFromParallelVector for "+ParallelObjectType.getType(object)+" is not implemented!");
+                    break;
 
-        copyFromManyMultivectors(mvTmp, vector, multivectors);
-
-
-        gapp.addInstruction(new GAPPAssignMv(
-                mvTmp,
-                selSet,
-                varMvDestSet));
-
-        gapp.addInstruction(new GAPPSetVector(
-                destination,
-                mvTmp,
-                createIncreasingSelectorset(vector.getSlots().size())));
-    }
-
-    /**
-     * Collects all names of multivectors in the MvComponents of a ParallelVector
-     * @param vector The ParallelVector
-     * @return The set of all names of multivectors
-     */
-    private HashSet<String> getMultivectors(ParallelVector vector) {
-        HashSet<String> mvs = new HashSet<String>();
-        for (ParallelObject obj : vector.getSlots()) {
-            if (ParallelObjectType.getType(obj) == ParallelObjectType.mvComponent) {
-                mvs.add(((MvComponent) obj).getMultivectorComponent().getName());
             }
         }
-        return mvs;
-    }
-
-    /**
-     * Computes the number of a type in a ParallelVector
-     * @param vector The ParallelVector
-     * @param type The type
-     * @return The number of the type in the vector
-     */
-    private int countTypeInParallelVector(ParallelVector vector, ParallelObjectType type) {
-        int count = 0;
-        for (ParallelObject obj : vector.getSlots()) {
-            if (ParallelObjectType.getType(obj) == type) {
-                count++;
-            }
-        }
-        return count;
+        gapp.addInstruction(new GAPPSetVector(destination, list));
+        return destination;
     }
 
     // ========================= Illegal methods ===============================

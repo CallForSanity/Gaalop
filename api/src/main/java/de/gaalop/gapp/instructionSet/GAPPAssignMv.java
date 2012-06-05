@@ -1,6 +1,7 @@
 package de.gaalop.gapp.instructionSet;
 
 import de.gaalop.gapp.PosSelectorset;
+import de.gaalop.gapp.Valueset;
 import de.gaalop.gapp.Variableset;
 import de.gaalop.gapp.variables.GAPPMultivector;
 import de.gaalop.gapp.visitor.GAPPVisitor;
@@ -12,9 +13,9 @@ public class GAPPAssignMv extends GAPPBaseInstruction {
 
     private GAPPMultivector destinationMv;
     private PosSelectorset selectors;
-    private Variableset values;
+    private Valueset values;
 
-    public GAPPAssignMv(GAPPMultivector destinationMv, PosSelectorset selectors, Variableset values) {
+    public GAPPAssignMv(GAPPMultivector destinationMv, PosSelectorset selectors, Valueset values) {
         this.destinationMv = destinationMv;
         this.selectors = selectors;
         this.values = values;
@@ -24,7 +25,7 @@ public class GAPPAssignMv extends GAPPBaseInstruction {
     public GAPPAssignMv(GAPPMultivector destinationMv) {
         this.destinationMv = destinationMv;
         this.selectors = new PosSelectorset();
-        this.values = new Variableset();
+        this.values = new Valueset();
     }
 
     @Override
@@ -32,7 +33,7 @@ public class GAPPAssignMv extends GAPPBaseInstruction {
         return visitor.visitAssignMv(this, arg);
     }
 
-    public GAPPMultivector getDestinationMv() {
+    public GAPPMultivector getDestination() {
         return destinationMv;
     }
 
@@ -40,7 +41,7 @@ public class GAPPAssignMv extends GAPPBaseInstruction {
         return selectors;
     }
 
-    public Variableset getValues() {
+    public Valueset getValues() {
         return values;
     }
 
@@ -52,7 +53,7 @@ public class GAPPAssignMv extends GAPPBaseInstruction {
         this.selectors = selectors;
     }
 
-    public void setValues(Variableset values) {
+    public void setValues(Valueset values) {
         this.values = values;
     }
 }

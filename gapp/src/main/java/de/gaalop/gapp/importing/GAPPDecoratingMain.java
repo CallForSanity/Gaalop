@@ -13,12 +13,10 @@ import de.gaalop.dfg.Variable;
 import de.gaalop.gapp.GAPP;
 import de.gaalop.gapp.Variableset;
 import de.gaalop.gapp.importing.optimization.GAPPFurtherOptimizationsFacade;
-import de.gaalop.gapp.instructionSet.GAPPAssignVector;
+import de.gaalop.gapp.instructionSet.GAPPAssignInputsVector;
 import de.gaalop.gapp.variables.GAPPScalarVariable;
 import de.gaalop.gapp.variables.GAPPVector;
 import de.gaalop.tba.Plugin;
-import de.gaalop.tba.UseAlgebra;
-import de.gaalop.tba.cfgImport.BaseVectorChecker;
 import de.gaalop.tba.cfgImport.CFGImporterFacade;
 import java.util.Collections;
 import java.util.Comparator;
@@ -34,34 +32,35 @@ public class GAPPDecoratingMain {
 
     /**
      * Decorates a given ControlFlowGraph with GAPP instructions
-     * @param usedAlgebra The used algebra
      * @param graph The ControlFlowGraph
      * @param optMaxima Should Maxima be used?
      * @param maximaCommand The maxima command
      * @return The same graph object (which is now decorated with GAPP instructions)
      * @throws OptimizationException
      */
-    public ControlFlowGraph decorateGraph(UseAlgebra usedAlgebra, ControlFlowGraph graph, boolean optMaxima, String maximaCommand) throws OptimizationException {
+    public ControlFlowGraph decorateGraph(ControlFlowGraph graph) throws OptimizationException {
+
+        //test if an variable inputsVector exists, if yes, throw an Exception,
+        //because inputsVector is used in the following conversion process.
+        Variable inputsVectorVar = new Variable("inputsVector");
+        if (
+                graph.getInputVariables().contains(inputsVectorVar) ||
+                graph.getScalarVariables().contains(inputsVectorVar) ||
+                graph.getLocalVariables().contains(inputsVectorVar)
+            )
+                throw new OptimizationException("The usage of 'inputsVector' as a variable is not allowed with using the GAPP optimization!\nPlease rename the 'inputsVector' variable definition and usages!", graph);
+
 
         boolean scalarFunctions = false;
 
-        if (!usedAlgebra.isN3()) {
-            BaseVectorChecker checker = new BaseVectorChecker(usedAlgebra.getAlgebra().getBase());
-            graph.accept(checker);
-        }
-
         Plugin plugin = new Plugin();
-        plugin.setMaximaCommand(maximaCommand);
         
         plugin.setInvertTransformation(true);
         plugin.setScalarFunctions(scalarFunctions);
-        
-        plugin.setOptMaxima(optMaxima);
-        plugin.setOptInserting(optMaxima);
-        plugin.setMaximaExpand(optMaxima);
+        plugin.setOptInserting(graph.globalSettings.isOptMaxima());
+        plugin.setMaximaExpand(graph.globalSettings.isOptMaxima());
         
         CFGImporterFacade facade = new CFGImporterFacade(plugin);
-        facade.setUsedAlgebra(usedAlgebra);
         facade.importGraph(graph);
 
         //Transform divisions with constants in multiplications
@@ -70,10 +69,10 @@ public class GAPPDecoratingMain {
         GAPP gappStart = new GAPP();
 
         HashSet<String> variables = getAllVariableNames(graph);
-        assignInputVariables(graph, gappStart, variables);
+        assignInputVariables(graph, gappStart);
 
         // import now the graph in GAPP
-        GAPPDecorator vCFG = new GAPPDecorator(gappStart, variables, usedAlgebra.getBladeCount(), scalarFunctions, usedAlgebra.getAlgebra());
+        GAPPDecorator vCFG = new GAPPDecorator(gappStart, variables, facade.getUsedAlgebra().getBladeCount(), scalarFunctions, facade.getUsedAlgebra().getAlgebra());
         graph.accept(vCFG);
 
         // perform further optimizations
@@ -90,9 +89,8 @@ public class GAPPDecoratingMain {
      * Adds instructions to a GAPP instance which assigns all InputVariables to a GAPPMultivector
      * @param graph The ControlFlowGraph
      * @param gappStart The GAPP instance
-     * @param variables All used variable names in the ControlFlowGraph
      */
-    private void assignInputVariables(ControlFlowGraph graph, GAPP gappStart, HashSet<String> variables) {
+    private void assignInputVariables(ControlFlowGraph graph, GAPP gappStart) {
         if (graph.getInputVariables().isEmpty()) return;
         
         LinkedList<Variable> toDo = new LinkedList<Variable>(graph.getInputVariables());
@@ -107,7 +105,7 @@ public class GAPPDecoratingMain {
 
         HashMap<Variable, MultivectorComponent> map = new HashMap<Variable, MultivectorComponent>();
 
-        GAPPVector inputsMv = new GAPPVector(createNameOfInputsVector(variables));
+        GAPPVector inputsMv = new GAPPVector("inputsVector");
 
         Variableset varSet = new Variableset();
         int slotNo = 0;
@@ -117,40 +115,13 @@ public class GAPPDecoratingMain {
             slotNo++;
         }
 
-        gappStart.addInstruction(new GAPPAssignVector(inputsMv, varSet));
+        gappStart.addInstruction(new GAPPAssignInputsVector(varSet));
 
 
         while (!toDo.isEmpty()) {
             Variable curVar = toDo.removeFirst();
             ReplaceVisitor replaceVisitor = new ReplaceVisitor(curVar, map.get(curVar));
             graph.accept(replaceVisitor);
-        }
-    }
-
-    /**
-     * Creates a recently non-used name for the inputsVector.
-     * Adds the new name to variables set and returns the new name.
-     * Preferes "inputsVector" as new name.
-     * An increasing number is appended on prefered name until the name is non-used.
-     *
-     * @param variables
-     * @return The new name
-     */
-    private String createNameOfInputsVector(HashSet<String> variables) {
-        // prefer as name "inputsVector"
-        String preferedName = "inputsVector";
-        if (!variables.contains(preferedName)) {
-            variables.add(preferedName);
-            return preferedName;
-        } else {
-            int number = 1;
-            while (variables.contains(preferedName + number)) {
-                number++;
-            }
-
-            String result = preferedName + number;
-            variables.add(result);
-            return result;
         }
     }
 

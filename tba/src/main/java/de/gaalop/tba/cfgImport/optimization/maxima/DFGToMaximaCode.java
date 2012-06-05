@@ -116,7 +116,7 @@ public class DFGToMaximaCode implements ExpressionVisitor {
 
     @Override
     public void visit(FloatConstant node) {
-        result.append(Float.toString(node.getValue()));
+        result.append(Double.toString(node.getValue()));
     }
 
     @Override

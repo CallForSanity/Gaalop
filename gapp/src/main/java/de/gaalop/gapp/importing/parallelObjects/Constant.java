@@ -6,17 +6,17 @@ package de.gaalop.gapp.importing.parallelObjects;
  */
 public class Constant extends ParallelObject {
 
-    private float value;
+    private double value;
 
-    public Constant(float value) {
+    public Constant(double value) {
         this.value = value;
     }
 
-    public float getValue() {
+    public double getValue() {
         return value;
     }
 
-    public void setValue(float value) {
+    public void setValue(double value) {
         this.value = value;
     }
 
@@ -27,7 +27,7 @@ public class Constant extends ParallelObject {
 
     @Override
     public String toString() {
-        return (isNegated() ? "!" : "") + Float.toString(value);
+        return (isNegated() ? "!" : "") + Double.toString(value);
     }
 
     @Override

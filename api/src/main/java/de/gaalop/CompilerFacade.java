@@ -16,6 +16,12 @@ import java.util.Set;
 public final class CompilerFacade extends Observable {
 
     private final CodeParser codeParser;
+    
+    private final GlobalSettingsStrategy globalSettingsStrategy;
+
+    private final VisualCodeInserterStrategy visualizerStrategy;
+
+    private final AlgebraStrategy algebraStrategy;
 
     private final OptimizationStrategy optimizationStrategy;
 
@@ -38,8 +44,11 @@ public final class CompilerFacade extends Observable {
      * @param optimizationStrategy The optimization strategy used to process the graph before generating code.
      * @param codeGenerator The code generator used to generate code from the previously optimized graph.
      */
-    public CompilerFacade(CodeParser codeParser, OptimizationStrategy optimizationStrategy, CodeGenerator codeGenerator) {
+    public CompilerFacade(CodeParser codeParser, GlobalSettingsStrategy globalSettingsStrategy, VisualCodeInserterStrategy visualizerStrategy, AlgebraStrategy algebraStrategy, OptimizationStrategy optimizationStrategy, CodeGenerator codeGenerator) {
         this.codeParser = codeParser;
+        this.globalSettingsStrategy = globalSettingsStrategy;
+        this.visualizerStrategy = visualizerStrategy;
+        this.algebraStrategy = algebraStrategy;
         this.optimizationStrategy = optimizationStrategy;
         this.codeGenerator = codeGenerator;
     }
@@ -65,9 +74,26 @@ public final class CompilerFacade extends Observable {
         ControlFlowGraph graph = codeParser.parseFile(input);
         setChanged();
         
+        notifyObservers("Setting global settings...");
+        globalSettingsStrategy.transform(graph);
+        setChanged();
+        
+        notifyObservers("Algebra inserting...");  
+        algebraStrategy.transform(graph);
+        setChanged();
+
+        notifyObservers("Inserting code for visualization...");
+        visualizerStrategy.transform(graph);
+        setChanged();
+
+        notifyObservers("Algebra inserting...");  
+        algebraStrategy.transform(graph);
+        setChanged();
+        
         notifyObservers("Optimizing...");  //FIXME thomas
         optimizationStrategy.transform(graph);
         setChanged();
+        
         notifyObservers("Generating Code...");
         Set<OutputFile> output = codeGenerator.generate(graph);  
         setChanged();

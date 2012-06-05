@@ -2,7 +2,7 @@ package de.gaalop.gaalet.output;
 
 import de.gaalop.cfg.*;
 import de.gaalop.dfg.*;
-import de.gaalop.gaalet.NameTable;
+import de.gaalop.NameTable;
 import de.gaalop.gaalet.GaaletMultiVector;
 
 import java.util.*;
@@ -21,12 +21,9 @@ public class CppVisitor extends de.gaalop.cpp.CppVisitor {
 	protected Map<StoreResultNode, String> outputNamesMap = new HashMap<StoreResultNode, String>();
 
 	protected Set<GaaletMultiVector> vectorSet = new HashSet<GaaletMultiVector>();
-
-	protected String variableType;
 	
 	public CppVisitor(boolean standalone) {
 		super(standalone);
-		variableType = "float";
 	}
 
 	public CppVisitor(String variableType) {
@@ -45,7 +42,7 @@ public class CppVisitor extends de.gaalop.cpp.CppVisitor {
 		FindStoreOutputNodes findOutput = new FindStoreOutputNodes();
 		graph.accept(findOutput);
 		for (StoreResultNode var : findOutput.getNodes()) {
-			String outputName = var.getValue().getName() + "_out";
+			String outputName = var.getValue().getName() + suffix;
 		
 			outputNamesMap.put(var, outputName);
 		}
@@ -55,13 +52,13 @@ public class CppVisitor extends de.gaalop.cpp.CppVisitor {
 			// Input Parameters
 			List<Variable> inputParameters = sortVariables(graph.getInputVariables());
 			for (Variable var : inputParameters) {
-				code.append("float "); // The assumption here is that they all are normal scalars
+				code.append(variableType).append(" "); // The assumption here is that they all are normal scalars
 				printVarName(var.getName());
 				code.append(", ");
 			}
 
 			for (StoreResultNode var : findOutput.getNodes()) {
-				code.append("float **");
+				code.append(variableType).append(" **");
 				printVarName(outputNamesMap.get(var));
 				code.append(", ");
 			}

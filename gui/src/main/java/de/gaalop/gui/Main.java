@@ -12,6 +12,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -83,18 +84,20 @@ public class Main {
     private void loadConfig() {
         Properties config = new Properties();
 
-        try {
-            FileInputStream input = new FileInputStream(CONFIG_FILENAME);
+        if (new File(CONFIG_FILENAME).exists()) {
             try {
-                config.loadFromXML(input);
-            } finally {
-                input.close();
+                FileInputStream input = new FileInputStream(CONFIG_FILENAME);
+                try {
+                    config.loadFromXML(input);
+                } finally {
+                    input.close();
+                }
+            } catch (IOException e) {
+                log.error("Unable to load configuration file " + CONFIG_FILENAME, e);
             }
-        } catch (IOException e) {
-            log.error("Unable to load configuration file " + CONFIG_FILENAME, e);
-        }
 
-        log.debug("Configuration loaded: " + config);
+            log.debug("Configuration loaded: " + config);
+        }
 
         PluginConfigurator configurator = new PluginConfigurator(config);
         configurator.configureAll(mainForm.getStatusBar());

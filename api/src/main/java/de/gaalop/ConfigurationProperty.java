@@ -29,6 +29,12 @@ public @interface ConfigurationProperty {
 		NUMBER,
 		
 		/** Boolean values */
-		BOOLEAN
+		BOOLEAN,
+
+                /** File chooser */
+                FILEPATH,
+
+                /** Directory chooser */
+                DIRPATH
 	}
 }

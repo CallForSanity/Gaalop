@@ -1,5 +1,6 @@
 package de.gaalop.cpp;
 
+import de.gaalop.Notifications;
 import de.gaalop.cfg.*;
 import de.gaalop.dfg.*;
 
@@ -15,17 +16,32 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 
 	protected Log log = LogFactory.getLog(CppVisitor.class);
 
+	protected boolean standalone = true;
+
+	protected final String suffix = "_opt";
+
 	protected StringBuilder code = new StringBuilder();
 
 	protected ControlFlowGraph graph;
 
-	// Maps the nodes that output variables to their result parameter names
-	protected Map<StoreResultNode, String> outputNamesMap = new HashMap<StoreResultNode, String>();
-
 	protected int indentation = 0;
+
+	protected Set<String> assigned = new HashSet<String>();
         
-        protected String outputSuffix = "_out";
-	protected boolean standalone = true;
+        protected String variableType = "float";
+	
+	public CppVisitor(boolean standalone) {
+		this.standalone = standalone;
+	}
+        
+	public CppVisitor(String variableType) {
+		this.standalone = false;
+		this.variableType = variableType;
+	}
+	
+	public void setStandalone(boolean standalone) {
+		this.standalone = standalone;
+	}
 
 	public String getCode() {
 		return code.toString();
@@ -40,44 +56,50 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 	@Override
 	public void visit(StartNode node) {
 		graph = node.getGraph();
+                int bladeCount = graph.getAlgebraDefinitionFile().getBladeCount();
 
-		FindStoreOutputNodes findOutput = new FindStoreOutputNodes();
-		graph.accept(findOutput);
-		for (StoreResultNode var : findOutput.getNodes()) {
-			String outputName = var.getValue().getName() + outputSuffix;
-			outputNamesMap.put(var, outputName);
-		}
+		List<Variable> localVariables = sortVariables(graph.getLocalVariables());
 		if (standalone) {
 			code.append("void calculate(");
 
 			// Input Parameters
 			List<Variable> inputParameters = sortVariables(graph.getInputVariables());
 			for (Variable var : inputParameters) {
-				code.append("float "); // The assumption here is that they all are normal scalars
+				code.append(variableType).append(" "); // The assumption here is that they all are normal scalars
 				code.append(var.getName());
 				code.append(", ");
 			}
 
-			for (StoreResultNode var : findOutput.getNodes()) {
-				code.append("float **");
-				code.append(outputNamesMap.get(var));
-				code.append(", ");
+			for (Variable var : localVariables) {
+				code.append(variableType).append(" ");
+				code.append(var.getName());
+				code.append("["+bladeCount+"], ");
 			}
 
-			if (!graph.getInputVariables().isEmpty() || !findOutput.getNodes().isEmpty()) {
+			if (graph.getLocalVariables().size() > 0) {
 				code.setLength(code.length() - 2);
 			}
 
 			code.append(") {\n");
 			indentation++;
+		} else {
+			for (Variable var : localVariables) {
+				appendIndentation();
+				code.append(variableType).append(" ");
+				code.append(var.getName());
+				code.append("["+bladeCount+"] = { 0.0 };\n");
+			}
 		}
 
-		// Declare local variables
-		for (Variable var : graph.getLocalVariables()) {
+		if (graph.getScalarVariables().size() > 0) {
 			appendIndentation();
-			code.append("float ");
-			code.append(var.getName());
-			code.append("[32];\n");
+			code.append(variableType).append(" ");
+			for (Variable tmp : graph.getScalarVariables()) {
+				code.append(tmp.getName());
+				code.append(", ");
+			}
+			code.delete(code.length() - 2, code.length());
+			code.append(";\n");
 		}
 
 		if (!graph.getLocalVariables().isEmpty()) {
@@ -107,27 +129,49 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 		return variables;
 	}
 
-	protected Set<String> assigned = new HashSet<String>();
-
 	@Override
 	public void visit(AssignmentNode node) {
-		if (assigned.contains(node.getVariable().getName())) {
-			log.warn("Reuse of variable " + node.getVariable().getName()
-				+ ". Make sure to reset this variable or use another name.");
+		String variable = node.getVariable().getName();
+                if (graph.getRenderingExpressions().containsKey(variable)) {
+                    node.getSuccessor().accept(this);
+                    return;
+                }
+
+		if (assigned.contains(variable)) {
+			String message = "Variable " + variable + " has been reset for reuse.";
+			log.warn(message);
+			Notifications.addWarning(message);
 			code.append("\n");
 			appendIndentation();
-			code.append("// Warning: reuse of variable ");
-			code.append(node.getVariable().getName());
-			code.append(".\n");
-			appendIndentation();
-			code.append("// Make sure to reset this variable or use another name.\n");
-			assigned.remove(node.getVariable().getName());
+			code.append("memset(");
+			code.append(variable);
+			code.append(", 0, sizeof(");
+			code.append(variable);
+			code.append(")); // Reset variable for reuse.\n");
+			assigned.remove(variable);
 		}
 
 		appendIndentation();
 		node.getVariable().accept(this);
 		code.append(" = ");
 		node.getValue().accept(this);
+		code.append(";");
+
+		if (node.getVariable() instanceof MultivectorComponent) {
+			code.append(" // ");
+			MultivectorComponent component = (MultivectorComponent) node.getVariable();
+			code.append(node.getGraph().getAlgebraDefinitionFile().getBladeString(component.getBladeIndex()));
+		}
+
+		code.append('\n');
+
+		node.getSuccessor().accept(this);
+	}
+
+	@Override
+	public void visit(ExpressionStatement node) {
+		appendIndentation();
+		node.getExpression().accept(this);
 		code.append(";\n");
 
 		node.getSuccessor().accept(this);
@@ -135,25 +179,17 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 
 	@Override
 	public void visit(StoreResultNode node) {
-		assigned.add(node.getValue().getName());
-
-		appendIndentation();
-		code.append("memcpy(");
-		code.append(outputNamesMap.get(node));
-		code.append(", ");
-		code.append(node.getValue().getName());
-		code.append(", sizeof(");
-		code.append(node.getValue().getName());
-		code.append("));\n");
-
+		assigned.add(node.getValue().getName() + suffix);
 		node.getSuccessor().accept(this);
 	}
 
 	@Override
 	public void visit(IfThenElseNode node) {
+		Expression condition = node.getCondition();
+
 		appendIndentation();
 		code.append("if (");
-		node.getCondition().accept(this);
+		condition.accept(this);
 		code.append(") {\n");
 
 		indentation++;
@@ -191,15 +227,24 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 	}
 
 	@Override
-	public void visit(LoopNode loopNode) {
-		// TODO Auto-generated method stub
-		
+	public void visit(LoopNode node) {
+		appendIndentation();
+		code.append("while(true) {\n");
+
+		indentation++;
+		node.getBody().accept(this);
+		indentation--;
+
+		appendIndentation();
+		code.append("}\n");
+
+		node.getSuccessor().accept(this);
 	}
 
 	@Override
 	public void visit(BreakNode breakNode) {
-		// TODO Auto-generated method stub
-		
+		appendIndentation();
+		code.append("break;\n");
 	}
 
 	@Override
@@ -213,6 +258,11 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 			indentation--;
 			code.append("}\n");
 		}
+	}
+
+	@Override
+	public void visit(ColorNode node) {
+		node.getSuccessor().accept(this);
 	}
 
 	protected void addBinaryInfix(BinaryOperation op, String operator) {
@@ -283,7 +333,7 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 
 	@Override
 	public void visit(MultivectorComponent component) {
-		code.append(component.getName());
+		code.append(component.getName().replace(suffix, ""));
 		code.append('[');
 		code.append(component.getBladeIndex());
 		code.append(']');
@@ -310,8 +360,8 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 
 	@Override
 	public void visit(FloatConstant floatConstant) {
-		code.append(Float.toString(floatConstant.getValue()));
-		code.append('f');
+		code.append(Double.toString(floatConstant.getValue()));
+		//code.append('d');
 	}
 
 	@Override
@@ -326,8 +376,10 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 
 	@Override
 	public void visit(Negation negation) {
+                code.append('(');
 		code.append('-');
 		addChild(negation, negation.getOperand());
+                code.append(')');
 	}
 
 	@Override
@@ -343,6 +395,12 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 	@Override
 	public void visit(LogicalAnd node) {
 		addBinaryInfix(node, " && ");
+	}
+
+	@Override
+	public void visit(LogicalNegation node) {
+		code.append('!');
+		addChild(node, node.getOperand());
 	}
 
 	@Override
@@ -362,34 +420,16 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 
 	@Override
 	public void visit(Macro node) {
-		// TODO Auto-generated method stub
-		
+		throw new IllegalStateException("Macros should have been inlined and removed from the graph.");
 	}
 
 	@Override
 	public void visit(FunctionArgument node) {
-		// TODO Auto-generated method stub
-		
+		throw new IllegalStateException("Macros should have been inlined and no function arguments should be the graph.");
 	}
 
 	@Override
 	public void visit(MacroCall node) {
-		// TODO Auto-generated method stub
-		
+		throw new IllegalStateException("Macros should have been inlined and no macro calls should be in the graph.");
 	}
-
-    @Override
-    public void visit(ExpressionStatement node) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void visit(ColorNode node) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void visit(LogicalNegation node) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
 }

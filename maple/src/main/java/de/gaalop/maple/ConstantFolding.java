@@ -199,7 +199,7 @@ public class ConstantFolding implements ExpressionVisitor, ControlFlowVisitor {
     if ((node.getFunction() == MathFunction.SQRT) &&
             (previousExpr instanceof FloatConstant)) {
       FloatConstant operand = (FloatConstant) previousExpr;
-      resultExpr = new FloatConstant((float) Math.sqrt(operand.getValue()));
+      resultExpr = new FloatConstant(Math.sqrt(operand.getValue()));
     } else if ((node.getFunction() == MathFunction.ABS) &&
             (previousExpr instanceof MathFunctionCall)) {
       /* remove abs() around sqrts, as they are always positive */
@@ -244,7 +244,7 @@ public class ConstantFolding implements ExpressionVisitor, ControlFlowVisitor {
     } else if (right instanceof FloatConstant) {
       // x ^ const
       FloatConstant rightc = (FloatConstant) right;
-      boolean isSqrt = rightc.getValue() - (float) new Float(rightc.getValue()).intValue() == 0.5;
+      boolean isSqrt = rightc.getValue() - (double) new Double(rightc.getValue()).intValue() == 0.5;
       if(isSqrt && rightc.getValue() != 0.5) {
           MathFunctionCall newsqrt = new MathFunctionCall(new Exponentiation(
                   left, new FloatConstant(rightc.getValue() - 0.5f)), MathFunction.SQRT);

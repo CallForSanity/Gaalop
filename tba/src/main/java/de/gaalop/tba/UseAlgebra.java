@@ -1,9 +1,15 @@
 package de.gaalop.tba;
 
-import de.gaalop.cfg.AlgebraSignature;
+import de.gaalop.algebra.AlStrategy;
+import de.gaalop.algebra.BladeArrayRoutines;
+import de.gaalop.algebra.TCBlade;
+import de.gaalop.cfg.AlgebraDefinitionFile;
 import de.gaalop.dfg.Expression;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -17,32 +23,42 @@ public class UseAlgebra {
     private IMultTable tableInner;
     private IMultTable tableOuter;
     private IMultTable tableGeo;
-    private boolean N3;
 
-    public UseAlgebra(String algebraDirName) {
+    public UseAlgebra(AlgebraDefinitionFile alFile) {
+        if (alFile.isUsePrecalculatedTable()) {
+            algebra = new Algebra(alFile);
+            tableInner = new MultTableImpl();
+            tableOuter = new MultTableImpl();
+            tableGeo = new MultTableImpl();
+            tableInner.createTable(algebra.getBladeCount());
+            tableOuter.createTable(algebra.getBladeCount());
+            tableGeo.createTable(algebra.getBladeCount());
 
-        boolean useAsRessource = algebraDirName.equalsIgnoreCase("5d")
-                || algebraDirName.equalsIgnoreCase("2d")
-                || algebraDirName.equalsIgnoreCase("3d");
-        N3 = algebraDirName.equalsIgnoreCase("5d");
-        String dirName = (useAsRessource) ? "algebra/" + algebraDirName + "/" : new File(algebraDirName).getAbsolutePath() + File.separatorChar;
+            MultTableLoader loader = new MultTableLoader();
+            try {
+                loader.load(this, alFile.getProductsFilePath(), alFile.isUseAsRessource());
+            } catch (IOException ex) {
+                Logger.getLogger(UseAlgebra.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+            tableInner = new MultTableAbsDirectComputer(alFile, new de.gaalop.productComputer.InnerProductCalculator());
+            tableInner.createTable(0);
+            tableOuter = new MultTableAbsDirectComputer(alFile, new de.gaalop.productComputer.OuterProductCalculator());
+            tableOuter.createTable(0);
+            tableGeo = new MultTableAbsDirectComputer(alFile, new de.gaalop.productComputer.GeoProductCalculator());
+            tableGeo.createTable(0);
+            algebra = new Algebra(alFile);
+        }
+    }
 
-        algebra = new Algebra(dirName + "blades.csv", useAsRessource);
-
+    public UseAlgebra(Algebra algebra, int bladeCount) {
+        this.algebra = algebra;
         tableInner = new MultTableImpl();
         tableOuter = new MultTableImpl();
         tableGeo = new MultTableImpl();
-        MultTableLoader loader = new MultTableLoader();
-        try {
-            loader.load(this, dirName + "products.csv", useAsRessource);
-        } catch (IOException ex) {
-            Logger.getLogger(UseAlgebra.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-    }
-
-    public boolean isN3() {
-        return N3;
+        tableInner.createTable(bladeCount);
+        tableOuter.createTable(bladeCount);
+        tableGeo.createTable(bladeCount);
     }
 
     /**
@@ -80,7 +96,7 @@ public class UseAlgebra {
      * @return The number of blades
      */
     public int getBladeCount() {
-        return algebra.getBlades().size();
+        return algebra.getBladeCount();
     }
 
     /**
@@ -112,9 +128,16 @@ public class UseAlgebra {
      * Returns the useAlgebra which represents the calculations in 5d conformal geometric algebra
      * @return The useAlgebra instance
      */
-    public static UseAlgebra get5dConformalGA() {
-        //load 5d conformal algebra
-        return new UseAlgebra("5d");
+    public static UseAlgebra get5dConformalGATable() {
+        return loadInternalAlgebra(5, true);
+    }
+
+    /**
+     * Returns the useAlgebra which represents the calculations in 5d conformal geometric algebra
+     * @return The useAlgebra instance
+     */
+    public static UseAlgebra get5dConformalGALive() {
+        return loadInternalAlgebra(5, false);
     }
 
     /**
@@ -122,8 +145,34 @@ public class UseAlgebra {
      * @return The useAlgebra instance
      */
     public static UseAlgebra get3dGA() {
-        //load 3d algebra
-        return new UseAlgebra("3d");
+        return loadInternalAlgebra(3, false);
+    }
+
+    /**
+     * Loads an internal algebra with a given dimension
+     * @param dimension The dimension
+     * @param useTable Should the tables be used?
+     * @return The usealgebra
+     */
+    private static UseAlgebra loadInternalAlgebra(int dimension, boolean useTable) {
+        try {
+            AlgebraDefinitionFile alFile = new AlgebraDefinitionFile();
+            String baseDirPath = "algebra/"+dimension+"d/";
+            alFile.loadFromFile(AlStrategy.class.getResourceAsStream(baseDirPath+"definition.csv"));
+            alFile.setProductsFilePath(baseDirPath+"products.csv");
+            alFile.setUseAsRessource(true);
+            alFile.setUsePrecalculatedTable(useTable);
+
+            TCBlade[] blades = BladeArrayRoutines.createBlades(Arrays.copyOfRange(alFile.base,1,alFile.base.length));
+            alFile.blades = new Expression[blades.length];
+            for (int i = 0; i < blades.length; i++) {
+                alFile.blades[i] = blades[i].toExpression();
+            }
+            return new UseAlgebra(alFile);
+        } catch (IOException ex) {
+            Logger.getLogger(UseAlgebra.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
 
     /**
@@ -154,22 +203,46 @@ public class UseAlgebra {
 
     }
 
-    /**
-     * Creates a new AlgebraSignature from this algebra
-     * @return The new AlgebraSignature
-     */
-    public AlgebraSignature getAlgebraSignature() {
+    public void saveToDir(File dir, int from, int to) throws FileNotFoundException {
 
-        Expression[] bladlist = new Expression[algebra.getBlades().size()];
-        for (int blade = 0; blade < bladlist.length; blade++) {
-            bladlist[blade] = algebra.getBlades().get(blade).getExpression();
-        }
+        //save blade file
+        PrintWriter out = new PrintWriter(new File(dir,"blades.csv"));
+        printBlades(out);
+        out.close();
 
+        //save products file
+        out = new PrintWriter(new File(dir,"products.csv"));
+        printProducts(out, from, to);
 
-        AlgebraSignature sig = new AlgebraSignature(algebra.getBaseCount(), bladlist, N3);
+        out.close();
 
-        sig.setBasesFromBladesFile(algebra.getBase());
-
-        return sig;
     }
+
+    public void printBlades(PrintWriter out) {
+        StringBuilder sb = new StringBuilder();
+        for (String b: algebra.getBase()) {
+            sb.append(";");
+            sb.append(b);
+        }
+        if (algebra.getBase().length > 0)
+            out.println(sb.substring(1));
+
+        int bladeCount = algebra.getBladeCount();
+        for (int blade=0;blade<bladeCount;blade++)
+            out.println(algebra.getBlade(blade).toString());
+    }
+
+    public void printProducts(PrintWriter out, int from, int to) {
+        int bladeCount = algebra.getBladeCount();
+        for (int i=from;i<to;i++)
+            for (int j=0;j<bladeCount;j++) {
+                out.print("E");out.print(i);out.print(";");
+                out.print("E");out.print(j);out.print(";");
+                out.print(tableInner.getProduct(i, j).print());out.print(";");
+                out.print(tableOuter.getProduct(i, j).print());out.print(";");
+                out.print(tableGeo.getProduct(i, j).print());
+                out.println();
+            }
+    }
+
 }

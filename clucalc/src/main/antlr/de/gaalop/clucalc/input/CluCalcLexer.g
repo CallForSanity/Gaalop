@@ -20,10 +20,6 @@ FLOATING_POINT_LITERAL
 
 RANGE_LITERAL : 'range';
 
-OUTPUT_LITERAL: 'output';
-
-ALGEBRA_LITERAL: 'algebraDimension';
-
 UNROLL_LITERAL: 'unroll';
 
 COUNT_LITERAL: 'count';

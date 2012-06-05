@@ -1,5 +1,6 @@
 package de.gaalop.gui;
 
+import de.gaalop.*;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -20,11 +21,9 @@ import javax.swing.JTextField;
 
 import org.apache.commons.beanutils.BeanUtils;
 
-import de.gaalop.CodeGeneratorPlugin;
-import de.gaalop.ConfigurationProperty;
-import de.gaalop.OptimizationStrategyPlugin;
-import de.gaalop.Plugin;
-import de.gaalop.Plugins;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 
 /**
  * This class represents the configuration panel.
@@ -49,22 +48,23 @@ public class ConfigurationPanel extends JPanel {
 	private void initialize() {
 		setLayout(new BorderLayout());
 		add(pluginPanes, BorderLayout.CENTER);
-		for (OptimizationStrategyPlugin strategy : Plugins.getOptimizationStrategyPlugins()) {
-			addPluginConfig(strategy);
-		}
+                for (CodeParserPlugin parser: Plugins.getCodeParserPlugins())
+                    addPluginConfig(parser);
+                for (GlobalSettingsStrategyPlugin global: Plugins.getGlobalSettingsStrategyPlugins())
+                    addPluginConfig(global);
+                for (VisualCodeInserterStrategyPlugin visStrat: Plugins.getVisualizerStrategyPlugins())
+                    addPluginConfig(visStrat);
+                for (AlgebraStrategyPlugin algebra: Plugins.getAlgebraStrategyPlugins())
+                    addPluginConfig(algebra);
+		for (OptimizationStrategyPlugin strategy : Plugins.getOptimizationStrategyPlugins()) 
+                    addPluginConfig(strategy);
+		
 		List<CodeGeneratorPlugin> sortedPlugins = new ArrayList<CodeGeneratorPlugin>(Plugins.getCodeGeneratorPlugins());
 		Collections.sort(sortedPlugins, new PluginSorter());
 		for (CodeGeneratorPlugin generator : sortedPlugins) {
 			addPluginConfig(generator);
 		}
 		pluginPanes.setSelectedIndex(0);
-	}
-
-	private void addOptimizationConfig(OptimizationStrategyPlugin strategy) {
-		JPanel panel = new JPanel();
-		for (final Field property : getConfigurationProperties(strategy)) {
-			
-		}
 	}
 
 	private void addPluginConfig(final Plugin plugin) {
@@ -126,6 +126,79 @@ public class ConfigurationPanel extends JPanel {
 					});
 					fields.add(numberField);
 					break;
+                                case DIRPATH:
+                                        final JTextField textField3 = new JTextField(value);
+					textField3.addKeyListener(new KeyAdapter() {
+						@Override
+						public void keyReleased(KeyEvent e) {
+							try {
+								BeanUtils.setProperty(plugin, property.getName(), textField3.getText());
+							} catch (IllegalAccessException e1) {
+								e1.printStackTrace();
+							} catch (InvocationTargetException e1) {
+								e1.printStackTrace();
+							}
+						}
+					});
+                                        JPanel subPanel2 = new JPanel(new GridLayout(1, 3, 5, 5));
+                                        subPanel2.add(textField3);
+					fields.add(subPanel2);
+                                        final JButton button3 = new JButton("Choose Directory path");
+                                        subPanel2.add(button3);
+                                        button3.addActionListener(new ActionListener() {
+                                            @Override
+                                            public void actionPerformed(ActionEvent e) {
+                                                JFileChooser jFC = new JFileChooser();
+                                                jFC.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+                                                if (jFC.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+                                                    textField3.setText(jFC.getSelectedFile().getAbsolutePath());
+                                                    try {
+                                                            BeanUtils.setProperty(plugin, property.getName(), textField3.getText());
+                                                    } catch (IllegalAccessException e1) {
+                                                            e1.printStackTrace();
+                                                    } catch (InvocationTargetException e1) {
+                                                            e1.printStackTrace();
+                                                    }
+                                                }
+                                            }
+                                        });
+					break;
+                                case FILEPATH:
+                                        final JTextField textField2 = new JTextField(value);
+					textField2.addKeyListener(new KeyAdapter() {
+						@Override
+						public void keyReleased(KeyEvent e) {
+							try {
+								BeanUtils.setProperty(plugin, property.getName(), textField2.getText());
+							} catch (IllegalAccessException e1) {
+								e1.printStackTrace();
+							} catch (InvocationTargetException e1) {
+								e1.printStackTrace();
+							}
+						}
+					});
+                                        JPanel subPanel = new JPanel(new GridLayout(1, 3, 5, 5));
+                                        subPanel.add(textField2);
+					fields.add(subPanel);
+                                        final JButton button = new JButton("Choose Filepath");
+                                        subPanel.add(button);
+                                        button.addActionListener(new ActionListener() {
+                                            @Override
+                                            public void actionPerformed(ActionEvent e) {
+                                                JFileChooser jFC = new JFileChooser();
+                                                if (jFC.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+                                                    textField2.setText(jFC.getSelectedFile().getAbsolutePath());
+                                                    try {
+                                                            BeanUtils.setProperty(plugin, property.getName(), textField2.getText());
+                                                    } catch (IllegalAccessException e1) {
+                                                            e1.printStackTrace();
+                                                    } catch (InvocationTargetException e1) {
+                                                            e1.printStackTrace();
+                                                    }
+                                                }
+                                            }
+                                        });
+					break;    
 				case TEXT:
 					// fall through to default
 				default:
@@ -157,7 +230,8 @@ public class ConfigurationPanel extends JPanel {
 		panel.setLayout(new BorderLayout());
 		panel.add(configPanel, BorderLayout.NORTH);
 		panel.add(new JPanel(), BorderLayout.CENTER);
-		pluginPanes.add(plugin.getName(), panel);
+                if (!properties.isEmpty()) //Hide panels with none parameters
+                    pluginPanes.add(plugin.getName(), panel);
 	}
 
 	private List<Field> getConfigurationProperties(Plugin plugin) {

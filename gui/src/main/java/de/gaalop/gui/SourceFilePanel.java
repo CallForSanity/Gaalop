@@ -40,7 +40,7 @@ public class SourceFilePanel extends JPanel {
 		SimpleAttributeSet forbidden = new SimpleAttributeSet();
 		StyleConstants.setBold(forbidden, true);
 		StyleConstants.setForeground(forbidden, Color.RED);
-
+/*
 		KEYWORDS.put("DefVarsN3", keyword);
 		KEYWORDS.put("DefVarsE3", keyword);
 
@@ -81,6 +81,7 @@ public class SourceFilePanel extends JPanel {
 		KEYWORDS.put("normal ", forbidden);
 		KEYWORDS.put("length ", forbidden);
 		KEYWORDS.put("point ", forbidden);
+ */
 		
 		String regex = "";
 		Iterator<String> it = KEYWORDS.keySet().iterator();

@@ -1,0 +1,50 @@
+//Creates a vector in N3 of three coordinates x,y,z
+//args:
+//x 
+//y 
+//z 
+VecN3 = {
+    _P(1)*e1+_P(2)*e2+0.5*(_P(1)*_P(1)+_P(2)*_P(2))*einf+e0
+}
+
+//Creates a point in N2 of three coordinates x,y
+//args:
+//x
+//y
+//z
+createPoint = {
+    _P(1)*e1+_P(2)*e2+0.5*(_P(1)*_P(1)+_P(2)*_P(2))*einf+e0
+}
+
+//Creates a point in N2 of three coordinates x,y,z
+//z will be set automatically to 0.
+//args:
+//x
+//y
+//z
+createPoint = {
+    _P(1)*e1+_P(2)*e2+_P(3)*0+0.5*(_P(1)*_P(1)+_P(2)*_P(2))*einf+e0
+}
+
+//The dualization operator
+//args:
+//m 
+Dual = {
+    _P(1)*(-e1^e2^einf^e0)
+}
+
+//arguments: 
+//pp Pointpair
+//returns the first point of the point pair
+extractPoint1 = {
+	ppd = *(_P(1));
+	(ppd+sqrt(ppd.ppd))/(e0.ppd)
+}
+
+//arguments: 
+//pp Pointpair
+//returns the first point of the point pair
+extractPoint2 = {
+	ppd = *(_P(1));
+	(ppd-sqrt(ppd.ppd))/(e0.ppd)
+}

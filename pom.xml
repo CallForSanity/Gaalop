@@ -12,23 +12,46 @@
      -->
     <modules>
         <module>api</module>
-        <module>maple</module>
+
+	<!-- front end -->
         <module>clucalc</module>
-        <module>cli</module>
-        <module>gui</module>
+
+        <module>globalSettings</module>
+
+        <module>visualCodeInserter</module>
+        <module>visualCodeInserter2d</module>
+
+        <!-- algebra -->
+        <module>algebra</module>
+
+	<!-- middle end -->
+        <module>maple</module>
+        <module>tba</module>
+        <module>gapp</module>
+
+	<!-- back end -->
         <module>codegen-cpp</module>
-        <module>codegen-latex</module>
+        <module>codegen-java</module>
         <module>codegen-dot</module>
+        <module>codegen-gapp</module>
+        <module>codegen-gappopencl</module>
         <module>codegen-compressed</module>
         <module>codegen-verilog</module>
-        <module>starter</module>
+        <module>codegen-latex</module>
+        <module>codegen-visualizer</module>
         <module>gaalet</module>
+        <module>codegen-vis2d</module>
+        <module>gappDebugger</module>
+	<!-- interface -->
+        <module>starter</module>
         <module>setup</module>
-        <module>tba</module>
-        <module>codegen-java</module>
-        <module>gapp</module>
-        <module>codegen-gapp</module>
-  </modules>
+        <module>cli</module>
+        <module>gui</module>
+
+        <!-- testbenches -->
+        <module>testbenchTbaGapp</module>
+
+    </modules>
 
     <!--
              All submodules should be built for the Java 6 platform.
@@ -46,6 +69,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-assembly-plugin</artifactId>
+		    <inherited>true</inherited>
                     <configuration>
                         <descriptors>
                             <descriptor>src/assemble/dist.xml</descriptor>

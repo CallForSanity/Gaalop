@@ -4,7 +4,7 @@ import de.gaalop.CodeGenerator;
 import de.gaalop.CodeGeneratorPlugin;
 import de.gaalop.ConfigurationProperty;
 import de.gaalop.ConfigurationProperty.Type;
-import de.gaalop.gaalet.NameTable;
+import de.gaalop.NameTable;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

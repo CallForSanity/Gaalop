@@ -1,13 +1,17 @@
 package de.gaalop.gapp.visitor;
 
 import de.gaalop.cfg.AssignmentNode;
+import de.gaalop.gapp.ConstantSetVectorArgument;
+import de.gaalop.gapp.PairSetOfVariablesAndIndices;
 import de.gaalop.gapp.PosSelectorset;
 import de.gaalop.gapp.Selector;
 import de.gaalop.gapp.PosSelector;
 import de.gaalop.gapp.Selectorset;
+import de.gaalop.gapp.SetVectorArgument;
+import de.gaalop.gapp.Valueset;
 import de.gaalop.gapp.Variableset;
 import de.gaalop.gapp.instructionSet.GAPPAssignMv;
-import de.gaalop.gapp.instructionSet.GAPPAssignVector;
+import de.gaalop.gapp.instructionSet.GAPPAssignInputsVector;
 import de.gaalop.gapp.instructionSet.GAPPCalculateMv;
 import de.gaalop.gapp.instructionSet.GAPPCalculateMvCoeff;
 import de.gaalop.gapp.instructionSet.GAPPDotVectors;
@@ -152,6 +156,49 @@ public class PrettyPrint extends CFGGAPPVisitor {
     }
 
     /**
+     * Pretty prints a valueset at the end of result
+     * @param valueset The valueset
+     */
+    private void printValueSet(Valueset valueset) {
+        result.append("[");
+        for (GAPPValueHolder cur : valueset) {
+            result.append(cur.prettyPrint());
+            result.append(",");
+        }
+        result.deleteCharAt(result.length() - 1);
+        result.append("]");
+    }
+
+    /**
+     * Prints a SetVectorArgument instance
+     * @param arg The argument
+     */
+    private void printArgument(SetVectorArgument arg) {
+        if (arg.isConstant())
+            result.append(((ConstantSetVectorArgument) arg).getValue());
+        else {
+            PairSetOfVariablesAndIndices pair = (PairSetOfVariablesAndIndices) arg;
+            result.append(pair.getSetOfVariable().prettyPrint());
+            printSelectors(pair.getSelectors());
+        }
+    }
+
+
+    /**
+     * Prints a list of SetVectorArgument
+     * @param list The list
+     */
+    private void printListOfArguments(LinkedList<SetVectorArgument> list) {
+        result.append("{");
+        for (SetVectorArgument cur : list) {
+            printArgument(cur);
+            result.append(",");
+        }
+        result.deleteCharAt(result.length() - 1);
+        result.append("}");
+    }
+
+    /**
      * Pretty prints a dot product of vectors at the end of result
      * @param vectors The vectors of the dot product
      */
@@ -172,10 +219,10 @@ public class PrettyPrint extends CFGGAPPVisitor {
     @Override
     public Object visitAssignMv(GAPPAssignMv gappAssignMv, Object arg) {
         result.append("assignMv ");
-        printMultivector(gappAssignMv.getDestinationMv());
+        printMultivector(gappAssignMv.getDestination());
         printPosSelectors(gappAssignMv.getSelectors());
         result.append(" = ");
-        printVariableSet(gappAssignMv.getValues());
+        printValueSet(gappAssignMv.getValues());
         result.append(";\n");
         return null;
     }
@@ -196,7 +243,7 @@ public class PrettyPrint extends CFGGAPPVisitor {
     @Override
     public Object visitResetMv(GAPPResetMv gappResetMv, Object arg) {
         result.append("resetMv ");
-        printMultivector(gappResetMv.getDestinationMv());
+        printMultivector(gappResetMv.getDestination());
         result.append("[");
         result.append(gappResetMv.getSize());
         result.append("];\n");
@@ -220,8 +267,7 @@ public class PrettyPrint extends CFGGAPPVisitor {
         result.append("setVector ");
         printVector(gappSetVector.getDestination());
         result.append(" = ");
-        printMultivector(gappSetVector.getSource());
-        printSelectors(gappSetVector.getSelectorsSrc());
+        printListOfArguments(gappSetVector.getEntries());
         result.append(";\n");
         return null;
     }
@@ -243,11 +289,9 @@ public class PrettyPrint extends CFGGAPPVisitor {
     }
 
     @Override
-    public Object visitAssignVector(GAPPAssignVector gappAssignVector, Object arg) {
-        result.append("assignVector ");
-        printVector(gappAssignVector.getDestination());
-        result.append(" = ");
-        printVariableSet(gappAssignVector.getValues());
+    public Object visitAssignInputsVector(GAPPAssignInputsVector gappAssignInputsVector, Object arg) {
+        result.append("assignInputsVector inputsVector = ");
+        printVariableSet(gappAssignInputsVector.getValues());
         result.append(";\n");
         return null;
     }
@@ -270,5 +314,9 @@ public class PrettyPrint extends CFGGAPPVisitor {
         result.append(");\n");
         return null;
     }
+
+
+
+
 
 }

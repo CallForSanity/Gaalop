@@ -44,10 +44,6 @@ public class CfgVisitor implements ControlFlowVisitor {
 		CluCalcFileHeader header = CluCalcFileHeader.get(startNode);
 
 		if (header != null) {
-			if (header.getAlgebraMode() != null) {
-				code.append(header.getAlgebraMode().getDefinitionMethod());
-				code.append("();\n");
-			}
 			if (header.getNullSpace() != null) {
 				switch (header.getNullSpace()) {
 				case IPNS:
@@ -68,7 +64,7 @@ public class CfgVisitor implements ControlFlowVisitor {
 		for (Variable localVariable : startNode.getGraph().getLocalVariables()) {
 			code.append(localVariable.getName() + codeSuffix);
 			code.append(" = List(");
-			code.append(startNode.getGraph().getBladeList().length);
+			code.append(startNode.getGraph().getAlgebraDefinitionFile().getBladeCount());
 			code.append(");\n");
 		}
 
@@ -93,20 +89,16 @@ public class CfgVisitor implements ControlFlowVisitor {
 			code.append(assignmentNode.getVariable().getName());
 			code.append(" = List(32); // reset for reuse\n");
 		}
-		
+
 		appendIndent();
-		addCode(assignmentNode.getVariable(), assignmentNode.getGraph().getSignature());
+		addCode(assignmentNode.getVariable());
 		code.append(" = ");
-		addCode(assignmentNode.getValue(), assignmentNode.getGraph().getSignature());
+		addCode(assignmentNode.getValue());
 		if (assignmentNode.getVariable() instanceof MultivectorComponent) {
 			code.append("; // ");
 
 			MultivectorComponent component = (MultivectorComponent) assignmentNode.getVariable();
-			Expression[] bladeList = assignmentNode.getGraph().getBladeList();
-
-			DfgVisitor bladeVisitor = new DfgVisitor(codeSuffix, MAPLE_SUFFIX, assignmentNode.getGraph().getSignature());
-			bladeList[component.getBladeIndex()].accept(bladeVisitor);
-			code.append(bladeVisitor.getCode());
+			code.append(assignmentNode.getGraph().getAlgebraDefinitionFile().getBladeString(component.getBladeIndex()));
 
 			code.append("\n");
 
@@ -125,7 +117,7 @@ public class CfgVisitor implements ControlFlowVisitor {
 	@Override
 	public void visit(ExpressionStatement node) {
 		appendIndent();
-		addCode(node.getExpression(), node.getGraph().getSignature());
+		addCode(node.getExpression());
 		code.append(";\n");
 		
 		node.getSuccessor().accept(this);
@@ -148,19 +140,20 @@ public class CfgVisitor implements ControlFlowVisitor {
 			// no assignment for this variable at all -> keep ? operator
 		} else {
 			code.append(" = ");
-			for (int i = 0; i < node.getGraph().getBladeList().length; ++i) {
+                        int bladeCount = node.getGraph().getAlgebraDefinitionFile().getBladeCount();
+			for (int i = 0; i < bladeCount; ++i) {
 				if (!var.contains(i)) {
 					continue;
 				}
 
-				Expression blade = node.getGraph().getBladeList()[i];
+				Expression blade = node.getGraph().getAlgebraDefinitionFile().getBladeExpression(i);
 
 				code.append(opt.replace(MAPLE_SUFFIX, codeSuffix));
 				code.append("(");
 				code.append(i + 1);
 				code.append(")");
 				code.append(" * ");
-				addCode(blade, node.getGraph().getSignature());
+				addCode(blade);
 				code.append(" + ");
 			}
 			// Remove the last " + "
@@ -180,7 +173,7 @@ public class CfgVisitor implements ControlFlowVisitor {
 		code.append('\n');
 		appendIndent();
 		code.append("if (");
-		addCode(node.getCondition(), node.getGraph().getSignature());
+		addCode(node.getCondition());
 		code.append(") {\n");
 		indent++;
 
@@ -241,8 +234,8 @@ public class CfgVisitor implements ControlFlowVisitor {
 		// nothing to do
 	}
 
-	void addCode(Expression value, AlgebraSignature signature) {
-		DfgVisitor visitor = new DfgVisitor(codeSuffix, MAPLE_SUFFIX, signature);
+	void addCode(Expression value) {
+		DfgVisitor visitor = new DfgVisitor(codeSuffix, MAPLE_SUFFIX);
 		value.accept(visitor);
 		code.append(visitor.getCode());
 	}

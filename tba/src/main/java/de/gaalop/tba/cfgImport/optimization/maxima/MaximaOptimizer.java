@@ -6,7 +6,6 @@ import de.gaalop.cfg.AssignmentNode;
 import de.gaalop.cfg.ControlFlowGraph;
 import de.gaalop.dfg.Expression;
 import de.gaalop.dfg.MultivectorComponent;
-import de.gaalop.dfg.Variable;
 import de.gaalop.tba.Plugin;
 import de.gaalop.tba.cfgImport.optimization.maxima.parser.MaximaLexer;
 import de.gaalop.tba.cfgImport.optimization.maxima.parser.MaximaParser;
@@ -45,22 +44,24 @@ public class MaximaOptimizer {
 
         MaximaInput input = new MaximaInput();
         input.add("display2d:false;"); // very important!
+        input.add("ratprint:false;"); // very important!
+        input.add("keepfloat:true;");
         fillMaximaInput(graph, input);
         input.add("quit();"); // very important!
 
         MaximaOutput output = connection.optimizeWithMaxima(input);
 
-
-
         //connect in and output
         LinkedList<String> connected = new LinkedList<String>();
-        groupMaximaInAndOutputs(connected, output);
+        MaximaRoutines.groupMaximaInAndOutputs(connected, output);
 
         connected.removeFirst(); // remove display2d
+        connected.removeFirst(); // remove ratsimp
+        connected.removeFirst(); // remove keepfloat
 
         ListIterator<AssignmentNode> listIterator = assignmentNodeCollector.getAssignmentNodes().listIterator();
         for (String io : connected) {
-            Expression exp = getExpressionFromMaximaOutput(io);
+            Expression exp = MaximaRoutines.getExpressionFromMaximaOutput(io);
             listIterator.next().setValue(exp);
         }
 /*
@@ -68,60 +69,6 @@ public class MaximaOptimizer {
             removeUnusedAssignments(graph, collector.getVariables());
         }
 */
-
-    }
-
-    /**
-     * Returns an expression from a maxima output string.
-     * @param maximaOut The maxima output string
-     * @return The according expression
-     * @throws RecognitionException
-     */
-    public static Expression getExpressionFromMaximaOutput(String maximaOut) throws RecognitionException {
-        ANTLRStringStream inputStream = new ANTLRStringStream(maximaOut);
-        MaximaLexer lexer = new MaximaLexer(inputStream);
-        CommonTokenStream tokenStream = new CommonTokenStream(lexer);
-        MaximaParser parser = new MaximaParser(tokenStream);
-        MaximaParser.program_return parserResult = parser.program();
-
-        CommonTreeNodeStream treeNodeStream = new CommonTreeNodeStream(parserResult.getTree());
-        MaximaTransformer transformer = new MaximaTransformer(treeNodeStream);
-
-        return transformer.expression();
-    }
-
-    /**
-     * Fills a given list of MaximaInOut from an output of maxima
-     * @param connected The list of MaximaInOut to be filled
-     * @param output The output of maxima
-     */
-    private void groupMaximaInAndOutputs(LinkedList<String> connected, MaximaOutput output) {
-
-        StringBuilder sb = new StringBuilder();
-
-        boolean input = false;
-        for (String o : output) {
-            if (o.startsWith("(%i")) {
-                input = false;
-                if (sb.length() != 0) {
-                    connected.add(sb.toString());
-                    sb.setLength(0);
-                }
-            } else {
-                if (o.startsWith("(%o")) {
-                    sb.append(o.substring(o.indexOf(")") + 2));
-                    input = true;
-                } else {
-                    if (input) {
-                        sb.append(o);
-                    }
-                }
-            }
-        }
-
-        if (input && sb.length() > 0) {
-            connected.add(sb.toString());
-        }
 
     }
 
@@ -152,10 +99,10 @@ public class MaximaOptimizer {
 
             dfg = new DFGToMaximaCode();
             node.getValue().accept(dfg);
-            String value = dfg.getResultString() + ";";
+            String value = "ratsimp("+dfg.getResultString() + ");";
             if (plugin.isOptInserting()) {
-
-                if (!collector.containsStoreResultVariableName(node.getVariable().getName())) { // see comment above
+                String name = node.getVariable().getName();
+                if (!graph.getPragmaOnlyEvaluateVariables().contains(name) && !collector.containsStoreResultVariableName(name)) { // see comment above
                     dfg = new DFGToMaximaCode();
                     node.getVariable().accept(dfg);
                     variable = dfg.getResultString() + "::";
@@ -167,7 +114,7 @@ public class MaximaOptimizer {
             }
 
             if (plugin.isMaximaExpand())
-                input.add(variable + "expand("+value.substring(0, value.length()-1)+");");
+                input.add(variable + "expand(ratsimp("+value.substring(0, value.length()-1)+"));");
             else
                 input.add(variable + value);
 

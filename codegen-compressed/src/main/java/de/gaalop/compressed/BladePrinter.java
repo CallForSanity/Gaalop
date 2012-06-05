@@ -89,7 +89,7 @@ public class BladePrinter implements ExpressionVisitor {
 
 	@Override
 	public void visit(FloatConstant floatConstant) {
-		code.append(Float.toString(floatConstant.getValue()).replace('E', 'e'));
+		code.append(Double.toString(floatConstant.getValue()).replace('E', 'e'));
 	}
 
 	@Override
@@ -98,33 +98,9 @@ public class BladePrinter implements ExpressionVisitor {
 	}
 
 	@Override
-	public void visit(BaseVector baseVector) {
-		// TODO Correctly handle the underlying algebra mode here
-		code.append("e");
-		switch (baseVector.getOrder()) {
-		case 1:
-		case 2:
-		case 3:
-			code.append(baseVector.getIndex());
-			break;
-		case 4:
-			if (baseVector.getIndex().equals("inf")) {
-				code.append("inf");
-			} else {
-				code.append('p');
-			}
-			break;
-		case 5:
-			if (baseVector.getIndex().equals("0")) {
-				code.append(0);
-			} else {
-				code.append('m');
-			}
-			break;
-		default:
-			throw new IllegalArgumentException("Invalid base vector index: " + baseVector.getIndex());
-		}
-	}
+        public void visit(BaseVector baseVector) {
+            code.append(baseVector.toString());
+        }
 
 	@Override
 	public void visit(Negation negation) {

@@ -1,6 +1,5 @@
 package de.gaalop.tba.cfgImport;
 
-import de.gaalop.api.dfg.ExpressionTypeVisitor;
 import de.gaalop.cfg.AssignmentNode;
 import de.gaalop.cfg.EmptyControlFlowVisitor;
 import de.gaalop.dfg.BinaryOperation;
@@ -9,6 +8,7 @@ import de.gaalop.dfg.ExpressionVisitor;
 import de.gaalop.dfg.MathFunctionCall;
 import de.gaalop.dfg.UnaryOperation;
 import de.gaalop.dfg.Variable;
+import de.gaalop.visitors.ExpressionTypeVisitor;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -103,7 +103,10 @@ public class MathFunctionSeparator extends EmptyControlFlowVisitor {
 
         node.getValue().accept(expressionVisitor);
         if (resultValue != null) {
-            node.setValue(resultValue);
+            //Direct MathFunctionCalls won't need an extra temporary variable,
+            //because they will be assigned to the AssignmentNode variable!
+            //For this optimization the variable must be removed from the toInsertVars list
+            toInsertVars.remove((Variable) resultValue);
             resultValue = null;
         }
         for (Variable var : toInsertVars) {

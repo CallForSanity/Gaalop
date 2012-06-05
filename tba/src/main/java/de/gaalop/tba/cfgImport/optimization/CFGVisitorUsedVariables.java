@@ -85,16 +85,19 @@ public class CFGVisitorUsedVariables implements ControlFlowVisitor {
 
     @Override
     public void visit(ExpressionStatement node) {
+
         // expression usage
         dfgVisitorusedVariables.getVariables().clear();
         node.getExpression().accept(dfgVisitorusedVariables);
         for (VariableComponent component : dfgVisitorusedVariables.getVariables()) {
             variableUsage.addUsage(component);
         }
+
     }
 
     @Override
     public void visit(ColorNode node) {
+
         // R usage
         dfgVisitorusedVariables.getVariables().clear();
         node.getR().accept(dfgVisitorusedVariables);
@@ -122,6 +125,7 @@ public class CFGVisitorUsedVariables implements ControlFlowVisitor {
         for (VariableComponent component : dfgVisitorusedVariables.getVariables()) {
             variableUsage.addUsage(component);
         }
+
     }
 
     @Override

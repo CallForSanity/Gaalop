@@ -38,7 +38,7 @@ import de.gaalop.dfg.Relation;
 import de.gaalop.dfg.Reverse;
 import de.gaalop.dfg.Subtraction;
 import de.gaalop.dfg.Variable;
-import de.gaalop.gaalet.NameTable;
+import de.gaalop.NameTable;
 import de.gaalop.gaalet.GaaletMultiVector;
 
 /**

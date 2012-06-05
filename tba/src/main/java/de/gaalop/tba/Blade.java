@@ -1,10 +1,13 @@
 package de.gaalop.tba;
 
+import de.gaalop.algebra.TCBlade;
 import de.gaalop.dfg.BaseVector;
 import de.gaalop.dfg.Expression;
 import de.gaalop.dfg.ExpressionFactory;
 import de.gaalop.dfg.FloatConstant;
+import de.gaalop.visitors.DFGTraversalVisitor;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.Vector;
 
 /**
@@ -13,17 +16,22 @@ import java.util.Vector;
  */
 public class Blade {
 
-    private Algebra algebra;
     private Vector<String> bases;
 
-    public Blade(Algebra algebra) {
-        this.algebra = algebra;
+    public Blade() {
         bases = new Vector<String>();
     }
 
-    public Blade(Algebra algebra, Vector<String> bases) {
-        this.algebra = algebra;
+    public Blade(String[] bases) {
+        this.bases = new Vector<String>(Arrays.asList(bases));
+    }
+
+    public Blade(Vector<String> bases) {
         this.bases = bases;
+    }
+
+    public Blade(TCBlade b) {
+        this.bases = new Vector<String>(Arrays.asList(b.getBase()));
     }
 
     @Override
@@ -35,7 +43,7 @@ public class Blade {
         if (bases.size() > 0) {
             return sb.substring(1);
         } else {
-            return "";
+            return "1.0";
         }
     }
 
@@ -47,42 +55,22 @@ public class Blade {
         bases.add(toAdd);
     }
 
-    /**
-     * Returns the indices of the base elements in this blade
-     * @return The indices
-     */
-    private int[] getIndicesArray() {
-        String[] base = algebra.getBase();
 
-        //determine to each contained base the basis index
-        int[] basesInt = new int[bases.size()];
-        for (int i = 0; i < basesInt.length; i++) {
-            String curItem = bases.get(i);
-
-            boolean valid = false;
-
-            for (int j = 0; j < base.length; j++) {
-                if (base[j].equals(curItem)) {
-                    valid = true;
-                    basesInt[i] = j;
-                }
-            }
-
-            if (!valid) {
-                System.err.println("Fault Base " + curItem);
-            }
-        }
-
-        return basesInt;
-    }
 
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof Blade) {
             Blade comp = (Blade) obj;
-            return Arrays.equals(comp.getIndicesArray(), getIndicesArray());
+            return bases.equals(comp.bases);
         }
         return false;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 31 * hash + (this.bases != null ? this.bases.hashCode() : 0);
+        return hash;
     }
 
     public Vector<String> getBases() {
@@ -104,8 +92,6 @@ public class Blade {
         } else {
             throw new IllegalStateException("Blade: Blade contains no base element!");
         }
-
-
     }
 
     /**
@@ -119,6 +105,18 @@ public class Blade {
         } else {
             return new BaseVector(string.substring(1));
         }
+    }
 
+    public static Blade createBladeFromExpression(Expression expr) {
+        final LinkedList<String> list = new LinkedList<String>();
+        DFGTraversalVisitor visitor = new DFGTraversalVisitor() {
+            @Override
+            public void visit(BaseVector node) {
+                list.add(node.toString());
+                super.visit(node);
+            }
+        };
+        expr.accept(visitor);
+        return new Blade(list.toArray(new String[0]));
     }
 }

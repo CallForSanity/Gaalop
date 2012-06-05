@@ -1,8 +1,8 @@
 package de.gaalop.gapp.importing.optimization;
 
-import de.gaalop.cfg.EndNode;
 import de.gaalop.gapp.visitor.EmptyCFGGAPPVisitor;
 import de.gaalop.cfg.AssignmentNode;
+import de.gaalop.cfg.EndNode;
 import de.gaalop.gapp.instructionSet.GAPPSetMv;
 import java.util.HashMap;
 import java.util.HashSet;

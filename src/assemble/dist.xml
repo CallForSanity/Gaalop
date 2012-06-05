@@ -1,22 +1,41 @@
 <assembly>
     <id>bin</id>
     <formats>
+	<format>dir</format>
         <format>zip</format>
     </formats>
     <baseDirectory>/</baseDirectory>
     <includeBaseDirectory>false</includeBaseDirectory>
+
     <moduleSets>
         <moduleSet>
+	    <!-- <useAllReactorProjects>true</useAllReactorProjects> -->
             <includes>
                 <include>de.gaalop:api</include>
-                <include>de.gaalop:cli</include>
+<include>de.gaalop:algebra</include>
+<include>de.gaalop:visualCodeInserter</include>
                 <include>de.gaalop:clucalc</include>
-                <include>de.gaalop:codegen-cpp</include>
-                <include>de.gaalop:codegen-latex</include>
-                <include>de.gaalop:gui</include>
+
                 <include>de.gaalop:maple</include>
+                <include>de.gaalop:tba</include>
+                <include>de.gaalop:gapp</include>
+
+                <include>de.gaalop:codegen-cpp</include>
+                <include>de.gaalop:codegen-java</include>
+                <!--<include>de.gaalop:codegen-dot</include>-->
+                <include>de.gaalop:codegen-verilog</include>
+                <include>de.gaalop:codegen-latex</include>
+                <include>de.gaalop:codegen-gapp</include>
+		<include>de.gaalop:codegen-visualizer</include>
+		<include>de.gaalop:codegen-vis2d</include>
+                <!--<include>de.gaalop:codegen-gappopencl</include>-->
+                <include>de.gaalop:gaalet</include>
+
+                <include>de.gaalop:cli</include>
+                <include>de.gaalop:gui</include>
             </includes>
             <binaries>
+                <includeDependencies>true</includeDependencies>
                 <outputDirectory>plugins</outputDirectory>
                 <unpack>false</unpack>
             </binaries>
@@ -27,10 +46,24 @@
                 <include>de.gaalop:setup</include>
             </includes>
             <binaries>
-                <includeDependencies>false</includeDependencies>
+                <includeDependencies>true</includeDependencies>
                 <outputDirectory></outputDirectory>
                 <unpack>false</unpack>
             </binaries>
         </moduleSet>
     </moduleSets>
+    <dependencySets>
+        <dependencySet>
+            <outputDirectory>plugins</outputDirectory>
+        </dependencySet>
+    </dependencySets>
+    <fileSets>
+        <fileSet>
+            <directory>startupscripts</directory>
+            <outputDirectory>/</outputDirectory>
+            <includes>
+                <include>**/**</include>
+            </includes>
+        </fileSet>
+    </fileSets>
 </assembly>

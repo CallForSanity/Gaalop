@@ -31,4 +31,11 @@ public class BladeRef {
     public void setPrefactor(byte prefactor) {
         this.prefactor = prefactor;
     }
+
+    @Override
+    public String toString() {
+        return prefactor+"["+index+"]";
+    }
+
+
 }

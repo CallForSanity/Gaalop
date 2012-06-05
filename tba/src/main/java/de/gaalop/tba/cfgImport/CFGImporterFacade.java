@@ -1,6 +1,7 @@
 package de.gaalop.tba.cfgImport;
 
 import de.gaalop.OptimizationException;
+import de.gaalop.algebra.UpdateLocalVariableSet;
 import de.gaalop.cfg.ControlFlowGraph;
 import de.gaalop.tba.Plugin;
 import de.gaalop.tba.UseAlgebra;
@@ -19,15 +20,12 @@ import java.util.LinkedList;
  */
 public class CFGImporterFacade {
 
-    private UseAlgebra usedAlgebra;
     private LinkedList<OptimizationStrategyWithModifyFlag> optimizations;
     private Plugin plugin;
+    private UseAlgebra usedAlgebra;
 
     public CFGImporterFacade(Plugin plugin) {
         this.plugin = plugin;
-
-        //load desired algebra
-        usedAlgebra = new UseAlgebra(plugin.getAlgebra());
 
         optimizations = new LinkedList<OptimizationStrategyWithModifyFlag>();
 
@@ -53,17 +51,15 @@ public class CFGImporterFacade {
      */
     public ControlFlowGraph importGraph(ControlFlowGraph graph) throws OptimizationException {
 
+        //load desired algebra
+        usedAlgebra = new UseAlgebra(graph.getAlgebraDefinitionFile());
+
         if (ContainsControlFlow.containsControlFlow(graph)) {
             throw new OptimizationException("Due to Control Flow Existence in Source, TBA isn't assigned on graph!", graph);
         }
 
         if (ContainsMultipleAssignments.containsMulipleAssignments(graph)) {
             throw new OptimizationException("Due to Existence of MultipleAssignments in Source, TBA isn't assigned on graph!", graph);
-        }
-
-        if (!usedAlgebra.isN3()) {
-            BaseVectorChecker checker = new BaseVectorChecker(usedAlgebra.getAlgebra().getBase());
-            graph.accept(checker);
         }
 
         if (!plugin.isInvertTransformation()) {
@@ -79,7 +75,9 @@ public class CFGImporterFacade {
             graph.accept(mathFunctionSeparator);
         }
 
-        CFGImporter builder = new CFGImporter(usedAlgebra, plugin.isScalarFunctions());
+
+
+        CFGImporter builder = new CFGImporter(usedAlgebra, plugin.isScalarFunctions(), graph.getAlgebraDefinitionFile());
         graph.accept(builder);
 
         int count = 0;
@@ -93,8 +91,8 @@ public class CFGImporterFacade {
         } while (repeat);
 
         //Use Maxima only once
-        if (plugin.isOptMaxima()) {
-            OptMaxima optMaxima = new OptMaxima(plugin.getMaximaCommand(), plugin);
+        if (graph.globalSettings.isOptMaxima()) {
+            OptMaxima optMaxima = new OptMaxima(graph.globalSettings.getMaximaCommmand(), plugin);
             optMaxima.transform(graph, usedAlgebra);
 
             //repeat other optimizations
@@ -108,10 +106,14 @@ public class CFGImporterFacade {
             } while (repeat);
         }
 
+        // update variable sets
+        UpdateLocalVariableSet.updateVariableSets(graph);
+
         return graph;
     }
 
-    public void setUsedAlgebra(UseAlgebra usedAlgebra) {
-        this.usedAlgebra = usedAlgebra;
+    public UseAlgebra getUsedAlgebra() {
+        return usedAlgebra;
     }
+
 }

@@ -148,7 +148,7 @@ public class MapleDfgVisitor implements ExpressionVisitor {
 		if (Double.compare(floatConstant.getValue(), Math.floor(floatConstant.getValue())) == 0) {
 			codeBuffer.append((int) floatConstant.getValue());
 		} else {
-			codeBuffer.append(Float.toString(floatConstant.getValue()));
+			codeBuffer.append(Double.toString(floatConstant.getValue()));
 		}
 	}
 

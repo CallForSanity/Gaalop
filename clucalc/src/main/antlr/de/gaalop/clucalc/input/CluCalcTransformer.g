@@ -63,7 +63,7 @@ statement returns [ArrayList<SequentialNode> nodes]
 	| OPNS { graphBuilder.handleNullSpace(NullSpace.OPNS); }
 	
 	// Displayed assignment (ignore the display part)
-	| ^(COLON assignment) { $nodes.add(graphBuilder.handleAssignment($assignment.variable, $assignment.value)); }
+	| ^(COLON assignment) { $nodes.add(graphBuilder.handleAssignment($assignment.variable, $assignment.value)); $nodes.add(graphBuilder.processExpressionStatement($assignment.variable)); }
 	
 	| ^(COLON id=variableOrConstant) { $nodes.add(graphBuilder.processExpressionStatement($id.result)); }
 	
@@ -135,10 +135,6 @@ return_value returns [Expression result]
 pragma
   :  PRAGMA RANGE_LITERAL min=float_literal LESS_OR_EQUAL varname=IDENTIFIER LESS_OR_EQUAL max=float_literal
      {  graphBuilder.addPragmaMinMaxValues($varname.text, min, max);}
-   | PRAGMA OUTPUT_LITERAL varname=IDENTIFIER
-     {  graphBuilder.addPragmaOutputVariable($varname.text);  }
-   | PRAGMA ALGEBRA_LITERAL varname=DECIMAL_LITERAL
-     {  graphBuilder.setAlgebraDimension(Integer.parseInt($varname.text));  }
   ;
 
 assignment returns [Variable variable, Expression value]

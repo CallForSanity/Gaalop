@@ -31,7 +31,7 @@ public abstract class ParallelObject {
     /**
      * Returns if this ParallelObject is a terminal.
      * A terminal has no children.
-     * @return
+     * @return if this ParallelObject is a terminal
      */
     public abstract boolean isTerminal();
 }
