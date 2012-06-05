@@ -35,7 +35,10 @@ public class Main {
 
   @Option(name = "-optimizer", required = false, usage = "Sets the class name of the optimization strategy plugin that should be used.")
   private String optimizationStrategyPlugin = "de.gaalop.maple.Plugin";
-
+  
+  @Option(name = "-globalSettings", required = false, usage = "Sets the class name of the global Settings strategy plugin that should be used.")
+  private String globalSettingsStrategyPlugin = "de.gaalop.globalSettings.Plugin";
+  
   @Option(name = "-algebra", required = false, usage = "Sets the class name of the algebra strategy plugin that should be used.")
   private String algebraStrategyPlugin = "de.gaalop.algebra.Plugin";
 
@@ -130,7 +133,7 @@ public class Main {
   private GlobalSettingsStrategy createGlobalSettingsStrategy() {
     Set<GlobalSettingsStrategyPlugin> plugins = Plugins.getGlobalSettingsStrategyPlugins();
     for (GlobalSettingsStrategyPlugin plugin : plugins) {
-      if (plugin.getClass().getName().equals(algebraStrategyPlugin)) {
+      if (plugin.getClass().getName().equals(globalSettingsStrategyPlugin)) {
         return plugin.createGlobalSettingsStrategy();
       }
     }
