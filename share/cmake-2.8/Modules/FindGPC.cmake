@@ -18,7 +18,7 @@ FIND_PATH(MAPLE_BIN_DIR HINTS "C:/Program Files (x86)/Maple 12/bin.win" "/opt/ma
 ELSE(GPC_WITH_MAPLE)
 OPTION(GPC_WITH_MAXIMA "whether to use the maxima in tba plugin or not." OFF)
 IF(GPC_WITH_MAXIMA)
-FIND_PROGRAM(MAXIMA_BIN HINTS NAMES "maxima" "maxima.sh" "maxima.bat" HINTS "C:/Program Files/Maxima" CACHE PATH "Maxima binary path")
+FIND_PROGRAM(MAXIMA_BIN NAMES "maxima" "maxima.sh" "maxima.bat" HINTS "C:/Program Files/Maxima" CACHE PATH "Maxima binary path")
 ENDIF(GPC_WITH_MAXIMA)
 ENDIF(GPC_WITH_MAPLE)
 
@@ -53,8 +53,8 @@ SET(GPC_COMMON_ARGS ${GPC_COMMON_ARGS} -algebra_userMacroFilePath "${GPC_ALGEBRA
 ENDIF(NOT GPC_ALGEBRA_USERMACROFILEPATH STREQUAL "")
 
 # define specific args
-SET(GPC_CXX_ARGS ${GPC_COMMON_ARGS} -generator "de.gaalop.compressed.Plugin")
-SET(GPC_CUDA_ARGS ${GPC_COMMON_ARGS} -generator "de.gaalop.compressed.Plugin")
+SET(GPC_CXX_ARGS ${GPC_COMMON_ARGS} -generator "de.gaalop.compressed.Plugin" -pragmas)
+SET(GPC_CUDA_ARGS ${GPC_COMMON_ARGS} -generator "de.gaalop.compressed.Plugin" -pragmas)
 IF(GPC_USE_GAPP)
 SET(GPC_OPENCL_ARGS ${GPC_EXTOPT_ARGS} -optimizer "de.gaalop.gapp.Plugin" -generator "de.gaalop.gappopencl.Plugin")
 ELSE(GPC_USE_GAPP)
