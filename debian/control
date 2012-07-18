@@ -1,0 +1,11 @@
+Source: gaalop-precompiler
+Section: devel
+Priority: optional
+Maintainer: Patrick Charrier <patrick.charrier@gmail.com>
+Build-Depends: cmake, maven2
+Homepage: http://www.gaalop.de
+
+Package: gaalop-precompiler
+Architecture: any
+Depends: cmake, java-common
+Description: Compiles C/C++, OpenCL, or CUDA with embedded CLUScript.
