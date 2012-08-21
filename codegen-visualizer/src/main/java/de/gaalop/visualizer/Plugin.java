@@ -20,9 +20,6 @@ import org.apache.commons.logging.LogFactory;
  */
 public class Plugin extends Observable implements CodeGeneratorPlugin {
 
-    @ConfigurationProperty(type = Type.FILEPATH)
-    public String maximaCommand = ProcessBuilderMaximaConnection.CMD_MAXIMA_LINUX;
-
     @ConfigurationProperty(type = Type.DIRPATH)
     public String lwJglNativePath = "/usr/lib/jni/";
 
@@ -66,14 +63,6 @@ public class Plugin extends Observable implements CodeGeneratorPlugin {
     void notifyError(Throwable error) {
     	setChanged();
     	notifyObservers(new Notifications.Error(error));
-    }
-
-    public String getMaximaCommand() {
-        return maximaCommand;
-    }
-
-    public void setMaximaCommand(String maximaCommand) {
-        this.maximaCommand = maximaCommand;
     }
 
     public String getLwJglNativePath() {

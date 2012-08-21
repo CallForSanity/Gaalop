@@ -19,7 +19,7 @@ public class MyGlobalSettingsStrategy implements GlobalSettingsStrategy {
 
     @Override
     public void transform(ControlFlowGraph graph) throws OptimizationException {
-        graph.globalSettings.maximaCommmand = plugin.maximaCommand;
+        graph.globalSettings.maximaCommand = plugin.maximaCommand;
         graph.globalSettings.optMaxima = plugin.optMaxima;
     }
 

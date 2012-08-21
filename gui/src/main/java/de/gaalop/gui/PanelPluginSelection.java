@@ -15,11 +15,11 @@ import javax.swing.colorchooser.AbstractColorChooserPanel;
  */
 public class PanelPluginSelection extends JPanel {
     
-    private JComboBox<GlobalSettingsStrategyPlugin> globalSettings; 
-    private JComboBox<VisualCodeInserterStrategyPlugin> visualCodeInserter; 
-    private JComboBox<AlgebraStrategyPlugin> algebra; 
-    private JComboBox<OptimizationStrategyPlugin> optimization;
-    private JComboBox<CodeGeneratorPlugin> generator;
+    private JComboBox globalSettings; 
+    private JComboBox visualCodeInserter; 
+    private JComboBox algebra; 
+    private JComboBox optimization;
+    private JComboBox generator;
     
     private String errorMessage;
     private String errorPlugin1;
@@ -74,7 +74,7 @@ public class PanelPluginSelection extends JPanel {
         
         ListCellRenderer c = new DefaultListCellRenderer() {
             @Override
-            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+            public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
                 if (value == null) return super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
                 String valueStr = ((Plugin) value).getName();
                 JLabel label = (JLabel) super.getListCellRendererComponent(list, valueStr, index, isSelected, cellHasFocus);
@@ -91,7 +91,7 @@ public class PanelPluginSelection extends JPanel {
         
         GlobalSettingsStrategyPlugin[] globalPlugins = Plugins.getGlobalSettingsStrategyPlugins().toArray(new GlobalSettingsStrategyPlugin[0]);
         Arrays.sort(globalPlugins, comparator);
-        globalSettings = new JComboBox<GlobalSettingsStrategyPlugin>(globalPlugins);
+        globalSettings = new JComboBox(globalPlugins);
         globalSettings.setSelectedItem(search(globalPlugins, "de.gaalop.globalSettings.Plugin"));
         globalSettings.addItemListener(itemListener);
         globalSettings.setRenderer(c);
@@ -100,7 +100,7 @@ public class PanelPluginSelection extends JPanel {
         
         VisualCodeInserterStrategyPlugin[] visPlugins = Plugins.getVisualizerStrategyPlugins().toArray(new VisualCodeInserterStrategyPlugin[0]);
         Arrays.sort(visPlugins, comparator);
-        visualCodeInserter = new JComboBox<VisualCodeInserterStrategyPlugin>(visPlugins);
+        visualCodeInserter = new JComboBox(visPlugins);
         visualCodeInserter.setSelectedItem(search(visPlugins, "de.gaalop.visualCodeInserter.Plugin"));
         visualCodeInserter.addItemListener(itemListener);
         visualCodeInserter.setRenderer(c);
@@ -109,7 +109,7 @@ public class PanelPluginSelection extends JPanel {
         
         AlgebraStrategyPlugin[] algPlugins = Plugins.getAlgebraStrategyPlugins().toArray(new AlgebraStrategyPlugin[0]);
         Arrays.sort(algPlugins, comparator);
-        algebra = new JComboBox<AlgebraStrategyPlugin>(algPlugins);
+        algebra = new JComboBox(algPlugins);
         algebra.setSelectedItem(search(algPlugins, "de.gaalop.algebra.Plugin"));
         algebra.addItemListener(itemListener);
         algebra.setRenderer(c);
@@ -118,7 +118,7 @@ public class PanelPluginSelection extends JPanel {
         
         OptimizationStrategyPlugin[] optPlugins = Plugins.getOptimizationStrategyPlugins().toArray(new OptimizationStrategyPlugin[0]);
         Arrays.sort(optPlugins, comparator);
-        optimization = new JComboBox<OptimizationStrategyPlugin>(optPlugins);
+        optimization = new JComboBox(optPlugins);
         optimization.setSelectedItem(search(optPlugins, "de.gaalop.tba.Plugin"));
         optimization.addItemListener(itemListener);
         optimization.setRenderer(c);
@@ -127,7 +127,7 @@ public class PanelPluginSelection extends JPanel {
         
         CodeGeneratorPlugin[] codegenPlugins = Plugins.getCodeGeneratorPlugins().toArray(new CodeGeneratorPlugin[0]);
         Arrays.sort(codegenPlugins, comparator);
-        generator = new JComboBox<CodeGeneratorPlugin>(codegenPlugins);
+        generator = new JComboBox(codegenPlugins);
         generator.setSelectedItem(search(codegenPlugins, "de.gaalop.cpp.Plugin"));
         generator.addItemListener(itemListener);
         generator.setRenderer(c);

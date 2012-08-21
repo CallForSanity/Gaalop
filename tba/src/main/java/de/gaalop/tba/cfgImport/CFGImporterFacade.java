@@ -92,7 +92,7 @@ public class CFGImporterFacade {
 
         //Use Maxima only once
         if (graph.globalSettings.isOptMaxima()) {
-            OptMaxima optMaxima = new OptMaxima(graph.globalSettings.getMaximaCommmand(), plugin);
+            OptMaxima optMaxima = new OptMaxima(graph.globalSettings.getMaximaCommand(), plugin);
             optMaxima.transform(graph, usedAlgebra);
 
             //repeat other optimizations

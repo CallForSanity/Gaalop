@@ -135,7 +135,7 @@ public class DrawSettingsCodeGen extends DrawSettings implements CodeGenerator, 
     public Set<OutputFile> generate(ControlFlowGraph in) throws CodeGeneratorException {
 
         this.graph = in;
-        finder = new RayMethod(plugin.maximaCommand);
+        finder = new RayMethod(in.globalSettings.maximaCommand);
         colors = ColorEvaluater.getColors(graph);
         finder.prepareGraph(in);
         

@@ -12,14 +12,16 @@
 	    <!-- <useAllReactorProjects>true</useAllReactorProjects> -->
             <includes>
                 <include>de.gaalop:api</include>
-<include>de.gaalop:algebra</include>
-<include>de.gaalop:visualCodeInserter</include>
+                <include>de.gaalop:algebra</include>
+                <include>de.gaalop:visualCodeInserter</include>
+                <include>de.gaalop:visualCodeInserter2d</include>
                 <include>de.gaalop:clucalc</include>
+                <include>de.gaalop:globalSettings</include>
 
                 <include>de.gaalop:maple</include>
                 <include>de.gaalop:tba</include>
                 <include>de.gaalop:gapp</include>
-
+                <!--<include>de.gaalop:codegen-compressed</include>-->
                 <include>de.gaalop:codegen-cpp</include>
                 <include>de.gaalop:codegen-java</include>
                 <!--<include>de.gaalop:codegen-dot</include>-->

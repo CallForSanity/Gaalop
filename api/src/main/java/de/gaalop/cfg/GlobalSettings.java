@@ -6,12 +6,12 @@ package de.gaalop.cfg;
  */
 public class GlobalSettings {
     
-    public String maximaCommmand;
+    public String maximaCommand;
     
     public boolean optMaxima;
 
-    public String getMaximaCommmand() {
-        return maximaCommmand;
+    public String getMaximaCommand() {
+        return maximaCommand;
     }
 
     public boolean isOptMaxima() {
