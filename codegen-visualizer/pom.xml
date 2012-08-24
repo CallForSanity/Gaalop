@@ -28,15 +28,16 @@
             <artifactId>lwjgl_util</artifactId>
             <version>2.8.3</version>
         </dependency>
-        <dependency>
-            <groupId>jdom</groupId>
-            <artifactId>jdom</artifactId>
-            <version>1.1</version>
-        </dependency>
+
         <dependency>
             <groupId>de.gaalop</groupId>
             <artifactId>tba</artifactId>
             <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jdom</groupId>
+            <artifactId>jdom</artifactId>
+            <version>1.1</version>
         </dependency>
     </dependencies>
 </project>
