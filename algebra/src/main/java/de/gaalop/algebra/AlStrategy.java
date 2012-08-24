@@ -84,6 +84,11 @@ public class AlStrategy implements AlgebraStrategy {
 
             //inline all macros
             Inliner.inline(graph, macros);
+            
+            //Remove Macro definitions from graph
+            for (Macro macro: macros.values()) 
+                graph.removeNode(macro);
+            
 
             //replace Variables which are basevectors
             BaseVectorDefiner definer = new BaseVectorDefiner();
