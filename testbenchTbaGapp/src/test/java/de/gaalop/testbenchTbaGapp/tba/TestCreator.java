@@ -13,6 +13,8 @@ import de.gaalop.OptimizationException;
 import de.gaalop.OptimizationStrategy;
 import de.gaalop.OutputFile;
 import de.gaalop.cfg.ControlFlowGraph;
+import de.gaalop.testbenchTbaGapp.tba.common.OneMacroTest;
+import de.gaalop.testbenchTbaGapp.tba.common.TwoMacrosTest;
 import de.gaalop.testbenchTbaGapp.tba.gps.GPSNoVarsTest;
 import de.gaalop.testbenchTbaGapp.tba.gps.GPSOnlyVarsTest;
 import de.gaalop.testbenchTbaGapp.tba.gps.Point3D;
@@ -90,6 +92,9 @@ public class TestCreator {
             testGPSOnlyVars();
 
             testLinePointDistance();
+            
+            test(new OneMacroTest(),"OneMacro");
+            test(new TwoMacrosTest(),"TwoMacros");
         } catch (OptimizationException e) {
             throw new Exception("CompileError in positive tests: " + e);
         }

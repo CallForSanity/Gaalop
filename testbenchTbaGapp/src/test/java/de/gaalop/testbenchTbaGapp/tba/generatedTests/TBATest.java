@@ -23,12 +23,12 @@ double pt2$5 = outputs.get("pt2$5");
 double pt3$1 = outputs.get("pt3$1");
 double pt3$2 = outputs.get("pt3$2");
 double pt3$5 = outputs.get("pt3$5");
-assertEquals(p$1,pt2$1,0.001);
-assertEquals(p$2,pt2$2,0.001);
-assertEquals(p$5,pt2$5,0.001);
-assertEquals(p$1,pt3$1,0.001);
-assertEquals(p$2,pt3$2,0.001);
-assertEquals(p$5,pt3$5,0.001);
+assertEquals(p$1,pt2$1,0.0010);
+assertEquals(p$2,pt2$2,0.0010);
+assertEquals(p$5,pt2$5,0.0010);
+assertEquals(p$1,pt3$1,0.0010);
+assertEquals(p$2,pt3$2,0.0010);
+assertEquals(p$5,pt3$5,0.0010);
 
   }
   @Test
@@ -1317,12 +1317,12 @@ double z21 = outputs.get("z21$0");
 double z22 = outputs.get("z22$0");
 double z31 = outputs.get("z31$0");
 double z32 = outputs.get("z32$0");
-assertEquals(0,z11,0.001);
-assertEquals(0,z12,0.001);
-assertEquals(0,z21,0.001);
-assertEquals(0,z22,0.001);
-assertEquals(0,z31,0.001);
-assertEquals(0,z32,0.001);
+assertEquals(0,z11,0.0010);
+assertEquals(0,z12,0.0010);
+assertEquals(0,z21,0.0010);
+assertEquals(0,z22,0.0010);
+assertEquals(0,z31,0.0010);
+assertEquals(0,z32,0.0010);
 // check number of outputs
 assertEquals(12, outputs.size());
 
@@ -1371,12 +1371,12 @@ double z21 = outputs.get("z21$0");
 double z22 = outputs.get("z22$0");
 double z31 = outputs.get("z31$0");
 double z32 = outputs.get("z32$0");
-assertEquals(0,z11,0.001);
-assertEquals(0,z12,0.001);
-assertEquals(0,z21,0.001);
-assertEquals(0,z22,0.001);
-assertEquals(0,z31,0.001);
-assertEquals(0,z32,0.001);
+assertEquals(0,z11,0.0010);
+assertEquals(0,z12,0.0010);
+assertEquals(0,z21,0.0010);
+assertEquals(0,z22,0.0010);
+assertEquals(0,z31,0.0010);
+assertEquals(0,z32,0.0010);
 // check number of outputs
 assertEquals(12, outputs.size());
 
@@ -1431,6 +1431,30 @@ r.normalize();
 Vec3D xmpTest = new Vec3D(pBase.x-3.0f,pBase.y-8.0f,pBase.z-10.0f);
 double dp = xmpTest.dotProduct(r);
 assertEquals(0,dp,0.001);
+
+  }
+  @Test
+  public void testOneMacro0() {
+    OneMacro inst = new OneMacro();
+    inst.calculate();
+    // collect outputs
+    HashMap<String,Double> outputs = inst.getValues();
+    // check outputs
+assertTrue(outputs.containsKey("a$0"));
+assertEquals(4,outputs.get("a$0"),0.01);
+
+  }
+  @Test
+  public void testTwoMacros0() {
+    TwoMacros inst = new TwoMacros();
+    inst.calculate();
+    // collect outputs
+    HashMap<String,Double> outputs = inst.getValues();
+    // check outputs
+assertTrue(outputs.containsKey("a$0"));
+assertEquals(8,outputs.get("a$0"),0.01);
+assertTrue(outputs.containsKey("b$0"));
+assertEquals(4,outputs.get("b$0"),0.01);
 
   }
 }
