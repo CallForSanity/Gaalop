@@ -1,0 +1,94 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+<!--
+    TODO define vocabulary identification
+    PUBLIC ID: -//vendor//vocabulary//EN
+    SYSTEM ID: http://server/path/algebras.dtd
+
+-->
+
+<!--
+    An example how to use this DTD from your XML document:
+
+    <?xml version="1.0"?>
+
+    <!DOCTYPE algebras SYSTEM "algebras.dtd">
+
+    <algebras>
+    ...
+    </algebras>
+-->
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT algebras (algebra)*>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT algebra (description|definition)*>
+<!ATTLIST algebra
+    name CDATA #IMPLIED
+  >
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT definition (transformations|signature|bases)*>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT bases (plusMinus|zeroInf)*>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT zeroInf (baseVector)*>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT baseVector EMPTY>
+<!ATTLIST baseVector
+    name CDATA #IMPLIED
+  >
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT plusMinus (baseVector)*>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT signature (square)*>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT square EMPTY>
+<!ATTLIST square
+    value CDATA #IMPLIED
+    baseVector CDATA #IMPLIED
+  >
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT transformations (plusMinusToZeroInf|zeroInfToPlusMinus)*>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT zeroInfToPlusMinus (equation)*>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT equation (summand)*>
+<!ATTLIST equation
+    lhsBaseVector CDATA #IMPLIED
+  >
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT summand EMPTY>
+<!ATTLIST summand
+    baseVector CDATA #IMPLIED
+    weight CDATA #IMPLIED
+  >
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT plusMinusToZeroInf (equation)*>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT description (long|short)*>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT short EMPTY>
+<!ATTLIST short
+    value CDATA #IMPLIED
+  >
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT long EMPTY>
+<!ATTLIST long
+    value CDATA #IMPLIED
+  >
