@@ -1,5 +1,0 @@
-// temporary values
-D0 = Di + D23*e2^e3 + D13*e1^e3 + D12*e1^e2 + D1x*e1^einf + D2x*e2^einf + D3x*e3^einf + D123x*e1^e2^e3^einf;
-
-// final values
-?pos = D0*e0*(~D0);
