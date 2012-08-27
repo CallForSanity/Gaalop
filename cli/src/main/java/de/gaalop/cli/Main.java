@@ -1,7 +1,7 @@
 package de.gaalop.cli;
 
 import de.gaalop.*;
-import de.gaalop.cfg.ControlFlowGraph;
+import de.gaalop.algebra.AlStrategy;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.kohsuke.args4j.CmdLineException;
@@ -10,6 +10,8 @@ import org.kohsuke.args4j.Option;
 
 import java.io.*;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Main class of the Gaalop command line interface. Arguments are parsed using the args4j plugin.
@@ -45,6 +47,12 @@ public class Main {
   @Option(name = "-visualizer", required = false, usage = "Sets the class name of the visualizer strategy plugin that should be used.")
   private String visualizerStrategyPlugin = "de.gaalop.visualCodeInserter.Plugin";
 
+  @Option(name = "-algebraName", required = true, usage = "Sets the name of the algebra that should be used.")
+  private String algebraName;
+  
+  @Option(name = "-algebraBaseDir", required = false, usage = "Sets the base directory path of the user-defined algebras.")
+  private String algebraBaseDirectory;
+  
   /**
    * Starts the command line interface of Gaalop.
    * 
@@ -113,8 +121,24 @@ public class Main {
     OptimizationStrategy optimizationStrategy = createOptimizationStrategy();
 
     CodeGenerator codeGenerator = createCodeGenerator();
+    
+    boolean asRessource = false;
+    
+    try {
+        InputStream inputStream = AlStrategy.class.getResourceAsStream("algebra/definedAlgebras.txt");
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
 
-    return new CompilerFacade(codeParser, globalSettingsStrategy, visualizerStrategy, algebraStrategy, optimizationStrategy, codeGenerator);
+        String line;
+        while ((line = reader.readLine()) != null) 
+            if (line.trim().equals(algebraName.trim()))
+                asRessource = true;
+
+        reader.close();
+    } catch (IOException ex) {
+        Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+    }
+
+    return new CompilerFacade(codeParser, globalSettingsStrategy, visualizerStrategy, algebraStrategy, optimizationStrategy, codeGenerator, algebraName, asRessource, algebraBaseDirectory);
   }
 
   private CodeParser createCodeParser() {

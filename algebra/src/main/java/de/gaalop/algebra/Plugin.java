@@ -16,12 +16,9 @@ public class Plugin extends Observable implements AlgebraStrategyPlugin {
 
     @ConfigurationProperty(type = Type.BOOLEAN)
     public boolean usePrecalulatedTables = true;
-    
-    @ConfigurationProperty(type = Type.BOOLEAN)
-    public boolean useBuiltInFiles = true;
 
     @ConfigurationProperty(type = Type.TEXT)
-    public String baseDirectory = "algebra/5d/";
+    public String additionalBaseDirectory = "";
 
     @ConfigurationProperty(type = Type.TEXT)
     public String userMacroFilePath = "";
@@ -52,16 +49,8 @@ public class Plugin extends Observable implements AlgebraStrategyPlugin {
         notifyObservers(new Notifications.Error(error));
     }
 
-    public boolean isUseBuiltInFiles() {
-        return useBuiltInFiles;
-    }
-
     public boolean isUsePrecalulatedTables() {
         return usePrecalulatedTables;
-    }
-
-    public String getBaseDirectory() {
-        return baseDirectory;
     }
 
     public String getUserMacroFilePath() {
@@ -72,16 +61,18 @@ public class Plugin extends Observable implements AlgebraStrategyPlugin {
         this.userMacroFilePath = userMacroFilePath;
     }
 
-    public void setBaseDirectory(String baseDirectory) {
-        this.baseDirectory = baseDirectory;
-    }
-
-    public void setUseBuiltInFiles(boolean useBuiltInFiles) {
-        this.useBuiltInFiles = useBuiltInFiles;
-    }
-
     public void setUsePrecalulatedTables(boolean usePrecalulatedTables) {
         this.usePrecalulatedTables = usePrecalulatedTables;
     }
 
+    public String getAdditionalBaseDirectory() {
+        return additionalBaseDirectory;
+    }
+
+    public void setAdditionalBaseDirectory(String additionalBaseDirectory) {
+        this.additionalBaseDirectory = additionalBaseDirectory;
+    }
+
+    
+    
 }

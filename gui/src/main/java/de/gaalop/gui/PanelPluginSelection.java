@@ -1,13 +1,23 @@
 package de.gaalop.gui;
 
 import de.gaalop.*;
+import de.gaalop.algebra.AlStrategy;
 import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.colorchooser.AbstractColorChooserPanel;
+import org.apache.commons.beanutils.BeanUtils;
 
 /**
  *
@@ -28,6 +38,11 @@ public class PanelPluginSelection extends JPanel {
     private Color defaultColor;
     
     private JTextArea errorTextArea = new JTextArea();
+    
+    private JComboBox algebraChooser = new JComboBox();
+    
+    public static String lastUsedAlgebra;
+    public static boolean lastUsedAlgebraRessource;
     
     private ItemListener itemListener = new ItemListener() {
         @Override
@@ -85,6 +100,8 @@ public class PanelPluginSelection extends JPanel {
             }
         };
         add(new JPanel());
+
+        addLabeledComponent("Algebra to use:", algebraChooser);
         
         PluginSorter comparator = new PluginSorter();
         
@@ -243,6 +260,71 @@ public class PanelPluginSelection extends JPanel {
 
     public String getErrorMessage() {
         return errorMessage;
+    }
+
+    public void refreshAlgebras() {
+        DefaultComboBoxModel model = new DefaultComboBoxModel();
+        try {
+            InputStream inputStream = AlStrategy.class.getResourceAsStream("algebra/definedAlgebras.txt");
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+            
+            String line;
+            while ((line = reader.readLine()) != null) 
+                model.addElement(new AlgebraChooserItem(true, line, line));
+            
+            reader.close();
+        } catch (IOException ex) {
+            Logger.getLogger(PanelPluginSelection.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
+        AlgebraStrategyPlugin algebra = Plugins.getAlgebraStrategyPlugins().iterator().next();
+        
+        try {
+             Field field = algebra.getClass().getField("additionalBaseDirectory");
+             String value = BeanUtils.getProperty(algebra, field.getName()).trim();
+             
+             if (!value.isEmpty()) {
+                 //TODO implement other algebra dirs
+                 System.err.println("additionalBaseDirectory from gui.panelpluginSelection: NOT implemented yet");
+             }
+             
+        } catch (IllegalAccessException ex) {
+            Logger.getLogger(PanelPluginSelection.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InvocationTargetException ex) {
+            Logger.getLogger(PanelPluginSelection.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NoSuchMethodException ex) {
+            Logger.getLogger(PanelPluginSelection.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NoSuchFieldException ex) {
+            Logger.getLogger(PanelPluginSelection.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SecurityException ex) {
+            Logger.getLogger(PanelPluginSelection.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        algebraChooser.setModel(model);
+        
+        if (lastUsedAlgebra == null)  {
+            lastUsedAlgebra = "5d";
+            lastUsedAlgebraRessource = true;
+        }
+        
+        
+
+        AlgebraChooserItem defaultItem = new AlgebraChooserItem(lastUsedAlgebraRessource, lastUsedAlgebra, "");
+        
+        FOR:
+        for (int i=0;i<model.getSize();i++) {
+            AlgebraChooserItem iItem = (AlgebraChooserItem) model.getElementAt(i);
+            if (defaultItem.algebraName.equals(iItem.algebraName) && defaultItem.ressource == iItem.ressource) {
+                defaultItem = iItem;
+                break FOR;
+            }
+        }
+        
+        algebraChooser.setSelectedItem(defaultItem);
+    }
+
+    public AlgebraChooserItem getAlgebraToUse() {
+        return (AlgebraChooserItem) algebraChooser.getSelectedItem();
     }
 
 }

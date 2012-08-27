@@ -36,11 +36,11 @@ public class Base {
     protected Executer executeProgram(GAPPTestable testable, String cluName) throws OptimizationException, CodeParserException {
         CodeParser parser = (new de.gaalop.clucalc.input.Plugin()).createCodeParser();
         ControlFlowGraph graph = parser.parseFile(new InputFile(cluName, testable.getSource()));
-
+        graph.algebraName = "5d";
+        graph.asRessource = true;
+        
         de.gaalop.algebra.Plugin alPlugin = new de.gaalop.algebra.Plugin();
-        alPlugin.useBuiltInFiles = true;
         alPlugin.usePrecalulatedTables = true;
-        alPlugin.baseDirectory = "algebra/5d/";
         AlgebraStrategy algebraStrategy = alPlugin.createAlgebraStrategy();
         algebraStrategy.transform(graph);
         

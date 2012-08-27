@@ -1,0 +1,9 @@
+2d
+3d
+5d
+6d
+8d
+9d
+cr4d
+pr4d
+st4d

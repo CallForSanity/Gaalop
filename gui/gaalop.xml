@@ -2,17 +2,17 @@
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
 <comment>Gaalop Configuration File</comment>
-<entry key="de.gaalop.algebra.Plugin.baseDirectory">algebra/cr4d/</entry>
-<entry key="de.gaalop.algebra.Plugin.usePrecalulatedTables">false</entry>
+<entry key="de.gaalop.algebra.Plugin.usePrecalulatedTables">true</entry>
 <entry key="de.gaalop.algebra.Plugin.userMacroFilePath"/>
 <entry key="de.gaalop.maple.Plugin.gaalopPath">/</entry>
 <entry key="de.gaalop.maple.Plugin.mapleJavaPath">/net/bifur/gaalop/maple/java/</entry>
+<entry key="de.gaalop.algebra.Plugin.additionalBaseDirectory"/>
 <entry key="de.gaalop.tba.Plugin.optUnusedAssignments">true</entry>
 <entry key="de.gaalop.cpp.Plugin.standalone">true</entry>
 <entry key="de.gaalop.gaalet.output.Plugin.useNameTable">false</entry>
 <entry key="de.gaalop.maple.Plugin.mapleBinaryPath">/net/bifur/gaalop/maple/bin.IBM_INTEL_LINUX/</entry>
 <entry key="de.gaalop.tba.Plugin.optConstantPropagation">true</entry>
-<entry key="de.gaalop.algebra.Plugin.useBuiltInFiles">true</entry>
+<entry key="lastUsedAlgebra">2d</entry>
 <entry key="de.gaalop.clucalc.output.Plugin.suffix">_opt</entry>
 <entry key="de.gaalop.gappopencl.Plugin.standalone">true</entry>
 <entry key="de.gaalop.tba.Plugin.optOneExpressionRemoval">true</entry>
@@ -21,4 +21,5 @@
 <entry key="de.gaalop.tba.Plugin.optInserting">true</entry>
 <entry key="de.gaalop.compressed.Plugin.standalone">false</entry>
 <entry key="de.gaalop.maple.Plugin.useCodeSegmenter">false</entry>
+<entry key="lastUsedAlgebraRessource">true</entry>
 </properties>

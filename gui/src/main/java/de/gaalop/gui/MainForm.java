@@ -39,7 +39,7 @@ public class MainForm {
     private JButton closeButton;
     private StatusBar statusBar;
     
-    private PanelPluginSelection panelPluginSelection;
+    public PanelPluginSelection panelPluginSelection;
 
     private Log log = LogFactory.getLog(MainForm.class);
 

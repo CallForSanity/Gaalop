@@ -136,10 +136,10 @@ public class TestCreator {
             CodeParser parser = (new de.gaalop.clucalc.input.Plugin()).createCodeParser();
             ControlFlowGraph graph = parser.parseFile(new InputFile(cluName, testable.getCLUScript()));
             //writeFile(new OutputFile("test",testable.getCLUScript(), Charset.forName("UTF-8")));
-
+            graph.algebraName = "5d";
+            graph.asRessource = true;
+            
             de.gaalop.algebra.Plugin plugin = new de.gaalop.algebra.Plugin();
-            plugin.baseDirectory = "algebra/5d/";
-            plugin.useBuiltInFiles = true;
             plugin.usePrecalulatedTables = true;       
             AlgebraStrategy algebraStrategy = plugin.createAlgebraStrategy();
             algebraStrategy.transform(graph);

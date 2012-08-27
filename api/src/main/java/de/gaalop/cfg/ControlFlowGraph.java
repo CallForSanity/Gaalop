@@ -67,6 +67,10 @@ public final class ControlFlowGraph {
         
         public LinkedList<UnknownMacroCall> unknownMacros = new LinkedList<UnknownMacroCall>();
         
+        public String algebraName;
+        public boolean asRessource;
+        public String algebraBaseDirectory;
+        
         public HashMap<String, Expression> getRenderingExpressions() {
             return renderingExpressions;
         }

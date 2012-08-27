@@ -10,9 +10,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.prefs.Preferences;
+import org.apache.commons.beanutils.BeanUtils;
 
 /**
  * This command object performs a compilation run.
@@ -38,6 +43,10 @@ public class CompileAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        AlgebraChooserItem algebraToUse = panelPluginSelection.getAlgebraToUse();
+        PanelPluginSelection.lastUsedAlgebra = algebraToUse.algebraName;
+        PanelPluginSelection.lastUsedAlgebraRessource = algebraToUse.ressource;
+        
     	statusBar.reset();
 
         GlobalSettingsStrategyPlugin globalSettingsPlugin = panelPluginSelection.getGlobalSettingsStrategyPlugin();
@@ -73,13 +82,36 @@ public class CompileAction extends AbstractAction {
         }
 
         CodeParserPlugin parserPlugin = sourcePanel.getParserPlugin();
+        
+        AlgebraStrategyPlugin algebra = Plugins.getAlgebraStrategyPlugins().iterator().next();
+        
+        String algebraBaseDirectory = "";
+        try {
+             Field field = algebra.getClass().getField("additionalBaseDirectory");
+             algebraBaseDirectory = BeanUtils.getProperty(algebra, field.getName()).trim();
+        } catch (IllegalAccessException ex) {
+            Logger.getLogger(PanelPluginSelection.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InvocationTargetException ex) {
+            Logger.getLogger(PanelPluginSelection.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NoSuchMethodException ex) {
+            Logger.getLogger(PanelPluginSelection.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NoSuchFieldException ex) {
+            Logger.getLogger(PanelPluginSelection.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SecurityException ex) {
+            Logger.getLogger(PanelPluginSelection.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
+        
 
         final CompilerFacade facade = new CompilerFacade(parserPlugin.createCodeParser(),
                 globalSettingsPlugin.createGlobalSettingsStrategy(),
                 visualizerPlugin.createVisualizerStrategy(),
                 algebraPlugin.createAlgebraStrategy(),
                 optimizationPlugin.createOptimizationStrategy(),
-                panelPluginSelection.getCodeGeneratorPlugin().createCodeGenerator());
+                panelPluginSelection.getCodeGeneratorPlugin().createCodeGenerator(),
+                algebraToUse.algebraName,algebraToUse.ressource,algebraBaseDirectory
+                );
         facade.addObserver(statusBar);
 
         // start new thread in order to see status changes in main thread (GUI)

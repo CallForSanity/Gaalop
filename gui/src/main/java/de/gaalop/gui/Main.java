@@ -68,7 +68,7 @@ public class Main {
         mainWindow.setVisible(true);
         
         loadConfig();
-
+        mainForm.panelPluginSelection.refreshAlgebras();
         mainForm.loadOpenedFiles();
 
         // Save the config whenever the main window is closed

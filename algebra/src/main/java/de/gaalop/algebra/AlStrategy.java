@@ -42,12 +42,17 @@ public class AlStrategy implements AlgebraStrategy {
             //load algebra
             AlgebraDefinitionFile alFile = graph.getAlgebraDefinitionFile();
             alFile.setUsePrecalculatedTable(plugin.usePrecalulatedTables);
-            alFile.setUseAsRessource(plugin.useBuiltInFiles);
-            String baseDir = plugin.getBaseDirectory();
+            alFile.setUseAsRessource(graph.asRessource);
+            
+            String baseDir = (graph.asRessource) ? "algebra" : graph.algebraBaseDirectory;
+            
             if (!baseDir.endsWith("/")) baseDir += "/";
+            
+            baseDir += graph.algebraName+"/";
+            
             alFile.setProductsFilePath(baseDir+"products.csv");
 
-            inputStream = (plugin.isUseBuiltInFiles())
+            inputStream = (graph.asRessource)
                     ? getClass().getResourceAsStream(baseDir+"definition.csv")
                     : new FileInputStream(new File(baseDir+"definition.csv"));
             alFile.loadFromFile(inputStream);
@@ -56,7 +61,7 @@ public class AlStrategy implements AlgebraStrategy {
 
             //replace all functions / macros
 
-            inputStream = (plugin.isUseBuiltInFiles())
+            inputStream = (graph.asRessource)
                     ? getClass().getResourceAsStream(baseDir+"macros.clu")
                     : new FileInputStream(new File(baseDir+"macros.clu"));
             
