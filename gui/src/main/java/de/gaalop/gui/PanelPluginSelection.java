@@ -269,8 +269,10 @@ public class PanelPluginSelection extends JPanel {
             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
             
             String line;
-            while ((line = reader.readLine()) != null) 
-                model.addElement(new AlgebraChooserItem(true, line, line));
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(";");
+                model.addElement(new AlgebraChooserItem(true, parts[0], parts[0]+" - "+parts[1]));
+            }
             
             reader.close();
         } catch (IOException ex) {
