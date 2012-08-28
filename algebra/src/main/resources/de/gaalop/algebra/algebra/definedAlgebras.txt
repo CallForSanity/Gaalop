@@ -1,6 +1,5 @@
 2d;imaginary numbers
 3d;vectors in 3d
-cr4d;compass-ruler
 pr4d;projective
 st4d;space-time
 5d;conformal space
