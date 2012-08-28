@@ -113,12 +113,14 @@ public class AlStrategy implements AlgebraStrategy {
             HashSet<String> copySet = new HashSet<String>(set);
             set.clear();
             for (String str: copySet) {
-                String[] parts = str.split(" ");
-                if (parts[1].equals("1")) parts[1] = "1.0";
-                if (!mapIndices.containsKey(parts[1]))
-                    throw new OptimizationException("The bladename "+parts[1]+" is not found in the default blade list.", graph);
-                
-                set.add(parts[0]+"$"+mapIndices.get(parts[1]));
+                if (str.contains(" ")) {
+                    String[] parts = str.split(" ");
+                    if (parts[1].equals("1")) parts[1] = "1.0";
+                    if (!mapIndices.containsKey(parts[1]))
+                        throw new OptimizationException("The bladename "+parts[1]+" is not found in the default blade list.", graph);
+
+                    set.add(parts[0]+"$"+mapIndices.get(parts[1]));
+                }
             }
         } catch (CodeParserException ex) {
             Logger.getLogger(AlStrategy.class.getName()).log(Level.SEVERE, null, ex);
