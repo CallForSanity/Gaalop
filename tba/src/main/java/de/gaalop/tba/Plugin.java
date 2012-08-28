@@ -100,7 +100,7 @@ public class Plugin extends Observable implements OptimizationStrategyPlugin {
 
     @Override
     public String getName() {
-        return "TBA";
+        return "Table-Based Approach";
     }
 
     @Override
