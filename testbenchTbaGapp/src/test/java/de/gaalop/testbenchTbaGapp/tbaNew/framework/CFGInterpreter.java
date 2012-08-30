@@ -4,6 +4,7 @@ import de.gaalop.cfg.*;
 import de.gaalop.dfg.*;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 
 /**
  *
@@ -15,7 +16,7 @@ public class CFGInterpreter extends EmptyControlFlowVisitor implements Expressio
     private HashSet<Variable> outputVariables;
     
     private double resultValue;
-
+    
     public CFGInterpreter(HashMap<Variable, Double> inputVariables) {
         mapVariables = new HashMap<Variable, Double>(inputVariables);
         outputVariables = new HashSet<Variable>();
@@ -139,7 +140,10 @@ public class CFGInterpreter extends EmptyControlFlowVisitor implements Expressio
 
     @Override
     public void visit(Variable node) {
-        throw new IllegalStateException("Variable nodes should have been removed by TBA.");
+        if (mapVariables.containsKey(node)) {
+            resultValue = mapVariables.get(node);
+        } else
+            throw new IllegalStateException("Variable nodes should have been removed by TBA.");
     }
 
     @Override

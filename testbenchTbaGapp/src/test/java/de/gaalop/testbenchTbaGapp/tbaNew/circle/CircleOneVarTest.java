@@ -13,25 +13,20 @@ import static org.junit.Assert.*;
  * @author Christian Steinmetz
  */
 @Ignore
-public class CircleNoVarsTest extends GenericCircleTest {
+public class CircleOneVarTest extends GenericCircleTest {
 
-    public CircleNoVarsTest(Point p1, Point p2, Point p3) {
+    public CircleOneVarTest(Point p1, Point p2, Point p3) {
         super(p1, p2, p3);
     }
 
     @Override
     protected String constantDefinition() {
-        return "x1 = " + p1.x + ";" + "\n"
-                + "y1 = " + p1.y + ";" + "\n"
-                + "x2 = " + p2.x + ";" + "\n"
-                + "y2 = " + p2.y + ";" + "\n"
-                + "x3 = " + p3.x + ";" + "\n"
-                + "y3 = " + p3.y + ";" + "\n";
+        return "x1 = "+p1.x+";\n";
     }
 
     @Override
     public void testOutputs(HashMap<Variable, Double> outputs) {
-
+            
         // check containing r$0,m$1,m$2
         assertTrue(outputs.containsKey(new MultivectorComponent("r", 0)));   
         assertTrue(outputs.containsKey(new MultivectorComponent("m", 1)));   
@@ -44,11 +39,19 @@ public class CircleNoVarsTest extends GenericCircleTest {
         assertEquals(p1.distance(m$1, m$2),r$0, EPSILON);
         assertEquals(p2.distance(m$1, m$2),r$0, EPSILON);
         assertEquals(p3.distance(m$1, m$2),r$0, EPSILON);
+        
         assertEquals(3, outputs.size());
+
     }
 
     @Override
     public HashMap<Variable, Double> getInputValues() {
-        return new HashMap<Variable, Double>(); //no inputs
+        HashMap<Variable, Double> result = new HashMap<Variable, Double>();
+        result.put(new Variable("y1"), (double) p1.y);
+        result.put(new Variable("x2"), (double) p2.x);
+        result.put(new Variable("y2"), (double) p2.y);
+        result.put(new Variable("x3"), (double) p3.x);
+        result.put(new Variable("y3"), (double) p3.y);
+        return result;
     }
 }

@@ -5,10 +5,7 @@ import de.gaalop.algebra.AlStrategy;
 import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
@@ -287,9 +284,18 @@ public class PanelPluginSelection extends JPanel {
              String value = BeanUtils.getProperty(algebra, field.getName()).trim();
              
              if (!value.isEmpty()) {
-                 //TODO implement other algebra dirs
-                 System.err.println("additionalBaseDirectory from gui.panelpluginSelection: NOT implemented yet");
-             }
+                File file = new File(value);
+                File[] dirs = file.listFiles(new FileFilter() {
+                    @Override
+                    public boolean accept(File pathname) {
+                        return pathname.isDirectory();
+                    }
+                });
+                if (dirs != null)
+                for (File dir: dirs) 
+                    model.addElement(new AlgebraChooserItem(false, dir.getName(), "Own - "+dir.getName()));
+
+                }
              
         } catch (IllegalAccessException ex) {
             Logger.getLogger(PanelPluginSelection.class.getName()).log(Level.SEVERE, null, ex);

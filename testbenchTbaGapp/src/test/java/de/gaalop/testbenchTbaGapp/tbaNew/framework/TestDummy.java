@@ -7,6 +7,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -17,7 +18,7 @@ import java.util.logging.Logger;
  */
 public class TestDummy {
     
-    public static void compile(TBATestCase tBATestCase, String algebraName) {
+    public static void compile(TBATestCase tBATestCase) {
         
         CodeParser parser                                       = new de.gaalop.clucalc.input.Plugin().createCodeParser();
         GlobalSettingsStrategy globalSettingsStrategy           = new de.gaalop.globalSettings.Plugin().createGlobalSettingsStrategy();
@@ -33,42 +34,64 @@ public class TestDummy {
                 algebraStrategy, 
                 optimizationStrategy, 
                 codeGenerator, 
-                algebraName, 
+                tBATestCase.getAlgebraName(), 
                 true, 
                 "");
         
-        Set<OutputFile> compile;
+        Set<OutputFile> outputFiles;
         try {
-            compile = facade.compile(new InputFile("TestCase", tBATestCase.getCLUScript()));
+            outputFiles = facade.compile(new InputFile("TestCase", tBATestCase.getCLUScript()));
             
-            String content = compile.iterator().next().getContent();
-            BufferedReader reader = new BufferedReader(new StringReader(content));
-            HashMap<Variable, Double> variables = new HashMap<Variable, Double>();
-            String line;
-            try {
-                while ((line = reader.readLine()) != null) {
-                    String[] parts = line.split("=");
-                    
-                    Variable variable;
-                    if (parts[0].contains("[")) {
-                        int indexOpen = parts[0].indexOf('[');
-                        int indexClose = parts[0].indexOf(']');
-                        variable = new MultivectorComponent(parts[0].substring(0, indexOpen).trim(), Integer.parseInt(parts[0].substring(indexOpen+1, indexClose).trim()));
-                    } else {
-                        variable = new Variable(parts[0].trim());
-                    }
-
-                    variables.put(variable, Double.parseDouble(parts[1].trim()));
-                }
-                reader.close();
-            } catch (IOException ex) {
-                Logger.getLogger(TestDummy.class.getName()).log(Level.SEVERE, null, ex);
+            
+            
+            OutputFile vars;
+            OutputFile outputVars;
+            
+            Iterator<OutputFile> iterator = outputFiles.iterator();
+            OutputFile f = iterator.next();
+            if (f.getName().equals("Map Values")) {
+                vars = f;
+                outputVars = iterator.next();
+            } else {
+                outputVars = f;
+                vars = iterator.next();
             }
-                tBATestCase.testOutputs(variables);
+            
+            HashMap<Variable, Double> varsValues = contentToMap(vars.getContent());
+            HashMap<Variable, Double> outputVarsValues = contentToMap(outputVars.getContent());
+            
+
+            tBATestCase.testOutputs(outputVarsValues);
         } catch (CompilationException ex) {
             Logger.getLogger(TestDummy.class.getName()).log(Level.SEVERE, null, ex);
         }
         
+    }
+    
+    private static HashMap<Variable, Double> contentToMap(String content) {
+        BufferedReader reader = new BufferedReader(new StringReader(content));
+        HashMap<Variable, Double> variables = new HashMap<Variable, Double>();
+        String line;
+        try {
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split("=");
+
+                Variable variable;
+                if (parts[0].contains("[")) {
+                    int indexOpen = parts[0].indexOf('[');
+                    int indexClose = parts[0].indexOf(']');
+                    variable = new MultivectorComponent(parts[0].substring(0, indexOpen).trim(), Integer.parseInt(parts[0].substring(indexOpen+1, indexClose).trim()));
+                } else {
+                    variable = new Variable(parts[0].trim());
+                }
+
+                variables.put(variable, Double.parseDouble(parts[1].trim()));
+            }
+            reader.close();
+        } catch (IOException ex) {
+            Logger.getLogger(TestDummy.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return variables;
     }
 
 }

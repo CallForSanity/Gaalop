@@ -12,7 +12,7 @@
 <entry key="de.gaalop.gaalet.output.Plugin.useNameTable">false</entry>
 <entry key="de.gaalop.maple.Plugin.mapleBinaryPath">/net/bifur/gaalop/maple/bin.IBM_INTEL_LINUX/</entry>
 <entry key="de.gaalop.tba.Plugin.optConstantPropagation">true</entry>
-<entry key="lastUsedAlgebra">5d</entry>
+<entry key="lastUsedAlgebra">cr4d</entry>
 <entry key="de.gaalop.clucalc.output.Plugin.suffix">_opt</entry>
 <entry key="de.gaalop.gappopencl.Plugin.standalone">true</entry>
 <entry key="de.gaalop.tba.Plugin.optOneExpressionRemoval">true</entry>
@@ -21,5 +21,5 @@
 <entry key="de.gaalop.tba.Plugin.optInserting">true</entry>
 <entry key="de.gaalop.compressed.Plugin.standalone">false</entry>
 <entry key="de.gaalop.maple.Plugin.useCodeSegmenter">false</entry>
-<entry key="lastUsedAlgebraRessource">true</entry>
+<entry key="lastUsedAlgebraRessource">false</entry>
 </properties>

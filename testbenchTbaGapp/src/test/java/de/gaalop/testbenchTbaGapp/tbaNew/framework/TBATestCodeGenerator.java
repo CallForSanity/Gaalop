@@ -4,6 +4,7 @@ import de.gaalop.CodeGenerator;
 import de.gaalop.CodeGeneratorException;
 import de.gaalop.OutputFile;
 import de.gaalop.cfg.ControlFlowGraph;
+import de.gaalop.dfg.MultivectorComponent;
 import de.gaalop.dfg.Variable;
 import de.gaalop.testbenchTbaGapp.tbaNew.framework.CFGInterpreter;
 import java.nio.charset.Charset;
@@ -35,21 +36,13 @@ public class TBATestCodeGenerator implements CodeGenerator {
         ArrayList<Variable> mapVariablesList = new ArrayList<Variable>(mapVariables.keySet());
         ArrayList<Variable> outputVariablesList = new ArrayList<Variable>(outputVariables);
         
-        if (sort) {
-            Collections.sort(outputVariablesList, new Comparator<Variable>() {
-                @Override
-                public int compare(Variable o1, Variable o2) {
-                    return o1.toString().compareTo(o2.toString());
-                }
-            });
-            
+        if (sort) {            
             Collections.sort(mapVariablesList, new Comparator<Variable>() {
                 @Override
                 public int compare(Variable o1, Variable o2) {
                     return o1.toString().compareTo(o2.toString());
                 }
             });
-            
         }
         
         for (Variable v: mapVariablesList) {
@@ -57,16 +50,30 @@ public class TBATestCodeGenerator implements CodeGenerator {
             contentMap.append("\n");
         }
         
-        /*
-        for (Variable v: outputVariablesList) 
-            for (Variable vi: mapVariablesList)
-                if (vi.getName().equals(v.getName()))
-                    contentOutput.append(v.toString()+" = "+vi.toString()+"\n");
-        */
+        for (Variable v: outputVariablesList) {
+            
+            LinkedList<Integer> indices = new LinkedList<Integer>();
+
+            for (String outputVarStr: in.getPragmaOutputVariables()) {
+                String[] parts = outputVarStr.split("\\$");
+                if (parts[0].equals(v.getName())) 
+                    indices.add(Integer.parseInt(parts[1]));
+            }
+
+            if (indices.isEmpty()) {
+                for (Variable vi: mapVariablesList)
+                    if (vi.getName().equals(v.getName()))
+                        contentOutput.append(vi.toString()+" = "+mapVariables.get(vi).toString()+"\n");
+            } else {
+                for (Variable vi: mapVariablesList)
+                    if (vi.getName().equals(v.getName()) && indices.contains(((MultivectorComponent) vi).getBladeIndex()))
+                        contentOutput.append(vi.toString()+" = "+mapVariables.get(vi).toString()+"\n");
+            }
+        }
 
         HashSet<OutputFile> result = new HashSet<OutputFile>();
         result.add(new OutputFile("Map Values", contentMap.toString(), Charset.forName("UTF-8")));
-        //result.add(new OutputFile("Output Values", contentOutput.toString(), Charset.forName("UTF-8")));
+        result.add(new OutputFile("Output Values", contentOutput.toString(), Charset.forName("UTF-8")));
         return result;
     }
 

@@ -11,7 +11,7 @@ public interface TBATestCase {
     
     public String getCLUScript();
     
-    public void testOutputs(HashMap<Variable, Double> variables);
+    public void testOutputs(HashMap<Variable, Double> outputs);
 
     public HashMap<Variable, Double> getInputValues();
     

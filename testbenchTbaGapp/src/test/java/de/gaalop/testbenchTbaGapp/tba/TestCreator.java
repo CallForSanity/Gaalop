@@ -1,9 +1,6 @@
 package de.gaalop.testbenchTbaGapp.tba;
 
 import de.gaalop.AlgebraStrategy;
-import de.gaalop.testbenchTbaGapp.tba.circle.CircleNoVarsTest;
-import de.gaalop.testbenchTbaGapp.tba.circle.CircleOneVarTest;
-import de.gaalop.testbenchTbaGapp.tba.circle.CircleOnlyVarsTest;
 import de.gaalop.CodeGenerator;
 import de.gaalop.CodeGeneratorException;
 import de.gaalop.CodeParser;
@@ -13,13 +10,10 @@ import de.gaalop.OptimizationException;
 import de.gaalop.OptimizationStrategy;
 import de.gaalop.OutputFile;
 import de.gaalop.cfg.ControlFlowGraph;
-import de.gaalop.testbenchTbaGapp.tba.common.OneMacroTest;
-import de.gaalop.testbenchTbaGapp.tba.common.TwoMacrosTest;
 import de.gaalop.testbenchTbaGapp.tba.gps.GPSNoVarsTest;
 import de.gaalop.testbenchTbaGapp.tba.gps.GPSOnlyVarsTest;
 import de.gaalop.testbenchTbaGapp.tba.gps.Point3D;
 import de.gaalop.testbenchTbaGapp.tba.linePointDistance.LinePointDistance;
-import de.gaalop.testbenchTbaGapp.tba.trigonFuncTest.TrigonometricFunctions;
 import java.awt.Point;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
@@ -80,11 +74,7 @@ public class TestCreator {
         try {
             // test(new CircleOneVarTest(new Point(5,2),new Point(3,9),new Point(6,4),new boolean[]{true,false,false,false,false,false},1),"CircleOneVar");
             testTrafoTest();
-            testTrigonometric();
 
-            testCircleNoVars();
-            testCircleOneVar();
-            testCircleOnlyVars();
             testOutputCount();
             testUnusedTest();
 
@@ -93,8 +83,6 @@ public class TestCreator {
 
             testLinePointDistance();
             
-            test(new OneMacroTest(),"OneMacro");
-            test(new TwoMacrosTest(),"TwoMacros");
         } catch (OptimizationException e) {
             throw new Exception("CompileError in positive tests: " + e);
         }
@@ -193,43 +181,11 @@ public class TestCreator {
      * Dummy method
      * @throws OptimizationException
      */
-    private void testTrigonometric() throws OptimizationException {
-        test(new TrigonometricFunctions(), "TrigonometricFunctions");
-    }
-
-    /**
-     * Dummy method
-     * @throws OptimizationException
-     */
     private void testLinePointDistance() throws OptimizationException {
         test(new LinePointDistance(
                 new Point3D(3, 4, 5),
                 new Point3D(7, 8, 10),
                 new Point3D(3, 8, 10)), "LinePointDistance");
-    }
-
-    /**
-     * Dummy method
-     * @throws OptimizationException
-     */
-    private void testCircleNoVars() throws OptimizationException {
-        test(new CircleNoVarsTest(new Point(5, 2), new Point(3, 9), new Point(6, 4)), "CircleNoVars");
-    }
-
-    /**
-     * Dummy method
-     * @throws OptimizationException
-     */
-    private void testCircleOneVar() throws OptimizationException {
-        test(new CircleOneVarTest(new Point(5, 2), new Point(3, 9), new Point(6, 4), new boolean[]{true, false, false, false, false, false}, 50), "CircleOneVar");
-    }
-
-    /**
-     * Dummy method
-     * @throws OptimizationException
-     */
-    private void testCircleOnlyVars() throws OptimizationException {
-        test(new CircleOnlyVarsTest(new Point(5, 2), new Point(3, 9), new Point(6, 4)), "CircleOnlyVars");
     }
 
     /**

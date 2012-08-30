@@ -120,7 +120,8 @@ public class AlStrategy implements AlgebraStrategy {
                         throw new OptimizationException("The bladename "+parts[1]+" is not found in the default blade list.", graph);
 
                     set.add(parts[0]+"$"+mapIndices.get(parts[1]));
-                }
+                } else 
+                    set.add(str);
             }
         } catch (CodeParserException ex) {
             Logger.getLogger(AlStrategy.class.getName()).log(Level.SEVERE, null, ex);
