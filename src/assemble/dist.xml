@@ -13,7 +13,7 @@
                 <include>de.gaalop:api</include>
                 <include>de.gaalop:algebra</include>
                 <include>de.gaalop:visualCodeInserter</include>
-                <include>de.gaalop:visualCodeInserter2d</include>
+                <!--TODO include after master thesis<include>de.gaalop:visualCodeInserter2d</include>-->
                 <include>de.gaalop:clucalc</include>
                 <include>de.gaalop:globalSettings</include>
 
@@ -28,7 +28,7 @@
                 <include>de.gaalop:codegen-latex</include>
                 <include>de.gaalop:codegen-gapp</include>
 		<include>de.gaalop:codegen-visualizer</include>
-		<include>de.gaalop:codegen-vis2d</include>
+		<!--TODO include after master thesis<include>de.gaalop:codegen-vis2d</include>-->
                 <!--<include>de.gaalop:codegen-gappopencl</include>-->
                 <include>de.gaalop:gaalet</include>
 
