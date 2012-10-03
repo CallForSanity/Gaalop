@@ -22,6 +22,7 @@ import org.apache.commons.beanutils.BeanUtils;
  */
 public class PanelPluginSelection extends JPanel {
     
+    
     private JComboBox globalSettings; 
     private JComboBox visualCodeInserter; 
     private JComboBox algebra; 
@@ -40,6 +41,11 @@ public class PanelPluginSelection extends JPanel {
     
     public static String lastUsedAlgebra;
     public static boolean lastUsedAlgebraRessource;
+    
+    public static String lastUsedVisualizer;
+    public static String lastUsedVisualCodeInserter;
+    public static String lastUsedOptimization;
+    
     
     private ItemListener itemListener = new ItemListener() {
         @Override
@@ -142,7 +148,6 @@ public class PanelPluginSelection extends JPanel {
         CodeGeneratorPlugin[] codegenPlugins = Plugins.getCodeGeneratorPlugins().toArray(new CodeGeneratorPlugin[0]);
         Arrays.sort(codegenPlugins, comparator);
         generator = new JComboBox(codegenPlugins);
-        generator.setSelectedItem(search(codegenPlugins, "de.gaalop.cpp.Plugin"));
         generator.addItemListener(itemListener);
         generator.setRenderer(c);
         if (Plugins.getCodeGeneratorPlugins().size() > 1)
@@ -260,6 +265,15 @@ public class PanelPluginSelection extends JPanel {
     }
 
     public void refreshAlgebras() {
+        VisualCodeInserterStrategyPlugin[] visualCodeInserterStrategyPlugins = Plugins.getVisualizerStrategyPlugins().toArray(new VisualCodeInserterStrategyPlugin[0]);
+        visualCodeInserter.setSelectedItem(search(visualCodeInserterStrategyPlugins, lastUsedVisualCodeInserter));
+        
+        OptimizationStrategyPlugin[] optimizationPlugins = Plugins.getOptimizationStrategyPlugins().toArray(new OptimizationStrategyPlugin[0]);
+        optimization.setSelectedItem(search(optimizationPlugins, lastUsedOptimization));
+        
+        CodeGeneratorPlugin[] codegenPlugins = Plugins.getCodeGeneratorPlugins().toArray(new CodeGeneratorPlugin[0]);
+        generator.setSelectedItem(search(codegenPlugins, lastUsedVisualizer));
+        
         DefaultComboBoxModel model = new DefaultComboBoxModel();
         try {
             InputStream inputStream = AlStrategy.class.getResourceAsStream("algebra/definedAlgebras.txt");
@@ -333,6 +347,12 @@ public class PanelPluginSelection extends JPanel {
 
     public AlgebraChooserItem getAlgebraToUse() {
         return (AlgebraChooserItem) algebraChooser.getSelectedItem();
+    }
+
+    public void updateLastUsedPlugins() {
+        lastUsedVisualizer = generator.getSelectedItem().getClass().getCanonicalName();
+        lastUsedVisualCodeInserter = visualCodeInserter.getSelectedItem().getClass().getCanonicalName();
+        lastUsedOptimization = optimization.getSelectedItem().getClass().getCanonicalName();
     }
 
 }

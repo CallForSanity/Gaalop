@@ -122,6 +122,9 @@ public class RayMethod extends ZeroFinder {
                     graph.removeNode(node);
             }
   
+        //Insert expressions, like Maxima,  !!!
+        InsertingExpression.insertExpressions(graph);
+        
         //differentiate with respect to t with the help of maxima = _V_PRODUCT_SD
         MaximaDifferentiater differentiater = new MaximaDifferentiater();
         LinkedList<AssignmentNode> derived;

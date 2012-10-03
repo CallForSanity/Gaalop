@@ -54,6 +54,7 @@ public class MainForm {
             public void actionPerformed(ActionEvent event) {
                 if (tabbedPane.getSelectedComponent() instanceof SourceFilePanel) {
                     if (panelPluginSelection.areConstraintsFulfilled()) {
+                        panelPluginSelection.updateLastUsedPlugins();
                         SourceFilePanel sourcePanel = (SourceFilePanel) tabbedPane.getSelectedComponent();
                         CompileAction action = new CompileAction(sourcePanel, statusBar, panelPluginSelection);
                         action.actionPerformed(event);

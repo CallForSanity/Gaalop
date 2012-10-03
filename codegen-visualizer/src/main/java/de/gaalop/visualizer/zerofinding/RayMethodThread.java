@@ -85,17 +85,17 @@ public class RayMethodThread extends Thread {
                     isolation(new RealInterval(t.lo(), center), values, graph, product);
                     isolation(new RealInterval(center, t.hi()), values, graph, product);
                 } else {
-                    
-                        if (!points.containsKey(product))
-                            points.put(product, new LinkedList<Point3d>());
-                        
-                        points.get(product).add(new Point3d(
-                                values.get(new MultivectorComponent("_V_ox", 0)).lo()+(t.lo()+t.hi())/2.0d, 
-                                values.get(new MultivectorComponent("_V_oy", 0)).lo(), 
-                                values.get(new MultivectorComponent("_V_oz", 0)).lo()
-                                ));
-                    
-                     }
+                        if (Math.abs(f.hi()) < 1E-1 && Math.abs(f.lo()) < 1E-1 ) {
+                            if (!points.containsKey(product))
+                                points.put(product, new LinkedList<Point3d>());
+
+                            points.get(product).add(new Point3d(
+                                    values.get(new MultivectorComponent("_V_ox", 0)).lo()+(t.lo()+t.hi())/2.0d, 
+                                    values.get(new MultivectorComponent("_V_oy", 0)).lo(), 
+                                    values.get(new MultivectorComponent("_V_oz", 0)).lo()
+                                    ));
+                        }
+                    }
             } else {
                 refinement(t, values, graph, product);
             }

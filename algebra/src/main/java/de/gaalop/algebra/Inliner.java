@@ -105,7 +105,7 @@ public class Inliner extends EmptyControlFlowVisitor {
     @Override
     public void visit(AssignmentNode node) {
         curNode = node;
-        error = false;
+        
         while (containsMacroCall(node.getValue()) && !error) {
             replacer.result = null;
             node.getValue().accept(replacer);

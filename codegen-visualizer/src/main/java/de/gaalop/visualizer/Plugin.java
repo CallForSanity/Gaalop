@@ -6,7 +6,6 @@ import de.gaalop.CodeGeneratorPlugin;
 import de.gaalop.ConfigurationProperty;
 import de.gaalop.ConfigurationProperty.Type;
 import de.gaalop.Notifications;
-import de.gaalop.tba.cfgImport.optimization.maxima.ProcessBuilderMaximaConnection;
 import java.awt.Image;
 import java.io.IOException;
 import java.net.URL;
@@ -22,6 +21,9 @@ public class Plugin extends Observable implements CodeGeneratorPlugin {
 
     @ConfigurationProperty(type = Type.DIRPATH)
     public String lwJglNativePath = "/usr/lib/jni/";
+    
+    @ConfigurationProperty(type = Type.TEXT)
+    public String zeroFindingMethod = "Ray method";
 
     private Log log = LogFactory.getLog(Plugin.class);
 
@@ -72,4 +74,13 @@ public class Plugin extends Observable implements CodeGeneratorPlugin {
     public void setLwJglNativePath(String lwJglNativePath) {
         this.lwJglNativePath = lwJglNativePath;
     }
+
+    public String getZeroFindingMethod() {
+        return zeroFindingMethod;
+    }
+
+    public void setZeroFindingMethod(String zeroFindingMethod) {
+        this.zeroFindingMethod = zeroFindingMethod;
+    }  
+    
 }

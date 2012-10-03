@@ -21,9 +21,8 @@ public class JavaCodeGenerator implements CodeGenerator {
     @Override
     public Set<OutputFile> generate(ControlFlowGraph in) {
         Set<OutputFile> result = new HashSet<OutputFile>();
-        String code = generateCode(in);
-
         String filename = generateFilename(in);
+        String code = generateCode(in, filename);
 
         OutputFile sourceFile = new OutputFile(filename, code, Charset.forName("UTF-8"));
         result.add(sourceFile);
@@ -58,10 +57,12 @@ public class JavaCodeGenerator implements CodeGenerator {
      * Generates source code for a control flow graph.
      *
      * @param in The control flow graph
+     * @param filename The filename
      * @return The generated source
      */
-    private String generateCode(ControlFlowGraph in) {
+    private String generateCode(ControlFlowGraph in, String filename) {
         JavaVisitor visitor = new JavaVisitor();
+        visitor.filename = filename;
         try {
             in.accept(visitor);
         } catch (Throwable error) {
@@ -106,10 +107,10 @@ public class JavaCodeGenerator implements CodeGenerator {
                 + "    public boolean setValue(String varName, double value);\n"
                 + "\n"
                 + "    /**\n"
-                + "      * Returns all values in a map name->value\n"
-                + "      * @return The map which contains all values\n"
-                + "      */\n"
-                + "     public HashMap<String,Double> getValues();\n"
+                + "     * Returns all values in a map name->value\n"
+                + "     * @return The map which contains all values\n"
+                + "     */\n"
+                + "    public HashMap<String,Double> getValues();\n"
                 + "\n"
                 + "}\n";
     }

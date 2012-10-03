@@ -44,7 +44,7 @@ public class ConstantPropagation extends EmptyControlFlowVisitor {
             if (mapConstants.containsKey(varComp)) {
                 // replace variable with constant
 
-                if (expression == varComp.getReferredExpression()) {
+                if (expression == varComp.getReferredExpression()) { //TODO warum == ?
                     expression = mapConstants.get(varComp);
                 } else {
                     expression.replaceExpression(varComp.getReferredExpression(), mapConstants.get(varComp));

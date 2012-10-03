@@ -94,4 +94,54 @@ public class TestDummy {
         return variables;
     }
 
+    public static void compileWithOptions(TBATestCase tBATestCase, de.gaalop.tba.Plugin optimPlugin) {
+        
+        CodeParser parser                                       = new de.gaalop.clucalc.input.Plugin().createCodeParser();
+        GlobalSettingsStrategy globalSettingsStrategy           = new de.gaalop.globalSettings.Plugin().createGlobalSettingsStrategy();
+        VisualCodeInserterStrategy visualCodeInserterStrategy   = new de.gaalop.visualCodeInserter.Plugin().createVisualizerStrategy();
+        AlgebraStrategy algebraStrategy                         = new de.gaalop.algebra.Plugin().createAlgebraStrategy();
+        OptimizationStrategy optimizationStrategy               = optimPlugin.createOptimizationStrategy();
+        CodeGenerator codeGenerator                             = new TBATestCodeGeneratorPlugin(tBATestCase.getInputValues()).createCodeGenerator();
+        
+        CompilerFacade facade = new CompilerFacade(
+                parser, 
+                globalSettingsStrategy, 
+                visualCodeInserterStrategy, 
+                algebraStrategy, 
+                optimizationStrategy, 
+                codeGenerator, 
+                tBATestCase.getAlgebraName(), 
+                true, 
+                "");
+        
+        Set<OutputFile> outputFiles;
+        try {
+            outputFiles = facade.compile(new InputFile("TestCase", tBATestCase.getCLUScript()));
+            
+            
+            
+            OutputFile vars;
+            OutputFile outputVars;
+            
+            Iterator<OutputFile> iterator = outputFiles.iterator();
+            OutputFile f = iterator.next();
+            if (f.getName().equals("Map Values")) {
+                vars = f;
+                outputVars = iterator.next();
+            } else {
+                outputVars = f;
+                vars = iterator.next();
+            }
+            
+            HashMap<Variable, Double> varsValues = contentToMap(vars.getContent());
+            HashMap<Variable, Double> outputVarsValues = contentToMap(outputVars.getContent());
+            
+
+            tBATestCase.testOutputs(outputVarsValues);
+        } catch (CompilationException ex) {
+            Logger.getLogger(TestDummy.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }
+    
 }

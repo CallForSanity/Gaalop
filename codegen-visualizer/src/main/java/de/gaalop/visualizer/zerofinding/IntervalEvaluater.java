@@ -150,17 +150,20 @@ public class IntervalEvaluater extends EmptyControlFlowVisitor implements Expres
     @Override
     public void visit(Variable node) {
         MultivectorComponent m = new MultivectorComponent(node.getName(), 0);
-        if (!values.containsKey(m))
+        if (!values.containsKey(m)) {
+            System.err.println("Interval Evaluater: Kein Wert gefunden! "+m.toString());
             return;
+        }
         RealInterval r = values.get(m);
         if (r != null)
             result = new RealInterval(r.lo(),r.hi());
-        else
+        else {
             result = null;
+            System.err.println("Interval Evaluater: Kein Wert 2 gefunden! "+m.toString());
+        }
     }
 
     // ====================== Illegal methods ======================
-
     @Override
     public void visit(OuterProduct node) {
         throw new UnsupportedOperationException("OuterProducts should have been removed by TBA.");

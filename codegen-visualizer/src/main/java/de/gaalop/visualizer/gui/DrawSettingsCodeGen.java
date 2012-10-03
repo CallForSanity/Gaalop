@@ -10,6 +10,7 @@ import de.gaalop.visualizer.*;
 import de.gaalop.visualizer.engines.lwjgl.LwJglRenderingEngine2;
 import de.gaalop.visualizer.engines.lwjgl.RenderingEngine;
 import de.gaalop.visualizer.engines.lwjgl.SimpleLwJglRenderingEngine;
+import de.gaalop.visualizer.zerofinding.DiscreteCubeMethod;
 import de.gaalop.visualizer.zerofinding.RayMethod;
 import de.gaalop.visualizer.zerofinding.ZeroFinder;
 import java.awt.Color;
@@ -33,6 +34,7 @@ public class DrawSettingsCodeGen extends DrawSettings implements CodeGenerator, 
     private Plugin plugin;
     
     public ZeroFinder finder;
+    boolean rayMethod = false;
     
     public HashMap<String, Color> colors;
     
@@ -133,9 +135,18 @@ public class DrawSettingsCodeGen extends DrawSettings implements CodeGenerator, 
     
     @Override
     public Set<OutputFile> generate(ControlFlowGraph in) throws CodeGeneratorException {
-
+        
         this.graph = in;
-        finder = new RayMethod(in.globalSettings.maximaCommand);
+
+        if (plugin.zeroFindingMethod.equalsIgnoreCase("Ray method")) 
+            finder = new RayMethod(in.globalSettings.maximaCommand);
+        else
+            if (plugin.zeroFindingMethod.equalsIgnoreCase("Discrete cube method")) 
+                finder = new DiscreteCubeMethod();
+        
+        if (finder == null)
+            finder = new RayMethod(in.globalSettings.maximaCommand);
+        
         colors = ColorEvaluater.getColors(graph);
         finder.prepareGraph(in);
         
@@ -177,7 +188,7 @@ public class DrawSettingsCodeGen extends DrawSettings implements CodeGenerator, 
         engine.pointSize = settingsPanel.getPointSize();
         
         
-        visiblePanel.setObjects(dataSet.keySet(), graph.getRenderingExpressions());
+        visiblePanel.setObjects(dataSet.keySet(), graph.getRenderingExpressions(),rayMethod);
     }
     
     /**
