@@ -42,7 +42,7 @@ public class PanelPluginSelection extends JPanel {
     public static String lastUsedAlgebra;
     public static boolean lastUsedAlgebraRessource;
     
-    public static String lastUsedVisualizer;
+    public static String lastUsedGenerator;
     public static String lastUsedVisualCodeInserter;
     public static String lastUsedOptimization;
     
@@ -272,7 +272,7 @@ public class PanelPluginSelection extends JPanel {
         optimization.setSelectedItem(search(optimizationPlugins, lastUsedOptimization));
         
         CodeGeneratorPlugin[] codegenPlugins = Plugins.getCodeGeneratorPlugins().toArray(new CodeGeneratorPlugin[0]);
-        generator.setSelectedItem(search(codegenPlugins, lastUsedVisualizer));
+        generator.setSelectedItem(search(codegenPlugins, lastUsedGenerator));
         
         DefaultComboBoxModel model = new DefaultComboBoxModel();
         try {
@@ -350,7 +350,7 @@ public class PanelPluginSelection extends JPanel {
     }
 
     public void updateLastUsedPlugins() {
-        lastUsedVisualizer = generator.getSelectedItem().getClass().getCanonicalName();
+        lastUsedGenerator = generator.getSelectedItem().getClass().getCanonicalName();
         lastUsedVisualCodeInserter = visualCodeInserter.getSelectedItem().getClass().getCanonicalName();
         lastUsedOptimization = optimization.getSelectedItem().getClass().getCanonicalName();
     }

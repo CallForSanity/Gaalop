@@ -108,7 +108,7 @@ public class PluginConfigurator {
         
         PanelPluginSelection.lastUsedAlgebra = (String) configuration.get("lastUsedAlgebra");  
         PanelPluginSelection.lastUsedAlgebraRessource = Boolean.parseBoolean((String) configuration.get("lastUsedAlgebraRessource"));
-        PanelPluginSelection.lastUsedVisualizer = (String) configuration.get("lastUsedVisualizer");
+        PanelPluginSelection.lastUsedGenerator = (String) configuration.get("lastUsedGenerator");
         PanelPluginSelection.lastUsedVisualCodeInserter = (String) configuration.get("lastUsedVisualCodeInserter");
         PanelPluginSelection.lastUsedOptimization = (String) configuration.get("lastUsedOptimization");
     }
@@ -149,7 +149,7 @@ public class PluginConfigurator {
         
         configuration.put("lastUsedAlgebra", PanelPluginSelection.lastUsedAlgebra);  
         configuration.put("lastUsedAlgebraRessource", Boolean.toString(PanelPluginSelection.lastUsedAlgebraRessource));
-        configuration.put("lastUsedVisualizer", PanelPluginSelection.lastUsedVisualizer);
+        configuration.put("lastUsedGenerator", PanelPluginSelection.lastUsedGenerator);
         configuration.put("lastUsedVisualCodeInserter", PanelPluginSelection.lastUsedVisualCodeInserter);
         configuration.put("lastUsedOptimization", PanelPluginSelection.lastUsedOptimization);
     }
