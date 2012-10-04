@@ -364,11 +364,18 @@ public class GAPPOpenCLVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor
         mvBladeMap.get(destMv).
                 put(gappDotVectors.getDestSelector().getIndex(),bladeCoeff);
 
-        // special case for operands of size 1
+        // special cases for operands of size 1 and 2
         final int operandSize = mvBladeMap.get(GAPPOpenCLCodeGenerator.getVarName(gappDotVectors.getParts().get(0).getName())).size();
         if(operandSize == 1) {
             result.append(bladeCoeff).append(" = ");
             visitDotVectorsParallelMultiply(gappDotVectors);
+            return null;
+        } else if(operandSize == 2) {
+            result.append(bladeCoeff).append(" = dot(");
+            result.append(GAPPOpenCLCodeGenerator.getVarName(gappDotVectors.getParts().get(0).getName()));
+            result.append(bladeCoeff).append(",");
+            result.append(GAPPOpenCLCodeGenerator.getVarName(gappDotVectors.getParts().get(1).getName()));
+            result.append(");\n");
             return null;
         }
         
