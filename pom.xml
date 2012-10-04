@@ -73,6 +73,7 @@
                     <configuration>
                         <descriptors>
                             <descriptor>src/assemble/dist.xml</descriptor>
+                            <descriptor>src/assemble/all.xml</descriptor>
                         </descriptors>
                     </configuration>
                 </plugin>

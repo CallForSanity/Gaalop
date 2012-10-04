@@ -138,14 +138,19 @@ public class DrawSettingsCodeGen extends DrawSettings implements CodeGenerator, 
         
         this.graph = in;
 
-        if (plugin.zeroFindingMethod.equalsIgnoreCase("Ray method")) 
+        if (plugin.zeroFindingMethod.equalsIgnoreCase("Ray method")) {
             finder = new RayMethod(in.globalSettings.maximaCommand);
-        else
-            if (plugin.zeroFindingMethod.equalsIgnoreCase("Discrete cube method")) 
+            rayMethod = true;
+        } else
+            if (plugin.zeroFindingMethod.equalsIgnoreCase("Discrete cube method"))  {
                 finder = new DiscreteCubeMethod();
+                rayMethod = false;
+            }
         
-        if (finder == null)
+        if (finder == null) {
             finder = new RayMethod(in.globalSettings.maximaCommand);
+            rayMethod = true;
+        }
         
         colors = ColorEvaluater.getColors(graph);
         finder.prepareGraph(in);
