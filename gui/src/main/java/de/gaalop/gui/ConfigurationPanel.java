@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -143,12 +144,14 @@ public class ConfigurationPanel extends JPanel {
                                         JPanel subPanel2 = new JPanel(new GridLayout(1, 3, 5, 5));
                                         subPanel2.add(textField3);
 					fields.add(subPanel2);
-                                        final JButton button3 = new JButton("Choose Directory path");
+                                        final JButton button3 = new JButton("Choose directory path");
                                         subPanel2.add(button3);
                                         button3.addActionListener(new ActionListener() {
                                             @Override
                                             public void actionPerformed(ActionEvent e) {
                                                 JFileChooser jFC = new JFileChooser();
+                                                jFC.setCurrentDirectory(new File(textField3.getText()));
+                                                jFC.setSelectedFile(new File(textField3.getText()));
                                                 jFC.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
                                                 if (jFC.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
                                                     textField3.setText(jFC.getSelectedFile().getAbsolutePath());
@@ -180,12 +183,14 @@ public class ConfigurationPanel extends JPanel {
                                         JPanel subPanel = new JPanel(new GridLayout(1, 3, 5, 5));
                                         subPanel.add(textField2);
 					fields.add(subPanel);
-                                        final JButton button = new JButton("Choose Filepath");
+                                        final JButton button = new JButton("Choose file path");
                                         subPanel.add(button);
                                         button.addActionListener(new ActionListener() {
                                             @Override
                                             public void actionPerformed(ActionEvent e) {
                                                 JFileChooser jFC = new JFileChooser();
+                                                jFC.setCurrentDirectory(new File(textField2.getText()));
+                                                jFC.setSelectedFile(new File(textField2.getText()));
                                                 if (jFC.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
                                                     textField2.setText(jFC.getSelectedFile().getAbsolutePath());
                                                     try {

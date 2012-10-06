@@ -17,10 +17,10 @@ public class Plugin extends Observable implements AlgebraStrategyPlugin {
     @ConfigurationProperty(type = Type.BOOLEAN)
     public boolean usePrecalulatedTables = true;
 
-    @ConfigurationProperty(type = Type.TEXT)
+    @ConfigurationProperty(type = Type.DIRPATH)
     public String additionalBaseDirectory = "";
 
-    @ConfigurationProperty(type = Type.TEXT)
+    @ConfigurationProperty(type = Type.FILEPATH)
     public String userMacroFilePath = "";
 
 
