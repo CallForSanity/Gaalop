@@ -21,10 +21,6 @@
 #include "BitWriter.h"
 #include "BitReader.h"
 
-// CUDA runtime
-#include <cuda_runtime.h>
-
-
 
 #define COMPUTE_INNER_PRODUCT
 #define COMPUTE_OUTER_AND_GEO_PRODUCT
@@ -46,12 +42,18 @@ void printBladelist(Bladelist& list, void (*printer) (Blade&, std::ostream&)) {
 
 #include "CalcThread.h"
 
-#include <helper_functions.h>
-
-
 #define BLADECOUNT 32
 
- __global__ void simpleCopyKernel(int* in_pos, int* out_pos) {
+// CUDA runtime
+#include <cuda_runtime.h>
+#include <assert.h>
+#include <iostream>
+
+#include "Definitions.h"
+
+void cudaCalculateProducts(SumOfBlades* pmTransformedZI);
+
+__global__ void simpleCopyKernel(int* in_pos, int* out_pos) {
 	int tx = threadIdx.x;
 	out_pos[tx] = in_pos[tx]*2;
 }
@@ -82,22 +84,23 @@ void cudaCalculateProducts(SumOfBlades* pmTransformedZI) {
 	// allocate memory pmTransformedZI
 	float* cin_coefficentsPMTransformedZI;
 	int size = summandCountPMTransformedZI * sizeof(float);
-	cudaMalloc((void**) &cin_coefficentsPMTransformedZI, size);
-	cudaMemcpy(cin_coefficentsPMTransformedZI, coefficentsPMTransformedZI, size, cudaMemcpyHostToDevice);
+	assert(cudaMalloc((void**) &cin_coefficentsPMTransformedZI, size) == cudaSuccess);
+	assert(cudaMemcpy(cin_coefficentsPMTransformedZI, coefficentsPMTransformedZI, size, cudaMemcpyHostToDevice) == cudaSuccess);
 
 	int* cin_positionsPMTransformedZI;
-	cudaMalloc((void**) &cin_positionsPMTransformedZI, BLADECOUNT*sizeof(int));
-	cudaMemcpy(cin_positionsPMTransformedZI, positionsPMTransformedZI, size, cudaMemcpyHostToDevice);
+	size = BLADECOUNT*sizeof(int);
+	assert(cudaMalloc((void**) &cin_positionsPMTransformedZI, size) == cudaSuccess);
+	assert(cudaMemcpy(cin_positionsPMTransformedZI, positionsPMTransformedZI, size, cudaMemcpyHostToDevice) == cudaSuccess);
 
 	int* cin_lengthsPMTransformedZI;
-	cudaMalloc((void**) &cin_lengthsPMTransformedZI, BLADECOUNT*sizeof(int));
-	cudaMemcpy(cin_lengthsPMTransformedZI, lengthsPMTransformedZI, size, cudaMemcpyHostToDevice);
+	assert(cudaMalloc((void**) &cin_lengthsPMTransformedZI, size) == cudaSuccess);
+	assert(cudaMemcpy(cin_lengthsPMTransformedZI, lengthsPMTransformedZI, size, cudaMemcpyHostToDevice) == cudaSuccess);
 
 	// allocate memory for output
 	//TODO first some testing
 	int* cout_out;
-	cudaMalloc((void**) &cout_out, BLADECOUNT*sizeof(int));
-	cudaMemset(cout_out,0,BLADECOUNT*sizeof(int));
+	assert(cudaMalloc((void**) &cout_out, BLADECOUNT*sizeof(int)) == cudaSuccess);
+	assert(cudaMemset(cout_out,0,BLADECOUNT*sizeof(int)) == cudaSuccess);
 
 	// TODO CPU: collect results on host-memory, print it, or store it into a binary file for loading in Gaalop
 	dim3 dimBlock(1,1,1);
@@ -108,23 +111,26 @@ void cudaCalculateProducts(SumOfBlades* pmTransformedZI) {
 	// retrieve data from gpu global memory
 	int out[BLADECOUNT];
 
-	cudaMemcpy(out, cout_out, BLADECOUNT*sizeof(int), cudaMemcpyDeviceToHost);
+	assert(cudaMemcpy(out, cout_out, BLADECOUNT*sizeof(int), cudaMemcpyDeviceToHost) == cudaSuccess);
 
 	for (int i = 0;i<BLADECOUNT;i++) 
 		std::cout << out[i] << std::endl;
 
 	// Free memory
-	cudaFree(cout_out);
-	cudaFree(cin_coefficentsPMTransformedZI);
-	cudaFree(cin_positionsPMTransformedZI);
-	cudaFree(cin_lengthsPMTransformedZI);
+	assert(cudaFree(cout_out) == cudaSuccess);
+	assert(cudaFree(cin_coefficentsPMTransformedZI) == cudaSuccess);
+	assert(cudaFree(cin_positionsPMTransformedZI) == cudaSuccess);
+	assert(cudaFree(cin_lengthsPMTransformedZI) == cudaSuccess);
 }
+
+
+
 
 
 /**
 	Creates the producttables of a geometric algebra using CUDA.
  **/
-int main3(int argc, char* argv[])
+int main(int argc, char* argv[])
 {
 	time_t start;
 	time(&start);
