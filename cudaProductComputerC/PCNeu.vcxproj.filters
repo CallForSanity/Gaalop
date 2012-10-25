@@ -18,10 +18,13 @@
     <None Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="PCNeu.cpp">
+    <ClCompile Include="Permutation.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Permutation.cpp">
+    <ClCompile Include="PCNeu.cu">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="main2.cu">
       <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>

@@ -2,8 +2,8 @@
 
 #include <stdint.h>
 
-#define Bitcon uint_fast16_t
-#define MAXBITCOUNT 9
+#define Bitcon int
+#define MAXBITCOUNT 5
 //TODO Blade as super of a bit class
 class Blade
 {

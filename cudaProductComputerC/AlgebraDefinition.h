@@ -4,7 +4,7 @@
 #include "Definitions.h"
 #include "Blade.h"
 
-#define ALGEBRA_9D
+#define ALGEBRA_5D
 
 #ifdef ALGEBRA_5D
 	//== 5d ==
