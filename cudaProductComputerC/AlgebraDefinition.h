@@ -4,13 +4,14 @@
 #include "Definitions.h"
 #include "Blade.h"
 
-#define ALGEBRA_5D
+#include "AlgebraSetting.h"
+
 
 #ifdef ALGEBRA_5D
 	//== 5d ==
 
 #define DIMENSION 5
-
+#define BLADECOUNT 32
 #define EINF 8
 #define E0 16
 #define EP 8
@@ -57,7 +58,7 @@
 	//== 9d ==
 
 	#define DIMENSION 9
-
+	#define BLADECOUNT 512
 	#define EINFX 8
 	#define EINFY 16
 	#define EINFZ 32
