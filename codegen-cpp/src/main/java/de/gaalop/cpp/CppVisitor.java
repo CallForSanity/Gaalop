@@ -132,11 +132,6 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 	@Override
 	public void visit(AssignmentNode node) {
 		String variable = node.getVariable().getName();
-                if (graph.getRenderingExpressions().containsKey(variable)) {
-                    node.getSuccessor().accept(this);
-                    return;
-                }
-
 		if (assigned.contains(variable)) {
 			String message = "Variable " + variable + " has been reset for reuse.";
 			log.warn(message);
