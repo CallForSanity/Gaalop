@@ -3,6 +3,7 @@ package de.gaalop.tba.cfgImport;
 import de.gaalop.OptimizationException;
 import de.gaalop.algebra.UpdateLocalVariableSet;
 import de.gaalop.cfg.ControlFlowGraph;
+import de.gaalop.dfg.Variable;
 import de.gaalop.tba.Plugin;
 import de.gaalop.tba.UseAlgebra;
 import de.gaalop.tba.cfgImport.optimization.OptConstantPropagation;
@@ -58,8 +59,9 @@ public class CFGImporterFacade {
             throw new OptimizationException("Due to Control Flow Existence in Source, TBA isn't assigned on graph!", graph);
         }
 
-        if (ContainsMultipleAssignments.containsMulipleAssignments(graph)) {
-            throw new OptimizationException("Due to Existence of MultipleAssignments in Source, TBA isn't assigned on graph!", graph);
+        Variable v;
+        if ((v = GetMultipleAssignments.getMulipleAssignments(graph)) != null) {
+            throw new OptimizationException("Due to Existence of multiple assignments of variable '"+v.getName()+"' in source, TBA isn't assigned on graph!", graph);
         }
 
         if (!plugin.isInvertTransformation()) {
