@@ -16,14 +16,20 @@ import java.util.Set;
 public final class CompilerFacade extends Observable {
 
     private final CodeParser codeParser;
+    
+    private final GlobalSettingsStrategy globalSettingsStrategy;
 
-    private final VisualizerStrategy visualizerStrategy;
+    private final VisualCodeInserterStrategy visualizerStrategy;
 
     private final AlgebraStrategy algebraStrategy;
 
     private final OptimizationStrategy optimizationStrategy;
 
     private final CodeGenerator codeGenerator;
+    
+    private final String algebraName;
+    private final boolean asRessource;
+    private final String algebraBaseDirectory;
     
     private static boolean useCodeSegmenter;
 
@@ -42,12 +48,16 @@ public final class CompilerFacade extends Observable {
      * @param optimizationStrategy The optimization strategy used to process the graph before generating code.
      * @param codeGenerator The code generator used to generate code from the previously optimized graph.
      */
-    public CompilerFacade(CodeParser codeParser, VisualizerStrategy visualizerStrategy, AlgebraStrategy algebraStrategy, OptimizationStrategy optimizationStrategy, CodeGenerator codeGenerator) {
+    public CompilerFacade(CodeParser codeParser, GlobalSettingsStrategy globalSettingsStrategy, VisualCodeInserterStrategy visualizerStrategy, AlgebraStrategy algebraStrategy, OptimizationStrategy optimizationStrategy, CodeGenerator codeGenerator, String algebraName, boolean asRessource, String algebraBaseDirectory) {
         this.codeParser = codeParser;
+        this.globalSettingsStrategy = globalSettingsStrategy;
         this.visualizerStrategy = visualizerStrategy;
         this.algebraStrategy = algebraStrategy;
         this.optimizationStrategy = optimizationStrategy;
         this.codeGenerator = codeGenerator;
+        this.algebraName = algebraName;
+        this.asRessource = asRessource;
+        this.algebraBaseDirectory = algebraBaseDirectory;
     }
 
     /**
@@ -69,6 +79,18 @@ public final class CompilerFacade extends Observable {
     	setChanged();
     	notifyObservers("Parsing...");
         ControlFlowGraph graph = codeParser.parseFile(input);
+        setChanged();
+        
+        graph.algebraName = algebraName;
+        graph.asRessource = asRessource;
+        graph.algebraBaseDirectory = algebraBaseDirectory;
+        
+        notifyObservers("Setting global settings...");
+        globalSettingsStrategy.transform(graph);
+        setChanged();
+        
+        notifyObservers("Algebra inserting...");  
+        algebraStrategy.transform(graph);
         setChanged();
 
         notifyObservers("Inserting code for visualization...");

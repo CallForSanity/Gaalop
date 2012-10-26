@@ -1,18 +1,15 @@
 package de.gaalop.algebra;
 
-import de.gaalop.cfg.AssignmentNode;
-import de.gaalop.cfg.ControlFlowGraph;
-import de.gaalop.cfg.EmptyControlFlowVisitor;
-import de.gaalop.cfg.ExpressionStatement;
-import de.gaalop.cfg.Macro;
-import de.gaalop.cfg.SequentialNode;
+import de.gaalop.cfg.*;
 import de.gaalop.dfg.Expression;
+import de.gaalop.dfg.FloatConstant;
 import de.gaalop.dfg.MacroCall;
 import de.gaalop.dfg.MathFunction;
 import de.gaalop.dfg.MathFunctionCall;
 import de.gaalop.dfg.Variable;
 import de.gaalop.visitors.DFGTraversalVisitor;
 import de.gaalop.visitors.ReplaceVisitor;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -25,6 +22,8 @@ public class Inliner extends EmptyControlFlowVisitor {
     private int count = 0;
     private HashMap<StringIntContainer, Macro> macros;
     private ControlFlowGraph graph;
+    
+    private ColorNode currentColorNode = null;
 
     private boolean containsMacroCall(Expression e) {
         final LinkedList<MacroCall> calls = new LinkedList<MacroCall>();
@@ -48,14 +47,65 @@ public class Inliner extends EmptyControlFlowVisitor {
             graph.accept(inliner);
     }
 
-    private AssignmentNode curNode;
+    @Override
+    public void visit(ColorNode node) {
+        curNode = node;
+        //make all non-variable arguments to variables
+        Expression c = node.getR();
+        if (!((c instanceof Variable) || (c instanceof FloatConstant))) {
+            Variable newVariable = createNewVariable();
+            AssignmentNode assignmentNode = new AssignmentNode(graph, newVariable, c);
+            curNode.insertBefore(assignmentNode); 
+            StoreResultNode storeNode = new StoreResultNode(graph, newVariable);
+            curNode.insertBefore(storeNode);
+            node.setR(newVariable);
+        } 
+        
+        c = node.getG();
+        if (!((c instanceof Variable) || (c instanceof FloatConstant))) {
+            Variable newVariable = createNewVariable();
+            AssignmentNode assignmentNode = new AssignmentNode(graph, newVariable, c);
+            curNode.insertBefore(assignmentNode); 
+            StoreResultNode storeNode = new StoreResultNode(graph, newVariable);
+            curNode.insertBefore(storeNode);
+            node.setG(newVariable);
+        } 
+
+        c = node.getB();
+        if (!((c instanceof Variable) || (c instanceof FloatConstant))) {
+            Variable newVariable = createNewVariable();
+            AssignmentNode assignmentNode = new AssignmentNode(graph, newVariable, c);
+            curNode.insertBefore(assignmentNode); 
+            StoreResultNode storeNode = new StoreResultNode(graph, newVariable);
+            curNode.insertBefore(storeNode);
+            node.setB(newVariable);
+        } 
+        
+        c = node.getAlpha();
+        if (!((c instanceof Variable) || (c instanceof FloatConstant))) {
+            Variable newVariable = createNewVariable();
+            AssignmentNode assignmentNode = new AssignmentNode(graph, newVariable, c);
+            curNode.insertBefore(assignmentNode); 
+            StoreResultNode storeNode = new StoreResultNode(graph, newVariable);
+            curNode.insertBefore(storeNode);
+            node.setAlpha(newVariable);
+        } 
+        
+        currentColorNode = node;
+        super.visit(node);
+    }
+
+    private Inliner() {
+    }
+
+    private SequentialNode curNode;
 
     private boolean error = false;
 
     @Override
     public void visit(AssignmentNode node) {
         curNode = node;
-        error = false;
+        
         while (containsMacroCall(node.getValue()) && !error) {
             replacer.result = null;
             node.getValue().accept(replacer);
@@ -67,14 +117,23 @@ public class Inliner extends EmptyControlFlowVisitor {
 
     @Override
     public void visit(ExpressionStatement node) {
+        curNode = node;
         replacer.result = null;
+        delete = false;
         node.getExpression().accept(replacer);
-        if (replacer.result != null)
-            node.setExpression(replacer.result);
+        boolean del = delete;
+        Expression result = replacer.result;
+        if (result != null)
+            node.setExpression(result);
 
         super.visit(node);
+        
+        if (del)
+            graph.removeNode(node);
     }
 
+    private boolean delete;
+    
 //TODO chs (optional) macros are case sensitive, math functions not!
 
     private ReplaceVisitor replacer = new ReplaceVisitor() {
@@ -97,6 +156,24 @@ public class Inliner extends EmptyControlFlowVisitor {
             if (!macros.containsKey(container)) {
                 System.err.println("Macro "+macroCallName+" is not defined!");
                 error = true; //escape endless loop!
+                result = null;
+                delete = true;
+                graph.unknownMacros.add(new UnknownMacroCall(node, currentColorNode));
+                //make all non-variable arguments to variables
+                ArrayList<Expression> newArgs = new ArrayList<Expression>(node.getArguments().size());
+                for (Expression arg: node.getArguments()) {
+                    if (!((arg instanceof Variable) || (arg instanceof FloatConstant))) {
+                        Variable newVariable = createNewVariable();
+                        AssignmentNode assignmentNode = new AssignmentNode(graph, newVariable, arg);
+                        curNode.insertBefore(assignmentNode); 
+                        StoreResultNode storeNode = new StoreResultNode(graph, newVariable);
+                        curNode.insertBefore(storeNode);
+                        newArgs.add(newVariable);
+                    } else 
+                        newArgs.add(arg);
+                }
+                node.setArgs(newArgs);
+                return;
             }
             Macro macro = macros.get(container);
 

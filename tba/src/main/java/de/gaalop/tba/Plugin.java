@@ -17,12 +17,6 @@ import de.gaalop.tba.cfgImport.optimization.maxima.ProcessBuilderMaximaConnectio
  */
 public class Plugin extends Observable implements OptimizationStrategyPlugin {
 
-    /*
-     * Please make sure this is disabled by default.
-     * Some tests fail otherwise.
-     */
-    @ConfigurationProperty(type = Type.BOOLEAN)
-    public boolean optMaxima = false;
 
     @ConfigurationProperty(type = Type.BOOLEAN)
     public boolean optOneExpressionRemoval = true;
@@ -30,17 +24,11 @@ public class Plugin extends Observable implements OptimizationStrategyPlugin {
     public boolean optConstantPropagation = true;
     @ConfigurationProperty(type = Type.BOOLEAN)
     public boolean optUnusedAssignments = true;
-    @ConfigurationProperty(type = Type.FILEPATH)
-    public String maximaCommand = ProcessBuilderMaximaConnection.CMD_MAXIMA_LINUX;
     @ConfigurationProperty(type = Type.BOOLEAN)
     public boolean optInserting = true;
     public boolean invertTransformation = true;
     public boolean scalarFunctions = true;
     public boolean maximaExpand = false;
-
-    public boolean isOptMaxima() {
-        return optMaxima;
-    }
 
     public boolean isOptConstantPropagation() {
         return optConstantPropagation;
@@ -70,20 +58,8 @@ public class Plugin extends Observable implements OptimizationStrategyPlugin {
         return maximaExpand;
     }
 
-    public String getMaximaCommand() {
-        return maximaCommand;
-    }
-
-    public void setMaximaCommand(String maximaCommand) {
-        this.maximaCommand = maximaCommand;
-    }
-
     public void setOptConstantPropagation(boolean optConstantPropagation) {
         this.optConstantPropagation = optConstantPropagation;
-    }
-
-    public void setOptMaxima(boolean optMaxima) {
-        this.optMaxima = optMaxima;
     }
 
     public void setOptOneExpressionRemoval(boolean optOneExpressionRemoval) {
@@ -124,7 +100,7 @@ public class Plugin extends Observable implements OptimizationStrategyPlugin {
 
     @Override
     public String getName() {
-        return "TBA";
+        return "Table-Based Approach";
     }
 
     @Override

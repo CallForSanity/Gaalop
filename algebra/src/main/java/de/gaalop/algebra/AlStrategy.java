@@ -42,12 +42,17 @@ public class AlStrategy implements AlgebraStrategy {
             //load algebra
             AlgebraDefinitionFile alFile = graph.getAlgebraDefinitionFile();
             alFile.setUsePrecalculatedTable(plugin.usePrecalulatedTables);
-            alFile.setUseAsRessource(plugin.useBuiltInFiles);
-            String baseDir = plugin.getBaseDirectory();
+            alFile.setUseAsRessource(graph.asRessource);
+            
+            String baseDir = (graph.asRessource) ? "algebra" : graph.algebraBaseDirectory;
+            
             if (!baseDir.endsWith("/")) baseDir += "/";
+            
+            baseDir += graph.algebraName+"/";
+            
             alFile.setProductsFilePath(baseDir+"products.csv");
 
-            inputStream = (plugin.isUseBuiltInFiles())
+            inputStream = (graph.asRessource)
                     ? getClass().getResourceAsStream(baseDir+"definition.csv")
                     : new FileInputStream(new File(baseDir+"definition.csv"));
             alFile.loadFromFile(inputStream);
@@ -56,7 +61,7 @@ public class AlStrategy implements AlgebraStrategy {
 
             //replace all functions / macros
 
-            inputStream = (plugin.isUseBuiltInFiles())
+            inputStream = (graph.asRessource)
                     ? getClass().getResourceAsStream(baseDir+"macros.clu")
                     : new FileInputStream(new File(baseDir+"macros.clu"));
             
@@ -84,6 +89,11 @@ public class AlStrategy implements AlgebraStrategy {
 
             //inline all macros
             Inliner.inline(graph, macros);
+            
+            //Remove Macro definitions from graph
+            for (Macro macro: macros.values()) 
+                graph.removeNode(macro);
+            
 
             //replace Variables which are basevectors
             BaseVectorDefiner definer = new BaseVectorDefiner();
@@ -92,7 +102,7 @@ public class AlStrategy implements AlgebraStrategy {
             graph.accept(replacerB);
             //Update variable set
             UpdateLocalVariableSet.updateVariableSets(graph);
-            RemoveDefVars.removeDefVars(graph);
+            //RemoveDefVars.removeDefVars(graph);
 
             //update output blades
             HashMap<String, Integer> mapIndices = new HashMap<String, Integer>();
@@ -103,12 +113,15 @@ public class AlStrategy implements AlgebraStrategy {
             HashSet<String> copySet = new HashSet<String>(set);
             set.clear();
             for (String str: copySet) {
-                String[] parts = str.split(" ");
-                if (parts[1].equals("1")) parts[1] = "1.0";
-                if (!mapIndices.containsKey(parts[1]))
-                    throw new OptimizationException("The bladename "+parts[1]+" is not found in the default blade list.", graph);
-                
-                set.add(parts[0]+"$"+mapIndices.get(parts[1]));
+                if (str.contains(" ")) {
+                    String[] parts = str.split(" ");
+                    if (parts[1].equals("1")) parts[1] = "1.0";
+                    if (!mapIndices.containsKey(parts[1]))
+                        throw new OptimizationException("The bladename "+parts[1]+" is not found in the default blade list.", graph);
+
+                    set.add(parts[0]+"$"+mapIndices.get(parts[1]));
+                } else 
+                    set.add(str);
             }
         } catch (CodeParserException ex) {
             Logger.getLogger(AlStrategy.class.getName()).log(Level.SEVERE, null, ex);

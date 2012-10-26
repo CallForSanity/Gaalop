@@ -23,3 +23,20 @@ public class TBAOptStrategy implements OptimizationStrategy {
         importer.importGraph(graph);
     }
 }
+
+/**
+ * TODO chs find solution: Example in 9d with/without maxima results in two different outputs:
+ * 
+G = createEllipsoid(2,3,3,2,2,4);
+:Blue;
+:G;
+
+H = createCylinder(3,4,0,3);
+:Green;
+:H;
+
+S = (G^H); //String als Bivektor
+:Red;
+:S;
+
+ */

@@ -12,6 +12,8 @@ import org.apache.commons.logging.LogFactory;
  * This visitor traverses the control and data flow graphs and generates Java code.
  */
 public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
+    
+    public String filename;
 
     protected Log log = LogFactory.getLog(JavaVisitor.class);
     protected StringBuilder codePre = new StringBuilder();
@@ -95,25 +97,30 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
             outputs.add(outputVarStr);
             known.add(outputVarStr.split("\\$")[0]);
         }
+        
+        FindOutputComponents findOutputComponents = new FindOutputComponents();
+        graph.accept(findOutputComponents);
+        
+        MultivectorComponent[] outputComponents = findOutputComponents.outputComponents.toArray(new MultivectorComponent[0]);
+        Arrays.sort(outputComponents, new Comparator<MultivectorComponent>() {
 
-        //get StoreResultNodes in graph
-        FindStoreOutputNodes storeOutputNodesVisitor = new FindStoreOutputNodes();
-        graph.accept(storeOutputNodesVisitor);
-        for (StoreResultNode s : storeOutputNodesVisitor.getNodes()) {
-            String name = s.getValue().getName();
-
-            // Remind that only variables can be outputted, no MultivectorComponents!
-            if (!known.contains(name)) {
-                known.add(name);
-                int bladeCount = graph.getAlgebraDefinitionFile().getBladeCount();
-                for (int blade = 0; blade < bladeCount; blade++) {
-                    String bladeName = name + "$" + blade;
-                    outputs.add(bladeName);
-                    declared.add(bladeName);
-                }
+            @Override
+            public int compare(MultivectorComponent o1, MultivectorComponent o2) {
+                return o1.toString().compareTo(o2.toString());
             }
+            
+        });
 
+        for (MultivectorComponent m: outputComponents) {
+            String name = m.getName();
+            if (!known.contains(name)) 
+                known.add(name);
+
+            String bladeName = name + "$" + m.getBladeIndex();
+            outputs.add(bladeName);
+            declared.add(bladeName);
         }
+        
         return outputs;
     }
 
@@ -127,7 +134,13 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
 
         append("import java.util.HashMap;\n\n");
 
-        append("public class " + graph.getSource().getName() + " implements GAProgram {\n");
+        
+        int lastDotIndex = filename.lastIndexOf('.');
+        if (lastDotIndex != -1) 
+            filename = filename.substring(0, lastDotIndex);
+        
+        
+        append("public class " + filename + " implements GAProgram {\n");
         indentation++;
 
 

@@ -15,16 +15,6 @@ import java.util.Observable;
  */
 public class Plugin extends Observable implements OptimizationStrategyPlugin {
 
-    @ConfigurationProperty(type = Type.FILEPATH)
-    public String maximaCommand = ProcessBuilderMaximaConnection.CMD_MAXIMA_LINUX;
-    
-    /*
-     * Please make sure this is disabled by default.
-     * Some tests fail otherwise.
-     */
-    @ConfigurationProperty(type = Type.BOOLEAN)
-    public boolean optMaxima = false;
-
     @Override
     public OptimizationStrategy createOptimizationStrategy() {
         return new GAPPOptStrategy(this);
@@ -48,22 +38,6 @@ public class Plugin extends Observable implements OptimizationStrategyPlugin {
     void notifyError(Throwable error) {
         setChanged();
         notifyObservers(new Notifications.Error(error));
-    }
-
-    public boolean isOptMaxima() {
-        return optMaxima;
-    }
-
-    public void setOptMaxima(boolean optMaxima) {
-        this.optMaxima = optMaxima;
-    }
-
-    public String getMaximaCommand() {
-        return maximaCommand;
-    }
-
-    public void setMaximaCommand(String maximaCommand) {
-        this.maximaCommand = maximaCommand;
     }
 
 }

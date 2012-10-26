@@ -18,8 +18,10 @@ public final class Plugins {
     private static Log log = LogFactory.getLog(Plugins.class);
 
     private static Set<CodeParserPlugin> codeParserPlugins;
+    
+    private static Set<GlobalSettingsStrategyPlugin> globalSettingsStrategyPlugins;
 
-    private static Set<VisualizerStrategyPlugin> visualizerStrategyPlugins;
+    private static Set<VisualCodeInserterStrategyPlugin> visualizerStrategyPlugins;
 
     private static Set<AlgebraStrategyPlugin> algebraStrategyPlugins;
 
@@ -29,7 +31,8 @@ public final class Plugins {
 
     static {
         codeParserPlugins = loadServices(CodeParserPlugin.class);
-        visualizerStrategyPlugins = loadServices(VisualizerStrategyPlugin.class);
+        globalSettingsStrategyPlugins = loadServices(GlobalSettingsStrategyPlugin.class);
+        visualizerStrategyPlugins = loadServices(VisualCodeInserterStrategyPlugin.class);
         algebraStrategyPlugins = loadServices(AlgebraStrategyPlugin.class);
         codeGeneratorPlugins = loadServices(CodeGeneratorPlugin.class);
         optimizationStrategyPlugins = loadServices(OptimizationStrategyPlugin.class);
@@ -67,6 +70,15 @@ public final class Plugins {
     public static Set<CodeParserPlugin> getCodeParserPlugins() {
         return Collections.unmodifiableSet(codeParserPlugins);
     }
+    
+    /**
+     * Gets the available globalSettings plugins.
+     *
+     * @return An unmodifiable set that contains all registered code parser plugins.
+     */
+    public static Set<GlobalSettingsStrategyPlugin> getGlobalSettingsStrategyPlugins() {
+        return Collections.unmodifiableSet(globalSettingsStrategyPlugins);
+    }
 
     /**
      * Gets the available code generator plugins.
@@ -96,7 +108,7 @@ public final class Plugins {
      * Gets the available visualizer strategy plugins.
      * @return An unmodifiable set of visualizer strategy plugins.
      */
-    public static Set<VisualizerStrategyPlugin> getVisualizerStrategyPlugins() {
+    public static Set<VisualCodeInserterStrategyPlugin> getVisualizerStrategyPlugins() {
         return Collections.unmodifiableSet(visualizerStrategyPlugins);
     }
 
