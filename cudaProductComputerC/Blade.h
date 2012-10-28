@@ -2,8 +2,10 @@
 
 #include <stdint.h>
 
+#include "AlgebraSetting.h"
+
 #define Bitcon int
-#define MAXBITCOUNT 5
+
 //TODO Blade as super of a bit class
 class Blade
 {

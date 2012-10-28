@@ -97,7 +97,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>D:\Builds\cudaProductComputer\</OutDir>
     <IntDir>D:\Builds\cudaProductComputerTemp\</IntDir>
-    <IncludePath>$(DXSDK_DIR)\include;$(IncludePath);C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v5.0\include</IncludePath>
+    <IncludePath>$(DXSDK_DIR)\include;$(IncludePath);C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v5.0\include;C:\ProgramData\NVIDIA Corporation\CUDA Samples\v5.0\common\inc\</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>../../bin/win64/$(Configuration)/</OutDir>

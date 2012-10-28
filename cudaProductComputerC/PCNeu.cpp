@@ -53,33 +53,65 @@ void printBladelist(Bladelist& list, void (*printer) (Blade&, std::ostream&)) {
 
 
 // declaration, forward
-extern "C" void cudaCalculateProducts(int summandCountPMTransformedZI, int* positionsPMTransformedZI, int* lengthsPMTransformedZI, float* coefficentsPMTransformedZI);
+extern "C" void cudaCalculateProducts(
+	int summandCountPMTransformedZI, int* positionsPMTransformedZI, 
+	int* lengthsPMTransformedZI, float* coefficentsPMTransformedZI, int* bladesPMTransformedZI,
+	int summandCountZITransformedPM, int* positionsZITransformedPM, 
+	int* lengthsZITransformedPM, float* coefficentsZITransformedPM, int* bladesZITransformedPM
+	);
 
-void cudaCalculateProducts1(SumOfBlades* pmTransformedZI) {
-	// == allocate memories ==
-	
-	// retrieve informations about positions, lenghts and number of elements
-	int positionsPMTransformedZI[BLADECOUNT];
-	int lengthsPMTransformedZI[BLADECOUNT];
-	int summandCountPMTransformedZI = 0;
+int getSummandCountAssignPositionsAndLenghts(SumOfBlades* pmTransformedZI, int* positionsPMTransformedZI, int* lengthsPMTransformedZI) {
+	int count = 0;
 	int position = 0;
 	for (int i=0;i<BLADECOUNT;i++) {
 		positionsPMTransformedZI[i] = position;
-		//std::cout << position << std::endl;
 		lengthsPMTransformedZI[i] = pmTransformedZI[i].size();
-		summandCountPMTransformedZI += lengthsPMTransformedZI[i];
+		count += lengthsPMTransformedZI[i];
 		position += lengthsPMTransformedZI[i];
 	}
+	return count;
+}
 
-	float* coefficentsPMTransformedZI = new float[summandCountPMTransformedZI];
+void assignBladesAndCoefficients(SumOfBlades* pmTransformedZI, float* coefficentsPMTransformedZI, int* bladesPMTransformedZI) {
+	// retrieve informations about positions, lenghts and number of elements
 	int index = 0;
 	for (int i=0;i<BLADECOUNT;i++) 
 		for (SumOfBlades::iterator sblade1 = pmTransformedZI[i].begin(); sblade1 != pmTransformedZI[i].end(); ++sblade1) {
-			coefficentsPMTransformedZI[index] = (*sblade1).coefficient;
+			SignedBlade& b = *sblade1;
+			bladesPMTransformedZI[index] = b.bits;
+			coefficentsPMTransformedZI[index] = b.coefficient;
 			index++;
 		}
+}
 
-	cudaCalculateProducts(summandCountPMTransformedZI, positionsPMTransformedZI, lengthsPMTransformedZI, coefficentsPMTransformedZI);
+void cudaCalculateProducts_Host(SumOfBlades* pmTransformedZI, SumOfBlades* ziTransformedPM) {
+	// == allocate memories ==
+	//PMTransformedZI
+	int positionsPMTransformedZI[BLADECOUNT];
+	int lengthsPMTransformedZI[BLADECOUNT];
+	int summandCountPMTransformedZI = getSummandCountAssignPositionsAndLenghts(pmTransformedZI, positionsPMTransformedZI, lengthsPMTransformedZI);
+	float* coefficentsPMTransformedZI = new float[summandCountPMTransformedZI];
+	int* bladesPMTransformedZI = new int[summandCountPMTransformedZI];
+	assignBladesAndCoefficients(pmTransformedZI, coefficentsPMTransformedZI, bladesPMTransformedZI);
+
+	//ZITransformedPM
+	int positionsZITransformedPM[BLADECOUNT];
+	int lengthsZITransformedPM[BLADECOUNT];
+	int summandCountZITransformedPM = getSummandCountAssignPositionsAndLenghts(ziTransformedPM, positionsZITransformedPM, lengthsZITransformedPM);
+	float* coefficentsZITransformedPM = new float[summandCountZITransformedPM];
+	int* bladesZITransformedPM = new int[summandCountZITransformedPM];
+	assignBladesAndCoefficients(ziTransformedPM, coefficentsZITransformedPM, bladesZITransformedPM);
+
+	cudaCalculateProducts(
+		summandCountPMTransformedZI, positionsPMTransformedZI, lengthsPMTransformedZI, coefficentsPMTransformedZI, bladesPMTransformedZI,
+		summandCountZITransformedPM, positionsZITransformedPM, lengthsZITransformedPM, coefficentsZITransformedPM, bladesZITransformedPM
+		);
+
+	// == free memories ==
+	delete[] coefficentsPMTransformedZI;
+	coefficentsPMTransformedZI = 0;
+	delete[] bladesPMTransformedZI;
+	bladesPMTransformedZI = 0;
 }
 
 /**
@@ -115,13 +147,13 @@ int main(int argc, char* argv[])
 	}
 
 	// TODO CUDA: calculate all products in PM, transform it into ZI, store it on host-memory
-	cudaCalculateProducts1(pmTransformedZI);
+	cudaCalculateProducts_Host(pmTransformedZI, ziTransformedPM);
 	
 
 	time_t ende;
 	time(&ende);
 	std::cout << "Ready in " << difftime(ende, start) << " seconds" << std::endl;
-	getchar();
+	
 	return 0;
 }
 
