@@ -53,30 +53,18 @@ __device__
 	// odd number of swaps -> return -1
 	return ((sum & 1) == 0) ? 1 : -1;
 }
-	
- __global__ void outerKernelPre( //TODO wrong implementation, count is always 32 for dim=5, debug this by copying into normal function
+
+__device__ void outerKernelCalc(
 	int* c_positionsPMTransformedZI, int* c_lengthsPMTransformedZI, float* c_coefficentsPMTransformedZI, int* c_bladesPMTransformedZI,
 	int* c_positionsZITransformedPM, int* c_lengthsZITransformedPM, float* c_coefficentsZITransformedPM, int* c_bladesZITransformedPM,
-	int* c_outCounts
+	float* accumulatorCoefficients, int x, int y, int idInBlock
 	) {
-		
-	__shared__ 
-		float accumulatorCoefficients[BLADECOUNT*THREAD_DIM_X*THREAD_DIM_Y];
-	for (int i=0;i<BLADECOUNT*THREAD_DIM_X*THREAD_DIM_Y;i++)
-		accumulatorCoefficients[i] = 0;
-	//__syncthreads();
 	
-	int x = threadIdx.x+THREAD_DIM_X*blockIdx.x;
-	int y = threadIdx.y+THREAD_DIM_Y*blockIdx.y;
-	int idGlobal = x*BLADECOUNT+y;
-	int idInBlock = threadIdx.x*THREAD_DIM_X+threadIdx.y;
 	
 	int posX = c_positionsPMTransformedZI[x];
 	int posY = c_positionsPMTransformedZI[y];
 	int lenX = c_lengthsPMTransformedZI[x];
 	int lenY = c_lengthsPMTransformedZI[y];
-
-	
 
 	for (int blade1Id = posX;blade1Id < posX+lenX; blade1Id++) 
 		for (int blade2Id = posY;blade2Id < posY+lenY; blade2Id++) {
@@ -111,16 +99,36 @@ __device__
 			
 		}
 
+}
+	
+ __global__ void outerKernelPre( //TODO wrong implementation, count is always 32 for dim=5, debug this by copying into normal function
+	int* c_positionsPMTransformedZI, int* c_lengthsPMTransformedZI, float* c_coefficentsPMTransformedZI, int* c_bladesPMTransformedZI,
+	int* c_positionsZITransformedPM, int* c_lengthsZITransformedPM, float* c_coefficentsZITransformedPM, int* c_bladesZITransformedPM,
+	int* c_outCounts
+	) {
+	__shared__ float accumulatorCoefficients[BLADECOUNT*THREAD_DIM_X*THREAD_DIM_Y];
+	for (int i=0;i<BLADECOUNT*THREAD_DIM_X*THREAD_DIM_Y;i++)
+		accumulatorCoefficients[i] = 0;
+
+	int x = threadIdx.x+THREAD_DIM_X*blockIdx.x;
+	int y = threadIdx.y+THREAD_DIM_Y*blockIdx.y;
+	int idInBlock = threadIdx.x*THREAD_DIM_X+threadIdx.y;
+
+	__syncthreads();
+
+	outerKernelCalc(
+		c_positionsPMTransformedZI, c_lengthsPMTransformedZI, c_coefficentsPMTransformedZI, c_bladesPMTransformedZI,
+	    c_positionsZITransformedPM, c_lengthsZITransformedPM, c_coefficentsZITransformedPM, c_bladesZITransformedPM,
+		accumulatorCoefficients, x, y, idInBlock
+		);
+
 	// zip accumulator
 	int index = 0;
-	for (int i=0;i<BLADECOUNT;i++) {
-		if (abs(accumulatorCoefficients[i+idInBlock*BLADECOUNT]) > 10E-4) { 
+	for (int i=0;i<BLADECOUNT;i++) 
+		if (abs(accumulatorCoefficients[i+idInBlock*BLADECOUNT]) > 10E-4)  
 			index++;
-		}
-	}
-	
-	c_outCounts[idGlobal] = index;
-	//__syncthreads();
+
+	c_outCounts[x*BLADECOUNT+y] = index;
 }
 
 
