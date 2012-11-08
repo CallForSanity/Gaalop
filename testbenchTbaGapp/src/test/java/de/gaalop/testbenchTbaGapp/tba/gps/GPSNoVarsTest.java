@@ -52,7 +52,27 @@ public class GPSNoVarsTest extends GenericGPSTest {
             public int getNo() {
                 return 0;
             }
+            
+            protected String getChecksForAllInstances() {
+        return "// check containing all outputs\n"
+                + "assertTrue(outputs.containsKey(\"rc1N$1\"));\n"
+                + "assertTrue(outputs.containsKey(\"rc1N$2\"));\n"
+                + "assertTrue(outputs.containsKey(\"rc1N$3\"));\n"
+                + "assertTrue(outputs.containsKey(\"rc2N$1\"));\n"
+                + "assertTrue(outputs.containsKey(\"rc2N$2\"));\n"
+                + "assertTrue(outputs.containsKey(\"rc2N$3\"));\n"
+                + "double rc1Nx = outputs.get(\"rc1N$1\");\n"
+                + "double rc1Ny = outputs.get(\"rc1N$2\");\n"
+                + "double rc1Nz = outputs.get(\"rc1N$3\");\n"
+                + "double rc2Nx = outputs.get(\"rc2N$1\");\n"
+                + "double rc2Ny = outputs.get(\"rc2N$2\");\n"
+                + "double rc2Nz = outputs.get(\"rc2N$3\");\n"
+                + "// check number of outputs\n"
+                + "assertEquals(6, outputs.size());\n";
+    }
         });
+        
+        
 
 
         return result;

@@ -3,6 +3,7 @@ package de.gaalop.testbenchTbaGapp.tba.generatedTests;
 import java.util.HashMap;
 
 public class GPSOnlyVars implements GAProgram {
+		
 	// input variables
 	private double sat3x$0;
 	private double sat3y$0;
@@ -17,34 +18,92 @@ public class GPSOnlyVars implements GAProgram {
 	private double sat1x$0;
 	private double sat2z$0;
 
+	// local variables
+	private double len$0;
+	private double rc1$1;
+	private double rc1$16;
+	private double rc1$17;
+	private double rc1$18;
+	private double rc1$19;
+	private double rc1$2;
+	private double rc1$20;
+	private double rc1$21;
+	private double rc1$22;
+	private double rc1$23;
+	private double rc1$24;
+	private double rc1$25;
+	private double rc1$3;
+	private double rc1$4;
+	private double rc1$5;
+	private double rc1N$4;
+	private double rc1N$5;
+	private double rc2$1;
+	private double rc2$16;
+	private double rc2$17;
+	private double rc2$18;
+	private double rc2$19;
+	private double rc2$2;
+	private double rc2$20;
+	private double rc2$21;
+	private double rc2$22;
+	private double rc2$23;
+	private double rc2$24;
+	private double rc2$25;
+	private double rc2$3;
+	private double rc2$4;
+	private double rc2$5;
+	private double rc2N$4;
+	private double rc2N$5;
+	private double rcPp$16;
+	private double rcPp$17;
+	private double rcPp$18;
+	private double rcPp$19;
+	private double rcPp$20;
+	private double rcPp$21;
+	private double rcPp$22;
+	private double rcPp$23;
+	private double rcPp$24;
+	private double rcPp$25;
+	private double rcPpDual$10;
+	private double rcPpDual$12;
+	private double rcPpDual$13;
+	private double rcPpDual$6;
+	private double rcPpDual$8;
+	private double sat1$4;
+	private double sat2$4;
+	private double sat3$4;
+	private double sph1$4;
+	private double sph2$4;
+	private double sph3$4;
+
 	// output variables
-	private double rc2N$3;
-	private double z32$0;
-	private double z12$0;
-	private double rc2N$1;
-	private double z11$0;
-	private double rc2N$2;
-	private double z22$0;
-	private double rc1N$2;
-	private double z31$0;
-	private double rc1N$3;
 	private double rc1N$1;
+	private double rc1N$2;
+	private double rc1N$3;
+	private double rc2N$1;
+	private double rc2N$2;
+	private double rc2N$3;
+	private double z11$0;
+	private double z12$0;
 	private double z21$0;
+	private double z22$0;
+	private double z31$0;
+	private double z32$0;
 
 	@Override
 	public double getValue(String varName) {
 		if (varName.equals("rc2N$3")) return rc2N$3;
-		if (varName.equals("z32$0")) return z32$0;
 		if (varName.equals("z12$0")) return z12$0;
 		if (varName.equals("rc2N$1")) return rc2N$1;
-		if (varName.equals("z11$0")) return z11$0;
 		if (varName.equals("rc2N$2")) return rc2N$2;
-		if (varName.equals("z22$0")) return z22$0;
-		if (varName.equals("rc1N$2")) return rc1N$2;
+		if (varName.equals("z11$0")) return z11$0;
 		if (varName.equals("z31$0")) return z31$0;
+		if (varName.equals("z32$0")) return z32$0;
+		if (varName.equals("z22$0")) return z22$0;
+		if (varName.equals("z21$0")) return z21$0;
+		if (varName.equals("rc1N$2")) return rc1N$2;
 		if (varName.equals("rc1N$3")) return rc1N$3;
 		if (varName.equals("rc1N$1")) return rc1N$1;
-		if (varName.equals("z21$0")) return z21$0;
 		return 0.0d;
 	}
 
@@ -52,17 +111,17 @@ public class GPSOnlyVars implements GAProgram {
 	public HashMap<String,Double> getValues() {
 		HashMap<String,Double> result = new HashMap<String,Double>();
 		result.put("rc2N$3",rc2N$3);
-		result.put("z32$0",z32$0);
 		result.put("z12$0",z12$0);
 		result.put("rc2N$1",rc2N$1);
-		result.put("z11$0",z11$0);
 		result.put("rc2N$2",rc2N$2);
-		result.put("z22$0",z22$0);
-		result.put("rc1N$2",rc1N$2);
+		result.put("z11$0",z11$0);
 		result.put("z31$0",z31$0);
+		result.put("z32$0",z32$0);
+		result.put("z22$0",z22$0);
+		result.put("z21$0",z21$0);
+		result.put("rc1N$2",rc1N$2);
 		result.put("rc1N$3",rc1N$3);
 		result.put("rc1N$1",rc1N$1);
-		result.put("z21$0",z21$0);
 		return result;
 	}
 	@Override
@@ -154,61 +213,5 @@ public class GPSOnlyVars implements GAProgram {
 		z32$0 = ((double) Math.sqrt((-2.0d * ((((((rc2N$1 * sat3x$0) + (rc2N$2 * sat3y$0)) + (rc2N$3 * sat3z$0)) + (-rc2N$4)) + (-((rc2N$5 * sat3$4))))))) - d3$0); // 1.0;
 	}
 
-	private double rc2$1;
-	private double rc2$2;
-	private double rc1$4;
-	private double rc1$5;
-	private double rc2N$4;
-	private double rc2N$5;
-	private double rc1$3;
-	private double rc2$18;
-	private double rc1$2;
-	private double rc2$19;
-	private double rc1$1;
-	private double rc2$16;
-	private double rc2$17;
-	private double rc1$19;
-	private double rc1$17;
-	private double rc1$18;
-	private double rc2$5;
-	private double rc2$4;
-	private double rc1$16;
-	private double rc2$3;
-	private double rcPpDual$6;
-	private double sph2$4;
-	private double sph1$4;
-	private double rc2$23;
-	private double rc2$24;
-	private double rc2$25;
-	private double rc2$20;
-	private double rc2$21;
-	private double rc2$22;
-	private double rcPp$22;
-	private double rcPp$21;
-	private double rcPp$20;
-	private double rcPp$25;
-	private double rcPp$24;
-	private double rcPp$23;
-	private double len$0;
-	private double sat1$4;
-	private double rcPpDual$8;
-	private double sph3$4;
-	private double rcPpDual$13;
-	private double rcPpDual$12;
-	private double rcPp$17;
-	private double rcPp$16;
-	private double rcPp$19;
-	private double rcPpDual$10;
-	private double rcPp$18;
-	private double rc1$20;
-	private double sat3$4;
-	private double rc1$21;
-	private double rc1$22;
-	private double rc1$23;
-	private double rc1$24;
-	private double sat2$4;
-	private double rc1$25;
-	private double rc1N$4;
-	private double rc1N$5;
 
 }

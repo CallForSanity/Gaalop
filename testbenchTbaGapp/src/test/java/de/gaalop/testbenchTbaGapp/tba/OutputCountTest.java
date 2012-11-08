@@ -30,7 +30,7 @@ public class OutputCountTest implements GenericTestable {
 
             @Override
             public String getCheckOutputsCode() {
-                return "assertEquals(32,outputs.size());";
+                return "assertEquals(0,outputs.size());";
             }
 
             @Override

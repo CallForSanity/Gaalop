@@ -6,16 +6,16 @@ import de.gaalop.dfg.MultivectorComponent;
 import java.util.HashSet;
 
 /**
- * Adds all components of output variables to a components set
+ * Adds all components of variables to a components set
  * @author Christian Steinmetz
  */
-public class FindOutputComponents extends EmptyControlFlowVisitor {
+public class FindMultivectorDestinationComponents extends EmptyControlFlowVisitor {
 
-    public HashSet<MultivectorComponent> outputComponents = new HashSet<MultivectorComponent>();
+    public HashSet<MultivectorComponent> mvDestComponents = new HashSet<MultivectorComponent>();
 
     @Override
     public void visit(AssignmentNode node) {
-        outputComponents.add((MultivectorComponent) node.getVariable());
+        mvDestComponents.add((MultivectorComponent) node.getVariable());
         super.visit(node);
     }
 

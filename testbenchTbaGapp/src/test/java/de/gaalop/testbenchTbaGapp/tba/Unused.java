@@ -29,7 +29,7 @@ public class Unused implements GenericTestable {
             @Override
             public String getCheckOutputsCode() {
                 return "// check number of outputs\n"
-                        + "assertEquals(32, outputs.size());\n";
+                        + "assertEquals(8, outputs.size());\n";
             }
 
             @Override

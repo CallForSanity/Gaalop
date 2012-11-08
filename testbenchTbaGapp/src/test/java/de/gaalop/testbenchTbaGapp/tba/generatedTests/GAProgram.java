@@ -30,9 +30,9 @@ public interface GAProgram {
     public boolean setValue(String varName, double value);
 
     /**
-      * Returns all values in a map name->value
-      * @return The map which contains all values
-      */
-     public HashMap<String,Double> getValues();
+     * Returns all values in a map name->value
+     * @return The map which contains all values
+     */
+    public HashMap<String,Double> getValues();
 
 }
