@@ -77,7 +77,7 @@ public class TestOptions {
         
         CodeParser parser                                       = new de.gaalop.clucalc.input.Plugin().createCodeParser();
         GlobalSettingsStrategy globalSettingsStrategy           = globalPlugin.createGlobalSettingsStrategy();
-        VisualCodeInserterStrategy visualCodeInserterStrategy   = new de.gaalop.visualCodeInserter.Plugin().createVisualizerStrategy();
+        VisualCodeInserterStrategy visualCodeInserterStrategy   = new de.gaalop.visualCodeInserter.Plugin().createVisualCodeInserterStrategy();
         AlgebraStrategy algebraStrategy                         = new de.gaalop.algebra.Plugin().createAlgebraStrategy();
         OptimizationStrategy optimizationStrategy               = optimPlugin.createOptimizationStrategy();
         CodeGenerator codeGenerator                             = visPlugin.createCodeGenerator();

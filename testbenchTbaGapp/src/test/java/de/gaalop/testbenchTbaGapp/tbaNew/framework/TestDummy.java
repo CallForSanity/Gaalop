@@ -22,7 +22,7 @@ public class TestDummy {
         
         CodeParser parser                                       = new de.gaalop.clucalc.input.Plugin().createCodeParser();
         GlobalSettingsStrategy globalSettingsStrategy           = new de.gaalop.globalSettings.Plugin().createGlobalSettingsStrategy();
-        VisualCodeInserterStrategy visualCodeInserterStrategy   = new de.gaalop.visualCodeInserter.Plugin().createVisualizerStrategy();
+        VisualCodeInserterStrategy visualCodeInserterStrategy   = new de.gaalop.visualCodeInserter.Plugin().createVisualCodeInserterStrategy();
         AlgebraStrategy algebraStrategy                         = new de.gaalop.algebra.Plugin().createAlgebraStrategy();
         OptimizationStrategy optimizationStrategy               = new de.gaalop.tba.Plugin().createOptimizationStrategy();
         CodeGenerator codeGenerator                             = new TBATestCodeGeneratorPlugin(tBATestCase.getInputValues()).createCodeGenerator();
@@ -98,7 +98,7 @@ public class TestDummy {
         
         CodeParser parser                                       = new de.gaalop.clucalc.input.Plugin().createCodeParser();
         GlobalSettingsStrategy globalSettingsStrategy           = new de.gaalop.globalSettings.Plugin().createGlobalSettingsStrategy();
-        VisualCodeInserterStrategy visualCodeInserterStrategy   = new de.gaalop.visualCodeInserter.Plugin().createVisualizerStrategy();
+        VisualCodeInserterStrategy visualCodeInserterStrategy   = new de.gaalop.visualCodeInserter.Plugin().createVisualCodeInserterStrategy();
         AlgebraStrategy algebraStrategy                         = new de.gaalop.algebra.Plugin().createAlgebraStrategy();
         OptimizationStrategy optimizationStrategy               = optimPlugin.createOptimizationStrategy();
         CodeGenerator codeGenerator                             = new TBATestCodeGeneratorPlugin(tBATestCase.getInputValues()).createCodeGenerator();

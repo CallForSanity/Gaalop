@@ -15,7 +15,7 @@ import java.util.Observable;
 public class Plugin extends Observable implements VisualCodeInserterStrategyPlugin {
 
     @Override
-    public VisualCodeInserterStrategy createVisualizerStrategy() {
+    public VisualCodeInserterStrategy createVisualCodeInserterStrategy() {
         return new VisualizerCodeInserter2d();
     }
 

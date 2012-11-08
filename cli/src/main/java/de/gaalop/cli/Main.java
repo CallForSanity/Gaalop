@@ -184,7 +184,7 @@ public class Main {
     Set<VisualCodeInserterStrategyPlugin> plugins = Plugins.getVisualizerStrategyPlugins();
     for (VisualCodeInserterStrategyPlugin plugin : plugins) {
       if (plugin.getClass().getName().equals(visualizerStrategyPlugin)) {
-        return plugin.createVisualizerStrategy();
+        return plugin.createVisualCodeInserterStrategy();
       }
     }
 

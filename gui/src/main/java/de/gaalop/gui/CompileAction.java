@@ -106,7 +106,7 @@ public class CompileAction extends AbstractAction {
 
         final CompilerFacade facade = new CompilerFacade(parserPlugin.createCodeParser(),
                 globalSettingsPlugin.createGlobalSettingsStrategy(),
-                visualizerPlugin.createVisualizerStrategy(),
+                visualizerPlugin.createVisualCodeInserterStrategy(),
                 algebraPlugin.createAlgebraStrategy(),
                 optimizationPlugin.createOptimizationStrategy(),
                 panelPluginSelection.getCodeGeneratorPlugin().createCodeGenerator(),
