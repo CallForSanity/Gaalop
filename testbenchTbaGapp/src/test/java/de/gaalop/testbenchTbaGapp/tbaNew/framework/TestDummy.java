@@ -18,7 +18,7 @@ import java.util.logging.Logger;
  */
 public class TestDummy {
     
-    public static void compile(TBATestCase tBATestCase) {
+    public static boolean compile(TBATestCase tBATestCase) {
         
         CodeParser parser                                       = new de.gaalop.clucalc.input.Plugin().createCodeParser();
         GlobalSettingsStrategy globalSettingsStrategy           = new de.gaalop.globalSettings.Plugin().createGlobalSettingsStrategy();
@@ -62,8 +62,9 @@ public class TestDummy {
             
 
             tBATestCase.testOutputs(outputVarsValues);
+            return true;
         } catch (CompilationException ex) {
-            Logger.getLogger(TestDummy.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
         }
         
     }

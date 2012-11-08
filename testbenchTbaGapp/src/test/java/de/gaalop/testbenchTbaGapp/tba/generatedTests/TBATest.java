@@ -2,7 +2,7 @@ package de.gaalop.testbenchTbaGapp.tba.generatedTests;
 
 import java.util.HashMap;
 import de.gaalop.testbenchTbaGapp.tba.gps.Point3D;
-import de.gaalop.testbenchTbaGapp.tba.linePointDistance.Vec3D;
+import de.gaalop.testbenchTbaGapp.tbaNew.linePointDistance.Vec3D;
 import org.junit.Test;
 import static org.junit.Assert.*;
 

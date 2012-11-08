@@ -1,4 +1,4 @@
-package de.gaalop.testbenchTbaGapp.tba.linePointDistance;
+package de.gaalop.testbenchTbaGapp.tbaNew.linePointDistance;
 
 import de.gaalop.testbenchTbaGapp.tba.gps.Point3D;
 

@@ -13,7 +13,6 @@ import de.gaalop.cfg.ControlFlowGraph;
 import de.gaalop.testbenchTbaGapp.tba.gps.GPSNoVarsTest;
 import de.gaalop.testbenchTbaGapp.tba.gps.GPSOnlyVarsTest;
 import de.gaalop.testbenchTbaGapp.tba.gps.Point3D;
-import de.gaalop.testbenchTbaGapp.tba.linePointDistance.LinePointDistance;
 import java.awt.Point;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
@@ -72,43 +71,13 @@ public class TestCreator {
 
         //positive tests - tests that should be compiled
         try {
-            // test(new CircleOneVarTest(new Point(5,2),new Point(3,9),new Point(6,4),new boolean[]{true,false,false,false,false,false},1),"CircleOneVar");
-            testTrafoTest();
-
-            testOutputCount();
-            testUnusedTest();
 
             testGPSNoVars();
             testGPSOnlyVars();
-
-            testLinePointDistance();
             
         } catch (OptimizationException e) {
             throw new Exception("CompileError in positive tests: " + e);
         }
-
-        //negative tests - tests shouldn't be compiled, since they aren't conform to specification
-        boolean valid = true;
-        try {
-            testMultipleAssignmentsTest();
-        } catch (OptimizationException e) {
-            valid = false;
-        }
-        if (valid) {
-            throw new Exception("No CompileError in negative test MultipleAssignmentsTest");
-        }
-
-
-        valid = true;
-        try {
-            testControlFlowTest();
-        } catch (OptimizationException e) {
-            valid = false;
-        }
-        if (valid) {
-            throw new Exception("No CompileError in negative test ControlFlowTest");
-        }
-
 
         endTestCase();
     }
@@ -181,17 +150,6 @@ public class TestCreator {
      * Dummy method
      * @throws OptimizationException
      */
-    private void testLinePointDistance() throws OptimizationException {
-        test(new LinePointDistance(
-                new Point3D(3, 4, 5),
-                new Point3D(7, 8, 10),
-                new Point3D(3, 8, 10)), "LinePointDistance");
-    }
-
-    /**
-     * Dummy method
-     * @throws OptimizationException
-     */
     private void testGPSNoVars() throws OptimizationException {
         test(new GPSNoVarsTest(new Point3D(1, 1, 1), new Point3D(0, 0, 1), new Point3D(0, 1, 0), 0.6f, 0.7f, 0.5f), "GPSNoVars");
     }
@@ -202,46 +160,6 @@ public class TestCreator {
      */
     private void testGPSOnlyVars() throws OptimizationException {
         test(new GPSOnlyVarsTest(new Point3D(1, 1, 1), new Point3D(0, 0, 1), new Point3D(0, 1, 0), 0.6f, 0.7f, 0.9f), "GPSOnlyVars");
-    }
-
-    /**
-     * Dummy method
-     * @throws OptimizationException
-     */
-    private void testMultipleAssignmentsTest() throws OptimizationException {
-        test(new MultipleAssignmentsTest(), "MultipleAssignments");
-    }
-
-    /**
-     * Dummy method
-     * @throws OptimizationException
-     */
-    private void testControlFlowTest() throws OptimizationException {
-        test(new ControlFlowTest(), "ControlFlow");
-    }
-
-    /**
-     * Dummy method
-     * @throws OptimizationException
-     */
-    private void testOutputCount() throws OptimizationException {
-        test(new OutputCountTest(), "OutputCount");
-    }
-
-    /**
-     * Dummy method
-     * @throws OptimizationException
-     */
-    private void testUnusedTest() throws OptimizationException {
-        test(new Unused(), "Unused");
-    }
-
-    /**
-     * Dummy method
-     * @throws OptimizationException
-     */
-    private void testTrafoTest() throws OptimizationException {
-        test(new TrafoTst(), "TrafoTst");
     }
 
     /**
