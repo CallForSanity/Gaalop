@@ -2,11 +2,9 @@ package de.gaalop.testbenchTbaGapp.tbaNew.linePointDistance;
 
 import de.gaalop.dfg.MultivectorComponent;
 import de.gaalop.dfg.Variable;
-import de.gaalop.testbenchTbaGapp.tba.VariableValue;
-import de.gaalop.testbenchTbaGapp.tba.gps.Point3D;
+import de.gaalop.testbenchTbaGapp.tbaNew.gps.Point3D;
 import de.gaalop.testbenchTbaGapp.tbaNew.framework.TBATestCase;
 import java.util.HashMap;
-import java.util.LinkedList;
 
 import static org.junit.Assert.*;
 

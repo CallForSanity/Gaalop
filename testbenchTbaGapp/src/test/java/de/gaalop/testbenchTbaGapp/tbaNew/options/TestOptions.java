@@ -2,19 +2,13 @@ package de.gaalop.testbenchTbaGapp.tbaNew.options;
 
 import de.gaalop.*;
 import de.gaalop.cfg.ControlFlowGraph;
-import de.gaalop.cfg.GlobalSettings;
 import de.gaalop.dfg.Variable;
 import de.gaalop.tba.Plugin;
 import de.gaalop.testbenchTbaGapp.tbaNew.framework.TBATestCase;
-import de.gaalop.testbenchTbaGapp.tbaNew.framework.TBATestCodeGeneratorPlugin;
-import de.gaalop.testbenchTbaGapp.tbaNew.framework.TestDummy;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JFrame;
-import static org.junit.Assert.*;
-import org.junit.Test;
 
 /**
  *

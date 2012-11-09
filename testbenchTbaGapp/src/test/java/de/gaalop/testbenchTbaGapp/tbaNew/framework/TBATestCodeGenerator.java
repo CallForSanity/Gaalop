@@ -6,7 +6,6 @@ import de.gaalop.OutputFile;
 import de.gaalop.cfg.ControlFlowGraph;
 import de.gaalop.dfg.MultivectorComponent;
 import de.gaalop.dfg.Variable;
-import de.gaalop.testbenchTbaGapp.tbaNew.framework.CFGInterpreter;
 import java.nio.charset.Charset;
 import java.util.*;
 
