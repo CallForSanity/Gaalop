@@ -13,22 +13,23 @@
      -->
     <modules>
         <module>api</module>
-	<module>algebra</module>
-	<module>visualCodeInserter</module>
+        <module>globalSettings</module>
+		<module>algebra</module>
+		<module>visualCodeInserter</module>
 
-	<module>clucalc</module>
+		<module>clucalc</module>
 
         <module>maple</module>
         <module>tba</module>
         <module>gapp</module>
 
-	<module>gaalet</module>
+		<module>gaalet</module>
         <module>codegen-dot</module>
         <module>codegen-cpp</module>
         <module>codegen-java</module>
         <module>codegen-compressed</module>
-	<module>codegen-gapp</module>
-	<module>codegen-gappopencl</module>
+		<module>codegen-gapp</module>
+		<module>codegen-gappopencl</module>
 
         <module>gpc</module>
         <module>starter</module>

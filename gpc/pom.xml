@@ -87,6 +87,11 @@
             <version>2.0.9</version>
             <type>jar</type>
         </dependency>
+        <dependency>
+        	<groupId>de.gaalop</groupId>
+        	<artifactId>globalSettings</artifactId>
+        	<version>1.0.0</version>
+        </dependency>
     </dependencies>
 </project>
 

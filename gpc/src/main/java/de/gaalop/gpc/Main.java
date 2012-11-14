@@ -47,6 +47,8 @@ public class Main {
     public static String codeGeneratorPlugin = "de.gaalop.compressed.Plugin";
     @Option(name = "-optimizer", required = false, usage = "Sets the class name of the optimization strategy plugin that should be used.")
     public static String optimizationStrategyPlugin = "de.gaalop.maple.Plugin";
+    @Option(name = "-globalSettings", required = false, usage = "Sets the class name of the global Settings strategy plugin that should be used.")
+    public static String globalSettingsStrategyPlugin = "de.gaalop.globalSettings.Plugin";
     @Option(name = "-algebra", required = false, usage = "Sets the class name of the algebra strategy plugin that should be used.")
     public static String algebraStrategyPlugin = "de.gaalop.algebra.Plugin";
     @Option(name = "-visualizer", required = false, usage = "Sets the class name of the visualizer strategy plugin that should be used.")
@@ -55,14 +57,10 @@ public class Main {
     public static boolean writeLinePragmas = false;
 
     // Algebra options
-    @Option(name = "-algebra_usePrecalulatedTables", required = false, usage = "wether to use precalculated algebra tables or not.")
-    public static boolean algebra_usePrecalulatedTables = true;
-    @Option(name = "-algebra_baseDirectory", required = false, usage = "algebra base directory")
-    public static String algebra_baseDirectory = "algebra/5d/";
-    @Option(name = "-algebra_userMacroFilePath", required = false, usage = "user macro file path")
-    public static String algebra_userMacroFilePath = "";
-    @Option(name = "-algebra_useBuiltInFiles", required = false, usage = "wether to use built-in algebra tables or not.")
-    public static boolean algebra_useBuiltInFiles = true;
+    @Option(name = "-algebraName", required = true, usage = "Sets the name of the algebra that should be used.")
+    public static String algebraName = "5d";    
+    @Option(name = "-algebraBaseDir", required = false, usage = "Sets the base directory path of the user-defined algebras.")
+    public static String algebraBaseDirectory;
 
     public static final String PATH_SEP = "/";
     public static final char LINE_END = '\n';

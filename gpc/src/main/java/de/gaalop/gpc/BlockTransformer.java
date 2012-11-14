@@ -5,7 +5,12 @@
 package de.gaalop.gpc;
 
 import de.gaalop.*;
+import de.gaalop.algebra.AlStrategy;
+
 import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.util.HashMap;
 import java.util.List;
@@ -13,6 +18,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -133,13 +140,33 @@ public class BlockTransformer {
     
     public static CompilerFacade createCompiler() {
         CodeParser codeParser = createCodeParser();
+        GlobalSettingsStrategy globalSettingsStrategy = createGlobalSettingsStrategy();
         AlgebraStrategy algebraStrategy = createAlgebraStrategy();
-	VisualizerStrategy visualizerStrategy = createVisualizerStrategy();
+        VisualCodeInserterStrategy visualizerStrategy = createVisualizerStrategy();
         OptimizationStrategy optimizationStrategy = createOptimizationStrategy();
         CodeGenerator codeGenerator = createCodeGenerator();
+        
+        // check if algebra is resource or file
+        boolean asResource = true;//false;
+        /*try {
+            InputStream inputStream = AlStrategy.class.getResourceAsStream("algebra/definedAlgebras.txt");
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
 
-        return new CompilerFacade(codeParser, visualizerStrategy, algebraStrategy,
-				  optimizationStrategy, codeGenerator);
+            String line;
+            while ((line = reader.readLine()) != null) 
+                if (line.trim().equals(Main.algebraName.trim()))
+                    asResource = true;
+
+            reader.close();
+        } catch (IOException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }*/
+        
+        return new CompilerFacade(codeParser, globalSettingsStrategy, 
+        		  visualizerStrategy, algebraStrategy,
+				  optimizationStrategy, codeGenerator,
+				  Main.algebraName, asResource,
+				  Main.algebraBaseDirectory);
     }
 
     public static CodeParser createCodeParser() {
@@ -154,18 +181,27 @@ public class BlockTransformer {
         System.exit(-2);
         return null;
     }
+    
+    public static GlobalSettingsStrategy createGlobalSettingsStrategy() {
+        Set<GlobalSettingsStrategyPlugin> plugins = Plugins.getGlobalSettingsStrategyPlugins();
+        for (GlobalSettingsStrategyPlugin plugin : plugins) {
+          if (plugin.getClass().getName().equals(Main.globalSettingsStrategyPlugin)) {
+            ((de.gaalop.globalSettings.Plugin) plugin).optMaxima = !Main.externalOptimizerPath.isEmpty();
+            ((de.gaalop.globalSettings.Plugin) plugin).maximaCommand = Main.externalOptimizerPath;
+          
+            return plugin.createGlobalSettingsStrategy();
+          }
+        }
+
+        System.err.println("Unknown algebra strategy plugin: " + Main.algebraStrategyPlugin);
+        System.exit(-3);
+        return null;
+    }
 
     public static AlgebraStrategy createAlgebraStrategy() {
         Set<AlgebraStrategyPlugin> plugins = Plugins.getAlgebraStrategyPlugins();
         for (AlgebraStrategyPlugin plugin : plugins) {
             if (plugin.getClass().getName().equals(Main.algebraStrategyPlugin)) {
-                de.gaalop.algebra.Plugin algebraPlugin = (de.gaalop.algebra.Plugin)plugin;
-                if(algebraPlugin != null) {
-                    algebraPlugin.useBuiltInFiles = Main.algebra_usePrecalulatedTables;
-                    algebraPlugin.baseDirectory = Main.algebra_baseDirectory;
-                    algebraPlugin.userMacroFilePath = Main.algebra_userMacroFilePath;
-                    algebraPlugin.useBuiltInFiles = Main.algebra_useBuiltInFiles;
-                }
                 return plugin.createAlgebraStrategy();
             }
         }
@@ -175,9 +211,9 @@ public class BlockTransformer {
         return null;
     }
 
-   public static VisualizerStrategy createVisualizerStrategy() {
-     Set<VisualizerStrategyPlugin> plugins = Plugins.getVisualizerStrategyPlugins();
-     for (VisualizerStrategyPlugin plugin : plugins) {
+   public static VisualCodeInserterStrategy createVisualizerStrategy() {
+     Set<VisualCodeInserterStrategyPlugin> plugins = Plugins.getVisualizerStrategyPlugins();
+     for (VisualCodeInserterStrategyPlugin plugin : plugins) {
        if (plugin.getClass().getName().equals(Main.visualizerStrategyPlugin)) {
          return plugin.createVisualizerStrategy();
        }
@@ -197,12 +233,7 @@ public class BlockTransformer {
                         ((de.gaalop.maple.Plugin) plugin).setMapleBinaryPath(Main.externalOptimizerPath);
                         ((de.gaalop.maple.Plugin) plugin).setMapleJavaPath(Main.externalOptimizerPath + "/../java");
                     }
-                    else if(plugin instanceof de.gaalop.tba.Plugin) {
-                        ((de.gaalop.tba.Plugin) plugin).optMaxima = true;
-                        ((de.gaalop.tba.Plugin) plugin).maximaCommand = Main.externalOptimizerPath;
-                    }
-                } else if(plugin instanceof de.gaalop.tba.Plugin)
-                    ((de.gaalop.tba.Plugin) plugin).optMaxima = false;
+                }
 
                 return plugin.createOptimizationStrategy();
             }
