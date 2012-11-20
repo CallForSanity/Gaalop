@@ -1,16 +1,18 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 CMAKE_POLICY(SET CMP0011 NEW)
-PROJECT(GaalopCompilerDriver)
+PROJECT(GaalopPrecompiler)
 
+# enable testing
 ENABLE_TESTING()
 
 # set module find path
 SET(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/share/cmake-2.8/Modules")
 
 # setup CPack
-INCLUDE(InstallRequiredSystemLibraries)
+#INCLUDE(InstallRequiredSystemLibraries)
 SET(CPACK_PACKAGE_CONTACT "Patrick Charrier <patrick.charrier@stud.tu-darmstadt.de>")
 SET(CPACK_PACKAGE_DESCRIPTION "Gaalop Precompiler (GPC) compiles source files containing Geometric Algebra expressions expressed in CLUCalc into C++-compatible object files.")
+SET(CPACK_DEBIAN_PACKAGE_DEPENDS "cmake, java-common")
 INCLUDE(CPack)
 
 # use packages
