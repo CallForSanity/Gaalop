@@ -193,7 +193,7 @@ public class BlockTransformer {
           }
         }
 
-        System.err.println("Unknown algebra strategy plugin: " + Main.algebraStrategyPlugin);
+        System.err.println("Unknown global settings plugin: " + Main.algebraStrategyPlugin);
         System.exit(-3);
         return null;
     }
