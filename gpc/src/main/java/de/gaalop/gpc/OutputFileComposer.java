@@ -97,7 +97,7 @@ public class OutputFileComposer {
         }
 
         // line pragma for compile errors
-        writeLinePragma(outputFile, lineCount++); // we skipped gpc end line
+        writeLinePragma(outputFile, lineCount++); // we skipped clucalc end line
         
         // scan block
         Common.scanBlock(gaalopOutFileVector, gaalopBlockCount, mvComponents);
@@ -128,8 +128,8 @@ public class OutputFileComposer {
             } else if(line.contains(Main.gpcEnd)) { // end gpc block
                 // flush command buffer
                 outputFile.write(commandBuffer.toString());
-                // we read one line
-                ++lineCount;
+                // line pragma for compile errors
+                writeLinePragma(outputFile, lineCount++); // we skipped gpc end line
                 // we reached the end of this block, so exit loop.
                 break;
             }

@@ -32,8 +32,9 @@ ADD_SUBDIRECTORY(share)
 # build
 add_custom_target(gaalop ALL COMMENT "Compiling Gaalop.")
 add_custom_command(TARGET gaalop COMMAND ${MVN_BINARY} -DupdateOnly=true -Dmaven.test.skip=true package assembly:directory WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
-#add_custom_target(mvn_clean ALL COMMENT "Maven Clean Gaalop.")
-#add_custom_command(TARGET mvn_clean COMMAND ${MVN_BINARY} clean WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+add_custom_target(mvn_clean ALL COMMENT "Maven Clean Gaalop.")
+add_custom_command(TARGET mvn_clean COMMAND ${MVN_BINARY} clean WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+add_dependencies(gaalop mvn_clean)
 # copy
 COPY_DIRECTORY(include-copy include include)
 COPY_DIRECTORY(gaalop-copy "target/gaalop*" "share/gpc/gaalop")
