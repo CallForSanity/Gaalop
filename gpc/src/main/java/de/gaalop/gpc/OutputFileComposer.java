@@ -40,26 +40,42 @@ public class OutputFileComposer {
         
         // open output file
         BufferedWriter outputFile = Main.createFileOutputStringStream(Main.outputFilePath);
-        writeLinePragma(outputFile, lineCount++);
+        
+        // Tell the compiler where the original source file is.
+        // Useful when there is an syntax error at the beginning.
+        // The IDE will redirect to the original source file.
+        writeLinePragma(outputFile, lineCount);
         
         // process line by line
         Map<String, Map<String,String>> mvComponents = new HashMap<String, Map<String,String>>();
         final BufferedReader inputFile = Main.createFileInputStringStream(Main.inputFilePath);
         String line;
-        while ((line = inputFile.readLine()) != null) {
-            if (line.contains("#include") && line.contains("\""))
+        while ((line = inputFile.readLine()) != null) {            
+            if (line.contains("#include") && line.contains("\"")) {
+                // we read one line
+                ++lineCount;
+
                 processInclude(outputFile, line, inputFileDir);
-            else if (line.contains(Main.clucalcBegin))
+            }
+            else if (line.contains(Main.clucalcBegin)) {
+                // we read one line
+                // but processClucalcBlock handles counting internally
+            	
                 processClucalcBlock(outputFile, gaalopOutFileVector, inputFile, mvComponents);
-            else if(line.contains(Main.gpcBegin))
+            }
+            else if(line.contains(Main.gpcBegin)) {
+                // we read one line
+                ++lineCount;
+
                 processGPCBlock(inputFile, mvComponents, outputFile, gaalopOutFileVector);
+            }
             else {
+                // we read one line
+                ++lineCount;
+
                 outputFile.write(line);
                 outputFile.write(Main.LINE_END);
             }
-            
-            // we read one line
-            ++lineCount;
         }
         
         // close output file
@@ -84,7 +100,7 @@ public class OutputFileComposer {
                                               final BufferedReader inputFile,
                                               Map<String, Map<String, String>> mvComponents) throws IOException {
         // line pragma for compile errors
-        writeLinePragma(outputFile, lineCount++); // we skipped gpc begin line
+        writeLinePragma(outputFile, ++lineCount); // we skipped clucalc begin line, pre-increment because we actually want to point to the line after the #pragma
 
         // merge optimized code
         outputFile.write(gaalopOutFileVector.get(gaalopBlockCount));
@@ -95,9 +111,8 @@ public class OutputFileComposer {
                 break;
             ++lineCount;
         }
-
         // line pragma for compile errors
-        writeLinePragma(outputFile, lineCount++); // we skipped clucalc end line
+        writeLinePragma(outputFile, ++lineCount); // we skipped clucalc end line, pre-increment because we actually want to point to the line after the #pragma
         
         // scan block
         Common.scanBlock(gaalopOutFileVector, gaalopBlockCount, mvComponents);
@@ -117,29 +132,31 @@ public class OutputFileComposer {
             if (line.contains(Main.clucalcBegin)) { // start clucalc block
                 // flush command buffer
                 outputFile.write(commandBuffer.toString());
+                
                 // process clucalc block
                 processClucalcBlock(outputFile, gaalopOutFileVector,
                                     inputFile, mvComponents);
-                
-                // we read one line
-                ++lineCount;
-                // continue without appending to buffer
+
+                // continue without appending to command buffer
                 continue;
             } else if(line.contains(Main.gpcEnd)) { // end gpc block
                 // flush command buffer
                 outputFile.write(commandBuffer.toString());
+                
                 // line pragma for compile errors
-                writeLinePragma(outputFile, lineCount); // we skipped gpc end line, no idea why no increment required here
+                writeLinePragma(outputFile, ++lineCount); // we skipped gpc end line, pre-increment because we actually want to point to the line after the #pragma
+
                 // we reached the end of this block, so exit loop.
                 break;
             }
+            
+            // we read one line
+            ++lineCount;
             
             // append line to command buffer
             commandBuffer.append(line).append(Main.LINE_END);
             // process command buffer
             processCommandBuffer(commandBuffer, mvComponents, outputFile);
-            // we read one line
-            ++lineCount;
          }
     }
 
