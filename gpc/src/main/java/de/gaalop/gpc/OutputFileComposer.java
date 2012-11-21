@@ -129,7 +129,7 @@ public class OutputFileComposer {
                 // flush command buffer
                 outputFile.write(commandBuffer.toString());
                 // line pragma for compile errors
-                writeLinePragma(outputFile, lineCount++); // we skipped gpc end line
+                writeLinePragma(outputFile, lineCount); // we skipped gpc end line, no idea why no increment required here
                 // we reached the end of this block, so exit loop.
                 break;
             }
