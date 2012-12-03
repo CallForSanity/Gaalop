@@ -81,6 +81,12 @@ public class PluginConfigurator {
      */
     public void configureAll(Observer o) {
         Set<? extends Plugin> plugins;
+        
+        plugins = Plugins.getGlobalSettingsStrategyPlugins();
+        for (Plugin plugin : plugins) {
+            configure(plugin);
+            register(plugin, o);
+        }
 
         plugins = Plugins.getOptimizationStrategyPlugins();
         for (Plugin plugin : plugins) {
@@ -126,6 +132,11 @@ public class PluginConfigurator {
      */
     public void readConfiguration() {
         Set<? extends Plugin> plugins;
+        
+        plugins = Plugins.getGlobalSettingsStrategyPlugins();
+        for (Plugin plugin : plugins) {
+            readConfiguration(plugin);
+        }
 
         plugins = Plugins.getOptimizationStrategyPlugins();
         for (Plugin plugin : plugins) {
