@@ -291,14 +291,20 @@ public class OutputFileComposer {
         outputFile.write(Main.LINE_END);
         outputFile.write(Main.LINE_END);
         while(it.hasNext()) {
+        	// get blade
+        	final String blade = it.next().toString();
+        	
+        	// skip blade if zero
+        	if(blade.equals("0"))
+        		continue;
+        	
             outputFile.write(array);
             outputFile.write('[');
             outputFile.write((count++).toString());
             outputFile.write(']');
             outputFile.write(" = ");                    
             outputFile.write(getMvBladeCoeffArrayEntry(mvComponents,
-                                                       mv,
-                                                       it.next().toString()));                                        
+                                                       mv,blade));                                        
             outputFile.write(";\n");
         }
         outputFile.write(Main.LINE_END);
@@ -320,6 +326,13 @@ public class OutputFileComposer {
         outputFile.write(Main.LINE_END);
         Integer counter = 0;
         while(it.hasNext()) {
+        	// get blade
+        	final String blade = it.next().toString();
+        	
+        	// skip blade if zero
+        	if(blade.equals("0"))
+        		continue;
+        	
             outputFile.write(array);
             outputFile.write("[(");
             outputFile.write(index);
@@ -330,8 +343,7 @@ public class OutputFileComposer {
             outputFile.write(")] = ");                    
 
             outputFile.write(getMvBladeCoeffArrayEntry(mvComponents,
-                                                       mv,
-                                                       it.next().toString()));                                        
+                                                       mv,blade));                                        
             outputFile.write(";\n");
         }
         outputFile.write(Main.LINE_END);
@@ -350,13 +362,19 @@ public class OutputFileComposer {
         int count = 0;
         outputFile.write(Main.LINE_END);
         while(it.hasNext()) {
+        	// get blade
+        	final String blade = it.next().toString();
+        	
+        	// skip blade if zero
+        	if(blade.equals("0"))
+        		continue;
+        	
             outputFile.write(vec);
             outputFile.write(".s"); // TODO recognize vector size and assign with make_float
             outputFile.write(Common.getOpenCLIndex(count++));
             outputFile.write(" = ");
             outputFile.write(getMvBladeCoeffArrayEntry(mvComponents,
-                                                       mv,
-                                                       it.next().toString()));                                        
+                                                       mv,blade));                                        
             outputFile.write(";\n");
         }
         outputFile.write(Main.LINE_END);
