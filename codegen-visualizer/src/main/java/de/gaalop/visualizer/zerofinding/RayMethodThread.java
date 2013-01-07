@@ -85,7 +85,7 @@ public class RayMethodThread extends Thread {
                     isolation(new RealInterval(t.lo(), center), values, graph, product);
                     isolation(new RealInterval(center, t.hi()), values, graph, product);
                 } else {
-                        if (Math.abs(f.hi()) < 1E-1 && Math.abs(f.lo()) < 1E-1 ) {
+                       // if (Math.abs(f.hi()) < 1E-1 && Math.abs(f.lo()) < 1E-1 ) { //TODO check
                             if (!points.containsKey(product))
                                 points.put(product, new LinkedList<Point3d>());
 
@@ -94,7 +94,7 @@ public class RayMethodThread extends Thread {
                                     values.get(new MultivectorComponent("_V_oy", 0)).lo(), 
                                     values.get(new MultivectorComponent("_V_oz", 0)).lo()
                                     ));
-                        }
+                       // }
                     }
             } else {
                 refinement(t, values, graph, product);
