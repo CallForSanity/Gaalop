@@ -1,0 +1,34 @@
+#include <math.h>
+
+float computeChainLength(float L1, float L2, float L3,
+						float x1, float y1, float x2, float y2, float x3, float y3,
+						float zh, float aufh) {
+#pragma gpc begin
+#pragma clucalc begin
+	// Drei Kugeln, deren Oberflächen jeweils den
+	// Erreichbarkeitsbereich einer Stange widerspiegeln
+	s1 = *SphereN3(x1,y1,0,L1);
+	s2 = *SphereN3(x2,y2,0,L2);
+	s3 = *SphereN3(x3,y3,0,L3);
+
+	// Die drei Stangen aneinanderlehnen (Der Kugelschnitt)
+	Pp = *(s1^s2^s3);
+
+	// Aus den zwei Punkten, die sich ergeben, den Radius berechnen
+	f = einf.Pp;
+	hoehe = sqrt((Pp.Pp)/f/f);
+
+	// Kettenhöhe berechnen
+	?kette = hoehe-zh-aufh; // Ergebnis: 1,375 m muss die Kette lang sein
+#pragma clucalc end
+
+    return mv_get_bladecoeff(kette,1);
+#pragma gpc end
+}
+
+int main() {
+	return !(fabs(computeChainLength(2.0f,2.05f,2.1f,
+									 0.0f,0.0f,0.85f,0.05f,0.35f,0.8f,
+									 0.4f,0.2f)
+			 - 1.375f) <= 0.01f);
+}

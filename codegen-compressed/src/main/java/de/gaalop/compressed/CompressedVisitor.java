@@ -38,7 +38,9 @@ public class CompressedVisitor extends de.gaalop.cpp.CppVisitor {
             for (Variable var : localVariables) {
                 code.append(variableType).append(" ");
                 code.append(var.getName());
-                code.append("[" + mvSizes.get(var.getName()).toString() + "], ");
+                if(mvSizes.get(var.getName()) > 1)
+                    code.append("[" + mvSizes.get(var.getName()).toString() + "]");
+                code.append(";\n");
             }
 
             if (graph.getLocalVariables().size() > 0) {
@@ -61,7 +63,9 @@ public class CompressedVisitor extends de.gaalop.cpp.CppVisitor {
                 appendIndentation();
                 code.append(variableType).append(" ");
                 code.append(var.getName());
-                code.append("[" + mvSizes.get(var.getName()).toString() + "];\n");
+                if(mvSizes.get(var.getName()) > 1)
+                    code.append("[" + mvSizes.get(var.getName()).toString() + "]");
+                code.append(";\n");
             }
         }
 
@@ -114,7 +118,9 @@ public class CompressedVisitor extends de.gaalop.cpp.CppVisitor {
         final int pos = mvBladeMap.get(name).get(component.getBladeIndex());
         
         // standard definition
-        code.append(name + '[' + pos + ']');
+        code.append(name);
+        if(mvSizes.get(name) > 1)
+            code.append('[' + pos + ']');
     }
 
     protected class DetourVisitor implements de.gaalop.dfg.ExpressionVisitor {

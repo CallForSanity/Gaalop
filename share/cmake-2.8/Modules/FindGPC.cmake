@@ -29,30 +29,36 @@ FIND_PATH(GPC_INCLUDE_DIR NAMES gpc.h HINTS "${GPC_ROOT_DIR}/include")
 INCLUDE_DIRECTORIES(${GPC_INCLUDE_DIR})
 
 # define common args
-IF(GPC_WITH_MAPLE)
-SET(GPC_COMMON_ARGS -optimizer "de.gaalop.maple.Plugin" -m "${MAPLE_BIN_DIR}")
-SET(GPC_EXTOPT_ARGS -m "${MAPLE_BIN_DIR}")
-ELSEIF(GPC_WITH_MAXIMA)
-SET(GPC_COMMON_ARGS -optimizer "de.gaalop.tba.Plugin" -m "${MAXIMA_BIN}")
-SET(GPC_EXTOPT_ARGS -m "${MAXIMA_BIN}")
-ELSE(GPC_WITH_MAPLE)
-SET(GPC_COMMON_ARGS -optimizer "de.gaalop.tba.Plugin")
-ENDIF(GPC_WITH_MAPLE)
-
-SET(GPC_COMMON_ARGS ${GPC_COMMON_ARGS} -algebraName "${GPC_ALGEBRA_NAME}")
+SET(GPC_COMMON_ARGS -algebraName "${GPC_ALGEBRA_NAME}")
 IF(NOT GPC_ALGEBRA_BASEDIRECTORY STREQUAL "")
-SET(GPC_COMMON_ARGS ${GPC_COMMON_ARGS} -algebraBaseDir "${GPC_ALGEBRA_BASEDIRECTORY}")
+	SET(GPC_COMMON_ARGS ${GPC_COMMON_ARGS} -algebraBaseDir "${GPC_ALGEBRA_BASEDIRECTORY}")
 ENDIF(NOT GPC_ALGEBRA_BASEDIRECTORY STREQUAL "")
+
+# define optimizer args
+IF(GPC_WITH_MAPLE)
+	SET(GPC_COMMON_ARGS ${GPC_COMMON_ARGS} -m "${MAPLE_BIN_DIR}")
+	SET(GPC_COMMON_ARGS ${GPC_COMMON_ARGS} -optimizer "de.gaalop.maple.Plugin")
+ELSE(GPC_WITH_MAPLE)
+	IF(GPC_USE_GAPP)
+		SET(GPC_COMMON_ARGS ${GPC_COMMON_ARGS} -optimizer "de.gaalop.gapp.Plugin")
+	ELSE(GPC_USE_GAPP)
+		SET(GPC_COMMON_ARGS ${GPC_COMMON_ARGS} -optimizer "de.gaalop.tba.Plugin")
+	ENDIF(GPC_USE_GAPP)
+	
+	IF(GPC_WITH_MAXIMA)
+		SET(GPC_COMMON_ARGS ${GPC_COMMON_ARGS} -m "${MAXIMA_BIN}")
+	ENDIF(GPC_WITH_MAXIMA)
+ENDIF(GPC_WITH_MAPLE)
 
 MESSAGE("${GPC_COMMON_ARGS}")
 
-# define specific args
+# define target specific args
 SET(GPC_CXX_ARGS ${GPC_COMMON_ARGS} -generator "de.gaalop.compressed.Plugin" -pragmas)
 SET(GPC_CUDA_ARGS ${GPC_COMMON_ARGS} -generator "de.gaalop.compressed.Plugin" -pragmas)
 IF(GPC_USE_GAPP)
-SET(GPC_OPENCL_ARGS ${GPC_EXTOPT_ARGS} -optimizer "de.gaalop.gapp.Plugin" -generator "de.gaalop.gappopencl.Plugin")
+	SET(GPC_OPENCL_ARGS ${GPC_COMMON_ARGS} -generator "de.gaalop.gappopencl.Plugin")
 ELSE(GPC_USE_GAPP)
-SET(GPC_OPENCL_ARGS ${GPC_COMMON_ARGS} -generator "de.gaalop.compressed.Plugin")
+	SET(GPC_OPENCL_ARGS ${GPC_COMMON_ARGS} -generator "de.gaalop.compressed.Plugin")
 ENDIF(GPC_USE_GAPP)
 SET(GPC_JAVA_ARGS ${GPC_COMMON_ARGS} -generator "de.gaalop.compressed.Plugin")
 
