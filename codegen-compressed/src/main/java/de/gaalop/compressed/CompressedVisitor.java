@@ -38,7 +38,9 @@ public class CompressedVisitor extends de.gaalop.cpp.CppVisitor {
             for (Variable var : localVariables) {
                 code.append(variableType).append(" ");
                 code.append(var.getName());
-                code.append("[" + mvSizes.get(var.getName()).toString() + "], ");
+                if(mvSizes.get(var.getName()) > 1)
+                    code.append("[" + mvSizes.get(var.getName()).toString() + "]");
+                code.append(";\n");
             }
 
             if (graph.getLocalVariables().size() > 0) {
@@ -61,7 +63,9 @@ public class CompressedVisitor extends de.gaalop.cpp.CppVisitor {
                 appendIndentation();
                 code.append(variableType).append(" ");
                 code.append(var.getName());
-                code.append("[" + mvSizes.get(var.getName()).toString() + "];\n");
+                if(mvSizes.get(var.getName()) > 1)
+                    code.append("[" + mvSizes.get(var.getName()).toString() + "]");
+                code.append(";\n");
             }
         }
 
@@ -99,7 +103,7 @@ public class CompressedVisitor extends de.gaalop.cpp.CppVisitor {
         }
 
         appendIndentation();
-        node.getVariable().accept(new DetourVisitor());
+        node.getVariable().accept(new MultivectorComponentWriteVisitor());
         code.append(" = ");
         node.getValue().accept(this);
         code.append(";\n");
@@ -109,27 +113,38 @@ public class CompressedVisitor extends de.gaalop.cpp.CppVisitor {
 
     @Override
     public void visit(MultivectorComponent component) {
+        // this method is for reading multivector components
+        
         // get blade pos in array
         final String name = component.getName().replace(suffix, "");
         final int pos = mvBladeMap.get(name).get(component.getBladeIndex());
         
         // standard definition
-        code.append(name + '[' + pos + ']');
+        code.append(name);
+        if(mvSizes.get(name) > 1)
+            code.append("[" + pos + "]");
     }
 
-    protected class DetourVisitor implements de.gaalop.dfg.ExpressionVisitor {
+    // this visitor is for writing to multivector components
+    protected class MultivectorComponentWriteVisitor implements de.gaalop.dfg.ExpressionVisitor {
 
         @Override
         public void visit(MultivectorComponent component) {
+            // this method is for writing to multivector components
+            
             // get blade pos in array
             final String name = component.getName().replace(suffix, "");
             Map<Integer,Integer> bladeMap = mvBladeMap.get(component.getName());
             if(bladeMap == null)
                 bladeMap = new HashMap<Integer, Integer>();
             final int pos = bladeMap.size();
+            
+            // determine component name
+            String componentName = name;
+            if(mvSizes.get(name) > 1)
+                componentName += "[" + pos + "]";
 
             // GPC definition
-            final String componentName = name + '[' + pos + ']';
             if (gpcMetaInfo) {
                 code.append("//#pragma gpc multivector_component ");
                 code.append(component.getName());

@@ -41,6 +41,7 @@ public class GAPPOpenCLVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor
     protected static int dotCount = 0;
     protected static final String lo = ".lo";
     protected static final String hi = ".hi";
+    protected static final int maxOpenCLVectorSize = 16;
     protected Map<String,Integer> mvSizes;
     protected boolean gpcMetaInfo = true;
     protected Map<String,Map<Integer,String>> mvBladeMap = new HashMap<String,Map<Integer,String>>();
@@ -57,7 +58,7 @@ public class GAPPOpenCLVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor
         if(gpcMetaInfo && !destMv.startsWith(GAPPOpenCLCodeGenerator.tempMv))
             result.append("//#pragma gpc multivector ").append(destMv).append("\n");
 
-        visitOpenCLVectorType(getOpenCLVectorSize(mvSizes.get(destMv)));
+        printOpenCLVectorType(computeNearestOpenCLVectorSize(mvSizes.get(destMv)));
         result.append(" ");
         result.append(destMv).append(";\n");
         mvBladeMap.put(destMv,new HashMap<Integer,String>());
@@ -99,7 +100,7 @@ public class GAPPOpenCLVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor
         if(bladeName.equals("1.0") || bladeName.equals("1.0f"))
             return "1";
         
-        // remove whitespaces from blade
+        // remove whitespaces from bladeIndex
         StringTokenizer tokenizer = new StringTokenizer(bladeName," \t\n\r\f()");
         StringBuilder bladeBuffer = new StringBuilder();
         while(tokenizer.hasMoreTokens())
@@ -114,73 +115,128 @@ public class GAPPOpenCLVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor
         result.append("//#pragma gpc multivector_component ");
         result.append(mv);
         result.append(" ").append(formatBladeName(sel.getBladeName()));
-        result.append(" ").append(mv).append(".s").append(blade);
+        result.append(" ").append(mv);
+        if(mvSizes.get(mv) > 1)
+            result.append(".s").append(blade);
         result.append("\n");
     }
 
     @Override
     public Object visitSetVector(GAPPSetVector gappSetVector, Object arg) {
-        final String destVec = GAPPOpenCLCodeGenerator.getVarName(gappSetVector.getDestination().getName());
-
         // determine vector sizes
-        int vectorSize = 0;
+        int wholeVectorSize = 0;
         for(SetVectorArgument setVectorArg : gappSetVector.getEntries()) {
             if(setVectorArg.isConstant())
-                ++vectorSize;
+                ++wholeVectorSize;
             else
-                vectorSize += ((PairSetOfVariablesAndIndices)setVectorArg).getSelectors().size();
-        }
-        final int openCLVectorSize = getOpenCLVectorSize(vectorSize);
-
-        // print declation
-        visitOpenCLVectorType(openCLVectorSize);
-        result.append(" ");
-        result.append(destVec);
-        result.append(" = (");
-        visitOpenCLVectorType(openCLVectorSize);
-        result.append(")(");
-
-        Iterator<SetVectorArgument> itSetVectorArg = gappSetVector.getEntries().iterator();
-        visitSetVectorArg(itSetVectorArg.next());    
-        while(itSetVectorArg.hasNext()) {
-            result.append(",");
-            visitSetVectorArg(itSetVectorArg.next());    
+                wholeVectorSize += ((PairSetOfVariablesAndIndices)setVectorArg).getSelectors().size();
         }
         
-        // fill remaining vector space with zeros
-        for(int counter = vectorSize; counter < openCLVectorSize; ++counter)
-            result.append(",0");
+        // get destVecBase
+        final String destVecBase = GAPPOpenCLCodeGenerator.getVarName(gappSetVector.getDestination().getName());
 
-        result.append(");\n");
-
-        // update blade map
+        // parallel multiply operation
         Map<Integer,String> bladeMap = new HashMap<Integer,String>();
-        for(int blade = 0; blade < vectorSize; ++blade)
-            bladeMap.put(blade,destVec + ".s" + blade);
-        mvBladeMap.put(destVec,bladeMap);
+        Iterator<SetVectorArgument> itSetVectorArg = gappSetVector.getEntries().iterator();
+        Iterator<Selector> itSelector = null;
+        SetVectorArgument setVectorArg = itSetVectorArg.next();
+        
+        int vectorSizeRemainder = wholeVectorSize;
+        int subvectorIndex = 0;
+        int bladeGlobalIndex = 0;
+        do {
+            // compute nearest OpenCL vector size
+            final int openCLVectorSize = computeNearestOpenCLVectorSize(vectorSizeRemainder);
+            // set destVec name
+            final String destVec = destVecBase + "_" + subvectorIndex;
+            
+            // print declaration
+            printOpenCLVectorType(openCLVectorSize);
+            result.append(" ");
+            result.append(destVec);
+            result.append(" = (");
+            printOpenCLVectorType(openCLVectorSize);
+            result.append(")(");
 
+            // print entries
+            int bladeLocalIndex = 0;
+            if(itSetVectorArg.hasNext()) {
+                bladeLocalIndex = visitSetVectorArg(itSetVectorArg,
+                                                    itSelector,
+                                                    setVectorArg,
+                                                    bladeLocalIndex,
+                                                    openCLVectorSize);
+            }
+            while(bladeLocalIndex < openCLVectorSize && itSetVectorArg.hasNext()) {
+                result.append(",");
+                bladeLocalIndex = visitSetVectorArg(itSetVectorArg,
+                                                    itSelector,
+                                                    setVectorArg,
+                                                    bladeLocalIndex,
+                                                    openCLVectorSize);
+            }
+
+            // fill remaining vector space with zeros
+            assert(bladeLocalIndex > 0); // cannot be the first entry
+            while(bladeLocalIndex++ < openCLVectorSize)
+                result.append(",0");
+
+            // print end of line
+            result.append(");\n");
+
+            // update bladeIndex map
+            for(bladeLocalIndex = 0; bladeLocalIndex < openCLVectorSize; ++bladeLocalIndex)
+                bladeMap.put(bladeGlobalIndex++,destVec + ".s" + bladeLocalIndex);
+            mvBladeMap.put(destVecBase,bladeMap);
+
+            // compute vector size remainder
+            vectorSizeRemainder -= maxOpenCLVectorSize; // if wholeVectorSize < 16 all should be done now
+            // increment subvector index
+            ++subvectorIndex;
+        } while(vectorSizeRemainder > 0);
+        
         return null;
     }
     
-    protected void visitOpenCLVectorType(final int openCLVectorSize) {
+    protected void printOpenCLVectorType(final int openCLVectorSize) {
         result.append("float");
         
         if(openCLVectorSize != 1)
             result.append(openCLVectorSize);
     }
 
-    protected void visitSetVectorArg(final SetVectorArgument setVectorArg) {
+    protected int visitSetVectorArg(Iterator<SetVectorArgument> itSetVectorArg,
+                                    Iterator<Selector> itSelector,
+                                    SetVectorArgument setVectorArg,
+                                    int bladeLocalIndex, final int openCLVectorSize) {
         if(setVectorArg.isConstant())
             result.append(((ConstantSetVectorArgument)setVectorArg).getValue());
         else {
-            final PairSetOfVariablesAndIndices pair = (PairSetOfVariablesAndIndices)setVectorArg;
-            Iterator<Selector> itSel = pair.getSelectors().iterator();
-            visitSelector(itSel.next(), GAPPOpenCLCodeGenerator.getVarName(pair.getSetOfVariable().getName()));
-            while (itSel.hasNext()) {
+            PairSetOfVariablesAndIndices pair = (PairSetOfVariablesAndIndices)setVectorArg;
+            
+            if(itSelector == null || !itSelector.hasNext()) {
+                // switch to next vector arg if no more selectors
+                if(!itSelector.hasNext())
+                    pair = (PairSetOfVariablesAndIndices)(setVectorArg = itSetVectorArg.next());
+                
+                // get a fresh selector iterator
+                itSelector = pair.getSelectors().iterator();
+            }
+            
+            // visit first selector
+            if(bladeLocalIndex < openCLVectorSize && itSelector.hasNext()) {
+                visitSelector(itSelector.next(), GAPPOpenCLCodeGenerator.getVarName(pair.getSetOfVariable().getName()));
+                ++bladeLocalIndex;
+            }
+            // visit further selectors
+            while (bladeLocalIndex < openCLVectorSize && itSelector.hasNext()) {
                 result.append(",");
-                visitSelector(itSel.next(), GAPPOpenCLCodeGenerator.getVarName(pair.getSetOfVariable().getName()));
+                visitSelector(itSelector.next(), GAPPOpenCLCodeGenerator.getVarName(pair.getSetOfVariable().getName()));
+                ++bladeLocalIndex;
             }
         }
+        
+        return bladeLocalIndex;
     }
 
     protected void visitSelector(final Selector sel, final String sourceName) {
@@ -202,7 +258,7 @@ public class GAPPOpenCLVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor
         return null;
     }
 
-    protected int getOpenCLVectorSize(final int in) {
+    protected int computeNearestOpenCLVectorSize(final int in) {
         if(in <= 0)
             return -1;
         else if(in == 1)
@@ -213,11 +269,8 @@ public class GAPPOpenCLVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor
             return 4;
         else if(in <= 8)
             return 8;
-        else if(in <= 16)
-            return 16;
-
-        assert(false);
-        return -1;
+        else
+            return maxOpenCLVectorSize;
     }
 
     protected String getOpenCLIndex(Integer index) {
@@ -358,9 +411,9 @@ public class GAPPOpenCLVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor
                                        thisMvSetCount,
                                        gappDotVectors.getDestSelector());
         
-        // compute blade coeff name
+        // compute bladeIndex coeff name
         final String bladeCoeff = getBladeCoeff(destMv,thisMvSetCount);
-        // update blade map
+        // update bladeIndex map
         mvBladeMap.get(destMv).
                 put(gappDotVectors.getDestSelector().getIndex(),bladeCoeff);
 
@@ -368,28 +421,99 @@ public class GAPPOpenCLVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor
         final int operandSize = mvBladeMap.get(GAPPOpenCLCodeGenerator.getVarName(gappDotVectors.getParts().get(0).getName())).size();
         if(operandSize == 1) {
             result.append(bladeCoeff).append(" = ");
-            visitDotVectorsParallelMultiply(gappDotVectors);
+            visitDotVectorsParallelMultiply(gappDotVectors,0);
             return null;
         }
         
-        // determine OpenCL vector size
-        int openCLVectorSize = getOpenCLVectorSize(operandSize);        
-
+        // save dot count for multiplication to be used later
+        final int multiplyDotCount = dotCount;
+        
         // parallel multiply operation
-        visitOpenCLVectorType(openCLVectorSize);
-        result.append(" ").append(GAPPOpenCLCodeGenerator.dot).append(dotCount);
-        //visitWriteMask(operandSize);
-        result.append(" = ");
-        visitDotVectorsParallelMultiply(gappDotVectors);
-
-        // parallel pyramid reduce
-        while((openCLVectorSize >>= 1) > 1) {
-            visitOpenCLVectorType(openCLVectorSize);
-            result.append(" ").append(GAPPOpenCLCodeGenerator.dot).append(dotCount+1);
+        int operandSizeRemainder = operandSize;
+        int openCLVectorSize;
+        int subvectorIndex = 0;
+        do {
+            // get vector size
+            openCLVectorSize = computeNearestOpenCLVectorSize(operandSizeRemainder);
+            
+            // print vector data type
+            printOpenCLVectorType(openCLVectorSize);
+            
+            // print operation
+            result.append(" ").append(GAPPOpenCLCodeGenerator.dot).append(multiplyDotCount);
+            result.append("_").append(subvectorIndex);
+            //visitWriteMask(operandSize);
             result.append(" = ");
-            result.append(GAPPOpenCLCodeGenerator.dot).append(dotCount).append(lo);
+            visitDotVectorsParallelMultiply(gappDotVectors,subvectorIndex);
+            
+            // compute operand size remainder
+            operandSizeRemainder -= openCLVectorSize;
+            // increment subvector index
+            ++subvectorIndex;
+        } while(operandSizeRemainder > 0);
+
+        // in case of multiple float16 add them together first
+        openCLVectorSize = computeNearestOpenCLVectorSize(operandSize);
+        if(operandSize / maxOpenCLVectorSize > 1) {
+            assert(openCLVectorSize == maxOpenCLVectorSize);
+            
+            // print vector data type (always float16 here)
+            printOpenCLVectorType(maxOpenCLVectorSize);
+            // print varname
+            result.append(" ").append(GAPPOpenCLCodeGenerator.dot).append(dotCount+1);
+            result.append("_0");
+            // print assignment
+            result.append(" = ");
+
+            // print first addition
+            result.append(" ").append(GAPPOpenCLCodeGenerator.dot).append(dotCount);
+            result.append("_0");
+            // print further additions
+            operandSizeRemainder = operandSize - openCLVectorSize;
+            subvectorIndex = 1;
+            while(operandSizeRemainder / maxOpenCLVectorSize > 0) {
+                // print operation
+                result.append(" + ");
+                result.append(" ").append(GAPPOpenCLCodeGenerator.dot).append(dotCount);
+                result.append("_").append(subvectorIndex++);
+            
+                // compute operand size remainder
+                operandSizeRemainder -= maxOpenCLVectorSize;
+            }
+            result.append(";\n");
+        }
+        // we created a new variable above
+        ++dotCount;
+        
+        // parallel pyramid sum reduce operations
+        int multiplyIndex = 1;
+        openCLVectorSize = computeNearestOpenCLVectorSize(operandSize);
+        while((openCLVectorSize >>= 1) > 1) {
+            // print type
+            printOpenCLVectorType(openCLVectorSize);
+            // print varname
+            result.append(" ").append(GAPPOpenCLCodeGenerator.dot).append(dotCount+1);
+            result.append("_0");
+            // print assignment
+            result.append(" = ");
+            // print addition
+            result.append(GAPPOpenCLCodeGenerator.dot).append(dotCount).append("_0").append(lo);
             result.append(" + ");
-            result.append(GAPPOpenCLCodeGenerator.dot).append(dotCount).append(hi);
+            result.append(GAPPOpenCLCodeGenerator.dot).append(dotCount).append("_0").append(hi);
+            
+            // in case of another existing vector of same size
+            // add it to this sum.
+            if((operandSize % (openCLVectorSize << 1)) / openCLVectorSize > 0) {
+                // mathematically, there can only be one more fitting vector
+                // of that size.
+                result.append(" + ");
+                result.append(GAPPOpenCLCodeGenerator.dot).append(multiplyDotCount).append("_").append(multiplyIndex++);
+                // (dotCount has to be from multiplication,
+                // therefore use multiplyDotCount.
+                // Count those using multiplyIndex.)
+            }
+            
+            // print end of line
             result.append(";\n");
 
             ++dotCount;
@@ -398,21 +522,24 @@ public class GAPPOpenCLVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor
         // last step directly assigns to destination
         result.append(bladeCoeff);
         result.append(" = ");
-        result.append(GAPPOpenCLCodeGenerator.dot).append(dotCount).append(lo);
+        result.append(GAPPOpenCLCodeGenerator.dot).append(dotCount).append("_0").append(lo);
         result.append(" + ");
-        result.append(GAPPOpenCLCodeGenerator.dot).append(dotCount).append(hi);
+        result.append(GAPPOpenCLCodeGenerator.dot).append(dotCount).append("_0").append(hi);
         result.append(";\n");
         ++dotCount;
         
         return null;
     }
     
-    public void visitDotVectorsParallelMultiply(GAPPDotVectors gappDotVectors) {
+    public void visitDotVectorsParallelMultiply(GAPPDotVectors gappDotVectors,
+                                                final int subvectorIndex) {
         Iterator<GAPPVector> it = gappDotVectors.getParts().iterator();
         result.append(it.next().getName());
+        result.append("_").append(subvectorIndex);
         while (it.hasNext()) {
             result.append(" * ");
             result.append(it.next().getName());
+            result.append("_").append(subvectorIndex);
         }
         result.append(";\n");
     }
@@ -455,24 +582,17 @@ public class GAPPOpenCLVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor
     @Override
     public Object visitAssignInputsVector(GAPPAssignInputsVector gappAssignInputsVector, Object arg) {
         final String inputsArrayName = GAPPOpenCLCodeGenerator.getVarName(GAPPOpenCLCodeGenerator.inputsVector);
-        
-        result.append("float ");
-        result.append(inputsArrayName);
-        result.append("[");
-        result.append(gappAssignInputsVector.getValues().size());
-        result.append("];\n");
 
+        // create bladeIndex map
         Map<Integer,String> bladeMap = new HashMap<Integer,String>();
         Iterator<GAPPValueHolder> it = gappAssignInputsVector.getValues().iterator();
         while(it.hasNext()) {
-            final String bladeCoeff = inputsArrayName + "[" + bladeMap.size() + "]";
-            
-            result.append(bladeCoeff).append(" = ");
-            result.append(it.next().prettyPrint());
-            result.append(";\n");
-            bladeMap.put(bladeMap.size(), bladeCoeff);
+            // instead of explicitly declaring the inputs vector
+            // just put the elements into the bladeIndex map
+            bladeMap.put(bladeMap.size(), it.next().prettyPrint());
         }
 
+        // add bladeIndex map to multivector->bladeIndex map
         mvBladeMap.put(inputsArrayName,bladeMap);
 
         return null;
