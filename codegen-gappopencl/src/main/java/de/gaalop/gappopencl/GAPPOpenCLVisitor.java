@@ -25,6 +25,7 @@ import de.gaalop.gapp.variables.GAPPMultivectorComponent;
 import de.gaalop.gapp.variables.GAPPScalarVariable;
 import de.gaalop.gapp.variables.GAPPValueHolder;
 import de.gaalop.gapp.variables.GAPPVector;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -135,12 +136,29 @@ public class GAPPOpenCLVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor
         // get destVecBase
         final String destVecBase = GAPPOpenCLCodeGenerator.getVarName(gappSetVector.getDestination().getName());
 
+        // collect all entries as string
+        ArrayList<String> entries = new ArrayList<String>();
+        Iterator<SetVectorArgument> itSetVectorArg = gappSetVector.getEntries().iterator();
+        while(itSetVectorArg.hasNext()) {
+            final SetVectorArgument setVectorArg = itSetVectorArg.next();
+            
+            if(setVectorArg.isConstant())
+                entries.add(String.valueOf(((ConstantSetVectorArgument)setVectorArg).getValue()));
+            else {
+                PairSetOfVariablesAndIndices pair = (PairSetOfVariablesAndIndices)setVectorArg;
+
+                // get a fresh selector iterator
+                Iterator<Selector> itSelector = pair.getSelectors().iterator();
+                // get all entries from selectors
+                while (itSelector.hasNext())
+                    entries.add(visitSelector(itSelector.next(),
+                                              GAPPOpenCLCodeGenerator.getVarName(pair.getSetOfVariable().getName())));
+            }
+        }
+        
         // parallel multiply operation
         Map<Integer,String> bladeMap = new HashMap<Integer,String>();
-        Iterator<SetVectorArgument> itSetVectorArg = gappSetVector.getEntries().iterator();
-        Iterator<Selector> itSelector = null;
-        SetVectorArgument setVectorArg = itSetVectorArg.next();
-        
+        Iterator<String> itEntries = entries.iterator();
         int vectorSizeRemainder = wholeVectorSize;
         int subvectorIndex = 0;
         int bladeGlobalIndex = 0;
@@ -160,20 +178,15 @@ public class GAPPOpenCLVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor
 
             // print entries
             int bladeLocalIndex = 0;
-            if(itSetVectorArg.hasNext()) {
-                bladeLocalIndex = visitSetVectorArg(itSetVectorArg,
-                                                    itSelector,
-                                                    setVectorArg,
-                                                    bladeLocalIndex,
-                                                    openCLVectorSize);
+            // print first entry
+            if(itEntries.hasNext()) {
+                result.append(itEntries.next());
+                ++bladeLocalIndex;
             }
-            while(bladeLocalIndex < openCLVectorSize && itSetVectorArg.hasNext()) {
+            // print further entries
+            while(bladeLocalIndex++ < openCLVectorSize && itEntries.hasNext()) {
                 result.append(",");
-                bladeLocalIndex = visitSetVectorArg(itSetVectorArg,
-                                                    itSelector,
-                                                    setVectorArg,
-                                                    bladeLocalIndex,
-                                                    openCLVectorSize);
+                result.append(itEntries.next());
             }
 
             // fill remaining vector space with zeros
@@ -205,52 +218,22 @@ public class GAPPOpenCLVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor
             result.append(openCLVectorSize);
     }
 
-    protected int visitSetVectorArg(Iterator<SetVectorArgument> itSetVectorArg,
-                                    Iterator<Selector> itSelector,
-                                    SetVectorArgument setVectorArg,
-                                    int bladeLocalIndex, final int openCLVectorSize) {
-        if(setVectorArg.isConstant())
-            result.append(((ConstantSetVectorArgument)setVectorArg).getValue());
-        else {
-            PairSetOfVariablesAndIndices pair = (PairSetOfVariablesAndIndices)setVectorArg;
-            
-            if(itSelector == null || !itSelector.hasNext()) {
-                // switch to next vector arg if no more selectors
-                if(!itSelector.hasNext())
-                    pair = (PairSetOfVariablesAndIndices)(setVectorArg = itSetVectorArg.next());
-                
-                // get a fresh selector iterator
-                itSelector = pair.getSelectors().iterator();
-            }
-            
-            // visit first selector
-            if(bladeLocalIndex < openCLVectorSize && itSelector.hasNext()) {
-                visitSelector(itSelector.next(), GAPPOpenCLCodeGenerator.getVarName(pair.getSetOfVariable().getName()));
-                ++bladeLocalIndex;
-            }
-            // visit further selectors
-            while (bladeLocalIndex < openCLVectorSize && itSelector.hasNext()) {
-                result.append(",");
-                visitSelector(itSelector.next(), GAPPOpenCLCodeGenerator.getVarName(pair.getSetOfVariable().getName()));
-                ++bladeLocalIndex;
-            }
-        }
+    protected String visitSelector(final Selector sel, final String sourceName) {
+        StringBuilder out = new StringBuilder();
         
-        return bladeLocalIndex;
-    }
-
-    protected void visitSelector(final Selector sel, final String sourceName) {
         if (sel.getSign() < 0)
-            result.append("-");
+            out.append("-");
         final String lookupBladeCoeff = mvBladeMap.get(sourceName).get(sel.getIndex());
         if(lookupBladeCoeff == null) {
             if(sourceName.equals("1.0"))
-                result.append("1");
+                out.append("1");
             else
-                result.append(sourceName);
+                out.append(sourceName);
         }
         else
-            result.append(lookupBladeCoeff);
+            out.append(lookupBladeCoeff);
+        
+        return out.toString();
     }
 
     @Override
