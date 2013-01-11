@@ -103,7 +103,7 @@ public class CompressedVisitor extends de.gaalop.cpp.CppVisitor {
         }
 
         appendIndentation();
-        node.getVariable().accept(new DetourVisitor());
+        node.getVariable().accept(new MultivectorComponentWriteVisitor());
         code.append(" = ");
         node.getValue().accept(this);
         code.append(";\n");
@@ -113,6 +113,8 @@ public class CompressedVisitor extends de.gaalop.cpp.CppVisitor {
 
     @Override
     public void visit(MultivectorComponent component) {
+        // this method is for reading multivector components
+        
         // get blade pos in array
         final String name = component.getName().replace(suffix, "");
         final int pos = mvBladeMap.get(name).get(component.getBladeIndex());
@@ -120,22 +122,29 @@ public class CompressedVisitor extends de.gaalop.cpp.CppVisitor {
         // standard definition
         code.append(name);
         if(mvSizes.get(name) > 1)
-            code.append('[' + pos + ']');
+            code.append("[" + pos + "]");
     }
 
-    protected class DetourVisitor implements de.gaalop.dfg.ExpressionVisitor {
+    // this visitor is for writing to multivector components
+    protected class MultivectorComponentWriteVisitor implements de.gaalop.dfg.ExpressionVisitor {
 
         @Override
         public void visit(MultivectorComponent component) {
+            // this method is for writing to multivector components
+            
             // get blade pos in array
             final String name = component.getName().replace(suffix, "");
             Map<Integer,Integer> bladeMap = mvBladeMap.get(component.getName());
             if(bladeMap == null)
                 bladeMap = new HashMap<Integer, Integer>();
             final int pos = bladeMap.size();
+            
+            // determine component name
+            String componentName = name;
+            if(mvSizes.get(name) > 1)
+                componentName += "[" + pos + "]";
 
             // GPC definition
-            final String componentName = name + '[' + pos + ']';
             if (gpcMetaInfo) {
                 code.append("//#pragma gpc multivector_component ");
                 code.append(component.getName());
