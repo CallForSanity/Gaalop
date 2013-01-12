@@ -21,6 +21,7 @@ public class GAPPTestCreator {
         beginTestCase();
 
         // =============== insert new tests here ======================
+        test("DotProductCollector");
         test("Circle");
         test("GPS");
         test("Paper");
@@ -28,6 +29,7 @@ public class GAPPTestCreator {
         test("Paper3");
         test("MoreVector");
         test("Paper3d");
+        
 
         endTestCase();
     }

@@ -9,6 +9,19 @@ import static org.junit.Assert.*;
 
 public class GAPPTest extends Base {
 @Test
+public void testDotProductCollector() {
+        try {
+            DotProductCollector c = new DotProductCollector();
+            Executer executer = executeProgram(c, "DotProductCollector");
+            c.testOutput(executer);
+        } catch (OptimizationException ex) {
+            assertTrue("Optimization Error", false);
+        } catch (CodeParserException ex) {
+             assertTrue("Code Parse Error", false);
+        }
+}
+
+@Test
 public void testCircle() {
         try {
             Circle c = new Circle();

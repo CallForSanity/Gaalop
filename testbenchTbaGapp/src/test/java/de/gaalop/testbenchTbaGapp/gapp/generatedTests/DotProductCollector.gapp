@@ -1,0 +1,118 @@
+//s1[1] = -(inputsVector[3])
+assignInputsVector inputsVector = [L1,L2,L3,x1,x2,x3,y1,y2,y3];
+resetMv s1[32];
+setMv s1[1,2] = inputsVector[-3,-6];
+
+//s1[2] = -(inputsVector[6])
+
+//s1[4] = -((0.5 * ((inputsVector[3] * inputsVector[3]) + (inputsVector[6] * inputsVector[6]))) - ((0.5 * inputsVector[0]) * inputsVector[0]))
+resetMv tempmv0[1];
+setVector ve1 = {inputsVector[3,6]};
+setVector ve2 = {inputsVector[3,6]};
+dotVectors tempmv0[0] = <ve1,ve2>;
+resetMv tempmv3[1];
+setVector ve4 = {0.5,-0.5};
+setVector ve5 = {tempmv0[0],inputsVector[0]};
+setVector ve6 = {1.0,inputsVector[0]};
+dotVectors tempmv3[0] = <ve4,ve5,ve6>;
+setMv s1[4] = tempmv3[-0];
+
+//s2[1] = -(inputsVector[4])
+resetMv s2[32];
+setMv s2[1,2] = inputsVector[-4,-7];
+
+//s2[2] = -(inputsVector[7])
+
+//s2[4] = -((0.5 * ((inputsVector[4] * inputsVector[4]) + (inputsVector[7] * inputsVector[7]))) - ((0.5 * inputsVector[1]) * inputsVector[1]))
+resetMv tempmv7[1];
+setVector ve8 = {inputsVector[4,7]};
+setVector ve9 = {inputsVector[4,7]};
+dotVectors tempmv7[0] = <ve8,ve9>;
+resetMv tempmv10[1];
+setVector ve11 = {0.5,-0.5};
+setVector ve12 = {tempmv7[0],inputsVector[1]};
+setVector ve13 = {1.0,inputsVector[1]};
+dotVectors tempmv10[0] = <ve11,ve12,ve13>;
+setMv s2[4] = tempmv10[-0];
+
+//s3[1] = -(inputsVector[5])
+resetMv s3[32];
+setMv s3[1,2] = inputsVector[-5,-8];
+
+//s3[2] = -(inputsVector[8])
+
+//s3[4] = -((0.5 * ((inputsVector[5] * inputsVector[5]) + (inputsVector[8] * inputsVector[8]))) - ((0.5 * inputsVector[2]) * inputsVector[2]))
+resetMv tempmv14[1];
+setVector ve15 = {inputsVector[5,8]};
+setVector ve16 = {inputsVector[5,8]};
+dotVectors tempmv14[0] = <ve15,ve16>;
+resetMv tempmv17[1];
+setVector ve18 = {0.5,-0.5};
+setVector ve19 = {tempmv14[0],inputsVector[2]};
+setVector ve20 = {1.0,inputsVector[2]};
+dotVectors tempmv17[0] = <ve18,ve19,ve20>;
+setMv s3[4] = tempmv17[-0];
+
+//Pp[7] = ((-((s1[2] * s2[4]) + (-(s1[4] * s2[2])))) + (-(((-(s1[2])) + s2[2]) * s3[4]))) + (((-(s1[4])) + s2[4]) * s3[2])
+resetMv Pp[32];
+resetMv tempmv21[1];
+resetMv tempmv22[1];
+setVector ve23 = {s1[-2],s2[2]};
+dotVectors tempmv22[0] = <ve23>;
+setMv tempmv21[0] = tempmv22[-0];
+resetMv tempmv24[1];
+setVector ve25 = {s1[-4],s2[4]};
+dotVectors tempmv24[0] = <ve25>;
+setVector ve26 = {s1[-2,4],tempmv21[0],tempmv24[0]};
+setVector ve27 = {s2[4,2],s3[4,2]};
+dotVectors Pp[7] = <ve26,ve27>;
+
+//Pp[10] = -(((-((s1[1] * s2[4]) + (-(s1[4] * s2[1])))) + (-(((-(s1[1])) + s2[1]) * s3[4]))) + (((-(s1[4])) + s2[4]) * s3[1]))
+resetMv tempmv28[1];
+resetMv tempmv29[1];
+setVector ve30 = {s1[-1],s2[1]};
+dotVectors tempmv29[0] = <ve30>;
+setMv tempmv28[0] = tempmv29[-0];
+resetMv tempmv31[1];
+setVector ve32 = {s1[-4],s2[4]};
+dotVectors tempmv31[0] = <ve32>;
+resetMv tempmv33[1];
+setVector ve34 = {s1[-1,4],tempmv28[0],tempmv31[0]};
+setVector ve35 = {s2[4,1],s3[4,1]};
+dotVectors tempmv33[0] = <ve34,ve35>;
+setMv Pp[10] = tempmv33[-0];
+
+//Pp[13] = -(((((s1[1] * s2[2]) + (-(s1[2] * s2[1]))) * s3[4]) + (-(((s1[1] * s2[4]) + (-(s1[4] * s2[1]))) * s3[2]))) + (((s1[2] * s2[4]) + (-(s1[4] * s2[2]))) * s3[1]))
+resetMv tempmv36[1];
+setVector ve37 = {s1[1,-2]};
+setVector ve38 = {s2[2,1]};
+dotVectors tempmv36[0] = <ve37,ve38>;
+resetMv tempmv39[1];
+resetMv tempmv40[1];
+setVector ve41 = {s1[1,-4]};
+setVector ve42 = {s2[4,1]};
+dotVectors tempmv40[0] = <ve41,ve42>;
+setMv tempmv39[0] = tempmv40[-0];
+resetMv tempmv43[1];
+setVector ve44 = {s1[2,-4]};
+setVector ve45 = {s2[4,2]};
+dotVectors tempmv43[0] = <ve44,ve45>;
+resetMv tempmv46[1];
+setVector ve47 = {tempmv36[0],tempmv39[0],tempmv43[0]};
+setVector ve48 = {s3[4,2,1]};
+dotVectors tempmv46[0] = <ve47,ve48>;
+setMv Pp[13] = tempmv46[-0];
+
+//Pp[14] = ((-((s1[1] * s2[2]) + (-(s1[2] * s2[1])))) + (-(((-(s1[1])) + s2[1]) * s3[2]))) + (((-(s1[2])) + s2[2]) * s3[1])
+resetMv tempmv49[1];
+resetMv tempmv50[1];
+setVector ve51 = {s1[-1],s2[1]};
+dotVectors tempmv50[0] = <ve51>;
+setMv tempmv49[0] = tempmv50[-0];
+resetMv tempmv52[1];
+setVector ve53 = {s1[-2],s2[2]};
+dotVectors tempmv52[0] = <ve53>;
+setVector ve54 = {s1[-1,2],tempmv49[0],tempmv52[0]};
+setVector ve55 = {s2[2,1],s3[2,1]};
+dotVectors Pp[14] = <ve54,ve55>;
+
