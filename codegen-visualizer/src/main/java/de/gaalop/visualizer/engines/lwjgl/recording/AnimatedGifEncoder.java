@@ -179,6 +179,7 @@ public class AnimatedGifEncoder {
    * OutputStream, the stream is not closed.
    */
   public boolean finish() {
+    closeStream = true;
     if (!started)
       return false;
     boolean ok = true;
