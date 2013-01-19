@@ -24,51 +24,11 @@ public class RayMethod extends ZeroFinder {
     private HashMap<String, LinkedList<Point3d>> points;
 
     private LinkedList<AssignmentNode> nodes;
-
-    @Override
-    public HashMap<String, LinkedList<Point3d>> findZeroLocations(HashMap<MultivectorComponent, Double> globalValues, boolean findOnlyIn2d) {
-        points = new HashMap<String, LinkedList<Point3d>>();
-        LinkedList<Point3d> list = new LinkedList<Point3d>();
-        list.add(new Point3d(1,0,0));
-        /*
-        float a = cubeEdgeLength;
-        float dist = density;
-        
-        int processorCount = Runtime.getRuntime().availableProcessors();
-        
-        RayMethodThread[] threads = new RayMethodThread[processorCount];
-        for (int i=0;i<processorCount;i++) {
-            float from = (i*2*a)/((float) processorCount) - a;
-            float to = ((i != processorCount-1) ? ((i+1)*2*a)/((float) processorCount) : 2*a) - a; 
-
-            threads[i] = new RayMethodThread(from, to, a, dist, null, globalValues, nodes, findOnlyIn2d); //TODO in
-            threads[i].start();
-        }
-
-        
-        for (int i=0;i<threads.length;i++) {
-            try {
-                threads[i].join();
-                for (String point: threads[i].points.keySet()) {
-                    if (!points.containsKey(point))
-                        points.put(point, threads[i].points.get(point));
-                    else 
-                        points.get(point).addAll(threads[i].points.get(point));
-                }
-            } catch (InterruptedException ex) {
-                Logger.getLogger(DiscreteCubeMethod.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-        */
-        points.put("_V_PRODUCT0_S", list);
-        return points;
-    }
-    
-    
+    /*
     //return PRODUCT_S Multivector names
     @Override
     public void prepareGraph(ControlFlowGraph graph) {
-        /*
+        
         //replace x=ox+t,y=oy,z=oz
         CFGReplaceVisitor replacer = new CFGReplaceVisitor(new ReplaceVisitor() {
 
@@ -137,8 +97,51 @@ public class RayMethod extends ZeroFinder {
         } catch (RecognitionException ex) {
             Logger.getLogger(RayMethod.class.getName()).log(Level.SEVERE, null, ex);
         }
-         */
+         
     }
+*/
+    @Override
+    public HashMap<String, LinkedList<Point3d>> findZeroLocations(HashMap<MultivectorComponent, Double> globalValues, LinkedList<AssignmentNode> assignmentNodes) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+    
+    
+/*
+    @Override
+    public HashMap<String, LinkedList<Point3d>> findZeroLocations(HashMap<MultivectorComponent, Double> globalValues, boolean findOnlyIn2d) {
+        points = new HashMap<String, LinkedList<Point3d>>();
+        float a = cubeEdgeLength;
+        float dist = density;
+        
+        int processorCount = Runtime.getRuntime().availableProcessors();
+        
+        RayMethodThread[] threads = new RayMethodThread[processorCount];
+        for (int i=0;i<processorCount;i++) {
+            float from = (i*2*a)/((float) processorCount) - a;
+            float to = ((i != processorCount-1) ? ((i+1)*2*a)/((float) processorCount) : 2*a) - a; 
+
+            threads[i] = new RayMethodThread(from, to, a, dist, null, globalValues, nodes, findOnlyIn2d); //TODO in
+            threads[i].start();
+        }
+
+        
+        for (int i=0;i<threads.length;i++) {
+            try {
+                threads[i].join();
+                for (String point: threads[i].points.keySet()) {
+                    if (!points.containsKey(point))
+                        points.put(point, threads[i].points.get(point));
+                    else 
+                        points.get(point).addAll(threads[i].points.get(point));
+                }
+            } catch (InterruptedException ex) {
+                Logger.getLogger(DiscreteCubeMethod.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+        return points;
+    }
+    */
     
     @Override
     public boolean isPositionVariable(String name) {

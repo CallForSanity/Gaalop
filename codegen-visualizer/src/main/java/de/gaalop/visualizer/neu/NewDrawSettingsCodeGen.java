@@ -145,7 +145,13 @@ public class NewDrawSettingsCodeGen extends DrawSettings implements CodeGenerato
             @Override
             public void run() {
                 long start = System.currentTimeMillis();
-                HashMap<String, LinkedList<Point3d>> pointsToRender = curZeroFinder.findZeroLocations(globalValues, false);
+                
+                //Copy List
+                LinkedList<AssignmentNode> list = new LinkedList<AssignmentNode>();
+                for (AssignmentNode node: graphAssignmentNodes) 
+                    list.add(node.copyElements());
+        
+                HashMap<String, LinkedList<Point3d>> pointsToRender = curZeroFinder.findZeroLocations(globalValues, list);
                 
                 long sum = 0;
                 for (String key : pointsToRender.keySet()) {

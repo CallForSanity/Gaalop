@@ -4,13 +4,14 @@ import de.gaalop.cfg.AssignmentNode;
 import de.gaalop.cfg.EmptyControlFlowVisitor;
 import de.gaalop.dfg.*;
 import java.util.HashMap;
+import java.util.LinkedList;
 
 
 /**
  * Evaluates the control flow graph in double precision
  * @author Christian Steinmetz
  */
-public class Evaluater extends EmptyControlFlowVisitor implements ExpressionVisitor {
+public class Evaluater implements ExpressionVisitor {
 
     private HashMap<MultivectorComponent, Double> values;
     
@@ -130,11 +131,9 @@ public class Evaluater extends EmptyControlFlowVisitor implements ExpressionVisi
         result = node.getValue();
     }
 
-    @Override
     public void visit(AssignmentNode node) {
         node.getValue().accept(this);
         values.put((MultivectorComponent) node.getVariable(), result);
-        super.visit(node);
     }
 
     @Override
@@ -204,6 +203,11 @@ public class Evaluater extends EmptyControlFlowVisitor implements ExpressionVisi
     @Override
     public void visit(InnerProduct node) {
         throw new UnsupportedOperationException("Inner products should have been removed by TBA.");
+    }
+
+    public void evaluate(LinkedList<AssignmentNode> assignmentNodes) {
+        for (AssignmentNode node: assignmentNodes) 
+            visit(node);
     }
 
 }

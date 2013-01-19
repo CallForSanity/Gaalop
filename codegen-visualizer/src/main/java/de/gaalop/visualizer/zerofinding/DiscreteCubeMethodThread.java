@@ -1,5 +1,6 @@
 package de.gaalop.visualizer.zerofinding;
 
+import de.gaalop.cfg.AssignmentNode;
 import de.gaalop.cfg.ControlFlowGraph;
 import de.gaalop.dfg.MultivectorComponent;
 import de.gaalop.visualizer.Point3d;
@@ -17,21 +18,21 @@ public class DiscreteCubeMethodThread extends Thread {
     private int fromX_Incl;
     private int toX_Excl;
     
-    private int a ;
+    private int a;
     private float dist;
-    private ControlFlowGraph graph;
+    private LinkedList<AssignmentNode> assignmentNodes;
     
     private HashMap<MultivectorComponent, Double> globalValues;
     
     public HashMap<String, LinkedList<Point3d>> points = new HashMap<String, LinkedList<Point3d>>();
 
-    public DiscreteCubeMethodThread(int fromX_Incl, int toX_Excl, int a, float dist, HashMap<MultivectorComponent, Double> globalValues, ControlFlowGraph graph) {
+    public DiscreteCubeMethodThread(int fromX_Incl, int toX_Excl, int a, float dist, HashMap<MultivectorComponent, Double> globalValues, LinkedList<AssignmentNode> assignmentNodes) {
         this.fromX_Incl = fromX_Incl;
         this.toX_Excl = toX_Excl;
         this.a = a;
         this.dist = dist;
         this.globalValues = globalValues;
-        this.graph = graph;
+        this.assignmentNodes = assignmentNodes;
     }
     
     @Override
@@ -51,7 +52,7 @@ public class DiscreteCubeMethodThread extends Thread {
                     values.put(new MultivectorComponent("_V_Z", 0), p.z);
 
                     Evaluater evaluater = new Evaluater(values);
-                    graph.accept(evaluater);
+                    evaluater.evaluate(assignmentNodes);
 
                     HashMap<String, Double> squaredAndSummedValues = new HashMap<String, Double>();
                     for (MultivectorComponent mvC : values.keySet()) {

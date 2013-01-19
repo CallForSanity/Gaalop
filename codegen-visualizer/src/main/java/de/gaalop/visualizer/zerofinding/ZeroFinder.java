@@ -29,10 +29,8 @@ public abstract class ZeroFinder {
         in.accept(collector);
         graphNodes = collector.getAssignmentNodes();
     }
-
-    public abstract void prepareGraph(ControlFlowGraph in);
     
-    public abstract HashMap<String, LinkedList<Point3d>> findZeroLocations(HashMap<MultivectorComponent, Double> globalValues, boolean findOnlyIn2d);
+    public abstract HashMap<String, LinkedList<Point3d>> findZeroLocations(HashMap<MultivectorComponent, Double> globalValues, LinkedList<AssignmentNode> assignmentNodes);
 
     public abstract boolean isPositionVariable(String name);
 

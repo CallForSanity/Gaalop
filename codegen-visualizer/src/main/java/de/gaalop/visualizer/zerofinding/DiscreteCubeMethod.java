@@ -1,6 +1,6 @@
 package de.gaalop.visualizer.zerofinding;
 
-import de.gaalop.cfg.ControlFlowGraph;
+import de.gaalop.cfg.AssignmentNode;
 import de.gaalop.dfg.MultivectorComponent;
 import de.gaalop.visualizer.Point3d;
 import java.util.HashMap;
@@ -15,7 +15,21 @@ import java.util.logging.Logger;
 public class DiscreteCubeMethod extends ZeroFinder {
 
     @Override
-    public HashMap<String, LinkedList<Point3d>> findZeroLocations(HashMap<MultivectorComponent, Double> globalValues, boolean findOnlyIn2d) {
+    public boolean isPositionVariable(String name) {
+        if (name.equals("_V_X")) return true;
+        if (name.equals("_V_Y")) return true;
+        if (name.equals("_V_Z")) return true;
+        
+        return false;
+    }
+
+    @Override
+    public boolean isRayMethod() {
+        return false;
+    }
+
+    @Override
+    public HashMap<String, LinkedList<Point3d>> findZeroLocations(HashMap<MultivectorComponent, Double> globalValues, LinkedList<AssignmentNode> assignmentNodes) {
         HashMap<String, LinkedList<Point3d>> points = new HashMap<String, LinkedList<Point3d>>();
 
         int a = (int) cubeEdgeLength;
@@ -28,7 +42,7 @@ public class DiscreteCubeMethod extends ZeroFinder {
             int from = (i*2*a)/processorCount - a;
             int to = ((i != processorCount-1) ? ((i+1)*2*a)/processorCount : 2*a) - a; 
 
-            threads[i] = new DiscreteCubeMethodThread(from, to, a, dist, globalValues, null); //TODO in
+            threads[i] = new DiscreteCubeMethodThread(from, to, a, dist, globalValues, assignmentNodes);
             threads[i].start();
         }
         
@@ -47,24 +61,5 @@ public class DiscreteCubeMethod extends ZeroFinder {
         }
         
         return points;
-    }
-
-    @Override
-    public void prepareGraph(ControlFlowGraph in) {
-        //Do nothing
-    }
-    
-    @Override
-    public boolean isPositionVariable(String name) {
-        if (name.equals("_V_X")) return true;
-        if (name.equals("_V_Y")) return true;
-        if (name.equals("_V_Z")) return true;
-        
-        return false;
-    }
-
-    @Override
-    public boolean isRayMethod() {
-        return false;
     }
 }
