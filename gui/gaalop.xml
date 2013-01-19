@@ -18,12 +18,13 @@
 <entry key="lastUsedGenerator">de.gaalop.visualizer.Plugin</entry>
 <entry key="de.gaalop.clucalc.output.Plugin.suffix">_opt</entry>
 <entry key="de.gaalop.gappopencl.Plugin.standalone">true</entry>
-<entry key="de.gaalop.tba.Plugin.optOneExpressionRemoval">true</entry>
 <entry key="de.gaalop.visualizer.Plugin.lwJglNativePath">C:\Libs\lwjgl\native\windows</entry>
+<entry key="de.gaalop.tba.Plugin.optOneExpressionRemoval">true</entry>
 <entry key="de.gaalop.maple.Plugin.constantFolding">false</entry>
 <entry key="de.gaalop.tba.Plugin.optInserting">true</entry>
+<entry key="de.gaalop.globalSettings.Plugin.optMaxima">false</entry>
 <entry key="de.gaalop.compressed.Plugin.standalone">false</entry>
+<entry key="de.gaalop.globalSettings.Plugin.maximaCommand">C:\Program Files (x86)\Maxima\bin\maxima.bat</entry>
 <entry key="de.gaalop.maple.Plugin.useCodeSegmenter">false</entry>
 <entry key="lastUsedAlgebraRessource">true</entry>
-<entry key="de.gaalop.visualizer.Plugin.zeroFindingMethod">Ray method</entry>
 </properties>

@@ -32,7 +32,7 @@ public class RayMethod extends ZeroFinder {
     }
 
     @Override
-    public HashMap<String, LinkedList<Point3d>> findZeroLocations(ControlFlowGraph in, HashMap<MultivectorComponent, Double> globalValues, boolean findOnlyIn2d) {
+    public HashMap<String, LinkedList<Point3d>> findZeroLocations(HashMap<MultivectorComponent, Double> globalValues, boolean findOnlyIn2d) {
         points = new HashMap<String, LinkedList<Point3d>>();
         
         float a = cubeEdgeLength;

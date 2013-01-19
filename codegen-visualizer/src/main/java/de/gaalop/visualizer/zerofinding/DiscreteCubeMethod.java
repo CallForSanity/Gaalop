@@ -15,7 +15,7 @@ import java.util.logging.Logger;
 public class DiscreteCubeMethod extends ZeroFinder {
 
     @Override
-    public HashMap<String, LinkedList<Point3d>> findZeroLocations(ControlFlowGraph in, HashMap<MultivectorComponent, Double> globalValues, boolean findOnlyIn2d) {
+    public HashMap<String, LinkedList<Point3d>> findZeroLocations(HashMap<MultivectorComponent, Double> globalValues, boolean findOnlyIn2d) {
         HashMap<String, LinkedList<Point3d>> points = new HashMap<String, LinkedList<Point3d>>();
 
         int a = (int) cubeEdgeLength;

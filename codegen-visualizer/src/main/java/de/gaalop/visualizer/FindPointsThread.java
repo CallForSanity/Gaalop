@@ -1,6 +1,5 @@
 package de.gaalop.visualizer;
 
-import de.gaalop.visualizer.gui.DrawSettingsCodeGen;
 import de.gaalop.dfg.MultivectorComponent;
 import java.util.HashMap;
 import java.util.LinkedList;

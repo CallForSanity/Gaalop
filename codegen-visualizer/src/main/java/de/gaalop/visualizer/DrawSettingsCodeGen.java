@@ -1,4 +1,4 @@
-package de.gaalop.visualizer.gui;
+package de.gaalop.visualizer;
 
 import de.gaalop.CodeGenerator;
 import de.gaalop.CodeGeneratorException;
@@ -10,6 +10,10 @@ import de.gaalop.visualizer.*;
 import de.gaalop.visualizer.engines.lwjgl.LwJglRenderingEngine2;
 import de.gaalop.visualizer.engines.lwjgl.RenderingEngine;
 import de.gaalop.visualizer.engines.lwjgl.SimpleLwJglRenderingEngine;
+import de.gaalop.visualizer.gui.DrawSettings;
+import de.gaalop.visualizer.gui.InputsPanel;
+import de.gaalop.visualizer.gui.SettingsPanel;
+import de.gaalop.visualizer.gui.VisiblePanel;
 import de.gaalop.visualizer.zerofinding.DiscreteCubeMethod;
 import de.gaalop.visualizer.zerofinding.RayMethod;
 import de.gaalop.visualizer.zerofinding.ZeroFinder;
