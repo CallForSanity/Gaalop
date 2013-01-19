@@ -16,8 +16,13 @@ public abstract class ZeroFinder {
     
     public float cubeEdgeLength = 5f;
     public float density = 0.1f;
+    protected String maximaCommand;
     
     public LinkedList<AssignmentNode> graphNodes;
+    
+    public void setMaximaCommand(String maximaCommand) {
+        this.maximaCommand = maximaCommand;
+    }
     
     public final void loadGraph(ControlFlowGraph in) {
         AssignmentNodeCollector collector = new AssignmentNodeCollector();
@@ -30,5 +35,7 @@ public abstract class ZeroFinder {
     public abstract HashMap<String, LinkedList<Point3d>> findZeroLocations(HashMap<MultivectorComponent, Double> globalValues, boolean findOnlyIn2d);
 
     public abstract boolean isPositionVariable(String name);
+
+    public abstract boolean isRayMethod();
 
 }

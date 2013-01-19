@@ -22,19 +22,15 @@ import org.antlr.runtime.RecognitionException;
 public class RayMethod extends ZeroFinder {
 
     private HashMap<String, LinkedList<Point3d>> points;
-    
-    private String maximaCommand;
-    
-    private LinkedList<AssignmentNode> nodes;
 
-    public RayMethod(String maximaCommand) {
-        this.maximaCommand = maximaCommand;
-    }
+    private LinkedList<AssignmentNode> nodes;
 
     @Override
     public HashMap<String, LinkedList<Point3d>> findZeroLocations(HashMap<MultivectorComponent, Double> globalValues, boolean findOnlyIn2d) {
         points = new HashMap<String, LinkedList<Point3d>>();
-        
+        LinkedList<Point3d> list = new LinkedList<Point3d>();
+        list.add(new Point3d(1,0,0));
+        /*
         float a = cubeEdgeLength;
         float dist = density;
         
@@ -45,7 +41,7 @@ public class RayMethod extends ZeroFinder {
             float from = (i*2*a)/((float) processorCount) - a;
             float to = ((i != processorCount-1) ? ((i+1)*2*a)/((float) processorCount) : 2*a) - a; 
 
-            threads[i] = new RayMethodThread(from, to, a, dist, in, globalValues, nodes, findOnlyIn2d);
+            threads[i] = new RayMethodThread(from, to, a, dist, null, globalValues, nodes, findOnlyIn2d); //TODO in
             threads[i].start();
         }
 
@@ -63,8 +59,8 @@ public class RayMethod extends ZeroFinder {
                 Logger.getLogger(DiscreteCubeMethod.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        
-        
+        */
+        points.put("_V_PRODUCT0_S", list);
         return points;
     }
     
@@ -72,6 +68,7 @@ public class RayMethod extends ZeroFinder {
     //return PRODUCT_S Multivector names
     @Override
     public void prepareGraph(ControlFlowGraph graph) {
+        /*
         //replace x=ox+t,y=oy,z=oz
         CFGReplaceVisitor replacer = new CFGReplaceVisitor(new ReplaceVisitor() {
 
@@ -129,7 +126,7 @@ public class RayMethod extends ZeroFinder {
         MaximaDifferentiater differentiater = new MaximaDifferentiater();
         LinkedList<AssignmentNode> derived;
         try {
-            derived = differentiater.differentiate(nodes, maximaCommand);
+            derived = differentiater.differentiate(nodes, maximaCommand, "_V_t");
             ListIterator<AssignmentNode> listIt = nodes.listIterator();
             for (AssignmentNode d: derived) {
                 d.setVariable(new MultivectorComponent(d.getVariable().getName()+"D", 0));
@@ -140,6 +137,7 @@ public class RayMethod extends ZeroFinder {
         } catch (RecognitionException ex) {
             Logger.getLogger(RayMethod.class.getName()).log(Level.SEVERE, null, ex);
         }
+         */
     }
     
     @Override
@@ -149,6 +147,11 @@ public class RayMethod extends ZeroFinder {
         if (name.equals("_V_Z")) return true;
         
         return false;
+    }
+
+    @Override
+    public boolean isRayMethod() {
+        return true;
     }
     
 }

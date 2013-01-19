@@ -28,7 +28,7 @@ public class DiscreteCubeMethod extends ZeroFinder {
             int from = (i*2*a)/processorCount - a;
             int to = ((i != processorCount-1) ? ((i+1)*2*a)/processorCount : 2*a) - a; 
 
-            threads[i] = new DiscreteCubeMethodThread(from, to, a, dist, globalValues, in);
+            threads[i] = new DiscreteCubeMethodThread(from, to, a, dist, globalValues, null); //TODO in
             threads[i].start();
         }
         
@@ -60,6 +60,11 @@ public class DiscreteCubeMethod extends ZeroFinder {
         if (name.equals("_V_Y")) return true;
         if (name.equals("_V_Z")) return true;
         
+        return false;
+    }
+
+    @Override
+    public boolean isRayMethod() {
         return false;
     }
 }
