@@ -85,7 +85,7 @@ public class RayMethod extends ZeroFinder {
                 Expression sumOfSquares = null; 
                 
                 for (AssignmentNode node: collect.get(s)) {
-                    Expression square = new Multiplication(node.getValue(), node.getValue().copy());
+                    Expression square = new Exponentiation(node.getValue(), new FloatConstant(2));
                     
                     if (sumOfSquares == null) 
                         sumOfSquares = square;
