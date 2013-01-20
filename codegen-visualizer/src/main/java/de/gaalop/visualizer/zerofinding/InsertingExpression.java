@@ -1,9 +1,6 @@
 package de.gaalop.visualizer.zerofinding;
 
 import de.gaalop.cfg.AssignmentNode;
-import de.gaalop.cfg.ControlFlowGraph;
-import de.gaalop.cfg.EmptyControlFlowVisitor;
-import de.gaalop.dfg.Addition;
 import de.gaalop.dfg.Expression;
 import de.gaalop.dfg.MultivectorComponent;
 import de.gaalop.dfg.Variable;

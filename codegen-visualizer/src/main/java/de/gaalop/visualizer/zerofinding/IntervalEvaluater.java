@@ -1,7 +1,6 @@
 package de.gaalop.visualizer.zerofinding;
 
 import de.gaalop.cfg.AssignmentNode;
-import de.gaalop.cfg.EmptyControlFlowVisitor;
 import de.gaalop.dfg.*;
 import de.gaalop.visualizer.ia_math.IAMath;
 import de.gaalop.visualizer.ia_math.RealInterval;

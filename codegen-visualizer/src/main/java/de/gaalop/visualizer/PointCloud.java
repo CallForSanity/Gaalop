@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import org.jdom.Element;
 
 /**
- * Implements a point cloud and common operations on point clouds
+ * Implements a point cloud and common operations on point clouds like loading and saving from/to XML Element
  * @author Christian Steinmetz
  */
 public class PointCloud {

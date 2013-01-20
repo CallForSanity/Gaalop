@@ -5,7 +5,6 @@ import de.gaalop.CodeGeneratorPlugin;
 import de.gaalop.ConfigurationProperty;
 import de.gaalop.ConfigurationProperty.Type;
 import de.gaalop.Notifications;
-import de.gaalop.visualizer.neu.NewDrawSettingsCodeGen;
 import java.awt.Image;
 import java.io.IOException;
 import java.net.URL;

@@ -28,7 +28,7 @@ public abstract class VisiblePanel implements ChangeListener {
      * @param names The names of the objects
      * @param renderingExpressions The expressions of the objects
      */
-    public void setObjects(Set<String> names, HashMap<String, Expression> renderingExpressions,boolean raymethod) {
+    public void setObjects(Set<String> names, HashMap<String, Expression> renderingExpressions) {
         panel.removeAll();
         
         panel.setSize(panel.getWidth(),25*names.size());
@@ -37,7 +37,7 @@ public abstract class VisiblePanel implements ChangeListener {
         boxes.clear();
         for (String input: names) {
             JCheckBox box = 
-                    (raymethod) ? new JCheckBox(renderingExpressions.get(input.substring(0, input.length()-2)).toString(), true) 
+                    (input.endsWith("_S")) ? new JCheckBox(renderingExpressions.get(input.substring(0, input.length()-2)).toString(), true) 
                     : new JCheckBox(renderingExpressions.get(input).toString());
             box.addChangeListener(this);
             boxes.put(box, input);

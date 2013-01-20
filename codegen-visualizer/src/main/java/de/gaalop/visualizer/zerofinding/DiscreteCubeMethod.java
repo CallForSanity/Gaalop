@@ -15,20 +15,6 @@ import java.util.logging.Logger;
 public class DiscreteCubeMethod extends ZeroFinder {
 
     @Override
-    public boolean isPositionVariable(String name) {
-        if (name.equals("_V_X")) return true;
-        if (name.equals("_V_Y")) return true;
-        if (name.equals("_V_Z")) return true;
-        
-        return false;
-    }
-
-    @Override
-    public boolean isRayMethod() {
-        return false;
-    }
-
-    @Override
     public HashMap<String, LinkedList<Point3d>> findZeroLocations(HashMap<MultivectorComponent, Double> globalValues, LinkedList<AssignmentNode> assignmentNodes) {
         HashMap<String, LinkedList<Point3d>> points = new HashMap<String, LinkedList<Point3d>>();
 
@@ -64,7 +50,7 @@ public class DiscreteCubeMethod extends ZeroFinder {
     }
 
     @Override
-    public String toString() {
+    public String getName() {
         return "Discrete Cube Method";
     }
     

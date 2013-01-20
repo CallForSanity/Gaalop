@@ -1,4 +1,4 @@
-package de.gaalop.visualizer.neu;
+package de.gaalop.visualizer;
 
 import de.gaalop.api.cfg.AssignmentNodeCollector;
 import de.gaalop.cfg.AssignmentNode;
@@ -11,7 +11,6 @@ import de.gaalop.OutputFile;
 import de.gaalop.cfg.ControlFlowGraph;
 import de.gaalop.dfg.Expression;
 import de.gaalop.dfg.MultivectorComponent;
-import de.gaalop.visualizer.*;
 import de.gaalop.visualizer.engines.lwjgl.RenderingEngine;
 import de.gaalop.visualizer.engines.lwjgl.SimpleLwJglRenderingEngine;
 import de.gaalop.visualizer.gui.DrawSettings;
@@ -28,8 +27,11 @@ import java.awt.event.ActionListener;
 import java.util.HashMap;
 import javax.swing.JFileChooser;
 import javax.swing.event.ChangeEvent;
+
 /**
- *
+ * Extends the DrawSettings gui by implementing the actions.
+ * Represents a Gaalop CodeGenerator.
+ * 
  * @author Christian Steinmetz
  */
 public class NewDrawSettingsCodeGen extends DrawSettings implements CodeGenerator, Rendering {
@@ -95,7 +97,7 @@ public class NewDrawSettingsCodeGen extends DrawSettings implements CodeGenerato
             }
         });
         
-        //ZeroFinding methods
+        //Add ZeroFinding methods
         LinkedList<ZeroFinder> zerofinderList = new LinkedList<ZeroFinder>();
         ZeroFinder defaultZeroFinder = new GradientMethod();
         zerofinderList.add(defaultZeroFinder);
@@ -109,6 +111,7 @@ public class NewDrawSettingsCodeGen extends DrawSettings implements CodeGenerato
         renderingEngine = new SimpleLwJglRenderingEngine(lwJglNativePath, this);
         renderingEngine.start();
         
+        //extract informations from the graph
         AssignmentNodeCollector collector = new AssignmentNodeCollector();
         in.accept(collector);
         graphAssignmentNodes = collector.getAssignmentNodes();
@@ -117,7 +120,7 @@ public class NewDrawSettingsCodeGen extends DrawSettings implements CodeGenerato
         renderingExpressions = in.getRenderingExpressions();
         colors = ColorEvaluater.getColors(in);
 
-        //Make form visible
+        //Make form visible and relayout it
         setVisible(true);
         setSize(getSize().width+1, getSize().height);
         setSize(getSize().width-1, getSize().height);
@@ -125,6 +128,9 @@ public class NewDrawSettingsCodeGen extends DrawSettings implements CodeGenerato
         return new HashSet<OutputFile>(); 
     }
     
+    /**
+     * Recomputes the point clouds by executing zerofinding methods
+     */
     private void recomputeCommand() {
         computedPointClouds.clear();
         
@@ -169,17 +175,19 @@ public class NewDrawSettingsCodeGen extends DrawSettings implements CodeGenerato
     }
     
     /**
-     * Is called, when finding is finished.
-     * Shows all visible objects in the VisiblePanel
+     * This method is called, when finding has finished.
+     * It shows all visible objects in the VisiblePanel.
      */
     private void findingComplete(long sum, double tokenTime) {
         newDataSetAvailable = true;  
         jLabel_Info.setText(sum + " points, time = "+tokenTime+" s");
-        visiblePanel.setObjects(getDataSet().keySet(), renderingExpressions, getSelectedZeroFinder().isRayMethod());   
+        visiblePanel.setObjects(getDataSet().keySet(), renderingExpressions);   
         renderingEngine.pointSize = settingsPanel.getPointSize();
-        
     }
     
+    /**
+     * Request repainting
+     */
     private void repaintCommand() {
         newDataSetAvailable = true;
     }

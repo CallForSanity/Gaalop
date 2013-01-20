@@ -1,13 +1,11 @@
 package de.gaalop.visualizer.engines.lwjgl;
 
-import de.gaalop.visualizer.Point3d;
 import de.gaalop.visualizer.PointCloud;
 import de.gaalop.visualizer.Rendering;
 import de.gaalop.visualizer.engines.lwjgl.recording.GIFRecorder;
 import de.gaalop.visualizer.engines.lwjgl.recording.Recorder;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -15,7 +13,6 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.GLU;
-
 
 /**
  * Implements a rendering engine based on LwJgl
@@ -51,6 +48,9 @@ public abstract class LwJglRenderingEngine extends RenderingEngine {
         
     }
 
+    /**
+     * Starts the lwjgl engine and shows a window, where the point clouds are rendered
+     */
     public void startEngine() {
         int width = 800;
         int height = 600;
@@ -132,7 +132,12 @@ public abstract class LwJglRenderingEngine extends RenderingEngine {
         Display.destroy();
     }
     
-    void mouseMoved(int x, int y) {
+    /**
+     * Implements the action which is done, when mouse is moved on the lwjgl window
+     * @param x The x coordinate of the position of the mouse
+     * @param y The y coordinate of the position of the mouse
+     */
+    public void mouseMoved(int x, int y) {
         switch (mouseButton) {
             // 1 => rotate
             case 1:
@@ -170,6 +175,13 @@ public abstract class LwJglRenderingEngine extends RenderingEngine {
         mouseY = y;
     }
 
+    /**
+     * Implements the action which is done, when a mouse button is pressed on the lwjgl window
+     * @param button The button which is pressed
+     * @param state The state of the button
+     * @param x The x coordinate of the position of the mouse
+     * @param y The y coordinate of the position of the mouse
+     */
     void mouseAction(int button, int state, int x, int y) {
         switch (button) {
             case 0:
@@ -202,6 +214,12 @@ public abstract class LwJglRenderingEngine extends RenderingEngine {
         }
     }
 
+    /**
+     * Poll all inputs of the keyboard<br>
+     * F3:Start recording
+     * F4:Stop recording
+     * ESC: Close window
+     */
     private void pollInput() {
         
         if (Keyboard.isKeyDown(Keyboard.KEY_F3)) {
@@ -248,6 +266,11 @@ public abstract class LwJglRenderingEngine extends RenderingEngine {
         }
     }
 
+    /**
+     * Changes the size of the lwjgl window
+     * @param w The new width of the lwjgl window
+     * @param h The new height of the lwjgl window
+     */
     private void changeSize(float w, float h) {
         // Prevent a division by zero, when window is too short
         if (h == 0) {
@@ -268,6 +291,12 @@ public abstract class LwJglRenderingEngine extends RenderingEngine {
                 camUp.x, camUp.y, camUp.z);               // Up-direction}
     }
 
+    /**
+     * Implements a float modulo
+     * @param value The float value
+     * @param modulo The modulo value
+     * @return The result of the modulo operation on the float value
+     */
     private float fmod(float value, float modulo) {
         while (value < 0) {
             value += modulo;
@@ -281,6 +310,7 @@ public abstract class LwJglRenderingEngine extends RenderingEngine {
     /**
      * Draws the concrete scene
      * @param clouds The point clouds
+     * @param visibleObjects The visible point clouds
      */
     public abstract void draw(HashMap<String, PointCloud> clouds, HashSet<String> visibleObjects);
     

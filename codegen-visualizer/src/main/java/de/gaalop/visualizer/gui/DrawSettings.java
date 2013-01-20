@@ -199,11 +199,20 @@ public class DrawSettings extends javax.swing.JFrame {
     public javax.swing.JScrollPane jScrollPane_Inputs;
     // End of variables declaration//GEN-END:variables
     
+    /**
+     * Initializes the zerofinding combobox
+     * @param zerofinderList The items of the combobox
+     * @param defaultZeroFinder The default selected zero finder
+     */
     protected void setZerofinderMethods(LinkedList<ZeroFinder> zerofinderList, ZeroFinder defaultZeroFinder) {
         jComboBox_ZerofindingMethod.setModel(new DefaultComboBoxModel(zerofinderList.toArray(new ZeroFinder[0])));
         jComboBox_ZerofindingMethod.setSelectedItem(defaultZeroFinder);
     }
     
+    /**
+     * Retruns the selected zerofinder in the combobox
+     * @return The selected zerofinder
+     */
     protected ZeroFinder getSelectedZeroFinder() {
         return (ZeroFinder) jComboBox_ZerofindingMethod.getSelectedItem();
     }

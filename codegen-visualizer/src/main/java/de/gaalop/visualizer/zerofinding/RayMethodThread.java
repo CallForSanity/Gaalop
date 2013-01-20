@@ -35,22 +35,27 @@ public class RayMethodThread extends Thread {
 
     @Override
     public void run() {
-        HashMap<MultivectorComponent, RealInterval> globalValuesI = new HashMap<MultivectorComponent, RealInterval>();
-                for (MultivectorComponent mvC: globalValues.keySet())
-                    globalValuesI.put(mvC, new RealInterval(globalValues.get(mvC)));        
-                
+        HashMap<MultivectorComponent, RealInterval> values = new HashMap<MultivectorComponent, RealInterval>();
+        for (MultivectorComponent mvC: globalValues.keySet())
+            values.put(mvC, new RealInterval(globalValues.get(mvC)));        
+        
         float ox = -a;
-        globalValuesI.put(new MultivectorComponent("_V_ox", 0), new RealInterval(ox));
+        values.put(new MultivectorComponent("_V_ox", 0), new RealInterval(ox));
         
         for (float oy = fromOY_Incl; oy <= toOY_Excl; oy += dist) {
-            globalValuesI.put(new MultivectorComponent("_V_oy", 0), new RealInterval(oy));
+            values.put(new MultivectorComponent("_V_oy", 0), new RealInterval(oy));
             for (float oz = -a; oz <= a; oz += dist) {
-                globalValuesI.put(new MultivectorComponent("_V_oz", 0), new RealInterval(oz));
-                isolation(new RealInterval(0, 2*a),globalValuesI);
+                values.put(new MultivectorComponent("_V_oz", 0), new RealInterval(oz));
+                isolation(new RealInterval(0, 2*a),values);
             }
         }
     }
     
+    /**
+     * Splits an interval as long as more than one root exists in this interval
+     * @param t The interval to be splitted
+     * @param values The gloabal values
+     */
     private void isolation(RealInterval t, HashMap<MultivectorComponent, RealInterval> values) {
         final String product = codePiece.nameOfMultivector;
         
@@ -82,6 +87,11 @@ public class RayMethodThread extends Thread {
 
     }
 
+    /**
+     * Given an interval, where only one root exists, find the root.
+     * @param t The interval
+     * @param values The global values
+     */
     private void refinement(RealInterval t, HashMap<MultivectorComponent, RealInterval> values) {
         final String product = codePiece.nameOfMultivector;
         

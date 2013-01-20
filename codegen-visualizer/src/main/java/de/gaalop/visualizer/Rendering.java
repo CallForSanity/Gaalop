@@ -5,13 +5,13 @@ import java.util.HashSet;
 
 
 /**
- * Defines an interface for somethin to render
+ * Defines an interface for something to render
  * @author christian
  */
 public interface Rendering {
     
     /**
-     * Tests, if a new data set is available
+     * Determines, if a new data set is available
      * @return <value>true</value> if a new data set is available, otherwise <value>false</value>
      */
     public boolean isNewDataSetAvailable();

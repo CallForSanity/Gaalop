@@ -24,16 +24,35 @@ public abstract class ZeroFinder {
         this.maximaCommand = maximaCommand;
     }
     
-    public final void loadGraph(ControlFlowGraph in) {
+    /**
+     * Loads a graph into the internal representation, i.e. a list of assginmentnodes
+     * @param graph The graph
+     */
+    public final void loadGraph(ControlFlowGraph graph) {
         AssignmentNodeCollector collector = new AssignmentNodeCollector();
-        in.accept(collector);
+        graph.accept(collector);
         graphNodes = collector.getAssignmentNodes();
     }
     
+    /**
+     * Finds the zero locations in a list of assignmentnodes, given a global values set
+     * @param globalValues The set of global values
+     * @param assignmentNodes The list of assignmentnodes
+     * @return The map name of multivector to list of zero locations
+     */
     public abstract HashMap<String, LinkedList<Point3d>> findZeroLocations(HashMap<MultivectorComponent, Double> globalValues, LinkedList<AssignmentNode> assignmentNodes);
 
-    public abstract boolean isPositionVariable(String name);
+    /**
+     * Returns the name of the zerofinding method
+     * @return The name
+     */
+    protected abstract String getName();
 
-    public abstract boolean isRayMethod();
-
+    @Override
+    public String toString() {
+        return getName();
+    }
+    
+    
+    
 }

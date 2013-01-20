@@ -14,11 +14,16 @@ import org.jdom.input.SAXBuilder;
 import org.jdom.output.XMLOutputter;
 
 /**
- *
+ * Represents a collection of point clouds and implements operation on them
+ * like loading and saving from/to a XML file.
  * @author Christian Steinmetz
  */
 public class PointClouds extends HashMap<String, PointCloud> {
     
+    /**
+     * Loads all point clouds from a XML file
+     * @param file The XML file
+     */
     public void loadFromFile(File file) {
         try {
             Element rootElement = new SAXBuilder().build(file).getRootElement();
@@ -33,6 +38,10 @@ public class PointClouds extends HashMap<String, PointCloud> {
         }
     }
     
+    /**
+     * Saves all points clouds to a XML file
+     * @param file The XML file
+     */
     public void saveToFile(File file) {
         Element rootElement = new Element("PointClouds");
         for (String key: keySet()) 

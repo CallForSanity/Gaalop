@@ -1,7 +1,6 @@
 package de.gaalop.visualizer.zerofinding;
 
 import de.gaalop.cfg.AssignmentNode;
-import de.gaalop.cfg.EmptyControlFlowVisitor;
 import de.gaalop.dfg.*;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -21,6 +20,11 @@ public class Evaluater implements ExpressionVisitor {
 
     public HashMap<MultivectorComponent, Double> getValues() {
         return values;
+    }
+    
+    public void evaluate(LinkedList<AssignmentNode> assignmentNodes) {
+        for (AssignmentNode node: assignmentNodes) 
+            visit(node);
     }
 
     private Double result;
@@ -203,11 +207,6 @@ public class Evaluater implements ExpressionVisitor {
     @Override
     public void visit(InnerProduct node) {
         throw new UnsupportedOperationException("Inner products should have been removed by TBA.");
-    }
-
-    public void evaluate(LinkedList<AssignmentNode> assignmentNodes) {
-        for (AssignmentNode node: assignmentNodes) 
-            visit(node);
     }
 
 }

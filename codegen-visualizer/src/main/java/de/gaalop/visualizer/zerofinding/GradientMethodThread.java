@@ -6,7 +6,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 
 /**
- * Implements a zero finder thread, which uses rays
+ * Implements a zero finder method thread, which samples a cube and searches at
+ * every sample point in a neighborhood along the gradient a zero point
  * @author christian
  */
 public class GradientMethodThread extends Thread {
@@ -22,6 +23,9 @@ public class GradientMethodThread extends Thread {
     private CodePiece codePiece;
             
     public LinkedList<Point3d> points = new LinkedList<Point3d>();
+    
+    private static final int MAX_N = 10; //TODO settable on GUI
+    private static final double EPSILON = 10E-04; //TODO settable on GUI
 
     public GradientMethodThread(float fromOX_Incl, float toOX_Excl, float a, float dist, HashMap<MultivectorComponent, Double> globalValues, CodePiece codePiece) {
         this.fromOX_Incl = fromOX_Incl;
@@ -34,20 +38,22 @@ public class GradientMethodThread extends Thread {
 
     @Override
     public void run() {
-            for (float ox = fromOX_Incl; ox <= toOX_Excl; ox += dist) {
-                for (float oy = -a; oy <= a; oy += dist) {
-                    for (float oz = -a; oz <= a; oz += dist) {
-                        float[] resultSearch = searchInNeighborhood(ox,oy,oz);
-                        if (resultSearch != null) 
-                            points.add(new Point3d(resultSearch[0],resultSearch[1],resultSearch[2]));
-                    }
+        for (float ox = fromOX_Incl; ox <= toOX_Excl; ox += dist)
+            for (float oy = -a; oy <= a; oy += dist)
+                for (float oz = -a; oz <= a; oz += dist) {
+                    float[] resultSearch = searchInNeighborhood(ox,oy,oz);
+                    if (resultSearch != null) 
+                        points.add(new Point3d(resultSearch[0],resultSearch[1],resultSearch[2]));
                 }
-            }
     }
     
-    private static final int MAX_N = 10;
-    private static final double EPSILON = 10E-04;
-    
+    /**
+     * Searches zero points in the neighborhood of a certain point ox,oy,oz along the gradient
+     * @param ox The x-coordinate of the point
+     * @param oy The y-coordinate of the point
+     * @param oz The z-coordinate of the point
+     * @return null, if no zero point was found, other an array with the three coordinates of the zero point
+     */
     private float[] searchInNeighborhood(float ox, float oy, float oz) {
         double distDir = dist/MAX_N;
         EvaluationResult eval;
@@ -79,7 +85,13 @@ public class GradientMethodThread extends Thread {
             return null;
     }
     
-    
+    /**
+     * Evaluates the code piece on a special point ox,oy,oz and returns the result
+     * @param ox The x-coordinate of the point
+     * @param oy The y-coordinate of the point
+     * @param oz The z-coordinate of the point
+     * @return The evaluation result
+     */
     private EvaluationResult evaluate(float ox, float oy, float oz) {
         final String productName = codePiece.nameOfMultivector;
         HashMap<MultivectorComponent, Double> valuesIn = new HashMap<MultivectorComponent, Double>(globalValues);

@@ -1,7 +1,7 @@
 package de.gaalop.visualizer.zerofinding;
 
 /**
- *
+ * Represents a vector in 3d with double precision
  * @author Christian Steinmetz
  */
 public class VecN3 {
@@ -16,6 +16,9 @@ public class VecN3 {
         this.z = z;
     }
     
+    /**
+     * Normalizes the vector, if its length is not zero
+     */
     public void normalize() {
         double denom = Math.sqrt(x*x+y*y+z*z);
         if (Math.abs(denom) < 10E-8) return;
