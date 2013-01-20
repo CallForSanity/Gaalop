@@ -2,9 +2,8 @@ package de.gaalop.visualizer.zerofinding;
 
 import de.gaalop.OptimizationException;
 import de.gaalop.cfg.AssignmentNode;
-import de.gaalop.dfg.*;
+import de.gaalop.dfg.MultivectorComponent;
 import de.gaalop.tba.cfgImport.optimization.maxima.MaximaDifferentiater;
-import de.gaalop.visitors.ReplaceVisitor;
 import de.gaalop.visualizer.Point3d;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -13,58 +12,53 @@ import java.util.logging.Logger;
 import org.antlr.runtime.RecognitionException;
 
 /**
- * Implements a zero finder method, which uses rays
+ * Implements a zero finder method, which samples a cube and searches at
+ * every sample point in a neighborhood along the gradient a zero point
+ * 
  * @author christian
  */
-public class RayMethod extends PrepareZerofinder {
-    
-    /**
-     * Replaces x by ox+t, y by oy and z by oz in a list of assignment nodes
-     * @param nodes The list of assignment nodes
-     */
-    private void replace(LinkedList<AssignmentNode> nodes) {
-        //replace x=ox+t,y=oy,z=oz
-        ReplaceVisitor visitor = new ReplaceVisitor() {
-
-            private void visitVar(Variable node) {
-                if (node.getName().equals("_V_X"))
-                    result = new Addition(new MultivectorComponent("_V_ox", 0), new MultivectorComponent("_V_t", 0));
-                if (node.getName().equals("_V_Y"))
-                    result = new MultivectorComponent("_V_oy", 0);
-                if (node.getName().equals("_V_Z"))
-                    result = new MultivectorComponent("_V_oz", 0);
-            }
-            
-            @Override
-            public void visit(MultivectorComponent node) {
-                visitVar(node);
-            }
-
-            @Override
-            public void visit(Variable node) {
-                visitVar(node);
-            }
-            
-        };
-        for (AssignmentNode node: nodes) {
-            node.setVariable((Variable) visitor.replace(node.getVariable()));
-            node.setValue(visitor.replace(node.getValue()));
-        }
-    }
+public class GradientMethod extends PrepareZerofinder {
 
     /**
      * Differentiate the codepieces with respect to ox,oy,z
      * @param codePieces 
      */
     private void diffentiateCodePieces(LinkedList<CodePiece> codePieces) {
-        //differentiate each item of codePieces with respect to t with the help of maxima  to _V_PRODUCT_SD
+        //differentiate each item of codePieces with respect to ox,oy,oz with the help of maxima  to _V_PRODUCT_SDx/y/z
         for (CodePiece cp: codePieces) {
+            //Differntiate with respect to ox
             MaximaDifferentiater differentiater = new MaximaDifferentiater();
             LinkedList<AssignmentNode> derived;
             try {
-                derived = differentiater.differentiate(cp, maximaCommand, "_V_t");
+                derived = differentiater.differentiate(cp, maximaCommand, "_V_ox");
                 for (AssignmentNode d: derived) {
-                    d.setVariable(new MultivectorComponent(d.getVariable().getName()+"D", 0));
+                    d.setVariable(new MultivectorComponent(d.getVariable().getName()+"Dx", 0));
+                    cp.add(d);
+                }
+            } catch (OptimizationException ex) {
+                Logger.getLogger(RayMethod.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (RecognitionException ex) {
+                Logger.getLogger(RayMethod.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            //Differntiate with respect to oy
+            differentiater = new MaximaDifferentiater();
+            try {
+                derived = differentiater.differentiate(cp, maximaCommand, "_V_oy");
+                for (AssignmentNode d: derived) {
+                    d.setVariable(new MultivectorComponent(d.getVariable().getName()+"Dy", 0));
+                    cp.add(d);
+                }
+            } catch (OptimizationException ex) {
+                Logger.getLogger(RayMethod.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (RecognitionException ex) {
+                Logger.getLogger(RayMethod.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            //Differntiate with respect to oz
+            differentiater = new MaximaDifferentiater();
+            try {
+                derived = differentiater.differentiate(cp, maximaCommand, "_V_oz");
+                for (AssignmentNode d: derived) {
+                    d.setVariable(new MultivectorComponent(d.getVariable().getName()+"Dz", 0));
                     cp.add(d);
                 }
             } catch (OptimizationException ex) {
@@ -81,9 +75,7 @@ public class RayMethod extends PrepareZerofinder {
      * @return The generated code pieces
      */
     private LinkedList<CodePiece> prepareGraph(LinkedList<AssignmentNode> nodes) {
-        //replace x=ox+t,y=oy,z=oz
-        replace(nodes);
-        
+       
         //Insert expressions, like Maxima,  !!!
         InsertingExpression.insertExpressions(nodes);
         
@@ -94,12 +86,12 @@ public class RayMethod extends PrepareZerofinder {
         //Optimize pieces of code for each multivector to be rendered
         LinkedList<CodePiece> codePieces = optimizeCodePieces(myNodes);
         
-        //differentiate each item of codePieces with respect to t with the help of maxima  to _V_PRODUCT_SD
+        //differentiate each item of codePieces with respect to ox,oy,oz with the help of maxima  to _V_PRODUCT_SDx/y/z
         diffentiateCodePieces(codePieces);
         
         return codePieces;
     }
-    
+
     @Override
     public HashMap<String, LinkedList<Point3d>> findZeroLocations(HashMap<MultivectorComponent, Double> globalValues, LinkedList<AssignmentNode> assignmentNodes) {
         LinkedList<CodePiece> codePieces = prepareGraph(assignmentNodes);
@@ -111,6 +103,11 @@ public class RayMethod extends PrepareZerofinder {
             result.put(cp.nameOfMultivector, points);
         }
         return result;
+    }
+
+    @Override
+    public String getName() {
+        return "Gradient Method";
     }
     
     /**
@@ -127,12 +124,12 @@ public class RayMethod extends PrepareZerofinder {
         
         int processorCount = Runtime.getRuntime().availableProcessors();
         
-        RayMethodThread[] threads = new RayMethodThread[processorCount];
+        GradientMethodThread[] threads = new GradientMethodThread[processorCount];
         for (int i=0;i<processorCount;i++) {
             float from = (i*2*a)/((float) processorCount) - a;
             float to = ((i != processorCount-1) ? ((i+1)*2*a)/((float) processorCount) : 2*a) - a; 
 
-            threads[i] = new RayMethodThread(from, to, a, dist, globalValues, cp);
+            threads[i] = new GradientMethodThread(from, to, a, dist, globalValues, cp);
             threads[i].start();
         }
 
@@ -148,8 +145,4 @@ public class RayMethod extends PrepareZerofinder {
         return points;
     }
     
-    @Override
-    public String getName() {
-        return "Ray Method";
-    }
 }

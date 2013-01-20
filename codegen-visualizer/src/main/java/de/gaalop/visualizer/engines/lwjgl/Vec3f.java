@@ -21,7 +21,13 @@ public class Vec3f {
         return x+","+y+","+z;
     }
 
-    void set(float x, float y, float z) {
+    /**
+     * Sets the x,y,z value
+     * @param x The x value
+     * @param y The y value
+     * @param z The z value
+     */
+    public void set(float x, float y, float z) {
         this.x = x;
         this.y = y;
         this.z = z;

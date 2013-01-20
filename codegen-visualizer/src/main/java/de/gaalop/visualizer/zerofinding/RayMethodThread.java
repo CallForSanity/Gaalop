@@ -1,7 +1,5 @@
 package de.gaalop.visualizer.zerofinding;
 
-import de.gaalop.cfg.AssignmentNode;
-import de.gaalop.cfg.ControlFlowGraph;
 import de.gaalop.dfg.MultivectorComponent;
 import de.gaalop.visualizer.Point3d;
 import de.gaalop.visualizer.ia_math.RealInterval;
@@ -19,62 +17,51 @@ public class RayMethodThread extends Thread {
     
     private float a ;
     private float dist;
-    private ControlFlowGraph graph;
     
     private HashMap<MultivectorComponent, Double> globalValues;
     
-    private LinkedList<AssignmentNode> nodes;
+    private CodePiece codePiece;
             
-    public HashMap<String, LinkedList<Point3d>> points = new HashMap<String, LinkedList<Point3d>>();
-    
-    private boolean findOnlyIn2d;
+    public LinkedList<Point3d> points = new LinkedList<Point3d>();
 
-    public RayMethodThread(float fromOY_Incl, float toOY_Excl, float a, float dist, ControlFlowGraph graph, HashMap<MultivectorComponent, Double> globalValues, LinkedList<AssignmentNode> nodes, boolean findOnlyIn2d) {
+    public RayMethodThread(float fromOY_Incl, float toOY_Excl, float a, float dist, HashMap<MultivectorComponent, Double> globalValues, CodePiece codePiece) {
         this.fromOY_Incl = fromOY_Incl;
         this.toOY_Excl = toOY_Excl;
         this.a = a;
         this.dist = dist;
-        this.graph = graph;
         this.globalValues = globalValues;
-        this.nodes = nodes;
-        this.findOnlyIn2d = findOnlyIn2d;
+        this.codePiece = codePiece;
     }
-
-
 
     @Override
     public void run() {
-        HashMap<MultivectorComponent, RealInterval> globalValuesI = new HashMap<MultivectorComponent, RealInterval>();
-                for (MultivectorComponent mvC: globalValues.keySet())
-                    globalValuesI.put(mvC, new RealInterval(globalValues.get(mvC)));        
-                
-        float ox = -a;
-        globalValuesI.put(new MultivectorComponent("_V_ox", 0), new RealInterval(ox));
+        HashMap<MultivectorComponent, RealInterval> values = new HashMap<MultivectorComponent, RealInterval>();
+        for (MultivectorComponent mvC: globalValues.keySet())
+            values.put(mvC, new RealInterval(globalValues.get(mvC)));        
         
-        if (!findOnlyIn2d) {
-            for (float oy = fromOY_Incl; oy <= toOY_Excl; oy += dist) {
-                globalValuesI.put(new MultivectorComponent("_V_oy", 0), new RealInterval(oy));
-                for (float oz = -a; oz <= a; oz += dist) {
-                    globalValuesI.put(new MultivectorComponent("_V_oz", 0), new RealInterval(oz));
-                    for (AssignmentNode node: nodes) 
-                        isolation(new RealInterval(0, 2*a),globalValuesI, graph, node.getVariable().getName());
-                }
-            }
-        } else {
-            for (float oy = fromOY_Incl; oy <= toOY_Excl; oy += dist) {
-                globalValuesI.put(new MultivectorComponent("_V_oy", 0), new RealInterval(oy));
-                float oz = 0;
-                globalValuesI.put(new MultivectorComponent("_V_oz", 0), new RealInterval(oz));
-                for (AssignmentNode node: nodes) 
-                    isolation(new RealInterval(0, 2*a),globalValuesI, graph, node.getVariable().getName());
+        float ox = -a;
+        values.put(new MultivectorComponent("_V_ox", 0), new RealInterval(ox));
+        
+        for (float oy = fromOY_Incl; oy <= toOY_Excl; oy += dist) {
+            values.put(new MultivectorComponent("_V_oy", 0), new RealInterval(oy));
+            for (float oz = -a; oz <= a; oz += dist) {
+                values.put(new MultivectorComponent("_V_oz", 0), new RealInterval(oz));
+                isolation(new RealInterval(0, 2*a),values);
             }
         }
     }
     
-    private void isolation(RealInterval t, HashMap<MultivectorComponent, RealInterval> values, ControlFlowGraph graph, String product) {
+    /**
+     * Splits an interval as long as more than one root exists in this interval
+     * @param t The interval to be splitted
+     * @param values The gloabal values
+     */
+    private void isolation(RealInterval t, HashMap<MultivectorComponent, RealInterval> values) {
+        final String product = codePiece.nameOfMultivector;
+        
         values.put(new MultivectorComponent("_V_t", 0), t);
         IntervalEvaluater evaluater = new IntervalEvaluater(values);
-        graph.accept(evaluater);
+        evaluater.evaluate(codePiece);
         
         RealInterval f = values.get(new MultivectorComponent(product,0));
         if (f.lo() <= 0 && 0 <= f.hi()) {
@@ -82,14 +69,11 @@ public class RayMethodThread extends Thread {
             if (df.lo() <= 0 && 0 <= df.hi()) {
                 if (t.hi()-t.lo() > 0.05) {
                     double center = (t.lo()+t.hi())/2.0d;
-                    isolation(new RealInterval(t.lo(), center), values, graph, product);
-                    isolation(new RealInterval(center, t.hi()), values, graph, product);
+                    isolation(new RealInterval(t.lo(), center), values);
+                    isolation(new RealInterval(center, t.hi()), values);
                 } else {
                        // if (Math.abs(f.hi()) < 1E-1 && Math.abs(f.lo()) < 1E-1 ) { //TODO check
-                            if (!points.containsKey(product))
-                                points.put(product, new LinkedList<Point3d>());
-
-                            points.get(product).add(new Point3d(
+                            points.add(new Point3d(
                                     values.get(new MultivectorComponent("_V_ox", 0)).lo()+(t.lo()+t.hi())/2.0d, 
                                     values.get(new MultivectorComponent("_V_oy", 0)).lo(), 
                                     values.get(new MultivectorComponent("_V_oz", 0)).lo()
@@ -97,13 +81,20 @@ public class RayMethodThread extends Thread {
                        // }
                     }
             } else {
-                refinement(t, values, graph, product);
+                refinement(t, values);
             }
         }
 
     }
 
-    private void refinement(RealInterval t, HashMap<MultivectorComponent, RealInterval> values, ControlFlowGraph graph, String product) {
+    /**
+     * Given an interval, where only one root exists, find the root.
+     * @param t The interval
+     * @param values The global values
+     */
+    private void refinement(RealInterval t, HashMap<MultivectorComponent, RealInterval> values) {
+        final String product = codePiece.nameOfMultivector;
+        
         MultivectorComponent pr = new MultivectorComponent(product, 0);
         boolean refine = true;
         while (refine) {
@@ -113,13 +104,14 @@ public class RayMethodThread extends Thread {
             values.put(new MultivectorComponent("_V_t", 0), new RealInterval(t.lo()));
             
             IntervalEvaluater evaluater = new IntervalEvaluater(values);
-            graph.accept(evaluater);
+            evaluater.evaluate(codePiece);
+
             double lo = values.get(pr).lo();
-            
             
             values.put(new MultivectorComponent("_V_t", 0), new RealInterval(center));  
             
-            graph.accept(evaluater);
+            evaluater = new IntervalEvaluater(values);
+            evaluater.evaluate(codePiece);
             double ce = values.get(pr).lo();
             
             if (Math.abs(ce) <= 0.01) refine = false;
@@ -131,18 +123,13 @@ public class RayMethodThread extends Thread {
                 t = new RealInterval(center,t.hi());
 
         }
-            
-        if (!points.containsKey(product))
-            points.put(product, new LinkedList<Point3d>());
 
-        points.get(product).add(new Point3d(
+        points.add(new Point3d(
                 values.get(new MultivectorComponent("_V_ox", 0)).lo()+(t.lo()+t.hi())/2.0d, 
                 values.get(new MultivectorComponent("_V_oy", 0)).lo(), 
                 values.get(new MultivectorComponent("_V_oz", 0)).lo()
                 ));
 
     }
-    
-    
-    
+
 }

@@ -1,7 +1,6 @@
 package de.gaalop.visualizer.zerofinding;
 
 import de.gaalop.cfg.AssignmentNode;
-import de.gaalop.cfg.EmptyControlFlowVisitor;
 import de.gaalop.dfg.*;
 import de.gaalop.visualizer.ia_math.IAMath;
 import de.gaalop.visualizer.ia_math.RealInterval;
@@ -11,7 +10,7 @@ import java.util.HashMap;
  * Evaluates the control flow graph with interval arithmetic
  * @author christian
  */
-public class IntervalEvaluater extends EmptyControlFlowVisitor implements ExpressionVisitor {
+public class IntervalEvaluater implements ExpressionVisitor {
 
     private HashMap<MultivectorComponent, RealInterval> values;
     
@@ -24,6 +23,11 @@ public class IntervalEvaluater extends EmptyControlFlowVisitor implements Expres
     }
 
     private RealInterval result;
+    
+    public void evaluate(CodePiece codePiece) {
+        for (AssignmentNode node: codePiece)
+            visit(node);
+    }
     
     @Override
     public void visit(Subtraction node) {
@@ -139,12 +143,10 @@ public class IntervalEvaluater extends EmptyControlFlowVisitor implements Expres
     public void visit(FloatConstant node) {
         result = new RealInterval(node.getValue());
     }
-
-    @Override
+    
     public void visit(AssignmentNode node) {
         node.getValue().accept(this);
         values.put((MultivectorComponent) node.getVariable(), result);
-        super.visit(node);
     }
 
     @Override
@@ -225,5 +227,7 @@ public class IntervalEvaluater extends EmptyControlFlowVisitor implements Expres
     public void visit(InnerProduct node) {
         throw new UnsupportedOperationException("Inner products should have been removed by TBA.");
     }
+
+    
 
 }

@@ -4,6 +4,10 @@
  */
 package de.gaalop.visualizer.gui;
 
+import de.gaalop.visualizer.zerofinding.ZeroFinder;
+import java.util.LinkedList;
+import javax.swing.DefaultComboBoxModel;
+
 /**
  *
  * @author christian
@@ -37,6 +41,8 @@ public class DrawSettings extends javax.swing.JFrame {
         jPanel_Visible = new javax.swing.JPanel();
         jButton_LoadPointCloud = new javax.swing.JButton();
         jButton_SavePointCloud = new javax.swing.JButton();
+        jComboBox_ZerofindingMethod = new javax.swing.JComboBox();
+        jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Gaalop Visualization Settings");
@@ -53,7 +59,7 @@ public class DrawSettings extends javax.swing.JFrame {
         );
         jPanel_SettingsLayout.setVerticalGroup(
             jPanel_SettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 167, Short.MAX_VALUE)
+            .addGap(0, 163, Short.MAX_VALUE)
         );
 
         getContentPane().add(jPanel_Settings);
@@ -78,7 +84,7 @@ public class DrawSettings extends javax.swing.JFrame {
         jPanel2.add(jScrollPane_Inputs);
 
         getContentPane().add(jPanel2);
-        jPanel2.setBounds(10, 11, 220, 420);
+        jPanel2.setBounds(10, 11, 220, 380);
 
         jButton_Repaint.setText("Repaint");
         jButton_Repaint.addActionListener(new java.awt.event.ActionListener() {
@@ -87,7 +93,7 @@ public class DrawSettings extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jButton_Repaint);
-        jButton_Repaint.setBounds(300, 400, 90, 30);
+        jButton_Repaint.setBounds(360, 400, 90, 30);
 
         jLabel_Info.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         getContentPane().add(jLabel_Info);
@@ -121,6 +127,13 @@ public class DrawSettings extends javax.swing.JFrame {
         jButton_SavePointCloud.setText("Save Pointcloud");
         getContentPane().add(jButton_SavePointCloud);
         jButton_SavePointCloud.setBounds(180, 470, 140, 23);
+
+        getContentPane().add(jComboBox_ZerofindingMethod);
+        jComboBox_ZerofindingMethod.setBounds(140, 405, 200, 20);
+
+        jLabel1.setText("Zerofinding method:");
+        getContentPane().add(jLabel1);
+        jLabel1.setBounds(30, 405, 100, 20);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -174,6 +187,8 @@ public class DrawSettings extends javax.swing.JFrame {
     public javax.swing.JButton jButton_LoadPointCloud;
     protected javax.swing.JButton jButton_Repaint;
     public javax.swing.JButton jButton_SavePointCloud;
+    private javax.swing.JComboBox jComboBox_ZerofindingMethod;
+    private javax.swing.JLabel jLabel1;
     public javax.swing.JLabel jLabel_Info;
     protected javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -183,5 +198,24 @@ public class DrawSettings extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     public javax.swing.JScrollPane jScrollPane_Inputs;
     // End of variables declaration//GEN-END:variables
+    
+    /**
+     * Initializes the zerofinding combobox
+     * @param zerofinderList The items of the combobox
+     * @param defaultZeroFinder The default selected zero finder
+     */
+    protected void setZerofinderMethods(LinkedList<ZeroFinder> zerofinderList, ZeroFinder defaultZeroFinder) {
+        jComboBox_ZerofindingMethod.setModel(new DefaultComboBoxModel(zerofinderList.toArray(new ZeroFinder[0])));
+        jComboBox_ZerofindingMethod.setSelectedItem(defaultZeroFinder);
+    }
+    
+    /**
+     * Retruns the selected zerofinder in the combobox
+     * @return The selected zerofinder
+     */
+    protected ZeroFinder getSelectedZeroFinder() {
+        return (ZeroFinder) jComboBox_ZerofindingMethod.getSelectedItem();
+    }
+    
     
 }

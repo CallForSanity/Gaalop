@@ -1,7 +1,9 @@
 package de.gaalop.visualizer.zerofinding;
 
+import de.gaalop.cfg.AssignmentNode;
 import de.gaalop.cfg.ControlFlowGraph;
 import de.gaalop.dfg.MultivectorComponent;
+import de.gaalop.api.cfg.AssignmentNodeCollector;
 import de.gaalop.visualizer.Point3d;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -14,11 +16,43 @@ public abstract class ZeroFinder {
     
     public float cubeEdgeLength = 5f;
     public float density = 0.1f;
-
-    public abstract void prepareGraph(ControlFlowGraph in);
+    protected String maximaCommand;
     
-    public abstract HashMap<String, LinkedList<Point3d>> findZeroLocations(ControlFlowGraph in, HashMap<MultivectorComponent, Double> globalValues, boolean findOnlyIn2d);
+    public LinkedList<AssignmentNode> graphNodes;
+    
+    public void setMaximaCommand(String maximaCommand) {
+        this.maximaCommand = maximaCommand;
+    }
+    
+    /**
+     * Loads a graph into the internal representation, i.e. a list of assginmentnodes
+     * @param graph The graph
+     */
+    public final void loadGraph(ControlFlowGraph graph) {
+        AssignmentNodeCollector collector = new AssignmentNodeCollector();
+        graph.accept(collector);
+        graphNodes = collector.getAssignmentNodes();
+    }
+    
+    /**
+     * Finds the zero locations in a list of assignmentnodes, given a global values set
+     * @param globalValues The set of global values
+     * @param assignmentNodes The list of assignmentnodes
+     * @return The map name of multivector to list of zero locations
+     */
+    public abstract HashMap<String, LinkedList<Point3d>> findZeroLocations(HashMap<MultivectorComponent, Double> globalValues, LinkedList<AssignmentNode> assignmentNodes);
 
-    public abstract boolean isPositionVariable(String name);
+    /**
+     * Returns the name of the zerofinding method
+     * @return The name
+     */
+    protected abstract String getName();
 
+    @Override
+    public String toString() {
+        return getName();
+    }
+    
+    
+    
 }
