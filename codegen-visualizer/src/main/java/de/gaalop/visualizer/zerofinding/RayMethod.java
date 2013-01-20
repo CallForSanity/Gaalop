@@ -2,10 +2,8 @@ package de.gaalop.visualizer.zerofinding;
 
 import de.gaalop.OptimizationException;
 import de.gaalop.cfg.AssignmentNode;
-import de.gaalop.cfg.ControlFlowGraph;
 import de.gaalop.dfg.*;
 import de.gaalop.tba.cfgImport.optimization.maxima.MaximaDifferentiater;
-import de.gaalop.visitors.CFGReplaceVisitor;
 import de.gaalop.visitors.ReplaceVisitor;
 import de.gaalop.visualizer.Point3d;
 import java.util.HashMap;
@@ -21,16 +19,25 @@ import org.antlr.runtime.RecognitionException;
  */
 public class RayMethod extends ZeroFinder {
 
-    private HashMap<String, LinkedList<Point3d>> points;
 
-    private LinkedList<AssignmentNode> nodes;
-    /*
-    //return PRODUCT_S Multivector names
+    
     @Override
-    public void prepareGraph(ControlFlowGraph graph) {
+    public boolean isPositionVariable(String name) {
+        if (name.equals("_V_X")) return true;
+        if (name.equals("_V_Y")) return true;
+        if (name.equals("_V_Z")) return true;
         
+        return false;
+    }
+
+    @Override
+    public boolean isRayMethod() {
+        return true;
+    }
+    
+    private void replace(LinkedList<AssignmentNode> nodes) {
         //replace x=ox+t,y=oy,z=oz
-        CFGReplaceVisitor replacer = new CFGReplaceVisitor(new ReplaceVisitor() {
+        ReplaceVisitor visitor = new ReplaceVisitor() {
 
             private void visitVar(Variable node) {
                 if (node.getName().equals("_V_X"))
@@ -51,13 +58,28 @@ public class RayMethod extends ZeroFinder {
                 visitVar(node);
             }
             
-        });
-        graph.accept(replacer);
-
+        };
+        for (AssignmentNode node: nodes) {
+            node.setVariable((Variable) visitor.replace(node.getVariable()));
+            node.setValue(visitor.replace(node.getValue()));
+        }
+    }
+    
+    private LinkedList<AssignmentNode> createSumOfSquares(LinkedList<AssignmentNode> nodes) {
         //search _V_PRODUCT and apply the sum of the squares = _V_PRODUCT_S
-        HashMap<String, LinkedList<AssignmentNode>> collect = MultivectorNodeCollector.collect(graph);
+        //and store the result in myNodes
+        HashMap<String, LinkedList<AssignmentNode>> collect = new HashMap<String, LinkedList<AssignmentNode>>();
         
-        nodes = new LinkedList<AssignmentNode>();
+        for (AssignmentNode node: nodes) {
+            MultivectorComponent m = (MultivectorComponent) node.getVariable();
+            String name = m.getName();
+            if (!collect.containsKey(name)) 
+                collect.put(name, new LinkedList<AssignmentNode>());
+
+            collect.get(name).add(node);
+        }
+        
+        LinkedList<AssignmentNode> myNodes = new LinkedList<AssignmentNode>();
         for (String s: collect.keySet()) 
             if (s.startsWith("_V_PRODUCT")) {
                 Expression sumOfSquares = null; 
@@ -71,45 +93,97 @@ public class RayMethod extends ZeroFinder {
                         sumOfSquares = new Addition(sumOfSquares, square);
                 }
                 
-                AssignmentNode newNode = new AssignmentNode(graph, new MultivectorComponent(s+"_S", 0), sumOfSquares);
-                nodes.add(newNode);
-                collect.get(s).getFirst().insertBefore(newNode);
+                AssignmentNode newNode = new AssignmentNode(null, new MultivectorComponent(s+"_S", 0), sumOfSquares);
+                myNodes.add(newNode);
+                listInsertBefore(myNodes, newNode, collect.get(s).getFirst());
 
                 for (AssignmentNode node: collect.get(s)) 
-                    graph.removeNode(node);
+                    myNodes.remove(node);
             }
-  
-        //Insert expressions, like Maxima,  !!!
-        InsertingExpression.insertExpressions(graph);
-        
-        //differentiate with respect to t with the help of maxima = _V_PRODUCT_SD
-        MaximaDifferentiater differentiater = new MaximaDifferentiater();
-        LinkedList<AssignmentNode> derived;
-        try {
-            derived = differentiater.differentiate(nodes, maximaCommand, "_V_t");
-            ListIterator<AssignmentNode> listIt = nodes.listIterator();
-            for (AssignmentNode d: derived) {
-                d.setVariable(new MultivectorComponent(d.getVariable().getName()+"D", 0));
-                listIt.next().insertAfter(d);
-            }
-        } catch (OptimizationException ex) {
-            Logger.getLogger(RayMethod.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (RecognitionException ex) {
-            Logger.getLogger(RayMethod.class.getName()).log(Level.SEVERE, null, ex);
-        }
-         
+        return myNodes;
     }
-*/
+    
+    private LinkedList<CodePiece> optimizeCodePieces(LinkedList<AssignmentNode> myNodes) {
+        //Optimize pieces of code for each multivector to be rendered
+        LinkedList<CodePiece> codePieces = new LinkedList<CodePiece>();
+        HashMap<String, CodePiece> mapCodePieces = new HashMap<String, CodePiece>();
+        for (AssignmentNode node: myNodes) {
+            String name = node.getVariable().getName();
+            if (!mapCodePieces.containsKey(name)) {
+                CodePiece cp = new CodePiece();
+                cp.nameOfMultivector = name;
+                mapCodePieces.put(name, cp);
+                codePieces.add(cp);
+            }
+            mapCodePieces.get(name).add(node);
+        }
+        return codePieces;
+    }
+    
+    private void diffentiateCodePieces(LinkedList<CodePiece> codePieces) {
+        //differentiate each item of codePieces with respect to t with the help of maxima  to _V_PRODUCT_SD
+        for (CodePiece cp: codePieces) {
+            MaximaDifferentiater differentiater = new MaximaDifferentiater();
+            LinkedList<AssignmentNode> derived;
+            try {
+                derived = differentiater.differentiate(cp, maximaCommand, "_V_t");
+                for (AssignmentNode d: derived) {
+                    d.setVariable(new MultivectorComponent(d.getVariable().getName()+"D", 0));
+                    cp.add(d);
+                }
+            } catch (OptimizationException ex) {
+                Logger.getLogger(RayMethod.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (RecognitionException ex) {
+                Logger.getLogger(RayMethod.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+    
+    private LinkedList<CodePiece> prepareGraph(LinkedList<AssignmentNode> nodes) {
+        //replace x=ox+t,y=oy,z=oz
+        replace(nodes);
+        
+        //Insert expressions, like Maxima,  !!!
+        InsertingExpression.insertExpressions(nodes);
+        
+        //search _V_PRODUCT and apply the sum of the squares = _V_PRODUCT_S
+        //and store the result in myNodes
+        LinkedList<AssignmentNode> myNodes = createSumOfSquares(nodes);
+
+        //Optimize pieces of code for each multivector to be rendered
+        LinkedList<CodePiece> codePieces = optimizeCodePieces(myNodes);
+        
+        //differentiate each item of codePieces with respect to t with the help of maxima  to _V_PRODUCT_SD
+        diffentiateCodePieces(codePieces);
+        
+        return codePieces;
+    }
+    
     @Override
     public HashMap<String, LinkedList<Point3d>> findZeroLocations(HashMap<MultivectorComponent, Double> globalValues, LinkedList<AssignmentNode> assignmentNodes) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        LinkedList<CodePiece> codePieces = prepareGraph(assignmentNodes);
+        
+        HashMap<String, LinkedList<Point3d>> result = new HashMap<String, LinkedList<Point3d>>();
+        for (CodePiece cp: codePieces) {
+            //search zero locations of mv cp.name in every CodePiece cp
+            LinkedList<Point3d> points = searchZeroLocations(cp, globalValues);
+            result.put(cp.nameOfMultivector, points);
+        }
+        return result;
     }
     
+    private void listInsertBefore(LinkedList<AssignmentNode> list, AssignmentNode toInsert, AssignmentNode before) {
+        LinkedList<AssignmentNode> listCopy = new LinkedList<AssignmentNode>(list);
+        list.clear();
+        for (AssignmentNode node: listCopy) {
+            if (node == before)
+                list.add(toInsert);
+            list.add(node);
+        }
+    } 
     
-/*
-    @Override
-    public HashMap<String, LinkedList<Point3d>> findZeroLocations(HashMap<MultivectorComponent, Double> globalValues, boolean findOnlyIn2d) {
-        points = new HashMap<String, LinkedList<Point3d>>();
+    private LinkedList<Point3d> searchZeroLocations(CodePiece cp, HashMap<MultivectorComponent, Double> globalValues) {
+        LinkedList<Point3d> points = new LinkedList<Point3d>();
         float a = cubeEdgeLength;
         float dist = density;
         
@@ -120,20 +194,14 @@ public class RayMethod extends ZeroFinder {
             float from = (i*2*a)/((float) processorCount) - a;
             float to = ((i != processorCount-1) ? ((i+1)*2*a)/((float) processorCount) : 2*a) - a; 
 
-            threads[i] = new RayMethodThread(from, to, a, dist, null, globalValues, nodes, findOnlyIn2d); //TODO in
+            threads[i] = new RayMethodThread(from, to, a, dist, globalValues, cp);
             threads[i].start();
         }
 
-        
         for (int i=0;i<threads.length;i++) {
             try {
                 threads[i].join();
-                for (String point: threads[i].points.keySet()) {
-                    if (!points.containsKey(point))
-                        points.put(point, threads[i].points.get(point));
-                    else 
-                        points.get(point).addAll(threads[i].points.get(point));
-                }
+                points.addAll(threads[i].points);
             } catch (InterruptedException ex) {
                 Logger.getLogger(DiscreteCubeMethod.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -141,20 +209,9 @@ public class RayMethod extends ZeroFinder {
 
         return points;
     }
-    */
     
     @Override
-    public boolean isPositionVariable(String name) {
-        if (name.equals("_V_X")) return true;
-        if (name.equals("_V_Y")) return true;
-        if (name.equals("_V_Z")) return true;
-        
-        return false;
+    public String toString() {
+        return "Ray Method";
     }
-
-    @Override
-    public boolean isRayMethod() {
-        return true;
-    }
-    
 }

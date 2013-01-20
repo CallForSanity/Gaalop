@@ -14,14 +14,14 @@ import org.antlr.runtime.RecognitionException;
  */
 public class MaximaDifferentiater {
     
-    public LinkedList<AssignmentNode> differentiate(LinkedList<AssignmentNode> toDerive, String maximaCommand) throws OptimizationException, RecognitionException {
+    public LinkedList<AssignmentNode> differentiate(LinkedList<AssignmentNode> toDerive, String maximaCommand, String variable) throws OptimizationException, RecognitionException {
         MaximaConnection connection = new ProcessBuilderMaximaConnection(maximaCommand);
         
         MaximaInput input = new MaximaInput();
         input.add("display2d:false;"); // very important!
         input.add("ratprint:false;"); // very important!
         input.add("keepfloat:true;");
-        fillMaximaInput(toDerive, input);
+        fillMaximaInput(toDerive, input, variable);
         input.add("quit();"); // very important!
 
         MaximaOutput output = connection.optimizeWithMaxima(input);
@@ -45,12 +45,12 @@ public class MaximaDifferentiater {
         return result; 
     }
 
-    private void fillMaximaInput(LinkedList<AssignmentNode> toDerive, MaximaInput input) {
+    private void fillMaximaInput(LinkedList<AssignmentNode> toDerive, MaximaInput input, String variable) {
 
         for (AssignmentNode node : toDerive) {
             DFGToMaximaCode dfg = new DFGToMaximaCode();
             node.getValue().accept(dfg);
-            input.add("ratsimp(diff("+dfg.getResultString() + ",_V_t\\$0,1));");
+            input.add("ratsimp(diff("+dfg.getResultString() + ","+variable+"\\$0,1));");
         }
 
     }

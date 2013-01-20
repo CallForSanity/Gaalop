@@ -62,4 +62,11 @@ public class DiscreteCubeMethod extends ZeroFinder {
         
         return points;
     }
+
+    @Override
+    public String toString() {
+        return "Discrete Cube Method";
+    }
+    
+    
 }

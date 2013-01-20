@@ -9,21 +9,22 @@ import de.gaalop.dfg.MultivectorComponent;
 import de.gaalop.dfg.Variable;
 import de.gaalop.visitors.ReplaceVisitor;
 import java.util.HashMap;
+import java.util.LinkedList;
 
 /**
  * Inserts an Expression A into Expression B, if A is located before B
  * @author Christian Steinmetz
  */
-public class InsertingExpression extends EmptyControlFlowVisitor {
-
-    public static void insertExpressions(ControlFlowGraph graph) {
+public class InsertingExpression {
+    
+    public static void insertExpressions(LinkedList<AssignmentNode> nodes) {
         InsertingExpression insertingExpression = new InsertingExpression();
-        graph.accept(insertingExpression);
+        for (AssignmentNode node: nodes)
+            insertingExpression.visit(node);
     }
     
     private HashMap<Variable, Expression> mapExpressions = new HashMap<Variable, Expression>();
-
-    @Override
+    
     public void visit(AssignmentNode node) {
         ReplaceVisitor replaceVisitor = new ReplaceVisitor() {
 
@@ -44,7 +45,6 @@ public class InsertingExpression extends EmptyControlFlowVisitor {
         };
         node.setValue(replaceVisitor.replace(node.getValue()));
         mapExpressions.put(node.getVariable(), node.getValue());
-        super.visit(node);
     }
     
     
