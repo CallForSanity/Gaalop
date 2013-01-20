@@ -19,6 +19,7 @@ import de.gaalop.visualizer.gui.InputsPanel;
 import de.gaalop.visualizer.gui.SettingsPanel;
 import de.gaalop.visualizer.gui.VisiblePanel;
 import de.gaalop.visualizer.zerofinding.DiscreteCubeMethod;
+import de.gaalop.visualizer.zerofinding.GradientMethod;
 import de.gaalop.visualizer.zerofinding.RayMethod;
 import de.gaalop.visualizer.zerofinding.ZeroFinder;
 import java.awt.Color;
@@ -96,8 +97,9 @@ public class NewDrawSettingsCodeGen extends DrawSettings implements CodeGenerato
         
         //ZeroFinding methods
         LinkedList<ZeroFinder> zerofinderList = new LinkedList<ZeroFinder>();
-        ZeroFinder defaultZeroFinder = new RayMethod();
+        ZeroFinder defaultZeroFinder = new GradientMethod();
         zerofinderList.add(defaultZeroFinder);
+        zerofinderList.add(new RayMethod());
         zerofinderList.add(new DiscreteCubeMethod());
         setZerofinderMethods(zerofinderList, defaultZeroFinder);
     }
