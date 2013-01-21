@@ -30,6 +30,8 @@ public class DrawSettings extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPanel4 = new javax.swing.JPanel();
+        jScrollPane_Settings = new javax.swing.JScrollPane();
         jPanel_Settings = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane_Inputs = new javax.swing.JScrollPane();
@@ -43,27 +45,44 @@ public class DrawSettings extends javax.swing.JFrame {
         jButton_SavePointCloud = new javax.swing.JButton();
         jComboBox_ZerofindingMethod = new javax.swing.JComboBox();
         jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Gaalop Visualization Settings");
-        setMinimumSize(new java.awt.Dimension(485, 541));
+        setTitle("Gaalop Visualizer Settings");
+        setMinimumSize(new java.awt.Dimension(500, 690));
         getContentPane().setLayout(null);
 
-        jPanel_Settings.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Settings", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION));
+        jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Settings", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION));
+
+        jScrollPane_Settings.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        jScrollPane_Settings.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
         javax.swing.GroupLayout jPanel_SettingsLayout = new javax.swing.GroupLayout(jPanel_Settings);
         jPanel_Settings.setLayout(jPanel_SettingsLayout);
         jPanel_SettingsLayout.setHorizontalGroup(
             jPanel_SettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 208, Short.MAX_VALUE)
+            .addGap(0, 209, Short.MAX_VALUE)
         );
         jPanel_SettingsLayout.setVerticalGroup(
             jPanel_SettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 163, Short.MAX_VALUE)
+            .addGap(0, 311, Short.MAX_VALUE)
         );
 
-        getContentPane().add(jPanel_Settings);
-        jPanel_Settings.setBounds(240, 10, 220, 190);
+        jScrollPane_Settings.setViewportView(jPanel_Settings);
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane_Settings)
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane_Settings)
+        );
+
+        getContentPane().add(jPanel4);
+        jPanel4.setBounds(240, 10, 240, 340);
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Inputs", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION));
         jPanel2.setLayout(new javax.swing.BoxLayout(jPanel2, javax.swing.BoxLayout.LINE_AXIS));
@@ -76,7 +95,7 @@ public class DrawSettings extends javax.swing.JFrame {
         );
         jPanel_InputsLayout.setVerticalGroup(
             jPanel_InputsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 378, Short.MAX_VALUE)
+            .addGap(0, 494, Short.MAX_VALUE)
         );
 
         jScrollPane_Inputs.setViewportView(jPanel_Inputs);
@@ -84,7 +103,7 @@ public class DrawSettings extends javax.swing.JFrame {
         jPanel2.add(jScrollPane_Inputs);
 
         getContentPane().add(jPanel2);
-        jPanel2.setBounds(10, 11, 220, 380);
+        jPanel2.setBounds(10, 11, 220, 530);
 
         jButton_Repaint.setText("Repaint");
         jButton_Repaint.addActionListener(new java.awt.event.ActionListener() {
@@ -93,11 +112,11 @@ public class DrawSettings extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jButton_Repaint);
-        jButton_Repaint.setBounds(360, 400, 90, 30);
+        jButton_Repaint.setBounds(360, 547, 90, 23);
 
         jLabel_Info.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         getContentPane().add(jLabel_Info);
-        jLabel_Info.setBounds(20, 440, 430, 20);
+        jLabel_Info.setBounds(30, 580, 430, 20);
 
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Visible Objects", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION));
         jPanel3.setLayout(new javax.swing.BoxLayout(jPanel3, javax.swing.BoxLayout.LINE_AXIS));
@@ -106,7 +125,7 @@ public class DrawSettings extends javax.swing.JFrame {
         jPanel_Visible.setLayout(jPanel_VisibleLayout);
         jPanel_VisibleLayout.setHorizontalGroup(
             jPanel_VisibleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 206, Short.MAX_VALUE)
+            .addGap(0, 209, Short.MAX_VALUE)
         );
         jPanel_VisibleLayout.setVerticalGroup(
             jPanel_VisibleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -118,22 +137,27 @@ public class DrawSettings extends javax.swing.JFrame {
         jPanel3.add(jScrollPane1);
 
         getContentPane().add(jPanel3);
-        jPanel3.setBounds(240, 210, 220, 180);
+        jPanel3.setBounds(240, 360, 240, 180);
 
         jButton_LoadPointCloud.setText("Load Pointcloud");
         getContentPane().add(jButton_LoadPointCloud);
-        jButton_LoadPointCloud.setBounds(20, 470, 130, 23);
+        jButton_LoadPointCloud.setBounds(80, 610, 130, 23);
 
         jButton_SavePointCloud.setText("Save Pointcloud");
         getContentPane().add(jButton_SavePointCloud);
-        jButton_SavePointCloud.setBounds(180, 470, 140, 23);
+        jButton_SavePointCloud.setBounds(250, 610, 140, 23);
 
         getContentPane().add(jComboBox_ZerofindingMethod);
-        jComboBox_ZerofindingMethod.setBounds(140, 405, 200, 20);
+        jComboBox_ZerofindingMethod.setBounds(140, 550, 200, 20);
 
         jLabel1.setText("Zerofinding method:");
         getContentPane().add(jLabel1);
-        jLabel1.setBounds(30, 405, 100, 20);
+        jLabel1.setBounds(10, 550, 120, 20);
+
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel2.setText("F3: Starts recording, F4: Stops recording, ESC: Quit");
+        getContentPane().add(jLabel2);
+        jLabel2.setBounds(0, 634, 490, 20);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -187,16 +211,19 @@ public class DrawSettings extends javax.swing.JFrame {
     public javax.swing.JButton jButton_LoadPointCloud;
     protected javax.swing.JButton jButton_Repaint;
     public javax.swing.JButton jButton_SavePointCloud;
-    private javax.swing.JComboBox jComboBox_ZerofindingMethod;
+    protected javax.swing.JComboBox jComboBox_ZerofindingMethod;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     public javax.swing.JLabel jLabel_Info;
     protected javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
     public javax.swing.JPanel jPanel_Inputs;
     protected javax.swing.JPanel jPanel_Settings;
     protected javax.swing.JPanel jPanel_Visible;
     private javax.swing.JScrollPane jScrollPane1;
     public javax.swing.JScrollPane jScrollPane_Inputs;
+    protected javax.swing.JScrollPane jScrollPane_Settings;
     // End of variables declaration//GEN-END:variables
     
     /**

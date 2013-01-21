@@ -1,8 +1,11 @@
 package de.gaalop.visualizer.gui;
 
 import java.awt.GridLayout;
+import java.util.HashMap;
+import java.util.LinkedList;
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
 /**
@@ -12,32 +15,16 @@ import javax.swing.JTextField;
 public class SettingsPanel {
     
     private JCheckBox autoRendering = new JCheckBox("Automatic Rendering", false);
-    private JTextField jTF_cubeLength = new JTextField("5"); 
-    private JTextField jTF_density = new JTextField("0.1");
     private JTextField jTF_pointSize = new JTextField("0.2");
+    private LabeledComponent lcPointSize = new LabeledComponent("point size", jTF_pointSize);
+    
+    private LinkedList<LabeledComponent> settings = new LinkedList<LabeledComponent>();
+    private JScrollPane scrollPane;
+    private JPanel panelSettings;
 
-    public SettingsPanel(JPanel panel) {
-        panel.setLayout(new GridLayout(4,1,5,5));
-        panel.add(autoRendering);
-        panel.add(new LabeledComponent("cube length", jTF_cubeLength));
-        panel.add(new LabeledComponent("density", jTF_density));
-        panel.add(new LabeledComponent("point size", jTF_pointSize));
-    }
-    
-    /**
-     * Returns the half length of the cube to render
-     * @return The half length of the cube to render
-     */
-    public float getCubeLength() {
-        return Float.parseFloat(jTF_cubeLength.getText());
-    }
-    
-    /**
-     * Returns the density of the rendering
-     * @return The density
-     */
-    public float getDensity() {
-        return Float.parseFloat(jTF_density.getText());
+    public SettingsPanel(JScrollPane scrollPane, JPanel panelSettings) {
+        this.scrollPane = scrollPane;
+        this.panelSettings = panelSettings;
     }
     
     /**
@@ -54,6 +41,36 @@ public class SettingsPanel {
      */
     public float getPointSize() {
         return Float.parseFloat(jTF_pointSize.getText());
+    }
+
+    /**
+     * Returns a map containing all settings of the selected zero finder method with its values
+     * @return The map
+     */
+    public HashMap<String, String> getSettings() {
+        HashMap<String, String> result = new HashMap<String, String>();
+        for (LabeledComponent c: settings) 
+            result.put(c.text, ((JTextField) c.component).getText());
+        return result;
+    }
+    
+    /**
+     * Sets a map containing all settings of the selected zero finder method with its default values
+     * @param settings The settings
+     */
+    public void setSettings(HashMap<String, String> settings) {
+        this.settings.clear();
+        panelSettings.removeAll();
+        int rows = settings.size()+2;
+        panelSettings.setLayout(new GridLayout(Math.max(9,rows),1,5,5));
+        panelSettings.add(autoRendering);
+        panelSettings.add(lcPointSize);
+        for (String key: settings.keySet()) {
+            LabeledComponent lc = new LabeledComponent(key, new JTextField(settings.get(key)));
+            panelSettings.add(lc);
+            this.settings.add(lc);
+        }
+        scrollPane.setViewportView(panelSettings);
     }
     
 }

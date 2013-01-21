@@ -24,16 +24,18 @@ public class GradientMethodThread extends Thread {
             
     public LinkedList<Point3d> points = new LinkedList<Point3d>();
     
-    private static final int MAX_N = 10; //TODO settable on GUI
-    private static final double EPSILON = 10E-04; //TODO settable on GUI
+    private int max_n;
+    private double epsilon;
 
-    public GradientMethodThread(float fromOX_Incl, float toOX_Excl, float a, float dist, HashMap<MultivectorComponent, Double> globalValues, CodePiece codePiece) {
+    public GradientMethodThread(float fromOX_Incl, float toOX_Excl, float a, float dist, HashMap<MultivectorComponent, Double> globalValues, CodePiece codePiece, double epsilon, int max_n) {
         this.fromOX_Incl = fromOX_Incl;
         this.toOX_Excl = toOX_Excl;
         this.a = a;
         this.dist = dist;
         this.globalValues = globalValues;
         this.codePiece = codePiece;
+        this.epsilon = epsilon;
+        this.max_n = max_n;
     }
 
     @Override
@@ -55,11 +57,11 @@ public class GradientMethodThread extends Thread {
      * @return null, if no zero point was found, other an array with the three coordinates of the zero point
      */
     private float[] searchInNeighborhood(float ox, float oy, float oz) {
-        double distDir = dist/MAX_N;
+        double distDir = dist/max_n;
         EvaluationResult eval;
         eval = evaluate(ox, oy, oz);
         int n = 1;
-        while (Math.abs(eval.f)>EPSILON && n<=MAX_N) {
+        while (Math.abs(eval.f)>epsilon && n<=max_n) {
             //Gradient: [eval.dx,eval.dy,eval.dz]
             eval.gradient.normalize();
             if (eval.f > 0) {
@@ -79,7 +81,7 @@ public class GradientMethodThread extends Thread {
             n++;
         }
         
-        if (Math.abs(eval.f)<=EPSILON) 
+        if (Math.abs(eval.f)<=epsilon) 
             return new float[] {ox,oy,oz};
         else
             return null;

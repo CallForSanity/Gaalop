@@ -13,9 +13,7 @@ import java.util.LinkedList;
  * @author christian
  */
 public abstract class ZeroFinder {
-    
-    public float cubeEdgeLength = 5f;
-    public float density = 0.1f;
+
     protected String maximaCommand;
     
     public LinkedList<AssignmentNode> graphNodes;
@@ -38,9 +36,10 @@ public abstract class ZeroFinder {
      * Finds the zero locations in a list of assignmentnodes, given a global values set
      * @param globalValues The set of global values
      * @param assignmentNodes The list of assignmentnodes
+     * @param mapSettings A map with all settings for the zero finder
      * @return The map name of multivector to list of zero locations
      */
-    public abstract HashMap<String, LinkedList<Point3d>> findZeroLocations(HashMap<MultivectorComponent, Double> globalValues, LinkedList<AssignmentNode> assignmentNodes);
+    public abstract HashMap<String, LinkedList<Point3d>> findZeroLocations(HashMap<MultivectorComponent, Double> globalValues, LinkedList<AssignmentNode> assignmentNodes, HashMap<String, String> mapSettings);
 
     /**
      * Returns the name of the zerofinding method
@@ -53,6 +52,6 @@ public abstract class ZeroFinder {
         return getName();
     }
     
-    
+    public abstract HashMap<String, String> getSettings();
     
 }

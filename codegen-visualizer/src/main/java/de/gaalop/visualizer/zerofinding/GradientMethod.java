@@ -93,13 +93,18 @@ public class GradientMethod extends PrepareZerofinder {
     }
 
     @Override
-    public HashMap<String, LinkedList<Point3d>> findZeroLocations(HashMap<MultivectorComponent, Double> globalValues, LinkedList<AssignmentNode> assignmentNodes) {
+    public HashMap<String, LinkedList<Point3d>> findZeroLocations(HashMap<MultivectorComponent, Double> globalValues, LinkedList<AssignmentNode> assignmentNodes, HashMap<String, String> mapSettings) {
+        int a = Integer.parseInt(mapSettings.get("cubeEdgeLength"));
+        float dist = Float.parseFloat(mapSettings.get("density"));
+        double epsilon = Double.parseDouble(mapSettings.get("epsilon"));
+        int max_n = Integer.parseInt(mapSettings.get("max_n"));
+
         LinkedList<CodePiece> codePieces = prepareGraph(assignmentNodes);
         
         HashMap<String, LinkedList<Point3d>> result = new HashMap<String, LinkedList<Point3d>>();
         for (CodePiece cp: codePieces) {
             //search zero locations of mv cp.name in every CodePiece cp
-            LinkedList<Point3d> points = searchZeroLocations(cp, globalValues);
+            LinkedList<Point3d> points = searchZeroLocations(cp, globalValues, a, dist, epsilon, max_n);
             result.put(cp.nameOfMultivector, points);
         }
         return result;
@@ -117,11 +122,9 @@ public class GradientMethod extends PrepareZerofinder {
      * @param globalValues The global initialised values
      * @return The zero locations points
      */
-    private LinkedList<Point3d> searchZeroLocations(CodePiece cp, HashMap<MultivectorComponent, Double> globalValues) {
+    private LinkedList<Point3d> searchZeroLocations(CodePiece cp, HashMap<MultivectorComponent, Double> globalValues, int a, float dist, double epsilon, int max_n) {
         LinkedList<Point3d> points = new LinkedList<Point3d>();
-        float a = cubeEdgeLength;
-        float dist = density;
-        
+
         int processorCount = Runtime.getRuntime().availableProcessors();
         
         GradientMethodThread[] threads = new GradientMethodThread[processorCount];
@@ -129,7 +132,7 @@ public class GradientMethod extends PrepareZerofinder {
             float from = (i*2*a)/((float) processorCount) - a;
             float to = ((i != processorCount-1) ? ((i+1)*2*a)/((float) processorCount) : 2*a) - a; 
 
-            threads[i] = new GradientMethodThread(from, to, a, dist, globalValues, cp);
+            threads[i] = new GradientMethodThread(from, to, a, dist, globalValues, cp, epsilon, max_n);
             threads[i].start();
         }
 
@@ -143,6 +146,16 @@ public class GradientMethod extends PrepareZerofinder {
         }
 
         return points;
+    }
+    
+    @Override
+    public HashMap<String, String> getSettings() {
+        HashMap<String, String> result = new HashMap<String, String>();
+        result.put("cubeEdgeLength", "5");
+        result.put("density", "0.4");
+        result.put("epsilon", "1E-4");
+        result.put("max_n", "10");
+        return result;
     }
     
 }

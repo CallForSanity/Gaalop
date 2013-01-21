@@ -15,11 +15,12 @@ import java.util.logging.Logger;
 public class DiscreteCubeMethod extends ZeroFinder {
 
     @Override
-    public HashMap<String, LinkedList<Point3d>> findZeroLocations(HashMap<MultivectorComponent, Double> globalValues, LinkedList<AssignmentNode> assignmentNodes) {
+    public HashMap<String, LinkedList<Point3d>> findZeroLocations(HashMap<MultivectorComponent, Double> globalValues, LinkedList<AssignmentNode> assignmentNodes, HashMap<String, String> mapSettings) {
         HashMap<String, LinkedList<Point3d>> points = new HashMap<String, LinkedList<Point3d>>();
 
-        int a = (int) cubeEdgeLength;
-        float dist = density;
+        int a = Integer.parseInt(mapSettings.get("cubeEdgeLength"));
+        float dist = Float.parseFloat(mapSettings.get("density"));
+        double epsilon = Double.parseDouble(mapSettings.get("epsilon"));
         
         int processorCount = Runtime.getRuntime().availableProcessors();
         
@@ -28,7 +29,7 @@ public class DiscreteCubeMethod extends ZeroFinder {
             int from = (i*2*a)/processorCount - a;
             int to = ((i != processorCount-1) ? ((i+1)*2*a)/processorCount : 2*a) - a; 
 
-            threads[i] = new DiscreteCubeMethodThread(from, to, a, dist, globalValues, assignmentNodes);
+            threads[i] = new DiscreteCubeMethodThread(from, to, a, dist, globalValues, assignmentNodes, epsilon);
             threads[i].start();
         }
         
@@ -52,6 +53,15 @@ public class DiscreteCubeMethod extends ZeroFinder {
     @Override
     public String getName() {
         return "Discrete Cube Method";
+    }
+
+    @Override
+    public HashMap<String, String> getSettings() {
+        HashMap<String, String> result = new HashMap<String, String>();
+        result.put("cubeEdgeLength", "5");
+        result.put("density", "0.1");
+        result.put("epsilon", "1E-1");
+        return result;
     }
     
     

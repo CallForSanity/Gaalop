@@ -15,8 +15,9 @@ public class RayMethodThread extends Thread {
     private float fromOY_Incl;
     private float toOY_Excl;
     
-    private float a ;
+    private float a;
     private float dist;
+    private double epsilon;
     
     private HashMap<MultivectorComponent, Double> globalValues;
     
@@ -24,13 +25,14 @@ public class RayMethodThread extends Thread {
             
     public LinkedList<Point3d> points = new LinkedList<Point3d>();
 
-    public RayMethodThread(float fromOY_Incl, float toOY_Excl, float a, float dist, HashMap<MultivectorComponent, Double> globalValues, CodePiece codePiece) {
+    public RayMethodThread(float fromOY_Incl, float toOY_Excl, float a, float dist, HashMap<MultivectorComponent, Double> globalValues, CodePiece codePiece, double epsilon) {
         this.fromOY_Incl = fromOY_Incl;
         this.toOY_Excl = toOY_Excl;
         this.a = a;
         this.dist = dist;
         this.globalValues = globalValues;
         this.codePiece = codePiece;
+        this.epsilon = epsilon;
     }
 
     @Override
@@ -114,7 +116,7 @@ public class RayMethodThread extends Thread {
             evaluater.evaluate(codePiece);
             double ce = values.get(pr).lo();
             
-            if (Math.abs(ce) <= 0.01) refine = false;
+            if (Math.abs(ce) <= epsilon) refine = false;
             if (t.hi()-t.lo() < 0.001) return;
         
             if (ce*lo < 0) 

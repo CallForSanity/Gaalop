@@ -12,7 +12,7 @@ import java.util.LinkedList;
  */
 public class DiscreteCubeMethodThread extends Thread {
     
-    private static final double EPSILON = 1E-1;
+    private double epsilon;
     
     private int fromX_Incl;
     private int toX_Excl;
@@ -25,13 +25,14 @@ public class DiscreteCubeMethodThread extends Thread {
     
     public HashMap<String, LinkedList<Point3d>> points = new HashMap<String, LinkedList<Point3d>>();
 
-    public DiscreteCubeMethodThread(int fromX_Incl, int toX_Excl, int a, float dist, HashMap<MultivectorComponent, Double> globalValues, LinkedList<AssignmentNode> assignmentNodes) {
+    public DiscreteCubeMethodThread(int fromX_Incl, int toX_Excl, int a, float dist, HashMap<MultivectorComponent, Double> globalValues, LinkedList<AssignmentNode> assignmentNodes, double epsilon) {
         this.fromX_Incl = fromX_Incl;
         this.toX_Excl = toX_Excl;
         this.a = a;
         this.dist = dist;
         this.globalValues = globalValues;
         this.assignmentNodes = assignmentNodes;
+        this.epsilon = epsilon;
     }
     
     @Override
@@ -67,7 +68,7 @@ public class DiscreteCubeMethodThread extends Thread {
                         }
                     }
                     for (String key : squaredAndSummedValues.keySet()) {
-                        if (Math.sqrt(squaredAndSummedValues.get(key)) <= EPSILON) {
+                        if (Math.sqrt(squaredAndSummedValues.get(key)) <= epsilon) {
                             //output point!
                             if (!points.containsKey(key)) {
                                 points.put(key, new LinkedList<Point3d>());

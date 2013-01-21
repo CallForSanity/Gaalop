@@ -70,7 +70,7 @@ public class NewDrawSettingsCodeGen extends DrawSettings implements CodeGenerato
                     recomputeCommand();
             }
         };
-        settingsPanel = new SettingsPanel(jPanel_Settings);
+        settingsPanel = new SettingsPanel(jScrollPane_Settings, jPanel_Settings);
         visiblePanel = new VisiblePanel(jPanel_Visible) {
             @Override
             public void stateChanged(ChangeEvent e) {
@@ -97,11 +97,19 @@ public class NewDrawSettingsCodeGen extends DrawSettings implements CodeGenerato
             }
         });
         
+        jComboBox_ZerofindingMethod.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                settingsPanel.setSettings(getSelectedZeroFinder().getSettings());
+                repaint();
+            }
+        });
+       
         //Add ZeroFinding methods
         LinkedList<ZeroFinder> zerofinderList = new LinkedList<ZeroFinder>();
-        ZeroFinder defaultZeroFinder = new GradientMethod();
+        ZeroFinder defaultZeroFinder = new RayMethod();
         zerofinderList.add(defaultZeroFinder);
-        zerofinderList.add(new RayMethod());
+        zerofinderList.add(new GradientMethod());
         zerofinderList.add(new DiscreteCubeMethod());
         setZerofinderMethods(zerofinderList, defaultZeroFinder);
     }
@@ -136,9 +144,7 @@ public class NewDrawSettingsCodeGen extends DrawSettings implements CodeGenerato
         
         final ZeroFinder curZeroFinder = getSelectedZeroFinder();
         curZeroFinder.setMaximaCommand(maximaCommand);
-        curZeroFinder.cubeEdgeLength = settingsPanel.getCubeLength();
-        curZeroFinder.density = settingsPanel.getDensity();
-        
+
         jLabel_Info.setText("Please wait while rendering ...");
         jLabel_Info.repaint();
         
@@ -158,8 +164,9 @@ public class NewDrawSettingsCodeGen extends DrawSettings implements CodeGenerato
                 LinkedList<AssignmentNode> list = new LinkedList<AssignmentNode>();
                 for (AssignmentNode node: graphAssignmentNodes) 
                     list.add(node.copyElements());
+                
         
-                HashMap<String, LinkedList<Point3d>> pointsToRender = curZeroFinder.findZeroLocations(globalValues, list);
+                HashMap<String, LinkedList<Point3d>> pointsToRender = curZeroFinder.findZeroLocations(globalValues, list, settingsPanel.getSettings());
                 
                 long sum = 0;
                 for (String key : pointsToRender.keySet()) {

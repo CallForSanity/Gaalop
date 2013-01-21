@@ -101,13 +101,17 @@ public class RayMethod extends PrepareZerofinder {
     }
     
     @Override
-    public HashMap<String, LinkedList<Point3d>> findZeroLocations(HashMap<MultivectorComponent, Double> globalValues, LinkedList<AssignmentNode> assignmentNodes) {
+    public HashMap<String, LinkedList<Point3d>> findZeroLocations(HashMap<MultivectorComponent, Double> globalValues, LinkedList<AssignmentNode> assignmentNodes, HashMap<String, String> mapSettings) {
+        int a = Integer.parseInt(mapSettings.get("cubeEdgeLength"));
+        float dist = Float.parseFloat(mapSettings.get("density"));
+        double epsilon = Double.parseDouble(mapSettings.get("epsilon"));
+        
         LinkedList<CodePiece> codePieces = prepareGraph(assignmentNodes);
         
         HashMap<String, LinkedList<Point3d>> result = new HashMap<String, LinkedList<Point3d>>();
         for (CodePiece cp: codePieces) {
             //search zero locations of mv cp.name in every CodePiece cp
-            LinkedList<Point3d> points = searchZeroLocations(cp, globalValues);
+            LinkedList<Point3d> points = searchZeroLocations(cp, globalValues, a, dist, epsilon);
             result.put(cp.nameOfMultivector, points);
         }
         return result;
@@ -120,10 +124,9 @@ public class RayMethod extends PrepareZerofinder {
      * @param globalValues The global initialised values
      * @return The zero locations points
      */
-    private LinkedList<Point3d> searchZeroLocations(CodePiece cp, HashMap<MultivectorComponent, Double> globalValues) {
+    private LinkedList<Point3d> searchZeroLocations(CodePiece cp, HashMap<MultivectorComponent, Double> globalValues, int a, float dist, double epsilon) {
         LinkedList<Point3d> points = new LinkedList<Point3d>();
-        float a = cubeEdgeLength;
-        float dist = density;
+
         
         int processorCount = Runtime.getRuntime().availableProcessors();
         
@@ -132,7 +135,7 @@ public class RayMethod extends PrepareZerofinder {
             float from = (i*2*a)/((float) processorCount) - a;
             float to = ((i != processorCount-1) ? ((i+1)*2*a)/((float) processorCount) : 2*a) - a; 
 
-            threads[i] = new RayMethodThread(from, to, a, dist, globalValues, cp);
+            threads[i] = new RayMethodThread(from, to, a, dist, globalValues, cp, epsilon);
             threads[i].start();
         }
 
@@ -152,4 +155,14 @@ public class RayMethod extends PrepareZerofinder {
     public String getName() {
         return "Ray Method";
     }
+    
+    @Override
+    public HashMap<String, String> getSettings() {
+        HashMap<String, String> result = new HashMap<String, String>();
+        result.put("cubeEdgeLength", "5");
+        result.put("density", "0.1");
+        result.put("epsilon", "0.01");
+        return result;
+    }
+        
 }
