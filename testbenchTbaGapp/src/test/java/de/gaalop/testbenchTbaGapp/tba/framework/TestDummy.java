@@ -69,6 +69,37 @@ public class TestDummy {
         
     }
     
+    public static boolean compile(TBATestCase tBATestCase, CodeGeneratorPlugin codegenPlugin) {
+        
+        CodeParser parser                                       = new de.gaalop.clucalc.input.Plugin().createCodeParser();
+        GlobalSettingsStrategy globalSettingsStrategy           = new de.gaalop.globalSettings.Plugin().createGlobalSettingsStrategy();
+        VisualCodeInserterStrategy visualCodeInserterStrategy   = new de.gaalop.visualCodeInserter.Plugin().createVisualCodeInserterStrategy();
+        AlgebraStrategy algebraStrategy                         = new de.gaalop.algebra.Plugin().createAlgebraStrategy();
+        OptimizationStrategy optimizationStrategy               = new de.gaalop.tba.Plugin().createOptimizationStrategy();
+        CodeGenerator codeGenerator                             = codegenPlugin.createCodeGenerator();
+        
+        CompilerFacade facade = new CompilerFacade(
+                parser, 
+                globalSettingsStrategy, 
+                visualCodeInserterStrategy, 
+                algebraStrategy, 
+                optimizationStrategy, 
+                codeGenerator, 
+                tBATestCase.getAlgebraName(), 
+                true, 
+                "");
+        
+        Set<OutputFile> outputFiles;
+        try {
+            outputFiles = facade.compile(new InputFile("TestCase", tBATestCase.getCLUScript()));
+
+            return true;
+        } catch (CompilationException ex) {
+            return false;
+        }
+        
+    }
+    
     private static HashMap<Variable, Double> contentToMap(String content) {
         BufferedReader reader = new BufferedReader(new StringReader(content));
         HashMap<Variable, Double> variables = new HashMap<Variable, Double>();

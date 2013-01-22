@@ -16,20 +16,8 @@ public abstract class ZeroFinder {
 
     protected String maximaCommand;
     
-    public LinkedList<AssignmentNode> graphNodes;
-    
     public void setMaximaCommand(String maximaCommand) {
         this.maximaCommand = maximaCommand;
-    }
-    
-    /**
-     * Loads a graph into the internal representation, i.e. a list of assginmentnodes
-     * @param graph The graph
-     */
-    public final void loadGraph(ControlFlowGraph graph) {
-        AssignmentNodeCollector collector = new AssignmentNodeCollector();
-        graph.accept(collector);
-        graphNodes = collector.getAssignmentNodes();
     }
     
     /**

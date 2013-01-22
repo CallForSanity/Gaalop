@@ -22,7 +22,7 @@ public class RayMethod extends PrepareZerofinder {
      * Replaces x by ox+t, y by oy and z by oz in a list of assignment nodes
      * @param nodes The list of assignment nodes
      */
-    private void replace(LinkedList<AssignmentNode> nodes) {
+    public static void replace(LinkedList<AssignmentNode> nodes) {
         //replace x=ox+t,y=oy,z=oz
         ReplaceVisitor visitor = new ReplaceVisitor() {
 
