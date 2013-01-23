@@ -191,7 +191,7 @@ public class GradientMethod extends PrepareZerofinder {
     public HashMap<String, String> getSettings() {
         HashMap<String, String> result = new HashMap<String, String>();
         result.put("cubeEdgeLength", "5");
-        result.put("density", "0.4");
+        result.put("density", "1");
         result.put("epsilon", "1E-4");
         result.put("max_n", "10");
         return result;
