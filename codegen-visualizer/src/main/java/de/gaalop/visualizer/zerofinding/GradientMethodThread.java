@@ -57,13 +57,20 @@ public class GradientMethodThread extends Thread {
      * @return null, if no zero point was found, other an array with the three coordinates of the zero point
      */
     private float[] searchInNeighborhood(float ox, float oy, float oz) {
-        double distDir = dist/max_n;
+        double distDir = 1;
         EvaluationResult eval;
         eval = evaluate(ox, oy, oz);
         int n = 1;
+        double glastx=eval.gradient.x;
+        double glasty=eval.gradient.y;
+        double glastz=eval.gradient.z;
         while (Math.abs(eval.f)>epsilon && n<=max_n) {
             //Gradient: [eval.dx,eval.dy,eval.dz]
             eval.gradient.normalize();
+            if (glastx*eval.gradient.x+glasty*eval.gradient.y+glastz*eval.gradient.z<0) {
+                distDir/=2;
+            }
+            
             if (eval.f > 0) {
                 //Go into direction of negative gradient
                 ox -= eval.gradient.x*distDir;
@@ -76,7 +83,9 @@ public class GradientMethodThread extends Thread {
                 oz += eval.gradient.z*distDir;
             }
             
-            
+            glastx=eval.gradient.x;
+            glasty=eval.gradient.y;
+            glastz=eval.gradient.z;
             eval = evaluate(ox, oy, oz);
             n++;
         }
@@ -97,9 +106,9 @@ public class GradientMethodThread extends Thread {
     private EvaluationResult evaluate(float ox, float oy, float oz) {
         final String productName = codePiece.nameOfMultivector;
         HashMap<MultivectorComponent, Double> valuesIn = new HashMap<MultivectorComponent, Double>(globalValues);
-        valuesIn.put(new MultivectorComponent("_V_X", 0), (double) ox);
-        valuesIn.put(new MultivectorComponent("_V_Y", 0), (double) oy);
-        valuesIn.put(new MultivectorComponent("_V_Z", 0), (double) oz);
+        valuesIn.put(new MultivectorComponent("_V_ox", 0), (double) ox);
+        valuesIn.put(new MultivectorComponent("_V_oy", 0), (double) oy);
+        valuesIn.put(new MultivectorComponent("_V_oz", 0), (double) oz);
         Evaluater evaluater = new Evaluater(valuesIn);
         evaluater.evaluate(codePiece);
         HashMap<MultivectorComponent, Double> valuesOut = evaluater.getValues();

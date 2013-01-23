@@ -2,8 +2,11 @@ package de.gaalop.visualizer.zerofinding;
 
 import de.gaalop.OptimizationException;
 import de.gaalop.cfg.AssignmentNode;
+import de.gaalop.dfg.Addition;
 import de.gaalop.dfg.MultivectorComponent;
+import de.gaalop.dfg.Variable;
 import de.gaalop.tba.cfgImport.optimization.maxima.MaximaDifferentiater;
+import de.gaalop.visitors.ReplaceVisitor;
 import de.gaalop.visualizer.Point3d;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -19,6 +22,40 @@ import org.antlr.runtime.RecognitionException;
  */
 public class GradientMethod extends PrepareZerofinder {
 
+    /**
+     * Replaces x by ox+t, y by oy and z by oz in a list of assignment nodes
+     * @param nodes The list of assignment nodes
+     */
+    public static void replace(LinkedList<AssignmentNode> nodes) {
+        //replace x=ox+t,y=oy,z=oz
+        ReplaceVisitor visitor = new ReplaceVisitor() {
+
+            private void visitVar(Variable node) {
+                if (node.getName().equals("_V_X"))
+                    result = new MultivectorComponent("_V_ox", 0);
+                if (node.getName().equals("_V_Y"))
+                    result = new MultivectorComponent("_V_oy", 0);
+                if (node.getName().equals("_V_Z"))
+                    result = new MultivectorComponent("_V_oz", 0);
+            }
+            
+            @Override
+            public void visit(MultivectorComponent node) {
+                visitVar(node);
+            }
+
+            @Override
+            public void visit(Variable node) {
+                visitVar(node);
+            }
+            
+        };
+        for (AssignmentNode node: nodes) {
+            node.setVariable((Variable) visitor.replace(node.getVariable()));
+            node.setValue(visitor.replace(node.getValue()));
+        }
+    }
+    
     /**
      * Differentiate the codepieces with respect to ox,oy,z
      * @param codePieces 
@@ -75,7 +112,9 @@ public class GradientMethod extends PrepareZerofinder {
      * @return The generated code pieces
      */
     private LinkedList<CodePiece> prepareGraph(LinkedList<AssignmentNode> nodes) {
-       
+        //replace x=ox+t,y=oy,z=oz
+        replace(nodes);
+        
         //Insert expressions, like Maxima,  !!!
         InsertingExpression.insertExpressions(nodes);
         

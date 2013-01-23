@@ -107,9 +107,9 @@ public class NewDrawSettingsCodeGen extends DrawSettings implements CodeGenerato
        
         //Add ZeroFinding methods
         LinkedList<ZeroFinder> zerofinderList = new LinkedList<ZeroFinder>();
-        ZeroFinder defaultZeroFinder = new RayMethod();
+        ZeroFinder defaultZeroFinder = new GradientMethod();
         zerofinderList.add(defaultZeroFinder);
-        zerofinderList.add(new GradientMethod());
+        zerofinderList.add(new RayMethod());
         zerofinderList.add(new DiscreteCubeMethod());
         setZerofinderMethods(zerofinderList, defaultZeroFinder);
     }
