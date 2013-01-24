@@ -24,7 +24,7 @@ public class Plugin extends Observable implements CodeParserPlugin
     private BufferedImage icon;
     
     public Plugin() {
-        URL url = getClass().getResource("/de/gaalop/gaalet/icon.png");
+        URL url = getClass().getResource("icon.png");
         if (url != null) {
             try {
                 icon = ImageIO.read(url);

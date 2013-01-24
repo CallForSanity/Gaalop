@@ -193,7 +193,7 @@ public class GradientMethod extends PrepareZerofinder {
         result.put("cubeEdgeLength", "5");
         result.put("density", "1");
         result.put("epsilon", "1E-4");
-        result.put("max_n", "10");
+        result.put("max_n", "50");
         return result;
     }
     
