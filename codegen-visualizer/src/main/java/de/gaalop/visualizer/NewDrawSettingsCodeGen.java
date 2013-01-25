@@ -11,6 +11,7 @@ import de.gaalop.OutputFile;
 import de.gaalop.cfg.ControlFlowGraph;
 import de.gaalop.dfg.Expression;
 import de.gaalop.dfg.MultivectorComponent;
+import de.gaalop.dfg.Variable;
 import de.gaalop.visualizer.engines.lwjgl.RenderingEngine;
 import de.gaalop.visualizer.engines.lwjgl.SimpleLwJglRenderingEngine;
 import de.gaalop.visualizer.gui.DrawSettings;
@@ -24,6 +25,7 @@ import de.gaalop.visualizer.zerofinding.ZeroFinder;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Collections;
 import java.util.HashMap;
 import javax.swing.JFileChooser;
 import javax.swing.event.ChangeEvent;
@@ -127,6 +129,15 @@ public class NewDrawSettingsCodeGen extends DrawSettings implements CodeGenerato
         
         renderingExpressions = in.getRenderingExpressions();
         colors = ColorEvaluater.getColors(in);
+        
+        //Determine all input variables
+        LinkedList<String> inputs = new LinkedList<String>();
+        for (Variable inputVar: in.getInputVariables()) 
+            if (!isPositionVariable(inputVar.getName()))
+                inputs.add(inputVar.getName());
+        
+        Collections.sort(inputs);
+        inputsPanel.setInputs(inputs);
 
         //Make form visible and relayout it
         setVisible(true);
@@ -215,6 +226,19 @@ public class NewDrawSettingsCodeGen extends DrawSettings implements CodeGenerato
     @Override
     public HashSet<String> getVisibleObjects() {
         return visiblePanel.getVisibleObjects();
+    }
+    
+    /**
+     * Determines, if a variable with the given name is an input variable
+     * @param name The name of the variable
+     * @return true, if the variable with the given name is an input variable, otherwise false
+     */
+    public boolean isPositionVariable(String name) {
+        if (name.equals("_V_X")) return true;
+        if (name.equals("_V_Y")) return true;
+        if (name.equals("_V_Z")) return true;
+        
+        return false;
     }
 
 }
