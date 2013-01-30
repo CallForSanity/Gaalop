@@ -6,6 +6,7 @@ import de.gaalop.dfg.Exponentiation;
 import de.gaalop.dfg.Expression;
 import de.gaalop.dfg.FloatConstant;
 import de.gaalop.dfg.MultivectorComponent;
+import de.gaalop.visualizer.Differentiater;
 import java.util.HashMap;
 import java.util.LinkedList;
 

@@ -4,6 +4,7 @@ import de.gaalop.cfg.AssignmentNode;
 import de.gaalop.cfg.ControlFlowGraph;
 import de.gaalop.dfg.MultivectorComponent;
 import de.gaalop.api.cfg.AssignmentNodeCollector;
+import de.gaalop.visualizer.Differentiater;
 import de.gaalop.visualizer.Point3d;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -13,11 +14,11 @@ import java.util.LinkedList;
  * @author christian
  */
 public abstract class ZeroFinder {
-
-    protected String maximaCommand;
     
-    public void setMaximaCommand(String maximaCommand) {
-        this.maximaCommand = maximaCommand;
+    protected Differentiater differentiater;
+
+    public void setDifferentiater(Differentiater differentiater) {
+        this.differentiater = differentiater;
     }
     
     /**

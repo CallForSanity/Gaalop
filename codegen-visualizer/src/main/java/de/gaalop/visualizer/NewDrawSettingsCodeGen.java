@@ -41,7 +41,7 @@ public class NewDrawSettingsCodeGen extends DrawSettings implements CodeGenerato
     private String lwJglNativePath;
     
     private LinkedList<AssignmentNode> graphAssignmentNodes;
-    private String maximaCommand;
+    private Differentiater differentiater;
 
     private PointClouds loadedPointClouds = new PointClouds();
     private PointClouds computedPointClouds = new PointClouds();
@@ -125,8 +125,8 @@ public class NewDrawSettingsCodeGen extends DrawSettings implements CodeGenerato
         AssignmentNodeCollector collector = new AssignmentNodeCollector();
         in.accept(collector);
         graphAssignmentNodes = collector.getAssignmentNodes();
-        maximaCommand = in.globalSettings.maximaCommand;
         
+        differentiater = new DifferentiaterCreator(in.globalSettings.optMaxima, in.globalSettings.maximaCommand).createDifferentiater();
         renderingExpressions = in.getRenderingExpressions();
         colors = ColorEvaluater.getColors(in);
         
@@ -154,7 +154,7 @@ public class NewDrawSettingsCodeGen extends DrawSettings implements CodeGenerato
         computedPointClouds.clear();
         
         final ZeroFinder curZeroFinder = getSelectedZeroFinder();
-        curZeroFinder.setMaximaCommand(maximaCommand);
+        curZeroFinder.setDifferentiater(differentiater);
 
         jLabel_Info.setText("Please wait while rendering ...");
         jLabel_Info.repaint();

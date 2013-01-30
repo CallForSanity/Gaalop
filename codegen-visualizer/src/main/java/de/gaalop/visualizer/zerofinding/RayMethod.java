@@ -1,16 +1,13 @@
 package de.gaalop.visualizer.zerofinding;
 
-import de.gaalop.OptimizationException;
 import de.gaalop.cfg.AssignmentNode;
 import de.gaalop.dfg.*;
-import de.gaalop.tba.cfgImport.optimization.maxima.MaximaDifferentiater;
 import de.gaalop.visitors.ReplaceVisitor;
 import de.gaalop.visualizer.Point3d;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.antlr.runtime.RecognitionException;
 
 /**
  * Implements a zero finder method, which uses rays
@@ -59,19 +56,14 @@ public class RayMethod extends PrepareZerofinder {
     private void diffentiateCodePieces(LinkedList<CodePiece> codePieces) {
         //differentiate each item of codePieces with respect to t with the help of maxima  to _V_PRODUCT_SD
         for (CodePiece cp: codePieces) {
-            MaximaDifferentiater differentiater = new MaximaDifferentiater();
             LinkedList<AssignmentNode> derived;
-            try {
-                derived = differentiater.differentiate(cp, maximaCommand, "_V_t");
+            
+            derived = differentiater.differentiate(cp, new MultivectorComponent("_V_t",0));
+            if (derived != null)
                 for (AssignmentNode d: derived) {
                     d.setVariable(new MultivectorComponent(d.getVariable().getName()+"D", 0));
                     cp.add(d);
                 }
-            } catch (OptimizationException ex) {
-                Logger.getLogger(RayMethod.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (RecognitionException ex) {
-                Logger.getLogger(RayMethod.class.getName()).log(Level.SEVERE, null, ex);
-            }
         }
     }
     

@@ -1,18 +1,14 @@
 package de.gaalop.visualizer.zerofinding;
 
-import de.gaalop.OptimizationException;
 import de.gaalop.cfg.AssignmentNode;
-import de.gaalop.dfg.Addition;
 import de.gaalop.dfg.MultivectorComponent;
 import de.gaalop.dfg.Variable;
-import de.gaalop.tba.cfgImport.optimization.maxima.MaximaDifferentiater;
 import de.gaalop.visitors.ReplaceVisitor;
 import de.gaalop.visualizer.Point3d;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.antlr.runtime.RecognitionException;
 
 /**
  * Implements a zero finder method, which samples a cube and searches at
@@ -64,45 +60,27 @@ public class GradientMethod extends PrepareZerofinder {
         //differentiate each item of codePieces with respect to ox,oy,oz with the help of maxima  to _V_PRODUCT_SDx/y/z
         for (CodePiece cp: codePieces) {
             //Differntiate with respect to ox
-            MaximaDifferentiater differentiater = new MaximaDifferentiater();
             LinkedList<AssignmentNode> derived;
-            try {
-                derived = differentiater.differentiate(cp, maximaCommand, "_V_ox");
+            derived = differentiater.differentiate(cp, new MultivectorComponent("_V_ox",0));
+            if (derived != null)
                 for (AssignmentNode d: derived) {
                     d.setVariable(new MultivectorComponent(d.getVariable().getName()+"Dx", 0));
                     cp.add(d);
                 }
-            } catch (OptimizationException ex) {
-                Logger.getLogger(RayMethod.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (RecognitionException ex) {
-                Logger.getLogger(RayMethod.class.getName()).log(Level.SEVERE, null, ex);
-            }
             //Differntiate with respect to oy
-            differentiater = new MaximaDifferentiater();
-            try {
-                derived = differentiater.differentiate(cp, maximaCommand, "_V_oy");
+            derived = differentiater.differentiate(cp, new MultivectorComponent("_V_oy",0));
+            if (derived != null)
                 for (AssignmentNode d: derived) {
                     d.setVariable(new MultivectorComponent(d.getVariable().getName()+"Dy", 0));
                     cp.add(d);
                 }
-            } catch (OptimizationException ex) {
-                Logger.getLogger(RayMethod.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (RecognitionException ex) {
-                Logger.getLogger(RayMethod.class.getName()).log(Level.SEVERE, null, ex);
-            }
             //Differntiate with respect to oz
-            differentiater = new MaximaDifferentiater();
-            try {
-                derived = differentiater.differentiate(cp, maximaCommand, "_V_oz");
+            derived = differentiater.differentiate(cp, new MultivectorComponent("_V_oz",0));
+            if (derived != null)
                 for (AssignmentNode d: derived) {
                     d.setVariable(new MultivectorComponent(d.getVariable().getName()+"Dz", 0));
                     cp.add(d);
                 }
-            } catch (OptimizationException ex) {
-                Logger.getLogger(RayMethod.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (RecognitionException ex) {
-                Logger.getLogger(RayMethod.class.getName()).log(Level.SEVERE, null, ex);
-            }
         }
     }
     
