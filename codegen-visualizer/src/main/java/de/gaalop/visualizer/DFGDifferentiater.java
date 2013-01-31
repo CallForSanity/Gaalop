@@ -37,7 +37,6 @@ public class DFGDifferentiater implements ExpressionVisitor {
     private MultivectorComponent diffVar;
     private Expression result;
     private final FloatConstant zero = new FloatConstant(0);
-    private final boolean simplify = false;
 
     private DFGDifferentiater(MultivectorComponent diffVar) {
         this.diffVar = diffVar;
@@ -62,18 +61,14 @@ public class DFGDifferentiater implements ExpressionVisitor {
         node.getLeft().accept(this);
         Expression left = result;
         node.getRight().accept(this);
-        if (simplify) {
-            if (left == zero) {
-                if (result != zero) {
-                    result = new Negation(result);
-                }
-            } else {
-                result = (result == zero)
-                        ? left
-                        : new Subtraction(left, result);
+        if (left == zero) { //0-result
+            if (result != zero) {
+                result = new Negation(result);
             }
         } else {
-            result = new Subtraction(left, result);
+            result = (result == zero)
+                    ? left //left-0
+                    : new Subtraction(left, result);
         }
     }
 
@@ -82,66 +77,131 @@ public class DFGDifferentiater implements ExpressionVisitor {
         node.getLeft().accept(this);
         Expression left = result;
         node.getRight().accept(this);
-        if (simplify) {
-            if (left != zero) {
-                result = (result == zero)
-                        ? left
-                        : new Addition(left, result);
-            }
-        } else {
-            result = new Addition(left, result);
+        if (left != zero) {
+            result = (result == zero)
+                    ? left //left+0
+                    : new Addition(left, result);
         }
     }
 
     @Override
     public void visit(Division node) {
         node.getLeft().accept(this);
-        Expression left = result;
+        Expression dLeft = result;
         node.getRight().accept(this);
-        Expression right = result;
-        result = new Division(
-                new Subtraction(
-                new Multiplication(left, node.getRight().copy()),
-                new Multiplication(node.getLeft().copy(), right)),
-                new Multiplication(node.getRight().copy(), node.getRight().copy()));
-        //TODO chs implement zero simplifiyings and check derivation
+        Expression dRight = result;
+        
+        if (dLeft == zero) {
+            if (dRight == zero) {
+                result = zero;
+            } else {
+                result = new Negation(
+                        new Division(
+                            new Multiplication(
+                                node.getLeft().copy(),
+                                dRight
+                            ),
+                            new Multiplication(
+                                node.getRight().copy(), 
+                                node.getRight().copy()
+                            )
+                        )
+                    );
+            }
+        } else
+            //dLeft != zero !!
+            if (dRight == zero) {
+                result = new Division(
+                            new Multiplication(
+                                dLeft,
+                                node.getRight().copy()
+                            ),
+                            new Multiplication(
+                                node.getRight().copy(), 
+                                node.getRight().copy()
+                            )
+                        );
+            } else {
+                result = new Division(
+                    new Subtraction(
+                        new Multiplication(dLeft, node.getRight().copy()),
+                        new Multiplication(node.getLeft().copy(), dRight)
+                    ),
+                    new Multiplication(node.getRight().copy(), node.getRight().copy()
+                    )
+                );
+            }
     }
 
     @Override
     public void visit(Multiplication node) {
         node.getLeft().accept(this);
-        Expression left = result;
+        Expression dLeft = result;
         node.getRight().accept(this);
-        Expression right = result;
-        result = new Addition(
-                new Multiplication(left, node.getRight().copy()),
-                new Multiplication(node.getLeft().copy(), right));
-        //TODO chs implement zero simplifiyings
+        Expression dRight = result;
+        
+        
+        if (dLeft == zero) {
+            if (dRight == zero) {
+                result = zero;
+            } else {
+                result = new Multiplication(node.getLeft().copy(), dRight);
+            }
+
+        } else {
+            //dLeft != zero !!
+            if (dRight == zero) {
+                result = new Multiplication(dLeft, node.getRight().copy());
+            } else {
+                result = new Addition(
+                    new Multiplication(dLeft, node.getRight().copy()),
+                    new Multiplication(node.getLeft().copy(), dRight)
+                        );
+            }
+        }
+
     }
 
     @Override
     public void visit(Exponentiation node) {
         node.getLeft().accept(this);
-        Expression du = result;
+        Expression dLeft = result;
+        node.getRight().accept(this);
+        Expression dRight = result;
         
-        if (node.getRight() instanceof FloatConstant) {
-            FloatConstant c = (FloatConstant) node.getRight();
-            result = new Multiplication(
-                new Multiplication(
-                    c.copy(), 
-                    new Exponentiation(
-                        node.getLeft().copy(),
-                        new FloatConstant(c.getValue()-1)
-                    )
-                ),result);
+        if (dRight == zero) {
             
+            Expression m = new Multiplication(
+                        node.getRight().copy(), 
+                        new Exponentiation(
+                            node.getLeft().copy(),
+                            new Subtraction(node.getRight().copy(), new FloatConstant(1))
+                        )
+                    );
+            
+            if (dLeft == zero) {
+                result = m;
+            } else {
+                result = new Multiplication(m, dLeft);
+            }
         } else {
-            node.getRight().accept(this);
-            Expression dv = result;
-            result = new Multiplication(new Addition(
-                new Multiplication(dv, new MathFunctionCall(node.getLeft().copy(), MathFunction.LOG)),
-                new Division(new Multiplication(node.getRight().copy(), du), node.getLeft().copy())),
-                node);
+            //dRight != zero !!
+            if (dLeft == zero) {
+                node.getRight().accept(this);
+                Expression dv = result;
+                result = new Multiplication(
+                            new Multiplication(dv, new MathFunctionCall(node.getLeft().copy(), MathFunction.LOG)),
+                            node.copy()
+                        );
+            } else {
+                node.getRight().accept(this);
+                Expression dv = result;
+                result = new Multiplication(new Addition(
+                            new Multiplication(dv, new MathFunctionCall(node.getLeft().copy(), MathFunction.LOG)),
+                            new Division(new Multiplication(node.getRight().copy(), dLeft), node.getLeft().copy())
+                        ),
+                        node.copy());
+            }
         }
         
     }
@@ -166,34 +226,81 @@ public class DFGDifferentiater implements ExpressionVisitor {
                 */
             case COS:
                 node.getOperand().accept(this);
-                result = new Negation(new Multiplication(new MathFunctionCall(node.getOperand().copy(), MathFunction.SIN), result));
+                if (result != zero)
+                    result = new Negation(
+                            new Multiplication(
+                                new MathFunctionCall(
+                                    node.getOperand().copy(), 
+                                    MathFunction.SIN
+                                ), 
+                                result
+                            )
+                        );
                 break;
             case EXP:
                 node.getOperand().accept(this);
-                result = new Multiplication(new MathFunctionCall(node.getOperand().copy(), MathFunction.EXP), result);
+                if (result != zero)
+                    result = new Multiplication(
+                            new MathFunctionCall(
+                                node.getOperand().copy(), 
+                                MathFunction.EXP
+                            ), 
+                            result
+                        );
                 break;
             case LOG:
                 node.getOperand().accept(this);
-                result = new Division(result, node.getOperand().copy());
+                if (result != zero)
+                    result = new Division(result, node.getOperand().copy());
                 break;
             case SIN:
                 node.getOperand().accept(this);
-                result = new Multiplication(new MathFunctionCall(node.getOperand().copy(), MathFunction.COS), result);
+                if (result != zero)
+                    result = new Multiplication(
+                            new MathFunctionCall(
+                                node.getOperand().copy(), 
+                                MathFunction.COS
+                            ), 
+                            result
+                        );
                 break;
             case SQRT:
                 node.getOperand().accept(this);
-                result = new Division(result, new Multiplication(new FloatConstant(2), new MathFunctionCall(node.getOperand().copy(), MathFunction.SQRT)));
+                if (result != zero)
+                    result = new Division(
+                            result, 
+                            new Multiplication(
+                                new FloatConstant(2), 
+                                new MathFunctionCall(
+                                    node.getOperand().copy(), 
+                                    MathFunction.SQRT
+                                )
+                            )
+                        );
                 break;
             case TAN:
                 node.getOperand().accept(this);
-                result = new Division(result, new Multiplication(new MathFunctionCall(node.getOperand().copy(), MathFunction.COS), new MathFunctionCall(node.getOperand().copy(), MathFunction.COS)));
+                if (result != zero)
+                    result = new Division(
+                            result, 
+                            new Multiplication(
+                                new MathFunctionCall(
+                                    node.getOperand().copy(), 
+                                    MathFunction.COS
+                                ), 
+                                new MathFunctionCall(
+                                    node.getOperand().copy(), 
+                                    MathFunction.COS
+                                )
+                            )
+                        );
                 break;
         }
     }
 
     @Override
     public void visit(Variable node) {
-        result = zero; //TODO chs Be careful! This assumes, that differentation with respect to a variable (not MultivectorComponent) is never done!
+        result = zero; 
     }
 
     @Override
@@ -211,7 +318,8 @@ public class DFGDifferentiater implements ExpressionVisitor {
     @Override
     public void visit(Negation node) {
         node.getOperand().accept(this);
-        result = new Negation(result);
+        if (result != zero)
+            result = new Negation(result);
     }
 
     //================ Illegal or not yet implemented methods ==================
