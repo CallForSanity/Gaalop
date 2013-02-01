@@ -314,7 +314,94 @@ public class TestDifferentiater {
         // End Tests
     }
     
-    //TODO chs Test Exponentiation
+    @Test
+    public void exponentiationRConst() throws CodeParserException {
+        HashMap<MultivectorComponent, Double> values = new HashMap<MultivectorComponent, Double>();
+        // Begin Inputs
+        AssignmentNodeCollector col = new AssignmentNodeCollector();
+        Expression v = new Exponentiation(
+                new Addition(new Multiplication(new FloatConstant(2), new MultivectorComponent("x", 0)), new FloatConstant(1)), 
+                new FloatConstant(8)
+                );
+        col.getAssignmentNodes().add(new AssignmentNode(null, new MultivectorComponent("out", 0), v));
+        LinkedList<AssignmentNode> e = new CFGDifferentiater().differentiate(col.getAssignmentNodes(), new MultivectorComponent("x",0));
+        
+        values.put(new MultivectorComponent("x", 0), 2d);
+        values.put(new MultivectorComponent("y", 0), 3d);
+        // End Inputs
+        Evaluater evaluater = new Evaluater(values);
+        evaluater.evaluate(e);
+        
+        // Begin Tests
+        assertEquals(1250000, values.get(new MultivectorComponent("out", 0)),10E-3);  
+        // End Tests
+    }
+    
+    @Test
+    public void exponentiationLConst() throws CodeParserException {
+        HashMap<MultivectorComponent, Double> values = new HashMap<MultivectorComponent, Double>();
+        // Begin Inputs
+        AssignmentNodeCollector col = new AssignmentNodeCollector();
+        Expression v = new Exponentiation(
+                new FloatConstant(2),
+                new Addition(new Multiplication(new FloatConstant(2), new MultivectorComponent("x", 0)), new FloatConstant(1))
+                );
+        col.getAssignmentNodes().add(new AssignmentNode(null, new MultivectorComponent("out", 0), v));
+        LinkedList<AssignmentNode> e = new CFGDifferentiater().differentiate(col.getAssignmentNodes(), new MultivectorComponent("x",0));
+        
+        values.put(new MultivectorComponent("x", 0), 2d);
+        values.put(new MultivectorComponent("y", 0), 3d);
+        // End Inputs
+        Evaluater evaluater = new Evaluater(values);
+        evaluater.evaluate(e);
+        
+        // Begin Tests
+        assertEquals(64*Math.log(2), values.get(new MultivectorComponent("out", 0)),10E-3);  
+        // End Tests
+    }
+    
+    @Test
+    public void exponentiationBConst() throws CodeParserException {
+        HashMap<MultivectorComponent, Double> values = new HashMap<MultivectorComponent, Double>();
+        // Begin Inputs
+        AssignmentNodeCollector col = new AssignmentNodeCollector();
+        Expression v = new Exponentiation(new FloatConstant(6),new FloatConstant(7));
+        col.getAssignmentNodes().add(new AssignmentNode(null, new MultivectorComponent("out", 0), v));
+        LinkedList<AssignmentNode> e = new CFGDifferentiater().differentiate(col.getAssignmentNodes(), new MultivectorComponent("x",0));
+        
+        values.put(new MultivectorComponent("z", 0), 2d);
+        values.put(new MultivectorComponent("y", 0), 3d);
+        // End Inputs
+        Evaluater evaluater = new Evaluater(values);
+        evaluater.evaluate(e);
+        
+        // Begin Tests
+        assertEquals(0, values.get(new MultivectorComponent("out", 0)),10E-3);  
+        // End Tests
+    }
+    
+    @Test
+    public void exponentiationNoConst() throws CodeParserException {
+        HashMap<MultivectorComponent, Double> values = new HashMap<MultivectorComponent, Double>();
+        // Begin Inputs
+        AssignmentNodeCollector col = new AssignmentNodeCollector();
+        Expression v = new Exponentiation(
+                new Addition(new Multiplication(new FloatConstant(2), new MultivectorComponent("x", 0)), new FloatConstant(1)), 
+                new Addition(new Multiplication(new FloatConstant(2), new MultivectorComponent("x", 0)), new FloatConstant(1))
+                );
+        col.getAssignmentNodes().add(new AssignmentNode(null, new MultivectorComponent("out", 0), v));
+        LinkedList<AssignmentNode> e = new CFGDifferentiater().differentiate(col.getAssignmentNodes(), new MultivectorComponent("x",0));
+        
+        values.put(new MultivectorComponent("x", 0), 2d);
+        values.put(new MultivectorComponent("y", 0), 3d);
+        // End Inputs
+        Evaluater evaluater = new Evaluater(values);
+        evaluater.evaluate(e);
+        
+        // Begin Tests
+        assertEquals(3125*(2*Math.log(5)+2), values.get(new MultivectorComponent("out", 0)),10E-3);  
+        // End Tests
+    }
     
     //TODO chs Test MathFunctionCalls
     
@@ -348,10 +435,38 @@ public class TestDifferentiater {
         // End Tests
     }
     
-    //TODO chs Test Negation
+    @Test
+    public void negationConstant() throws CodeParserException {
+        HashMap<MultivectorComponent, Double> values = new HashMap<MultivectorComponent, Double>();
+        // Begin Inputs
+        LinkedList<AssignmentNode> e = diffCluScript("?out_0 = -(5+7);", "x_0");
+        values.put(new MultivectorComponent("x", 0), 2d);
+        // End Inputs
+        Evaluater evaluater = new Evaluater(values);
+        evaluater.evaluate(e);
+        
+        // Begin Tests
+        assertEquals(0, values.get(new MultivectorComponent("out", 0)),10E-3);  
+        // End Tests
+    }
+    
+    @Test
+    public void negationVariable() throws CodeParserException {
+        HashMap<MultivectorComponent, Double> values = new HashMap<MultivectorComponent, Double>();
+        // Begin Inputs
+        LinkedList<AssignmentNode> e = diffCluScript("?out_0 = -(5*x_0);", "x_0");
+        values.put(new MultivectorComponent("x", 0), 2d);
+        // End Inputs
+        Evaluater evaluater = new Evaluater(values);
+        evaluater.evaluate(e);
+        
+        // Begin Tests
+        assertEquals(-5, values.get(new MultivectorComponent("out", 0)),10E-3);  
+        // End Tests
+    }
     
     //TODO chs Test Negative tests
-    
+
     /* //Template
     @Test
     public void simple() throws CodeParserException {

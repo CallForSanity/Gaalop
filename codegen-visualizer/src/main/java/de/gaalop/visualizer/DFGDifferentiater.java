@@ -180,7 +180,7 @@ public class DFGDifferentiater implements ExpressionVisitor {
                     );
             
             if (dLeft == zero) {
-                result = m;
+                result = zero;
             } else {
                 result = new Multiplication(m, dLeft);
             }
