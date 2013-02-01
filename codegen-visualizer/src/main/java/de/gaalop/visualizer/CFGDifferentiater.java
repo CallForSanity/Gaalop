@@ -3,6 +3,7 @@ package de.gaalop.visualizer;
 import de.gaalop.cfg.AssignmentNode;
 import de.gaalop.dfg.Expression;
 import de.gaalop.dfg.MultivectorComponent;
+import de.gaalop.tba.cfgImport.optimization.ConstantFolding;
 import java.util.LinkedList;
 
 /**
@@ -17,7 +18,9 @@ public class CFGDifferentiater implements Differentiater {
         LinkedList<AssignmentNode> result = new LinkedList<AssignmentNode>();
         for (AssignmentNode node : toDerive) {
             Expression differentiated = DFGDifferentiater.differentiate(node.getValue(), variable);
-            result.add(new AssignmentNode(null, node.getVariable(), differentiated));
+            ConstantFolding cF = new ConstantFolding();
+            differentiated.accept(cF);
+            result.add(new AssignmentNode(null, node.getVariable(), cF.getResultExpr()));
         }
         return result;
     }
