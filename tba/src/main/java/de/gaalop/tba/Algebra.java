@@ -45,7 +45,8 @@ public class Algebra {
         if (index < blades.size()) {
             return blades.get(index);
         } else
-            return blades.get(0); //TODO chs search usages: inputsVector.bladeIndex can be greater then algebra bladecount
+            return blades.get(0);   //hint: inputsVector.bladeIndex can be greater then algebra bladecount, if more than 2^n input variables exist. 
+                                    //Return blade "1" in this case (of a vector), because the order of a vector depends not on the algebra. 
     }
 
     public void setBlade(int index, Blade bladeExpr) {

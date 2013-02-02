@@ -209,21 +209,65 @@ public class DFGDifferentiater implements ExpressionVisitor {
     @Override
     public void visit(MathFunctionCall node) {
         switch (node.getFunction()) {
-           //ABS
-           // CEIL
-            //FACT
-                //FLOOR
-
-            /*
-             //TODO To implement
+            //ABS, CEIL, FACT, FLOOR is not differentiable
              
             case ACOS:
+                //-x'/sqrt(1-x*x);
+                
+                node.getOperand().accept(this);
+                result =    new Negation(
+                                new Division(
+                                    result,
+                                    new MathFunctionCall(
+                                        new Subtraction(
+                                            new FloatConstant(1), 
+                                            new Exponentiation(
+                                                node.getOperand().copy(), 
+                                                new FloatConstant(2)
+                                            )
+                                        ), 
+                                        MathFunction.SQRT
+                                    )
+                                )
+                            );
+                
                 break;
             case ASIN:
+                //x'/sqrt(1-x*x);
+                
+                node.getOperand().accept(this);
+                result =    new Division(
+                                result,
+                                new MathFunctionCall(
+                                    new Subtraction(
+                                        new FloatConstant(1), 
+                                        new Exponentiation(
+                                            node.getOperand().copy(), 
+                                            new FloatConstant(2)
+                                        )
+                                    ), 
+                                    MathFunction.SQRT
+                                )
+                            );
+                           
+                
                 break;
             case ATAN:
+                // x' / (1+x*x)
+                node.getOperand().accept(this);
+                result =    new Division(
+                                result,
+                                new Addition(
+                                    new FloatConstant(1), 
+                                    new Exponentiation(
+                                        node.getOperand().copy(), 
+                                        new FloatConstant(2)
+                                    )
+                                )
+                            );
+
                 break;
-                */
+                
             case COS:
                 node.getOperand().accept(this);
                 if (result != zero)

@@ -12,7 +12,7 @@ import java.util.LinkedList;
  */
 public class ZeroAssignmentsCollector extends EmptyControlFlowVisitor {
 
-    private static final double EPSILON = (double) 10E-10; //TODO pre
+    private static final double EPSILON = (double) 10E-10; 
 
     private LinkedList<SequentialNode> toRemove = new LinkedList<SequentialNode>();
 

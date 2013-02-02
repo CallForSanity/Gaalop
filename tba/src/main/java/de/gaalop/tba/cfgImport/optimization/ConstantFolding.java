@@ -49,7 +49,7 @@ public class ConstantFolding implements ExpressionVisitor, ControlFlowVisitor {
 
     /* global visitor return variable */
     private Expression resultExpr;
-    private static final double EPSILON = (double) 10E-10; //TODO pre
+    private static final double EPSILON = (double) 10E-10; 
     private boolean graphModified = false;
 
     public Expression getResultExpr() {

@@ -106,11 +106,6 @@ public class DrawSettings extends javax.swing.JFrame {
         jPanel2.setBounds(10, 11, 220, 530);
 
         jButton_Repaint.setText("Repaint");
-        jButton_Repaint.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton_RepaintActionPerformed(evt);
-            }
-        });
         getContentPane().add(jButton_Repaint);
         jButton_Repaint.setBounds(360, 547, 90, 23);
 
@@ -161,10 +156,6 @@ public class DrawSettings extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void jButton_RepaintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_RepaintActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton_RepaintActionPerformed
 
     /**
      * @param args the command line arguments

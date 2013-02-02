@@ -484,13 +484,9 @@ public final class GraphBuilder {
 	 * the graph can be performed here.
 	 */
 	public void finish() {
-		FindStoreOutputNodes outputNodes = new FindStoreOutputNodes();
-		graph.accept(outputNodes);
-		if (outputNodes.getNodes().isEmpty()) {
-			//TODO chs throw new RuntimeException("There are no lines marked for optimization ('?')");
-		}
-                
-		
+                //Check, if the cluscript contains at least one '?'-mark is moved to algebra plugin,
+                //because of problems in macros.clu parsing in algebra plugin
+            
 		SetCallerVisitor visitor = new SetCallerVisitor();
 		graph.accept(visitor);
 		
