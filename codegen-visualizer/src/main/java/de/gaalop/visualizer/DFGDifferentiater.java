@@ -208,7 +208,10 @@ public class DFGDifferentiater implements ExpressionVisitor {
 
     @Override
     public void visit(MathFunctionCall node) {
-        switch (node.getFunction()) {
+        node.getOperand().accept(this);
+        if (result != zero) {
+            //Not constant
+            switch (node.getFunction()) {
             //ABS, CEIL, FACT, FLOOR is not differentiable
              
             case ACOS:
@@ -339,6 +342,7 @@ public class DFGDifferentiater implements ExpressionVisitor {
                             )
                         );
                 break;
+            }    
         }
     }
 

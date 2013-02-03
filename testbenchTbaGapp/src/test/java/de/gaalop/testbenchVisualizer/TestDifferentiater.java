@@ -1,8 +1,11 @@
 package de.gaalop.testbenchVisualizer;
 
+import de.gaalop.AlgebraStrategy;
 import de.gaalop.CodeParser;
 import de.gaalop.CodeParserException;
 import de.gaalop.InputFile;
+import de.gaalop.OptimizationException;
+import de.gaalop.algebra.AlStrategy;
 import de.gaalop.api.cfg.AssignmentNodeCollector;
 import de.gaalop.cfg.AssignmentNode;
 import de.gaalop.cfg.ControlFlowGraph;
@@ -35,6 +38,18 @@ public class TestDifferentiater {
     public static ControlFlowGraph parseGraph(String cluscript) throws CodeParserException {
         CodeParser cp = new de.gaalop.clucalc.input.Plugin().createCodeParser();
         ControlFlowGraph graph = cp.parseFile(new InputFile("test", cluscript));
+        
+        graph.algebraName = "5d";
+        graph.asRessource = true;
+        graph.algebraBaseDirectory = "";
+        
+        AlgebraStrategy algStr = new de.gaalop.algebra.Plugin().createAlgebraStrategy();
+        try {
+            algStr.transform(graph);
+        } catch (OptimizationException ex) {
+            fail("OptimizationException");
+            Logger.getLogger(TestDifferentiater.class.getName()).log(Level.SEVERE, null, ex);
+        }
         CFGReplaceVisitor rep = new CFGReplaceVisitor(new ReplaceVisitor() {
 
             @Override
@@ -403,7 +418,275 @@ public class TestDifferentiater {
         // End Tests
     }
     
-    //TODO chs Test MathFunctionCalls
+    @Test
+    public void mathFunctionACOSConst() throws CodeParserException {
+        HashMap<MultivectorComponent, Double> values = new HashMap<MultivectorComponent, Double>();
+        // Begin Inputs
+        LinkedList<AssignmentNode> e = diffCluScript("?out_0 = ACOS(12);", "x_0");
+        values.put(new MultivectorComponent("x", 0), 2d);
+        // End Inputs
+        Evaluater evaluater = new Evaluater(values);
+        evaluater.evaluate(e);
+        
+        // Begin Tests
+        assertEquals(0, values.get(new MultivectorComponent("out", 0)),10E-3);  
+        // End Tests
+    }
+    
+    @Test
+    public void mathFunctionACOS() throws CodeParserException {
+        HashMap<MultivectorComponent, Double> values = new HashMap<MultivectorComponent, Double>();
+        // Begin Inputs
+        LinkedList<AssignmentNode> e = diffCluScript("?out_0 = ACOS(x_0);", "x_0");
+        values.put(new MultivectorComponent("x", 0), 0.1d);
+        // End Inputs
+        Evaluater evaluater = new Evaluater(values);
+        evaluater.evaluate(e);
+        
+        // Begin Tests
+        assertEquals(-1.00503, values.get(new MultivectorComponent("out", 0)),10E-3);  
+        // End Tests
+    }
+    
+    @Test
+    public void mathFunctionASINConst() throws CodeParserException {
+        HashMap<MultivectorComponent, Double> values = new HashMap<MultivectorComponent, Double>();
+        // Begin Inputs
+        LinkedList<AssignmentNode> e = diffCluScript("?out_0 = ASIN(12);", "x_0");
+        values.put(new MultivectorComponent("x", 0), 2d);
+        // End Inputs
+        Evaluater evaluater = new Evaluater(values);
+        evaluater.evaluate(e);
+        
+        // Begin Tests
+        assertEquals(0, values.get(new MultivectorComponent("out", 0)),10E-3);  
+        // End Tests
+    }
+    
+    @Test
+    public void mathFunctionASIN() throws CodeParserException {
+        HashMap<MultivectorComponent, Double> values = new HashMap<MultivectorComponent, Double>();
+        // Begin Inputs
+        LinkedList<AssignmentNode> e = diffCluScript("?out_0 = ASIN(x_0);", "x_0");
+        values.put(new MultivectorComponent("x", 0), 0.1d);
+        // End Inputs
+        Evaluater evaluater = new Evaluater(values);
+        evaluater.evaluate(e);
+        
+        // Begin Tests
+        assertEquals(1.00503, values.get(new MultivectorComponent("out", 0)),10E-3);  
+        // End Tests
+    }
+    
+    @Test
+    public void mathFunctionATANConst() throws CodeParserException {
+        HashMap<MultivectorComponent, Double> values = new HashMap<MultivectorComponent, Double>();
+        // Begin Inputs
+        LinkedList<AssignmentNode> e = diffCluScript("?out_0 = ATAN(12);", "x_0");
+        values.put(new MultivectorComponent("x", 0), 2d);
+        // End Inputs
+        Evaluater evaluater = new Evaluater(values);
+        evaluater.evaluate(e);
+        
+        // Begin Tests
+        assertEquals(0, values.get(new MultivectorComponent("out", 0)),10E-3);  
+        // End Tests
+    }
+    
+    @Test
+    public void mathFunctionATAN() throws CodeParserException {
+        HashMap<MultivectorComponent, Double> values = new HashMap<MultivectorComponent, Double>();
+        // Begin Inputs
+        LinkedList<AssignmentNode> e = diffCluScript("?out_0 = ATAN(x_0);", "x_0");
+        values.put(new MultivectorComponent("x", 0), 0.1d);
+        // End Inputs
+        Evaluater evaluater = new Evaluater(values);
+        evaluater.evaluate(e);
+        
+        // Begin Tests
+        assertEquals(0.99009, values.get(new MultivectorComponent("out", 0)),10E-3);  
+        // End Tests
+    }
+    
+    @Test
+    public void mathFunctionCOSConst() throws CodeParserException {
+        HashMap<MultivectorComponent, Double> values = new HashMap<MultivectorComponent, Double>();
+        // Begin Inputs
+        LinkedList<AssignmentNode> e = diffCluScript("?out_0 = COS(12);", "x_0");
+        values.put(new MultivectorComponent("x", 0), 2d);
+        // End Inputs
+        Evaluater evaluater = new Evaluater(values);
+        evaluater.evaluate(e);
+        
+        // Begin Tests
+        assertEquals(0, values.get(new MultivectorComponent("out", 0)),10E-3);  
+        // End Tests
+    }
+    
+    @Test
+    public void mathFunctionCOS() throws CodeParserException {
+        HashMap<MultivectorComponent, Double> values = new HashMap<MultivectorComponent, Double>();
+        // Begin Inputs
+        LinkedList<AssignmentNode> e = diffCluScript("?out_0 = COS(x_0);", "x_0");
+        values.put(new MultivectorComponent("x", 0), 0.1d);
+        // End Inputs
+        Evaluater evaluater = new Evaluater(values);
+        evaluater.evaluate(e);
+        
+        // Begin Tests
+        assertEquals(-0.09983, values.get(new MultivectorComponent("out", 0)),10E-3);  
+        // End Tests
+    }
+    
+    @Test
+    public void mathFunctionEXPConst() throws CodeParserException {
+        HashMap<MultivectorComponent, Double> values = new HashMap<MultivectorComponent, Double>();
+        // Begin Inputs
+        LinkedList<AssignmentNode> e = diffCluScript("?out_0 = exp(5);", "x_0");
+        values.put(new MultivectorComponent("x", 0), 2d);
+        // End Inputs
+        Evaluater evaluater = new Evaluater(values);
+        evaluater.evaluate(e);
+        
+        // Begin Tests
+        assertEquals(0, values.get(new MultivectorComponent("out", 0)),10E-3);  
+        // End Tests
+    }
+    
+    @Test
+    public void mathFunctionEXP() throws CodeParserException {
+        HashMap<MultivectorComponent, Double> values = new HashMap<MultivectorComponent, Double>();
+        // Begin Inputs
+        LinkedList<AssignmentNode> e = diffCluScript("?out_0 = exp(5*x_0);", "x_0");
+        values.put(new MultivectorComponent("x", 0), 2d);
+        // End Inputs
+        Evaluater evaluater = new Evaluater(values);
+        evaluater.evaluate(e);
+        
+        // Begin Tests
+        assertEquals(110132.328974, values.get(new MultivectorComponent("out", 0)),10E-3);  
+        // End Tests
+    }
+    
+    @Test
+    public void mathFunctionLOGConst() throws CodeParserException {
+        HashMap<MultivectorComponent, Double> values = new HashMap<MultivectorComponent, Double>();
+        // Begin Inputs
+        LinkedList<AssignmentNode> e = diffCluScript("?out_0 = LOG(12);", "x_0");
+        values.put(new MultivectorComponent("x", 0), 2d);
+        // End Inputs
+        Evaluater evaluater = new Evaluater(values);
+        evaluater.evaluate(e);
+        
+        // Begin Tests
+        assertEquals(0, values.get(new MultivectorComponent("out", 0)),10E-3);  
+        // End Tests
+    }
+    
+    @Test
+    public void mathFunctionLOG() throws CodeParserException {
+        HashMap<MultivectorComponent, Double> values = new HashMap<MultivectorComponent, Double>();
+        // Begin Inputs
+        LinkedList<AssignmentNode> e = diffCluScript("?out_0 = LOG(x_0);", "x_0");
+        values.put(new MultivectorComponent("x", 0), 2d);
+        // End Inputs
+        Evaluater evaluater = new Evaluater(values);
+        evaluater.evaluate(e);
+        
+        // Begin Tests
+        assertEquals(0.5, values.get(new MultivectorComponent("out", 0)),10E-3);  
+        // End Tests
+    }
+    
+    @Test
+    public void mathFunctionSINConst() throws CodeParserException {
+        HashMap<MultivectorComponent, Double> values = new HashMap<MultivectorComponent, Double>();
+        // Begin Inputs
+        LinkedList<AssignmentNode> e = diffCluScript("?out_0 = SIN(5);", "x_0");
+        values.put(new MultivectorComponent("x", 0), 2d);
+        // End Inputs
+        Evaluater evaluater = new Evaluater(values);
+        evaluater.evaluate(e);
+        
+        // Begin Tests
+        assertEquals(0, values.get(new MultivectorComponent("out", 0)),10E-3);  
+        // End Tests
+    }
+    
+    @Test
+    public void mathFunctionSIN() throws CodeParserException {
+        HashMap<MultivectorComponent, Double> values = new HashMap<MultivectorComponent, Double>();
+        // Begin Inputs
+        LinkedList<AssignmentNode> e = diffCluScript("?out_0 = SIN(2*x_0);", "x_0");
+        values.put(new MultivectorComponent("x", 0), 2d);
+        // End Inputs
+        Evaluater evaluater = new Evaluater(values);
+        evaluater.evaluate(e);
+        
+        // Begin Tests
+        assertEquals(-1.3072, values.get(new MultivectorComponent("out", 0)),10E-3);  
+        // End Tests
+    }
+    
+    @Test
+    public void mathFunctionSQRTConst() throws CodeParserException {
+        HashMap<MultivectorComponent, Double> values = new HashMap<MultivectorComponent, Double>();
+        // Begin Inputs
+        LinkedList<AssignmentNode> e = diffCluScript("?out_0 = sqrt(12);", "x_0");
+        values.put(new MultivectorComponent("x", 0), 2d);
+        // End Inputs
+        Evaluater evaluater = new Evaluater(values);
+        evaluater.evaluate(e);
+        
+        // Begin Tests
+        assertEquals(0, values.get(new MultivectorComponent("out", 0)),10E-3);  
+        // End Tests
+    }
+    
+    @Test
+    public void mathFunctionSQRT() throws CodeParserException {
+        HashMap<MultivectorComponent, Double> values = new HashMap<MultivectorComponent, Double>();
+        // Begin Inputs
+        LinkedList<AssignmentNode> e = diffCluScript("?out_0 = sqrt(x_0);", "x_0");
+        values.put(new MultivectorComponent("x", 0), 2d);
+        // End Inputs
+        Evaluater evaluater = new Evaluater(values);
+        evaluater.evaluate(e);
+        
+        // Begin Tests
+        assertEquals(0.3535, values.get(new MultivectorComponent("out", 0)),10E-3);  
+        // End Tests
+    }
+    
+    @Test
+    public void mathFunctionTANConst() throws CodeParserException {
+        HashMap<MultivectorComponent, Double> values = new HashMap<MultivectorComponent, Double>();
+        // Begin Inputs
+        LinkedList<AssignmentNode> e = diffCluScript("?out_0 = TAN(12);", "x_0");
+        values.put(new MultivectorComponent("x", 0), 2d);
+        // End Inputs
+        Evaluater evaluater = new Evaluater(values);
+        evaluater.evaluate(e);
+        
+        // Begin Tests
+        assertEquals(0, values.get(new MultivectorComponent("out", 0)),10E-3);  
+        // End Tests
+    }
+    
+    @Test
+    public void mathFunctionTAN() throws CodeParserException {
+        HashMap<MultivectorComponent, Double> values = new HashMap<MultivectorComponent, Double>();
+        // Begin Inputs
+        LinkedList<AssignmentNode> e = diffCluScript("?out_0 = TAN(5*x_0);", "x_0");
+        values.put(new MultivectorComponent("x", 0), 2d);
+        // End Inputs
+        Evaluater evaluater = new Evaluater(values);
+        evaluater.evaluate(e);
+        
+        // Begin Tests
+        assertEquals(7.10185, values.get(new MultivectorComponent("out", 0)),10E-3);  
+        // End Tests
+    }
     
     @Test
     public void variable() throws CodeParserException {
@@ -465,8 +748,6 @@ public class TestDifferentiater {
         // End Tests
     }
     
-    //TODO chs Test Negative tests
-
     /* //Template
     @Test
     public void simple() throws CodeParserException {
