@@ -54,6 +54,8 @@ public class NewDrawSettingsCodeGen extends DrawSettings implements CodeGenerato
     private RenderingEngine renderingEngine;
     private boolean newDataSetAvailable = false;
     private HashMap<String, Expression> renderingExpressions;
+    
+    private boolean renderIn2d; //for cr4d
 
     public NewDrawSettingsCodeGen(String lwJglNativePath) {
         this.lwJglNativePath = lwJglNativePath;
@@ -118,6 +120,8 @@ public class NewDrawSettingsCodeGen extends DrawSettings implements CodeGenerato
 
     @Override
     public Set<OutputFile> generate(ControlFlowGraph in) throws CodeGeneratorException {
+        renderIn2d = ("cr4d".equals(in.algebraName));
+        
         renderingEngine = new SimpleLwJglRenderingEngine(lwJglNativePath, this);
         renderingEngine.start();
         
@@ -177,7 +181,7 @@ public class NewDrawSettingsCodeGen extends DrawSettings implements CodeGenerato
                     list.add(node.copyElements());
                 
         
-                HashMap<String, LinkedList<Point3d>> pointsToRender = curZeroFinder.findZeroLocations(globalValues, list, settingsPanel.getSettings());
+                HashMap<String, LinkedList<Point3d>> pointsToRender = curZeroFinder.findZeroLocations(globalValues, list, settingsPanel.getSettings(), renderIn2d);
                 
                 long sum = 0;
                 for (String key : pointsToRender.keySet()) {

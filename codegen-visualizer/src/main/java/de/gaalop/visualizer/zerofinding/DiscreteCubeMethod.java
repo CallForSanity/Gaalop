@@ -15,7 +15,7 @@ import java.util.logging.Logger;
 public class DiscreteCubeMethod extends ZeroFinder {
 
     @Override
-    public HashMap<String, LinkedList<Point3d>> findZeroLocations(HashMap<MultivectorComponent, Double> globalValues, LinkedList<AssignmentNode> assignmentNodes, HashMap<String, String> mapSettings) {
+    public HashMap<String, LinkedList<Point3d>> findZeroLocations(HashMap<MultivectorComponent, Double> globalValues, LinkedList<AssignmentNode> assignmentNodes, HashMap<String, String> mapSettings, boolean renderIn2d) {
         HashMap<String, LinkedList<Point3d>> points = new HashMap<String, LinkedList<Point3d>>();
 
         int a = Integer.parseInt(mapSettings.get("cubeEdgeLength"));
@@ -29,7 +29,7 @@ public class DiscreteCubeMethod extends ZeroFinder {
             int from = (i*2*a)/processorCount - a;
             int to = ((i != processorCount-1) ? ((i+1)*2*a)/processorCount : 2*a) - a; 
 
-            threads[i] = new DiscreteCubeMethodThread(from, to, a, dist, globalValues, assignmentNodes, epsilon);
+            threads[i] = new DiscreteCubeMethodThread(from, to, a, dist, globalValues, assignmentNodes, epsilon, renderIn2d);
             threads[i].start();
         }
         

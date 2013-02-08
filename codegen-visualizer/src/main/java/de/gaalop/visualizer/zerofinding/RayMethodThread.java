@@ -24,8 +24,10 @@ public class RayMethodThread extends Thread {
     private CodePiece codePiece;
             
     public LinkedList<Point3d> points = new LinkedList<Point3d>();
+    
+    private boolean renderIn2d;
 
-    public RayMethodThread(float fromOY_Incl, float toOY_Excl, float a, float dist, HashMap<MultivectorComponent, Double> globalValues, CodePiece codePiece, double epsilon) {
+    public RayMethodThread(float fromOY_Incl, float toOY_Excl, float a, float dist, HashMap<MultivectorComponent, Double> globalValues, CodePiece codePiece, double epsilon, boolean renderIn2d) {
         this.fromOY_Incl = fromOY_Incl;
         this.toOY_Excl = toOY_Excl;
         this.a = a;
@@ -33,10 +35,33 @@ public class RayMethodThread extends Thread {
         this.globalValues = globalValues;
         this.codePiece = codePiece;
         this.epsilon = epsilon;
+        this.renderIn2d = renderIn2d;
     }
 
     @Override
     public void run() {
+        if (renderIn2d)
+            run2d();
+        else 
+            run3d();
+    }
+    
+    private void run2d() {
+        HashMap<MultivectorComponent, RealInterval> values = new HashMap<MultivectorComponent, RealInterval>();
+        for (MultivectorComponent mvC: globalValues.keySet())
+            values.put(mvC, new RealInterval(globalValues.get(mvC)));    
+        values.put(new MultivectorComponent("_V_oz", 0), new RealInterval(0));
+        
+        float ox = -a;
+        values.put(new MultivectorComponent("_V_ox", 0), new RealInterval(ox));
+        
+        for (float oy = fromOY_Incl; oy <= toOY_Excl; oy += dist) {
+            values.put(new MultivectorComponent("_V_oy", 0), new RealInterval(oy));
+            isolation(new RealInterval(0, 2*a),values);
+        }
+    }
+    
+    private void run3d() {
         HashMap<MultivectorComponent, RealInterval> values = new HashMap<MultivectorComponent, RealInterval>();
         for (MultivectorComponent mvC: globalValues.keySet())
             values.put(mvC, new RealInterval(globalValues.get(mvC)));        

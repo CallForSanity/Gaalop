@@ -26,9 +26,10 @@ public abstract class ZeroFinder {
      * @param globalValues The set of global values
      * @param assignmentNodes The list of assignmentnodes
      * @param mapSettings A map with all settings for the zero finder
+     * @param renderIn2d Rendering in 2d?
      * @return The map name of multivector to list of zero locations
      */
-    public abstract HashMap<String, LinkedList<Point3d>> findZeroLocations(HashMap<MultivectorComponent, Double> globalValues, LinkedList<AssignmentNode> assignmentNodes, HashMap<String, String> mapSettings);
+    public abstract HashMap<String, LinkedList<Point3d>> findZeroLocations(HashMap<MultivectorComponent, Double> globalValues, LinkedList<AssignmentNode> assignmentNodes, HashMap<String, String> mapSettings, boolean renderIn2d);
 
     /**
      * Returns the name of the zerofinding method

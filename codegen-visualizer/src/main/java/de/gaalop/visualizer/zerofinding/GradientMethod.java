@@ -110,7 +110,7 @@ public class GradientMethod extends PrepareZerofinder {
     }
 
     @Override
-    public HashMap<String, LinkedList<Point3d>> findZeroLocations(HashMap<MultivectorComponent, Double> globalValues, LinkedList<AssignmentNode> assignmentNodes, HashMap<String, String> mapSettings) {
+    public HashMap<String, LinkedList<Point3d>> findZeroLocations(HashMap<MultivectorComponent, Double> globalValues, LinkedList<AssignmentNode> assignmentNodes, HashMap<String, String> mapSettings, boolean renderIn2d) {
         int a = Integer.parseInt(mapSettings.get("cubeEdgeLength"));
         float dist = Float.parseFloat(mapSettings.get("density"));
         double epsilon = Double.parseDouble(mapSettings.get("epsilon"));
@@ -121,7 +121,7 @@ public class GradientMethod extends PrepareZerofinder {
         HashMap<String, LinkedList<Point3d>> result = new HashMap<String, LinkedList<Point3d>>();
         for (CodePiece cp: codePieces) {
             //search zero locations of mv cp.name in every CodePiece cp
-            LinkedList<Point3d> points = searchZeroLocations(cp, globalValues, a, dist, epsilon, max_n);
+            LinkedList<Point3d> points = searchZeroLocations(cp, globalValues, a, dist, epsilon, max_n, renderIn2d);
             result.put(cp.nameOfMultivector, points);
         }
         return result;
@@ -139,7 +139,7 @@ public class GradientMethod extends PrepareZerofinder {
      * @param globalValues The global initialised values
      * @return The zero locations points
      */
-    private LinkedList<Point3d> searchZeroLocations(CodePiece cp, HashMap<MultivectorComponent, Double> globalValues, int a, float dist, double epsilon, int max_n) {
+    private LinkedList<Point3d> searchZeroLocations(CodePiece cp, HashMap<MultivectorComponent, Double> globalValues, int a, float dist, double epsilon, int max_n, boolean renderIn2d) {
         LinkedList<Point3d> points = new LinkedList<Point3d>();
 
         int processorCount = Runtime.getRuntime().availableProcessors();
@@ -149,7 +149,7 @@ public class GradientMethod extends PrepareZerofinder {
             float from = (i*2*a)/((float) processorCount) - a;
             float to = ((i != processorCount-1) ? ((i+1)*2*a)/((float) processorCount) : 2*a) - a; 
 
-            threads[i] = new GradientMethodThread(from, to, a, dist, globalValues, cp, epsilon, max_n);
+            threads[i] = new GradientMethodThread(from, to, a, dist, globalValues, cp, epsilon, max_n, renderIn2d);
             threads[i].start();
         }
 

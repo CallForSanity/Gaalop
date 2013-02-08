@@ -26,8 +26,10 @@ public class GradientMethodThread extends Thread {
     
     private int max_n;
     private double epsilon;
+    
+    private boolean renderIn2d;
 
-    public GradientMethodThread(float fromOX_Incl, float toOX_Excl, float a, float dist, HashMap<MultivectorComponent, Double> globalValues, CodePiece codePiece, double epsilon, int max_n) {
+    public GradientMethodThread(float fromOX_Incl, float toOX_Excl, float a, float dist, HashMap<MultivectorComponent, Double> globalValues, CodePiece codePiece, double epsilon, int max_n, boolean renderIn2d) {
         this.fromOX_Incl = fromOX_Incl;
         this.toOX_Excl = toOX_Excl;
         this.a = a;
@@ -36,10 +38,27 @@ public class GradientMethodThread extends Thread {
         this.codePiece = codePiece;
         this.epsilon = epsilon;
         this.max_n = max_n;
+        this.renderIn2d = renderIn2d;
     }
 
     @Override
     public void run() {
+        if (renderIn2d)
+            run2d();
+        else 
+            run3d();
+    }
+    
+    private void run2d() {
+        for (float ox = fromOX_Incl; ox <= toOX_Excl; ox += dist)
+            for (float oy = -a; oy <= a; oy += dist) {
+                float[] resultSearch = searchInNeighborhood(ox,oy,0);
+                if (resultSearch != null) 
+                    points.add(new Point3d(resultSearch[0],resultSearch[1],resultSearch[2]));
+            }
+    }
+    
+    private void run3d() {
         for (float ox = fromOX_Incl; ox <= toOX_Excl; ox += dist)
             for (float oy = -a; oy <= a; oy += dist)
                 for (float oz = -a; oz <= a; oz += dist) {
