@@ -99,12 +99,18 @@ public class RayMethodThread extends Thread {
                     isolation(new RealInterval(t.lo(), center), values);
                     isolation(new RealInterval(center, t.hi()), values);
                 } else {
-                    points.add(new Point3d(
-                            values.get(new MultivectorComponent("_V_ox", 0)).lo()+(t.lo()+t.hi())/2.0d, 
-                            values.get(new MultivectorComponent("_V_oy", 0)).lo(), 
-                            values.get(new MultivectorComponent("_V_oz", 0)).lo()
-                            ));
-                    }
+                    double tCenter = (t.lo()+t.hi())/2.0d;
+                    values.put(new MultivectorComponent("_V_t", 0), new RealInterval(tCenter));
+                    evaluater = new IntervalEvaluater(values);
+                    evaluater.evaluate(codePiece);
+                    f = values.get(new MultivectorComponent(product,0));
+                    if (Math.abs((f.lo()+f.hi())/2) <= epsilon)
+                        points.add(new Point3d(
+                                values.get(new MultivectorComponent("_V_ox", 0)).lo()+tCenter, 
+                                values.get(new MultivectorComponent("_V_oy", 0)).lo(), 
+                                values.get(new MultivectorComponent("_V_oz", 0)).lo()
+                                ));
+                }
             } else {
                 refinement(t, values);
             }
@@ -122,6 +128,7 @@ public class RayMethodThread extends Thread {
         
         MultivectorComponent pr = new MultivectorComponent(product, 0);
         boolean refine = true;
+        double ce = 1000;
         while (refine) {
             
             double center = (t.lo()+t.hi())/2.0d;
@@ -137,7 +144,7 @@ public class RayMethodThread extends Thread {
             
             evaluater = new IntervalEvaluater(values);
             evaluater.evaluate(codePiece);
-            double ce = values.get(pr).lo();
+            ce = values.get(pr).lo();
             
             if (Math.abs(ce) <= epsilon) refine = false;
             if (t.hi()-t.lo() < 0.001) return;
@@ -149,11 +156,12 @@ public class RayMethodThread extends Thread {
 
         }
 
-        points.add(new Point3d(
-                values.get(new MultivectorComponent("_V_ox", 0)).lo()+(t.lo()+t.hi())/2.0d, 
-                values.get(new MultivectorComponent("_V_oy", 0)).lo(), 
-                values.get(new MultivectorComponent("_V_oz", 0)).lo()
-                ));
+        if (Math.abs(ce) <= epsilon)
+            points.add(new Point3d(
+                    values.get(new MultivectorComponent("_V_ox", 0)).lo()+(t.lo()+t.hi())/2.0d, 
+                    values.get(new MultivectorComponent("_V_oy", 0)).lo(), 
+                    values.get(new MultivectorComponent("_V_oz", 0)).lo()
+                    ));
 
     }
 
