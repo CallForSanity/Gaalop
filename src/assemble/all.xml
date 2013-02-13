@@ -24,7 +24,7 @@
                 <include>de.gaalop:codegen-cpp</include>
                 <include>de.gaalop:codegen-java</include>
                 <include>de.gaalop:codegen-dot</include>
-                <include>de.gaalop:codegen-verilog</include>
+          <!--      <include>de.gaalop:codegen-verilog</include>-->
                 <include>de.gaalop:codegen-latex</include>
                 <include>de.gaalop:codegen-gapp</include>
 		<include>de.gaalop:codegen-visualizer</include>
