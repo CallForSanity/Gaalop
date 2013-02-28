@@ -9,15 +9,18 @@ SET(GPC_ALGEBRA_BASEDIRECTORY "" CACHE STRING "algebra base directory")
 
 # find java
 FIND_PACKAGE(Java COMPONENTS Runtime REQUIRED)
+IF(NOT Java_JAVA_EXECUTABLE)
+	SET(Java_JAVA_EXECUTABLE ${JAVA_RUNTIME})
+ENDIF(NOT Java_JAVA_EXECUTABLE)
 
 # find
 IF(GPC_WITH_MAPLE)
-FIND_PATH(MAPLE_BIN_DIR HINTS "C:/Program Files (x86)/Maple 12/bin.win" "/opt/maple13/bin" CACHE PATH "Maple Binary Dir")
+	FIND_PATH(MAPLE_BIN_DIR HINTS "C:/Program Files (x86)/Maple 12/bin.win" "/opt/maple13/bin" CACHE PATH "Maple Binary Dir")
 ELSE(GPC_WITH_MAPLE)
-OPTION(GPC_WITH_MAXIMA "whether to use the maxima in tba plugin or not." OFF)
-IF(GPC_WITH_MAXIMA)
-FIND_PROGRAM(MAXIMA_BIN NAMES "maxima" "maxima.sh" "maxima.bat" HINTS "C:/Program Files/Maxima" CACHE PATH "Maxima binary path")
-ENDIF(GPC_WITH_MAXIMA)
+	OPTION(GPC_WITH_MAXIMA "whether to use the maxima in tba plugin or not." OFF)
+	IF(GPC_WITH_MAXIMA)
+		FIND_PROGRAM(MAXIMA_BIN NAMES "maxima" "maxima.sh" "maxima.bat" HINTS "C:/Program Files/Maxima" CACHE PATH "Maxima binary path")
+	ENDIF(GPC_WITH_MAXIMA)
 ENDIF(GPC_WITH_MAPLE)
 
 FIND_PATH(GPC_ROOT_DIR share PATH_SUFFIXES GaalopCompilerDriver 0.1.1
