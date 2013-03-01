@@ -54,7 +54,7 @@ public class GAPPOpenCLVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor
     
     @Override
     public Object visitResetMv(GAPPResetMv gappResetMv, Object arg) {
-        final String destMv = GAPPOpenCLCodeGenerator.getVarName(gappResetMv.getDestination().getName());
+        final String destMv = GAPPOpenCLCodeGenerator.getVarName(gappResetMv.getDestination().prettyPrint());
         
         if(gpcMetaInfo && !destMv.startsWith(GAPPOpenCLCodeGenerator.tempMv))
             result.append("//#pragma gpc multivector ").append(destMv).append("\n");
@@ -69,7 +69,7 @@ public class GAPPOpenCLVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor
 
     @Override
     public Object visitSetMv(GAPPSetMv gappSetMv, Object arg) {
-        final String destMv = GAPPOpenCLCodeGenerator.getVarName(gappSetMv.getDestination().getName());
+        final String destMv = GAPPOpenCLCodeGenerator.getVarName(gappSetMv.getDestination().prettyPrint());
         Integer thisMvSetCount = mvBladeMap.get(destMv).size();
 
         int selCount = 0;
@@ -82,7 +82,7 @@ public class GAPPOpenCLVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor
             result.append(" = ");
             if(gappSetMv.getSelectorsSrc().get(0).getSign() < 0)
                 result.append("-");
-            result.append(mvBladeMap.get(GAPPOpenCLCodeGenerator.getVarName(gappSetMv.getSource().getName())).get(gappSetMv.getSelectorsSrc().get(selCount++).getIndex()));
+            result.append(mvBladeMap.get(GAPPOpenCLCodeGenerator.getVarName(gappSetMv.getSource().prettyPrint())).get(gappSetMv.getSelectorsSrc().get(selCount++).getIndex()));
             result.append(";\n");
 
             mvBladeMap.get(destMv).put(sel.getIndex(),bladeCoeff);
@@ -134,7 +134,7 @@ public class GAPPOpenCLVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor
         }
         
         // get destVecBase
-        final String destVecBase = GAPPOpenCLCodeGenerator.getVarName(gappSetVector.getDestination().getName());
+        final String destVecBase = GAPPOpenCLCodeGenerator.getVarName(gappSetVector.getDestination().prettyPrint());
 
         // collect all entries as string
         ArrayList<String> entries = new ArrayList<String>();
@@ -152,11 +152,11 @@ public class GAPPOpenCLVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor
                 // get all entries from selectors
                 while (itSelector.hasNext())
                     entries.add(visitSelector(itSelector.next(),
-                                              GAPPOpenCLCodeGenerator.getVarName(pair.getSetOfVariable().getName())));
+                                              GAPPOpenCLCodeGenerator.getVarName(pair.getSetOfVariable().prettyPrint())));
             }
         }
         
-        // parallel multiply operation
+        // print all entries
         Map<Integer,String> bladeMap = new HashMap<Integer,String>();
         Iterator<String> itEntries = entries.iterator();
         int vectorSizeRemainder = wholeVectorSize;
@@ -184,14 +184,14 @@ public class GAPPOpenCLVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor
                 ++bladeLocalIndex;
             }
             // print further entries
-            while(bladeLocalIndex++ < openCLVectorSize && itEntries.hasNext()) {
+            for(; bladeLocalIndex < openCLVectorSize && itEntries.hasNext(); ++bladeLocalIndex) {
                 result.append(",");
                 result.append(itEntries.next());
             }
 
             // fill remaining vector space with zeros
             assert(bladeLocalIndex > 0); // cannot be the first entry
-            while(bladeLocalIndex++ < openCLVectorSize)
+            for(; bladeLocalIndex < openCLVectorSize; ++bladeLocalIndex)
                 result.append(",0");
 
             // print end of line
@@ -280,15 +280,15 @@ public class GAPPOpenCLVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor
 
     @Override
     public Object visitCalculateMvCoeff(GAPPCalculateMvCoeff gappCalculateMvCoeff, Object arg) {
-        final String destMv = GAPPOpenCLCodeGenerator.getVarName(gappCalculateMvCoeff.getDestination().getName());
+        final String destMv = GAPPOpenCLCodeGenerator.getVarName(gappCalculateMvCoeff.getDestination().prettyPrint());
         final Integer thisMvSetCount = mvBladeMap.get(destMv).size();
         final String bladeCoeff = getBladeCoeff(destMv,thisMvSetCount);
 
         result.append(bladeCoeff);
         result.append(" = ");
         visitCalculateOp(gappCalculateMvCoeff.getType(),
-                         GAPPOpenCLCodeGenerator.getVarName(gappCalculateMvCoeff.getOperand1().getName()),
-                         GAPPOpenCLCodeGenerator.getVarName(gappCalculateMvCoeff.getOperand2().getName()));
+                         GAPPOpenCLCodeGenerator.getVarName(gappCalculateMvCoeff.getOperand1().prettyPrint()),
+                         GAPPOpenCLCodeGenerator.getVarName(gappCalculateMvCoeff.getOperand2().prettyPrint()));
         result.append(";\n");
 
         mvBladeMap.get(destMv).put(gappCalculateMvCoeff.getDestination().getBladeIndex(),bladeCoeff);
@@ -365,7 +365,7 @@ public class GAPPOpenCLVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor
     
     @Override
     public Object visitAssignMv(GAPPAssignMv gappAssignMv, Object arg) {
-        final String destMv = GAPPOpenCLCodeGenerator.getVarName(gappAssignMv.getDestination().getName());
+        final String destMv = GAPPOpenCLCodeGenerator.getVarName(gappAssignMv.getDestination().prettyPrint());
         Integer thisMvSetCount = mvBladeMap.get(destMv).size();
 
         int selCount = 0;
@@ -374,7 +374,7 @@ public class GAPPOpenCLVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor
             
             result.append(bladeCoeff);
             result.append(" = ");
-            result.append(val.toString());
+            result.append(val.prettyPrint());
             result.append(";\n");
 
             mvBladeMap.get(destMv).put(gappAssignMv.getSelectors().get(selCount++).getIndex(),bladeCoeff);
@@ -386,7 +386,7 @@ public class GAPPOpenCLVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor
 
     @Override
     public Object visitDotVectors(GAPPDotVectors gappDotVectors, Object arg) {
-        final String destMv = GAPPOpenCLCodeGenerator.getVarName(gappDotVectors.getDestination().getName());
+        final String destMv = GAPPOpenCLCodeGenerator.getVarName(gappDotVectors.getDestination().prettyPrint());
         Integer thisMvSetCount = mvBladeMap.get(destMv).size();
 
         // print gpc meta info
@@ -400,20 +400,26 @@ public class GAPPOpenCLVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor
         mvBladeMap.get(destMv).
                 put(gappDotVectors.getDestSelector().getIndex(),bladeCoeff);
 
-        // special cases for operands of size 1 and 2
-        final int operandSize = mvBladeMap.get(GAPPOpenCLCodeGenerator.getVarName(gappDotVectors.getParts().get(0).getName())).size();
+        // special cases for operands of size 1, 2, and 4
+        final int operandSize = mvBladeMap.get(GAPPOpenCLCodeGenerator.getVarName(gappDotVectors.getParts().get(0).prettyPrint())).size();
         if(operandSize == 1) {
             result.append(bladeCoeff).append(" = ");
             visitDotVectorsParallelMultiply(gappDotVectors,0);
             return null;
-        } else if(operandSize == 2) {
+        } /*else if(gappDotVectors.getParts().size() == 2 && (operandSize == 2 || operandSize == 4)) {
             result.append(bladeCoeff).append(" = dot(");
-            result.append(GAPPOpenCLCodeGenerator.getVarName(gappDotVectors.getParts().get(0).getName()));
+            result.append(GAPPOpenCLCodeGenerator.getVarName(gappDotVectors.getParts().get(0).prettyPrint()));
             result.append(bladeCoeff).append(",");
-            result.append(GAPPOpenCLCodeGenerator.getVarName(gappDotVectors.getParts().get(1).getName()));
+            result.append(GAPPOpenCLCodeGenerator.getVarName(gappDotVectors.getParts().get(1).prettyPrint()));
+        	if(operandSize == 4) {
+                result.append(bladeCoeff).append(",");
+            	result.append(GAPPOpenCLCodeGenerator.getVarName(gappDotVectors.getParts().get(2).prettyPrint()));
+            	result.append(bladeCoeff).append(",");
+            	result.append(GAPPOpenCLCodeGenerator.getVarName(gappDotVectors.getParts().get(3).prettyPrint()));
+        	}
             result.append(");\n");
             return null;
-        }
+        }*/
         
         // save dot count for multiplication to be used later
         final int multiplyDotCount = dotCount;
@@ -471,9 +477,10 @@ public class GAPPOpenCLVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor
                 operandSizeRemainder -= maxOpenCLVectorSize;
             }
             result.append(";\n");
+            
+            // we created a new variable above
+            ++dotCount;
         }
-        // we created a new variable above
-        ++dotCount;
         
         // parallel pyramid sum reduce operations
         int multiplyIndex = 1;
@@ -506,6 +513,7 @@ public class GAPPOpenCLVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor
             // print end of line
             result.append(";\n");
 
+            // we created a new variable above
             ++dotCount;
         }
 
@@ -516,6 +524,7 @@ public class GAPPOpenCLVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor
         result.append(" + ");
         result.append(GAPPOpenCLCodeGenerator.dot).append(dotCount).append("_0").append(hi);
         result.append(";\n");
+        // we created a new variable above
         ++dotCount;
         
         return null;
@@ -523,12 +532,13 @@ public class GAPPOpenCLVisitor extends de.gaalop.gapp.visitor.CFGGAPPVisitor
     
     public void visitDotVectorsParallelMultiply(GAPPDotVectors gappDotVectors,
                                                 final int subvectorIndex) {
+   	
         Iterator<GAPPVector> it = gappDotVectors.getParts().iterator();
-        result.append(it.next().getName());
+        result.append(it.next().prettyPrint());
         result.append("_").append(subvectorIndex);
         while (it.hasNext()) {
             result.append(" * ");
-            result.append(it.next().getName());
+            result.append(it.next().prettyPrint());
             result.append("_").append(subvectorIndex);
         }
         result.append(";\n");
