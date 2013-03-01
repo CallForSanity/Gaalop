@@ -42,24 +42,25 @@ IF(GPC_WITH_MAPLE)
 	SET(GPC_COMMON_ARGS ${GPC_COMMON_ARGS} -m "${MAPLE_BIN_DIR}")
 	SET(GPC_COMMON_ARGS ${GPC_COMMON_ARGS} -optimizer "de.gaalop.maple.Plugin")
 ELSE(GPC_WITH_MAPLE)
-	IF(GPC_USE_GAPP)
-		SET(GPC_COMMON_ARGS ${GPC_COMMON_ARGS} -optimizer "de.gaalop.gapp.Plugin")
-	ELSE(GPC_USE_GAPP)
-		SET(GPC_COMMON_ARGS ${GPC_COMMON_ARGS} -optimizer "de.gaalop.tba.Plugin")
-	ENDIF(GPC_USE_GAPP)
-	
+	# Maxima works commonly
 	IF(GPC_WITH_MAXIMA)
 		SET(GPC_COMMON_ARGS ${GPC_COMMON_ARGS} -m "${MAXIMA_BIN}")
 	ENDIF(GPC_WITH_MAXIMA)
-ENDIF(GPC_WITH_MAPLE)
 
-MESSAGE("${GPC_COMMON_ARGS}")
+	# GAPP only works with OpenCL
+	IF(GPC_USE_GAPP)
+		SET(GPC_GAPP_ARGS ${GPC_COMMON_ARGS} -optimizer "de.gaalop.gapp.Plugin")
+	ENDIF(GPC_USE_GAPP)
+
+	# TBA works commonly
+	SET(GPC_COMMON_ARGS ${GPC_COMMON_ARGS} -optimizer "de.gaalop.tba.Plugin")
+ENDIF(GPC_WITH_MAPLE)
 
 # define target specific args
 SET(GPC_CXX_ARGS ${GPC_COMMON_ARGS} -generator "de.gaalop.compressed.Plugin" -pragmas)
 SET(GPC_CUDA_ARGS ${GPC_COMMON_ARGS} -generator "de.gaalop.compressed.Plugin" -pragmas)
 IF(GPC_USE_GAPP)
-	SET(GPC_OPENCL_ARGS ${GPC_COMMON_ARGS} -generator "de.gaalop.gappopencl.Plugin")
+	SET(GPC_OPENCL_ARGS ${GPC_GAPP_ARGS} -generator "de.gaalop.gappopencl.Plugin")
 ELSE(GPC_USE_GAPP)
 	SET(GPC_OPENCL_ARGS ${GPC_COMMON_ARGS} -generator "de.gaalop.compressed.Plugin")
 ENDIF(GPC_USE_GAPP)
