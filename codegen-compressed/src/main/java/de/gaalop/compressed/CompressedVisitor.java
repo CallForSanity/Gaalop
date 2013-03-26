@@ -2,6 +2,7 @@ package de.gaalop.compressed;
 
 import de.gaalop.cfg.*;
 import de.gaalop.dfg.*;
+import de.gaalop.visitors.DFGTraversalVisitor;
 
 import java.util.*;
 
@@ -127,7 +128,7 @@ public class CompressedVisitor extends de.gaalop.cpp.CppVisitor {
 
     // this visitor is for writing to multivector components
     protected class MultivectorComponentWriteVisitor implements de.gaalop.dfg.ExpressionVisitor {
-
+        
         @Override
         public void visit(MultivectorComponent component) {
             // this method is for writing to multivector components
@@ -149,7 +150,9 @@ public class CompressedVisitor extends de.gaalop.cpp.CppVisitor {
                 code.append("//#pragma gpc multivector_component ");
                 code.append(component.getName());
                 code.append(' ');
-                code.append(component.getBladeName());
+                String bladeStr = graph.getAlgebraDefinitionFile().getBladeString(component.getBladeIndex());
+                bladeStr = bladeStr.replaceAll("\\(", "").replaceAll("\\)", "").replaceAll(" ", "");
+                code.append(bladeStr);
                 code.append(' ');
                 code.append(componentName);
                 code.append('\n');
