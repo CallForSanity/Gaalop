@@ -1,0 +1,15 @@
+1. Install java,maven,cmake
+2. Create Build dir
+3. In CMake choose Source and Build dir
+4. Configure
+5. Generate
+6. run "make"
+
+For completely new builds:
+7. run "make edit_cache"
+8. Delete Cache
+9. Configure again
+10. Generate again
+
+To package:
+11. run "make && make package"

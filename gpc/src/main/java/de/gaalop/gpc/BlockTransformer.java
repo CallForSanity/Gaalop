@@ -215,7 +215,7 @@ public class BlockTransformer {
      Set<VisualCodeInserterStrategyPlugin> plugins = Plugins.getVisualizerStrategyPlugins();
      for (VisualCodeInserterStrategyPlugin plugin : plugins) {
        if (plugin.getClass().getName().equals(Main.visualizerStrategyPlugin)) {
-         return plugin.createVisualizerStrategy();
+         return plugin.createVisualCodeInserterStrategy();
        }
      }
 

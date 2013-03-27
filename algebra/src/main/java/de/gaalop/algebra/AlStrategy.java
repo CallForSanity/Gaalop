@@ -6,6 +6,7 @@ import de.gaalop.InputFile;
 import de.gaalop.OptimizationException;
 import de.gaalop.cfg.AlgebraDefinitionFile;
 import de.gaalop.cfg.ControlFlowGraph;
+import de.gaalop.cfg.FindStoreOutputNodes;
 import de.gaalop.cfg.Macro;
 import de.gaalop.dfg.Expression;
 import de.gaalop.dfg.OuterProduct;
@@ -37,6 +38,13 @@ public class AlStrategy implements AlgebraStrategy {
 
     @Override
     public void transform(ControlFlowGraph graph) throws OptimizationException {
+        //Check if graph contains at least one StoreResultNode
+        FindStoreOutputNodes outputNodes = new FindStoreOutputNodes();
+        graph.accept(outputNodes);
+        if (outputNodes.getNodes().isEmpty()) {
+            throw new RuntimeException("There are no lines marked for optimization ('?')");
+        }
+
         InputStream inputStream = null;
         try {
             //load algebra
@@ -166,7 +174,6 @@ public class AlStrategy implements AlgebraStrategy {
         StringBuilder sb = new StringBuilder();
         readIn(inputStream, sb, parent);
         sb.append("\n");
-        //sb.append("?a=1;"); //TODO häh?
         return new InputFile(cluName, sb.toString());
     }
     

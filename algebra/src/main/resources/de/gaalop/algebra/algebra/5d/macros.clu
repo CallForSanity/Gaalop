@@ -59,3 +59,28 @@ SphereN3 = {
 TranslatorN3 = {
     1-0.5*((_P(1)*e1+_P(2)*e2+_P(3)*e3)*einf)
 }
+
+// Extracts the first point from a given point pair
+// and returns it
+//args:
+//pp: The Point Pair
+ExtractFirstPoint = {
+    dPP = *(_P(1));
+    (dPP+sqrt(abs(_P(1)._P(1))))/(einf.dPP)
+}
+
+// Extracts the second point from a given point pair
+// and returns it
+//args:
+//pp: The Point Pair
+ExtractSecondPoint = {
+    dPP = *(_P(1));
+    (dPP-sqrt(abs(_P(1)._P(1))))/(einf.dPP)
+}
+
+// Normalizes a given multivector
+//args:
+//mv: The multivector
+Normalize = {
+    -_P(1)/(_P(1).einf)
+}

@@ -89,9 +89,9 @@ public final class CompilerFacade extends Observable {
         globalSettingsStrategy.transform(graph);
         setChanged();
         
-        notifyObservers("Algebra inserting...");  
-        algebraStrategy.transform(graph);
-        setChanged();
+        //notifyObservers("Algebra inserting...");  
+        //algebraStrategy.transform(graph);
+        //setChanged();
 
         notifyObservers("Inserting code for visualization...");
         visualizerStrategy.transform(graph);

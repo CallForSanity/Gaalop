@@ -121,7 +121,9 @@ public class SignedSummandsGetter implements ExpressionVisitor {
 
     @Override
     public void visit(Negation node) {
-        handleNodes(node);
+        curSignPositive = !curSignPositive;
+        node.getOperand().accept(this);
+        curSignPositive = !curSignPositive;
     }
 
     // ============================ Logical methods ============================

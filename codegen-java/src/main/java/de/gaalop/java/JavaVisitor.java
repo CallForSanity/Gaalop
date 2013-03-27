@@ -21,12 +21,12 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
     protected StringBuilder codePost = new StringBuilder();
     protected ControlFlowGraph graph;
     protected int indentation = 0;
-    protected Set<String> assigned = new HashSet<String>();
-    protected Set<String> declared = new HashSet<String>();
-    protected Set<String> toDeclare = new HashSet<String>();
+
+    protected Set<String> declaredLocal = new HashSet<String>();
+    protected Set<String> outputtedMultivectors = new HashSet<String>();
+    
     private final int JAVALIMIT = 65500; // let space for indentation!
     private byte curSection = 0;
-    private int storedIndentation;
     private boolean implementFactorial = false;
 
     /**
@@ -83,47 +83,6 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
         }
     }
 
-    /**
-     * Returns all outputs components of the graph
-     * @return The output components
-     */
-    private LinkedList<String> getOutputs() {
-        LinkedList<String> outputs = new LinkedList<String>();
-
-        HashSet<String> known = new HashSet<String>();
-
-        for (String outputVarStr : graph.getPragmaOutputVariables()) {
-            declared.add(outputVarStr);
-            outputs.add(outputVarStr);
-            known.add(outputVarStr.split("\\$")[0]);
-        }
-        
-        FindOutputComponents findOutputComponents = new FindOutputComponents();
-        graph.accept(findOutputComponents);
-        
-        MultivectorComponent[] outputComponents = findOutputComponents.outputComponents.toArray(new MultivectorComponent[0]);
-        Arrays.sort(outputComponents, new Comparator<MultivectorComponent>() {
-
-            @Override
-            public int compare(MultivectorComponent o1, MultivectorComponent o2) {
-                return o1.toString().compareTo(o2.toString());
-            }
-            
-        });
-
-        for (MultivectorComponent m: outputComponents) {
-            String name = m.getName();
-            if (!known.contains(name)) 
-                known.add(name);
-
-            String bladeName = name + "$" + m.getBladeIndex();
-            outputs.add(bladeName);
-            declared.add(bladeName);
-        }
-        
-        return outputs;
-    }
-
     @Override
     public void visit(StartNode node) {
         graph = node.getGraph();
@@ -142,99 +101,10 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
         
         append("public class " + filename + " implements GAProgram {\n");
         indentation++;
-
-
-        appendIndentation();
-        append("// input variables\n");
-        for (Variable inputVar : graph.getInputVariables()) {
-
-            String variableName = getVarName(inputVar);
-            declared.add(variableName);
-            appendIndentation();
-            append("private double " + variableName + ";\n");
-        }
-        append("\n");
-
-        LinkedList<String> outputs = getOutputs();
-
-        appendIndentation();
-        append("// output variables\n");
-        for (String curOutput : outputs) {
-            appendIndentation();
-            append("private double " + curOutput + ";\n");
-        }
-        append("\n");
-
-        // getValue for output variables
-        appendIndentation();
-        append("@Override\n");
-        appendIndentation();
-        append("public double getValue(String varName) {\n");
         indentation++;
-
-        for (String curOutput : outputs) {
-            appendIndentation();
-            append("if (varName.equals(\"" + curOutput + "\")) return " + curOutput + ";\n");
-        }
-
         appendIndentation();
-        append("return 0.0d;\n");
-
-        indentation--;
-        appendIndentation();
-        append("}\n"); // close procedure getValue
-        append("\n");
-
-        //getValues for output variables
-        appendIndentation();
-        append("@Override\n");
-        appendIndentation();
-        append("public HashMap<String,Double> getValues() {\n");
-        indentation++;
-
-        appendIndentation();
-        append("HashMap<String,Double> result = new HashMap<String,Double>();\n");
-
-        for (String curOutput : outputs) {
-            appendIndentation();
-            append("result.put(\"" + curOutput + "\"," + curOutput + ");\n");
-        }
-
-        appendIndentation();
-        append("return result;\n");
-
-        indentation--;
-        appendIndentation();
-        append("}\n"); // close procedure getValues
-
-
-        // setValue for input variables
-        appendIndentation();
-        append("@Override\n");
-        appendIndentation();
-        append("public boolean setValue(String varName, double value) {\n");
-        indentation++;
-
-        for (Variable inputVar : graph.getInputVariables()) {
-            appendIndentation();
-            append("if (varName.equals(\"" + getVarName(inputVar) + "\")) { " + getVarName(inputVar) + " = value; return true; }\n");
-        }
-        appendIndentation();
-        append("return false;\n");
-
-        indentation--;
-        appendIndentation();
-        append("}\n"); // close procedure setValue
-
-        appendIndentation();
-        append("\n");
-        appendIndentation();
-        append("@Override\n");
-        appendIndentation();
-        append("public void calculate() {\n");
-        indentation++;
-        storedIndentation = indentation;
         curSection = 1;
+        
         node.getSuccessor().accept(this);
     }
 
@@ -269,12 +139,9 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
 
     @Override
     public void visit(AssignmentNode node) {
-        String varName = getVarName(node.getVariable());
-
         appendIndentation();
-        if (!(declared.contains(varName) || toDeclare.contains(varName))) {
-            toDeclare.add(varName);
-        }
+        
+        declaredLocal.add(getVarName(node.getVariable()));
 
         node.getVariable().accept(this);
         append(" = ");
@@ -302,7 +169,7 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
 
     @Override
     public void visit(StoreResultNode node) {
-        assigned.add(node.getValue().getName());
+        outputtedMultivectors.add(node.getValue().getName());
         node.getSuccessor().accept(this);
     }
 
@@ -377,10 +244,13 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
 
     @Override
     public void visit(EndNode node) {
+        
+        
         indentation--;
         appendIndentation();
         append("}\n\n"); // close procedure calculate
         curSection = 2;
+        indentation--;
 
         if (implementFactorial) {
             appendIndentation();
@@ -401,17 +271,149 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
             append("}\n");
         }
 
-        // print all members that are used for calculating
-        for (String decl : toDeclare) {
-            appendIndentation();
-            append("private double " + decl + ";\n");
-        }
-
         append("\n");
         indentation--;
 
         appendIndentation();
         append("}\n"); // close class
+        
+        
+        
+        //declare variables
+        curSection = 0;
+        
+        append("\n");
+        indentation++;
+        indentation++;
+        
+        appendIndentation();
+        append("// input variables\n");
+        for (Variable inputVar : graph.getInputVariables()) {
+            appendIndentation();
+            append("private double " + getVarName(inputVar) + ";\n");
+        }
+        append("\n");
+
+        
+        //outputtedMultivectors
+        //declaredLocal
+        LinkedList<String> locals = new LinkedList<String>();
+        LinkedList<String> outputs = new LinkedList<String>();
+        
+        for (String l: declaredLocal) {
+            String name = l.split("\\$")[0];
+            if (outputtedMultivectors.contains(name)) {
+                boolean outputComponentExist = false;
+                
+                for (String outputVarStr : graph.getPragmaOutputVariables()) 
+                    if (outputVarStr.split("\\$")[0].equals(name)) 
+                        outputComponentExist = true;
+                
+                if (outputComponentExist) {
+                    if (graph.getPragmaOutputVariables().contains(l)) 
+                        outputs.add(l);
+                    else
+                        locals.add(l);
+                } else {
+                    outputs.add(l);
+                }
+                    
+            } else
+                locals.add(l);
+        }
+        
+        String[] localsArr = locals.toArray(new String[0]);
+        String[] outputsArr = outputs.toArray(new String[0]);
+        Arrays.sort(localsArr);
+        Arrays.sort(outputsArr);
+        
+        appendIndentation();
+        append("// local variables\n");
+        for (String curLocal : localsArr) {
+            appendIndentation();
+            append("private double " + curLocal + ";\n");
+        }
+        append("\n");
+        
+        appendIndentation();
+        append("// output variables\n");
+        for (String curOutput : outputsArr) {
+            appendIndentation();
+            append("private double " + curOutput + ";\n");
+        }
+        append("\n");
+
+        // getValue for output variables
+        appendIndentation();
+        append("@Override\n");
+        appendIndentation();
+        append("public double getValue(String varName) {\n");
+        indentation++;
+
+        for (String curOutput : outputs) {
+            appendIndentation();
+            append("if (varName.equals(\"" + curOutput + "\")) return " + curOutput + ";\n");
+        }
+
+        appendIndentation();
+        append("return 0.0d;\n");
+
+        indentation--;
+        appendIndentation();
+        append("}\n"); // close procedure getValue
+        append("\n");
+
+        //getValues for output variables
+        appendIndentation();
+        append("@Override\n");
+        appendIndentation();
+        append("public HashMap<String,Double> getValues() {\n");
+        indentation++;
+
+        appendIndentation();
+        append("HashMap<String,Double> result = new HashMap<String,Double>();\n");
+
+        for (String curOutput : outputs) {
+            appendIndentation();
+            append("result.put(\"" + curOutput + "\"," + curOutput + ");\n");
+        }
+
+        appendIndentation();
+        append("return result;\n");
+
+        indentation--;
+        appendIndentation();
+        append("}\n"); // close procedure getValues
+
+
+        // setValue for input variables
+        appendIndentation();
+        append("@Override\n");
+        appendIndentation();
+        append("public boolean setValue(String varName, double value) {\n");
+        indentation++;
+
+        for (Variable inputVar : graph.getInputVariables()) {
+            appendIndentation();
+            append("if (varName.equals(\"" + getVarName(inputVar) + "\")) { " + getVarName(inputVar) + " = value; return true; }\n");
+        }
+        appendIndentation();
+        append("return false;\n");
+
+        indentation--;
+        appendIndentation();
+        append("}\n"); // close procedure setValue
+
+        appendIndentation();
+        append("\n");
+        appendIndentation();
+        append("@Override\n");
+        appendIndentation();
+        append("public void calculate() {\n");
+        indentation++;
+        
+        curSection = 2;
+        
     }
 
     @Override
@@ -594,7 +596,7 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
         StringBuilder result = new StringBuilder();
 
         int backupIndentation = indentation;
-        indentation = storedIndentation;
+        
 
         int length = codeCalc.length();
         int curPosition = 0;
