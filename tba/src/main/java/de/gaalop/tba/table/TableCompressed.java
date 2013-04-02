@@ -7,6 +7,8 @@ import de.gaalop.tba.IMultTable;
 import de.gaalop.tba.Multivector;
 import de.gaalop.tba.table.BitIO.BitReader;
 import de.gaalop.tba.table.BitIO.BitWriter;
+import de.gaalop.tba.table.BitIO.SimpleBitReader;
+import de.gaalop.tba.table.BitIO.SimpleBitWriter;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -99,9 +101,9 @@ public class TableCompressed implements TableReaderIO {
     @Override
     public void writeToFile(int bladeCount, int dimension, IMultTable innerTable, IMultTable outerTable, IMultTable geoTable, OutputStream outputStream) {
         try {
-            BitWriter w = new BitWriter();
+            AbsBitWriter w = new SimpleBitWriter();
 
-            int bitCount = 4;
+            int bitCount = 32;
             File tempFile = File.createTempFile("TableCreator", "txt");
             DataOutputStream out = new DataOutputStream(new FileOutputStream(tempFile));
 
@@ -133,7 +135,7 @@ public class TableCompressed implements TableReaderIO {
 
             DataInputStream in = new DataInputStream(new FileInputStream(tempFile));
 
-            BitReader r = new BitReader();
+            AbsBitReader r = new SimpleBitReader();
             r.setDataInputStream(in);
 
 

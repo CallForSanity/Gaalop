@@ -37,5 +37,32 @@ public class BladeRef {
         return prefactor+"["+index+"]";
     }
 
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 59 * hash + this.prefactor;
+        hash = 59 * hash + this.index;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final BladeRef other = (BladeRef) obj;
+        if (this.prefactor != other.prefactor) {
+            return false;
+        }
+        if (this.index != other.index) {
+            return false;
+        }
+        return true;
+    }
+
+    
 
 }

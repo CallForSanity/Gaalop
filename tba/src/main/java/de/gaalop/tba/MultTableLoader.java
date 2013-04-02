@@ -3,6 +3,8 @@ package de.gaalop.tba;
 import de.gaalop.algebra.AlStrategy;
 import de.gaalop.tba.table.BitIO.BitReader;
 import de.gaalop.tba.table.BitIO.BitWriter;
+import de.gaalop.tba.table.BitIO.SimpleBitReader;
+import de.gaalop.tba.table.BitIO.SimpleBitWriter;
 import de.gaalop.tba.table.TableCompressed;
 import de.gaalop.tba.table.TableHumanReadable;
 import de.gaalop.tba.table.TableReaderIO;
@@ -36,7 +38,7 @@ public class MultTableLoader {
         tableOuter.createTable(bladeCount);
         tableGeo.createTable(bladeCount);
 
-        TableReaderIO io = new TableCompressed(new BitReader(), new BitWriter());
+        TableReaderIO io = new TableCompressed(new SimpleBitReader(), new SimpleBitWriter());
 
         InputStream filestream;
         if (useAsRessource) {
