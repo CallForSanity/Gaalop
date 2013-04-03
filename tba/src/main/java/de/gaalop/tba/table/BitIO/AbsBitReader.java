@@ -10,7 +10,7 @@ import java.io.IOException;
 public abstract class AbsBitReader {
 
     protected DataInputStream in;
-
+    
     public void setDataInputStream(DataInputStream in) {
         this.in = in;
     }

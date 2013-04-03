@@ -20,27 +20,27 @@ public class BitWriter extends AbsBitWriter {
     @Override
     public void write(int data, int bitCount) throws IOException {
         cache <<= bitCount;
+        long maskD = 0; maskD = ~maskD; maskD <<= bitCount; maskD = ~maskD; data &= maskD;
         cache |= data;
         cachedBits += bitCount;
-        while (cachedBits>=8) {
-            int toWrite = (int) ((cache >> (cachedBits-8)) & 0xFF);
-            if (toWrite > 127) toWrite -= 256;
-            out.writeByte(toWrite);
-            cachedBits -= 8;
-            cache &= ~(0xFF << cachedBits);
+        while (cachedBits>=16) {
+            writeCharFromCache();
         }
+    }
+    
+    private void writeCharFromCache() throws IOException {
+        long cacheT = cache; cacheT >>= (cachedBits-16); 
+        cacheT &= 0xFFFF;
+        out.writeChar((int) cacheT);
+        long maskC = 0; maskC = ~maskC; maskC <<= (cachedBits-16); maskC = ~maskC; cache &= maskC;
+        cachedBits -= 16;
     }
 
     @Override
     public void finish() throws IOException {
-        if (cachedBits > 0) {
-            cache <<= 8-cachedBits;
-            int toWrite = (int) (cache & 0xFF);
-            if (toWrite > 127) toWrite -= 256;
-            out.writeByte(toWrite);
-            cache = 0;
-            cachedBits = 0;
-        }
-        super.finish();
+        if (cachedBits == 0) return;
+        if (cachedBits != 16) 
+            write(0,16-cachedBits);
+        writeCharFromCache();
     }
 }
