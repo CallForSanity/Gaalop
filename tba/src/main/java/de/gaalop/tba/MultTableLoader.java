@@ -1,13 +1,7 @@
 package de.gaalop.tba;
 
 import de.gaalop.algebra.AlStrategy;
-import de.gaalop.tba.table.BitIO.BitReader;
-import de.gaalop.tba.table.BitIO.BitWriter;
-import de.gaalop.tba.table.BitIO.SimpleBitReader;
-import de.gaalop.tba.table.BitIO.SimpleBitWriter;
-import de.gaalop.tba.table.TableCompressed;
-import de.gaalop.tba.table.TableHumanReadable;
-import de.gaalop.tba.table.TableReaderIO;
+import de.gaalop.tba.table.TableFormat;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -38,8 +32,6 @@ public class MultTableLoader {
         tableOuter.createTable(bladeCount);
         tableGeo.createTable(bladeCount);
 
-        TableReaderIO io = new TableCompressed(new SimpleBitReader(), new SimpleBitWriter());
-
         InputStream filestream;
         if (useAsRessource) {
             filestream = AlStrategy.class.getResourceAsStream(filename_Products);
@@ -47,7 +39,6 @@ public class MultTableLoader {
             filestream = new FileInputStream(new File(filename_Products));
         }
 
-        io.readFromFile(filestream, tableInner, tableOuter, tableGeo);
-
+        TableFormat.readFromFile(filestream, tableInner, tableOuter, tableGeo);
     }
 }

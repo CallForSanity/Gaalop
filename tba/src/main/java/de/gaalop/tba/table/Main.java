@@ -9,16 +9,13 @@ import de.gaalop.tba.IMultTable;
 import de.gaalop.tba.MultTableAbsDirectComputer;
 import de.gaalop.tba.MultTableImpl;
 import de.gaalop.tba.Multivector;
-import de.gaalop.tba.table.BitIO.BitReader;
-import de.gaalop.tba.table.BitIO.BitWriter;
-import de.gaalop.tba.table.BitIO.SimpleBitReader;
-import de.gaalop.tba.table.BitIO.SimpleBitWriter;
-import de.gaalop.tba.table.TableCompressed;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Vector;
 import javax.swing.JFileChooser;
 
@@ -28,25 +25,8 @@ import javax.swing.JFileChooser;
  */
 public class Main {
 
-    /**
-     * @param args the command line arguments:
-     * 0: directory path
-     */
-    public static void main(String[] args) throws FileNotFoundException, IOException {
-        File dir = null;
-
-        if (args.length == 0) {
-            JFileChooser jFC = new JFileChooser("D:\\BscMsc\\Gaalop\\algebra\\src\\main\\resources\\de\\gaalop\\algebra\\algebra");
-            jFC.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-            if (jFC.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-                dir = jFC.getSelectedFile();
-                System.out.println(dir.getCanonicalPath());
-            } else {
-                System.out.println("No directory chosen!");
-                System.exit(1);
-            }
-        } else 
-            dir = new File(args[0]);
+    private static void createFromDir(File dir, int format) throws FileNotFoundException, IOException {
+        System.out.print(dir.getName()+":");
         if (!dir.exists()) {
             System.out.println("The given first parameter, is not the path of an existing directory!");
             System.exit(2);
@@ -65,10 +45,9 @@ public class Main {
         IMultTable geo = new MultTableAbsDirectComputer(alFile, new GeoProductCalculator());
         
         int dimension = alFile.base.length-1;
-        TableReaderIO tableReaderIO = new TableCompressed(new SimpleBitReader(), new SimpleBitWriter());
-        tableReaderIO.writeToFile((int) Math.pow(2,dimension), dimension, inner, outer, geo, new FileOutputStream(new File(dir, "products.csv")));
+        TableFormat.writeToFile((int) Math.pow(2,dimension), dimension, inner, outer, geo, new FileOutputStream(new File(dir, "products.csv")),format);
         
-        System.out.println("Test");
+        System.out.println("Verify created file");
         
         int bladeCount = (int) Math.pow(2, dimension);
         
@@ -78,11 +57,51 @@ public class Main {
         outerStored.createTable(bladeCount);
         IMultTable geoStored = new MultTableImpl();
         geoStored.createTable(bladeCount);
-        tableReaderIO.readFromFile(new FileInputStream(new File(dir, "products.csv")), innerStored, outerStored, geoStored);
+        TableFormat.readFromFile(new FileInputStream(new File(dir, "products.csv")), innerStored, outerStored, geoStored);
         
         testEqual(innerStored, inner, dimension);
         testEqual(outerStored, outer, dimension);
         testEqual(geoStored, geo, dimension);
+    }
+    
+    private static void gui(String[] args) throws FileNotFoundException, IOException {
+        File dir = null;
+
+        if (args.length == 0) {
+            JFileChooser jFC = new JFileChooser("D:\\BscMsc\\Gaalop\\algebra\\src\\main\\resources\\de\\gaalop\\algebra\\algebra");
+            jFC.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+            if (jFC.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+                dir = jFC.getSelectedFile();
+                System.out.println(dir.getCanonicalPath());
+            } else {
+                System.out.println("No directory chosen!");
+                System.exit(1);
+            }
+        } else 
+            dir = new File(args[0]);
+    }
+    
+    private static void createAll() throws FileNotFoundException, IOException {
+        File directory = new File("D:\\BscMsc\\Gaalop\\algebra\\src\\main\\resources\\de\\gaalop\\algebra\\algebra");
+        File[] dirs = directory.listFiles(new FileFilter() {
+
+                               @Override
+                               public boolean accept(File pathname) {
+                                   return pathname.isDirectory();
+                               }
+                           });
+        Arrays.sort(dirs);
+        for (File dir: dirs)
+            createFromDir(dir,TableFormat.TABLE_COMPRESSED_MAX);
+    }
+    
+    /**
+     * @param args the command line arguments:
+     * 0: directory path
+     */
+    public static void main(String[] args) throws FileNotFoundException, IOException {
+        //gui(args);
+        createAll(); 
     }
 
     private static void testEqual(IMultTable t1, IMultTable t2, int dimension) {

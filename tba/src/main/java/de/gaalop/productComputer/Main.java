@@ -5,10 +5,7 @@ import de.gaalop.cfg.AlgebraDefinitionFile;
 import de.gaalop.tba.IMultTable;
 import de.gaalop.tba.MultTableAbsDirectComputer;
 import de.gaalop.tba.MultTableImpl;
-import de.gaalop.tba.table.BitIO.BitReader;
-import de.gaalop.tba.table.BitIO.BitWriter;
-import de.gaalop.tba.table.TableCompressed;
-import de.gaalop.tba.table.TableReaderIO;
+import de.gaalop.tba.table.TableFormat;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -51,16 +48,7 @@ public class Main {
                     geo.setProduct(i, j, geoLive.getProduct(i, j));
                 }
             
-            
-            TableReaderIO io = new TableCompressed(new BitReader(), new BitWriter());
-            io.writeToFile(
-                    bladeCount,
-                    algebraPC.base.length,
-                    inner,
-                    outer,
-                    geo,
-                    new FileOutputStream("products"+dimension+".csv")
-                    );
+            TableFormat.writeToFile(bladeCount,algebraPC.base.length,inner,outer,geo,new FileOutputStream("products"+dimension+".csv"),TableFormat.TABLE_COMPRESSED_MAX);
         }
 
     }

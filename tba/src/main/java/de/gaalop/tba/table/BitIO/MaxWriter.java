@@ -12,7 +12,7 @@ import java.io.IOException;
  * except at the end of the file.
  * @author christian
  */
-public class BitWriter extends AbsBitWriter {
+public class MaxWriter extends AbsBitWriter {
 
     private long cache = 0;
     private int cachedBits = 0;

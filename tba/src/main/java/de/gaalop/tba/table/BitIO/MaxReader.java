@@ -7,7 +7,7 @@ import java.io.IOException;
  * except at the end of the file.
  * @author christian
  */
-public class BitReader extends AbsBitReader {
+public class MaxReader extends AbsBitReader {
 
     private long cache = 0;
     private int cachedBits = 0;
