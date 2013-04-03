@@ -15,8 +15,6 @@ import java.io.OutputStream;
 public class TableFormat {
     
     public static final int TABLE_COMPRESSED_MAX       = 1;
-    public static final int TABLE_COMPRESSED_INT       = 2;
-    public static final int TABLE_COMPRESSED_SIMPLE    = 3;
     public static final int TABLE_HUMAN_READABLE       = 69;
 
     /**
@@ -30,10 +28,6 @@ public class TableFormat {
             AbsBitReader reader = tc.getReader();
             if (reader instanceof MaxReader) 
                 return TABLE_COMPRESSED_MAX;
-            if (reader instanceof IntReader) 
-                return TABLE_COMPRESSED_INT;
-            if (reader instanceof SimpleBitReader) 
-                return TABLE_COMPRESSED_SIMPLE;
         }
         if (tableReaderIO instanceof TableHumanReadable) 
             return TABLE_HUMAN_READABLE;
@@ -50,10 +44,6 @@ public class TableFormat {
         switch (byteFormat) {
             case TABLE_COMPRESSED_MAX:
                 return new TableCompressed(new MaxReader(), new MaxWriter());
-            case TABLE_COMPRESSED_INT:
-                return new TableCompressed(new IntReader(), new IntWriter());
-            case TABLE_COMPRESSED_SIMPLE:
-                return new TableCompressed(new SimpleBitReader(), new SimpleBitWriter());
             case TABLE_HUMAN_READABLE:
                 return new TableHumanReadable();
             default:
