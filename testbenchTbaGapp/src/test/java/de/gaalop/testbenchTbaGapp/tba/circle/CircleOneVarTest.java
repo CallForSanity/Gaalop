@@ -1,4 +1,4 @@
-package de.gaalop.testbenchTbaGapp.tbaNew.circle;
+package de.gaalop.testbenchTbaGapp.tba.circle;
 
 import de.gaalop.dfg.MultivectorComponent;
 import de.gaalop.dfg.Variable;

@@ -1,4 +1,4 @@
-package de.gaalop.testbenchTbaGapp.tbaNew.gps;
+package de.gaalop.testbenchTbaGapp.tba.gps;
 
 /**
  * Represents a point in a 3d space in double precision

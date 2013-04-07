@@ -4,10 +4,14 @@
  */
 package de.gaalop.tba.cfgImport.optimization.maxima;
 
+import de.gaalop.dfg.Exponentiation;
 import de.gaalop.dfg.Expression;
+import de.gaalop.dfg.FloatConstant;
+import de.gaalop.dfg.Multiplication;
 import de.gaalop.tba.cfgImport.optimization.maxima.parser.MaximaLexer;
 import de.gaalop.tba.cfgImport.optimization.maxima.parser.MaximaParser;
 import de.gaalop.tba.cfgImport.optimization.maxima.parser.MaximaTransformer;
+import de.gaalop.visitors.ReplaceVisitor;
 import java.util.LinkedList;
 import org.antlr.runtime.ANTLRStringStream;
 import org.antlr.runtime.CommonTokenStream;
@@ -70,8 +74,49 @@ public class MaximaRoutines {
 
         CommonTreeNodeStream treeNodeStream = new CommonTreeNodeStream(parserResult.getTree());
         MaximaTransformer transformer = new MaximaTransformer(treeNodeStream);
-
-        return transformer.expression();
+        return unfoldSimplePows(transformer.expression());
     }
+
+    /**
+     * Unfolds simple pow expressions, i.e. pow(a,3) -> a*a*a,
+     * where exponent <= 3 and constant.
+     * @param expression The expression to unfold the pow operations
+     */
+    private static Expression unfoldSimplePows(Expression expression) {
+        return new UnfoldingSimplePows().replace(expression);
+    }
+    
+    private static class UnfoldingSimplePows extends ReplaceVisitor {
+
+        @Override
+        public void visit(Exponentiation node) {
+            
+            if (node.getRight() instanceof FloatConstant) {
+                double constant = ((FloatConstant) node.getRight()).getValue();
+                int integer = (int) Math.round(constant);
+                if (integer>0 && integer<=3) 
+                    if (Math.abs(constant-integer) < 10E-7) {
+                        //Unfold
+                        //TODO chs set a new temporary variable, if left is of big height
+                        switch (integer) {
+                            case 1:
+                                result = node.getLeft();
+                                return;
+                            case 2:
+                                result = new Multiplication(node.getLeft(), node.getLeft());
+                                return;
+                            case 3:
+                                result = new Multiplication(new Multiplication(node.getLeft(),node.getLeft()), node.getLeft());
+                                return;    
+                        }
+                    }
+            }
+            
+            super.visit(node);
+        }
+        
+        
+    }
+
     
 }

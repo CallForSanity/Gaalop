@@ -1,4 +1,6 @@
-package de.gaalop.testbenchTbaGapp.tbaNew.framework;
+package de.gaalop.testbenchTbaGapp.tba.framework;
+
+
 
 import de.gaalop.*;
 import de.gaalop.dfg.MultivectorComponent;
@@ -170,6 +172,35 @@ public class TestDummy {
             
 
             tBATestCase.testOutputs(outputVarsValues);
+        } catch (CompilationException ex) {
+            Logger.getLogger(TestDummy.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }
+    
+    public static void compileWithOptions(TBATestCase tBATestCase, de.gaalop.globalSettings.Plugin globalPlugin, CodeGenerator codeGenerator) {
+        
+        CodeParser parser                                       = new de.gaalop.clucalc.input.Plugin().createCodeParser();
+        GlobalSettingsStrategy globalSettingsStrategy           = globalPlugin.createGlobalSettingsStrategy();
+        VisualCodeInserterStrategy visualCodeInserterStrategy   = new de.gaalop.visualCodeInserter.Plugin().createVisualCodeInserterStrategy();
+        AlgebraStrategy algebraStrategy                         = new de.gaalop.algebra.Plugin().createAlgebraStrategy();
+        OptimizationStrategy optimizationStrategy               = new de.gaalop.tba.Plugin().createOptimizationStrategy();
+        
+        
+        CompilerFacade facade = new CompilerFacade(
+                parser, 
+                globalSettingsStrategy, 
+                visualCodeInserterStrategy, 
+                algebraStrategy, 
+                optimizationStrategy, 
+                codeGenerator, 
+                tBATestCase.getAlgebraName(), 
+                true, 
+                "");
+        
+        Set<OutputFile> outputFiles;
+        try {
+            outputFiles = facade.compile(new InputFile("TestCase", tBATestCase.getCLUScript()));
         } catch (CompilationException ex) {
             Logger.getLogger(TestDummy.class.getName()).log(Level.SEVERE, null, ex);
         }

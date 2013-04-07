@@ -1,7 +1,7 @@
-package de.gaalop.testbenchTbaGapp.tbaNew.negative;
+package de.gaalop.testbenchTbaGapp.tba.negative;
 
 import de.gaalop.dfg.Variable;
-import de.gaalop.testbenchTbaGapp.tbaNew.framework.TBATestCase;
+import de.gaalop.testbenchTbaGapp.tba.framework.TBATestCase;
 import java.util.HashMap;
 
 /**

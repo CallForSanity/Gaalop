@@ -1,6 +1,6 @@
-package de.gaalop.testbenchTbaGapp.tbaNew.circle;
+package de.gaalop.testbenchTbaGapp.tba.circle;
 
-import de.gaalop.testbenchTbaGapp.tbaNew.framework.TBATestCase;
+import de.gaalop.testbenchTbaGapp.tba.framework.TBATestCase;
 import java.awt.Point;
 
 /**

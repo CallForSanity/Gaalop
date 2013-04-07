@@ -1,6 +1,6 @@
-package de.gaalop.testbenchTbaGapp.tbaNew.gps;
+package de.gaalop.testbenchTbaGapp.tba.gps;
 
-import de.gaalop.testbenchTbaGapp.tbaNew.framework.TBATestCase;
+import de.gaalop.testbenchTbaGapp.tba.framework.TBATestCase;
 
 /**
  *

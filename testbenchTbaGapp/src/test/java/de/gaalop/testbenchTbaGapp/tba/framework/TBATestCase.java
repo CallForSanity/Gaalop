@@ -1,4 +1,4 @@
-package de.gaalop.testbenchTbaGapp.tbaNew.framework;
+package de.gaalop.testbenchTbaGapp.tba.framework;
 
 import de.gaalop.dfg.Variable;
 import java.util.HashMap;

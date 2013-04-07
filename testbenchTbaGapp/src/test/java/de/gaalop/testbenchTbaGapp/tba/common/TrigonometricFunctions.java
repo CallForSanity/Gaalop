@@ -1,8 +1,8 @@
-package de.gaalop.testbenchTbaGapp.tbaNew.common;
+package de.gaalop.testbenchTbaGapp.tba.common;
 
 import de.gaalop.dfg.MultivectorComponent;
 import de.gaalop.dfg.Variable;
-import de.gaalop.testbenchTbaGapp.tbaNew.framework.TBATestCase;
+import de.gaalop.testbenchTbaGapp.tba.framework.TBATestCase;
 import java.util.HashMap;
 
 import static org.junit.Assert.*;

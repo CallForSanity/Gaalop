@@ -1,16 +1,16 @@
-package de.gaalop.testbenchTbaGapp.tbaNew;
+package de.gaalop.testbenchTbaGapp.tba;
 
-import de.gaalop.testbenchTbaGapp.tbaNew.gps.Point3D;
-import de.gaalop.testbenchTbaGapp.tbaNew.circle.CircleNoVarsTest;
-import de.gaalop.testbenchTbaGapp.tbaNew.circle.CircleOneVarTest;
-import de.gaalop.testbenchTbaGapp.tbaNew.circle.CircleOnlyVarsTest;
-import de.gaalop.testbenchTbaGapp.tbaNew.common.*;
-import de.gaalop.testbenchTbaGapp.tbaNew.framework.TestDummy;
-import de.gaalop.testbenchTbaGapp.tbaNew.gps.GPSNoVarsTest;
-import de.gaalop.testbenchTbaGapp.tbaNew.gps.GPSOnlyVarsTest;
-import de.gaalop.testbenchTbaGapp.tbaNew.linePointDistance.LinePointDistance;
-import de.gaalop.testbenchTbaGapp.tbaNew.negative.ControlFlowTest;
-import de.gaalop.testbenchTbaGapp.tbaNew.negative.MultipleAssignmentsTest;
+import de.gaalop.testbenchTbaGapp.tba.gps.Point3D;
+import de.gaalop.testbenchTbaGapp.tba.circle.CircleNoVarsTest;
+import de.gaalop.testbenchTbaGapp.tba.circle.CircleOneVarTest;
+import de.gaalop.testbenchTbaGapp.tba.circle.CircleOnlyVarsTest;
+import de.gaalop.testbenchTbaGapp.tba.common.*;
+import de.gaalop.testbenchTbaGapp.tba.framework.TestDummy;
+import de.gaalop.testbenchTbaGapp.tba.gps.GPSNoVarsTest;
+import de.gaalop.testbenchTbaGapp.tba.gps.GPSOnlyVarsTest;
+import de.gaalop.testbenchTbaGapp.tba.linePointDistance.LinePointDistance;
+import de.gaalop.testbenchTbaGapp.tba.negative.ControlFlowTest;
+import de.gaalop.testbenchTbaGapp.tba.negative.MultipleAssignmentsTest;
 import java.awt.Point;
 import org.junit.Test;
 import static org.junit.Assert.*;

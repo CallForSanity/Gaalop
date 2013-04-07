@@ -1,6 +1,6 @@
-package de.gaalop.testbenchTbaGapp.tbaNew.linePointDistance;
+package de.gaalop.testbenchTbaGapp.tba.linePointDistance;
 
-import de.gaalop.testbenchTbaGapp.tbaNew.gps.Point3D;
+import de.gaalop.testbenchTbaGapp.tba.gps.Point3D;
 
 /**
  * Implements a vector in 3d euclidean space

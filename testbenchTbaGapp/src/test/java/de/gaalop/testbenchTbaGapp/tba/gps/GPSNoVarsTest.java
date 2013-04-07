@@ -1,4 +1,4 @@
-package de.gaalop.testbenchTbaGapp.tbaNew.gps;
+package de.gaalop.testbenchTbaGapp.tba.gps;
 
 import de.gaalop.dfg.MultivectorComponent;
 import de.gaalop.dfg.Variable;
