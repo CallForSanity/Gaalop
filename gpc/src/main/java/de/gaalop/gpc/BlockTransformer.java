@@ -147,8 +147,8 @@ public class BlockTransformer {
         CodeGenerator codeGenerator = createCodeGenerator();
         
         // check if algebra is resource or file
-        boolean asResource = true;//false;
-        /*try {
+        boolean asResource = false;
+	try {
             InputStream inputStream = AlStrategy.class.getResourceAsStream("algebra/definedAlgebras.txt");
             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
 
@@ -160,7 +160,7 @@ public class BlockTransformer {
             reader.close();
         } catch (IOException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-        }*/
+        }
         
         return new CompilerFacade(codeParser, globalSettingsStrategy, 
         		  visualizerStrategy, algebraStrategy,
