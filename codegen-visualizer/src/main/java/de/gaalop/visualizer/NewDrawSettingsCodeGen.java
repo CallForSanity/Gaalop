@@ -96,7 +96,7 @@ public class NewDrawSettingsCodeGen extends DrawSettings implements CodeGenerato
             public void actionPerformed(ActionEvent e) {
                 JFileChooser chooser = new JFileChooser();
                 if (chooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
-                    loadedPointClouds.saveToFile(chooser.getSelectedFile());
+                    computedPointClouds.saveToFile(chooser.getSelectedFile());
                 }
             }
         });
