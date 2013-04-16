@@ -2,6 +2,7 @@ package de.gaalop.algebra;
 
 import de.gaalop.AlgebraStrategy;
 import de.gaalop.CodeParserException;
+import de.gaalop.CompilationException;
 import de.gaalop.InputFile;
 import de.gaalop.OptimizationException;
 import de.gaalop.cfg.AlgebraDefinitionFile;
@@ -42,7 +43,7 @@ public class AlStrategy implements AlgebraStrategy {
         FindStoreOutputNodes outputNodes = new FindStoreOutputNodes();
         graph.accept(outputNodes);
         if (outputNodes.getNodes().isEmpty()) {
-            throw new RuntimeException("There are no lines marked for optimization ('?')");
+            throw new OptimizationException("There are no lines marked for optimization ('?')", graph);
         }
 
         InputStream inputStream = null;
