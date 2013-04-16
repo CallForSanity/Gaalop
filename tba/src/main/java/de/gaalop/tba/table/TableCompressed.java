@@ -1,20 +1,15 @@
 package de.gaalop.tba.table;
 
-import de.gaalop.tba.table.BitIO.AbsBitWriter;
-import de.gaalop.tba.table.BitIO.AbsBitReader;
 import de.gaalop.tba.BladeRef;
 import de.gaalop.tba.IMultTable;
 import de.gaalop.tba.Multivector;
-import de.gaalop.tba.table.BitIO.BitReader;
-import de.gaalop.tba.table.BitIO.BitWriter;
+import de.gaalop.tba.table.BitIO.*;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -33,14 +28,8 @@ public class TableCompressed implements TableReaderIO {
     }
 
     @Override
-    public void readFromFile(InputStream filestream, IMultTable innerTable, IMultTable outerTable, IMultTable geoTable) {
+    public void readFromInputStream(DataInputStream in, IMultTable innerTable, IMultTable outerTable, IMultTable geoTable) {
         try {
-            DataInputStream in = new DataInputStream(filestream);
-            byte format = in.readByte();
-            if (format != 1) {
-                System.err.println("The format is not the compressed format - Stop to read in");
-                in.close();
-            }
             int dimension = in.readByte();
             int bladeCount = (int) Math.pow(2,dimension);
             int bitCount = in.readByte();
@@ -97,15 +86,15 @@ public class TableCompressed implements TableReaderIO {
     }
 
     @Override
-    public void writeToFile(int bladeCount, int dimension, IMultTable innerTable, IMultTable outerTable, IMultTable geoTable, OutputStream outputStream) {
+    public void writeFromInputStream(int bladeCount, int dimension, IMultTable innerTable, IMultTable outerTable, IMultTable geoTable, DataOutputStream out) {
         try {
-            BitWriter w = new BitWriter();
+            AbsBitWriter w = new SimpleBitWriter();
 
-            int bitCount = 4;
+            int bitCount = 32;
             File tempFile = File.createTempFile("TableCreator", "txt");
-            DataOutputStream out = new DataOutputStream(new FileOutputStream(tempFile));
+            DataOutputStream out1 = new DataOutputStream(new FileOutputStream(tempFile));
 
-            w.setDataOutputStream(out);
+            w.setDataOutputStream(out1);
 
             int maxNumber = 0;
 
@@ -125,15 +114,13 @@ public class TableCompressed implements TableReaderIO {
                 }
 
             w.finish();
-            out.close();
+            out1.close();
 
             // ===== 
 
-            out = new DataOutputStream(outputStream);
-
             DataInputStream in = new DataInputStream(new FileInputStream(tempFile));
 
-            BitReader r = new BitReader();
+            AbsBitReader r = new SimpleBitReader();
             r.setDataInputStream(in);
 
 
@@ -144,8 +131,6 @@ public class TableCompressed implements TableReaderIO {
                 number *= 2;
             }
 
-
-            out.writeByte(1); //format
             out.writeByte(dimension); //dimension
             out.writeByte(bitCount2);
 
@@ -166,5 +151,11 @@ public class TableCompressed implements TableReaderIO {
             Logger.getLogger(TableCompressed.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
+    public AbsBitReader getReader() {
+        return reader;
+    }
+    
+    
 
 }

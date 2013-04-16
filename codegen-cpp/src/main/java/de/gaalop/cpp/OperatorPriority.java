@@ -24,8 +24,8 @@ public class OperatorPriority {
         OPERATOR_PRIORITY.put(Exponentiation.class, 1000);
         OPERATOR_PRIORITY.put(OuterProduct.class, 995);
         OPERATOR_PRIORITY.put(Negation.class, 990);
+        OPERATOR_PRIORITY.put(Division.class, 965);
         OPERATOR_PRIORITY.put(Multiplication.class, 960);
-        OPERATOR_PRIORITY.put(Division.class, 960);
         OPERATOR_PRIORITY.put(Subtraction.class, 955);
         OPERATOR_PRIORITY.put(Addition.class, 950);
         OPERATOR_PRIORITY.put(Relation.class, 940);

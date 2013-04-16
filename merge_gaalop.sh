@@ -1,5 +1,5 @@
 #!/bin/sh
-export USER=pc
+export USER=chs
 export START_REV=1223
 
 svn merge -r $START_REV:HEAD svn+ssh://${USER}@erebor.esa.informatik.tu-darmstadt.de/home/wimi/svn/GaalopCompiler/gaalop-2.0/trunk/api api
