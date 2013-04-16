@@ -1,4 +1,0 @@
-#include "Timing.h"
-Timing Timing::timing;
-Timing::timing.startTime("Normalize");
-Timing::timing.stopTime("Normalize");
