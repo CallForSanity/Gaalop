@@ -1,6 +1,7 @@
 package de.gaalop.visualizer.engines.lwjgl;
 
 import de.gaalop.visualizer.PointCloud;
+import de.gaalop.visualizer.PointClouds;
 import de.gaalop.visualizer.Rendering;
 import de.gaalop.visualizer.engines.lwjgl.recording.GIFRecorder;
 import de.gaalop.visualizer.engines.lwjgl.recording.Recorder;
@@ -94,7 +95,7 @@ public abstract class LwJglRenderingEngine extends RenderingEngine {
                 if (list != -1) GL11.glDeleteLists(list, 1);
                 list = GL11.glGenLists(1);
                 GL11.glNewList(list, GL11.GL_COMPILE);
-                draw(rendering.getDataSet(), rendering.getVisibleObjects());
+                draw(rendering.getDataSet(), rendering.getVisibleObjects(), rendering.getLoadedPointClouds());
                 GL11.glEndList();
                 changed = true;
             }
@@ -312,6 +313,6 @@ public abstract class LwJglRenderingEngine extends RenderingEngine {
      * @param clouds The point clouds
      * @param visibleObjects The visible point clouds
      */
-    public abstract void draw(HashMap<String, PointCloud> clouds, HashSet<String> visibleObjects);
+    public abstract void draw(HashMap<String, PointCloud> clouds, HashSet<String> visibleObjects, PointClouds loadedClouds);
     
 }

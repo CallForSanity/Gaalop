@@ -222,9 +222,13 @@ public class NewDrawSettingsCodeGen extends DrawSettings implements CodeGenerato
     @Override
     public HashMap<String, PointCloud> getDataSet() {
         PointClouds pointClouds = new PointClouds();
-        pointClouds.putAll(loadedPointClouds);
         pointClouds.putAll(computedPointClouds);
         return pointClouds;
+    }
+    
+    @Override
+    public PointClouds getLoadedPointClouds() {
+        return loadedPointClouds;
     }
 
     @Override

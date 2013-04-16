@@ -28,4 +28,10 @@ public interface Rendering {
      */
     public HashSet<String> getVisibleObjects();
     
+    /**
+     * Returns the loaded pointClouds
+     * @return The loaded pointClouds instance
+     */
+    public PointClouds getLoadedPointClouds();
+    
 }
