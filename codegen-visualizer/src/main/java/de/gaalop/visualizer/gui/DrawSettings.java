@@ -46,6 +46,7 @@ public class DrawSettings extends javax.swing.JFrame {
         jComboBox_ZerofindingMethod = new javax.swing.JComboBox();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
+        jButton_DisplayEquations = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Gaalop Visualizer Settings");
@@ -135,12 +136,14 @@ public class DrawSettings extends javax.swing.JFrame {
         jPanel3.setBounds(240, 360, 240, 180);
 
         jButton_LoadPointCloud.setText("Load Pointcloud");
+        jButton_LoadPointCloud.setMaximumSize(new java.awt.Dimension(109, 23));
+        jButton_LoadPointCloud.setMinimumSize(new java.awt.Dimension(1079, 23));
         getContentPane().add(jButton_LoadPointCloud);
-        jButton_LoadPointCloud.setBounds(80, 610, 130, 23);
+        jButton_LoadPointCloud.setBounds(30, 610, 120, 23);
 
         jButton_SavePointCloud.setText("Save Pointcloud");
         getContentPane().add(jButton_SavePointCloud);
-        jButton_SavePointCloud.setBounds(250, 610, 140, 23);
+        jButton_SavePointCloud.setBounds(180, 610, 120, 23);
 
         getContentPane().add(jComboBox_ZerofindingMethod);
         jComboBox_ZerofindingMethod.setBounds(140, 550, 200, 20);
@@ -154,8 +157,23 @@ public class DrawSettings extends javax.swing.JFrame {
         getContentPane().add(jLabel2);
         jLabel2.setBounds(0, 634, 490, 20);
 
+        jButton_DisplayEquations.setText("Display equations");
+        jButton_DisplayEquations.setMaximumSize(new java.awt.Dimension(109, 23));
+        jButton_DisplayEquations.setMinimumSize(new java.awt.Dimension(109, 23));
+        jButton_DisplayEquations.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton_DisplayEquationsActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jButton_DisplayEquations);
+        jButton_DisplayEquations.setBounds(330, 610, 130, 23);
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton_DisplayEquationsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_DisplayEquationsActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton_DisplayEquationsActionPerformed
 
     /**
      * @param args the command line arguments
@@ -199,6 +217,7 @@ public class DrawSettings extends javax.swing.JFrame {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    public javax.swing.JButton jButton_DisplayEquations;
     public javax.swing.JButton jButton_LoadPointCloud;
     protected javax.swing.JButton jButton_Repaint;
     public javax.swing.JButton jButton_SavePointCloud;

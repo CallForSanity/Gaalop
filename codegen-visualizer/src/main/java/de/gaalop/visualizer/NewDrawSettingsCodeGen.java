@@ -12,6 +12,7 @@ import de.gaalop.cfg.ControlFlowGraph;
 import de.gaalop.dfg.Expression;
 import de.gaalop.dfg.MultivectorComponent;
 import de.gaalop.dfg.Variable;
+import de.gaalop.visitors.ReplaceVisitor;
 import de.gaalop.visualizer.engines.lwjgl.RenderingEngine;
 import de.gaalop.visualizer.engines.lwjgl.SimpleLwJglRenderingEngine;
 import de.gaalop.visualizer.gui.DrawSettings;
@@ -20,14 +21,28 @@ import de.gaalop.visualizer.gui.SettingsPanel;
 import de.gaalop.visualizer.gui.VisiblePanel;
 import de.gaalop.visualizer.zerofinding.DiscreteCubeMethod;
 import de.gaalop.visualizer.zerofinding.GradientMethod;
+import de.gaalop.visualizer.zerofinding.PrepareZerofinder;
 import de.gaalop.visualizer.zerofinding.RayMethod;
 import de.gaalop.visualizer.zerofinding.ZeroFinder;
+import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.MenuItem;
+import java.awt.PopupMenu;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.Collections;
 import java.util.HashMap;
+import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.event.ChangeEvent;
 
 /**
@@ -106,6 +121,32 @@ public class NewDrawSettingsCodeGen extends DrawSettings implements CodeGenerato
             public void actionPerformed(ActionEvent e) {
                 settingsPanel.setSettings(getSelectedZeroFinder().getSettings());
                 repaint();
+            }
+        });
+        
+        jButton_DisplayEquations.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFrame frame = new JFrame("Gaalop - Rendering equations");
+                frame.setLayout(new BorderLayout(5,5));
+                frame.setSize(500, 500);
+                JScrollPane pane = new JScrollPane(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+                frame.add(pane, BorderLayout.CENTER);
+                JTextArea area = new JTextArea(getDisplayEquationsAsString());
+                area.setLineWrap(true);
+                area.setEditable(false);
+                pane.setViewportView(area);
+                frame.setVisible(true);
+                frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                JButton buttonCopy = new JButton("Copy content to clipboard");
+                frame.add(buttonCopy, BorderLayout.SOUTH);
+                buttonCopy.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        final Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+                        clipboard.setContents( new StringSelection(getDisplayEquationsAsString()), null );
+                    }
+                });
             }
         });
        
@@ -194,6 +235,50 @@ public class NewDrawSettingsCodeGen extends DrawSettings implements CodeGenerato
                 findingComplete(sum, (System.currentTimeMillis()-start)/1000.0d);
             }
         }.start();
+    }
+    
+    private String getDisplayEquationsAsString() {
+        //Copy List
+        LinkedList<AssignmentNode> list = new LinkedList<AssignmentNode>();
+        for (AssignmentNode node: graphAssignmentNodes) 
+            list.add(node.copyElements());
+                
+        ReplaceVisitor visitor = new ReplaceVisitor() {
+
+            private void visitVar(Variable node) {
+                if (node.getName().equals("_V_X"))
+                    result = new Variable("x");
+                if (node.getName().equals("_V_Y"))
+                    result = new Variable("y");
+                if (node.getName().equals("_V_Z"))
+                    result = new Variable("z");
+            }
+            
+            @Override
+            public void visit(MultivectorComponent node) {
+                visitVar(node);
+            }
+
+            @Override
+            public void visit(Variable node) {
+                visitVar(node);
+            }
+            
+        };
+        for (AssignmentNode node: list) {
+            node.setVariable((Variable) visitor.replace(node.getVariable()));
+            node.setValue(visitor.replace(node.getValue()));
+        }        
+                
+        list = PrepareZerofinder.createSumOfSquares(list);
+        
+        StringBuilder sb = new StringBuilder();
+        for (AssignmentNode node: list) {
+            sb.append(node.toString());
+            sb.append("\n");
+        }
+
+        return sb.toString();
     }
     
     /**

@@ -23,7 +23,7 @@ public abstract class PrepareZerofinder extends ZeroFinder {
      * @param nodes The list of assignment nodes
      * @return The new list of assignment nodes
      */
-    protected static LinkedList<AssignmentNode> createSumOfSquares(LinkedList<AssignmentNode> nodes) {
+    public static LinkedList<AssignmentNode> createSumOfSquares(LinkedList<AssignmentNode> nodes) {
         HashMap<String, LinkedList<AssignmentNode>> collect = new HashMap<String, LinkedList<AssignmentNode>>();
         
         for (AssignmentNode node: nodes) {
