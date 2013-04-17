@@ -9,7 +9,10 @@ import de.gaalop.CodeGenerator;
 import de.gaalop.CodeGeneratorException;
 import de.gaalop.OutputFile;
 import de.gaalop.cfg.ControlFlowGraph;
+import de.gaalop.dfg.Addition;
+import de.gaalop.dfg.Exponentiation;
 import de.gaalop.dfg.Expression;
+import de.gaalop.dfg.FloatConstant;
 import de.gaalop.dfg.MultivectorComponent;
 import de.gaalop.dfg.Variable;
 import de.gaalop.visitors.ReplaceVisitor;
@@ -270,7 +273,7 @@ public class NewDrawSettingsCodeGen extends DrawSettings implements CodeGenerato
             node.setValue(visitor.replace(node.getValue()));
         }        
                 
-        list = PrepareZerofinder.createSumOfSquares(list);
+        list = createSumOfSquares(list);
         
         StringBuilder sb = new StringBuilder();
         for (AssignmentNode node: list) {
@@ -280,6 +283,65 @@ public class NewDrawSettingsCodeGen extends DrawSettings implements CodeGenerato
 
         return sb.toString();
     }
+    
+    /**
+     * Search _V_PRODUCT in a list of assignment nodes, 
+     * applies the sum of the squares to _V_PRODUCT_S
+     * and returns the result
+     * @param nodes The list of assignment nodes
+     * @return The new list of assignment nodes
+     */
+    private LinkedList<AssignmentNode> createSumOfSquares(LinkedList<AssignmentNode> nodes) {
+        HashMap<String, LinkedList<AssignmentNode>> collect = new HashMap<String, LinkedList<AssignmentNode>>();
+        
+        for (AssignmentNode node: nodes) {
+            MultivectorComponent m = (MultivectorComponent) node.getVariable();
+            String name = m.getName();
+            if (!collect.containsKey(name)) 
+                collect.put(name, new LinkedList<AssignmentNode>());
+
+            collect.get(name).add(node);
+        }
+        
+        LinkedList<AssignmentNode> myNodes = new LinkedList<AssignmentNode>();
+        for (String s: collect.keySet()) 
+            if (s.startsWith("_V_PRODUCT")) {
+                Expression sumOfSquares = null; 
+                
+                for (AssignmentNode node: collect.get(s)) {
+                    Expression square = new Exponentiation(node.getValue(), new FloatConstant(2));
+                    
+                    if (sumOfSquares == null) 
+                        sumOfSquares = square;
+                    else 
+                        sumOfSquares = new Addition(sumOfSquares, square);
+                }
+                
+                AssignmentNode newNode = new AssignmentNode(null, new Variable(renderingExpressions.get(s).toString()), sumOfSquares);
+                myNodes.add(newNode);
+                listInsertBefore(myNodes, newNode, collect.get(s).getFirst());
+
+                for (AssignmentNode node: collect.get(s)) 
+                    myNodes.remove(node);
+            }
+        return myNodes;
+    }
+    
+    /**
+     * Inserts an element in a list before a certain element
+     * @param list The list to insert in
+     * @param toInsert The element to be insert
+     * @param before The suceeding element
+     */
+    protected static void listInsertBefore(LinkedList<AssignmentNode> list, AssignmentNode toInsert, AssignmentNode before) {
+        LinkedList<AssignmentNode> listCopy = new LinkedList<AssignmentNode>(list);
+        list.clear();
+        for (AssignmentNode node: listCopy) {
+            if (node == before)
+                list.add(toInsert);
+            list.add(node);
+        }
+    } 
     
     /**
      * This method is called, when finding has finished.
