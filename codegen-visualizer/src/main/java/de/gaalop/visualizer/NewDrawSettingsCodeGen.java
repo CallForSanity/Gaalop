@@ -273,9 +273,25 @@ public class NewDrawSettingsCodeGen extends DrawSettings implements CodeGenerato
             node.setValue(visitor.replace(node.getValue()));
         }        
                 
+        //WithoutSums
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("//All components that should be zero on the surface of the multivector");
+        sb.append("\n");
+        for (AssignmentNode node: list) {
+            String name = node.getVariable().getName();
+            String newName = renderingExpressions.get(name).toString();
+            AssignmentNode nodeCpy = node.copyElements();
+            nodeCpy.setVariable(new MultivectorComponent(newName, ((MultivectorComponent) nodeCpy.getVariable()).getBladeIndex()));
+            sb.append(nodeCpy.toString());
+            sb.append("\n");
+        }
+        
         list = createSumOfSquares(list);
         
-        StringBuilder sb = new StringBuilder();
+        sb.append("\n");
+        sb.append("//Sum of the squared components that should be zero on the surface of the multivector");
+        sb.append("\n");
         for (AssignmentNode node: list) {
             sb.append(node.toString());
             sb.append("\n");
@@ -308,21 +324,28 @@ public class NewDrawSettingsCodeGen extends DrawSettings implements CodeGenerato
             if (s.startsWith("_V_PRODUCT")) {
                 Expression sumOfSquares = null; 
                 
-                for (AssignmentNode node: collect.get(s)) {
-                    Expression square = new Exponentiation(node.getValue(), new FloatConstant(2));
-                    
-                    if (sumOfSquares == null) 
-                        sumOfSquares = square;
-                    else 
-                        sumOfSquares = new Addition(sumOfSquares, square);
+                if (collect.get(s).size() > 1) {
+                    for (AssignmentNode node: collect.get(s)) {
+                        Expression square = new Exponentiation(node.getValue(), new FloatConstant(2));
+
+                        if (sumOfSquares == null) 
+                            sumOfSquares = square;
+                        else 
+                            sumOfSquares = new Addition(sumOfSquares, square);
+                    }
+                } else {
+                    if (collect.get(s).size() == 1)
+                        sumOfSquares = collect.get(s).getFirst().getValue();
                 }
                 
-                AssignmentNode newNode = new AssignmentNode(null, new Variable(renderingExpressions.get(s).toString()), sumOfSquares);
-                myNodes.add(newNode);
-                listInsertBefore(myNodes, newNode, collect.get(s).getFirst());
+                if (sumOfSquares != null) {
+                    AssignmentNode newNode = new AssignmentNode(null, new Variable(renderingExpressions.get(s).toString()), sumOfSquares);
+                    myNodes.add(newNode);
+                    listInsertBefore(myNodes, newNode, collect.get(s).getFirst());
 
-                for (AssignmentNode node: collect.get(s)) 
-                    myNodes.remove(node);
+                    for (AssignmentNode node: collect.get(s)) 
+                        myNodes.remove(node);
+                }
             }
         return myNodes;
     }
