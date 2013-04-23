@@ -40,7 +40,7 @@ public abstract class PrepareZerofinder extends ZeroFinder {
             if (s.startsWith("_V_PRODUCT")) {
                 Expression sumOfSquares = null; 
                 
-                if (collect.get(s).size() > 1) {
+                
                     for (AssignmentNode node: collect.get(s)) {
                         Expression square = new Exponentiation(node.getValue(), new FloatConstant(2));
 
@@ -49,10 +49,7 @@ public abstract class PrepareZerofinder extends ZeroFinder {
                         else 
                             sumOfSquares = new Addition(sumOfSquares, square);
                     }
-                } else {
-                    if (collect.get(s).size() == 1)
-                        sumOfSquares = collect.get(s).getFirst().getValue();
-                }
+                
                 
                 if (sumOfSquares != null) {
                     AssignmentNode newNode = new AssignmentNode(null, new MultivectorComponent(s+"_S", 0), sumOfSquares);
