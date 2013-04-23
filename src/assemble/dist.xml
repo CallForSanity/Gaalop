@@ -13,23 +13,23 @@
                 <include>de.gaalop:api</include>
                 <include>de.gaalop:algebra</include>
                 <include>de.gaalop:visualCodeInserter</include>
-                <!--TODO include after master thesis<include>de.gaalop:visualCodeInserter2d</include>-->
+                <include>de.gaalop:visualCodeInserter2d</include>
                 <include>de.gaalop:clucalc</include>
                 <include>de.gaalop:globalSettings</include>
 
                 <include>de.gaalop:maple</include>
                 <include>de.gaalop:tba</include>
                 <include>de.gaalop:gapp</include>
-                <!--<include>de.gaalop:codegen-compressed</include>-->
+                <include>de.gaalop:codegen-compressed</include>
                 <include>de.gaalop:codegen-cpp</include>
                 <include>de.gaalop:codegen-java</include>
-                <!--<include>de.gaalop:codegen-dot</include>-->
-                <!--<include>de.gaalop:codegen-verilog</include>-->
+                <include>de.gaalop:codegen-dot</include>
+          <!--      <include>de.gaalop:codegen-verilog</include>-->
                 <include>de.gaalop:codegen-latex</include>
                 <include>de.gaalop:codegen-gapp</include>
 		<include>de.gaalop:codegen-visualizer</include>
-		<!--TODO include after master thesis<include>de.gaalop:codegen-vis2d</include>-->
-                <!--<include>de.gaalop:codegen-gappopencl</include>-->
+		<include>de.gaalop:codegen-vis2d</include>
+                <include>de.gaalop:codegen-gappopencl</include>
                 <include>de.gaalop:gaalet</include>
 
                 <include>de.gaalop:cli</include>
