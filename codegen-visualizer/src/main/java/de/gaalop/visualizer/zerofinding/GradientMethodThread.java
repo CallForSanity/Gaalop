@@ -90,17 +90,12 @@ public class GradientMethodThread extends Thread {
                 distDir/=2;
             }
             
-            if (eval.f > 0) {
-                //Go into direction of negative gradient
-                ox -= eval.gradient.x*distDir;
-                oy -= eval.gradient.y*distDir;
-                oz -= eval.gradient.z*distDir;
-            } else {
-                //Go into direction of positive gradient
-                ox += eval.gradient.x*distDir;
-                oy += eval.gradient.y*distDir;
-                oz += eval.gradient.z*distDir;
-            }
+            
+            //Go into direction of negative gradient
+            ox -= eval.gradient.x*distDir;
+            oy -= eval.gradient.y*distDir;
+            oz -= eval.gradient.z*distDir;
+            
             
             glastx=eval.gradient.x;
             glasty=eval.gradient.y;
