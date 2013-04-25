@@ -1,0 +1,5 @@
+1,e1,e2,einf,e0
+ep=0.5*einf-e0,em=0.5*einf+e0
+1,e1,e2,ep,em
+e1=1,e2=1,ep=1,em=-1
+e0=0.5*em-0.5*ep,einf=em+ep
