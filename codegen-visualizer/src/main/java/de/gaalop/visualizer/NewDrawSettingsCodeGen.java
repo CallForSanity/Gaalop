@@ -61,7 +61,7 @@ public class NewDrawSettingsCodeGen extends DrawSettings implements CodeGenerato
     private LinkedList<AssignmentNode> graphAssignmentNodes;
     private Differentiater differentiater;
 
-    private PointClouds loadedPointClouds = new PointClouds();
+    public PointClouds loadedPointClouds = new PointClouds();
     private PointClouds computedPointClouds = new PointClouds();
     
     private InputsPanel inputsPanel;
@@ -418,5 +418,5 @@ public class NewDrawSettingsCodeGen extends DrawSettings implements CodeGenerato
         
         return false;
     }
-
+    
 }
