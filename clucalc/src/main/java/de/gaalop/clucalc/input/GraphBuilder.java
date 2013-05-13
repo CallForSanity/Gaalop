@@ -478,6 +478,10 @@ public final class GraphBuilder {
 		addNode(statement);
 		return statement;
 	}
+	
+	public void addVisualizerExpression(ExpressionStatement expr) {
+		graph.visualizerExpressions.add(expr);
+	}
 
 	/**
 	 * Should be called to notify the graph builder that the parsing process has finished. If needed, post-processing of
