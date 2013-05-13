@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.LinkedList;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -61,6 +62,7 @@ public final class ControlFlowGraph {
 	private HashMap<String, String> pragmaMinValue = new HashMap<String, String>();
 	private HashMap<String, String> pragmaMaxValue = new HashMap<String, String>();
         
+	public LinkedList<ExpressionStatement> visualizerExpressions = new LinkedList<ExpressionStatement>();
         private HashMap<String, Expression> renderingExpressions = new HashMap<String, Expression>();
 
         public GlobalSettings globalSettings = new GlobalSettings();
