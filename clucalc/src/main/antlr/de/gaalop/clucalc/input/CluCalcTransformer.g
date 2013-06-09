@@ -69,7 +69,11 @@ statement returns [ArrayList<SequentialNode> nodes]
 		graphBuilder.addVisualizerExpression(ex);
 	}
 	
-	| ^(COLON id=variableOrConstant) { $nodes.add(graphBuilder.processExpressionStatement($id.result)); }
+	| ^(COLON id=variableOrConstant) { 
+                ExpressionStatement ex = graphBuilder.processExpressionStatement($id.result);
+		$nodes.add(ex);
+		graphBuilder.addVisualizerExpression(ex);            
+        }
 	
 	// Stand-alone assignment
 	| assignment { $nodes.add(graphBuilder.handleAssignment($assignment.variable, $assignment.value)); }

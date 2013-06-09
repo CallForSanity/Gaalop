@@ -16,7 +16,7 @@
                 <include>de.gaalop:visualCodeInserter2d</include>
                 <include>de.gaalop:clucalc</include>
                 <include>de.gaalop:globalSettings</include>
-
+				<include>de.gaalop:gappDebugger</include>
                 <include>de.gaalop:maple</include>
                 <include>de.gaalop:tba</include>
                 <include>de.gaalop:gapp</include>
