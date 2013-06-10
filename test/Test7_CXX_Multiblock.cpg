@@ -1,5 +1,4 @@
 #include <iostream>
-#include <gpc.h>
 
 int main() {
 	float in_array[5];
