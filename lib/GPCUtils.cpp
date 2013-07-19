@@ -25,4 +25,8 @@ BaseVisualizationBackend* GPCUtils::getVisualizationBackend() {
 	return visualizationBackend.get();
 }
 
+void GPCUtils::setVisualizationBackend(BaseVisualizationBackend* visualizationBackend_) {
+	visualizationBackend.reset(visualizationBackend_);
+}
+
 std::auto_ptr<BaseVisualizationBackend> GPCUtils::visualizationBackend;
