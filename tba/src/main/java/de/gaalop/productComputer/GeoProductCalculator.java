@@ -8,7 +8,7 @@ package de.gaalop.productComputer;
 public class GeoProductCalculator implements ProductCalculator {
 
     @Override
-    public void calcProduct(SignedBlade b1, SignedBlade b2, SumOfBlades result, int bitCount, BitSet squareMask) {
+    public void calcProduct(SignedBlade b1, SignedBlade b2, SumOfBlades result, int bitCount, byte[] squareMask) {
         SignedBlade resultOuter = new SignedBlade(bitCount, b1, b1.coefficient*b2.coefficient*GAMethods.canonicalReorderingSign(b1,b2, bitCount));
         resultOuter.xor(b2);
 
@@ -18,11 +18,11 @@ public class GeoProductCalculator implements ProductCalculator {
 	} else {
             //outer product is null
             //calculate geo product
-            Blade aAndBMasked10 = new Blade(bitCount, squareMask);
-            aAndBMasked10.and(b1);
-            aAndBMasked10.and(b2);
-            if (!aAndBMasked10.isEmpty() && ((aAndBMasked10.cardinality() % 2) == 1))
-                resultOuter.coefficient *= -1;
+            Blade aAndBMasked = new Blade(bitCount, b1);
+            aAndBMasked.and(b2);
+            for (int index = 0;index < bitCount; index++) 
+                if (aAndBMasked.get(index)) 
+                    resultOuter.coefficient *= squareMask[index];
 
             result.add(resultOuter);
 	}

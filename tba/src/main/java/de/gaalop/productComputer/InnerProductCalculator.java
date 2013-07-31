@@ -16,7 +16,7 @@ public class InnerProductCalculator implements ProductCalculator {
      * @param squareMask The signature
      * @return true, if the result is not empty; false, otherwise
      */
-    private boolean calcInner1Product1(SignedBlade b1, SignedBlade b2, SignedBlade result, int bitCount, BitSet squareMask) {
+    private boolean calcInner1Product1(SignedBlade b1, SignedBlade b2, SignedBlade result, int bitCount, byte[] squareMask) {
         result.clear();
         result.coefficient = b1.coefficient * b2.coefficient;
         Blade aAndB = new Blade(bitCount, b1);
@@ -24,13 +24,13 @@ public class InnerProductCalculator implements ProductCalculator {
         if (aAndB.isEmpty()) {
             return false;
         }
-        Blade aAndBMasked1 = new Blade(bitCount, aAndB);
-        aAndBMasked1.and(squareMask);
-        if (!aAndBMasked1.isEmpty()) // if ((aAndBMasked1.count() % 2) == 1)  always true!
-        {
-            result.coefficient *= -1;
-        }
-        return true;
+        for (int index=0;index<bitCount;index++)
+            if (aAndB.get(index)) {
+                result.coefficient *= squareMask[index];
+                return (squareMask[index] != 0);
+            }
+        
+        throw new IllegalStateException("InnerProductCalculator.calcInner1Product1: state not allowed");
     }
 
     /**
@@ -42,7 +42,7 @@ public class InnerProductCalculator implements ProductCalculator {
      * @param squareMask The signature
      * @return true, if the result is not empty; false, otherwise
      */
-    private boolean calcInner1Productn(SignedBlade b1, SignedBlade b2, SignedBlade result, int bitCount, BitSet squareMask) {
+    private boolean calcInner1Productn(SignedBlade b1, SignedBlade b2, SignedBlade result, int bitCount, byte[] squareMask) {
         Blade aAndBMasked2 = new Blade(bitCount, b1);
         aAndBMasked2.and(b2);
         if (!aAndBMasked2.isEmpty()) {
@@ -60,16 +60,17 @@ public class InnerProductCalculator implements ProductCalculator {
                 i++;
             }
 
-            Blade temp = new Blade(bitCount, aAndBMasked2);
-            temp.and(squareMask);
-
-            if (!temp.isEmpty()) {
-                negate = !negate;
-            }
-
             if (negate) {
                 result.coefficient *= -1;
             }
+            
+            for (int index = 0;index<bitCount;index++)
+                if (aAndBMasked2.get(index)) {
+                    result.coefficient *= squareMask[index];
+                    if (squareMask[index] == 0)
+                        return false;
+                }
+            
             return true;
         }
         return false;
@@ -84,7 +85,7 @@ public class InnerProductCalculator implements ProductCalculator {
      * @param squareMask The signature
      * @return true, if the result is not empty; false, otherwise
      */
-    private boolean calcInnernProduct1(SignedBlade b1, SignedBlade b2, SignedBlade result, int bitCount, BitSet squareMask) {
+    private boolean calcInnernProduct1(SignedBlade b1, SignedBlade b2, SignedBlade result, int bitCount, byte[] squareMask) {
         Blade aAndBMasked3 = new Blade(bitCount, b1);
         aAndBMasked3.and(b2);
         if (!aAndBMasked3.isEmpty()) {
@@ -102,15 +103,17 @@ public class InnerProductCalculator implements ProductCalculator {
                 i--;
             }
 
-            Blade temp = new Blade(bitCount, aAndBMasked3);
-            temp.and(squareMask);
-            if (!temp.isEmpty()) {
-                negate = !negate;
-            }
-
             if (negate) {
                 result.coefficient *= -1;
             }
+            
+            for (int index = 0;index<bitCount;index++)
+                if (aAndBMasked3.get(index)) {
+                    result.coefficient *= squareMask[index];
+                    if (squareMask[index] == 0)
+                        return false;
+                }
+            
             return true;
         }
         return false;
@@ -125,7 +128,7 @@ public class InnerProductCalculator implements ProductCalculator {
      * @param squareMask The signature
      * @return true, if the result is not empty; false, otherwise
      */
-    private boolean calcInnernProductn(SignedBlade b1, SignedBlade b2, SignedBlade result, int bitCount, BitSet squareMask) {
+    private boolean calcInnernProductn(SignedBlade b1, SignedBlade b2, SignedBlade result, int bitCount, byte[] squareMask) {
         if (b1.cardinality() > b2.cardinality()) {
             // Bl*ak, k<l
 
@@ -177,7 +180,7 @@ public class InnerProductCalculator implements ProductCalculator {
     }
 
     @Override
-    public void calcProduct(SignedBlade b1, SignedBlade b2, SumOfBlades innerProduct, int bitCount, BitSet squareMask) {
+    public void calcProduct(SignedBlade b1, SignedBlade b2, SumOfBlades innerProduct, int bitCount, byte[] squareMask) {
         if (!b1.isEmpty() && !b2.isEmpty()) {
             SignedBlade result = new SignedBlade(bitCount);
             if (b1.cardinality() == 1) {

@@ -14,7 +14,7 @@ import java.util.LinkedList;
 public class ProductComputer {
 
     private int bitCount;
-    private BitSet squareMask;
+    private byte[] squareMask;
     private HashMap<Integer, SumOfBlades> mapZIToPM;
     private HashMap<Integer, SumOfBlades> mapPMToZI;
 
@@ -107,10 +107,9 @@ public class ProductComputer {
         bitCount = algebraPC.base.length;
 
         //set square mask
-        squareMask = new BitSet(bitCount);
-        for (String baseElement: algebraPC.baseSquaresStr.keySet()) 
-            if (algebraPC.baseSquaresStr.get(baseElement) == -1) 
-                squareMask.set(getIndex(baseElement, algebraPC.base2));
+        squareMask = new byte[algebraPC.base2.length];
+        for (int index = 0;index < algebraPC.base2.length; index++) 
+            squareMask[index] = algebraPC.baseSquaresStr.get(algebraPC.base2[index]);
         
         //initialise map Zeroinf to Plusminus
         mapZIToPM = new HashMap<Integer, SumOfBlades>();

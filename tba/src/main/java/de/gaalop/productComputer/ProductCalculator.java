@@ -1,5 +1,7 @@
 package de.gaalop.productComputer;
 
+import java.util.HashMap;
+
 /**
  * Defines an interface for calculating a product of two blades
  * @author christian
@@ -14,6 +16,6 @@ public interface ProductCalculator {
      * @param bitCount The maximum number of bits
      * @param squareMask The signature
      */
-    public void calcProduct(SignedBlade b1, SignedBlade b2, SumOfBlades result, int bitCount, BitSet squareMask);
+    public void calcProduct(SignedBlade b1, SignedBlade b2, SumOfBlades result, int bitCount, byte[] squareMask);
 
 }
