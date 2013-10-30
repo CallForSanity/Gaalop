@@ -19,14 +19,6 @@ int main() {
 #pragma clucalc begin
 	?b = a + 5;
 #pragma clucalc end
-/*	D0[0] = Din_SCALAR;
-	D0[1] = Din_E12;
-	D0[2] = Din_E13;
-	D0[3] = Din_E1INF;
-	D0[4] = Din_E23;
-	D0[5] = Din_E2INF;
-	D0[6] = Din_E3INF;
-	D0[7] = Din_E123INF;*/
 	array = mv_to_array(b,1);
 
 	return !(mv_get_bladecoeff(b,1) == 10.0f);
