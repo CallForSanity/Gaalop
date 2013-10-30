@@ -146,15 +146,15 @@ public class BlockTransformer {
         OptimizationStrategy optimizationStrategy = createOptimizationStrategy();
         CodeGenerator codeGenerator = createCodeGenerator();
         
-        // check if algebra is resource or file
+        // check if algebra exists as resource
         boolean asResource = false;
-	try {
+        try {
             InputStream inputStream = AlStrategy.class.getResourceAsStream("algebra/definedAlgebras.txt");
             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
 
             String line;
             while ((line = reader.readLine()) != null) 
-                if (line.trim().equals(Main.algebraName.trim()))
+                if (line.trim().contains(Main.algebraName.trim()))
                     asResource = true;
 
             reader.close();
