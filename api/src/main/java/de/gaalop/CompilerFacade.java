@@ -32,6 +32,8 @@ public final class CompilerFacade extends Observable {
     private final String algebraBaseDirectory;
     
     private static boolean useCodeSegmenter;
+    
+    private ControlFlowGraph lastGraph;
 
     public static boolean isUseCodeSegmenter() {
 		return useCodeSegmenter;
@@ -58,6 +60,7 @@ public final class CompilerFacade extends Observable {
         this.algebraName = algebraName;
         this.asRessource = asRessource;
         this.algebraBaseDirectory = algebraBaseDirectory;
+        this.lastGraph = null;
     }
 
     /**
@@ -108,7 +111,10 @@ public final class CompilerFacade extends Observable {
         notifyObservers("Generating Code...");
         Set<OutputFile> output = codeGenerator.generate(graph);  
         setChanged();
-        notifyObservers("Finished");        
+        notifyObservers("Finished");
+        
+        lastGraph = graph;
+        
         return output;   	
     }
     
@@ -138,4 +144,9 @@ public final class CompilerFacade extends Observable {
     
     
     
+}
+
+ControlFlowGraph getLastGraph()
+{
+    return lastGraph;
 }
