@@ -42,6 +42,11 @@ public final class CompilerFacade extends Observable {
 	public static void setUseCodeSegmenter(boolean useCodeSegmenter) {
 		CompilerFacade.useCodeSegmenter = useCodeSegmenter;
 	}
+    
+    ControlFlowGraph getLastGraph()
+	{
+    	return lastGraph;
+	}    
 
 	/**
      * Constructs a new compiler facade.
@@ -142,11 +147,4 @@ public final class CompilerFacade extends Observable {
         return output;   	
     }    
     
-    
-    
-}
-
-ControlFlowGraph getLastGraph()
-{
-    return lastGraph;
 }
