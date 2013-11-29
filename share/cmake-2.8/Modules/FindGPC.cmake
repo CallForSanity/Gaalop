@@ -15,15 +15,15 @@ ENDIF(NOT Java_JAVA_EXECUTABLE)
 
 # find
 IF(GPC_WITH_MAPLE)
-	FIND_PATH(MAPLE_BIN_DIR HINTS "C:/Program Files (x86)/Maple 12/bin.win" "/opt/maple13/bin" CACHE PATH "Maple Binary Dir")
+	FIND_PATH(MAPLE_BIN_DIR NAMES maple PATH_SUFFIXES "Maple 12" maple13 CACHE PATH "Maple Binary Dir")
 ELSE(GPC_WITH_MAPLE)
-	OPTION(GPC_WITH_MAXIMA "whether to use the maxima in tba plugin or not." OFF)
+	OPTION(GPC_WITH_MAXIMA "whether to use the maxima or not." OFF)
 	IF(GPC_WITH_MAXIMA)
-		FIND_PROGRAM(MAXIMA_BIN NAMES "maxima" "maxima.sh" "maxima.bat" HINTS "C:/Program Files/Maxima" CACHE PATH "Maxima binary path")
+		FIND_PROGRAM(MAXIMA_BIN NAMES "maxima" "maxima.sh" "maxima.bat" PATH_SUFFIXES Maxima CACHE PATH "Maxima binary path")
 	ENDIF(GPC_WITH_MAXIMA)
 ENDIF(GPC_WITH_MAPLE)
 
-FIND_PATH(GPC_ROOT_DIR share PATH_SUFFIXES GaalopCompilerDriver 0.1.1
+FIND_PATH(GPC_ROOT_DIR share PATH_SUFFIXES GaalopPrecompiler
           DOC "Gaalop Precompiler root directory")
 FIND_FILE(GPC_JAR starter-1.0.0.jar "${GPC_ROOT_DIR}/share/gpc/gaalop" DOC "Gaalop GPC")
 FIND_LIBRARY(GPC_LIBRARY gpc HINTS "${GPC_ROOT_DIR}/lib" DOC "GPC helper library")
