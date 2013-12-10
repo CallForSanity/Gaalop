@@ -154,8 +154,10 @@ public class BlockTransformer {
 
             String line;
             while ((line = reader.readLine()) != null) 
-                if (line.trim().contains(Main.algebraName.trim()))
+                if (line.trim().contains(Main.algebraName.trim())) {
                     asResource = true;
+                    break;
+                }
 
             reader.close();
         } catch (IOException ex) {
@@ -202,6 +204,7 @@ public class BlockTransformer {
         Set<AlgebraStrategyPlugin> plugins = Plugins.getAlgebraStrategyPlugins();
         for (AlgebraStrategyPlugin plugin : plugins) {
             if (plugin.getClass().getName().equals(Main.algebraStrategyPlugin)) {
+            	// TODO how to get the correct algebra?
                 return plugin.createAlgebraStrategy();
             }
         }

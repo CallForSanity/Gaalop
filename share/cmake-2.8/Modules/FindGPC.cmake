@@ -137,11 +137,11 @@ MACRO(GPC_WRAP_SRCS generated_files)
 	ENDFOREACH(source_file)
 ENDMACRO(GPC_WRAP_SRCS)
 
-MACRO(GPC_CXX_ADD_LIBRARY target)
+MACRO(GPC_CXX_ADD_LIBRARY target lib_type)
     #UNSET(src)
     FILE(GLOB src ${ARGN})
     GPC_WRAP_SRCS(generated_files ${src})
-    ADD_LIBRARY(${target} ${generated_files} ${src}) # need to add src, so that normal files get compiled too
+    ADD_LIBRARY(${target} ${lib_type} ${generated_files} ${src}) # need to add src, so that normal files get compiled too
     TARGET_LINK_LIBRARIES(${target} ${GPC_LIBRARY})
 ENDMACRO(GPC_CXX_ADD_LIBRARY)
 
@@ -153,11 +153,11 @@ MACRO(GPC_CXX_ADD_EXECUTABLE target)
     TARGET_LINK_LIBRARIES(${target} ${GPC_LIBRARY})
 ENDMACRO(GPC_CXX_ADD_EXECUTABLE)
 
-MACRO(GPC_CUDA_ADD_LIBRARY target)
+MACRO(GPC_CUDA_ADD_LIBRARY target lib_type)
     #UNSET(src)
     FILE(GLOB src ${ARGN})
     GPC_WRAP_SRCS(generated_files ${src})
-    CUDA_ADD_LIBRARY(${target} ${generated_files} ${src}) # need to add src, so that normal files get compiled too
+    CUDA_ADD_LIBRARY(${target} ${lib_type} ${generated_files} ${src}) # need to add src, so that normal files get compiled too
     TARGET_LINK_LIBRARIES(${target} ${GPC_LIBRARY})
 ENDMACRO(GPC_CUDA_ADD_LIBRARY)
 
@@ -169,11 +169,11 @@ MACRO(GPC_CUDA_ADD_EXECUTABLE target)
     TARGET_LINK_LIBRARIES(${target} ${GPC_LIBRARY})
 ENDMACRO(GPC_CUDA_ADD_EXECUTABLE)
 
-MACRO(GPC_OPENCL_ADD_LIBRARY target)
+MACRO(GPC_OPENCL_ADD_LIBRARY target lib_type)
     #UNSET(src)
     FILE(GLOB src ${ARGN})
     GPC_WRAP_SRCS(generated_files ${src})
-    ADD_LIBRARY(${target} ${generated_files} ${src}) # need to add src, so that normal files get compiled too
+    ADD_LIBRARY(${target} ${lib_type} ${generated_files} ${src}) # need to add src, so that normal files get compiled too
     SET_TARGET_PROPERTIES(${target} PROPERTIES LINKER_LANGUAGE CXX)
     TARGET_LINK_LIBRARIES(${target} ${OPENCL_LIBRARIES} ${GPC_LIBRARY})
 ENDMACRO(GPC_OPENCL_ADD_LIBRARY)

@@ -147,11 +147,14 @@ public class CompressedVisitor extends de.gaalop.cpp.CppVisitor {
 
             // GPC definition
             if (gpcMetaInfo) {
+                // format bladeStr
+                String bladeStr = graph.getAlgebraDefinitionFile().getBladeString(component.getBladeIndex());
+                bladeStr = bladeStr.replaceAll("\\(", "").replaceAll("\\)", "").replaceAll(" ", "").replaceAll("1.0","1").replaceAll("1.0f","1");
+                
+                // write pragma
                 code.append("//#pragma gpc multivector_component ");
                 code.append(component.getName());
                 code.append(' ');
-                String bladeStr = graph.getAlgebraDefinitionFile().getBladeString(component.getBladeIndex());
-                bladeStr = bladeStr.replaceAll("\\(", "").replaceAll("\\)", "").replaceAll(" ", "");
                 code.append(bladeStr);
                 code.append(' ');
                 code.append(componentName);

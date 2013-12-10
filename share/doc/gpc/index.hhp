@@ -1,0 +1,65 @@
+[OPTIONS]
+Compatibility=1.1
+Full-text search=Yes
+Contents file=index.hhc
+Default Window=main
+Default topic=main.html
+Index file=index.hhk
+Language=0x409 English (United States)
+Title=CLUCalc
+
+[WINDOWS]
+main="CLUCalc","index.hhc","index.hhk","main.html","main.html",,,,,0x23520,,0x387e,,,,,,,,0
+
+[FILES]
+main.html
+page_CLUScript.html
+page_Animation.html
+page_ChangeLog.html
+page_ErrProp.html
+page_GettingStarted.html
+page_Images.html
+page_Info.html
+page_Latex.html
+page_Presentation.html
+page_SerialPort.html
+page_SolveMVEqns.html
+page_TextureMapping.html
+page_TheLanguage.html
+page_Tools.html
+page_UserInteraction.html
+page_WorkWithMat.html
+page_WorkWithMV.html
+page_WorkWithTensors.html
+page_CLUCalc.html
+page_Ideas.html
+page_License.html
+page_RelLog.html
+deprecated.html
+group__grp__DrawFunc.html
+group__grp__ErrPropFunc.html
+group__grp__File.html
+group__grp__GAFunc.html
+group__grp__ImageFunc.html
+group__grp__InfoFunc.html
+group__grp__LatexFunc.html
+group__grp__LightFunc.html
+group__grp__List.html
+group__grp__Logic.html
+group__grp__MathFunc.html
+group__grp__Matrix.html
+group__grp__Misc.html
+group__grp__PresentationFunc.html
+group__grp__RanFunc.html
+group__grp__Serial.html
+group__grp__ToolFunc.html
+group__grp__VarAll.html
+group__grp__ColVars.html
+group__grp__VarDrawStyle.html
+group__grp__VarEnv.html
+group__grp__VarMisc.html
+group__grp__VarMVStyle.html
+group__grp__Functions.html
+group__grp__PreProc.html
+modules.html
+pages.html

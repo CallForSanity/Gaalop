@@ -242,7 +242,7 @@ public class OutputFileComposer {
             out.append(cp.getCleanedLineStart());
             out.append(bladeCoeffArrayEntry);
 
-            // search for further occurences
+            // search for further occurrences
             cp = new CommandFunctionReplacer(
                     cp.getCleanedLineEnd(),
                     Main.gpcMvGetBladeCoeff);

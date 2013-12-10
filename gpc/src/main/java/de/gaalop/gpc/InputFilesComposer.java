@@ -263,7 +263,7 @@ public class InputFilesComposer {
     
     /*
      * Search for keywords in command and parse the command.
-     * Handle mv_get_bladecoeff as a specieal case
+     * Handle mv_get_bladecoeff as a special case
      * because it may be embedded anywhere.
      */
     public static void processMvGetBladeCoeff(String command,
@@ -296,9 +296,10 @@ public class InputFilesComposer {
         final String mv = it.next().toString();
         Set<String> set = getMvBladeOutputSet(mvBladeOutput,mv);
         
+        // handle special case for wildcard operator
         Iterator<Expression> it_copy = it;
         if(((MacroCall) assignment.getValue()).getArguments().size() == 2
-           && it_copy.next().equals("_")) {
+           && it_copy.next().equals("*")) {
             
             set.add("1");
             
