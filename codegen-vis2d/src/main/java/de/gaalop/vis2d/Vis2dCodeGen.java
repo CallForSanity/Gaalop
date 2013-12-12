@@ -91,15 +91,25 @@ public class Vis2dCodeGen implements CodeGenerator {
                 drawing.objects.add(new Gerade2d(ox, oy, dx, dy, c));
 
             } else {
-                //Circle or point
+                //Circle or point   x+(0.5*x*x-0.5*r*r)*(einf)+e0
                 double x = mv.entries[1] / e0;
                 double y = mv.entries[2] / e0;
+
                 double r = Math.sqrt(Math.abs(2.0 * mv.entries[3] * mv.entries[4] - mv.entries[2] * mv.entries[2] - mv.entries[1] * mv.entries[1])) / Math.abs(mv.entries[4]);
 
                 if (r < EPSILON) {
                     drawing.objects.add(new Point2d(x, y, c));
                 } else {
-                    drawing.objects.add(new Circle2d(x, y, r, c));
+				
+					if (x*x+y*y-2*mv.entries[3] < 0) {
+						//imaginary radius
+						drawing.objects.add(new CircleDashed2d(x, y, r, c));
+					} else {
+						//real radius
+						drawing.objects.add(new Circle2d(x, y, r, c));
+					}
+				
+                    
                 }
             }
         }

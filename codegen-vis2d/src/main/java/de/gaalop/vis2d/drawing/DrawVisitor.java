@@ -9,6 +9,8 @@ import de.gaalop.vis2d.Stretch2d;
 public interface DrawVisitor {
 
     public void visitCircle2d(Circle2d circle2d);
+    
+    public void visitCircleDashed2d(CircleDashed2d circleDashed2d);
 
     public void visitGerade2d(Gerade2d gerade2d);
     

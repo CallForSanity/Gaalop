@@ -1,10 +1,13 @@
 package de.gaalop.vis2d.drawing;
 
 import de.gaalop.vis2d.Stretch2d;
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.Stroke;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
@@ -53,6 +56,28 @@ public class DrawVisitorGraphics implements DrawVisitor {
         int ovalWidth = (int) Math.round(transformLength(circle2d.radius*2));
         Point location = transformPoint(circle2d.centerX, circle2d.centerY);
         graphics.drawOval(location.x-ovalWidth/2, location.y-ovalWidth/2, ovalWidth, ovalWidth);
+    }
+    
+    @Override
+    public void visitCircleDashed2d(CircleDashed2d circleDashed2d) {
+        Graphics2D g = (Graphics2D) graphics;
+        
+        Stroke s = g.getStroke();
+        
+        float dash1[] = {10.0f};
+        BasicStroke dashed =
+        new BasicStroke(1.0f,
+                        BasicStroke.CAP_BUTT,
+                        BasicStroke.JOIN_MITER,
+                        10.0f, dash1, 0.0f);
+        
+        g.setStroke(dashed);
+        graphics.setColor(circleDashed2d.color);
+        int ovalWidth = (int) Math.round(transformLength(circleDashed2d.radius*2));
+        Point location = transformPoint(circleDashed2d.centerX, circleDashed2d.centerY);
+        graphics.drawOval(location.x-ovalWidth/2, location.y-ovalWidth/2, ovalWidth, ovalWidth);
+        
+        g.setStroke(s);
     }
 
     @Override
