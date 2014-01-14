@@ -15,21 +15,22 @@ ENDIF(NOT Java_JAVA_EXECUTABLE)
 
 # find
 IF(GPC_WITH_MAPLE)
-	FIND_PATH(MAPLE_BIN_DIR NAMES maple PATH_SUFFIXES "Maple 12" maple13 CACHE PATH "Maple Binary Dir")
+	FIND_PATH(MAPLE_BIN_DIR HINTS "C:/Program Files (x86)/Maple 12/bin.win" "/opt/maple13/bin" CACHE PATH "Maple Binary Dir")
 ELSE(GPC_WITH_MAPLE)
-	OPTION(GPC_WITH_MAXIMA "whether to use the maxima or not." OFF)
+	OPTION(GPC_WITH_MAXIMA "whether to use the maxima in tba plugin or not." OFF)
 	IF(GPC_WITH_MAXIMA)
-		FIND_PROGRAM(MAXIMA_BIN NAMES "maxima" "maxima.sh" "maxima.bat" PATH_SUFFIXES Maxima CACHE PATH "Maxima binary path")
+		FIND_PROGRAM(MAXIMA_BIN NAMES "maxima" "maxima.sh" "maxima.bat" HINTS "C:/Program Files/Maxima" CACHE PATH "Maxima binary path")
 	ENDIF(GPC_WITH_MAXIMA)
 ENDIF(GPC_WITH_MAPLE)
 
-FIND_PATH(GPC_ROOT_DIR share PATH_SUFFIXES GaalopPrecompiler
+FIND_PATH(GPC_ROOT_DIR share PATH_SUFFIXES GaalopCompilerDriver 0.1.1
           DOC "Gaalop Precompiler root directory")
 FIND_FILE(GPC_JAR starter-1.0.0.jar "${GPC_ROOT_DIR}/share/gpc/gaalop" DOC "Gaalop GPC")
-FIND_LIBRARY(GPC_LIBRARY gpc HINTS "${GPC_ROOT_DIR}/lib" DOC "GPC helper library")
+FIND_LIBRARY(GPC_BASE_LIBRARY gpc-base HINTS "${GPC_ROOT_DIR}/lib" DOC "GPC helper library")
 get_filename_component(GPC_JAR_DIR ${GPC_JAR} PATH)
-FIND_PATH(GPC_INCLUDE_DIR NAMES gpc.h HINTS "${GPC_ROOT_DIR}/include")
+FIND_PATH(GPC_INCLUDE_DIR NAMES GPCUtils.h HINTS "${GPC_ROOT_DIR}/include")
 INCLUDE_DIRECTORIES(${GPC_INCLUDE_DIR})
+SET(GPC_LIBRARIES ${GPC_BASE_LIBRARY})
 
 # define common args
 SET(GPC_COMMON_ARGS -algebraName "${GPC_ALGEBRA_NAME}")
@@ -84,8 +85,10 @@ ELSE(WIN32 AND NOT UNIX)
 ENDIF(WIN32 AND NOT UNIX)
 
 # custom command to compile gpc source files
-MACRO(GPC_WRAP_SRCS generated_files)
-	UNSET(${generated_files}) # actually needed
+MACRO(GPC_WRAP_SRCS src_unmodified generated_link_files generated_unlink_files)
+	UNSET(${src_unmodified}) # actually needed
+	UNSET(${generated_link_files}) # actually needed
+	UNSET(${generated_unlink_files}) # actually needed
 
 	FOREACH(source_file ${ARGN})
 	    # check for headers
@@ -99,7 +102,7 @@ MACRO(GPC_WRAP_SRCS generated_files)
 			                COMMAND ${GPC_COMPILE_SCRIPT}
 			                ARGS ${GPC_CXX_ARGS} -o "${generated_file}" -i "${source_file}"
 					        MAIN_DEPENDENCY ${source_file})
-			LIST(APPEND ${generated_files} ${generated_file}) # needed here, to exclude non-gpc files
+			LIST(APPEND ${generated_link_files} ${generated_file}) # needed here, to exclude non-gpc files
 		ELSEIF(${source_file} MATCHES ".*\\.cug$" AND NOT is_header)
 			get_filename_component(source_file_name ${source_file} NAME)
 			SET(generated_file "${CMAKE_CURRENT_BINARY_DIR}/${source_file_name}.cu")
@@ -108,7 +111,7 @@ MACRO(GPC_WRAP_SRCS generated_files)
 			                COMMAND ${GPC_COMPILE_SCRIPT}
 			                ARGS ${GPC_CUDA_ARGS} -o "${generated_file}" -i "${source_file}"
 					        MAIN_DEPENDENCY ${source_file})
-			LIST(APPEND ${generated_files} ${generated_file}) # needed here, to exclude non-gpc files
+			LIST(APPEND ${generated_link_files} ${generated_file})
 		ELSEIF(${source_file} MATCHES ".*\\.clg$" AND NOT is_header)
 			get_filename_component(source_file_name ${source_file} NAME)
 			SET(generated_file "${CMAKE_CURRENT_BINARY_DIR}/${source_file_name}.cl")
@@ -120,7 +123,7 @@ MACRO(GPC_WRAP_SRCS generated_files)
 			                COMMAND ${GPC_COMPILE_SCRIPT}
 			                ARGS ${GPC_OPENCL_ARGS} -o "${generated_file}" -i "${source_file}"
 					        MAIN_DEPENDENCY ${source_file})
-			LIST(APPEND ${generated_files} ${generated_file}) # needed here, to exclude non-gpc files
+			LIST(APPEND ${generated_unlink_files} ${generated_file})
 		ELSEIF(${source_file} MATCHES ".*\\.jgp$" AND NOT is_header)
 			get_filename_component(source_file_name ${source_file} NAME)
 			SET(generated_file "${CMAKE_CURRENT_BINARY_DIR}/${source_file_name}.java")
@@ -132,59 +135,75 @@ MACRO(GPC_WRAP_SRCS generated_files)
 			                COMMAND ${GPC_COMPILE_SCRIPT}
 			                ARGS ${GPC_JAVA_ARGS} -o "${generated_file}" -i "${source_file}"
 					        MAIN_DEPENDENCY ${source_file})
-			LIST(APPEND ${generated_files} ${generated_file}) # needed here, to exclude non-GPC files
-		ENDIF(${source_file} MATCHES ".*\\.cpg$" AND NOT is_header)
+			LIST(APPEND ${generated_unlink_files} ${generated_file})
+		ELSE()
+			LIST(APPEND ${src_unmodified} ${source_file})
+		ENDIF()
 	ENDFOREACH(source_file)
 ENDMACRO(GPC_WRAP_SRCS)
 
-MACRO(GPC_CXX_ADD_LIBRARY target lib_type)
+MACRO(GPC_ADD_LIBRARY target)
+	CMAKE_PARSE_ARGUMENTS(
+		ARG
+		""
+		"SHARED"
+		${ARGN}
+    )
+
     #UNSET(src)
     FILE(GLOB src ${ARGN})
-    GPC_WRAP_SRCS(generated_files ${src})
-    ADD_LIBRARY(${target} ${lib_type} ${generated_files} ${src}) # need to add src, so that normal files get compiled too
-    TARGET_LINK_LIBRARIES(${target} ${GPC_LIBRARY})
+    GPC_WRAP_SRCS(src_unmodified generated_link_files generated_unlink_files ${src})
+	SET(all_src ${src_unmodified} ${generated_link_files})
+    ADD_LIBRARY(${target} ${ARG_SHARED} ${all_src})
+	SET_TARGET_PROPERTIES(${target} PROPERTIES LINKER_LANGUAGE CXX)
+	IF(GPC_LIBRARIES)
+		TARGET_LINK_LIBRARIES(${target} ${GPC_LIBRARIES})
+	ENDIF(GPC_LIBRARIES)
+ENDMACRO(GPC_ADD_LIBRARY)
+
+MACRO(GPC_ADD_EXECUTABLE target)
+	CMAKE_PARSE_ARGUMENTS(
+		ARG
+		""
+		"SHARED"
+		${ARGN}
+    )
+
+    #UNSET(src)
+    FILE(GLOB src ${ARGN})
+    GPC_WRAP_SRCS(src_unmodified generated_link_files generated_unlink_files ${src})
+	SET(all_src ${src_unmodified} ${generated_link_files})
+    ADD_EXECUTABLE(${target} ${ARG_SHARED} ${all_src})
+	SET_TARGET_PROPERTIES(${target} PROPERTIES LINKER_LANGUAGE CXX)
+	IF(GPC_LIBRARIES)
+		TARGET_LINK_LIBRARIES(${target} ${GPC_LIBRARIES})
+	ENDIF(GPC_LIBRARIES)
+ENDMACRO(GPC_ADD_EXECUTABLE)
+
+MACRO(GPC_CXX_ADD_LIBRARY target lib_type)
+	GPC_ADD_LIBRARY(${target} ${lib_type} ${ARGN})
 ENDMACRO(GPC_CXX_ADD_LIBRARY)
 
-MACRO(GPC_CXX_ADD_EXECUTABLE target)
-    #UNSET(src)
-    FILE(GLOB src ${ARGN})
-    GPC_WRAP_SRCS(generated_files ${src})
-    ADD_EXECUTABLE(${target} ${generated_files} ${src}) # need to add src, so that normal files get compiled too
-    TARGET_LINK_LIBRARIES(${target} ${GPC_LIBRARY})
+MACRO(GPC_CXX_ADD_EXECUTABLE target lib_type)
+	GPC_ADD_EXECUTABLE(${target} ${lib_type} ${ARGN})
 ENDMACRO(GPC_CXX_ADD_EXECUTABLE)
 
 MACRO(GPC_CUDA_ADD_LIBRARY target lib_type)
-    #UNSET(src)
-    FILE(GLOB src ${ARGN})
-    GPC_WRAP_SRCS(generated_files ${src})
-    CUDA_ADD_LIBRARY(${target} ${lib_type} ${generated_files} ${src}) # need to add src, so that normal files get compiled too
-    TARGET_LINK_LIBRARIES(${target} ${GPC_LIBRARY})
+	GPC_ADD_LIBRARY(${target} ${lib_type} ${ARGN})
 ENDMACRO(GPC_CUDA_ADD_LIBRARY)
 
-MACRO(GPC_CUDA_ADD_EXECUTABLE target)
-    #UNSET(src)
-    FILE(GLOB src ${ARGN})
-    GPC_WRAP_SRCS(generated_files ${src})
-    CUDA_ADD_EXECUTABLE(${target} ${generated_files} ${src}) # need to add src, so that normal files get compiled too
-    TARGET_LINK_LIBRARIES(${target} ${GPC_LIBRARY})
+MACRO(GPC_CUDA_ADD_EXECUTABLE target lib_type)
+	GPC_ADD_EXECUTABLE(${target} ${lib_type} ${ARGN})
 ENDMACRO(GPC_CUDA_ADD_EXECUTABLE)
 
 MACRO(GPC_OPENCL_ADD_LIBRARY target lib_type)
-    #UNSET(src)
-    FILE(GLOB src ${ARGN})
-    GPC_WRAP_SRCS(generated_files ${src})
-    ADD_LIBRARY(${target} ${lib_type} ${generated_files} ${src}) # need to add src, so that normal files get compiled too
-    SET_TARGET_PROPERTIES(${target} PROPERTIES LINKER_LANGUAGE CXX)
-    TARGET_LINK_LIBRARIES(${target} ${OPENCL_LIBRARIES} ${GPC_LIBRARY})
+	GPC_ADD_LIBRARY(${target} ${lib_type} ${ARGN})
+    TARGET_LINK_LIBRARIES(${target} ${OPENCL_LIBRARIES})	
 ENDMACRO(GPC_OPENCL_ADD_LIBRARY)
 
-MACRO(GPC_OPENCL_ADD_EXECUTABLE target)
-    #UNSET(src)
-    FILE(GLOB src ${ARGN})
-    GPC_WRAP_SRCS(generated_files ${src})
-    ADD_EXECUTABLE(${target} ${generated_files} ${src}) # need to add src, so that normal files get compiled too
-    SET_TARGET_PROPERTIES(${target} PROPERTIES LINKER_LANGUAGE CXX)
-    TARGET_LINK_LIBRARIES(${target} ${OPENCL_LIBRARIES} ${GPC_LIBRARY})
+MACRO(GPC_OPENCL_ADD_EXECUTABLE target lib_type)
+	GPC_ADD_EXECUTABLE(${target} ${lib_type} ${ARGN})
+    TARGET_LINK_LIBRARIES(${target} ${OPENCL_LIBRARIES})	
 ENDMACRO(GPC_OPENCL_ADD_EXECUTABLE)
 
 MACRO(GPC_JAVA_ADD_LIBRARY target)
