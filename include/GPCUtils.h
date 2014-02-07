@@ -17,21 +17,18 @@ public:
 	~GPCUtils();
 
 	static GPCUtils& getInstance();
-
 	static BaseVisualizationBackend* getVisualizationBackend();
-	static void setVisualizationBackend(BaseVisualizationBackend* visualizationBackend_);
+	static void setVisualizationBackend( std::auto_ptr<BaseVisualizationBackend> visualizationBackend);
 
-	/*
-	Draws a multivector represented by an array of 32-floats.
-	First it analyzes what kind of multivector was passed
-	and which parameters it has,
-	and it then uses the draw*() Methods provided by
-	visualizationBackend to do the actually drawing.
-	*/
-	static void drawMultivector(const float* mvArray);
+	static void setVisualizationCallback( void (*renderingCallback) (void) );
+	static void setKeyboardCallback( void (*keyboardCallback)( unsigned char, int, int ));
+	static void setDrawColor(const float r, const float g, const float b);
+	static void setDrawColor(const float r, const float g, const float b, const float a);
+
+	static void drawMultivector(const float mvArray[32]);
 
 private:
-	static std::auto_ptr<BaseVisualizationBackend> visualizationBackend;
+	static std::auto_ptr<BaseVisualizationBackend> m_visualizationBackend;
 };
 
 #endif /* GPCUTILS_H_ */
