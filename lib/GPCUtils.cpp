@@ -5,9 +5,9 @@
  *      Author: patrick
  */
 
-#include "GPCUtils.h"
-#include <MultiVectorEntries.h>
 #include <math.h>
+#include "GPCUtils.h"
+#include "MultiVectorEntries.h"
 
 GPCUtils::GPCUtils() {
 	// TODO Auto-generated constructor stub
