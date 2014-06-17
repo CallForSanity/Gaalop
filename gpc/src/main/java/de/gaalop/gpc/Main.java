@@ -55,6 +55,8 @@ public class Main {
     public static String visualizerStrategyPlugin = "de.gaalop.visualCodeInserter.Plugin";
     @Option(name = "-pragmas", required = false, usage = "Wether or not to write line pragmas for compile errors.")
     public static boolean writeLinePragmas = false;
+    @Option(name = "-double", required = false, usage = "Wether or not to use double precision foating point format.")
+    public static boolean useDoubles = false;
 
     // Algebra options
     @Option(name = "-algebraName", required = true, usage = "Sets the name of the algebra that should be used.")

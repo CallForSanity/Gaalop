@@ -28,7 +28,7 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 
 	protected Set<String> assigned = new HashSet<String>();
         
-        protected String variableType = "float";
+    protected String variableType = "double";
 	
 	public CppVisitor(boolean standalone) {
 		this.standalone = standalone;
@@ -51,6 +51,14 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 		for (int i = 0; i < indentation; ++i) {
 			code.append('\t');
 		}
+	}
+
+	public String getVariableType() {
+		return variableType;
+	}
+
+	public void setVariableType(String variableType) {
+		this.variableType = variableType;
 	}
 
 	@Override

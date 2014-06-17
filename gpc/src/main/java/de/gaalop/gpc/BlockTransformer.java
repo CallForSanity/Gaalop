@@ -6,6 +6,7 @@ package de.gaalop.gpc;
 
 import de.gaalop.*;
 import de.gaalop.algebra.AlStrategy;
+import de.gaalop.compressed.CompressedCodeGenerator;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -251,6 +252,10 @@ public class BlockTransformer {
         Set<CodeGeneratorPlugin> plugins = Plugins.getCodeGeneratorPlugins();
         for (CodeGeneratorPlugin plugin : plugins) {
             if (plugin.getClass().getName().equals(Main.codeGeneratorPlugin)) {
+                if(plugin instanceof de.gaalop.compressed.CompressedCodeGenerator && Main.useDoubles) {
+                    ((de.gaalop.compressed.CompressedCodeGenerator) plugin).setVariableType("double");
+                }
+                
                 return plugin.createCodeGenerator();
             }
         }

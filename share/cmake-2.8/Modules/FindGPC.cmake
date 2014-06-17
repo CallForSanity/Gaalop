@@ -3,6 +3,7 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 # options
 OPTION(GPC_WITH_MAPLE "wether to use the maple plugin or not." OFF)
 OPTION(GPC_USE_GAPP "wether to use Geometric Algebra Parallelism Programs (GAPP) language or not." OFF)
+OPTION(GPC_USE_DOUBLE "wether to use double precision floating point format or not." OFF)
 
 SET(GPC_ALGEBRA_NAME "5d" CACHE STRING "algebra name")
 SET(GPC_ALGEBRA_BASEDIRECTORY "" CACHE STRING "algebra base directory")
@@ -37,6 +38,10 @@ SET(GPC_COMMON_ARGS -algebraName "${GPC_ALGEBRA_NAME}")
 IF(NOT GPC_ALGEBRA_BASEDIRECTORY STREQUAL "")
 	SET(GPC_COMMON_ARGS ${GPC_COMMON_ARGS} -algebraBaseDir "${GPC_ALGEBRA_BASEDIRECTORY}")
 ENDIF(NOT GPC_ALGEBRA_BASEDIRECTORY STREQUAL "")
+
+IF(GPC_USE_DOUBLE)
+	SET(GPC_COMMON_ARGS ${GPC_COMMON_ARGS} -double)
+ENDIF(GPC_USE_DOUBLE)
 
 # define optimizer args
 IF(GPC_WITH_MAPLE)
