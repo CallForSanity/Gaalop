@@ -1,0 +1,2 @@
+# Gaalop
+Gaalop (Geometic Algebra Algorithms Optimizer) is a software to optimize geometric algebra files. Algorithms can be developed by using the freely available CLUCalc software by Christian Perwass. Gaalop optimizes the algorithm and produces C++, OpenCL, CUDA, CLUCalc or LaTeX output (other output-formats will follow). The optimized code has no more geometric algebra operations and can be run very efficiently on various platforms.
