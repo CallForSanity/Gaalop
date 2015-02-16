@@ -1,10 +1,29 @@
 # Gaalop
-Gaalop (Geometic Algebra Algorithms Optimizer) is a software to optimize geometric algebra files. Algorithms can be developed by using the freely available CLUCalc software by Christian Perwass. Gaalop optimizes the algorithm and produces C++, OpenCL, CUDA, CLUCalc or LaTeX output (other output-formats will follow). The optimized code has no more geometric algebra operations and can be run very efficiently on various platforms.
+Gaalop (Geometic Algebra Algorithms Optimizer) is a software to compile and optimize geometric algebra (GA) expressions into high-level programming language code. Geometric algebra expressions can be developed using the freely available CLUCalc software by Christian Perwass. Gaalop optimizes CLUCalc expressions and produces C++, OpenCL, CUDA, CLUCalc or LaTeX output. The optimized code is free of geometric algebra operations and runs very efficiently on various platforms.
 
-# Verwendete Quellen & Lizenzen
+# What is Geometric Algebra?
+This is probably best explained in this article:
+https://slehar.wordpress.com/2014/03/18/clifford-algebra-a-visual-introduction/
+or this book:
+http://www.amazon.de/Foundations-Geometric-Algebra-Computing-Geometry/dp/3642317936
 
+# Gaalop Precompiler (GPC)
+Note that this repository also contains Gaalop Precompiler (GPC)
+in the branch gaalop_precompiler.
+GPC integrates Gaalop directly into CMake-generated C/C++-toolchains.
+Gaalop Precompiler reuses most of the code of Gaalop
+which is why merges from Gaalop are required quite often.
+
+#License
+The code of both projects is licensed under the Apache license.
+
+# Contributions
+Contributions are welcome.
+Please fork or ask for direct commit access to the repo.
+
+# Used Sources and Licences
 package de.gaalop.productComputer. BubbleSort
-Quelle: http://de.wikipedia.org/wiki/Bubblesort#Formaler%20Algorithmus
+Source: http://de.wikipedia.org/wiki/Bubblesort#Formaler%20Algorithmus
 
 package de.gaalop.productComputer.GAMethods
 public static float canonicalReorderingSign(Blade a_p, Blade b, int bitCount)
