@@ -5,6 +5,8 @@
  *      Author: patrick
  */
 
+#include <cstdlib>
+#include <cmath>
 #include <math.h>
 #include "GPCUtils.h"
 #include "MultiVectorEntries.h"
@@ -41,7 +43,7 @@ void GPCUtils::drawMultivector( const float mvArray[32] )
 	unsigned int nonZeroComponents = 0;
 	for ( unsigned int i = 0; i < 32; i++ )
 	{
-		nonZeroComponents |= (abs(mvArray[i]) >= precision) ? (1 << i) : 0;
+		nonZeroComponents |= (std::abs(mvArray[i]) >= precision) ? (1 << i) : 0;
 	}
 	
 	// points, spheres and planes are vectors, circles and lines are bivectors, point pairs are trivectors
@@ -56,7 +58,7 @@ void GPCUtils::drawMultivector( const float mvArray[32] )
 		// The factor in front of e0 needs to be 1 after normalization, divide by it.
 		float facE0 = mvArray[E0];
 		// If the factor is 0, multivector seems to be a plane.
-		if (abs(facE0) < precision)
+		if (std::abs(facE0) < precision)
 		{
 			// The normal components are stored in e1, e2, e3
 			float nx = mvArray[E1];
@@ -81,7 +83,7 @@ void GPCUtils::drawMultivector( const float mvArray[32] )
 			float z = mvArray[E3] / facE0;
 			float facEinf = mvArray[EINF] / facE0;
 			float midpointDist = x*x + y*y + z*z;
-			float r = sqrt(midpointDist - 2.0f * facEinf);
+			float r = std::sqrt(midpointDist - 2.0f * facEinf);
 			// If the radius is (close to) 0, it's a point
 			if ( r < precision )
 			{
@@ -101,7 +103,7 @@ void GPCUtils::drawMultivector( const float mvArray[32] )
 		float facE3E0 = mvArray[E3E0];
 		float facEINFE0 = mvArray[EINFE0];
 		// check if there are any E0 components
-		if (abs(facE1E0) < precision && abs(facE2E0) < precision && abs(facE3E0) < precision && abs(facEINFE0) < precision)
+		if (std::abs(facE1E0) < precision && std::abs(facE2E0) < precision && std::abs(facE3E0) < precision && std::abs(facEINFE0) < precision)
 		{
 			// draw line
 
@@ -148,7 +150,7 @@ void GPCUtils::drawMultivector( const float mvArray[32] )
 
 			// get the radius
 			float r2 = ((-((-C[6]) * C[6])) + (-((-C[7]) * C[7])) + (-C[8]) * C[9] + (-C[9]) * C[8] + (-((-C[10]) * C[10])) + (-C[11]) * C[12] + (-C[12]) * C[11] + (-C[13]) * C[14] + (-C[14]) * C[13] + (-C[15]) * C[15]); // 1.0
-			float r = sqrtf(abs(r2*l2_inv));
+			float r = std::sqrtf(std::abs(r2*l2_inv));
 
 			// if the radius is (close to) 0 it is an oriented point
 			if ( r < precision)
