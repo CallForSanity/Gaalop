@@ -150,7 +150,7 @@ void GPCUtils::drawMultivector( const float mvArray[32] )
 
 			// get the radius
 			float r2 = ((-((-C[6]) * C[6])) + (-((-C[7]) * C[7])) + (-C[8]) * C[9] + (-C[9]) * C[8] + (-((-C[10]) * C[10])) + (-C[11]) * C[12] + (-C[12]) * C[11] + (-C[13]) * C[14] + (-C[14]) * C[13] + (-C[15]) * C[15]); // 1.0
-			float r = std::sqrtf(std::abs(r2*l2_inv));
+			float r = std::sqrt(std::abs(r2*l2_inv));
 
 			// if the radius is (close to) 0 it is an oriented point
 			if ( r < precision)
@@ -186,7 +186,7 @@ void GPCUtils::drawMultivector( const float mvArray[32] )
 		Pp[13] = (-PP[17]); // e3 ^ einf
 		Pp[14] = PP[18]; // e3 ^ e0
 		Pp[15] = PP[16]; // einf ^ e0
-		offset = sqrtf((-(Pp[6] * Pp[6])) + (-(Pp[7] * Pp[7])) + Pp[8] * Pp[9] + Pp[9] * Pp[8] + (-(Pp[10] * Pp[10])) + Pp[11] * Pp[12] + Pp[12] * Pp[11] + Pp[13] * Pp[14] + Pp[14] * Pp[13] + Pp[15] * Pp[15]); // 1.0
+		offset = std::sqrt((-(Pp[6] * Pp[6])) + (-(Pp[7] * Pp[7])) + Pp[8] * Pp[9] + Pp[9] * Pp[8] + (-(Pp[10] * Pp[10])) + Pp[11] * Pp[12] + Pp[12] * Pp[11] + Pp[13] * Pp[14] + Pp[14] * Pp[13] + Pp[15] * Pp[15]); // 1.0
 		p1[1] = offset * Pp[9] / (Pp[9] * Pp[9] + Pp[12] * Pp[12] + Pp[14] * Pp[14]) + Pp[6] * Pp[12] / (Pp[9] * Pp[9] + Pp[12] * Pp[12] + Pp[14] * Pp[14]) + Pp[7] * Pp[14] / (Pp[9] * Pp[9] + Pp[12] * Pp[12] + Pp[14] * Pp[14]) + (-(Pp[9] * Pp[15] / (Pp[9] * Pp[9] + Pp[12] * Pp[12] + Pp[14] * Pp[14]))); // e1
 		p1[2] = offset * Pp[12] / (Pp[9] * Pp[9] + Pp[12] * Pp[12] + Pp[14] * Pp[14]) + (-(Pp[6] * Pp[9] / (Pp[9] * Pp[9] + Pp[12] * Pp[12] + Pp[14] * Pp[14]))) + Pp[10] * Pp[14] / (Pp[9] * Pp[9] + Pp[12] * Pp[12] + Pp[14] * Pp[14]) + (-(Pp[12] * Pp[15] / (Pp[9] * Pp[9] + Pp[12] * Pp[12] + Pp[14] * Pp[14]))); // e2
 		p1[3] = offset * Pp[14] / (Pp[9] * Pp[9] + Pp[12] * Pp[12] + Pp[14] * Pp[14]) + (-(Pp[7] * Pp[9] / (Pp[9] * Pp[9] + Pp[12] * Pp[12] + Pp[14] * Pp[14]))) + (-(Pp[10] * Pp[12] / (Pp[9] * Pp[9] + Pp[12] * Pp[12] + Pp[14] * Pp[14]))) + (-(Pp[14] * Pp[15] / (Pp[9] * Pp[9] + Pp[12] * Pp[12] + Pp[14] * Pp[14]))); // e3
