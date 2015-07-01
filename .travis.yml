@@ -9,7 +9,7 @@ before_script:
     - sudo apt-get install -y maven
     - mkdir build
     - cd build
-    - cmake -DBUILD_WITH_TESTS=ON -DGPC_ROOT_DIR=/home/travis/build/CallForSanity/Gaalop/build ..
+    - cmake -DBUILD_WITH_TESTS=ON -DGPC_ROOT_DIR="." ..
 
 script: make
 
