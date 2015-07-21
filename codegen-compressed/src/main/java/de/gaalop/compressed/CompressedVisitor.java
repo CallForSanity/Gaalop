@@ -15,8 +15,8 @@ public class CompressedVisitor extends de.gaalop.cpp.CppVisitor {
     protected Map<String,Map<Integer,Integer>> mvBladeMap = new HashMap<String,Map<Integer,Integer>>();
     protected boolean gpcMetaInfo = true;
 
-    public CompressedVisitor(Map<String,Integer> mvSizes,boolean standalone) {
-        super(standalone);
+    public CompressedVisitor(Map<String,Integer> mvSizes,boolean standalone, boolean useDouble) {
+        super(standalone, useDouble);
         this.mvSizes = mvSizes;
     }
 

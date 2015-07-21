@@ -29,9 +29,15 @@ public class CppVisitor implements ControlFlowVisitor, ExpressionVisitor {
 	protected Set<String> assigned = new HashSet<String>();
         
         protected String variableType = "float";
-	
-	public CppVisitor(boolean standalone) {
+        
+        public CppVisitor(boolean standalone) {
 		this.standalone = standalone;
+	}
+	
+	public CppVisitor(boolean standalone, boolean useDouble) {
+		this.standalone = standalone;
+                if (useDouble)
+                    variableType = "double";
 	}
         
 	public CppVisitor(String variableType) {

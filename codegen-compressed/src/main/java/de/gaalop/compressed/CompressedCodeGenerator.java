@@ -55,7 +55,7 @@ public class CompressedCodeGenerator implements CodeGenerator {
         } catch (Throwable error) {
         	plugin.notifyError(error);
         }
-        CompressedVisitor visitor = new CompressedVisitor(mvSizeVisitor.getMvSizes(),plugin.getStandalone());
+        CompressedVisitor visitor = new CompressedVisitor(mvSizeVisitor.getMvSizes(),plugin.getStandalone(),plugin.getUseDouble());
         try {
         	in.accept(visitor);
         } catch (Throwable error) {

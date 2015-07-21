@@ -26,6 +26,10 @@ public class Plugin extends Observable implements CodeGeneratorPlugin {
     
     @ConfigurationProperty(type = Type.BOOLEAN)
     public boolean standalone = true;
+    
+    @ConfigurationProperty(type = Type.BOOLEAN)
+    public boolean useDouble = false;
+    
 
     public Plugin() {
         URL url = getClass().getResource("icon.png");
@@ -47,6 +51,16 @@ public class Plugin extends Observable implements CodeGeneratorPlugin {
     public boolean getStandalone() {
 		return standalone;
 	}
+
+    public void setUseDouble(boolean useDouble) {
+        this.useDouble = useDouble;
+    }
+
+    public boolean getUseDouble() {
+		return useDouble;
+	}
+    
+    
 
     @Override
     public CodeGenerator createCodeGenerator() {
