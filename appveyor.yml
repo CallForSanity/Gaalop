@@ -1,0 +1,17 @@
+version: 1.0.{build}
+environment:
+  JAVA_HOME: C:\Program Files (x86)\Java\jdk1.7.0\
+install:
+- cinst maven
+- set PATH=C:\bin\apache-maven-3.3.1\bin;%JAVA_HOME%\bin;%PATH%
+cache:
+- C:\bin\apache-maven-3.3.1
+- C:\Users\appveyor\.m2
+build_script:
+- mkdir build
+- cd build
+- cmake ..
+- msbuild GaalopPrecompiler.sln
+test_script:
+- cmake -DBUILD_WITH_TESTS=ON -DGPC_ROOT_DIR="C:/projects/gaalop/build"  -DGPC_INCLUDE_DIR="C:/projects/gaalop/build/include" -DGPC_JAR="C:/projects/gaalop/build/share/gpc/gaalop/starter-1.0.0.jar" ..
+- msbuild GaalopPrecompiler.sln
