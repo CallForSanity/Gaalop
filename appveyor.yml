@@ -14,6 +14,6 @@ build_script:
 - msbuild GaalopPrecompiler.sln /p:Configuration=Release
 test_script:
 - cmake -DBUILD_WITH_TESTS=ON -DGPC_ROOT_DIR="C:/projects/gaalop/build"  -DGPC_INCLUDE_DIR="C:/projects/gaalop/build/include" -DGPC_JAR="C:/projects/gaalop/build/share/gpc/gaalop/starter-1.0.0.jar" ..
-- msbuild GaalopPrecompiler.sln
+- msbuild GaalopPrecompiler.sln /p:Configuration=Release
 - cd test\Release
 - for "." %%a in (*.exe) do start "" "%%~fa"
