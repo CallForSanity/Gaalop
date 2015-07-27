@@ -2,7 +2,7 @@ version: 1.0.{build}
 environment:
   JAVA_HOME: C:\Program Files (x86)\Java\jdk1.7.0\
 install:
-- cinst maven
+- cinst maven nsis
 - set PATH=C:\bin\apache-maven-3.3.1\bin;%JAVA_HOME%\bin;%PATH%
 cache:
 - C:\bin\apache-maven-3.3.1
@@ -10,9 +10,21 @@ cache:
 build_script:
 - mkdir build
 - cd build
-- cmake ..
+- cmake -DCPACK_BINARY_7Z=ON -DCPACK_BINARY_ZIP=ON -DCPACK_SOURCE_7Z=OFF -DCPACK_SOURCE_ZIP=OFF ..
 - msbuild GaalopPrecompiler.sln /p:Configuration=Release
+- msbuild GaalopPrecompiler.sln /t:PACKAGE /p:Configuration=Release
 test_script:
 - cmake -DBUILD_WITH_TESTS=ON -DGPC_ROOT_DIR="C:/projects/gaalop/build"  -DGPC_INCLUDE_DIR="C:/projects/gaalop/build/include" -DGPC_JAR="C:/projects/gaalop/build/share/gpc/gaalop/starter-1.0.0.jar" ..
 - msbuild GaalopPrecompiler.sln /p:Configuration=Release
 - ctest -C Release
+deploy:
+  release: gaalop_precompiler-v$(appveyor_build_version)
+  provider: GitHub
+  auth_token:
+    secure: U3F2PVmtUhgG8EdOHyFwYOZ6TRKz5Xmt3cvPF5EkKx7lHiqbCnRtrSJQsRFIlR43 # your encrypted token from GitHub
+  artifact: /.*\.exe/            # upload all NuGet packages to release assets
+  draft: false
+  prerelease: false
+  on:
+    branch: gaalop_precompiler # release from master branch only
+    appveyor_repo_tag: false   # deploy on tag push only
