@@ -12,7 +12,7 @@ build_script:
 - cd build
 - cmake -DCPACK_BINARY_7Z=ON -DCPACK_BINARY_ZIP=ON -DCPACK_SOURCE_7Z=OFF -DCPACK_SOURCE_ZIP=OFF ..
 - msbuild GaalopPrecompiler.sln /p:Configuration=Release
-- msbuild GaalopPrecompiler.sln /t:PACKAGE /p:Configuration=Release
+- msbuild PACKAGE.vcxproj /p:Configuration=Release
 test_script:
 - cmake -DBUILD_WITH_TESTS=ON -DGPC_ROOT_DIR="C:/projects/gaalop/build"  -DGPC_INCLUDE_DIR="C:/projects/gaalop/build/include" -DGPC_JAR="C:/projects/gaalop/build/share/gpc/gaalop/starter-1.0.0.jar" ..
 - msbuild GaalopPrecompiler.sln /p:Configuration=Release
