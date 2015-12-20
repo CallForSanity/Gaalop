@@ -1,19 +1,26 @@
 language: cpp
-
-compiler:  
-    - gcc
-    - clang
-
-before_script:  
-    - sudo apt-get update -qq
-    - sudo apt-get install -y maven
-    - mkdir build
-    - cd build
-    - cmake ..
-
+compiler:
+- gcc
+- clang
+before_script:
+- sudo apt-get update -qq
+- sudo apt-get install -y maven
+- mkdir build
+- cd build
+- cmake ..
 script: make
-
 after_script:
-    - cmake -DBUILD_WITH_TESTS=ON -DGPC_ROOT_DIR="/home/travis/build/CallForSanity/Gaalop/build"  -DGPC_INCLUDE_DIR="/home/travis/build/CallForSanity/Gaalop/build/include" -DGPC_JAR="/home/travis/build/CallForSanity/Gaalop/build/share/gpc/gaalop/starter-1.0.0.jar" ..
-    - make
-    - make test
+- cmake -DBUILD_WITH_TESTS=ON -DGPC_ROOT_DIR="/home/travis/build/CallForSanity/Gaalop/build"  -DGPC_INCLUDE_DIR="/home/travis/build/CallForSanity/Gaalop/build/include"
+  -DGPC_JAR="/home/travis/build/CallForSanity/Gaalop/build/share/gpc/gaalop/starter-1.0.0.jar"
+  ..
+- make
+- make test
+- make package
+deploy:
+  provider: releases
+  api_key:
+    secure: u2Lyzx69Y/hX08QJKYrijrAzReUC6vjpAy3dZaaSJjcwfLbLOkzjTBTPjPTChsIItl4Vwv+D/D/vbNgtN3KF7+s1KQwIXCmljMyLGO/NnpfLllMuPdOeuOTGk8g/Y2+YA38mi9WqMdwdC0OCpXufYZvIVjO7tCBSCi3WONO2ewqRP+baO+einrE5xCMGe3MbaT/iOrNOcNIei3HQ8j4FxZ16dfXfIquLpBhSjbzidooTUKNBKXKKPJ3Cq5/GWbTuvgjqwAoy7ZgxqYpfIRonWXQk6PB72ARDz5Ri3SQwP6NDklLbC3nMYjxTD4N1Vif3gZ0gLjnxXsWYt6cvRBwN1CYRV8+HSoYuKa22XKLC+rCX5iU3HJUPAyZPl1ww9i2cLCPB3fNuZcHdtj9jVj5j15pEKeWsNO1ja6C82g14Ya9w9EBbE/cc1E/DmBZpav2wOE+sd6yEctT1/eKPaoIKWD+Gwa3ySsGAESDzXy5XIjIrsqJu3B/KdMxLoB1BufaQ2ky9q8usHP01+uQsiZJz5DRnb2Kp0CVEyPS2KIBEdx8CNCZrNIqO2FfJPO7kO36YkmixHVKBqzZ2i3eKzylS5Ein+tMLoZaCJR6+aMW7YebkHs8m8x/FaEHPq82qQLvy3gHbN07szxscKDlSVBG2hQLTbjMEWMA4RR179f316Wo=
+  file: GaalopPrecompiler-2.0.1438-Linux.tar.gz
+  on:
+    repo: CallForSanity/Gaalop
+    branch: gaalop_precompiler
