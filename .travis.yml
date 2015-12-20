@@ -24,3 +24,4 @@ deploy:
   on:
     repo: CallForSanity/Gaalop
     branch: gaalop_precompiler
+    tags: true
