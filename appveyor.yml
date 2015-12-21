@@ -17,8 +17,6 @@ test_script:
 - cmake -DBUILD_WITH_TESTS=ON -DGPC_ROOT_DIR="C:/projects/gaalop/build"  -DGPC_INCLUDE_DIR="C:/projects/gaalop/build/include" -DGPC_JAR="C:/projects/gaalop/build/share/gpc/gaalop/starter-1.0.0.jar" ..
 - msbuild GaalopPrecompiler.sln /p:Configuration=Release
 - ctest -C Release
-artifacts:
-- path: C:\projects\gaalop\build\\.*.(7z|exe|zip)/
 deploy:
   release: gaalop_precompiler-v$(appveyor_build_version)
   provider: GitHub
