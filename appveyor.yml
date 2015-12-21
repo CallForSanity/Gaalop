@@ -18,15 +18,15 @@ test_script:
 - msbuild GaalopPrecompiler.sln /p:Configuration=Release
 - ctest -C Release
 artifacts:
-- path: /build\\.*.(7z|exe|zip)/
+- path: C:\projects\gaalop\build\\.*.(7z|exe|zip)/
 deploy:
   release: gaalop_precompiler-v$(appveyor_build_version)
   provider: GitHub
   auth_token:
     secure: U3F2PVmtUhgG8EdOHyFwYOZ6TRKz5Xmt3cvPF5EkKx7lHiqbCnRtrSJQsRFIlR43 # your encrypted token from GitHub
-  artifact: /build\\.*.(7z|exe|zip)/
+  artifact: C:\projects\gaalop\build\\.*.(7z|exe|zip)/
   draft: false
   prerelease: false
   on:
-    branch: gaalop_precompiler # release from master branch only
+    branch: gaalop_precompiler # release from gaalop_precompiler branch only
     appveyor_repo_tag: true    # deploy on tag push only
