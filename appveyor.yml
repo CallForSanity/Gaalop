@@ -22,7 +22,7 @@ deploy:
   provider: GitHub
   auth_token:
     secure: U3F2PVmtUhgG8EdOHyFwYOZ6TRKz5Xmt3cvPF5EkKx7lHiqbCnRtrSJQsRFIlR43 # your encrypted token from GitHub
-  artifact: /C:\\projects\\gaalop\build\\.*\.(7zip|exe|zip)/
+  artifact: /C:\\projects\\gaalop\build\\.*\.zip/
   draft: false
   prerelease: false
   on:
