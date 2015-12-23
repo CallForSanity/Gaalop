@@ -76,12 +76,9 @@ public class OneExpressionRemoval extends EmptyControlFlowVisitor {
                 Expression toReplace = variable.getReferredExpression();
                 Expression replacement = mapOneExpressions.get(variable).getReferredExpression();
 
-                if (value == toReplace) {
-                    value = replacement;
-                } else {
-                    value.replaceExpression(toReplace, replacement);
-                }
-
+                ExpressionReplacer replacer = new ExpressionReplacer(toReplace, replacement);
+                value = replacer.replace(value);
+                
                 setGraphModified();
 
             }
