@@ -44,8 +44,10 @@ public class Base {
         AlgebraStrategy algebraStrategy = alPlugin.createAlgebraStrategy();
         algebraStrategy.transform(graph);
         
+        de.gaalop.gapp.Plugin gappPlugin = new de.gaalop.gapp.Plugin();
+        gappPlugin.useScalarFunctions = true;
 
-        GAPPDecoratingMain importer = new GAPPDecoratingMain();
+        GAPPDecoratingMain importer = new GAPPDecoratingMain(gappPlugin);
         importer.decorateGraph(graph);
 
         outputPlugin(new de.gaalop.codegenGapp.Plugin(), graph);
