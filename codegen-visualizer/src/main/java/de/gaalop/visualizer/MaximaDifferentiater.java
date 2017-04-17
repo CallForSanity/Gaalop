@@ -14,7 +14,6 @@ import java.util.LinkedList;
 import java.util.ListIterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.antlr.runtime.RecognitionException;
 
 /**
  * Implements a differentiater that uses maxima
@@ -59,8 +58,6 @@ public class MaximaDifferentiater implements Differentiater {
             }
 
             return result; 
-        } catch (RecognitionException ex) {
-            Logger.getLogger(MaximaDifferentiater.class.getName()).log(Level.SEVERE, null, ex);
         } catch (OptimizationException ex) {
             Logger.getLogger(MaximaDifferentiater.class.getName()).log(Level.SEVERE, null, ex);
         }

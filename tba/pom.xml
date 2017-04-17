@@ -14,22 +14,19 @@
         <plugins>
             <plugin>
                 <groupId>org.antlr</groupId>
-                <artifactId>antlr3-maven-plugin</artifactId>
-                <version>3.1.1.2</version>
+                <artifactId>antlr4-maven-plugin</artifactId>
+                <version>4.3</version>
                 <executions>
                     <execution>
                         <goals>
-                            <goal>antlr</goal>
+                            <goal>antlr4</goal>
                         </goals>
                     </execution>
                 </executions>
                 <configuration>
-                    <!--
-                      This configuration is required to use the tokenVocab directive in ANTLR.
-                      Otherwise the .token files will not be found.
-                      See http://mojo.codehaus.org/antlr3-maven-plugin/examples/tokenVocab.html
-                    -->
                     <libDirectory>target/generated-sources/antlr/de/gaalop/tba/cfgImport/optimization/maxima/parser</libDirectory>
+                    <listener>false</listener>
+                    <visitor>true</visitor>
                 </configuration>
             </plugin>
         </plugins>
@@ -47,8 +44,20 @@
         </dependency>
         <dependency>
             <groupId>org.antlr</groupId>
-            <artifactId>antlr-runtime</artifactId>
-            <version>3.1.1</version>
+            <artifactId>antlr4-runtime</artifactId>
+            <version>4.3</version>
+            <type>jar</type>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.antlr</groupId>
+                    <artifactId>antlr4-annotations</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.antlr</groupId>
+            <artifactId>antlr4-annotations</artifactId>
+            <version>4.3</version>
             <type>jar</type>
         </dependency>
     </dependencies>

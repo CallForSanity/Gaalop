@@ -7,15 +7,8 @@ import de.gaalop.cfg.ControlFlowGraph;
 import de.gaalop.dfg.Expression;
 import de.gaalop.dfg.MultivectorComponent;
 import de.gaalop.tba.Plugin;
-import de.gaalop.tba.cfgImport.optimization.maxima.parser.MaximaLexer;
-import de.gaalop.tba.cfgImport.optimization.maxima.parser.MaximaParser;
-import de.gaalop.tba.cfgImport.optimization.maxima.parser.MaximaTransformer;
 import java.util.LinkedList;
 import java.util.ListIterator;
-import org.antlr.runtime.ANTLRStringStream;
-import org.antlr.runtime.CommonTokenStream;
-import org.antlr.runtime.RecognitionException;
-import org.antlr.runtime.tree.CommonTreeNodeStream;
 
 /**
  * Defines a facade class for transforming a graph with maxima
@@ -38,7 +31,7 @@ public class MaximaOptimizer {
      * @param graph The ControlFlowGraph to be transformed
      * @throws RecognitionException
      */
-    public void transformGraph(ControlFlowGraph graph) throws RecognitionException, OptimizationException {
+    public void transformGraph(ControlFlowGraph graph) throws OptimizationException {
         collector = new StoreResultNodesCollector();
         graph.accept(collector);
 

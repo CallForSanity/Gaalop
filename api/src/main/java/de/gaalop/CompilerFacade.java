@@ -1,9 +1,5 @@
 package de.gaalop;
 
-import de.gaalop.segmenter.CodeSegment;
-import de.gaalop.segmenter.Merger;
-import de.gaalop.segmenter.Operator;
-import de.gaalop.segmenter.Splitter;
 import de.gaalop.cfg.ControlFlowGraph;
 
 import java.util.List;
@@ -68,8 +64,6 @@ public final class CompilerFacade extends Observable {
      * @throws CompilationException If any error occurs during compilation.
      */
     public Set<OutputFile> compile(InputFile input) throws CompilationException {
-    	if (useCodeSegmenter)
-    		return realCompileSegmenter(input);
     	return realCompile(input);
     }
     
@@ -111,30 +105,6 @@ public final class CompilerFacade extends Observable {
         notifyObservers("Finished");        
         return output;   	
     }
-    
-    /**
-     * Using code segmentation.
-     * @param input
-     * @return
-     * @throws CompilationException
-     */
-    private Set<OutputFile> realCompileSegmenter(InputFile input) throws CompilationException {
-    	setChanged();
-    	notifyObservers("Parsing...");
-    	
-    	Splitter parts = new Splitter(input, codeParser, optimizationStrategy, codeGenerator);
-        List <CodeSegment> splitted = parts.getCodeSegments();
-        setChanged();
-        
-        Operator operate = new Operator (splitted);
-        List <CodeSegment> texts = operate.getCodeSegments();
-
-        Merger merge = new Merger(texts);
-        Set<OutputFile> output = merge.getOutputFile();  
-        setChanged();
-        notifyObservers("Finished");        
-        return output;   	
-    }    
     
     
     
