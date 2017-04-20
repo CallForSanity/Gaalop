@@ -121,4 +121,12 @@ public class TestAllTBA {
                 );
     } 
     
+    @Test
+    public void operatorPriority() {
+        assertTrue(
+            TestDummy.compile(new OperatorPriorityTest())
+                );
+    }
+    
+    
 }
