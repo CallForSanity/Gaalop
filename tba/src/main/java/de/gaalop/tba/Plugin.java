@@ -29,6 +29,12 @@ public class Plugin extends Observable implements OptimizationStrategyPlugin {
     public boolean invertTransformation = true;
     public boolean scalarFunctions = true;
     public boolean maximaExpand = false;
+    
+    @ConfigurationProperty(type = Type.BOOLEAN)
+    public boolean doRoundingAfterOptimization = false;
+    
+    @ConfigurationProperty(type = Type.NUMBER)
+    public int numberOfRoundingDigits = 6;
 
     public boolean isOptConstantPropagation() {
         return optConstantPropagation;
@@ -86,7 +92,21 @@ public class Plugin extends Observable implements OptimizationStrategyPlugin {
         this.maximaExpand = maximaExpand;
     }
 
-    
+    public boolean isDoRoundingAfterOptimization() {
+        return doRoundingAfterOptimization;
+    }
+
+    public void setNumberOfRoundingDigits(int numberOfRoundingDigits) {
+        this.numberOfRoundingDigits = numberOfRoundingDigits;
+    }
+
+    public int getNumberOfRoundingDigits() {
+        return numberOfRoundingDigits;
+    }
+
+    public void setDoRoundingAfterOptimization(boolean doRoundingAfterOptimization) {
+        this.doRoundingAfterOptimization = doRoundingAfterOptimization;
+    }
 
     @Override
     public String getDescription() {

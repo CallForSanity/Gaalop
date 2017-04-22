@@ -2,6 +2,7 @@ package de.gaalop.tba.cfgImport;
 
 import de.gaalop.OptimizationException;
 import de.gaalop.algebra.UpdateLocalVariableSet;
+import de.gaalop.api.cfg.RoundingCFGVisitor;
 import de.gaalop.cfg.ControlFlowGraph;
 import de.gaalop.dfg.Variable;
 import de.gaalop.tba.Plugin;
@@ -110,6 +111,10 @@ public class CFGImporterFacade {
 
         // update variable sets
         UpdateLocalVariableSet.updateVariableSets(graph);
+        
+        // round float constants, if this is desired by the user through configuration panel
+        if (plugin.isDoRoundingAfterOptimization()) 
+            graph.accept(new RoundingCFGVisitor(plugin.getNumberOfRoundingDigits()));
 
         return graph;
     }
