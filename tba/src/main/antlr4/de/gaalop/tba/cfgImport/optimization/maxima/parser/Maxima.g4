@@ -78,21 +78,24 @@ WS  :  (' '|'\r'|'\t'|'\u000C'|'\n') -> skip
 // Parser rules
 
 expression
-        : left=expression WEDGE right=expression                #Exponentiation
+        : LBRACKET ex=expression RBRACKET                          #Bracket
+        | left=expression WEDGE right=expression                #Exponentiation
         | left=expression SLASH right=expression                #Division
         | left=expression STAR right=expression                 #Multiplication
         | left=expression MINUS right=expression                #Subtraction
         | left=expression PLUS right=expression                 #Addition
-        | MINUS operand=expression                              #Negation
+        | MINUS LBRACKET operand=expression RBRACKET            #NegationBracket
+        | MINUS operand=primary_expression                      #Negation
         | name=IDENTIFIER LBRACKET arg=expression RBRACKET      #Function
         | primary_expression                                    #Primary
         ;
+
+
 
 primary_expression
 	: mv_coefficient
 	| variable
 	| constant
-	| LBRACKET expression RBRACKET
 	;
 
 mv_coefficient
@@ -105,5 +108,6 @@ variable
 	
 constant
     :   DECIMAL_LITERAL
-    |   FLOATING_POINT_LITERAL
+    |   FLOATING_POINT_LITERAL 
+    |   '%pi'     
     ;

@@ -291,7 +291,7 @@ assignment
   ;
 
 expression
-  : LBRACKET e=expression RBRACKET                          #Bracket
+  : LBRACKET e=expression RBRACKET                        #Bracket
   | STAR operand=expression                               #Dual
   | REVERSE operand=expression                            #Reverse
   | left=expression WEDGE right=expression                #OuterProduct
@@ -301,14 +301,15 @@ expression
   | left=expression MINUS right=expression                #Subtraction
   | left=expression PLUS right=expression                 #Addition
   | name=IDENTIFIER LBRACKET args=argument_expression_list? RBRACKET      #Function
-  | MINUS operand=expression                              #Negation
+  | MINUS LBRACKET operand=expression RBRACKET            #NegationBracket
+  | MINUS operand=primary_expression                      #Negation
   | primary_expression                                    #Primary
   ;
 
 primary_expression
   : variable
   | function_argument
-  | constant
+  | constant         
   ;
 
 variable

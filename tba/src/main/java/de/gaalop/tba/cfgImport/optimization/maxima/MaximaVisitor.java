@@ -53,7 +53,9 @@ public class MaximaVisitor extends MaximaBaseVisitor<Expression> {
 
     @Override
     public Expression visitConstant(MaximaParser.ConstantContext ctx) {
-        return new FloatConstant(Double.parseDouble(ctx.getText()));
+        String text = ctx.getText();
+        if ("%pi".equals(text)) return new FloatConstant(Math.PI);
+        return new FloatConstant(Double.parseDouble(text));
     }
 
     @Override
@@ -70,5 +72,17 @@ public class MaximaVisitor extends MaximaBaseVisitor<Expression> {
     public Expression visitMultiplication(MaximaParser.MultiplicationContext ctx) {
         return new Multiplication(visit(ctx.left), visit(ctx.right));
     }
+
+    @Override
+    public Expression visitBracket(MaximaParser.BracketContext ctx) {
+        return visit(ctx.ex);
+    }
+
+    @Override
+    public Expression visitNegationBracket(MaximaParser.NegationBracketContext ctx) {
+        return new Negation(visit(ctx.operand));
+    }
+    
+    
 
 }

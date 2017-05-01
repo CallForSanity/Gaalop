@@ -233,6 +233,11 @@ public class CluVisitor extends CluCalcBaseVisitor<Object> {
     public Object visitBracket(CluCalcParser.BracketContext ctx) {
         return (Expression) visit(ctx.e);
     }
+
+    @Override
+    public Object visitNegationBracket(CluCalcParser.NegationBracketContext ctx) {
+        return new Negation((Expression) visit(ctx.operand));
+    }
     
     
 
