@@ -192,11 +192,14 @@ public class LatexVisitor implements ControlFlowVisitor, ExpressionVisitor {
 
     @Override
     public void visit(FloatConstant floatConstant) {
-        if (compare(floatConstant.getValue(), Math.floor(floatConstant.getValue())) == 0) {
-            code.append((int) floatConstant.getValue());
-        } else {
-            code.append(Double.toString(floatConstant.getValue()));
-        }
+        if (Double.isNaN(floatConstant.getValue()))
+            code.append("undefined");
+        else 
+            if (compare(floatConstant.getValue(), Math.floor(floatConstant.getValue())) == 0) {
+                code.append((int) floatConstant.getValue());
+            } else {
+                code.append(Double.toString(floatConstant.getValue()));
+            }
     }
 
     @Override
