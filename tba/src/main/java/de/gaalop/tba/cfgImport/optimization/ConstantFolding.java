@@ -246,8 +246,10 @@ public class ConstantFolding implements ExpressionVisitor, ControlFlowVisitor {
         if ((node.getFunction() == MathFunction.SQRT)
                 && isConstant(operandExpr)) {
             FloatConstant operand = (FloatConstant) operandExpr;
-            resultExpr = new FloatConstant(Math.sqrt(operand.getValue()));
-            setGraphModified();
+            if (operand.getValue() >= 0) {
+                resultExpr = new FloatConstant(Math.sqrt(operand.getValue()));
+                setGraphModified();
+            }
         } else if ((node.getFunction() == MathFunction.ABS)
                 && (DFGNodeTypeGetter.getTypeOfDFGNode(operandExpr) == DFGNodeType.MathFunctionCall)) {
             // remove abs() around sqrts, as they are always positive

@@ -109,5 +109,6 @@ variable
 constant
     :   DECIMAL_LITERAL
     |   FLOATING_POINT_LITERAL 
-    |   '%pi'     
+    |   '%pi'
+    |   '%i'
     ;

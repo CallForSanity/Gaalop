@@ -55,6 +55,7 @@ public class MaximaVisitor extends MaximaBaseVisitor<Expression> {
     public Expression visitConstant(MaximaParser.ConstantContext ctx) {
         String text = ctx.getText();
         if ("%pi".equals(text)) return new FloatConstant(Math.PI);
+        if ("%i".equals(text)) return new MathFunctionCall(new FloatConstant(-1), MathFunction.SQRT);
         return new FloatConstant(Double.parseDouble(text));
     }
 
