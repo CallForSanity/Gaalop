@@ -1,7 +1,9 @@
 package de.gaalop.gui;
 
 import de.gaalop.CodeParserPlugin;
+import de.gaalop.GlobalSettingsStrategyPlugin;
 import de.gaalop.InputFile;
+import de.gaalop.Plugins;
 import de.gaalop.gui.util.PluginIconUtil;
 
 import javax.swing.*;
@@ -121,7 +123,19 @@ public class SourceFilePanel extends JPanel {
 
 		// The text editor for our source code
 		textPane = new JTextPane();
-		textPane.setFont(Font.getFont(Font.SANS_SERIF));
+                
+                de.gaalop.globalSettings.Plugin globalSettings = null;
+                for (GlobalSettingsStrategyPlugin p: Plugins.getGlobalSettingsStrategyPlugins()) 
+                    if (p instanceof de.gaalop.globalSettings.Plugin)
+                        globalSettings = (de.gaalop.globalSettings.Plugin) p;
+                
+                if (globalSettings != null) {
+                    int size =  globalSettings.getEditorFontSize();
+                    textPane.setFont(new Font(Font.MONOSPACED, Font.PLAIN, size));
+                } else {
+                    textPane.setFont(Font.getFont(Font.SANS_SERIF));
+                }
+
 		textPane.setText(content);
 		formatCode(content);
 		textPane.addKeyListener(new SetChangedStateListener());
