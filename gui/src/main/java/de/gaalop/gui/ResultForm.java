@@ -1,6 +1,8 @@
 package de.gaalop.gui;
 
+import de.gaalop.GlobalSettingsStrategyPlugin;
 import de.gaalop.OutputFile;
+import de.gaalop.Plugins;
 
 import javax.swing.*;
 
@@ -59,7 +61,19 @@ public class ResultForm {
         for (OutputFile file : files) {
             JScrollPane filePane = new OutputFilePane(file);
             JTextPane textPane = new JTextPane();
-            textPane.setFont(Font.getFont(Font.SANS_SERIF));
+            
+            de.gaalop.globalSettings.Plugin globalSettings = null;
+                for (GlobalSettingsStrategyPlugin p: Plugins.getGlobalSettingsStrategyPlugins()) 
+                    if (p instanceof de.gaalop.globalSettings.Plugin)
+                        globalSettings = (de.gaalop.globalSettings.Plugin) p;
+                
+                if (globalSettings != null) {
+                    int size =  globalSettings.getEditorFontSize();
+                    textPane.setFont(new Font(Font.MONOSPACED, Font.PLAIN, size));
+                } else {
+                    textPane.setFont(Font.getFont(Font.SANS_SERIF));
+                }
+            
             textPane.setText(file.getContent());
             filePane.setViewportView(textPane);
             tabbedPane.add(file.getName(), filePane);
