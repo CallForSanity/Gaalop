@@ -36,15 +36,18 @@ public class ProcessBuilderMaximaConnection implements MaximaConnection {
 
             MaximaOutput output = new MaximaOutput();
 
-            String path = tmpFile.getAbsolutePath();
+            String path = tmpFile.getCanonicalPath();
             if (File.separatorChar == '\\') {
                 path = path.replaceAll("\\\\", "\\\\\\\\");
             }
 
             Process p;
             try {
-                ProcessBuilder builder = new ProcessBuilder(commandMaxima, "-b", path);
+                ProcessBuilder builder = new ProcessBuilder(commandMaxima);
                 p = builder.start();
+                PrintWriter writer = new PrintWriter(p.getOutputStream());
+                writer.println("batch(\""+path+"\");");
+                writer.flush();
             } catch (Exception e) {
                 tmpFile.delete();
                 throw new OptimizationException("Maxima is not accessible. Please check the Maxima command in the Configurations panel or disable the usage of Maxima.", null);
