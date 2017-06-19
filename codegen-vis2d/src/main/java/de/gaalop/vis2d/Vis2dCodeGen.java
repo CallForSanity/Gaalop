@@ -101,7 +101,7 @@ public class Vis2dCodeGen implements CodeGenerator {
                     drawing.objects.add(new Point2d(x, y, c));
                 } else {
 				
-					if (x*x+y*y-2*mv.entries[3] < 0) {
+					if (x*x+y*y-(2*mv.entries[3]) / e0 < 0) {
 						//imaginary radius
 						drawing.objects.add(new CircleDashed2d(x, y, r, c));
 					} else {

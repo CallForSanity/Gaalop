@@ -153,6 +153,20 @@ public class CluVisitor extends CluCalcBaseVisitor<Object> {
         return graphBuilder.processFunction(ctx.name.getText(), args);
     }
     
+    @Override
+    public Object visitCOLORARGS(CluCalcParser.COLORARGSContext ctx) {
+        LinkedList<Expression> args = (ctx.args != null) ? (LinkedList<Expression>) visit(ctx.args) : new LinkedList<Expression>();
+        nodes.add(graphBuilder.handleColor(args));
+        return null;
+    }
+
+    @Override
+    public Object visitBgcolor(CluCalcParser.BgcolorContext ctx) {
+        LinkedList<Expression> args = (ctx.args != null) ? (LinkedList<Expression>) visit(ctx.args) : new LinkedList<Expression>();
+        graphBuilder.handleBGColor(args);
+        return null; 
+    }
+
     private LinkedList<SequentialNode> macroNodes;
 
     @Override
@@ -238,6 +252,13 @@ public class CluVisitor extends CluCalcBaseVisitor<Object> {
     public Object visitNegationBracket(CluCalcParser.NegationBracketContext ctx) {
         return new Negation((Expression) visit(ctx.operand));
     }
+     
+    @Override
+    public Object visitCOLORNAME(CluCalcParser.COLORNAMEContext ctx) {
+        nodes.add(graphBuilder.handleColor(ctx.name.getText()));
+        return null;
+    }
+
     
     
 
