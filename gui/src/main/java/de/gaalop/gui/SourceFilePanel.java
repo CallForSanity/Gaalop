@@ -110,11 +110,13 @@ public class SourceFilePanel extends JPanel {
 
 	public SourceFilePanel(CodeParserPlugin plugin) {
 		this(plugin, new File("New File"), "");
+                
 		fileState = FileState.UNSAVED;
 	}
 
 	public SourceFilePanel(CodeParserPlugin plugin, File file, String content) {
 		super(new BorderLayout(), true);
+                
 
 		this.parserPlugin = plugin;
 		this.file = file;
@@ -124,17 +126,12 @@ public class SourceFilePanel extends JPanel {
 		// The text editor for our source code
 		textPane = new JTextPane();
                 
-                de.gaalop.globalSettings.Plugin globalSettings = null;
-                for (GlobalSettingsStrategyPlugin p: Plugins.getGlobalSettingsStrategyPlugins()) 
-                    if (p instanceof de.gaalop.globalSettings.Plugin)
-                        globalSettings = (de.gaalop.globalSettings.Plugin) p;
+                int fontSize = FontSize.getEditorFontSize();
+                int guiFontSize = FontSize.getGuiFontSize();
                 
-                if (globalSettings != null) {
-                    int size =  globalSettings.getEditorFontSize();
-                    textPane.setFont(new Font(Font.MONOSPACED, Font.PLAIN, size));
-                } else {
-                    textPane.setFont(Font.getFont(Font.SANS_SERIF));
-                }
+                textPane.setFont(new Font(Font.MONOSPACED, Font.PLAIN, fontSize));
+                
+                
 
 		textPane.setText(content);
 		formatCode(content);
@@ -150,6 +147,7 @@ public class SourceFilePanel extends JPanel {
 		} else {
 			tabLabel = new JLabel("", SwingConstants.LEFT);
 		}
+                tabLabel.setFont(new Font("Arial", Font.PLAIN, guiFontSize));
 
 		updateTabLabel();
 	}
@@ -189,11 +187,14 @@ public class SourceFilePanel extends JPanel {
 	}
 
 	void updateTabLabel() {
+            
 		if (fileState != FileState.SAVED) {
 			tabLabel.setText(file.getName() + "*");
 		} else {
 			tabLabel.setText(file.getName());
 		}
+                final Font font = new Font("Arial", Font.PLAIN, FontSize.getGuiFontSize());
+                tabLabel.setFont(font);
 	}
 
 	public CodeParserPlugin getParserPlugin() {

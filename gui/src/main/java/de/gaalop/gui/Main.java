@@ -56,6 +56,8 @@ public class Main {
             e.printStackTrace();
         }
 
+        PluginConfigurator configurator = loadConfig1();
+        
         mainForm = new MainForm();
 
 
@@ -67,7 +69,8 @@ public class Main {
         mainWindow.setLocationRelativeTo(null);
         mainWindow.setVisible(true);
         
-        loadConfig();
+        
+        loadConfig2(configurator);
         mainForm.panelPluginSelection.refreshAlgebras();
         mainForm.loadOpenedFiles();
 
@@ -81,7 +84,7 @@ public class Main {
         });
     }
 
-    private void loadConfig() {
+    private PluginConfigurator loadConfig1() {
         Properties config = new Properties();
 
         if (new File(CONFIG_FILENAME).exists()) {
@@ -100,6 +103,11 @@ public class Main {
         }
 
         PluginConfigurator configurator = new PluginConfigurator(config);
+        configurator.configureAll(null);
+        return configurator;
+    }
+    
+    private void loadConfig2(PluginConfigurator configurator) {
         configurator.configureAll(mainForm.getStatusBar());
     }
 

@@ -2,6 +2,7 @@ package de.gaalop.gui;
 
 import de.gaalop.*;
 import java.awt.BorderLayout;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -49,6 +50,8 @@ public class ConfigurationPanel extends JPanel {
 	private void initialize() {
 		setLayout(new BorderLayout());
 		add(pluginPanes, BorderLayout.CENTER);
+                Font font = new Font("Arial", Font.PLAIN, FontSize.getGuiFontSize());
+                pluginPanes.setFont(font);
                 for (CodeParserPlugin parser: Plugins.getCodeParserPlugins())
                     addPluginConfig(parser);
                 for (GlobalSettingsStrategyPlugin global: Plugins.getGlobalSettingsStrategyPlugins())
@@ -69,6 +72,7 @@ public class ConfigurationPanel extends JPanel {
 	}
 
 	private void addPluginConfig(final Plugin plugin) {
+                Font font = new Font("Arial", Font.PLAIN, FontSize.getGuiFontSize());
 		JPanel configPanel = new JPanel();
 		configPanel.setLayout(new BorderLayout());
 		List<Field> properties = getConfigurationProperties(plugin);
@@ -79,13 +83,16 @@ public class ConfigurationPanel extends JPanel {
 		configPanel.add(labels, BorderLayout.WEST);
 		configPanel.add(fields, BorderLayout.CENTER);
 		for (final Field property : properties) {
-			labels.add(new JLabel(property.getName()));
+                        JLabel label = new JLabel(property.getName());
+                        label.setFont(font);
+			labels.add(label);
 			try {
 				String value = BeanUtils.getProperty(plugin, property.getName());
 				ConfigurationProperty clazz = property.getAnnotation(ConfigurationProperty.class);
 				switch (clazz.type()) {
 				case BOOLEAN:
 					final JCheckBox checkBox = new JCheckBox();
+                                        checkBox.setFont(font);
 					checkBox.setSelected(Boolean.parseBoolean(value));
 					checkBox.addActionListener(new ActionListener() {
 						
@@ -105,6 +112,7 @@ public class ConfigurationPanel extends JPanel {
 					break;
 				case NUMBER:
 					final JTextField numberField = new JTextField(value);
+                                        numberField.setFont(font);
 					numberField.addKeyListener(new KeyAdapter() {
 						
 						@Override
@@ -129,6 +137,7 @@ public class ConfigurationPanel extends JPanel {
 					break;
                                 case DIRPATH:
                                         final JTextField textField3 = new JTextField(value);
+                                        textField3.setFont(font);
 					textField3.addKeyListener(new KeyAdapter() {
 						@Override
 						public void keyReleased(KeyEvent e) {
@@ -146,6 +155,7 @@ public class ConfigurationPanel extends JPanel {
 					fields.add(subPanel2);
                                         final JButton button3 = new JButton("Choose directory path");
                                         subPanel2.add(button3);
+                                        button3.setFont(font);
                                         button3.addActionListener(new ActionListener() {
                                             @Override
                                             public void actionPerformed(ActionEvent e) {
@@ -168,6 +178,7 @@ public class ConfigurationPanel extends JPanel {
 					break;
                                 case FILEPATH:
                                         final JTextField textField2 = new JTextField(value);
+                                        textField2.setFont(font);
 					textField2.addKeyListener(new KeyAdapter() {
 						@Override
 						public void keyReleased(KeyEvent e) {
@@ -185,6 +196,7 @@ public class ConfigurationPanel extends JPanel {
 					fields.add(subPanel);
                                         final JButton button = new JButton("Choose file path");
                                         subPanel.add(button);
+                                        button.setFont(font);
                                         button.addActionListener(new ActionListener() {
                                             @Override
                                             public void actionPerformed(ActionEvent e) {
@@ -208,6 +220,7 @@ public class ConfigurationPanel extends JPanel {
 					// fall through to default
 				default:
 					final JTextField textField = new JTextField(value);
+                                        textField.setFont(font);
 					textField.addKeyListener(new KeyAdapter() {
 						@Override
 						public void keyReleased(KeyEvent e) {

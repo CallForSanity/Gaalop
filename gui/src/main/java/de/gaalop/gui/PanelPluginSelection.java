@@ -88,6 +88,7 @@ public class PanelPluginSelection extends JPanel {
     }
     
     public PanelPluginSelection() {
+        final Font font = new Font("Arial", Font.PLAIN, FontSize.getGuiFontSize());
         setLayout(new GridLayout(7,1,5,5));
         
         ListCellRenderer c = new DefaultListCellRenderer() {
@@ -96,6 +97,7 @@ public class PanelPluginSelection extends JPanel {
                 if (value == null) return super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
                 String valueStr = ((Plugin) value).getName();
                 JLabel label = (JLabel) super.getListCellRendererComponent(list, valueStr, index, isSelected, cellHasFocus);
+                label.setFont(font);
                 Image icon = (((Plugin) value).getIcon());
                 if (icon != null)
                     label.setIcon(new ImageIcon(((Plugin) value).getIcon()));
@@ -104,6 +106,7 @@ public class PanelPluginSelection extends JPanel {
         };
         add(new JPanel());
 
+        algebraChooser.setFont(font);
         addLabeledComponent("Algebra to use:", algebraChooser);
         
         PluginSorter comparator = new PluginSorter();
@@ -112,6 +115,7 @@ public class PanelPluginSelection extends JPanel {
         GlobalSettingsStrategyPlugin[] globalPlugins = Plugins.getGlobalSettingsStrategyPlugins().toArray(new GlobalSettingsStrategyPlugin[0]);
         Arrays.sort(globalPlugins, comparator);
         globalSettings = new JComboBox(globalPlugins);
+        globalSettings.setFont(font);
         globalSettings.setSelectedItem(search(globalPlugins, "de.gaalop.globalSettings.Plugin"));
         globalSettings.addItemListener(itemListener);
         globalSettings.setRenderer(c);
@@ -121,6 +125,7 @@ public class PanelPluginSelection extends JPanel {
         VisualCodeInserterStrategyPlugin[] visPlugins = Plugins.getVisualizerStrategyPlugins().toArray(new VisualCodeInserterStrategyPlugin[0]);
         Arrays.sort(visPlugins, comparator);
         visualCodeInserter = new JComboBox(visPlugins);
+        visualCodeInserter.setFont(font);
         visualCodeInserter.setSelectedItem(search(visPlugins, "de.gaalop.visualCodeInserter.Plugin"));
         visualCodeInserter.addItemListener(itemListener);
         visualCodeInserter.setRenderer(c);
@@ -132,6 +137,7 @@ public class PanelPluginSelection extends JPanel {
         algebra = new JComboBox(algPlugins);
         algebra.setSelectedItem(search(algPlugins, "de.gaalop.algebra.Plugin"));
         algebra.addItemListener(itemListener);
+        algebra.setFont(font);
         algebra.setRenderer(c);
         if (Plugins.getAlgebraStrategyPlugins().size() > 1)
             addLabeledComponent("Algebra:", algebra);
@@ -139,6 +145,7 @@ public class PanelPluginSelection extends JPanel {
         OptimizationStrategyPlugin[] optPlugins = Plugins.getOptimizationStrategyPlugins().toArray(new OptimizationStrategyPlugin[0]);
         Arrays.sort(optPlugins, comparator);
         optimization = new JComboBox(optPlugins);
+        optimization.setFont(font);
         optimization.setSelectedItem(search(optPlugins, "de.gaalop.tba.Plugin"));
         optimization.addItemListener(itemListener);
         optimization.setRenderer(c);
@@ -148,6 +155,7 @@ public class PanelPluginSelection extends JPanel {
         CodeGeneratorPlugin[] codegenPlugins = Plugins.getCodeGeneratorPlugins().toArray(new CodeGeneratorPlugin[0]);
         Arrays.sort(codegenPlugins, comparator);
         generator = new JComboBox(codegenPlugins);
+        generator.setFont(font);
         generator.addItemListener(itemListener);
         generator.setRenderer(c);
         if (Plugins.getCodeGeneratorPlugins().size() > 1)
@@ -161,8 +169,11 @@ public class PanelPluginSelection extends JPanel {
     }
     
     private void addLabeledComponent(String label, JComboBox c) {
+        Font font = new Font("Arial", Font.PLAIN, FontSize.getGuiFontSize());
         JPanel panel = new JPanel(new GridLayout(2,1));
-        panel.add(new JLabel(label));
+        JLabel l = new JLabel(label);
+        l.setFont(font);
+        panel.add(l);
         panel.add(c);
         add(panel);
     }
