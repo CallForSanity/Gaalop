@@ -26,11 +26,19 @@ public class Vis2dCodeGen implements CodeGenerator {
     public DrawVisitorGraphics visitor;
     public Vis2dUI vis2dUI;
     
+    private ControlFlowGraph graph;
+    
     private HashMap<String, double[]> values;
     
+    private void printMultivector(String name, Multivector mv) {
+        for (int bladeIndex = 0; bladeIndex < mv.entries.length; bladeIndex++)
+            if (Math.abs(mv.entries[bladeIndex]) > EPSILON)
+                System.out.println(name + "(" + bladeIndex + ") = "+mv.entries[bladeIndex]+" // "+graph.getAlgebraDefinitionFile().getBladeString(bladeIndex));
+    }
 
     @Override
     public Set<OutputFile> generate(ControlFlowGraph in) throws CodeGeneratorException {
+        graph = in;
         values = ValueEvaluater.evaluateValues(in);
             
         HashMap<String, Color> colors = ColorEvaluater.getColors(in);
@@ -38,6 +46,20 @@ public class Vis2dCodeGen implements CodeGenerator {
         drawing.objects.clear();
 
         HashMap<String, Multivector> mapMv = MultivectorBuilder.buildMultivectors(in);
+        
+        // Print with ? marked multivector in console
+        for (String name: FindOutputVariableNames.getVariableNames(in))
+            if (!in.getRenderingExpressions().containsKey(name))
+            {
+                if (!mapMv.containsKey(name)) {
+                    System.err.println("Programming error Vis2dCodeGen");
+                    new Exception().printStackTrace();
+                } else {
+                    printMultivector(name, mapMv.get(name));
+                }
+            }
+
+        // Handle with : marked multivectors in GUI
 
         drawUnknownMacros(in.unknownMacros);
         for (String s : in.getRenderingExpressions().keySet()) {
