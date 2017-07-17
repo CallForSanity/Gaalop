@@ -36,7 +36,6 @@ No copyright asserted on the source code of this class. May be used for any
  * purpose, however, refer to the Unisys LZW patent for restrictions on use of
  * the associated LZWEncoder class. Please forward any corrections to
  * kweiner@fmsware.com.
- * 
  * @author Kevin Weiner, FM Software
  * @version 1.03 November 2003
 
