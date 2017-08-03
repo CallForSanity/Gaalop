@@ -259,7 +259,11 @@ public class CluVisitor extends CluCalcBaseVisitor<Object> {
         return null;
     }
 
-    
+    @Override
+    public Object visitNegationFunction(CluCalcParser.NegationFunctionContext ctx) {
+        LinkedList<Expression> args = (ctx.args != null) ? (LinkedList<Expression>) visit(ctx.args) : new LinkedList<Expression>();
+        return new Negation(graphBuilder.processFunction(ctx.name.getText(), args));
+    }
     
 
 }

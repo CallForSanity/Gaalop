@@ -302,6 +302,7 @@ expression
   | left=expression PLUS right=expression                 #Addition
   | name=IDENTIFIER LBRACKET args=argument_expression_list? RBRACKET      #Function
   | MINUS LBRACKET operand=expression RBRACKET            #NegationBracket
+  | MINUS name=IDENTIFIER LBRACKET args=argument_expression_list? RBRACKET      #NegationFunction
   | MINUS operand=primary_expression                      #Negation
   | primary_expression                                    #Primary
   ;
