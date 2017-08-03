@@ -46,7 +46,7 @@ public class MainForm {
     public MainForm() {
         $$$setupUI$$$();
 
-        contentPane.setPreferredSize(new Dimension(900, 480));
+        //contentPane.setPreferredSize(new Dimension(900, 480));
 
         // The optimize button shows a menu with available output formats
         optimizeButton.addActionListener(new ActionListener() {
@@ -284,6 +284,8 @@ public class MainForm {
      * @noinspection ALL
      */
     private void $$$setupUI$$$() {
+        Font font = new Font("Arial", Font.PLAIN, FontSize.getGuiFontSize());
+        
         contentPane = new JPanel();
         contentPane.setLayout(new BorderLayout(0, 0));
         final JPanel panel1 = new JPanel();
@@ -304,16 +306,19 @@ public class MainForm {
         newFileButton.setIcon(new ImageIcon(getClass().getResource("/de/gaalop/gui/document-new.png")));
         newFileButton.setText("New File");
         newFileButton.setMnemonic('N');
+        newFileButton.setFont(font);
         newFileButton.setDisplayedMnemonicIndex(0);
         toolBar1.add(newFileButton);
         openFileButton = new JButton();
         openFileButton.setIcon(new ImageIcon(getClass().getResource("/de/gaalop/gui/document-open.png")));
         openFileButton.setText("Open File");
+        openFileButton.setFont(font);
         openFileButton.setMnemonic('O');
         openFileButton.setDisplayedMnemonicIndex(0);
         toolBar1.add(openFileButton);
         saveFileButton = new JButton();
         saveFileButton.setEnabled(false);
+        saveFileButton.setFont(font);
         saveFileButton.setIcon(new ImageIcon(getClass().getResource("/de/gaalop/gui/document-save.png")));
         saveFileButton.setText("Save File");
         saveFileButton.setMnemonic('S');
@@ -321,11 +326,13 @@ public class MainForm {
         toolBar1.add(saveFileButton);
         closeButton = new JButton();
         closeButton.setIcon(new ImageIcon(getClass().getResource("/de/gaalop/gui/emblem-unreadable.png")));
+        closeButton.setFont(font);
         closeButton.setText("Close File");
         toolBar1.add(closeButton);
         final JToolBar.Separator toolBar$Separator2 = new JToolBar.Separator();
         toolBar1.add(toolBar$Separator2);
         configureButton = new JButton();
+        configureButton.setFont(font);
         configureButton.setEnabled(true);
         configureButton.setIcon(new ImageIcon(getClass().getResource("/de/gaalop/gui/preferences-system.png")));
         configureButton.setText("Configure");
@@ -339,10 +346,12 @@ public class MainForm {
         optimizeButton.setEnabled(false);
         optimizeButton.setIcon(new ImageIcon(getClass().getResource("/de/gaalop/gui/applications-system.png")));
         optimizeButton.setText("Optimize");
+        optimizeButton.setFont(font);
         optimizeButton.setMnemonic('I');
         optimizeButton.setDisplayedMnemonicIndex(3);
         toolBar1.add(optimizeButton);
         tabbedPane = new JTabbedPane();
+        tabbedPane.setFont(font);
         contentPane.add(tabbedPane, BorderLayout.CENTER);
         panelPluginSelection = new PanelPluginSelection();
         contentPane.add(panelPluginSelection, BorderLayout.EAST);
@@ -351,6 +360,7 @@ public class MainForm {
         tabbedPane.addTab("Welcome", panel2);
         welcomeToGaalopWelcomeEditorPane = new JEditorPane();
         welcomeToGaalopWelcomeEditorPane.setContentType("text/html");
+        welcomeToGaalopWelcomeEditorPane.setFont(font);
         welcomeToGaalopWelcomeEditorPane.setEditable(false);
         welcomeToGaalopWelcomeEditorPane.setText("<html>\r\n  <head>\r\n    \r\n  </head>\r\n  <body>\r\n  </body>\r\n</html>\r\n");
         panel2.add(welcomeToGaalopWelcomeEditorPane, BorderLayout.CENTER);

@@ -27,6 +27,7 @@ public class ResultForm {
     private Log log = LogFactory.getLog(ResultForm.class);
 
     public ResultForm(Set<OutputFile> files) {
+        Font font = new Font("Arial", Font.PLAIN, FontSize.getGuiFontSize());
     	contentPane = new JPanel();
     	contentPane.setLayout(new BorderLayout(0, 0));
     	
@@ -36,6 +37,7 @@ public class ResultForm {
     	contentPane.add(toolBar, BorderLayout.NORTH);
     	
     	JButton saveButton = new JButton("Save file");
+        saveButton.setFont(font);
     	saveButton.setIcon(new ImageIcon(getClass().getResource("/de/gaalop/gui/document-save.png")));
     	saveButton.addActionListener(new ActionListener() {
 			
@@ -57,6 +59,7 @@ public class ResultForm {
     	
         tabbedPane = new JTabbedPane();
         contentPane.add(tabbedPane, BorderLayout.CENTER);
+        tabbedPane.setFont(font);
 
         for (OutputFile file : files) {
             JScrollPane filePane = new OutputFilePane(file);
@@ -68,7 +71,7 @@ public class ResultForm {
                         globalSettings = (de.gaalop.globalSettings.Plugin) p;
                 
                 if (globalSettings != null) {
-                    int size =  globalSettings.getEditorFontSize();
+                    int size = globalSettings.getEditorFontSize();
                     textPane.setFont(new Font(Font.MONOSPACED, Font.PLAIN, size));
                 } else {
                     textPane.setFont(Font.getFont(Font.SANS_SERIF));

@@ -84,31 +84,60 @@ public class PluginConfigurator {
         
         plugins = Plugins.getGlobalSettingsStrategyPlugins();
         for (Plugin plugin : plugins) {
-            configure(plugin);
-            register(plugin, o);
-        }
+            configure(plugin);        }
 
         plugins = Plugins.getOptimizationStrategyPlugins();
         for (Plugin plugin : plugins) {
             configure(plugin);
-            register(plugin, o);
         }
 
         plugins = Plugins.getAlgebraStrategyPlugins();
         for (Plugin plugin : plugins) {
             configure(plugin);
-            register(plugin, o);
         }
 
         plugins = Plugins.getCodeParserPlugins();
         for (Plugin plugin : plugins) {
             configure(plugin);
-            register(plugin, o);
         }
 
         plugins = Plugins.getCodeGeneratorPlugins();
         for (Plugin plugin : plugins) {
             configure(plugin);
+        }
+        
+        PanelPluginSelection.lastUsedAlgebra = (String) configuration.get("lastUsedAlgebra");  
+        PanelPluginSelection.lastUsedAlgebraRessource = Boolean.parseBoolean((String) configuration.get("lastUsedAlgebraRessource"));
+        PanelPluginSelection.lastUsedGenerator = (String) configuration.get("lastUsedGenerator");
+        PanelPluginSelection.lastUsedVisualCodeInserter = (String) configuration.get("lastUsedVisualCodeInserter");
+        PanelPluginSelection.lastUsedOptimization = (String) configuration.get("lastUsedOptimization");
+    }
+    
+    public void registerAll(Observer o) {
+        Set<? extends Plugin> plugins;
+        
+        plugins = Plugins.getGlobalSettingsStrategyPlugins();
+        for (Plugin plugin : plugins) {
+            register(plugin, o);
+        }
+
+        plugins = Plugins.getOptimizationStrategyPlugins();
+        for (Plugin plugin : plugins) {
+            register(plugin, o);
+        }
+
+        plugins = Plugins.getAlgebraStrategyPlugins();
+        for (Plugin plugin : plugins) {
+            register(plugin, o);
+        }
+
+        plugins = Plugins.getCodeParserPlugins();
+        for (Plugin plugin : plugins) {
+            register(plugin, o);
+        }
+
+        plugins = Plugins.getCodeGeneratorPlugins();
+        for (Plugin plugin : plugins) {
             register(plugin, o);
         }
         
