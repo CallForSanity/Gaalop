@@ -1,5 +1,6 @@
 package de.gaalop.testbenchTbaGapp.tba;
 
+import de.gaalop.testbenchTbaGapp.tba.common.LocalVarsTest;
 import de.gaalop.testbenchTbaGapp.tba.gps.Point3D;
 import de.gaalop.testbenchTbaGapp.tba.circle.CircleNoVarsTest;
 import de.gaalop.testbenchTbaGapp.tba.circle.CircleOneVarTest;
@@ -20,6 +21,20 @@ import static org.junit.Assert.*;
  * @author Christian Steinmetz
  */
 public class TestAllTBA {
+    
+    @Test
+    public void testNoLocalVars() {
+        assertTrue(
+            TestDummy.compile(new NoLocalVarsTest())
+                );
+    } 
+    
+    @Test
+    public void testLocalVars() {
+        assertTrue(
+            TestDummy.compile(new LocalVarsTest())
+                );
+    } 
 
     @Test
     public void testCircleNoVars() {

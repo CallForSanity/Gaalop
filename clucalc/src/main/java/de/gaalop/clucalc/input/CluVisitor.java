@@ -108,8 +108,11 @@ public class CluVisitor extends CluCalcBaseVisitor<Object> {
     public Object visitAssignment(CluCalcParser.AssignmentContext ctx) {
         Variable variable = (Variable) visit(ctx.var);
         Expression expression = (Expression) visit(ctx.expr);
-        AssignmentNode result = graphBuilder.handleAssignment(variable, expression);
-        return result;
+        if (inMacro) {
+            macroNodes.add(new AssignmentNode(graph, variable, expression));
+            return null;
+        } else
+            return graphBuilder.handleAssignment(variable, expression);
     }
 
     @Override
