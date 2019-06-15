@@ -23,6 +23,14 @@ import static org.junit.Assert.*;
 public class TestAllTBA {
     
     @Test
+    public void testMultipleLocalVars() {
+        assertTrue(
+            TestDummy.compile(new FunctionTest())
+                );
+    } 
+    
+    
+    @Test
     public void testNoLocalVars() {
         assertTrue(
             TestDummy.compile(new NoLocalVarsTest())

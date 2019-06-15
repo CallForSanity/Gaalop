@@ -234,6 +234,10 @@ statement
   | draw_mode
   ;
 
+statement_list
+  : statement*
+  ;
+
 expression_statement
   : SEMICOLON                                               #EmptyStatement
   | QUESTIONMARK val=assignment SEMICOLON                   #OutputAssignmentCaseQ
@@ -271,7 +275,7 @@ float_or_dec
   ;
   
 macro_definition
-  : id=IDENTIFIER EQUALS CLBRACKET body=statement* e=return_value? CRBRACKET #MACRO
+  : id=IDENTIFIER EQUALS CLBRACKET body=statement_list e=return_value? CRBRACKET #MACRO
   ;
   
 return_value
