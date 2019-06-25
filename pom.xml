@@ -50,6 +50,9 @@
         <!-- testbenches -->
         <module>testbenchTbaGapp</module>
 
+        <!-- distribution -->
+        <module>distribution</module>
+
     </modules>
 
     <!--
@@ -68,12 +71,13 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-assembly-plugin</artifactId>
-		    <inherited>true</inherited>
-                    <configuration>
-                        <descriptors>
-                            <descriptor>src/assemble/dist.xml</descriptor>
-                        </descriptors>
-                    </configuration>
+                    <version>3.1.1</version>
+<!--		            <inherited>true</inherited>-->
+<!--                    <configuration>-->
+<!--                        <descriptors>-->
+<!--                            <descriptor>src/assemble/dist.xml</descriptor>-->
+<!--                        </descriptors>-->
+<!--                    </configuration>-->
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -124,13 +128,13 @@
     </dependencies>
 
 
-    <repositories>
-        <repository>
-            <id>ccnexus</id>
-            <name>Code-Camp 3rd Party Repository</name>
-            <url>http://nexus.code-camp.org/content/repositories/thirdparty/</url>
-        </repository>
-    </repositories>
+<!--    <repositories>-->
+<!--        <repository>-->
+<!--            <id>ccnexus</id>-->
+<!--            <name>Code-Camp 3rd Party Repository</name>-->
+<!--            <url>http://nexus.code-camp.org/content/repositories/thirdparty/</url>-->
+<!--        </repository>-->
+<!--    </repositories>-->
     
     <properties>
     	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

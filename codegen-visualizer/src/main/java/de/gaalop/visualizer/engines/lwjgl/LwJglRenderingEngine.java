@@ -5,6 +5,10 @@ import de.gaalop.visualizer.PointClouds;
 import de.gaalop.visualizer.Rendering;
 import de.gaalop.visualizer.engines.lwjgl.recording.GIFRecorder;
 import de.gaalop.visualizer.engines.lwjgl.recording.Recorder;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.HashSet;
 import org.lwjgl.LWJGLException;
@@ -45,7 +49,10 @@ public abstract class LwJglRenderingEngine extends RenderingEngine {
 
     public LwJglRenderingEngine(String lwJglNativePath, Rendering rendering) {
         this.rendering = rendering;
-        System.setProperty("org.lwjgl.librarypath", lwJglNativePath);
+
+        Path lwjglLibraryPath = Paths.get(lwJglNativePath);
+
+        System.setProperty("org.lwjgl.librarypath", lwjglLibraryPath.toAbsolutePath().toString());
         
     }
 
