@@ -1,8 +1,8 @@
 
-s2_opt = List(32);
-s1_opt = List(32);
-Pp_opt = List(32);
 s3_opt = List(32);
+Pp_opt = List(32);
+s1_opt = List(32);
+s2_opt = List(32);
 
 s1(2) = (-inputsVector(4)); // e1
 s1(3) = (-inputsVector(7)); // e2
