@@ -1,3 +1,3 @@
 
-mvn clean package assembly:directory
+mvn clean package
 pause

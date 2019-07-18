@@ -8,6 +8,6 @@ cache:
 - C:\bin\apache-maven-3.3.1
 - C:\Users\appveyor\.m2
 build_script:
-- mvn clean package assembly:directory
+- mvn clean package
 test_script:
 - mvn test

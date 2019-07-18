@@ -1,2 +1,2 @@
-mvn package assembly:directory
+mvn package
 pause

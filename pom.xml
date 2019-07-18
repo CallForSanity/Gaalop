@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.gaalop</groupId>
     <artifactId>gaalop</artifactId>
-    <version>2.2</version>
+    <version>1.0.0</version>
     <packaging>pom</packaging>
     <name>Gaalop</name>
 
@@ -35,7 +35,7 @@
         <module>codegen-gapp</module>
         <module>codegen-gappopencl</module>
         <module>codegen-compressed</module>
-        <!--<module>codegen-verilog</module>-->
+        <module>codegen-verilog</module>
         <module>codegen-latex</module>
         <module>codegen-visualizer</module>
         <module>gaalet</module>
