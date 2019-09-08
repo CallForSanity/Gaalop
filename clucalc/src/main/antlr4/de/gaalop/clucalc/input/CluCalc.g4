@@ -83,7 +83,7 @@ WS  :  (' '|'\r'|'\t'|'\u000C'|'\n') -> skip
     ;
 
 COMMENT
-    :   '/*' ( . )* '*/' -> skip
+    :   '/*' .*? '*/' -> skip
     ;
 
 // rely on the fact that they are recognized in the order in this file
