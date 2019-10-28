@@ -38,6 +38,8 @@
         <module>codegen-verilog</module>
         <module>codegen-latex</module>
         <module>codegen-visualizer</module>
+	<module>codegen-rust</module>
+	<module>codegen-mathematica</module>
         <module>gaalet</module>
         <module>codegen-vis2d</module>
         <module>gappDebugger</module>

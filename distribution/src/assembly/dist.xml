@@ -28,6 +28,8 @@
 		        <include>de.gaalop:codegen-visualizer</include>
 		        <include>de.gaalop:codegen-vis2d</include>
                 <include>de.gaalop:codegen-gappopencl</include>
+				<include>de.gaalop:codegen-rust</include>
+				<include>de.gaalop:codegen-mathematica</include>
                 <include>de.gaalop:gaalet</include>
 
                 <include>de.gaalop:cli</include>
