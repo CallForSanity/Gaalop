@@ -23,14 +23,14 @@ public enum MathematicaCodeGenerator implements CodeGenerator {
     }
 
     private String generateFilename(ControlFlowGraph in) {
-        String filename = "gaalop.rs";
+        String filename = "gaalop.txt";
         if (in.getSource() != null) {
             filename = in.getSource().getName();
             int lastDotIndex = filename.lastIndexOf('.');
             if (lastDotIndex != -1) {
                 filename = filename.substring(0, lastDotIndex);
             }
-            filename += ".rs";
+            filename += ".txt";
         }
         return filename;
     }

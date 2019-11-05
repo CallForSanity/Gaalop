@@ -188,7 +188,31 @@ public class RustVisitor implements ControlFlowVisitor, ExpressionVisitor {
 
     @Override
     public void visit(MathFunctionCall node) {
-        not_implemented("MathFunctionCall");
+        String functionName = "";
+        switch (node.getFunction()) {
+            case SQRT:
+                functionName = "sqrt";
+                break;
+            case ABS:
+                functionName = "abs";
+                break;
+            case COS:
+                functionName = "cos";
+                break;
+            case SIN:
+                functionName = "sin";
+                break;
+            case EXP:
+                functionName = "exp";
+                break;
+            default:
+                not_implemented("specific MathFunctionCall");
+        }
+        code.append("(");
+        node.getOperand().accept(this);
+        code.append(").");
+        code.append(functionName);
+        code.append("()");
     }
 
     @Override
@@ -207,8 +231,9 @@ public class RustVisitor implements ControlFlowVisitor, ExpressionVisitor {
 
     @Override
     public void visit(Exponentiation node) {
+        code.append("(");
         node.getLeft().accept(this);
-        code.append(".pow(");
+        code.append(").pow(");
         node.getRight().accept(this);
         code.append(")");
     }
@@ -216,6 +241,7 @@ public class RustVisitor implements ControlFlowVisitor, ExpressionVisitor {
     @Override
     public void visit(FloatConstant node) {
         code.append(Double.toString(node.getValue()));
+        code.append("_f32"); // Otherwise, we can't apply functions to numbers
     }
 
     @Override

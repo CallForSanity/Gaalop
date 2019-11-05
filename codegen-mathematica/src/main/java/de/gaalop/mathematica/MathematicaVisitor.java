@@ -245,15 +245,15 @@ public class MathematicaVisitor implements ControlFlowVisitor, ExpressionVisitor
                 functionName = "Sin";
                 break;
             case EXP:
-                functionName = "Power";
+                functionName = "Exp";
                 break;
             default:
                 not_implemented("specific MathFunctionCall");
         }
         code.append(functionName);
-        code.append("(");
+        code.append("[");
         node.getOperand().accept(this);
-        code.append(")");
+        code.append("]");
     }
 
     @Override
@@ -266,7 +266,7 @@ public class MathematicaVisitor implements ControlFlowVisitor, ExpressionVisitor
         //code.append(node.getName().replace(suffix, ""));
         code.append(node.getName());
         code.append("[[");
-        code.append(node.getBladeIndex());
+        code.append(node.getBladeIndex() + 1); // Indices start at 1 in Mathematica
         code.append("]]");
     }
 
