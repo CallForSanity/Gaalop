@@ -109,7 +109,7 @@
             <artifactId>codegen-gappopencl</artifactId>
             <version>1.0.0</version>
         </dependency>
-	<dependency>
+		<dependency>
             <groupId>de.gaalop</groupId>
             <artifactId>codegen-rust</artifactId>
             <version>1.0.0</version>
@@ -117,6 +117,11 @@
         <dependency>
             <groupId>de.gaalop</groupId>
             <artifactId>codegen-mathematica</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+	<dependency>
+            <groupId>de.gaalop</groupId>
+            <artifactId>codegen-julia</artifactId>
             <version>1.0.0</version>
         </dependency>
         <dependency>
