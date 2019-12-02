@@ -103,16 +103,28 @@ public class CompileAction extends AbstractAction {
         
         
         
+        // create optimitzation strategy from plugin and add StatusBar as listener to be notified
+        // when progress is made.
+        OptimizationStrategy optStrategy = optimizationPlugin.createOptimizationStrategy();
+  	  	optStrategy.addProgressListener(new LoggingListener() {
+  	  		@Override
+  	  		public void logNote(String topic, Object args) {
+  	  			statusBar.setStatus(topic);
+  	  			statusBar.setProgressPercent((double)args);
+  	  		}
+  	  	});
 
+        
         final CompilerFacade facade = new CompilerFacade(parserPlugin.createCodeParser(),
                 globalSettingsPlugin.createGlobalSettingsStrategy(),
                 visualizerPlugin.createVisualCodeInserterStrategy(),
                 algebraPlugin.createAlgebraStrategy(),
-                optimizationPlugin.createOptimizationStrategy(),
+                optStrategy,
                 panelPluginSelection.getCodeGeneratorPlugin().createCodeGenerator(),
                 algebraToUse.algebraName,algebraToUse.ressource,algebraBaseDirectory
                 );
         facade.addObserver(statusBar);
+        
 
         // start new thread in order to see status changes in main thread (GUI)
 		Thread compiler = new Thread(new Runnable() {

@@ -62,8 +62,13 @@ public class StatusBar extends JPanel implements Observer {
 		add(new JLabel(spacer), BorderLayout.EAST);
 	}
 
-	private void setStatus(String status) {
+	public void setStatus(String status) {
 		statusLabel.setText(spacer + status);
+	}
+	
+	public void setProgressPercent(double percent) {
+		progressBar.setMaximum(100);
+		progressBar.setValue((int)(percent*100));
 	}
 
 	@Override

@@ -197,7 +197,9 @@ public class Main {
     Set<OptimizationStrategyPlugin> plugins = Plugins.getOptimizationStrategyPlugins();
     for (OptimizationStrategyPlugin plugin : plugins) {
       if (plugin.getClass().getName().equals(optimizationStrategyPlugin)) {
-        return plugin.createOptimizationStrategy();
+    	  OptimizationStrategy strategy = plugin.createOptimizationStrategy();
+    	  // no progressListeners will be added
+        return strategy;
       }
     }
 

@@ -8,6 +8,7 @@ import de.gaalop.tba.cfgImport.optimization.maxima.MaximaOptimizer;
 import de.gaalop.tba.cfgImport.optimization.maxima.ProcessBuilderMaximaConnection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import de.gaalop.LoggingListenerGroup;
 
 /**
  * Facade class for the optimization using maxima
@@ -22,9 +23,9 @@ public class OptMaxima implements OptimizationStrategyWithModifyFlag {
     }
 
     @Override
-    public boolean transform(ControlFlowGraph graph, UseAlgebra usedAlgebra) throws OptimizationException {
+    public boolean transform(ControlFlowGraph graph, UseAlgebra usedAlgebra, LoggingListenerGroup listeners) throws OptimizationException {
         
-        transformer.transformGraph(graph);
+        transformer.transformGraph(graph, listeners);
         
         return false; // don't do a second step, if it was not necessary for other optimizations
     }
