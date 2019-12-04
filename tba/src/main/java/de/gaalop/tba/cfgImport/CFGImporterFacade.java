@@ -1,6 +1,8 @@
 package de.gaalop.tba.cfgImport;
 
 import de.gaalop.OptimizationException;
+import de.gaalop.LoggingListener;
+import de.gaalop.LoggingListenerGroup;
 import de.gaalop.algebra.UpdateLocalVariableSet;
 import de.gaalop.api.cfg.RoundingCFGVisitor;
 import de.gaalop.cfg.ControlFlowGraph;
@@ -25,9 +27,11 @@ public class CFGImporterFacade {
     private LinkedList<OptimizationStrategyWithModifyFlag> optimizations;
     private Plugin plugin;
     private UseAlgebra usedAlgebra;
+    private LoggingListenerGroup listeners;
 
     public CFGImporterFacade(Plugin plugin) {
         this.plugin = plugin;
+        this.listeners = new LoggingListenerGroup();
 
         optimizations = new LinkedList<OptimizationStrategyWithModifyFlag>();
 
@@ -42,6 +46,11 @@ public class CFGImporterFacade {
         }
 
     }
+    
+    public void setProgressListeners(LoggingListenerGroup progressListeners) {
+    	listeners = progressListeners;
+    }
+    
 
     /**
      * Transforms the graph and apply optionally optimizations.
@@ -88,7 +97,7 @@ public class CFGImporterFacade {
         do {
             repeat = false;
             for (OptimizationStrategyWithModifyFlag curOpt : optimizations) {
-                repeat = repeat || curOpt.transform(graph, usedAlgebra);
+                repeat = repeat || curOpt.transform(graph, usedAlgebra, listeners);
             }
             count++;
         } while (repeat);
@@ -96,14 +105,14 @@ public class CFGImporterFacade {
         //Use Maxima only once
         if (graph.globalSettings.isOptMaxima()) {
             OptMaxima optMaxima = new OptMaxima(graph.globalSettings.getMaximaCommand(), plugin);
-            optMaxima.transform(graph, usedAlgebra);
+            optMaxima.transform(graph, usedAlgebra, listeners);
 
             //repeat other optimizations
             count = 0;
             do {
                 repeat = false;
                 for (OptimizationStrategyWithModifyFlag curOpt : optimizations) {
-                    repeat = repeat || curOpt.transform(graph, usedAlgebra);
+                    repeat = repeat || curOpt.transform(graph, usedAlgebra, listeners);
                 }
                 count++;
             } while (repeat);

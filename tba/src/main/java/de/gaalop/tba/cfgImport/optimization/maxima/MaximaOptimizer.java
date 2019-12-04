@@ -1,6 +1,8 @@
 package de.gaalop.tba.cfgImport.optimization.maxima;
 
 import de.gaalop.OptimizationException;
+
+import de.gaalop.LoggingListenerGroup;
 import de.gaalop.api.cfg.AssignmentNodeCollector;
 import de.gaalop.cfg.AssignmentNode;
 import de.gaalop.cfg.ControlFlowGraph;
@@ -31,7 +33,7 @@ public class MaximaOptimizer {
      * @param graph The ControlFlowGraph to be transformed
      * @throws RecognitionException
      */
-    public void transformGraph(ControlFlowGraph graph) throws OptimizationException {
+    public void transformGraph(ControlFlowGraph graph, LoggingListenerGroup progressLoggers) throws OptimizationException {
         collector = new StoreResultNodesCollector();
         graph.accept(collector);
 
@@ -42,6 +44,7 @@ public class MaximaOptimizer {
         fillMaximaInput(graph, input);
         input.add("quit();"); // very important!
 
+        connection.setProgressListeners(progressLoggers);
         MaximaOutput output = connection.optimizeWithMaxima(input);
 
         //connect in and output

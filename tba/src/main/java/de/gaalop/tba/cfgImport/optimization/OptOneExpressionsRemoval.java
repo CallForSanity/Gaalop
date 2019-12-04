@@ -1,6 +1,8 @@
 package de.gaalop.tba.cfgImport.optimization;
 
 import de.gaalop.cfg.ControlFlowGraph;
+
+import de.gaalop.LoggingListenerGroup;
 import de.gaalop.cfg.SequentialNode;
 import de.gaalop.tba.UseAlgebra;
 
@@ -11,13 +13,14 @@ import de.gaalop.tba.UseAlgebra;
 public class OptOneExpressionsRemoval implements OptimizationStrategyWithModifyFlag {
 
     @Override
-    public boolean transform(ControlFlowGraph graph, UseAlgebra usedAlgebra) {
+    public boolean transform(ControlFlowGraph graph, UseAlgebra usedAlgebra, LoggingListenerGroup listeners) {
         OneExpressionRemoval oneExpressionRemoval = new OneExpressionRemoval(usedAlgebra);
         graph.accept(oneExpressionRemoval);
 
         // remove all nodes that are marked for removal
         for (SequentialNode node : oneExpressionRemoval.getNodeRemovals()) {
             graph.removeNode(node);
+            // ToDo: present progress to listeners
         }
 
         UpdateLocalVariableSet.updateVariableSets(graph);

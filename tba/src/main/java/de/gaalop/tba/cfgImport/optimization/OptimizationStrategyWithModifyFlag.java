@@ -1,8 +1,10 @@
 package de.gaalop.tba.cfgImport.optimization;
 
 import de.gaalop.OptimizationException;
+
 import de.gaalop.cfg.ControlFlowGraph;
 import de.gaalop.tba.UseAlgebra;
+import de.gaalop.LoggingListenerGroup;
 
 /**
  * This interface describes a strategy for source-to-source compilation which
@@ -21,5 +23,5 @@ public interface OptimizationStrategyWithModifyFlag {
      * @param usedAlgebra The underlying algebra
      * @return <value>true</value> if the graph has been modified, <value>false</value> otherwise
      */
-    boolean transform(ControlFlowGraph graph, UseAlgebra usedAlgebra) throws OptimizationException;
+    boolean transform(ControlFlowGraph graph, UseAlgebra usedAlgebra, LoggingListenerGroup listeners) throws OptimizationException;
 }

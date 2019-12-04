@@ -1,6 +1,7 @@
 package de.gaalop;
 
 import de.gaalop.cfg.ControlFlowGraph;
+import de.gaalop.LoggingListener;
 
 /**
  * This interface describes a strategy for soure-to-source compilation which
@@ -17,4 +18,5 @@ public interface OptimizationStrategy {
      */
     void transform(ControlFlowGraph graph) throws OptimizationException;
 
+    void addProgressListener(LoggingListener progressListener);
 }

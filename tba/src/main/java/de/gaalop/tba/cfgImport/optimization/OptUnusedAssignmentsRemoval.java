@@ -7,6 +7,7 @@ import de.gaalop.tba.UseAlgebra;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
+import de.gaalop.LoggingListenerGroup;
 
 /**
  * Facade class for the unused assignments optimization
@@ -14,8 +15,9 @@ import java.util.LinkedList;
  */
 public class OptUnusedAssignmentsRemoval implements OptimizationStrategyWithModifyFlag {
 
+	// ToDo: do we need to log progress?
     @Override
-    public boolean transform(ControlFlowGraph graph, UseAlgebra usedAlgebra) {
+    public boolean transform(ControlFlowGraph graph, UseAlgebra usedAlgebra, LoggingListenerGroup listeners) {
         // traverse the graph in the opposite direction
         NodeCollectorControlFlowVisitor v = new NodeCollectorControlFlowVisitor();
         graph.accept(v);
