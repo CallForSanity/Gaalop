@@ -21,7 +21,10 @@ public class JuliaVisitor implements ControlFlowVisitor, ExpressionVisitor {
     protected StringBuilder code;
     private ControlFlowGraph graph;
 
-    public JuliaVisitor() {
+    private boolean forGrassmann;
+
+    public JuliaVisitor(boolean forGrassmann) {
+        this.forGrassmann = forGrassmann;
         code = new StringBuilder();
     }
 
@@ -64,6 +67,24 @@ public class JuliaVisitor implements ControlFlowVisitor, ExpressionVisitor {
         }
     }
 
+    private Set<Variable> collectStoreNodeVariables(ControlFlowGraph graph) {
+        Set<Variable> storeNodeVariables = new HashSet<Variable>();
+        Node node = graph.getStartNode();
+        while (! (node instanceof EndNode)) {
+            if (node instanceof StoreResultNode) {
+                StoreResultNode storeNode = (StoreResultNode) node;
+                storeNodeVariables.add(storeNode.getValue());
+            }
+            if (node instanceof SequentialNode) {
+                SequentialNode seqNode = (SequentialNode) node;
+                node = seqNode.getSuccessor();
+            } else {
+                break;
+            }
+        }
+        return storeNodeVariables;
+    }
+
     @Override
     public void visit(StartNode node) {
         graph = node.getGraph();
@@ -72,24 +93,39 @@ public class JuliaVisitor implements ControlFlowVisitor, ExpressionVisitor {
         List<Variable> localVariables = sortVariables(graph.getLocalVariables());
         List<Variable> inputParameters = sortVariables(graph.getInputVariables());
 
+        if (forGrassmann) {
+            code.append("# using StaticArrays, Grassmann\n\n");
+        }
+
         code.append("function calculate(");
+
+        if (forGrassmann) {
+            code.append("V, ");
+        }
 
         for (Variable var : inputParameters) {
             code.append(var.getName());
             code.append(", ");
         }
 
-        for (Variable var : localVariables) {
-            code.append(var.getName());
-            code.append(", ");
-        }
-
-        // Remove the last ", " if we have any local variables.
-        if (graph.getLocalVariables().size() > 0) {
+        // Remove the last ", " if we have any input variables or the vector space variable.
+        if (graph.getInputVariables().size() > 0 || forGrassmann) {
             code.setLength(code.length() - 2);
         }
 
         code.append(")\n");
+
+        for (Variable var : localVariables) {
+            code.append('\t');
+            code.append(var.getName());
+            code.append(" = ");
+            if (forGrassmann) {
+                code.append("@MArray ");
+            }
+            code.append("zeros(");
+            code.append(bladeCount);
+            code.append(")\n");
+        }
 
         node.getSuccessor().accept(this);
     }
@@ -149,6 +185,22 @@ public class JuliaVisitor implements ControlFlowVisitor, ExpressionVisitor {
 
     @Override
     public void visit(EndNode node) {
+        List<Variable> resultsToStore = sortVariables(collectStoreNodeVariables(graph));
+        code.append('\t');
+        for (Variable var : resultsToStore) {
+            if (forGrassmann) {
+                code.append("MultiVector{V}(");
+            }
+            code.append(var.getName());
+            if (forGrassmann) {
+                code.append(')');
+            }
+            code.append(", ");
+        }
+        if (graph.getLocalVariables().size() > 0) {
+            code.setLength(code.length() - 2);
+            code.append('\n');
+        }
         code.append("end\n");
     }
 
