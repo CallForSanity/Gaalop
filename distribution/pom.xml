@@ -10,7 +10,7 @@
 
     <artifactId>distribution</artifactId>
     <packaging>pom</packaging>
-	<version>2.2.1</version>
+	<version>2.2.2</version>
 
     <name>Gaalop Distribution</name>
 
