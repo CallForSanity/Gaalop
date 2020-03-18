@@ -3,7 +3,7 @@ package de.gaalop.gui;
 import de.gaalop.gui.util.PluginConfigurator;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.log4j.*;
+import org.apache.logging.log4j.*;
 
 import com.sun.jna.Platform;
 
