@@ -103,7 +103,6 @@ public class AlStrategy implements AlgebraStrategy {
             for (Macro macro: macros.values()) 
                 graph.removeNode(macro);
             
-
             //replace Variables which are basevectors
             BaseVectorDefiner definer = new BaseVectorDefiner();
             definer.createFromAlBase(alFile.base);

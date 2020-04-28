@@ -91,7 +91,12 @@ public final class AssignmentNode extends SequentialNode {
     
     @Override
     public AssignmentNode copyElements() {
-    	AssignmentNode result = new AssignmentNode(getGraph(), variable.copy(), value.copy());
+    	return copyElements(getGraph());
+    }
+    
+    @Override
+    public AssignmentNode copyElements(ControlFlowGraph graph) {
+    	AssignmentNode result = new AssignmentNode(graph, variable.copy(), value.copy());
         result.setGAPP(copyGAPP());
         return result;
     }

@@ -79,8 +79,8 @@ public class LoopNode extends SequentialNode {
 	}
 
 	@Override
-	public LoopNode copyElements() {
-		LoopNode copy = new LoopNode(getGraph());
+	public LoopNode copyElements(ControlFlowGraph graph) {
+		LoopNode copy = new LoopNode(graph);
 		copy.setIterations(iterations);
 		copy.setCounterVariable(counter);
 		

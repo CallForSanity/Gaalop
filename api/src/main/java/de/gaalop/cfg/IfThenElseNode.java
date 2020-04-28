@@ -132,8 +132,8 @@ public class IfThenElseNode extends SequentialNode {
 	}
 	
 	@Override
-	public IfThenElseNode copyElements() {
-		IfThenElseNode copy = new IfThenElseNode(getGraph(), condition.copy());
+	public IfThenElseNode copyElements(ControlFlowGraph graph) {
+		IfThenElseNode copy = new IfThenElseNode(graph, condition.copy());
 		copy.elseif = elseif;
 		
 		SequentialNode newPositive = positive.copy();

@@ -197,7 +197,7 @@ public class Inliner extends EmptyControlFlowVisitor {
             }
 
             for (SequentialNode sNode: macro.getBody()) {
-                SequentialNode copySNode = sNode.copy();
+                SequentialNode copySNode = sNode.copy(graph);
                 //replace variables in copySNode
                 MacroVariablesCFGReplacer r = new MacroVariablesCFGReplacer(replaceMap);
                 copySNode.accept(r);

@@ -36,12 +36,12 @@ public class Macro extends SequentialNode {
 	}
 
 	@Override
-	public Macro copyElements() {
+	public Macro copyElements(ControlFlowGraph graph) {
 		List<SequentialNode> bodyCopy = new ArrayList<SequentialNode>();
 		for (SequentialNode node : body) {
 			bodyCopy.add(node.copy());
 		}
-		return new Macro(getGraph(), name, bodyCopy, returnValue.copy());
+		return new Macro(graph, name, bodyCopy, returnValue.copy());
 	}
 
 	@Override
