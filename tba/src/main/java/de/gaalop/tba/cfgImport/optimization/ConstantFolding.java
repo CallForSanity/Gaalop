@@ -277,6 +277,31 @@ public class ConstantFolding implements ExpressionVisitor, ControlFlowVisitor {
             FloatConstant operand = (FloatConstant) operandExpr;
             resultExpr = new FloatConstant(Math.abs(operand.getValue()));
             setGraphModified();
+        } else if ((node.getFunction() == MathFunction.ACOS)
+                && isConstant(operandExpr)) {
+            FloatConstant operand = (FloatConstant) operandExpr;
+            resultExpr = new FloatConstant(Math.acos(operand.getValue()));
+            setGraphModified();
+        } else if ((node.getFunction() == MathFunction.ASIN)
+                && isConstant(operandExpr)) {
+            FloatConstant operand = (FloatConstant) operandExpr;
+            resultExpr = new FloatConstant(Math.asin(operand.getValue()));
+            setGraphModified();
+        } else if ((node.getFunction() == MathFunction.SIN)
+                && isConstant(operandExpr)) {
+            FloatConstant operand = (FloatConstant) operandExpr;
+            resultExpr = new FloatConstant(Math.sin(operand.getValue()));
+            setGraphModified();
+        } else if ((node.getFunction() == MathFunction.COS)
+                && isConstant(operandExpr)) {
+            FloatConstant operand = (FloatConstant) operandExpr;
+            resultExpr = new FloatConstant(Math.cos(operand.getValue()));
+            setGraphModified();
+        } else if ((node.getFunction() == MathFunction.TAN)
+                && isConstant(operandExpr)) {
+            FloatConstant operand = (FloatConstant) operandExpr;
+            resultExpr = new FloatConstant(Math.tan(operand.getValue()));
+            setGraphModified();
         }
 
     }

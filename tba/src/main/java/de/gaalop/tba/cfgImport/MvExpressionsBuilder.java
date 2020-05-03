@@ -316,19 +316,27 @@ public class MvExpressionsBuilder extends EmptyControlFlowVisitor implements Exp
 
             switch (node.getFunction()) {
                 case ABS:
-                    //sqrt(abs(op*op))
-
                     MvExpressions op = expressions.get(node.getOperand());
-                    MvExpressions opR = getReverse(op);
-                    MvExpressions prod = calculateUsingMultTable(Products.GEO, op, opR);
 
-                    Expression i0 = prod.bladeExpressions[0];
+                    Expression sum = null;
+                    
+                    boolean first = true;
+                    for (Expression expr: op.bladeExpressions)
+                        if (expr != null) {
+                            Expression exprSquare = new Multiplication(expr, expr);
+                            if (first) {
+                                first = false;
+                                sum = exprSquare;
+                            } else {
+                                sum = new Addition(sum, exprSquare);
+                            }
+                        }
 
-                    if (i0 == null) {
-                        i0 = new FloatConstant(0);
+                    if (sum == null) {
+                        sum = new FloatConstant(0);
                     }
 
-                    result.bladeExpressions[0] = new MathFunctionCall(new MathFunctionCall(i0, MathFunction.ABS), MathFunction.SQRT);
+                    result.bladeExpressions[0] = new MathFunctionCall(sum, MathFunction.SQRT);
 
                     break;
                 case SQRT:
