@@ -67,7 +67,7 @@ rcPp(24) = sph1(3) * sph2(4) + (-(sph1(4) * sph2(3))) + (-((sph1(3) + (-sph2(3))
 rcPp(25) = sph1(3) * sph2(5) + (-(sph1(5) * sph2(3))) + (-((sph1(3) + (-sph2(3))) * sph3(5))) + (sph1(5) + (-sph2(5))) * sph3(3); // e2 ^ (einf ^ e0)
 rcPp(26) = sph1(4) * sph2(5) + (-(sph1(5) * sph2(4))) + (-((sph1(4) + (-sph2(4))) * sph3(5))) + (sph1(5) + (-sph2(5))) * sph3(4); // e3 ^ (einf ^ e0)
 ?rcPp;
-len(1) = sqrt(sqrt(abs(((-(rcPp(17) * rcPp(17))) + rcPp(18) * rcPp(19) + rcPp(19) * rcPp(18) + rcPp(20) * rcPp(21) + rcPp(21) * rcPp(20) + rcPp(22) * rcPp(22) + rcPp(23) * rcPp(24) + rcPp(24) * rcPp(23) + rcPp(25) * rcPp(25) + rcPp(26) * rcPp(26)) * ((-(rcPp(17) * rcPp(17))) + rcPp(18) * rcPp(19) + rcPp(19) * rcPp(18) + rcPp(20) * rcPp(21) + rcPp(21) * rcPp(20) + rcPp(22) * rcPp(22) + rcPp(23) * rcPp(24) + rcPp(24) * rcPp(23) + rcPp(25) * rcPp(25) + rcPp(26) * rcPp(26))))); // 1.0
+len(1) = sqrt(abs((-(rcPp(17) * rcPp(17))) + rcPp(18) * rcPp(19) + rcPp(19) * rcPp(18) + rcPp(20) * rcPp(21) + rcPp(21) * rcPp(20) + rcPp(22) * rcPp(22) + rcPp(23) * rcPp(24) + rcPp(24) * rcPp(23) + rcPp(25) * rcPp(25) + rcPp(26) * rcPp(26))); // 1.0
 ?len;
 rcPpDual(7) = (-rcPp(26)); // e1 ^ e2
 rcPpDual(8) = rcPp(25); // e1 ^ e3
