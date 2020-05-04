@@ -29,8 +29,11 @@ public class Main {
     private static final String DEBUG_LOG = "debug.log";
     private static final String LOG_PATTERN = "%d{ISO8601} %-5p [%t] %c: %m%n";
 	private MainForm mainForm;
+        
+    public static File lastDirectory;
 
     public static void main(String[] args) throws IOException {
+        Main.lastDirectory = new File("test.txt").getParentFile();
         if (args.length > 0 && args[0].equals("-debug")) {
             startLog();
         }

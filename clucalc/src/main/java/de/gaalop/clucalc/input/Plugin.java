@@ -39,12 +39,12 @@ public class Plugin extends Observable implements CodeParserPlugin {
 
     @Override
     public String getName() {
-        return "CluCalc";
+        return "GAALOPScript";
     }
 
     @Override
     public String getDescription() {
-        return "This plugin can parse files that contain a subset of CluScript V4.";
+        return "This plugin can parse GAALOPScript files.";
     }
 
     @Override
