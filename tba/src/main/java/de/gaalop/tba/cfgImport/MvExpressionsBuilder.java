@@ -339,7 +339,7 @@ public class MvExpressionsBuilder extends EmptyControlFlowVisitor implements Exp
                     
                     //Use the ordinary method result = sqrt(abs(op.(~op)))
                     MvExpressions opR = getReverse(op);
-                    MvExpressions prod = calculateUsingMultTable(Products.INNER, op, opR);
+                    MvExpressions prod = calculateUsingMultTable(Products.GEO, op, opR);
 
                     Expression i0 = prod.bladeExpressions[0];
 
