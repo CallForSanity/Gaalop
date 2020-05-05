@@ -35,7 +35,7 @@ public class Plugin implements CodeGeneratorPlugin {
                 log.error("Unable to read plugin icon " + url);
             }
         } else {
-            log.warn("Unable to find CluCalc plugin icon!");
+            log.warn("Unable to find GAALOPScript plugin icon!");
         }
     }
     
@@ -58,12 +58,12 @@ public class Plugin implements CodeGeneratorPlugin {
 
     @Override
     public String getName() {
-        return "CluCalc";
+        return "GAALOPScript";
     }
 
     @Override
     public String getDescription() {
-        return "This plugin generates CluCalc scripts.";
+        return "This plugin generates GAALOPScripts.";
     }
 
     @Override
