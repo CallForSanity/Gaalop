@@ -8,9 +8,13 @@ import java.nio.charset.StandardCharsets;
 import java.util.Set;
 import java.util.Collections;
 
-public enum JuliaCodeGenerator implements CodeGenerator {
+public class JuliaCodeGenerator implements CodeGenerator {
 
-    INSTANCE;
+    private boolean forGrassmannJL;
+
+    public JuliaCodeGenerator(boolean forGrassmannJL) {
+        this.forGrassmannJL = forGrassmannJL;
+    }
 
     @Override
     public Set<OutputFile> generate(ControlFlowGraph in) {
@@ -42,9 +46,8 @@ public enum JuliaCodeGenerator implements CodeGenerator {
      * @return
      */
     private String generateCode(ControlFlowGraph in) {
-        JuliaVisitor visitor = new JuliaVisitor();
+        JuliaVisitor visitor = new JuliaVisitor(forGrassmannJL);
         in.accept(visitor);
         return visitor.getCode();
     }
-
 }

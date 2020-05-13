@@ -43,8 +43,8 @@ public final class BlockEndNode extends SequentialNode {
 //    }
     
     @Override
-    public BlockEndNode copyElements() {
-    	return new BlockEndNode(getGraph(), null);
+    public BlockEndNode copyElements(ControlFlowGraph graph) {
+    	return new BlockEndNode(graph, null);
     }
     
     /**

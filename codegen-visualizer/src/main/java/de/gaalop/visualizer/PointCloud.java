@@ -2,7 +2,7 @@ package de.gaalop.visualizer;
 
 import java.awt.Color;
 import java.util.LinkedList;
-import org.jdom.Element;
+import org.jdom2.Element;
 
 /**
  * Implements a point cloud and common operations on point clouds like loading and saving from/to XML Element

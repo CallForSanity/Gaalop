@@ -158,10 +158,16 @@ public class ConstantFolding implements ExpressionVisitor, ControlFlowVisitor {
             FloatConstant rightc = (FloatConstant) right;
             resultExpr = new FloatConstant(leftc.getValue() / rightc.getValue());
             setGraphModified();
-        } else if (isConstant(node.getRight())) {
+        } else if (isConstant(right)) {
             /* division by 1 gets canceled */
-            FloatConstant floatConst = (FloatConstant) node.getRight();
+            FloatConstant floatConst = (FloatConstant) right;
             if (doubleEquals(floatConst.getValue(), 1.0f)) {
+                resultExpr = left;
+                setGraphModified();
+            }
+        } else if (isConstant(left)) {
+            FloatConstant floatConst = (FloatConstant) left;
+            if (doubleEquals(floatConst.getValue(), 0.0f)) {
                 resultExpr = left;
                 setGraphModified();
             }
@@ -270,6 +276,31 @@ public class ConstantFolding implements ExpressionVisitor, ControlFlowVisitor {
                 && isConstant(operandExpr)) {
             FloatConstant operand = (FloatConstant) operandExpr;
             resultExpr = new FloatConstant(Math.abs(operand.getValue()));
+            setGraphModified();
+        } else if ((node.getFunction() == MathFunction.ACOS)
+                && isConstant(operandExpr)) {
+            FloatConstant operand = (FloatConstant) operandExpr;
+            resultExpr = new FloatConstant(Math.acos(operand.getValue()));
+            setGraphModified();
+        } else if ((node.getFunction() == MathFunction.ASIN)
+                && isConstant(operandExpr)) {
+            FloatConstant operand = (FloatConstant) operandExpr;
+            resultExpr = new FloatConstant(Math.asin(operand.getValue()));
+            setGraphModified();
+        } else if ((node.getFunction() == MathFunction.SIN)
+                && isConstant(operandExpr)) {
+            FloatConstant operand = (FloatConstant) operandExpr;
+            resultExpr = new FloatConstant(Math.sin(operand.getValue()));
+            setGraphModified();
+        } else if ((node.getFunction() == MathFunction.COS)
+                && isConstant(operandExpr)) {
+            FloatConstant operand = (FloatConstant) operandExpr;
+            resultExpr = new FloatConstant(Math.cos(operand.getValue()));
+            setGraphModified();
+        } else if ((node.getFunction() == MathFunction.TAN)
+                && isConstant(operandExpr)) {
+            FloatConstant operand = (FloatConstant) operandExpr;
+            resultExpr = new FloatConstant(Math.tan(operand.getValue()));
             setGraphModified();
         }
 

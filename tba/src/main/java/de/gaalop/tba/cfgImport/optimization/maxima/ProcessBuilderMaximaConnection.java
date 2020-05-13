@@ -103,7 +103,7 @@ public class ProcessBuilderMaximaConnection implements MaximaConnection {
                 output.add(line);
             }
             
-            listeners.logNote("Done", 0);
+            listeners.logNote("Done", 0.0);
         	
 
             b.close();

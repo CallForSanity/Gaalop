@@ -85,7 +85,7 @@ expression
         | left=expression MINUS right=expression                #Subtraction
         | left=expression PLUS right=expression                 #Addition
         | MINUS LBRACKET operand=expression RBRACKET            #NegationBracket
-        | MINUS operand=primary_expression                      #Negation
+        | MINUS operand=expression                              #Negation
         | name=IDENTIFIER LBRACKET arg=expression RBRACKET      #Function
         | primary_expression                                    #Primary
         ;

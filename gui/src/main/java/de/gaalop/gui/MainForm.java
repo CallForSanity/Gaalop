@@ -77,14 +77,19 @@ public class MainForm {
         newFileButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JPopupMenu menu = new JPopupMenu("New File");
                 List<CodeParserPlugin> plugins = new ArrayList<CodeParserPlugin>();
                 plugins.addAll(Plugins.getCodeParserPlugins());
                 Collections.sort(plugins, new PluginSorter());
-                for (CodeParserPlugin plugin : plugins) {
-                    menu.add(new NewFileAction(plugin, tabbedPane));
+                if (plugins.size() == 1) {
+                    NewFileAction action = new NewFileAction(plugins.get(0), tabbedPane);
+                    action.actionPerformed(null);
+                } else {
+                    JPopupMenu menu = new JPopupMenu("New File");
+                    for (CodeParserPlugin plugin : plugins) {
+                        menu.add(new NewFileAction(plugin, tabbedPane));
+                    }
+                    menu.show(newFileButton, 0, newFileButton.getBounds().height);
                 }
-                menu.show(newFileButton, 0, newFileButton.getBounds().height);
             }
         });
 
@@ -96,6 +101,8 @@ public class MainForm {
                 if (component instanceof SourceFilePanel) {
                     SourceFilePanel sourceFile = (SourceFilePanel) component;
                     JFileChooser fileChooser = new JFileChooser();
+                    Main.lastDirectory = sourceFile.getFile().getParentFile();
+                    fileChooser.setCurrentDirectory(Main.lastDirectory);
                     fileChooser.setSelectedFile(sourceFile.getFile());
                     int result = fileChooser.showSaveDialog(contentPane);
                     if (result == JFileChooser.APPROVE_OPTION) {
@@ -130,14 +137,21 @@ public class MainForm {
         openFileButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JPopupMenu menu = new JPopupMenu("Open File");
+                
                 List<CodeParserPlugin> plugins = new ArrayList<CodeParserPlugin>();
                 plugins.addAll(Plugins.getCodeParserPlugins());
                 Collections.sort(plugins, new PluginSorter());
-                for (CodeParserPlugin plugin : plugins) {
-                    menu.add(new OpenFileAction(plugin, tabbedPane));
+                
+                if (plugins.size() == 1) {
+                    OpenFileAction action = new OpenFileAction(plugins.get(0), tabbedPane);
+                    action.actionPerformed(null);
+                } else {
+                    JPopupMenu menu = new JPopupMenu("Open File");
+                    for (CodeParserPlugin plugin : plugins) {
+                        menu.add(new OpenFileAction(plugin, tabbedPane));
+                    }
+                    menu.show(openFileButton, 0, openFileButton.getBounds().height);
                 }
-                menu.show(openFileButton, 0, openFileButton.getBounds().height);
             }
         });
 

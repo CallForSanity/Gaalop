@@ -316,9 +316,28 @@ public class MvExpressionsBuilder extends EmptyControlFlowVisitor implements Exp
 
             switch (node.getFunction()) {
                 case ABS:
-                    //sqrt(abs(op*op))
-
                     MvExpressions op = expressions.get(node.getOperand());
+                    
+                    // if the operand is only a scalar, then there is a shorthand: result = abs(operand);
+                    if (op.bladeExpressions[0] != null) {
+                        boolean allOthersAreNull = true;
+                        boolean firstElement = true;
+                        for (Expression expr: op.bladeExpressions) {
+                            if (firstElement) {
+                                firstElement = false;
+                            } else 
+                                if (expr != null)
+                                    allOthersAreNull = false;
+                        }
+                        
+                        if (allOthersAreNull) {
+                            // scalar not null, all other are null
+                            result.bladeExpressions[0] = new MathFunctionCall(op.bladeExpressions[0], MathFunction.ABS);
+                            break;
+                        }
+                    }
+                    
+                    //Use the ordinary method result = sqrt(abs(op.(~op)))
                     MvExpressions opR = getReverse(op);
                     MvExpressions prod = calculateUsingMultTable(Products.GEO, op, opR);
 

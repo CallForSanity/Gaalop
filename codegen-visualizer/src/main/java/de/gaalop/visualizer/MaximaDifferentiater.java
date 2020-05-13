@@ -1,5 +1,6 @@
 package de.gaalop.visualizer;
 
+import de.gaalop.LoggingListenerGroup;
 import de.gaalop.OptimizationException;
 import de.gaalop.cfg.AssignmentNode;
 import de.gaalop.dfg.Expression;
@@ -31,6 +32,7 @@ public class MaximaDifferentiater implements Differentiater {
     public LinkedList<AssignmentNode> differentiate(LinkedList<AssignmentNode> toDerive, MultivectorComponent variable) {
         try {
             MaximaConnection connection = new ProcessBuilderMaximaConnection(maximaCommand);
+            connection.setProgressListeners(new LoggingListenerGroup());
             
             MaximaInput input = new MaximaInput();
             input.add("display2d:false;"); // very important!

@@ -75,9 +75,19 @@ public abstract class SequentialNode extends Node {
 	/**
 	 * Must be implemented to copy properties of subtypes.
 	 * 
+         * @param graph use this graph
 	 * @return a copy of this node
 	 */
-	public abstract SequentialNode copyElements();
+	public abstract SequentialNode copyElements(ControlFlowGraph graph);
+        
+        /**
+	 * Must be implemented to copy properties of subtypes.
+	 * 
+	 * @return a copy of this node
+	 */
+	public SequentialNode copyElements() {
+            return copyElements(getGraph());
+        }
 
 	/**
 	 * Makes a deep copy of this node using the same predecessors and successor as the original. Depending on the
@@ -85,12 +95,22 @@ public abstract class SequentialNode extends Node {
 	 * 
 	 * @return a copy of this node with same predecessors and successors
 	 */
-	public SequentialNode copy() {
-		SequentialNode copy = copyElements();
+	public SequentialNode copy(ControlFlowGraph graph) {
+		SequentialNode copy = copyElements(graph);
 		copy.setSuccessor(successor);
 		for (Node p : getPredecessors()) {
 			copy.addPredecessor(p);
 		}
 		return copy;
+	}
+        
+        /**
+	 * Makes a deep copy of this node using the same predecessors and successor as the original. Depending on the
+	 * subtype, more properties are copied according to the {@link #copyElements()} method.
+	 * 
+	 * @return a copy of this node with same predecessors and successors
+	 */
+	public SequentialNode copy() {
+		return copy(getGraph());
 	}
 }

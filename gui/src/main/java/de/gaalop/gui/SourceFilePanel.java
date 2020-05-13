@@ -109,7 +109,7 @@ public class SourceFilePanel extends JPanel {
 	String savedContent;
 
 	public SourceFilePanel(CodeParserPlugin plugin) {
-		this(plugin, new File("New File"), "");
+		this(plugin, new File(Main.lastDirectory, "New File"), "");
                 
 		fileState = FileState.UNSAVED;
 	}

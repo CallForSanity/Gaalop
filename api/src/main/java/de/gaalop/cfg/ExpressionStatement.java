@@ -35,8 +35,8 @@ public class ExpressionStatement extends SequentialNode {
 	}
 	
 	@Override
-	public ExpressionStatement copyElements() {
-		return new ExpressionStatement(getGraph(), expression.copy());
+	public ExpressionStatement copyElements(ControlFlowGraph graph) {
+		return new ExpressionStatement(graph, expression.copy());
 	}
 	
 	@Override
