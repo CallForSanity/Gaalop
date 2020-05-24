@@ -81,7 +81,7 @@ public class SparseTestDummy extends TestDummy {
             tBATestCase.testOutputs(outputVarsValues);
             return true;
         } catch (CompilationException ex) {
-            Logger.getLogger(TestDummy.class.getName()).log(Level.INFO, null, ex);
+            Logger.getLogger(TestDummy.class.getName()).log(Level.INFO, ex.getMessage());
             return false;
         }
 
