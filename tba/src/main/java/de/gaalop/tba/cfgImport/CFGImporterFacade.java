@@ -29,9 +29,15 @@ public class CFGImporterFacade {
     private UseAlgebra usedAlgebra;
     private LoggingListenerGroup listeners;
 
+    // Use HashMap Implementation
+    // by Adrian Kiesthardt
+    private boolean useSparseExpressions;
+
     public CFGImporterFacade(Plugin plugin) {
         this.plugin = plugin;
         this.listeners = new LoggingListenerGroup();
+
+        this.useSparseExpressions = false;
 
         optimizations = new LinkedList<OptimizationStrategyWithModifyFlag>();
 
@@ -43,6 +49,10 @@ public class CFGImporterFacade {
         }
         if (plugin.isOptOneExpressionRemoval()) {
             optimizations.add(new OptOneExpressionsRemoval());
+        }
+
+        if(plugin.useSparseExpressions) {
+            this.useSparseExpressions = true;
         }
 
     }
@@ -90,6 +100,7 @@ public class CFGImporterFacade {
 
 
         CFGImporter builder = new CFGImporter(usedAlgebra, plugin.isScalarFunctions(), graph.getAlgebraDefinitionFile());
+        builder.useSparseExpressions = this.useSparseExpressions;
         graph.accept(builder);
 
         int count = 0;

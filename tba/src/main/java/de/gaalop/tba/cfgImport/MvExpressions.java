@@ -2,17 +2,24 @@ package de.gaalop.tba.cfgImport;
 
 import de.gaalop.dfg.Expression;
 
-/**
- * Stores blade expressions
- * @author Christian Steinmetz
- */
-public class MvExpressions {
+import java.util.Collection;
 
-    public String nameMv;
-    public Expression[] bladeExpressions;
+public interface MvExpressions {
 
-    public MvExpressions(String nameMv, int bladeCount) {
-        this.nameMv = nameMv;
-        bladeExpressions = new Expression[bladeCount];
-    }
+    /**
+     *
+     * @param bladeIndex bladeIndex of the expression to get
+     * @return expression with given index, if found. Null otherwise
+     */
+    public Expression getExpression(int bladeIndex);
+
+    /**
+     *
+     * @param bladeIndex The index to set the expression for
+     * @param expression expression to set
+     *
+     */
+    public void setExpression(int bladeIndex, Expression expression);
+
+    public Collection<Expression> getAllExpressions();
 }

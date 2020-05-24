@@ -2,6 +2,7 @@ package de.gaalop.tba.cfgImport;
 
 import de.gaalop.dfg.Expression;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,7 +14,7 @@ import java.util.Map;
  * May yield memory benefits if multivectors are sparse.
  *
  */
-public class SparseMvExpressions {
+public class SparseMvExpressions implements MvExpressions {
 
     public String nameMv;
     public int bladeCount;
@@ -43,6 +44,11 @@ public class SparseMvExpressions {
      */
     public void setExpression(int bladeIndex, Expression expression) {
         bladeExpressions.put(bladeIndex, expression);
+    }
+
+    @Override
+    public Collection<Expression> getAllExpressions() {
+        return this.bladeExpressions.values();
     }
 
 }
