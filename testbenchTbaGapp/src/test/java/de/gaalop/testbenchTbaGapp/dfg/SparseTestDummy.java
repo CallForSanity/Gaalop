@@ -33,7 +33,7 @@ public class SparseTestDummy extends TestDummy {
 
         // overridden behaviour begin
         de.gaalop.tba.Plugin optimizationStrategyPlugin = new de.gaalop.tba.Plugin();
-        //optimizationStrategyPlugin.useSparseExpressions = true;
+        optimizationStrategyPlugin.useSparseExpressions = true;
         OptimizationStrategy optimizationStrategy       = optimizationStrategyPlugin.createOptimizationStrategy();
         // overridden behaviour end
         // TODO: reduce redundant code, make methods non-static

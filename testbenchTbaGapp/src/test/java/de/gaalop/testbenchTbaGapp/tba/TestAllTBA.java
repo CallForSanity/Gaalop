@@ -39,6 +39,18 @@ public class TestAllTBA {
         );
     }
 
+    @Test
+    public void testSparseEqualLinePointDistance() {
+        assertEquals(
+                TestDummy.compile(new LinePointDistance(new Point3D(3, 4, 5),
+                        new Point3D(7, 8, 10),
+                        new Point3D(3, 8, 10))),
+                SparseTestDummy.compile(new LinePointDistance(new Point3D(3, 4, 5),
+                        new Point3D(7, 8, 10),
+                        new Point3D(3, 8, 10)))
+        );
+    }
+
 
 
 
