@@ -19,18 +19,17 @@ public class TestDummySuite {
         String message = "[Test] testing "+tBATestCase.getClass().getName();
 
         if(denseResult != sparseResult) {
-            message += "\n [ERROR]\t test with denseExpressions returned ";
+            message += "\n [WARNING]\t test with denseExpressions returned ";
             message += denseResult ? "TRUE" : "FALSE";
             message += " while sparseExpressions test returned ";
             message += sparseResult ? "TRUE" : "FALSE";
         }
 
         if(overallResult == false) {
-            message += "\n [ERROR]\t one test of this suite failed \n\t denseExpressions returned ";
+            message += "\n [WARNING]\t one test of this suite failed \n\t\t denseExpressions returned ";
             message += denseResult ? "TRUE" : "FALSE";
-            message += "\n\t sparseExpressions test returned ";
+            message += "\n\t\t sparseExpressions test returned ";
             message += sparseResult ? "TRUE" : "FALSE";
-            message += ")";
         } else {
             message += "\n SUCCESS both test succeeded with TRUE";
         }
