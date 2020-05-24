@@ -1,5 +1,7 @@
 package de.gaalop.testbenchTbaGapp.tba;
 
+import de.gaalop.testbenchTbaGapp.dfg.SparseMvExpressionsTest;
+import de.gaalop.testbenchTbaGapp.dfg.SparseTestDummy;
 import de.gaalop.testbenchTbaGapp.tba.common.LocalVarsTest;
 import de.gaalop.testbenchTbaGapp.tba.gps.Point3D;
 import de.gaalop.testbenchTbaGapp.tba.circle.CircleNoVarsTest;
@@ -21,15 +23,37 @@ import static org.junit.Assert.*;
  * @author Christian Steinmetz
  */
 public class TestAllTBA {
-    
+
+
+    @Test
+    public void testSparseMvExpressionsTestCompilation() {
+        assertTrue(
+                TestDummy.compile(new SparseMvExpressionsTest())
+        );
+    }
+
+    @Test
+    public void testSparseMvExpressionsScript() {
+        assertTrue(
+                SparseTestDummy.compile(new SparseMvExpressionsTest())
+        );
+    }
+
+
+
+
+
+
     @Test
     public void testMultipleLocalVars() {
         assertTrue(
-            TestDummy.compile(new FunctionTest())
-                );
-    } 
-    
-    
+                TestDummy.compile(new FunctionTest())
+        );
+    }
+
+
+
+
     @Test
     public void testNoLocalVars() {
         assertTrue(
