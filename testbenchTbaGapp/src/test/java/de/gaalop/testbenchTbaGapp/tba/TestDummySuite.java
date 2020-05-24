@@ -16,31 +16,27 @@ public class TestDummySuite {
         boolean sparseResult = SparseTestDummy.compile(tBATestCase);
         boolean overallResult = denseResult && sparseResult;
 
-        String message = "";
+        String message = "[Test] testing "+tBATestCase.getClass().getName();
 
         if(denseResult != sparseResult) {
-            message += "\n [ERROR] test with denseExpressions returned ";
+            message += "\n [ERROR]\t test with denseExpressions returned ";
             message += denseResult ? "TRUE" : "FALSE";
             message += " while sparseExpressions test returned ";
             message += sparseResult ? "TRUE" : "FALSE";
         }
 
         if(overallResult == false) {
-            message += "\n [ERROR] one test of this suite failed (denseExpressions returned ";
+            message += "\n [ERROR]\t one test of this suite failed \n\t denseExpressions returned ";
             message += denseResult ? "TRUE" : "FALSE";
-            message += ", sparseExpressions test returned ";
+            message += "\n\t sparseExpressions test returned ";
             message += sparseResult ? "TRUE" : "FALSE";
             message += ")";
         } else {
-            message += "\n [SUCCESS] both test of this suite succeeded (denseExpressions ";
-            message += denseResult ? "TRUE" : "FALSE";
-            message += ", sparseExpressions ";
-            message += sparseResult ? "TRUE" : "FALSE";
-            message += ")";
+            message += "\n SUCCESS both test succeeded with TRUE";
         }
         message += "\n";
 
-        Logger.getLogger(TestDummySuite.class.getName()).log(Level.INFO, message);
+        Logger.getLogger(TestDummy.class.getName()).log(Level.INFO, message);
         return overallResult;
 
     }
