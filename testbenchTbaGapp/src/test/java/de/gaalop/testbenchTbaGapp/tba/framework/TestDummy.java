@@ -17,11 +17,21 @@ import java.util.logging.Logger;
 /**
  *
  * @author Christian Steinmetz
+ *
+ *
+ *
  */
 public class TestDummy {
-    
+
+    /**
+     * Uses a TBATestCase to run Gaalop once
+     * @param tBATestCase the test case implementation to provide
+     * @return
+     */
     public static boolean compile(TBATestCase tBATestCase) {
-        
+
+        // Initialize Gaalop Plugins
+        // The CodeGenerator plugin is used for Black Box Testing
         CodeParser parser                                       = new de.gaalop.clucalc.input.Plugin().createCodeParser();
         GlobalSettingsStrategy globalSettingsStrategy           = new de.gaalop.globalSettings.Plugin().createGlobalSettingsStrategy();
         VisualCodeInserterStrategy visualCodeInserterStrategy   = new de.gaalop.visualCodeInserter.Plugin().createVisualCodeInserterStrategy();
@@ -42,6 +52,7 @@ public class TestDummy {
         
         Set<OutputFile> outputFiles;
         try {
+            // compile CLU script provided by test case
             outputFiles = facade.compile(new InputFile("TestCase", tBATestCase.getCLUScript()));
             
             
@@ -101,8 +112,14 @@ public class TestDummy {
         }
         
     }
-    
-    private static HashMap<Variable, Double> contentToMap(String content) {
+
+    /**
+     * This method converts a string in the form of "" to a Map
+     * TODO: extend comment
+     * @param content
+     * @return
+     */
+    protected static HashMap<Variable, Double> contentToMap(String content) {
         BufferedReader reader = new BufferedReader(new StringReader(content));
         HashMap<Variable, Double> variables = new HashMap<Variable, Double>();
         String line;

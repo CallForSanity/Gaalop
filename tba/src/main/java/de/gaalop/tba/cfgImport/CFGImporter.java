@@ -29,7 +29,7 @@ public class CFGImporter extends MvExpressionsBuilder {
         // At first, output all assignments
         for (int i = 0; i < bladeCount; i++) {
 
-            Expression e = mvExpr.bladeExpressions[i];
+            Expression e = mvExpr.getExpression(i);
 
             if (e != null) {
                 inserted = true;
