@@ -1,0 +1,5 @@
+1,e1,e2,e0p,e0m,e0c,einfp,einfm,einfc
+ep1=0.5*einfp-e0p,em1=0.5*einfp+e0p,ep2=0.5*einfm-e0m,em2=0.5*einfm+e0m,ep3=0.5*einfc-e0c,em3=0.5*einfc+e0c
+1,e1,e2,ep1,ep2,ep3,em1,em2,em3
+e1=1,e2=1,ep1=1,ep2=1,ep3=1,em1=-1,em2=-1,em3=-1
+e0p=0.5*em1-0.5*ep1,einfp=em1+ep1,e0m=0.5*em2-0.5*ep2,einfm=em2+ep2,e0c=0.5*em3-0.5*ep3,einfc=em3+ep3
