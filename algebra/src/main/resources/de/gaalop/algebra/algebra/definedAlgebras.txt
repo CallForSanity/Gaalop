@@ -6,4 +6,5 @@ st4d;space-time
 5d;conformal space
 6d;conic space
 8d;conformal conic
+dcga;double conformal
 9d;GA by Zamora
