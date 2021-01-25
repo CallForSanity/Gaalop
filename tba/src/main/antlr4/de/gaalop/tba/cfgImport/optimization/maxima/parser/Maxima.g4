@@ -25,10 +25,15 @@ FLOATING_POINT_LITERAL
     |   ('0'..'9')+ EXPONENT
     ;
 
+E_LITERAL
+        : 'E'
+        | 'e'
+        ;
+
 fragment
 EXPONENT 
-	: 'E' MINUS? ('0'..'9')+
-        | 'E' PLUS ('0'..'9')+
+	: E_LITERAL MINUS? ('0'..'9')+
+        | E_LITERAL PLUS ('0'..'9')+
 	;
 
 LBRACKET
