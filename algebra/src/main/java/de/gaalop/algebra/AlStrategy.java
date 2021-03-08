@@ -81,7 +81,6 @@ public class AlStrategy implements AlgebraStrategy {
             StringIntContainer dual = new StringIntContainer("Dual",1);
             if (macros.containsKey(dual)) {
                 macros.put(new StringIntContainer("*",1), macros.get(dual));
-                macros.remove(dual);
             }
 
             //load user macros
