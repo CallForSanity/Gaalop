@@ -6,6 +6,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.*;
 
 import com.sun.jna.Platform;
+import javax.swing.plaf.nimbus.NimbusLookAndFeel;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -53,7 +54,7 @@ public class Main {
     public void run() {
         try {
           if (Platform.isWindows()) {
-            UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
+            UIManager.setLookAndFeel(new NimbusLookAndFeel());
           }
         } catch (Exception e) {
             e.printStackTrace();
