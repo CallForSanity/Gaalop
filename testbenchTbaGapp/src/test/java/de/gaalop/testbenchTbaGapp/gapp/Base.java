@@ -1,9 +1,6 @@
 package de.gaalop.testbenchTbaGapp.gapp;
 
 import de.gaalop.AlgebraStrategy;
-import de.gaalop.CodeGenerator;
-import de.gaalop.CodeGeneratorException;
-import de.gaalop.CodeGeneratorPlugin;
 import de.gaalop.CodeParser;
 import de.gaalop.CodeParserException;
 import de.gaalop.InputFile;
@@ -50,9 +47,6 @@ public class Base {
         GAPPDecoratingMain importer = new GAPPDecoratingMain(gappPlugin);
         importer.decorateGraph(graph);
 
-        outputPlugin(new de.gaalop.codegenGapp.Plugin(), graph);
-        outputPlugin(new de.gaalop.clucalc.output.Plugin(), graph);
-
         //printStatistics(graph);
 
         //Evaluate!
@@ -62,23 +56,6 @@ public class Base {
         return executer;
     }
 
-    /**
-     * Writes the output of a plugin, called for a given graph, into files
-     * @param plugin The plugin to be used
-     * @param graph The underlying graph
-     */
-    public static void outputPlugin(CodeGeneratorPlugin plugin, ControlFlowGraph graph) {
-        CodeGenerator generator = plugin.createCodeGenerator();
-        Set<OutputFile> outputFiles;
-        try {
-            outputFiles = generator.generate(graph);
-            for (OutputFile outputFile : outputFiles) {
-                writeFile(outputFile);
-            }
-        } catch (CodeGeneratorException ex) {
-            Logger.getLogger(GAPPDecoratingMain.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
 
     /**
      * Writes an output file in the generatedTests directory
