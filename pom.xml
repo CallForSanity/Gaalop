@@ -74,7 +74,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-assembly-plugin</artifactId>
-                    <version>3.2.0</version>
+                    <version>3.3.0</version>
 <!--		            <inherited>true</inherited>-->
 <!--                    <configuration>-->
 <!--                        <descriptors>-->
@@ -93,7 +93,7 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.5</version>
+            <version>4.13.2</version>
             <scope>test</scope>
         </dependency>
 
