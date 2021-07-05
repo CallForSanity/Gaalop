@@ -20,7 +20,7 @@
 <entry key="de.gaalop.gaalet.output.Plugin.useNameTable">false</entry>
 <entry key="de.gaalop.visualizer.Plugin.lwJglNativePath">nativeLibraries</entry>
 <entry key="de.gaalop.visualizer.Plugin.zeroFindingMethod">Ray method</entry>
-<entry key="lastUsedAlgebra">5d</entry>
+<entry key="lastUsedAlgebra">cga</entry>
 <entry key="lastUsedAlgebraRessource">true</entry>
 <entry key="lastUsedVisualCodeInserter">de.gaalop.visualCodeInserter.Plugin</entry>
 <entry key="lastUsedOptimization">de.gaalop.tba.Plugin</entry>

@@ -39,7 +39,7 @@ public class TestDifferentiater {
         CodeParser cp = new de.gaalop.clucalc.input.Plugin().createCodeParser();
         ControlFlowGraph graph = cp.parseFile(new InputFile("test", cluscript));
         
-        graph.algebraName = "5d";
+        graph.algebraName = "cga";
         graph.asRessource = true;
         graph.algebraBaseDirectory = "";
         

@@ -18,9 +18,9 @@ public class InnerProductTest extends ProductTes {
     @BeforeClass
     public static void setUp() {
         test = new InnerProductTest();
-        test.useAlgebraClu = UseAlgebra.get5dConformalGATable();
+        test.useAlgebraClu = UseAlgebra.getCGATable();
         test.algebra = test.useAlgebraClu.getAlgebra();
-        inner = UseAlgebra.get5dConformalGALive().getTableInner();
+        inner = UseAlgebra.getCGALive().getTableInner();
     }
 
     @Test

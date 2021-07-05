@@ -43,7 +43,7 @@ public interface TBATestCase {
      *
      *
      *
-     * Empty Test: return some common geometric algebra name like "5d"
+     * Empty Test: return some common geometric algebra name like "cga"
      *
      * The algebra the test case is run in. Used to initialize Gaalop
      * @return

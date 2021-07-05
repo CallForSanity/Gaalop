@@ -2,6 +2,7 @@ package de.gaalop.gui;
 
 import de.gaalop.*;
 import de.gaalop.algebra.AlStrategy;
+import de.gaalop.algebra.DefinedAlgebra;
 import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
@@ -286,22 +287,10 @@ public class PanelPluginSelection extends JPanel {
         generator.setSelectedItem(search(codegenPlugins, lastUsedGenerator));
         
         DefaultComboBoxModel model = new DefaultComboBoxModel();
-        try {
-            InputStream inputStream = AlStrategy.class.getResourceAsStream("algebra/definedAlgebras.txt");
-            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-            
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(";");
-                model.addElement(new AlgebraChooserItem(true, parts[0], parts[0]+" - "+parts[1]));
-            }
-            
-            reader.close();
-        } catch (IOException ex) {
-            Logger.getLogger(PanelPluginSelection.class.getName()).log(Level.SEVERE, null, ex);
-        }
         
-        
+        for (DefinedAlgebra definedAlgebra: de.gaalop.algebra.Plugin.getDefinedAlgebras())
+            model.addElement(new AlgebraChooserItem(true, definedAlgebra.id, definedAlgebra.id+" - "+definedAlgebra.name));
+
         AlgebraStrategyPlugin algebra = Plugins.getAlgebraStrategyPlugins().iterator().next();
         
         try {
@@ -336,7 +325,7 @@ public class PanelPluginSelection extends JPanel {
         algebraChooser.setModel(model);
         
         if (lastUsedAlgebra == null)  {
-            lastUsedAlgebra = "5d";
+            lastUsedAlgebra = "cga";
             lastUsedAlgebraRessource = true;
         }
         

@@ -41,7 +41,7 @@ public class NoLocalVarsTest implements TBATestCase {
 
     @Override
     public String getAlgebraName() {
-        return "5d";
+        return "cga";
     }
     
 }

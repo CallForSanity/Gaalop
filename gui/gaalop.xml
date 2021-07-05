@@ -1,30 +1,33 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
 <comment>Gaalop Configuration File</comment>
-<entry key="de.gaalop.algebra.Plugin.usePrecalulatedTables">false</entry>
-<entry key="de.gaalop.algebra.Plugin.userMacroFilePath"/>
-<entry key="de.gaalop.maple.Plugin.gaalopPath">/</entry>
-<entry key="de.gaalop.maple.Plugin.mapleJavaPath">/net/bifur/gaalop/maple/java/</entry>
-<entry key="de.gaalop.algebra.Plugin.additionalBaseDirectory">C:\Gaalop HP\algebras</entry>
-<entry key="de.gaalop.tba.Plugin.optUnusedAssignments">true</entry>
-<entry key="de.gaalop.cpp.Plugin.standalone">true</entry>
-<entry key="lastUsedOptimization">de.gaalop.tba.Plugin</entry>
-<entry key="de.gaalop.gaalet.output.Plugin.useNameTable">false</entry>
-<entry key="lastUsedVisualCodeInserter">de.gaalop.visualCodeInserter.Plugin</entry>
-<entry key="de.gaalop.maple.Plugin.mapleBinaryPath">/net/bifur/gaalop/maple/bin.IBM_INTEL_LINUX/</entry>
-<entry key="de.gaalop.tba.Plugin.optConstantPropagation">true</entry>
 <entry key="lastUsedAlgebra">9d</entry>
-<entry key="lastUsedGenerator">de.gaalop.visualizer.Plugin</entry>
-<entry key="de.gaalop.clucalc.output.Plugin.suffix">_opt</entry>
-<entry key="de.gaalop.gappopencl.Plugin.standalone">true</entry>
 <entry key="de.gaalop.tba.Plugin.optOneExpressionRemoval">true</entry>
-<entry key="de.gaalop.visualizer.Plugin.lwJglNativePath">nativeLibraries</entry>
-<entry key="de.gaalop.maple.Plugin.constantFolding">false</entry>
-<entry key="de.gaalop.tba.Plugin.optInserting">true</entry>
-<entry key="de.gaalop.globalSettings.Plugin.optMaxima">true</entry>
-<entry key="de.gaalop.compressed.Plugin.standalone">false</entry>
+<entry key="lastUsedOptimization">de.gaalop.tba.Plugin</entry>
+<entry key="de.gaalop.julia.Plugin.forGrassmann">false</entry>
+<entry key="lastUsedVisualCodeInserter">de.gaalop.visualCodeInserter.Plugin</entry>
+<entry key="de.gaalop.algebra.Plugin.userMacroFilePath"></entry>
+<entry key="de.gaalop.algebra.Plugin.usePrecalulatedTables">false</entry>
+<entry key="de.gaalop.gaalet.output.Plugin.useNameTable">false</entry>
 <entry key="de.gaalop.globalSettings.Plugin.maximaCommand">C:\Program Files (x86)\Maxima\bin\maxima.bat</entry>
-<entry key="de.gaalop.maple.Plugin.useCodeSegmenter">false</entry>
+<entry key="de.gaalop.tba.Plugin.optConstantPropagation">true</entry>
+<entry key="lastUsedGenerator">de.gaalop.visualizer.Plugin</entry>
+<entry key="de.gaalop.globalSettings.Plugin.guiFontSize">12</entry>
+<entry key="de.gaalop.globalSettings.Plugin.editorFontSize">12</entry>
+<entry key="de.gaalop.gappopencl.Plugin.standalone">true</entry>
+<entry key="de.gaalop.tba.Plugin.optInserting">true</entry>
+<entry key="de.gaalop.visualizer.Plugin.lwJglNativePath">nativeLibraries</entry>
+<entry key="de.gaalop.tba.Plugin.numberOfRoundingDigits">6</entry>
+<entry key="de.gaalop.globalSettings.Plugin.optMaxima">true</entry>
+<entry key="de.gaalop.clucalc.output.Plugin.suffix">_opt</entry>
+<entry key="de.gaalop.cpp.Plugin.standalone">true</entry>
+<entry key="de.gaalop.compressed.Plugin.useDouble">false</entry>
+<entry key="de.gaalop.cpp.Plugin.useDouble">false</entry>
+<entry key="de.gaalop.gapp.Plugin.useScalarFunctions">true</entry>
+<entry key="de.gaalop.tba.Plugin.optUnusedAssignments">true</entry>
+<entry key="de.gaalop.algebra.Plugin.additionalBaseDirectory">C:\Gaalop HP\algebras</entry>
+<entry key="de.gaalop.tba.Plugin.doRoundingAfterOptimization">false</entry>
+<entry key="de.gaalop.compressed.Plugin.standalone">false</entry>
 <entry key="lastUsedAlgebraRessource">true</entry>
 </properties>

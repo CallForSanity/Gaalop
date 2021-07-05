@@ -62,6 +62,7 @@ is therefore probably unsound for the transcendental functions.
 - Antlr [BSD]
 - antlr-runtime [BSD]
 - args4j [MIT]
+- commons-io [Apache]
 - commons-beanutils [Apache]
 - jdom [Apache-style open source license]
 - jna [This library is licensed under the LGPL, version 2.1 or later, and (from version 4.0 onward) the Apache Software License, version 2.0. Commercial license arrangements are negotiable.]

@@ -18,9 +18,9 @@ public class OuterProductTest extends ProductTes {
     @BeforeClass
     public static void setUp() {
         test = new OuterProductTest();
-        test.useAlgebraClu = UseAlgebra.get5dConformalGATable();
+        test.useAlgebraClu = UseAlgebra.getCGATable();
         test.algebra = test.useAlgebraClu.getAlgebra();
-        outer = UseAlgebra.get5dConformalGALive().getTableOuter();
+        outer = UseAlgebra.getCGALive().getTableOuter();
     }
 
 

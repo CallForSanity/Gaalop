@@ -43,7 +43,7 @@ public class TestAssignmentCopy {
 
             @Override
             public String getAlgebraName() {
-                return "9d";
+                return "qga";
             }
         };
         

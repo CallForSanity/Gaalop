@@ -18,9 +18,9 @@ public class GeoProductTest extends ProductTes {
     @BeforeClass
     public static void setUp() {
         test = new InnerProductTest();
-        test.useAlgebraClu = UseAlgebra.get5dConformalGATable();
+        test.useAlgebraClu = UseAlgebra.getCGATable();
         test.algebra = test.useAlgebraClu.getAlgebra();
-        geo = UseAlgebra.get5dConformalGALive().getTableGeo();
+        geo = UseAlgebra.getCGALive().getTableGeo();
     }
 
 
