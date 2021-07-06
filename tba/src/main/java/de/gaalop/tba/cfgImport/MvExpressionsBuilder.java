@@ -533,12 +533,26 @@ public class MvExpressionsBuilder extends EmptyControlFlowVisitor implements Exp
         MvExpressions r = expressions.get(node.getRight());
 
         MvExpressions result = createNewMvExpressions();
+        
+        if (node.getType() == Relation.Type.COEFFICIENT) {
+            // Coefficient equals to the dot product of the two arrays l and r
+            Expression sum = null;
+            
+            for (int blade = 0; blade < bladeCount; blade++) 
+                if (l.getExpression(blade) != null && r.getExpression(blade) != null) {
+                    Expression summand = new Multiplication(l.getExpression(blade), r.getExpression(blade));
+                    sum = (sum == null) ? summand : new Addition(sum, summand);
+                }
+            
+            if (sum != null) 
+                result.setExpression(0, sum);
+            
+        } else {
+            result.setExpression(0, new Relation(l.getExpression(0), r.getExpression(0), node.getType()));
+            System.err.println("Warning: Relation is only implemented for scalars!");
+        }
 
-        result.setExpression(0, new Relation(l.getExpression(0), r.getExpression(0), node.getType()));
-
-        expressions.put(node, result);
-
-        System.err.println("Warning: Relation is only implemented for scalars!");
+        expressions.put(node, result);   
     }
 
     @Override

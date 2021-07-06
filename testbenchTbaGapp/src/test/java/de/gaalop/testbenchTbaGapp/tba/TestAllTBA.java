@@ -32,6 +32,12 @@ public class TestAllTBA {
         );
     }
 
+    @Test
+    public void testCoefficientTest() {
+        assertTrue(
+            TestDummySuite.compile(new CoefficientTest())
+        );
+    }
 
 
 

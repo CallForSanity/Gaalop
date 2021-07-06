@@ -6,6 +6,7 @@ import de.gaalop.dfg.FloatConstant;
 import de.gaalop.dfg.MacroCall;
 import de.gaalop.dfg.MathFunction;
 import de.gaalop.dfg.MathFunctionCall;
+import de.gaalop.dfg.Relation;
 import de.gaalop.dfg.Variable;
 import de.gaalop.visitors.DFGTraversalVisitor;
 import de.gaalop.visitors.ReplaceVisitor;
@@ -142,6 +143,12 @@ public class Inliner extends EmptyControlFlowVisitor {
         public void visit(MacroCall node) {
 
             String macroCallName = node.getName();
+            
+            //check if this macro call is a builtin function
+            if ("coefficient".equals(macroCallName.toLowerCase())) {
+                result = new Relation(node.getArguments().get(0), node.getArguments().get(1), Relation.Type.COEFFICIENT);
+                return;
+            }
 
             //check if this macro call is a MathFunction
             for (MathFunction f: MathFunction.values()) {

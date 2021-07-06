@@ -53,6 +53,14 @@ public final class Relation extends BinaryOperation {
         return " > ";
       }
     }
+    ,
+    
+    COEFFICIENT {
+        @Override
+      public String toString() {
+        return " | ";
+      }
+    }
 
   }
   
