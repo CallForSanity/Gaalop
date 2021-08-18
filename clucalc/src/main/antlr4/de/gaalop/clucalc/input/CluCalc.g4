@@ -244,6 +244,7 @@ expression_statement
   | QUESTIONMARK val=variable SEMICOLON                     #OutputVariableCaseQ
   | COLON val=assignment SEMICOLON                          #OutputAssignmentCaseC
   | COLON val=variable SEMICOLON                            #OutputVariableCaseC
+  | NOT val=assignment SEMICOLON                            #EvaluateAssignmentCase
   | val=assignment SEMICOLON                                #AssignmentCase
   ;
 

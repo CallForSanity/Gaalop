@@ -48,6 +48,12 @@ public class CluVisitor extends CluCalcBaseVisitor<Object> {
 	}*/
 
     @Override
+    public Object visitEvaluateAssignmentCase(CluCalcParser.EvaluateAssignmentCaseContext ctx) {
+        graph.getPragmaOnlyEvaluateVariables().add(((Variable) visit(ctx.val.var)).getName());
+        return visitAssignment(ctx.val);
+    }
+
+    @Override
     public Object visitScript(CluCalcParser.ScriptContext ctx) {
         graphBuilder = new GraphBuilder();
         graph = graphBuilder.getGraph();
