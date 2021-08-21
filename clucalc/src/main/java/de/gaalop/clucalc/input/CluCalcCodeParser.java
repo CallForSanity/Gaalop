@@ -53,6 +53,7 @@ public enum CluCalcCodeParser implements CodeParser {
         LinkedList<String> onlyEvaluates = new LinkedList<String>();
         LinkedList<String> outputs = new LinkedList<String>();
 
+        String syntax = null;
 
         String content = input.getContent();
         BufferedReader reader = new BufferedReader(new StringReader(content));
@@ -82,7 +83,9 @@ public enum CluCalcCodeParser implements CodeParser {
                             //IDENTIFIER+
                             String[] parts = rest.split(" ");
                             onlyEvaluates.addAll(Arrays.asList(parts));
-                        } else 
+                        } else if (whichPragma.equals("in2out")) {
+                            syntax = rest;
+                        } else
                             throw new CodeParserException(input, "pragma "+whichPragma+" is unknown.");
                     }
 
@@ -105,6 +108,22 @@ public enum CluCalcCodeParser implements CodeParser {
         visitor.visit(parser.script());
         
         ControlFlowGraph graph = visitor.graph;
+        if (syntax != null) {
+            //Parse syntax
+            String[] syntaxParts = syntax.split("->");
+            if (syntaxParts.length == 2) {
+                // Parse inputs
+                for (String var: syntaxParts[0].split(",")) 
+                    graph.syntaxInputs.add(var.trim());
+                // Parse outputs
+                for (String var: syntaxParts[1].split(",")) 
+                    graph.syntaxOutputs.add(var.trim());
+            } else {
+                throw new CodeParserException(input, "#pragma in2out must contain one arrow ->");
+            }
+            graph.syntaxSpecified = true;
+        } else 
+            graph.syntaxSpecified = false;
 
         for (String output: outputs)
             graph.getPragmaOutputVariables().add(output);

@@ -6,7 +6,7 @@ import java.io.DataOutputStream;
 
 /**
  * Defines an interface for input/output operations of product tables
- * @author christian
+ * @author Christian Steinmetz
  */
 public interface TableReaderIO {
 

@@ -15,7 +15,7 @@ import java.util.logging.Logger;
 
 /**
  * Stores the product tables in a human readable format
- * @author christian
+ * @author Christian Steinmetz
  */
 public class TableHumanReadable implements TableReaderIO {
 

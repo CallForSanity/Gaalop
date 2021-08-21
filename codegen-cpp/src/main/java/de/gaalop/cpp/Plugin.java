@@ -23,13 +23,12 @@ public class Plugin extends Observable implements CodeGeneratorPlugin {
     private Log log = LogFactory.getLog(Plugin.class);
 
     private Image icon;
-    
+
     @ConfigurationProperty(type = Type.BOOLEAN)
     public boolean standalone = true;
-    
+
     @ConfigurationProperty(type = Type.BOOLEAN)
     public boolean useDouble = false;
-    
 
     public Plugin() {
         URL url = getClass().getResource("icon.png");
@@ -43,24 +42,22 @@ public class Plugin extends Observable implements CodeGeneratorPlugin {
             log.warn("Unable to find plugin icon!");
         }
     }
-    
+
     public void setStandalone(boolean standalone) {
-		this.standalone = standalone;
-	}
-    
+        this.standalone = standalone;
+    }
+
     public boolean getStandalone() {
-		return standalone;
-	}
+        return standalone;
+    }
 
     public void setUseDouble(boolean useDouble) {
         this.useDouble = useDouble;
     }
 
     public boolean getUseDouble() {
-		return useDouble;
-	}
-    
-    
+        return useDouble;
+    }
 
     @Override
     public CodeGenerator createCodeGenerator() {
@@ -81,9 +78,9 @@ public class Plugin extends Observable implements CodeGeneratorPlugin {
     public Image getIcon() {
         return icon;
     }
-    
+
     void notifyError(Throwable error) {
-    	setChanged();
-    	notifyObservers(new Notifications.Error(error));
+        setChanged();
+        notifyObservers(new Notifications.Error(error));
     }
 }

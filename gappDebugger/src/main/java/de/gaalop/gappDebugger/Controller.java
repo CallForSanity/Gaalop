@@ -23,7 +23,7 @@ import javax.swing.table.DefaultTableModel;
 /**
  * The controller for the ui
  *
- * @author christian
+ * @author Christian Steinmetz
  */
 public class Controller {
 

@@ -6,7 +6,7 @@ import java.util.HashSet;
 
 /**
  * Defines an interface for something to render
- * @author christian
+ * @author Christian Steinmetz
  */
 public interface Rendering {
     

@@ -98,8 +98,7 @@ public class CfgVisitor implements ControlFlowVisitor {
 			code.append("; // ");
 
 			MultivectorComponent component = (MultivectorComponent) assignmentNode.getVariable();
-			code.append(assignmentNode.getGraph().getAlgebraDefinitionFile().getBladeString(component.getBladeIndex()));
-
+                        code.append(assignmentNode.getGraph().getBladeString(component));
 			code.append("\n");
 
 			// Record that this component has been set for the multivector

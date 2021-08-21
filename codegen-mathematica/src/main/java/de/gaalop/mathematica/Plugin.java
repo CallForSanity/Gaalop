@@ -31,7 +31,7 @@ public class Plugin implements CodeGeneratorPlugin {
 
     @Override
     public CodeGenerator createCodeGenerator() {
-        return MathematicaCodeGenerator.INSTANCE;
+        return new MathematicaCodeGenerator();
     }
 
     @Override

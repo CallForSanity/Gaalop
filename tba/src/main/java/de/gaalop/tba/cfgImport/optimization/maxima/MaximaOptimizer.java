@@ -46,6 +46,7 @@ public class MaximaOptimizer {
 
         connection.setProgressListeners(progressLoggers);
         MaximaOutput output = connection.optimizeWithMaxima(input);
+        if (output == null) return;
 
         //connect in and output
         LinkedList<String> connected = new LinkedList<String>();

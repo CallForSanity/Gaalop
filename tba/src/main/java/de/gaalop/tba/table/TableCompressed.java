@@ -15,7 +15,7 @@ import java.util.logging.Logger;
 
 /**
  * Stores the product tables in a compressed format
- * @author christian
+ * @author Christian Steinmetz
  */
 public class TableCompressed implements TableReaderIO {
 

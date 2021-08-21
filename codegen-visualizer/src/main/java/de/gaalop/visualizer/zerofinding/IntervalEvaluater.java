@@ -8,7 +8,7 @@ import java.util.HashMap;
 
 /**
  * Evaluates the control flow graph with interval arithmetic
- * @author christian
+ * @author Christian Steinmetz
  */
 public class IntervalEvaluater implements ExpressionVisitor {
 

@@ -18,7 +18,7 @@ import java.util.logging.Logger;
 
 /**
  * Implements a differentiater that uses maxima
- * @author christian
+ * @author Christian Steinmetz
  */
 public class MaximaDifferentiater implements Differentiater {
     

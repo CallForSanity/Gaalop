@@ -2,21 +2,20 @@ package de.gaalop.algebra;
 
 import de.gaalop.AlgebraStrategy;
 import de.gaalop.CodeParserException;
-import de.gaalop.CompilationException;
 import de.gaalop.InputFile;
 import de.gaalop.OptimizationException;
 import de.gaalop.cfg.AlgebraDefinitionFile;
 import de.gaalop.cfg.ControlFlowGraph;
-import de.gaalop.cfg.FindStoreOutputNodes;
 import de.gaalop.cfg.Macro;
 import de.gaalop.dfg.Expression;
 import de.gaalop.dfg.OuterProduct;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.StringReader;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -40,13 +39,11 @@ public class AlStrategy implements AlgebraStrategy {
     @Override
     public void transform(ControlFlowGraph graph) throws OptimizationException {
         //Check if graph contains at least one StoreResultNode
-        FindStoreOutputNodes outputNodes = new FindStoreOutputNodes();
-        graph.accept(outputNodes);
-        if (outputNodes.getNodes().isEmpty()) {
+        if (graph.getOutputs().isEmpty() && plugin.atLeastOneQuestionSignedRequired) {
             throw new OptimizationException("There are no lines marked for optimization ('?')", graph);
         }
 
-        InputStream inputStream = null;
+        Reader reader = null;
         try {
             //load algebra
             AlgebraDefinitionFile alFile = graph.getAlgebraDefinitionFile();
@@ -61,21 +58,25 @@ public class AlStrategy implements AlgebraStrategy {
             
             alFile.setProductsFilePath(baseDir+"products.csv");
 
-            inputStream = (graph.asRessource)
-                    ? getClass().getResourceAsStream(baseDir+"definition.csv")
-                    : new FileInputStream(new File(baseDir+"definition.csv"));
-            alFile.loadFromFile(inputStream);
+            if (plugin.algebraDefinitionString == null) {
+                alFile.setProductsFilePath(baseDir+"products.csv");
+                reader = (graph.asRessource)
+                        ? new InputStreamReader(getClass().getResourceAsStream(baseDir+"definition.csv"))
+                        : new FileReader(new File(baseDir+"definition.csv"));
+            } else 
+                reader = new StringReader(plugin.algebraDefinitionString);
+            alFile.loadFromFile(reader);
             
             createBlades(alFile);
 
             //replace all functions / macros
 
-            inputStream = (graph.asRessource)
-                    ? getClass().getResourceAsStream(baseDir+"macros.clu")
-                    : new FileInputStream(new File(baseDir+"macros.clu"));
+            reader = (graph.asRessource)
+                    ? new InputStreamReader(getClass().getResourceAsStream(baseDir+"macros.clu"))
+                    : new FileReader(new File(baseDir+"macros.clu"));
             
-            ControlFlowGraph macrosGraph = new de.gaalop.clucalc.input.Plugin().createCodeParser().parseFile(inputStreamToInputFile(inputStream, "macros", null));
-            inputStream.close();
+            ControlFlowGraph macrosGraph = new de.gaalop.clucalc.input.Plugin().createCodeParser().parseFile(inputStreamToInputFile(reader, "macros", null));
+            reader.close();
             HashMap<StringIntContainer, Macro> macros = MacrosVisitor.getAllMacros(macrosGraph);
             MacrosVisitor.getAllMacros(graph, macros);
             StringIntContainer dual = new StringIntContainer("Dual",1);
@@ -87,9 +88,9 @@ public class AlStrategy implements AlgebraStrategy {
             if (!plugin.getUserMacroFilePath().trim().equals("")) {
                 File f = new File(plugin.userMacroFilePath);
                 if (f.exists()) {
-                     inputStream = new FileInputStream(f);
-                     ControlFlowGraph userMacrosGraph = new de.gaalop.clucalc.input.Plugin().createCodeParser().parseFile(inputStreamToInputFile(inputStream, "userMacros", f.getParentFile()));
-                     inputStream.close();
+                     reader = new FileReader(f);
+                     ControlFlowGraph userMacrosGraph = new de.gaalop.clucalc.input.Plugin().createCodeParser().parseFile(inputStreamToInputFile(reader, "userMacros", f.getParentFile()));
+                     reader.close();
                      MacrosVisitor.getAllMacros(userMacrosGraph, macros);
                 } else
                     System.err.println("Algebra Plugin: User Macro File Path does not exist!");
@@ -136,7 +137,7 @@ public class AlStrategy implements AlgebraStrategy {
             Logger.getLogger(AlStrategy.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
-                inputStream.close();
+                reader.close();
             } catch (IOException ex) {
                 Logger.getLogger(AlStrategy.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -163,42 +164,42 @@ public class AlStrategy implements AlgebraStrategy {
     }
 
     /**
-     * Puts an inputStream into an InputFile
-     * @param inputStream The inputStream
+     * Puts a reated into an InputFile
+     * @param reader The reader
      * @param cluName The cluName to use
      * @param parent The parent file object
      * @return The InputFile
      */
-    private InputFile inputStreamToInputFile(InputStream inputStream, String cluName, File parent) {
+    private InputFile inputStreamToInputFile(Reader reader, String cluName, File parent) {
         StringBuilder sb = new StringBuilder();
-        readIn(inputStream, sb, parent);
+        readIn(reader, sb, parent);
         sb.append("\n");
         return new InputFile(cluName, sb.toString());
     }
     
     /**
-     * Reads an inputStream in a stringbuilder object
-     * @param inputStream The inputStream
+     * Reads a reader in a stringbuilder object
+     * @param reader The reader
      * @param sb The stringbuilder object to use
      * @param parent The parent file object
      */
-    private void readIn(InputStream inputStream, StringBuilder sb, File parent) {
+    private void readIn(Reader reader, StringBuilder sb, File parent) {
         try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+            BufferedReader bufReader = new BufferedReader(reader);
             String line;
-            while ((line = reader.readLine()) != null) {
+            while ((line = bufReader.readLine()) != null) {
                 if (line.trim().startsWith("#include")) {
                     line = line.trim();
                     String filename = line.substring(line.indexOf(" ")+1).trim();
                     File newParent = new File(parent, filename);
-                    FileInputStream inp = new FileInputStream(newParent);
-                    readIn(inp, sb, newParent);
-                    inp.close();
+                    FileReader rea = new FileReader(newParent);
+                    readIn(rea, sb, newParent);
+                    rea.close();
                 } else 
                     sb.append(line);
                 sb.append("\n");
             }
-            reader.close();
+            bufReader.close();
         } catch (IOException ex) {
             Logger.getLogger(AlStrategy.class.getName()).log(Level.SEVERE, null, ex);
         }

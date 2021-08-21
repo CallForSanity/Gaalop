@@ -11,7 +11,7 @@ import javax.swing.JOptionPane;
 
 /**
  *
- * @author christian
+ * @author Christian Steinmetz
  */
 public class UI extends javax.swing.JFrame {
 

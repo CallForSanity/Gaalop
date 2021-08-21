@@ -41,7 +41,6 @@ public class BladeArrayRoutines {
     
     /**
      * Creates an array of blades from a base
-     * @param base The base
      * @return The array of blades
      */
     public TCBlade[] createBlades() {

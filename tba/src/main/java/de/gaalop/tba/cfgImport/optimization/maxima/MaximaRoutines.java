@@ -21,7 +21,7 @@ import org.antlr.v4.runtime.CommonTokenStream;
 
 /**
  *
- * @author christian
+ * @author Christian Steinmetz
  */
 public class MaximaRoutines {
     

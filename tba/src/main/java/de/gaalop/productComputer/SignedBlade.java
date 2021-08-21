@@ -2,7 +2,7 @@ package de.gaalop.productComputer;
 
 /**
  * Represents a weighted blade
- * @author christian
+ * @author Christian Steinmetz
  */
 public class SignedBlade extends Blade {
 

@@ -1,5 +1,12 @@
 package de.gaalop.testbenchTbaGapp.tba;
 
+import de.gaalop.AlgebraStrategy;
+import de.gaalop.CodeGenerator;
+import de.gaalop.CodeParser;
+import de.gaalop.CompilerFacade;
+import de.gaalop.GlobalSettingsStrategy;
+import de.gaalop.OptimizationStrategy;
+import de.gaalop.VisualCodeInserterStrategy;
 import de.gaalop.testbenchTbaGapp.dfg.SparseMvExpressionsTest;
 import de.gaalop.testbenchTbaGapp.dfg.SparseTestDummy;
 import de.gaalop.testbenchTbaGapp.tba.common.LocalVarsTest;
@@ -8,6 +15,8 @@ import de.gaalop.testbenchTbaGapp.tba.circle.CircleNoVarsTest;
 import de.gaalop.testbenchTbaGapp.tba.circle.CircleOneVarTest;
 import de.gaalop.testbenchTbaGapp.tba.circle.CircleOnlyVarsTest;
 import de.gaalop.testbenchTbaGapp.tba.common.*;
+import de.gaalop.testbenchTbaGapp.tba.framework.TBATestCase;
+import de.gaalop.testbenchTbaGapp.tba.framework.TBATestCodeGeneratorPlugin;
 import de.gaalop.testbenchTbaGapp.tba.framework.TestDummy;
 import de.gaalop.testbenchTbaGapp.tba.gps.GPSNoVarsTest;
 import de.gaalop.testbenchTbaGapp.tba.gps.GPSOnlyVarsTest;
@@ -23,8 +32,7 @@ import static org.junit.Assert.*;
  * @author Christian Steinmetz
  */
 public class TestAllTBA {
-
-
+    
     @Test
     public void testSparseMvExpressionsDummyTest() {
         assertTrue(
@@ -40,114 +48,109 @@ public class TestAllTBA {
     }
 
 
-
-
-
     @Test
     public void testMultipleLocalVars() {
         assertTrue(
-            TestDummySuite.compile(new FunctionTest())
-        );
-    }
-
-
-
-
+            TestDummy.compile(new FunctionTest())
+                );
+    } 
+    
+    
     @Test
     public void testNoLocalVars() {
         assertTrue(
-            TestDummySuite.compile(new NoLocalVarsTest())
+            TestDummy.compile(new NoLocalVarsTest())
                 );
     } 
     
     @Test
     public void testLocalVars() {
         assertTrue(
-            TestDummySuite.compile(new LocalVarsTest())
+            TestDummy.compile(new LocalVarsTest())
                 );
     } 
 
     @Test
     public void testCircleNoVars() {
         assertTrue(
-            TestDummySuite.compile(new CircleNoVarsTest(new Point(5, 2), new Point(3, 9), new Point(6, 4)))
+            TestDummy.compile(new CircleNoVarsTest(new Point(5, 2), new Point(3, 9), new Point(6, 4)))
                 );
     } 
     
     @Test
     public void testCircleOnlyVars() {
         assertTrue(
-            TestDummySuite.compile(new CircleOnlyVarsTest(new Point(5, 2), new Point(3, 9), new Point(6, 4)))
+            TestDummy.compile(new CircleOnlyVarsTest(new Point(5, 2), new Point(3, 9), new Point(6, 4)))
                 );
     } 
     
     @Test
     public void testCircleOneVar() {
         assertTrue(
-            TestDummySuite.compile(new CircleOneVarTest(new Point(5, 2), new Point(3, 9), new Point(6, 4)))
+            TestDummy.compile(new CircleOneVarTest(new Point(5, 2), new Point(3, 9), new Point(6, 4)))
                 );
     } 
     
     @Test
     public void testGPSNoVars() {
         assertTrue(
-            TestDummySuite.compile(new GPSNoVarsTest(new Point3D(1, 1, 1), new Point3D(0, 0, 1), new Point3D(0, 1, 0), 0.6f, 0.7f, 0.5f))
+            TestDummy.compile(new GPSNoVarsTest(new Point3D(1, 1, 1), new Point3D(0, 0, 1), new Point3D(0, 1, 0), 0.6f, 0.7f, 0.5f))
                 );
     } 
     
     @Test
     public void testGPSOnlyVars() {
         assertTrue(
-            TestDummySuite.compile(new GPSOnlyVarsTest(new Point3D(1, 1, 1), new Point3D(0, 0, 1), new Point3D(0, 1, 0), 0.6f, 0.7f, 0.9f))
+            TestDummy.compile(new GPSOnlyVarsTest(new Point3D(1, 1, 1), new Point3D(0, 0, 1), new Point3D(0, 1, 0), 0.6f, 0.7f, 0.9f))
                 );
     } 
     
     @Test
     public void testOneMacro() {
         assertTrue(
-            TestDummySuite.compile(new OneMacroTest())
+            TestDummy.compile(new OneMacroTest())
                 );
     } 
     
     @Test
     public void testTwoMacros() {
         assertTrue(
-            TestDummySuite.compile(new TwoMacrosTest())
+            TestDummy.compile(new TwoMacrosTest())
                 );
     } 
     
     @Test
     public void testTrigonometric() {
         assertTrue(
-            TestDummySuite.compile(new TrigonometricFunctions())
+            TestDummy.compile(new TrigonometricFunctions())
                 );
     } 
     
     @Test
     public void testOutputCount() {
         assertTrue(
-            TestDummySuite.compile(new OutputCountTest())
+            TestDummy.compile(new OutputCountTest())
                 );
     } 
     
     @Test
     public void testUnused() {
         assertTrue(
-            TestDummySuite.compile(new UnusedTest())
+            TestDummy.compile(new UnusedTest())
                 );
     }
     
     @Test
     public void testTrafoTst() {
         assertTrue(
-            TestDummySuite.compile(new TrafoTest())
+            TestDummy.compile(new TrafoTest())
                 );
     }
     
     @Test
     public void testLinePointDistance() {
         assertTrue(
-            TestDummySuite.compile(new LinePointDistance(new Point3D(3, 4, 5),
+            TestDummy.compile(new LinePointDistance(new Point3D(3, 4, 5),
                 new Point3D(7, 8, 10),
                 new Point3D(3, 8, 10)))
                 );
@@ -156,21 +159,21 @@ public class TestAllTBA {
     @Test
     public void testNegativeMultipleAssignements() {
         assertFalse(
-                TestDummySuite.compile(new MultipleAssignmentsTest())
+            TestDummy.compile(new MultipleAssignmentsTest())
                 );
     } 
     
     @Test
     public void testNegativeControlFlow() {
         assertFalse(
-            TestDummySuite.compile(new ControlFlowTest())
+            TestDummy.compile(new ControlFlowTest())
                 );
     } 
     
     @Test
     public void operatorPriority() {
         assertTrue(
-            TestDummySuite.compile(new OperatorPriorityTest())
+            TestDummy.compile(new OperatorPriorityTest())
                 );
     }
     

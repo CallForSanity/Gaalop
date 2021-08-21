@@ -1,5 +1,6 @@
 package de.gaalop.compressed;
 
+import de.gaalop.StringList;
 import de.gaalop.cfg.*;
 import de.gaalop.dfg.*;
 import de.gaalop.visitors.DFGTraversalVisitor;
@@ -24,60 +25,50 @@ public class CompressedVisitor extends de.gaalop.cpp.CppVisitor {
     public void visit(StartNode node) {
         graph = node.getGraph();
 
-        List<Variable> localVariables = sortVariables(graph.getLocalVariables());
         if (standalone) {
             code.append("void calculate(");
 
+            StringList list = new StringList();
             // Input Parameters
-            List<Variable> inputParameters = sortVariables(graph.getInputVariables());
-            for (Variable var : inputParameters) {
-                code.append(variableType).append(" "); // The assumption here is that they all are normal scalars
-                code.append(var.getName());
-                code.append(", ");
+            for (String var : graph.getInputs()) {
+                list.add(variableType+" "+var);
             }
 
-            for (Variable var : localVariables) {
-                code.append(variableType).append(" ");
-                code.append(var.getName());
-                if(mvSizes.get(var.getName()) > 1)
-                    code.append("[" + mvSizes.get(var.getName()).toString() + "]");
-                code.append(";\n");
+            for (String var : graph.getLocals()) {
+                String add = variableType+" "+var;
+                if(mvSizes.get(var) > 1)
+                    add += "[" + mvSizes.get(var).toString() + "]";
+                list.add(add);
             }
 
-            if (graph.getLocalVariables().size() > 0) {
-                code.setLength(code.length() - 2);
-            }
+            code.append(list.join());
 
             code.append(") {\n");
             indentation++;
         } else {
-            for (Variable var : localVariables) {
+            for (String var : graph.getLocals()) {
                 // GPC definition
                 if (gpcMetaInfo) {
                     appendIndentation();
                     code.append("//#pragma gpc multivector ");
-                    code.append(var.getName());
+                    code.append(var);
                     code.append('\n');
                 }
                 
                 // standard definition
                 appendIndentation();
                 code.append(variableType).append(" ");
-                code.append(var.getName());
-                if(mvSizes.get(var.getName()) > 1)
-                    code.append("[" + mvSizes.get(var.getName()).toString() + "]");
+                code.append(var);
+                if(mvSizes.get(var) > 1)
+                    code.append("[" + mvSizes.get(var).toString() + "]");
                 code.append(";\n");
             }
         }
 
-        if (graph.getScalarVariables().size() > 0) {
+        if (!graph.getScalars().isEmpty()) {
             appendIndentation();
             code.append(variableType).append(" ");
-            for (Variable tmp : graph.getScalarVariables()) {
-                code.append(tmp.getName());
-                code.append(", ");
-            }
-            code.delete(code.length() - 2, code.length());
+            code.append(graph.getScalars().join());
             code.append(";\n");
         }
 
@@ -117,7 +108,7 @@ public class CompressedVisitor extends de.gaalop.cpp.CppVisitor {
         // this method is for reading multivector components
         
         // get blade pos in array
-        final String name = component.getName().replace(suffix, "");
+        final String name = component.getName();
         final int pos = mvBladeMap.get(name).get(component.getBladeIndex());
         
         // standard definition
@@ -134,7 +125,7 @@ public class CompressedVisitor extends de.gaalop.cpp.CppVisitor {
             // this method is for writing to multivector components
             
             // get blade pos in array
-            final String name = component.getName().replace(suffix, "");
+            final String name = component.getName();
             Map<Integer,Integer> bladeMap = mvBladeMap.get(component.getName());
             if(bladeMap == null)
                 bladeMap = new HashMap<Integer, Integer>();

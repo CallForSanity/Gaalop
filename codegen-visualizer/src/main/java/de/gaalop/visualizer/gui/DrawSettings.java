@@ -10,7 +10,7 @@ import javax.swing.DefaultComboBoxModel;
 
 /**
  *
- * @author christian
+ * @author Christian Steinmetz
  */
 public class DrawSettings extends javax.swing.JFrame {
 

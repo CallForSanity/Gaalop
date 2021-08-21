@@ -34,7 +34,7 @@ public class Plugin implements CodeGeneratorPlugin {
 
     @Override
     public CodeGenerator createCodeGenerator() {
-        return DotCodeGenerator.INSTANCE;
+        return new DotCodeGenerator();
     }
 
     @Override

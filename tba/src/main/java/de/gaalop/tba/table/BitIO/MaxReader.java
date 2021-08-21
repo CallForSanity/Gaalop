@@ -5,7 +5,7 @@ import java.io.IOException;
 /**
  * Implements a bit reader which reads no padding bits,
  * except at the end of the file.
- * @author christian
+ * @author Christian Steinmetz
  */
 public class MaxReader extends AbsBitReader {
 

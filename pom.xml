@@ -44,6 +44,8 @@
         <module>gaalet</module>
         <module>codegen-vis2d</module>
         <module>gappDebugger</module>
+        <module>codegen-matlab</module>
+        
 	<!-- interface -->
         <module>starter</module>
         <module>setup</module>

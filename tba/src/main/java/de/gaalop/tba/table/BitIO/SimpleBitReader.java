@@ -6,7 +6,7 @@ import java.io.IOException;
  * Implements a bit reader, that reads all values as a datatype,
  * which has at least the number of bits to be used.
  * The data types are java (unsigned) byte, char and int
- * @author christian
+ * @author Christian Steinmetz
  */
 public class SimpleBitReader extends AbsBitReader {
 

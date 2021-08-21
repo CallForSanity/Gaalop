@@ -31,6 +31,7 @@
 		<include>de.gaalop:codegen-rust</include>
 		<include>de.gaalop:codegen-mathematica</include>
 		<include>de.gaalop:codegen-julia</include>
+                <include>de.gaalop:codegen-matlab</include>
                 <include>de.gaalop:gaalet</include>
 
                 <include>de.gaalop:cli</include>
