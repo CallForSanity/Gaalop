@@ -9,7 +9,11 @@ import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
 
 import java.io.*;
+import java.lang.reflect.Field;
+import java.util.LinkedList;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Main class of the Gaalop command line interface. Arguments are parsed using the args4j plugin.
@@ -64,7 +68,11 @@ public class Main {
   @Option(name = "--gapp", aliases = { "-p" }, required = false, usage = "Use the GAPP Optimization Plugin. Default: Disabled.")
   private boolean useGAPP = false;
   
-
+  @Option(name = "--specific",  aliases = { "--spec" }, required = false, usage = "Sets specific configuration properties for plugins by a comma separated list. Syntax {Plugin1-Classname}:{Plugin1-Optionname}={Plugin1-Value},{Plugin2-Classname}:{Plugin2-Optionname}={Plugin2-Value}, ... . Defaults to ''.")
+  private String specificOptions = "";
+  
+  private LinkedList<SpecificOption> specificOptionsList;
+  
   /**
    * Starts the command line interface of Gaalop.
    */
@@ -84,6 +92,10 @@ public class Main {
    * Runs the command line interface. Should be invoked after setup.
    */
   public void run() throws Exception {
+      if (outputDirectory.trim().isEmpty()) {
+          outputDirectory = new File(inputFile).getParent();
+      }
+      
     log.debug("Starting up compilation process.");
     
     if (useGAPP) 
@@ -125,6 +137,16 @@ public class Main {
   }
 
   private CompilerFacade createCompiler() {
+    specificOptionsList = SpecificOption.parseSpecificOptions(specificOptions);
+      
+    if (!maximaPath.trim().isEmpty()) { 
+        specificOptionsList.add(new SpecificOption("de.gaalop.globalSettings.Plugin", "optMaxima", "true"));
+        specificOptionsList.add(new SpecificOption("de.gaalop.globalSettings.Plugin", "maximaCommand", maximaPath.trim()));
+    } else {
+        specificOptionsList.add(new SpecificOption("de.gaalop.globalSettings.Plugin", "optMaxima", "false"));
+        specificOptionsList.add(new SpecificOption("de.gaalop.globalSettings.Plugin", "maximaCommand", ""));
+    }
+      
     CodeParser codeParser = createCodeParser();
     
     GlobalSettingsStrategy globalSettingsStrategy = createGlobalSettingsStrategy();
@@ -145,11 +167,31 @@ public class Main {
    
     return new CompilerFacade(codeParser, globalSettingsStrategy, visualizerStrategy, algebraStrategy, optimizationStrategy, codeGenerator, algebraName, asRessource, algebraBaseDirectory);
   }
+  
+  private void setSpecificOptionsForPlugin(Object plugin) {
+      for (SpecificOption option: specificOptionsList) {
+          if (option.classname.equals(plugin.getClass().getName())) {
+              try {
+                  Field optionField = plugin.getClass().getDeclaredField(option.optionname);
+                  optionField.setAccessible(true);
+                  Class<?> type = optionField.getType();
+                  if (type.equals(Boolean.TYPE)) optionField.setBoolean(plugin, Boolean.parseBoolean(option.value));
+                  else if (type.equals(Integer.TYPE)) optionField.setInt(plugin, Integer.parseInt(option.value));
+                  else if (type.equals(Long.TYPE)) optionField.setLong(plugin, Long.parseLong(option.value));
+                  else 
+                      optionField.set(plugin, option.value);
+              } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException ex) {
+                  Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+              }
+          }
+      }
+  }
 
   private CodeParser createCodeParser() {
     Set<CodeParserPlugin> plugins = Plugins.getCodeParserPlugins();
     for (CodeParserPlugin plugin : plugins) {
       if (plugin.getClass().getName().equals(codeParserPlugin)) {
+          setSpecificOptionsForPlugin(plugin);
         return plugin.createCodeParser();
       }
     }
@@ -163,16 +205,7 @@ public class Main {
     Set<GlobalSettingsStrategyPlugin> plugins = Plugins.getGlobalSettingsStrategyPlugins();
     for (GlobalSettingsStrategyPlugin plugin : plugins) {
       if (plugin.getClass().getName().equals(globalSettingsPlugin)) {
-            if (plugin.getClass().getName().equals("de.gaalop.globalSettings.Plugin"))  {
-                de.gaalop.globalSettings.Plugin globalPlugin = (de.gaalop.globalSettings.Plugin) plugin;
-                if (!maximaPath.trim().isEmpty()) { 
-                    globalPlugin.optMaxima = true;
-                    globalPlugin.maximaCommand = maximaPath.trim();
-                } else {
-                    globalPlugin.optMaxima = false;
-                    globalPlugin.maximaCommand = "";
-                }
-            }           
+            setSpecificOptionsForPlugin(plugin);
          return plugin.createGlobalSettingsStrategy();
       }
     }
@@ -186,6 +219,7 @@ public class Main {
     Set<AlgebraStrategyPlugin> plugins = Plugins.getAlgebraStrategyPlugins();
     for (AlgebraStrategyPlugin plugin : plugins) {
       if (plugin.getClass().getName().equals(algebraPlugin)) {
+          setSpecificOptionsForPlugin(plugin);
         return plugin.createAlgebraStrategy();
       }
     }
@@ -199,6 +233,7 @@ public class Main {
     Set<VisualCodeInserterStrategyPlugin> plugins = Plugins.getVisualizerStrategyPlugins();
     for (VisualCodeInserterStrategyPlugin plugin : plugins) {
       if (plugin.getClass().getName().equals(visualCodeInserterPlugin)) {
+          setSpecificOptionsForPlugin(plugin);
         return plugin.createVisualCodeInserterStrategy();
       }
     }
@@ -213,6 +248,7 @@ public class Main {
     for (OptimizationStrategyPlugin plugin : plugins) {
       if (plugin.getClass().getName().equals(optimizationPlugin)) {
     	  OptimizationStrategy strategy = plugin.createOptimizationStrategy();
+          setSpecificOptionsForPlugin(plugin);
     	  // no progressListeners will be added
         return strategy;
       }
@@ -227,6 +263,8 @@ public class Main {
     Set<CodeGeneratorPlugin> plugins = Plugins.getCodeGeneratorPlugins();
     for (CodeGeneratorPlugin plugin : plugins) {
       if (plugin.getClass().getName().equals(codeGeneratorPlugin)) {
+          setSpecificOptionsForPlugin(plugin);
+        
         return plugin.createCodeGenerator();
       }
     }
@@ -242,10 +280,10 @@ public class Main {
 
     if (inputFile.equals("-")) {
       reader = new InputStreamReader(System.in);
-      filename = "stdin";
+      filename = "calculate";
     } else {
       reader = new FileReader(inputFile);
-      filename = inputFile;
+      filename = new File(inputFile).getName();
     }
 
     try {

@@ -20,6 +20,11 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.PlainDocument;
+import javax.swing.text.StyleContext;
+import javax.swing.text.TabSet;
+import javax.swing.text.TabStop;
 
 /**
  * This class represents a panel in a tabbed panel that contains a source file.
@@ -131,8 +136,6 @@ public class SourceFilePanel extends JPanel {
                 
                 textPane.setFont(new Font(Font.MONOSPACED, Font.PLAIN, fontSize));
                 
-                
-
 		textPane.setText(content);
 		formatCode(content);
 		textPane.addKeyListener(new SetChangedStateListener());
@@ -155,6 +158,24 @@ public class SourceFilePanel extends JPanel {
 	void formatCode(String content) {
 		try {
 			StyledDocument doc = textPane.getStyledDocument();
+                        
+                        // Tab size to 2
+                        Font f = textPane.getFont();
+                        FontMetrics fm = textPane.getFontMetrics(f);
+                        int width = fm.charWidth(' ');
+                        int tabSize = 4;
+                        int n = 100;
+
+                        TabStop[] tabs = new TabStop[n];
+                        for (int i=1;i<=n;i++)
+                            tabs[i-1] = new TabStop(width*tabSize*i, TabStop.ALIGN_LEFT, TabStop.LEAD_NONE);
+                        TabSet tabset = new TabSet(tabs);
+
+                        StyleContext cont = StyleContext.getDefaultStyleContext();
+                        AttributeSet a = cont.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.TabSet, tabset);
+                        textPane.setParagraphAttributes(a, false);
+                        
+                        // Highligthing keywords
 			Matcher matcher = PATTERN.matcher(content);
 			while (matcher.find()) {
 				int start = matcher.start();

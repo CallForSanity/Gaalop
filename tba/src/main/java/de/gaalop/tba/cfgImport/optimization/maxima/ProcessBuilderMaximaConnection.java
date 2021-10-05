@@ -60,11 +60,14 @@ public class ProcessBuilderMaximaConnection implements MaximaConnection {
                 writer.flush();
             } catch (Exception e) {
                 tmpFile.delete();
-                throw new OptimizationException("Maxima is not accessible. Please check the Maxima command in the Configurations panel or disable the usage of Maxima.", null);
+                throw new OptimizationException("Maxima is not accessible. Please check the Maxima command in the Configurations panel or disable the usage of Maxima optimization.", null);
             }
 
             BufferedReader b = new BufferedReader(new InputStreamReader(p.getInputStream()));
 
+            listeners.logNote("Compiling with Maxima, please wait...", 0.0);
+            int lastPercent = 0;
+            
             String line;
             int progress = 0;
             while ((line = b.readLine()) != null) {
@@ -73,6 +76,10 @@ public class ProcessBuilderMaximaConnection implements MaximaConnection {
             	if(line.matches(pattern)) {
             		progress++;
             	}
+                if (line.contains("quotient") && line.contains("zero")) {
+                    Logger.getLogger(ProcessBuilderMaximaConnection.class.getName()).log(Level.INFO, "Quotient is zero. Aborting.");
+                    return null;
+                }
             	// simulating long task
             	/*
             	try {
@@ -98,12 +105,17 @@ public class ProcessBuilderMaximaConnection implements MaximaConnection {
             	
             	// because input and output are separate steps
             	// numSteps = numSteps*2;
-            	listeners.logNote("Compiling with Maxima, please wait...", (double)(((double)progress)/numSteps));
-            	
+                
+                int curPercent = (progress * 100) / numSteps;
+                if (curPercent >= lastPercent+5) {
+                    lastPercent = curPercent;
+                    listeners.logNote("Compiling with Maxima, please wait...", (double)(((double)progress)/numSteps));
+                }
+
                 output.add(line);
             }
             
-            listeners.logNote("Done", 0.0);
+            listeners.logNote("Done", 1.0);
         	
 
             b.close();

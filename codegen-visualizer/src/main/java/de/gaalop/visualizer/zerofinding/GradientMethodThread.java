@@ -8,7 +8,7 @@ import java.util.LinkedList;
 /**
  * Implements a zero finder method thread, which samples a cube and searches at
  * every sample point in a neighborhood along the gradient a zero point
- * @author christian
+ * @author Christian Steinmetz
  */
 public class GradientMethodThread extends Thread {
     

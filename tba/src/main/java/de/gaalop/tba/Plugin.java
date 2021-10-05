@@ -7,7 +7,6 @@ import java.awt.Image;
 import java.util.Observable;
 import de.gaalop.OptimizationStrategy;
 import de.gaalop.OptimizationStrategyPlugin;
-import de.gaalop.tba.cfgImport.optimization.maxima.ProcessBuilderMaximaConnection;
 
 /**
  * Implements the Table Based Approach as an OptimizationStrategyPlugin

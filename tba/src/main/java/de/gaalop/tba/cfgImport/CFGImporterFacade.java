@@ -103,14 +103,12 @@ public class CFGImporterFacade {
         builder.useSparseExpressions = this.useSparseExpressions;
         graph.accept(builder);
 
-        int count = 0;
         boolean repeat;
         do {
             repeat = false;
             for (OptimizationStrategyWithModifyFlag curOpt : optimizations) {
                 repeat = repeat || curOpt.transform(graph, usedAlgebra, listeners);
             }
-            count++;
         } while (repeat);
 
         //Use Maxima only once
@@ -119,13 +117,11 @@ public class CFGImporterFacade {
             optMaxima.transform(graph, usedAlgebra, listeners);
 
             //repeat other optimizations
-            count = 0;
             do {
                 repeat = false;
                 for (OptimizationStrategyWithModifyFlag curOpt : optimizations) {
                     repeat = repeat || curOpt.transform(graph, usedAlgebra, listeners);
                 }
-                count++;
             } while (repeat);
         }
 

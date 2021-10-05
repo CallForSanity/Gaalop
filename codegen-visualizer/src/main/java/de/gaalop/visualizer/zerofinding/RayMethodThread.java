@@ -8,7 +8,7 @@ import java.util.LinkedList;
 
 /**
  * Implements a zero finder thread, which uses rays
- * @author christian
+ * @author Christian Steinmetz
  */
 public class RayMethodThread extends Thread {
     

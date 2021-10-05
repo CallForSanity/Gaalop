@@ -8,7 +8,7 @@ import java.util.LinkedList;
 
 /**
  * Implements a zero finder thread, which samples a cube
- * @author christian
+ * @author Christian Steinmetz
  */
 public class DiscreteCubeMethodThread extends Thread {
     

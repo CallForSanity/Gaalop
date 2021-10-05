@@ -5,6 +5,7 @@ import de.gaalop.AlgebraStrategyPlugin;
 import de.gaalop.ConfigurationProperty;
 import de.gaalop.ConfigurationProperty.Type;
 import de.gaalop.Notifications;
+import de.gaalop.StringList;
 import java.awt.Image;
 import java.io.IOException;
 import java.util.LinkedList;
@@ -28,6 +29,10 @@ public class Plugin extends Observable implements AlgebraStrategyPlugin {
     @ConfigurationProperty(type = Type.FILEPATH)
     public String userMacroFilePath = "";
 
+    public String algebraDefinitionString = null;
+    public String macroDefinitionString = null;
+    
+    public boolean atLeastOneQuestionSignedRequired = true;
 
     @Override
     public AlgebraStrategy createAlgebraStrategy() {

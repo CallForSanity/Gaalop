@@ -1,8 +1,6 @@
 package de.gaalop.api.cfg;
 
 import de.gaalop.cfg.ControlFlowGraph;
-import de.gaalop.cfg.FindStoreOutputNodes;
-import de.gaalop.cfg.StoreResultNode;
 import de.gaalop.tba.UseAlgebra;
 import de.gaalop.tba.cfgImport.optimization.VariableComponent;
 import java.util.HashSet;
@@ -29,10 +27,9 @@ public class GetAllOutputBlades {
             result.add(new VariableComponent(parts[0], Integer.parseInt(parts[1]), null));
         }
 
-        FindStoreOutputNodes storeResultNodes = new FindStoreOutputNodes();
-        graph.accept(storeResultNodes);
-        for (StoreResultNode curSRNode : storeResultNodes.getNodes()) {
-            String name = curSRNode.getValue().getName();
+        
+        
+        for (String name: graph.getOutputs()) {
             int bladeCount = usedAlgebra.getBladeCount();
             for (int blade = 0; blade < bladeCount; blade++) {
                 result.add(new VariableComponent(name, blade, null));

@@ -1,5 +1,6 @@
 package de.gaalop.java;
 
+import de.gaalop.OperatorPriority;
 import de.gaalop.cfg.*;
 import de.gaalop.dfg.*;
 
@@ -21,6 +22,7 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
     protected StringBuilder codePost = new StringBuilder();
     protected ControlFlowGraph graph;
     protected int indentation = 0;
+    protected OperatorPriority operatorPriority = new OperatorPriority();
 
     protected Set<String> declaredLocal = new HashSet<String>();
     protected Set<String> outputtedMultivectors = new HashSet<String>();
@@ -151,8 +153,7 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
             append(';');
             append(" // ");
 
-            MultivectorComponent component = (MultivectorComponent) node.getVariable();
-            append(node.getGraph().getAlgebraDefinitionFile().getBladeString(component.getBladeIndex()));
+            append(node.getGraph().getBladeString((MultivectorComponent) node.getVariable()));
         }
         append(";\n");
         node.getSuccessor().accept(this);
@@ -430,7 +431,7 @@ public class JavaVisitor implements ControlFlowVisitor, ExpressionVisitor {
     }
 
     protected void addChild(Expression parent, Expression child) {
-        if (OperatorPriority.hasLowerPriority(parent, child)) {
+        if (operatorPriority.hasLowerPriority(parent, child)) {
             append('(');
             child.accept(this);
             append(')');

@@ -2,7 +2,7 @@ package de.gaalop.productComputer;
 
 /**
  * Provides Geometric Algebra methods
- * @author christian
+ * @author Christian Steinmetz
  */
 public class GAMethods {
     

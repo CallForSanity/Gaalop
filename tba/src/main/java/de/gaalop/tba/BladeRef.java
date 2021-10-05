@@ -4,7 +4,7 @@ package de.gaalop.tba;
  * Represents a blade by its index.
  * Stores also a prefactor
  * 
- * @author christian
+ * @author Christian Steinmetz
  */
 public class BladeRef {
 

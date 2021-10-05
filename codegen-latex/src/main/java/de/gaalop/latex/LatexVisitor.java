@@ -1,5 +1,6 @@
 package de.gaalop.latex;
 
+import de.gaalop.DefaultCodeGeneratorVisitor;
 import de.gaalop.cfg.*;
 import de.gaalop.dfg.*;
 
@@ -10,11 +11,9 @@ import static java.lang.Double.compare;
 /**
  * This class implements the CFG and DFG visitor that generate LaTeX code.
  */
-public class LatexVisitor implements ControlFlowVisitor, ExpressionVisitor {
+public class LatexVisitor extends DefaultCodeGeneratorVisitor {
 
     private Pattern INDEXED_NUMBER = Pattern.compile("^(\\w+)(\\d+)$");
-
-    private StringBuilder code = new StringBuilder();
 
     private final static FloatConstant HALF = new FloatConstant(0.5f);
 
@@ -23,10 +22,6 @@ public class LatexVisitor implements ControlFlowVisitor, ExpressionVisitor {
     private final static Division ONE_HALF = new Division(new FloatConstant(1.0f), new FloatConstant(2.0f));
 
     private final static Negation MINUS_ONE_HALF = new Negation(ONE_HALF);
-
-    public String getCode() {
-        return code.toString();
-    }
 
     @Override
     public void visit(StartNode node) {
@@ -45,13 +40,13 @@ public class LatexVisitor implements ControlFlowVisitor, ExpressionVisitor {
 
         node.getSuccessor().accept(this);
     }
-	
-	@Override
-	public void visit(ExpressionStatement node) {
-		node.getExpression().accept(this);
-		code.append("\\\\\n");
-		node.getSuccessor().accept(this);
-	}
+
+    @Override
+    public void visit(ExpressionStatement node) {
+        node.getExpression().accept(this);
+        code.append("\\\\\n");
+        node.getSuccessor().accept(this);
+    }
 
     @Override
     public void visit(StoreResultNode node) {
@@ -63,46 +58,36 @@ public class LatexVisitor implements ControlFlowVisitor, ExpressionVisitor {
     }
 
     @Override
-	public void visit(IfThenElseNode node) {
-	  code.append("\\text{IF } (");
-	  node.getCondition().accept(this);
-	  code.append(") \\\\\n");
-	  node.getPositive().accept(this);
-	  if (!(node.getNegative() instanceof BlockEndNode)) {
-		  code.append("\\text{ELSE} \\\\\n");
-		  node.getNegative().accept(this);
-	  }
-	  code.append("\\text{END IF} \\\\\n");
-	  node.getSuccessor().accept(this);
-	}
-
-	@Override
-	public void visit(LoopNode node) {
-		code.append("\\text{LOOP} \\\\\n");
-		node.getBody().accept(this);
-		code.append("\\text{END LOOP} \\\\\n");
-		node.getSuccessor().accept(this);
-	}
-
-	@Override
-	public void visit(BreakNode breakNode) {
-		code.append("\\text{break}\\\\");
-		breakNode.getSuccessor().accept(this);
-	}
-
-	@Override
-	public void visit(BlockEndNode node) {
-	}
-
-	@Override
-    public void visit(EndNode node) {
-        code.append("\\end{align*}\n");
+    public void visit(IfThenElseNode node) {
+        code.append("\\text{IF } (");
+        node.getCondition().accept(this);
+        code.append(") \\\\\n");
+        node.getPositive().accept(this);
+        if (!(node.getNegative() instanceof BlockEndNode)) {
+            code.append("\\text{ELSE} \\\\\n");
+            node.getNegative().accept(this);
+        }
+        code.append("\\text{END IF} \\\\\n");
+        node.getSuccessor().accept(this);
     }
 
-    private void addBinaryInfix(BinaryOperation op, String operator) {
-        op.getLeft().accept(this);
-        code.append(operator);
-        op.getRight().accept(this);
+    @Override
+    public void visit(LoopNode node) {
+        code.append("\\text{LOOP} \\\\\n");
+        node.getBody().accept(this);
+        code.append("\\text{END LOOP} \\\\\n");
+        node.getSuccessor().accept(this);
+    }
+
+    @Override
+    public void visit(BreakNode breakNode) {
+        code.append("\\text{break}\\\\");
+        breakNode.getSuccessor().accept(this);
+    }
+
+    @Override
+    public void visit(EndNode node) {
+        code.append("\\end{align*}\n");
     }
 
     @Override
@@ -192,14 +177,13 @@ public class LatexVisitor implements ControlFlowVisitor, ExpressionVisitor {
 
     @Override
     public void visit(FloatConstant floatConstant) {
-        if (Double.isNaN(floatConstant.getValue()))
+        if (Double.isNaN(floatConstant.getValue())) {
             code.append("undefined");
-        else 
-            if (compare(floatConstant.getValue(), Math.floor(floatConstant.getValue())) == 0) {
-                code.append((int) floatConstant.getValue());
-            } else {
-                code.append(Double.toString(floatConstant.getValue()));
-            }
+        } else if (compare(floatConstant.getValue(), Math.floor(floatConstant.getValue())) == 0) {
+            code.append((int) floatConstant.getValue());
+        } else {
+            code.append(Double.toString(floatConstant.getValue()));
+        }
     }
 
     @Override
@@ -228,52 +212,37 @@ public class LatexVisitor implements ControlFlowVisitor, ExpressionVisitor {
 
     @Override
     public void visit(LogicalOr node) {
-      addBinaryInfix(node, " \\vee ");
+        addBinaryInfix(node, " \\vee ");
     }
 
     @Override
     public void visit(LogicalAnd node) {
-      addBinaryInfix(node, " \\wedge ");
+        addBinaryInfix(node, " \\wedge ");
     }
-    
+
     @Override
     public void visit(LogicalNegation node) {
-    	code.append("!");
-    	node.getOperand().accept(this);
+        code.append("!");
+        node.getOperand().accept(this);
     }
 
     @Override
     public void visit(Equality node) {
-      addBinaryInfix(node, " == ");
+        addBinaryInfix(node, " == ");
     }
 
     @Override
     public void visit(Inequality node) {
-      addBinaryInfix(node, " \neq ");
+        addBinaryInfix(node, " \neq ");
     }
 
     @Override
     public void visit(Relation relation) {
-      addBinaryInfix(relation, relation.getTypeString());
+        addBinaryInfix(relation, relation.getTypeString());
     }
 
-	@Override
-	public void visit(Macro node) {
-		throw new IllegalArgumentException("Macros should have been inlined.");
-	}
-
-	@Override
-	public void visit(FunctionArgument node) {
-		throw new IllegalArgumentException("Macros should have been inlined.");
-	}
-
-	@Override
-	public void visit(MacroCall node) {
-		throw new IllegalArgumentException("Macros should have been inlined.");
-	}
-
-	@Override
-	public void visit(ColorNode node) {
-		node.getSuccessor().accept(this);
-	}
+    @Override
+    public void visit(ColorNode node) {
+        node.getSuccessor().accept(this);
+    }
 }

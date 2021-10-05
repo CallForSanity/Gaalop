@@ -11,7 +11,7 @@ import java.io.IOException;
 /**
  * Defines an abstract bit writer, that write bits to a file.
  * Therefore an internal cache can be used.
- * @author christian
+ * @author Christian Steinmetz
  */
 public abstract class AbsBitWriter {
     

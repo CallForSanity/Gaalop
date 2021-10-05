@@ -14,6 +14,7 @@ import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Vector;
@@ -37,9 +38,9 @@ public class Main {
             System.exit(3);
         }
         AlgebraDefinitionFile alFile = new AlgebraDefinitionFile();
-        FileInputStream inputStream = new FileInputStream(definitionFile);
-        alFile.loadFromFile(inputStream);
-        inputStream.close();
+        FileReader reader = new FileReader(definitionFile);
+        alFile.loadFromFile(reader);
+        reader.close();
         IMultTable inner = new MultTableAbsDirectComputer(alFile, new InnerProductCalculator());
         IMultTable outer = new MultTableAbsDirectComputer(alFile, new OuterProductCalculator());
         IMultTable geo = new MultTableAbsDirectComputer(alFile, new GeoProductCalculator());

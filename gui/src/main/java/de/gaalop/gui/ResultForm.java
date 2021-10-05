@@ -16,6 +16,12 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyleContext;
+import javax.swing.text.TabSet;
+import javax.swing.text.TabStop;
 
 /**
  * This form is used to display compilation results.
@@ -76,6 +82,22 @@ public class ResultForm {
                 } else {
                     textPane.setFont(Font.getFont(Font.SANS_SERIF));
                 }
+                
+            // Tab size to 2
+            Font f = textPane.getFont();
+            FontMetrics fm = textPane.getFontMetrics(f);
+            int width = fm.charWidth(' ');
+            int tabSize = 4;
+            int n = 100;
+
+            TabStop[] tabs = new TabStop[n];
+            for (int i=1;i<=n;i++)
+                tabs[i-1] = new TabStop(width*tabSize*i, TabStop.ALIGN_LEFT, TabStop.LEAD_NONE);
+            TabSet tabset = new TabSet(tabs);
+
+            StyleContext cont = StyleContext.getDefaultStyleContext();
+            AttributeSet a = cont.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.TabSet, tabset);
+            textPane.setParagraphAttributes(a, false);
             
             textPane.setText(file.getContent());
             filePane.setViewportView(textPane);

@@ -5,6 +5,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.HashMap;
 
 /**
@@ -112,11 +113,11 @@ public class AlgebraDefinitionFile {
     }
 
     /**
-     * Loads a algebra definition from a inputStream
-     * @param inputStream The InputStream to be used
+     * Loads a algebra definition from a Reader
+     * @param reader The reader to be used
      */
-    public void loadFromFile(InputStream inputStream) throws IOException {
-        BufferedReader d = new BufferedReader(new InputStreamReader(inputStream));
+    public void loadFromFile(Reader reader) throws IOException {
+        BufferedReader d = new BufferedReader(reader);
         base = parseStrArray(d.readLine());
         lineMapPlusMinusToZeroInf = d.readLine();
         base2 = parseStrArray(d.readLine());

@@ -7,7 +7,7 @@ import java.util.LinkedList;
 
 /**
  *
- * @author christian
+ * @author Christian Steinmetz
  */
 public class AlgebraPC {
     

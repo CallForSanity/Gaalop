@@ -11,7 +11,7 @@ import java.util.LinkedList;
 
 /**
  * Definies an interface for an zero finding method
- * @author christian
+ * @author Christian Steinmetz
  */
 public abstract class ZeroFinder {
     

@@ -8,6 +8,7 @@ import de.gaalop.dfg.Expression;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.logging.Level;
@@ -166,7 +167,7 @@ public class UseAlgebra {
         try {
             AlgebraDefinitionFile alFile = new AlgebraDefinitionFile();
             String baseDirPath = "algebra/"+name+"/";
-            alFile.loadFromFile(AlStrategy.class.getResourceAsStream(baseDirPath+"definition.csv"));
+            alFile.loadFromFile(new InputStreamReader(AlStrategy.class.getResourceAsStream(baseDirPath+"definition.csv")));
             alFile.setProductsFilePath(baseDirPath+"products.csv");
             alFile.setUseAsRessource(true);
             alFile.setUsePrecalculatedTable(useTable);

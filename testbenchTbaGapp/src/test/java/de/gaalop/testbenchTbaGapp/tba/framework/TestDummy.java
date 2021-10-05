@@ -224,4 +224,35 @@ public class TestDummy {
         
     }
     
+    
+    public static boolean compileWithCompilerFacade(TBATestCase tBATestCase, CompilerFacade facade) {
+
+        Set<OutputFile> outputFiles;
+        try {
+            outputFiles = facade.compile(new InputFile("TestCase", tBATestCase.getCLUScript()));
+
+            OutputFile vars;
+            OutputFile outputVars;
+            
+            Iterator<OutputFile> iterator = outputFiles.iterator();
+            OutputFile f = iterator.next();
+            if (f.getName().equals("Map Values")) {
+                vars = f;
+                outputVars = iterator.next();
+            } else {
+                outputVars = f;
+                vars = iterator.next();
+            }
+            
+            HashMap<Variable, Double> varsValues = contentToMap(vars.getContent());
+            HashMap<Variable, Double> outputVarsValues = contentToMap(outputVars.getContent());
+            
+
+            tBATestCase.testOutputs(outputVarsValues);
+            return true;
+        } catch (CompilationException ex) {
+            return false;
+        }
+        
+    }
 }

@@ -10,7 +10,7 @@ import java.util.logging.Logger;
 
 /**
  * Implements a zero finder method, which samples a cube
- * @author christian
+ * @author Christian Steinmetz
  */
 public class DiscreteCubeMethod extends ZeroFinder {
 

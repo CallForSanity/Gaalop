@@ -1,15 +1,13 @@
 package de.gaalop;
 
-import de.gaalop.cfg.ControlFlowGraph;
-
-import java.util.List;
 import java.util.Observable;
 import java.util.Set;
+import de.gaalop.cfg.ControlFlowGraph;
 
 /**
  * Represents the high level compilation process.
  */
-public final class CompilerFacade extends Observable {
+public class CompilerFacade extends Observable {
 
     private final CodeParser codeParser;
     
@@ -30,12 +28,12 @@ public final class CompilerFacade extends Observable {
     private static boolean useCodeSegmenter;
 
     public static boolean isUseCodeSegmenter() {
-		return useCodeSegmenter;
-	}
+        return useCodeSegmenter;
+    }
 
-	public static void setUseCodeSegmenter(boolean useCodeSegmenter) {
-		CompilerFacade.useCodeSegmenter = useCodeSegmenter;
-	}
+    public static void setUseCodeSegmenter(boolean useCodeSegmenter) {
+        CompilerFacade.useCodeSegmenter = useCodeSegmenter;
+    }
 
 	/**
      * Constructs a new compiler facade.
@@ -95,7 +93,7 @@ public final class CompilerFacade extends Observable {
         algebraStrategy.transform(graph);
         setChanged();
         
-        notifyObservers("Optimizing...");  //FIXME thomas
+        notifyObservers("Optimizing...");
         optimizationStrategy.transform(graph);
         setChanged();
         

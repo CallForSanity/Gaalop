@@ -11,7 +11,7 @@ import java.util.logging.Logger;
 
 /**
  * Implements a zero finder method, which uses rays
- * @author christian
+ * @author Christian Steinmetz
  */
 public class RayMethod extends PrepareZerofinder {
     

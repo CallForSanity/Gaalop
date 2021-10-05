@@ -14,7 +14,7 @@ import java.util.logging.Logger;
  * Implements a zero finder method, which samples a cube and searches at
  * every sample point in a neighborhood along the gradient a zero point
  * 
- * @author christian
+ * @author Christian Steinmetz
  */
 public class GradientMethod extends PrepareZerofinder {
 

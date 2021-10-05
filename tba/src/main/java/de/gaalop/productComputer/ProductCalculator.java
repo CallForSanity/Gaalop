@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 /**
  * Defines an interface for calculating a product of two blades
- * @author christian
+ * @author Christian Steinmetz
  */
 public interface ProductCalculator {
 

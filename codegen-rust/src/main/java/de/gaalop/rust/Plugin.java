@@ -31,7 +31,7 @@ public class Plugin implements CodeGeneratorPlugin {
 
     @Override
     public CodeGenerator createCodeGenerator() {
-        return RustCodeGenerator.INSTANCE;
+        return new RustCodeGenerator();
     }
 
     @Override

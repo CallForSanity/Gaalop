@@ -28,12 +28,6 @@
             <artifactId>jna</artifactId>
             <version>5.8.0</version>
         </dependency>
-        
-        <dependency>
-            <groupId>de.gaalop</groupId>
-            <artifactId>codegen-cpp</artifactId>
-            <version>1.0.0</version>
-        </dependency>
         <dependency>
             <groupId>de.gaalop</groupId>
             <artifactId>gaalet</artifactId>
@@ -41,64 +35,17 @@
         </dependency>
         <dependency>
             <groupId>de.gaalop</groupId>
-            <artifactId>codegen-compressed</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>de.gaalop</groupId>
             <artifactId>tba</artifactId>
             <version>1.0.0</version>
         </dependency>
-        <dependency>
-            <groupId>de.gaalop</groupId>
-            <artifactId>codegen-dot</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>de.gaalop</groupId>
-            <artifactId>codegen-latex</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-         <dependency>
-            <groupId>de.gaalop</groupId>
-            <artifactId>codegen-verilog</artifactId>
-            <version>1.0.0</version>
-        </dependency>  
+        
         <dependency>
             <groupId>commons-beanutils</groupId>
             <artifactId>commons-beanutils</artifactId>
-            <version>1.9.4</version>
+            <version>1.8.0</version>
         </dependency>
-        <dependency>
-            <groupId>de.gaalop</groupId>
-            <artifactId>codegen-java</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>de.gaalop</groupId>
-            <artifactId>codegen-gapp</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>de.gaalop</groupId>
-            <artifactId>codegen-gappopencl</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-		<dependency>
-            <groupId>de.gaalop</groupId>
-            <artifactId>codegen-rust</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>de.gaalop</groupId>
-            <artifactId>codegen-mathematica</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-	<dependency>
-            <groupId>de.gaalop</groupId>
-            <artifactId>codegen-julia</artifactId>
-            <version>1.0.0</version>
-        </dependency>
+        
+        
         <dependency>
             <groupId>de.gaalop</groupId>
             <artifactId>gapp</artifactId>
@@ -119,29 +66,91 @@
             <artifactId>visualCodeInserter2d</artifactId>
             <version>1.0.0</version>
         </dependency>
-        <dependency>
-            <groupId>de.gaalop</groupId>
-            <artifactId>codegen-visualizer</artifactId>
-            <version>1.0.0</version>
-        </dependency>
+        
+        
 <!--        <dependency>
             <groupId>de.gaalop</groupId>
             <artifactId>codegen-visualizerC</artifactId>
             <version>1.0.0</version>
         </dependency>-->
-        <dependency>
-            <groupId>de.gaalop</groupId>
-            <artifactId>codegen-vis2d</artifactId>
-            <version>1.0.0</version>
-        </dependency>
+        
         <dependency>
             <groupId>de.gaalop</groupId>
             <artifactId>globalSettings</artifactId>
             <version>1.0.0</version>
         </dependency>
+        
+        
+        <!-- Code Generators -->
+        
+        <dependency>
+            <groupId>de.gaalop</groupId>
+            <artifactId>codegen-cpp</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>de.gaalop</groupId>
+            <artifactId>codegen-compressed</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>de.gaalop</groupId>
+            <artifactId>codegen-dot</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>de.gaalop</groupId>
+            <artifactId>codegen-latex</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+         <dependency>
+            <groupId>de.gaalop</groupId>
+            <artifactId>codegen-verilog</artifactId>
+            <version>1.0.0</version>
+        </dependency>  
+        <dependency>
+            <groupId>de.gaalop</groupId>
+            <artifactId>codegen-java</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>de.gaalop</groupId>
+            <artifactId>codegen-gapp</artifactId>
+            <version>1.0.0</version>
+        </dependency>
         <dependency>
             <groupId>de.gaalop</groupId>
             <artifactId>gappDebugger</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+		<dependency>
+            <groupId>de.gaalop</groupId>
+            <artifactId>codegen-rust</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>de.gaalop</groupId>
+            <artifactId>codegen-mathematica</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+	<dependency>
+            <groupId>de.gaalop</groupId>
+            <artifactId>codegen-julia</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>de.gaalop</groupId>
+            <artifactId>codegen-gappopencl</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>de.gaalop</groupId>
+            <artifactId>codegen-visualizer</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>de.gaalop</groupId>
+            <artifactId>codegen-vis2d</artifactId>
             <version>1.0.0</version>
         </dependency>
     </dependencies>

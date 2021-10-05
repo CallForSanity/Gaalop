@@ -26,6 +26,7 @@ public class TBAOptStrategy implements OptimizationStrategy {
         CFGImporterFacade importer = new CFGImporterFacade(plugin);
         importer.setProgressListeners(listeners);
         importer.importGraph(graph);
+        graph.tbaOptimized = true;
     }
     
     public void addProgressListener(LoggingListener progressListener) {
