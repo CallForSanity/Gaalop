@@ -24,16 +24,6 @@ public class CompilerFacade extends Observable {
     private final String algebraName;
     private final boolean asRessource;
     private final String algebraBaseDirectory;
-    
-    private static boolean useCodeSegmenter;
-
-    public static boolean isUseCodeSegmenter() {
-        return useCodeSegmenter;
-    }
-
-    public static void setUseCodeSegmenter(boolean useCodeSegmenter) {
-        CompilerFacade.useCodeSegmenter = useCodeSegmenter;
-    }
 
 	/**
      * Constructs a new compiler facade.
