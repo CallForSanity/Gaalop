@@ -5,7 +5,7 @@
 //y
 //z
 createPoint = {
-    _P(1)*(e0^e3^e2)+_P(2)*(e0^e1^e3)+_P(3)*(e0^e2^e1)+(e1^e2^e3);
+    _P(1)*(e0^e3^e2)+_P(2)*(e0^e1^e3)+_P(3)*(e0^e2^e1)+(e1^e2^e3)
 }
 
 
@@ -28,7 +28,7 @@ Dual = {
     + coefficient(_P(1),e0^e1^e3)*(e2)
     + coefficient(_P(1),e0^e2^e3)*(e1)
     + coefficient(_P(1),e1^e2^e3)*(e0)
-    + coefficient(_P(1),e0^e1^e2^e3)*(1);
+    + coefficient(_P(1),e0^e1^e2^e3)*(1)
 }
 
 //The reverse operator
@@ -50,7 +50,7 @@ reverse = {
     - coefficient(_P(1),e0^e1^e3)*(e0^e1^e3)
     - coefficient(_P(1),e0^e3^e2)*(e0^e3^e2)
     - coefficient(_P(1),e1^e2^e3)*(e1^e2^e3)
-    + coefficient(_P(1),e0^e1^e2^e3)*(e0^e1^e2^e3);
+    + coefficient(_P(1),e0^e1^e2^e3)*(e0^e1^e2^e3)
 }
 
 // Normalizes a given multivector
