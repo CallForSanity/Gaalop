@@ -3,8 +3,6 @@ package de.gaalop.cfg;
 import de.gaalop.dfg.Expression;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.HashMap;
 
@@ -34,7 +32,28 @@ public class AlgebraDefinitionFile {
      * The line contating the map to transform from the zeroinf base to the plusminus base
      */
     public String lineMapZeroInfToPlusMinus;
-
+    
+    public AlgebraSignature getSignature() {
+        int p = 0;
+        int q = 0;
+        int r = 0;
+        
+        for (Byte b: baseSquares.values()) {
+            switch (b.byteValue()) {
+                case 1:
+                    p++;
+                    break;
+                case -1:
+                    q++;
+                    break;
+                case 0:
+                    r++;
+                    break;
+            }
+        }
+        
+        return new AlgebraSignature(p, q, r);
+    }
 
     //generated attributes
     public Expression[] blades;
