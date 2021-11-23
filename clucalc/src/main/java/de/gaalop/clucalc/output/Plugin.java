@@ -18,13 +18,13 @@ import java.awt.*;
  */
 public class Plugin implements CodeGeneratorPlugin {
 
-	@ConfigurationProperty(type = Type.TEXT)
-	public String suffix = "_opt";
-	
+    @ConfigurationProperty(type = Type.TEXT)
+    public String suffix = "_opt";
+
     private Log log = LogFactory.getLog(Plugin.class);
     private Image icon;
 
-	private CluCalcCodeGenerator codeGenerator;
+    private CluCalcCodeGenerator codeGenerator;
 
     public Plugin() {
         URL url = getClass().getResource("/de/gaalop/clucalc/icon.png");
@@ -35,35 +35,35 @@ public class Plugin implements CodeGeneratorPlugin {
                 log.error("Unable to read plugin icon " + url);
             }
         } else {
-            log.warn("Unable to find CluCalc plugin icon!");
+            log.warn("Unable to find GAALOPScript plugin icon!");
         }
     }
-    
+
     public String getSuffix() {
-		return suffix;
-	}
-    
+        return suffix;
+    }
+
     public void setSuffix(String suffix) {
-		this.suffix = suffix;
-	}
+        this.suffix = suffix;
+    }
 
     @Override
     public CodeGenerator createCodeGenerator() {
-    	if (codeGenerator == null) {    		
-    		codeGenerator = new CluCalcCodeGenerator(suffix);
-    	}
-    	codeGenerator.setSuffix(suffix);
-    	return codeGenerator;
+        if (codeGenerator == null) {
+            codeGenerator = new CluCalcCodeGenerator(suffix);
+        }
+        codeGenerator.setSuffix(suffix);
+        return codeGenerator;
     }
 
     @Override
     public String getName() {
-        return "CluCalc";
+        return "GAALOPScript";
     }
 
     @Override
     public String getDescription() {
-        return "This plugin generates CluCalc scripts.";
+        return "This plugin generates GAALOPScripts.";
     }
 
     @Override

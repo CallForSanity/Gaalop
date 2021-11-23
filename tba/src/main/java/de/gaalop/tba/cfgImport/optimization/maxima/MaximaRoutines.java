@@ -10,17 +10,18 @@ import de.gaalop.dfg.FloatConstant;
 import de.gaalop.dfg.Multiplication;
 import de.gaalop.tba.cfgImport.optimization.maxima.parser.MaximaLexer;
 import de.gaalop.tba.cfgImport.optimization.maxima.parser.MaximaParser;
-import de.gaalop.tba.cfgImport.optimization.maxima.parser.MaximaTransformer;
 import de.gaalop.visitors.ReplaceVisitor;
+import java.io.IOException;
+import java.io.StringReader;
 import java.util.LinkedList;
-import org.antlr.runtime.ANTLRStringStream;
-import org.antlr.runtime.CommonTokenStream;
-import org.antlr.runtime.RecognitionException;
-import org.antlr.runtime.tree.CommonTreeNodeStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.antlr.v4.runtime.ANTLRInputStream;
+import org.antlr.v4.runtime.CommonTokenStream;
 
 /**
  *
- * @author christian
+ * @author Christian Steinmetz
  */
 public class MaximaRoutines {
     
@@ -65,16 +66,24 @@ public class MaximaRoutines {
      * @return The according expression
      * @throws RecognitionException
      */
-    public static Expression getExpressionFromMaximaOutput(String maximaOut) throws RecognitionException {
-        ANTLRStringStream inputStream = new ANTLRStringStream(maximaOut);
-        MaximaLexer lexer = new MaximaLexer(inputStream);
-        CommonTokenStream tokenStream = new CommonTokenStream(lexer);
-        MaximaParser parser = new MaximaParser(tokenStream);
-        MaximaParser.program_return parserResult = parser.program();
-
-        CommonTreeNodeStream treeNodeStream = new CommonTreeNodeStream(parserResult.getTree());
-        MaximaTransformer transformer = new MaximaTransformer(treeNodeStream);
-        return unfoldSimplePows(transformer.expression());
+    public static Expression getExpressionFromMaximaOutput(String maximaOut) {
+        
+        try {
+            ANTLRInputStream inputStream = new ANTLRInputStream(new StringReader(maximaOut));
+            MaximaLexer lexer = new MaximaLexer(inputStream);
+            CommonTokenStream tokenStream = new CommonTokenStream(lexer);
+            MaximaParser parser = new MaximaParser(tokenStream);
+            
+            MaximaVisitor visitor = new MaximaVisitor();
+            Expression expression = visitor.visit(parser.expression());
+            
+            
+            return unfoldSimplePows(expression);
+            
+        } catch (IOException ex) {
+            Logger.getLogger(MaximaRoutines.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
 
     /**

@@ -9,10 +9,8 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.Arrays;
 import java.util.LinkedList;
-import org.antlr.runtime.ANTLRStringStream;
-import org.antlr.runtime.CommonTokenStream;
-import org.antlr.runtime.RecognitionException;
-import org.antlr.runtime.tree.CommonTreeNodeStream;
+import org.antlr.v4.runtime.ANTLRInputStream;
+import org.antlr.v4.runtime.CommonTokenStream;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -51,10 +49,11 @@ public enum CluCalcCodeParser implements CodeParser {
         return graph;
     }
 
-    private ControlFlowGraph parse(InputFile input) throws CodeParserException, RecognitionException, IOException {
+    private ControlFlowGraph parse(InputFile input) throws CodeParserException, IOException {
         LinkedList<String> onlyEvaluates = new LinkedList<String>();
         LinkedList<String> outputs = new LinkedList<String>();
 
+        String syntax = null;
 
         String content = input.getContent();
         BufferedReader reader = new BufferedReader(new StringReader(content));
@@ -84,7 +83,9 @@ public enum CluCalcCodeParser implements CodeParser {
                             //IDENTIFIER+
                             String[] parts = rest.split(" ");
                             onlyEvaluates.addAll(Arrays.asList(parts));
-                        } else 
+                        } else if (whichPragma.equals("in2out")) {
+                            syntax = rest;
+                        } else
                             throw new CodeParserException(input, "pragma "+whichPragma+" is unknown.");
                     }
 
@@ -97,40 +98,32 @@ public enum CluCalcCodeParser implements CodeParser {
             }
         }
 
-
-        ANTLRStringStream inputStream = new ANTLRStringStream(builder.toString());
+        String program = builder.toString();
+        ANTLRInputStream inputStream = new ANTLRInputStream(new StringReader(program));
         CluCalcLexer lexer = new CluCalcLexer(inputStream);
         CommonTokenStream tokenStream = new CommonTokenStream(lexer);
         CluCalcParser parser = new CluCalcParser(tokenStream);
-        CluCalcParser.script_return parserResult = parser.script();
-
-        if (!parser.getErrors().isEmpty()) {
-            StringBuilder message = new StringBuilder();
-            message.append("Unable to parse CluCalc file:\n");
-            for (String error : parser.getErrors()) {
-                message.append(error);
-                message.append('\n');
+        
+        CluVisitor visitor = new CluVisitor();
+        visitor.visit(parser.script());
+        
+        ControlFlowGraph graph = visitor.graph;
+        if (syntax != null) {
+            //Parse syntax
+            String[] syntaxParts = syntax.split("->");
+            if (syntaxParts.length == 2) {
+                // Parse inputs
+                for (String var: syntaxParts[0].split(",")) 
+                    graph.syntaxInputs.add(var.trim());
+                // Parse outputs
+                for (String var: syntaxParts[1].split(",")) 
+                    graph.syntaxOutputs.add(var.trim());
+            } else {
+                throw new CodeParserException(input, "#pragma in2out must contain one arrow ->");
             }
-            throw new CodeParserException(input,  message.toString());
-        }
-
-        if (parserResult.getTree() == null) {
-            throw new CodeParserException(input, "The input file is empty.");
-        }
-
-        CommonTreeNodeStream treeNodeStream = new CommonTreeNodeStream(parserResult.getTree());
-        CluCalcTransformer transformer = new CluCalcTransformer(treeNodeStream);
-        ControlFlowGraph graph = transformer.script();
-
-        if (!parser.getErrors().isEmpty()) {
-            StringBuilder message = new StringBuilder();
-            message.append("Unable to parse CluCalc file:\n");
-            for (String error : parser.getErrors()) {
-                message.append(error);
-                message.append('\n');
-            }
-            throw new CodeParserException(input,  message.toString());
-        }
+            graph.syntaxSpecified = true;
+        } else 
+            graph.syntaxSpecified = false;
 
         for (String output: outputs)
             graph.getPragmaOutputVariables().add(output);

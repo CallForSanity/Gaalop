@@ -29,6 +29,12 @@ import java.util.LinkedList;
  * @author Christian Steinmetz
  */
 public class GAPPDecoratingMain {
+    
+    private de.gaalop.gapp.Plugin plugin;
+
+    public GAPPDecoratingMain(de.gaalop.gapp.Plugin plugin) {
+        this.plugin = plugin;
+    }
 
     /**
      * Decorates a given ControlFlowGraph with GAPP instructions
@@ -51,7 +57,7 @@ public class GAPPDecoratingMain {
                 throw new OptimizationException("The usage of 'inputsVector' as a variable is not allowed with using the GAPP optimization!\nPlease rename the 'inputsVector' variable definition and usages!", graph);
 
 
-        boolean scalarFunctions = false;
+        boolean scalarFunctions = plugin.isUseScalarFunctions();
 
         Plugin plugin = new Plugin();
         

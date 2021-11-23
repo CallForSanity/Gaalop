@@ -6,12 +6,14 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.*;
 
 import com.sun.jna.Platform;
+import javax.swing.plaf.nimbus.NimbusLookAndFeel;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -28,8 +30,11 @@ public class Main {
     private static final String DEBUG_LOG = "debug.log";
     private static final String LOG_PATTERN = "%d{ISO8601} %-5p [%t] %c: %m%n";
 	private MainForm mainForm;
+        
+    public static File lastDirectory;
 
     public static void main(String[] args) throws IOException {
+        Main.lastDirectory = new File("test.txt").getParentFile();
         if (args.length > 0 && args[0].equals("-debug")) {
             startLog();
         }
@@ -49,12 +54,14 @@ public class Main {
     public void run() {
         try {
           if (Platform.isWindows()) {
-            UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
+            UIManager.setLookAndFeel(new NimbusLookAndFeel());
           }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
+        PluginConfigurator configurator = loadConfig1();
+        
         mainForm = new MainForm();
 
 
@@ -66,8 +73,9 @@ public class Main {
         mainWindow.setLocationRelativeTo(null);
         mainWindow.setVisible(true);
         
-        loadConfig();
-
+        
+        loadConfig2(configurator);
+        mainForm.panelPluginSelection.refreshAlgebras();
         mainForm.loadOpenedFiles();
 
         // Save the config whenever the main window is closed
@@ -80,23 +88,30 @@ public class Main {
         });
     }
 
-    private void loadConfig() {
+    private PluginConfigurator loadConfig1() {
         Properties config = new Properties();
 
-        try {
-            FileInputStream input = new FileInputStream(CONFIG_FILENAME);
+        if (new File(CONFIG_FILENAME).exists()) {
             try {
-                config.loadFromXML(input);
-            } finally {
-                input.close();
+                FileInputStream input = new FileInputStream(CONFIG_FILENAME);
+                try {
+                    config.loadFromXML(input);
+                } finally {
+                    input.close();
+                }
+            } catch (IOException e) {
+                log.error("Unable to load configuration file " + CONFIG_FILENAME, e);
             }
-        } catch (IOException e) {
-            log.error("Unable to load configuration file " + CONFIG_FILENAME, e);
+
+            log.debug("Configuration loaded: " + config);
         }
 
-        log.debug("Configuration loaded: " + config);
-
         PluginConfigurator configurator = new PluginConfigurator(config);
+        configurator.configureAll(null);
+        return configurator;
+    }
+    
+    private void loadConfig2(PluginConfigurator configurator) {
         configurator.configureAll(mainForm.getStatusBar());
     }
 

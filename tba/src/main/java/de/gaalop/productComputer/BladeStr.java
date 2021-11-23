@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 /**
  * Blade represented by an array of strings
- * @author christian
+ * @author Christian Steinmetz
  */
 public class BladeStr {
 

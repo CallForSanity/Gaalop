@@ -57,8 +57,8 @@ public final class StoreResultNode extends SequentialNode {
     }
     
     @Override
-    public StoreResultNode copyElements() {
-    	return new StoreResultNode(getGraph(), value.copy());
+    public StoreResultNode copyElements(ControlFlowGraph graph) {
+    	return new StoreResultNode(graph, value.copy());
     }
     
     @Override

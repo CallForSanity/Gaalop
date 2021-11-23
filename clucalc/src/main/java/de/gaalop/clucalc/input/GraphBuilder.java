@@ -386,7 +386,7 @@ public final class GraphBuilder {
 		addNode(macro);
 		graph.addMacro(macro);
 
-		rewireNodes(body, macro);
+		//rewireNodes(body, macro);
 
 		return macro;
 	}

@@ -5,7 +5,7 @@ import java.io.IOException;
 
 /**
  * Defines an abstract bit reader, that read bits from a file
- * @author christian
+ * @author Christian Steinmetz
  */
 public abstract class AbsBitReader {
 

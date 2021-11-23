@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package de.gaalop.visitors;
 
 import de.gaalop.cfg.AssignmentNode;
@@ -13,7 +9,7 @@ import de.gaalop.dfg.Variable;
 
 /**
  *
- * @author christian
+ * @author Christian Steinmetz
  */
 public class CFGReplaceVisitor extends EmptyControlFlowVisitor {
 

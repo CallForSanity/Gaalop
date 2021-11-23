@@ -41,12 +41,12 @@ public class Plugin extends Observable implements CodeGeneratorPlugin {
     }
 
     public void setStandalone(boolean standalone) {
-		this.standalone = standalone;
-	}
+        this.standalone = standalone;
+    }
 
     public boolean getStandalone() {
-		return standalone;
-	}
+        return standalone;
+    }
 
     @Override
     public CodeGenerator createCodeGenerator() {
@@ -69,7 +69,7 @@ public class Plugin extends Observable implements CodeGeneratorPlugin {
     }
 
     void notifyError(Throwable error) {
-    	setChanged();
-    	notifyObservers(new Notifications.Error(error));
+        setChanged();
+        notifyObservers(new Notifications.Error(error));
     }
 }

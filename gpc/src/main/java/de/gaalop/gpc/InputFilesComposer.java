@@ -1,19 +1,16 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package de.gaalop.gpc;
 
 import de.gaalop.NameTable;
+import de.gaalop.cfg.AlgebraDefinitionFile;
 import de.gaalop.cfg.AssignmentNode;
 import de.gaalop.dfg.Expression;
 import de.gaalop.dfg.MacroCall;
+import de.gaalop.visitors.BladePrinter;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import antlr.RecognitionException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -25,6 +22,8 @@ import java.util.Set;
  * @author Patrick Charrier
  */
 public class InputFilesComposer {
+    
+    public static AlgebraDefinitionFile algebraDefinitionFile;
 
     public static List<String> readInputFile() throws Exception {
         // process input file
@@ -32,12 +31,12 @@ public class InputFilesComposer {
         List<String> gaalopInFileVector = new ArrayList<String>();
         StringBuffer globalImportBuffer = new StringBuffer();
         String line;
-        final BufferedReader inputFile = Main.createFileInputStringStream(Main.inputFilePath);
+        final BufferedReader inputFile = FileMethods.createFileInputStringStream(Main.inputFilePath);
         while ((line = inputFile.readLine()) != null) {
-            if (line.contains(Main.gpcBegin)) {
+            if (line.contains(GPCCommands.gpcBegin)) {
                 readGPCBlock(inputFile, globalImportBuffer, gaalopInFileVector);
             }
-            else if(line.contains(Main.clucalcBegin))
+            else if(line.contains(GPCCommands.clucalcBegin))
                 globalImportBuffer = readClucalcBlock(globalImportBuffer,
                                                       new StringBuffer(),
                                                       inputFile,
@@ -49,24 +48,24 @@ public class InputFilesComposer {
 
     protected static void readGPCBlock(final BufferedReader inputFile,
                                         StringBuffer globalImportBuffer,
-                                        List<String> gaalopInFileVector) throws IOException, RecognitionException {
+                                        List<String> gaalopInFileVector) throws IOException {
         StringBuffer gpcBlockImportBuffer = new StringBuffer();
         Map<String,Set<String>> mvBladeOutput = new HashMap<String,Set<String>>();
         StringBuilder commandBuffer = new StringBuilder();
         String line;
         while ((line = inputFile.readLine()) != null) {
-            if (line.contains(Main.clucalcBegin)) { // start clucalc block
+            if (line.contains(GPCCommands.clucalcBegin)) { // start clucalc block
                 readClucalcBlock(globalImportBuffer,
                                  gpcBlockImportBuffer,
                                  inputFile,
                                  gaalopInFileVector);
                 // this line should not be part of the command buffer
                 continue;
-            } else if(line.contains(Main.gpcEnd)) // end gpc block
+            } else if(line.contains(GPCCommands.gpcEnd)) // end gpc block
                 break;
             
             // add line to command buffer
-            commandBuffer.append(line).append(Main.LINE_END);
+            commandBuffer.append(line).append(GPCCommands.LINE_END);
             // process command buffer
             processCommandBuffer(commandBuffer,
                                  gpcBlockImportBuffer,
@@ -83,7 +82,7 @@ public class InputFilesComposer {
                 finalInFile.append("//#pragma output ").append(entry.getKey());
                 for(String bladeName : entry.getValue())
                     finalInFile.append(" ").append(bladeName);
-                finalInFile.append(Main.LINE_END);
+                finalInFile.append(GPCCommands.LINE_END);
             }
             
             // append original file
@@ -95,7 +94,7 @@ public class InputFilesComposer {
 
     protected static void processCommandBuffer(StringBuilder commandBuffer,
                                                StringBuffer gpcBlockImportBuffer,
-                                               Map<String,Set<String>> mvBladeOutput) throws RecognitionException, IOException {
+                                               Map<String,Set<String>> mvBladeOutput) throws IOException {
         int commandEndPos = -1;
         while (true) {
             // get buffered command
@@ -122,17 +121,17 @@ public class InputFilesComposer {
             command = command.substring(0, commandEndPos);
             
             processMvGetBladeCoeff(command,mvBladeOutput);
-            if (command.contains(Main.gpcMvFromArray)) {
+            if (command.contains(GPCCommands.gpcMvFromArray)) {
                 processMvFromArray(command, gpcBlockImportBuffer);
-            } else if (command.contains(Main.gpcMvFromStridedArray)) {
+            } else if (command.contains(GPCCommands.gpcMvFromStridedArray)) {
                 processMvFromStridedArray(command, gpcBlockImportBuffer);
-            } else if (command.contains(Main.gpcMvFromVector)) {
+            } else if (command.contains(GPCCommands.gpcMvFromVector)) {
                 processMvFromVector(command, gpcBlockImportBuffer);
-            } else if (command.contains(Main.gpcMvToArray)) {
+            } else if (command.contains(GPCCommands.gpcMvToArray)) {
                 processMvToArray(command, mvBladeOutput);
-            } else if (command.contains(Main.gpcMvToStridedArray)) {
+            } else if (command.contains(GPCCommands.gpcMvToStridedArray)) {
                 processMvToStridedArray(command, mvBladeOutput);
-            } else if (command.contains(Main.gpcMvToVector)) {
+            } else if (command.contains(GPCCommands.gpcMvToVector)) {
                 processMvToVector(command, mvBladeOutput);
             }
 
@@ -153,21 +152,21 @@ public class InputFilesComposer {
         // read until end of optimized file
         String line;
         while ((line = inputFile.readLine()) != null) {
-            if (line.contains(Main.clucalcEnd))
+            if (line.contains(GPCCommands.clucalcEnd))
                 break;
             
             gaalopInFileStream.append(line);
-            gaalopInFileStream.append(Main.LINE_END);
+            gaalopInFileStream.append(GPCCommands.LINE_END);
         }
         
         // warning, if we reach something illegal before clucalc end
         if (line == null)
             System.err.println("Warning: Reached end of file before #pragma clucalc end");
-        else if (line.contains(Main.gpcEnd))
+        else if (line.contains(GPCCommands.gpcEnd))
             System.err.println("Warning: Reached #pragma gpc end before #pragma clucalc end");
-        else if (line.contains(Main.gpcBegin))
+        else if (line.contains(GPCCommands.gpcBegin))
             System.err.println("Warning: Reached #pragma gpc end before #pragma clucalc end");
-        else if (line.contains(Main.clucalcBegin))
+        else if (line.contains(GPCCommands.clucalcBegin))
             System.err.println("Warning: Reached #pragma clucalc begin before #pragma clucalc end");
 
         // add to vector
@@ -177,14 +176,14 @@ public class InputFilesComposer {
         return new StringBuffer(); //globalImportBuffer; TODO fixme
     }
 
-    public static void processMvFromArray(final String command, StringBuffer output) throws RecognitionException, IOException {
+    public static void processMvFromArray(final String command, StringBuffer output) throws IOException {
         // parse assignment
         AssignmentNode assignment = Common.parseAssignment(command);
         if (assignment == null)
             return;
 
         // print mv assignment
-        output.append(Main.LINE_END);
+        output.append(GPCCommands.LINE_END);
         output.append(assignment.getVariable().getName()); // mv name
         output.append(" = 0");
 
@@ -201,14 +200,14 @@ public class InputFilesComposer {
         output.append(";\n");
     }
     
-    public static void processMvFromStridedArray(final String command, StringBuffer output) throws RecognitionException, IOException {
+    public static void processMvFromStridedArray(final String command, StringBuffer output) throws IOException {
         // parse assignment
         AssignmentNode assignment = Common.parseAssignment(command);
         if (assignment == null)
             return;
 
         // print mv assignment
-        output.append(Main.LINE_END);
+        output.append(GPCCommands.LINE_END);
         output.append(assignment.getVariable().getName()); // mv name
         output.append(" = 0");
 
@@ -228,14 +227,14 @@ public class InputFilesComposer {
         output.append(";\n");
     }
     
-    public static void processMvFromVector(final String command, StringBuffer output) throws RecognitionException, IOException {
+    public static void processMvFromVector(final String command, StringBuffer output) throws IOException {
         // parse assignment
         AssignmentNode assignment = Common.parseAssignment(command);
         if (assignment == null)
             return;
 
         // print mv assignment
-        output.append(Main.LINE_END);
+        output.append(GPCCommands.LINE_END);
         output.append(assignment.getVariable().getName()); // mv name
         output.append(" = 0");
 
@@ -271,7 +270,7 @@ public class InputFilesComposer {
         // replace step by step
         CommandFunctionReplacer cp = new CommandFunctionReplacer(
                 command,
-                Main.gpcMvGetBladeCoeff);
+                GPCCommands.gpcMvGetBladeCoeff);
         while (cp.isFound()) {
             final String mv = cp.getCommandParams()[0];
             Set<String> set = getMvBladeOutputSet(mvBladeOutput,mv);
@@ -281,12 +280,17 @@ public class InputFilesComposer {
             // search for further occurences
             cp = new CommandFunctionReplacer(
                     cp.getCleanedLineEnd(),
-                    Main.gpcMvGetBladeCoeff);
+                    GPCCommands.gpcMvGetBladeCoeff);
         }
     }
     
+    private static String replace1_0(String str) {
+        return ("1.0".equals(str)) ? "1": str;
+    }
+    
+    
     public static void processMvToArray(final String command,
-                                        Map<String,Set<String>> mvBladeOutput) throws RecognitionException {
+                                        Map<String,Set<String>> mvBladeOutput) throws IOException {
         // parse assignment
         AssignmentNode assignment = Common.parseAssignment(command);
         if (assignment == null)
@@ -301,6 +305,10 @@ public class InputFilesComposer {
         if(((MacroCall) assignment.getValue()).getArguments().size() == 2
            && it_copy.next().equals("*")) {
             
+            for (Expression blade: algebraDefinitionFile.blades) 
+                set.add(replace1_0(BladePrinter.print(blade)));
+            
+            /*
             set.add("1");
             
             set.add("e1");
@@ -342,6 +350,7 @@ public class InputFilesComposer {
             set.add("e2^e3^einf^e0");
 
             set.add("e1^e2^e3^einf^e0");
+            */
             
             mvBladeOutput.put(mv, set);
             return;
@@ -356,7 +365,7 @@ public class InputFilesComposer {
     }
 
     public static void processMvToStridedArray(final String command,
-                                                Map<String,Set<String>> mvBladeOutput) throws RecognitionException {
+                                                Map<String,Set<String>> mvBladeOutput) throws IOException {
         // parse assignment
         AssignmentNode assignment = Common.parseAssignment(command);
         if (assignment == null) {
@@ -379,7 +388,7 @@ public class InputFilesComposer {
     }
 
     public static void processMvToVector(final String command,
-                                        Map<String,Set<String>> mvBladeOutput) throws RecognitionException {
+                                        Map<String,Set<String>> mvBladeOutput) throws IOException {
         // parse assignment
         AssignmentNode assignment = Common.parseAssignment(command);
         if (assignment == null) {

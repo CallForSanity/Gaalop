@@ -1,6 +1,5 @@
 package de.gaalop.cfg;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -12,10 +11,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import de.gaalop.InputFile;
+import de.gaalop.StringList;
 import de.gaalop.dfg.Expression;
-import de.gaalop.dfg.MacroCall;
+import de.gaalop.dfg.MultivectorComponent;
 import de.gaalop.dfg.Variable;
-import java.util.*;
 
 /**
  * This class models a control dataflow graph.
@@ -61,6 +60,12 @@ public final class ControlFlowGraph {
 
 	private HashMap<String, String> pragmaMinValue = new HashMap<String, String>();
 	private HashMap<String, String> pragmaMaxValue = new HashMap<String, String>();
+        
+        public boolean syntaxSpecified = false;
+        public StringList syntaxInputs = new StringList();
+        public StringList syntaxOutputs = new StringList();
+        
+        public boolean tbaOptimized = true;
         
 	public LinkedList<ExpressionStatement> visualizerExpressions = new LinkedList<ExpressionStatement>();
         private HashMap<String, Expression> renderingExpressions = new HashMap<String, Expression>();
@@ -373,6 +378,15 @@ public final class ControlFlowGraph {
 		accept(printer);
 		return printer.getCode();
 	}
+        
+        /**
+         * Returns the blade string representation of a given multivector component.
+         * @param multivectorComponent
+         * @return 
+         */
+        public String getBladeString(MultivectorComponent multivectorComponent) {
+            return getAlgebraDefinitionFile().getBladeString(multivectorComponent.getBladeIndex());
+        }
 
 	private static class Printer implements ControlFlowVisitor {
 
@@ -504,6 +518,87 @@ public final class ControlFlowGraph {
 
     public void setAlgebraDefinitionFile(AlgebraDefinitionFile algebraDefinitionFile) {
         this.algebraDefinitionFile = algebraDefinitionFile;
+    }
+
+    /**
+     * Computes the order of the inputs.
+     * If a syntax pragma is specified, then the order given by syntax is used, otherwise, a lexiographical ordering ignoring case is used.
+     * @return The order of the inputs as list of variable names.
+     */
+    public StringList getInputs() {
+        StringList list = new StringList();
+        if (syntaxSpecified) {
+            HashSet<Variable> inputVars = new HashSet<>(getInputVariables());
+            for (String syntaxInput: syntaxInputs) {
+                Variable syntaxInputVar = new Variable(syntaxInput);
+                
+                if (inputVars.contains(syntaxInputVar)) {
+                    //add to list, if in inputVars
+                    list.add(syntaxInput);
+                    //remove from input Vars
+                    inputVars.remove(syntaxInputVar);
+                } else {
+                    throw new IllegalStateException("Input "+syntaxInput+", specified in in2outPragma, is no input variable in the script!");
+                }
+            }
+            if (inputVars.size() > 0) {
+                throw new IllegalStateException("Input variables "+inputVars+", must be in in2outPragma!");
+            }
+        } else {
+            for (Variable var : getInputVariables()) 
+                list.add(var.getName());
+            list.sortIgnoringCase();
+        }
+        return list;            
+    }
+    
+    /**
+     * Computes the order of the local variables.
+     * @return The order of the locals as list of variable names.
+     */
+    public StringList getLocals() {
+        StringList list = new StringList();
+        for (Variable var : getLocalVariables()) 
+            list.add(var.getName());
+        list.sortIgnoringCase();
+        return list;            
+    }
+    
+    /**
+     * Computes the order of the scalar variables.
+     * @return The order of the scalars as list of variable names.
+     */
+    public StringList getScalars() {
+        StringList list = new StringList();
+        for (Variable var : getScalarVariables()) 
+            list.add(var.getName());
+        list.sortIgnoringCase();
+        return list;            
+    }
+    
+    /**
+     * Computes the order of the outputs.
+     * If a syntax pragma is specified, then the order given by syntax is used, otherwise, a lexiographical ordering ignoring case is used.
+     * @return The order of the outputs as list of variable names.
+     */
+    public StringList getOutputs() {
+        HashSet<String> outputs = OutputsCollector.getOutputsFromGraph(this);
+        
+        StringList list;
+        if (syntaxSpecified) {
+            list = new StringList();
+            for (String syntaxOutput: syntaxOutputs) {
+                if (outputs.contains(syntaxOutput)) {
+                    list.add(syntaxOutput);
+                } else {
+                    throw new IllegalStateException("Output "+syntaxOutput+", specified in in2outPragma, must be leaded by a question sign!");
+                }
+            }
+        } else {
+            list = new StringList(outputs);
+            list.sortIgnoringCase();
+        }
+        return list;
     }
 
 }

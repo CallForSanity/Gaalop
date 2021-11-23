@@ -1,12 +1,8 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package de.gaalop.gpc;
 
 import de.gaalop.*;
 import de.gaalop.algebra.AlStrategy;
-import de.gaalop.compressed.CompressedCodeGenerator;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -54,7 +50,7 @@ public class BlockTransformer {
                 
                 // compose file
                 StringBuffer inputFileStream = new StringBuffer();
-                inputFileStream.append(variableDeclarations.toString()).append(Main.LINE_END);
+                inputFileStream.append(variableDeclarations.toString()).append(GPCCommands.LINE_END);
                 inputFileStream.append(gaalopInFileVector.get(gaalopFileCount));
 
                 System.out.println(inputFileStream.toString());
@@ -71,7 +67,7 @@ public class BlockTransformer {
                     String content = output.getContent();
                     content = filterHashedBladeCoefficients(content);
                     content = filterImportedMultivectorsFromExport(content, mvComponents.keySet());
-                    gaalopOutFileStream.append(content).append(Main.LINE_END);
+                    gaalopOutFileStream.append(content).append(GPCCommands.LINE_END);
                 }
 
                 gaalopOutFileVector.add(gaalopOutFileStream.toString());
@@ -104,7 +100,7 @@ public class BlockTransformer {
         while ((line = inStream.readLine()) != null) {
 
             // find multivector meta-statement
-            int index = line.indexOf(Main.mvSearchString); // will also find components
+            int index = line.indexOf(GPCCommands.mvSearchString); // will also find components
             if (index >= 0) {
                 // extract exported multivector
                 final String exportedMV = line.substring(index).split(" ")[3];
@@ -116,7 +112,7 @@ public class BlockTransformer {
             // skip until next multivector meta-statement
             if (!skip) {
                 outStream.append(line);
-                outStream.append(Main.LINE_END);
+                outStream.append(GPCCommands.LINE_END);
             } else if(importedMVs.isEmpty())
                 System.err.println("Internal Error: Gaalop Precompiler should not remove multivectors if there are none imported!");
         }
@@ -133,7 +129,7 @@ public class BlockTransformer {
             for(Entry<String,String> entry : NameTable.getInstance().getTable().entrySet())
                 line = line.replaceAll(entry.getKey(),entry.getValue());
             
-            outStream.append(line).append(Main.LINE_END);
+            outStream.append(line).append(GPCCommands.LINE_END);
         }
 
         return outStream.toString();
@@ -232,13 +228,6 @@ public class BlockTransformer {
         Set<OptimizationStrategyPlugin> plugins = Plugins.getOptimizationStrategyPlugins();
         for (OptimizationStrategyPlugin plugin : plugins) {
             if (plugin.getClass().getName().equals(Main.optimizationStrategyPlugin)) {
-                if (Main.externalOptimizerPath.length() != 0) {
-                    if(plugin instanceof de.gaalop.maple.Plugin) {
-                        ((de.gaalop.maple.Plugin) plugin).setMapleBinaryPath(Main.externalOptimizerPath);
-                        ((de.gaalop.maple.Plugin) plugin).setMapleJavaPath(Main.externalOptimizerPath + "/../java");
-                    }
-                }
-
                 return plugin.createOptimizationStrategy();
             }
         }
@@ -253,7 +242,7 @@ public class BlockTransformer {
         for (CodeGeneratorPlugin plugin : plugins) {
             if (plugin.getClass().getName().equals(Main.codeGeneratorPlugin)) {
                 if(plugin instanceof de.gaalop.compressed.CompressedCodeGenerator && Main.useDoubles) {
-                    ((de.gaalop.compressed.CompressedCodeGenerator) plugin).setVariableType("double");
+                    ((de.gaalop.compressed.Plugin) plugin).useDouble = true;
                 }
                 
                 return plugin.createCodeGenerator();

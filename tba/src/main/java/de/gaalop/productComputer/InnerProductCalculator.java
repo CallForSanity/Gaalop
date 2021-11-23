@@ -3,7 +3,7 @@ package de.gaalop.productComputer;
 
 /**
  * Calculates the inner product of two blades
- * @author christian
+ * @author Christian Steinmetz
  */
 public class InnerProductCalculator implements ProductCalculator {
 

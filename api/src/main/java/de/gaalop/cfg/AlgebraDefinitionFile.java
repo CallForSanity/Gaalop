@@ -1,10 +1,10 @@
 package de.gaalop.cfg;
 
 import de.gaalop.dfg.Expression;
+import de.gaalop.visitors.BladePrinter;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.HashMap;
 
 /**
@@ -33,7 +33,28 @@ public class AlgebraDefinitionFile {
      * The line contating the map to transform from the zeroinf base to the plusminus base
      */
     public String lineMapZeroInfToPlusMinus;
-
+    
+    public AlgebraSignature getSignature() {
+        int p = 0;
+        int q = 0;
+        int r = 0;
+        
+        for (Byte b: baseSquares.values()) {
+            switch (b.byteValue()) {
+                case 1:
+                    p++;
+                    break;
+                case -1:
+                    q++;
+                    break;
+                case 0:
+                    r++;
+                    break;
+            }
+        }
+        
+        return new AlgebraSignature(p, q, r);
+    }
 
     //generated attributes
     public Expression[] blades;
@@ -53,7 +74,7 @@ public class AlgebraDefinitionFile {
      * @return The string representing the blade
      */
     public String getBladeString(int index) {
-        return blades[index].toString();
+        return BladePrinter.print(blades[index]);
     }
 
     /**
@@ -112,11 +133,11 @@ public class AlgebraDefinitionFile {
     }
 
     /**
-     * Loads a algebra definition from a inputStream
-     * @param inputStream The InputStream to be used
+     * Loads a algebra definition from a Reader
+     * @param reader The reader to be used
      */
-    public void loadFromFile(InputStream inputStream) throws IOException {
-        BufferedReader d = new BufferedReader(new InputStreamReader(inputStream));
+    public void loadFromFile(Reader reader) throws IOException {
+        BufferedReader d = new BufferedReader(reader);
         base = parseStrArray(d.readLine());
         lineMapPlusMinusToZeroInf = d.readLine();
         base2 = parseStrArray(d.readLine());

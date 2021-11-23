@@ -14,17 +14,8 @@ import java.nio.charset.Charset;
 public class CompressedCodeGenerator implements CodeGenerator {
     
     private final Plugin plugin;
-    private String variableType = "float";
     
-    public String getVariableType() {
-		return variableType;
-	}
-
-	public void setVariableType(String variableType) {
-		this.variableType = variableType;
-	}
-
-	CompressedCodeGenerator(Plugin plugin) {
+    CompressedCodeGenerator(Plugin plugin) {
     	this.plugin = plugin;
     }
 
@@ -64,8 +55,7 @@ public class CompressedCodeGenerator implements CodeGenerator {
         } catch (Throwable error) {
         	plugin.notifyError(error);
         }
-        CompressedVisitor visitor = new CompressedVisitor(mvSizeVisitor.getMvSizes(),plugin.getStandalone());
-        visitor.setVariableType(variableType);
+        CompressedVisitor visitor = new CompressedVisitor(mvSizeVisitor.getMvSizes(),plugin.getStandalone(),plugin.getUseDouble());
         try {
         	in.accept(visitor);
         } catch (Throwable error) {

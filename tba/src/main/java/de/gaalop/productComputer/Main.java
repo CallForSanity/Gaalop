@@ -1,6 +1,7 @@
 package de.gaalop.productComputer;
 
 import de.gaalop.algebra.AlStrategy;
+import de.gaalop.algebra.DefinedAlgebra;
 import de.gaalop.cfg.AlgebraDefinitionFile;
 import de.gaalop.tba.IMultTable;
 import de.gaalop.tba.MultTableAbsDirectComputer;
@@ -8,7 +9,7 @@ import de.gaalop.tba.MultTableImpl;
 import de.gaalop.tba.table.TableFormat;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.InputStreamReader;
 
 /**
  * Creates the multiplication table
@@ -17,12 +18,10 @@ import java.io.InputStream;
 public class Main {
 
     public static void main(String[] args) throws IOException {
-        int[] dimensions = {8};
-        for (int dimension: dimensions) {
+        for (DefinedAlgebra definedAlgebra: de.gaalop.algebra.Plugin.getDefinedAlgebras()) {
             ProductComputer productComputer = new ProductComputer();
-            InputStream inputStream = AlStrategy.class.getResourceAsStream("algebra/"+dimension+"d/definition.csv");
             AlgebraDefinitionFile alFile = new AlgebraDefinitionFile();
-            alFile.loadFromFile(inputStream);
+            alFile.loadFromFile(new InputStreamReader(AlStrategy.class.getResourceAsStream("algebra/"+definedAlgebra.id+"/definition.csv")));
             AlgebraPC algebraPC = new AlgebraPC(alFile);
             productComputer.initialize(algebraPC);
 
@@ -48,7 +47,7 @@ public class Main {
                     geo.setProduct(i, j, geoLive.getProduct(i, j));
                 }
             
-            TableFormat.writeToFile(bladeCount,algebraPC.base.length,inner,outer,geo,new FileOutputStream("products"+dimension+".csv"),TableFormat.TABLE_COMPRESSED_MAX);
+            TableFormat.writeToFile(bladeCount,algebraPC.base.length,inner,outer,geo,new FileOutputStream("products_"+definedAlgebra.id+".csv"),TableFormat.TABLE_COMPRESSED_MAX);
         }
 
     }

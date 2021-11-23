@@ -232,7 +232,7 @@ public class VerilogIRConverterVisitorCookies implements ExpressionVisitor,
 //    }
 
     public boolean isPowerOf2(Expression node) {
-        float f;
+        double f;
         int fi;
         if (node instanceof FloatConstant) {
 
@@ -380,7 +380,7 @@ public class VerilogIRConverterVisitorCookies implements ExpressionVisitor,
 		else {
                     assert exnode.getRight() instanceof FloatConstant;
                     FloatConstant c = (FloatConstant)exnode.getRight();
-                    assert (c.getValue() - (float)(new Float(c.getValue())).intValue() == 0f);
+                    assert (c.getValue() - (double)(new Double(c.getValue())).intValue() == 0f);
                     int exponent = (int)c.getValue();
                     assert exponent >= 2 : "assert exponent >= 2 error: exponent="+exponent;
 

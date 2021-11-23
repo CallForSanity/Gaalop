@@ -16,7 +16,7 @@ public class GAPPMultivectorComponent extends GAPPVariable {
 
     @Override
     public String prettyPrint() {
-        return name + "{" + bladeIndex + "}";
+        return name + "[" + bladeIndex + "]";
     }
 
     public int getBladeIndex() {

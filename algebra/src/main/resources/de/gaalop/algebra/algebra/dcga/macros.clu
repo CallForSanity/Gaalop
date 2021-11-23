@@ -1,0 +1,361 @@
+// DCGA macros.clu
+eo = { eo1^eo2 }
+ei = { ei1^ei2 }
+
+// DCGA point value-extraction operators for defining DCGA GIPNS 2-vector entities
+Tx = { (1/2)*(e1^ei2+ei1^e6) }
+Ty = { (1/2)*(e2^ei2+ei1^e7) }
+Tz = { (1/2)*(e3^ei2+ei1^e8) }
+Txy = { (1/2)*(e7^e1+e6^e2) }
+Tyz = { (1/2)*(e7^e3+e8^e2) }
+Tzx = { (1/2)*(e8^e1+e6^e3) }
+Txx = { e6^e1 }
+Tyy = { e7^e2 }
+Tzz = { e8^e3 }
+Txt2 = { e1^eo2+eo1^e6 }
+Tyt2 = { e2^eo2+eo1^e7 }
+Tzt2 = { e3^eo2+eo1^e8 }
+T1 = { -ei() }
+Tt2 = { eo2^ei1+ei2^eo1 }
+Tt4 = { -4*eo() }
+
+// Derivative operators
+Dx = { 2*Tx()/Txx() }
+Dy = { 2*Ty()/Tyy() }
+Dz = { 2*Tz()/Tzz() }
+// directional derivative operator
+// com(Dn,E) on a quadric surface entity E
+// makes an entity representing the directional derivative
+Dn = {
+ x = _P(1); y = _P(2); z = _P(3); mag = sqrt(x*x+y*y+z*z);
+ nx = x/mag; ny = y/mag; nz = z/mag;
+ nx*Dx() + ny*Dy() + nz*Dz()
+}
+// Commutator and anti-commutator
+com = { (1/2)*(_P(1)*_P(2)-_P(2)*_P(1)) }
+acom = { (1/2)*(_P(1)*_P(2)+_P(2)*_P(1)) }
+
+// directional pseudo-antiderivative operators
+// try com(In,E) on a linear entity
+// integration constant can be added after as C*T1
+// Txt2,Tyt2,Tzt2 are pseudo-inverses of Tx,Ty,Tz
+Ix = { Txt2()/Txx()/2 }
+Iy = { Tyt2()/Tyy()/2 }
+Iz = { Tzt2()/Tzz()/2 }
+In = {
+ x = _P(1); y = _P(2); z = _P(3); mag = sqrt(x*x+y*y+z*z);
+ nx = x/mag; ny = y/mag; nz = z/mag;
+ nx*Ix() + ny*Iy() + nz*Iz()
+}
+
+// Pseudoscalars
+IE1 = { e1^e2^e3 }
+IE2 = { e6^e7^e8 }
+IC1 = { e1^e2^e3^e4^e5 }
+IC2 = { e6^e7^e8^e9^e10 }
+ID =  { e1^e2^e3^e4^e5^e6^e7^e8^e9^e10 }
+
+// DCGA dualization macro
+DD =  { -_P(1).ID() }
+// CGA1 and CGA2 dualizations
+C1D = { -_P(1).IC1() }
+C2D = { -_P(1).IC2() }
+// Euclidean 1 and Euclidean 2 dualizations
+E1D = { -_P(1).IE1() }
+E2D = { -_P(1).IE2() }
+// special Dual macro for DCGA dualization operator *
+Dual = { DD(_P(1)) }
+
+// Normalize a non-null vector
+Normalize = { _P(1)/sqrt(_P(1)._P(1)) }
+// Convert degrees angle to radians
+Deg2Rad = { _P(1)*acos(-1)/180 }
+
+// CGA1_Point(x,y,z) representing point at (x,y,z) in Euclidean 3D
+CGA1_Point = {
+ _P(1)*e1 + _P(2)*e2 + _P(3)*e3 +
+ (1/2)*(_P(1)*_P(1) + _P(2)*_P(2) + _P(3)*_P(3))*ei1 + eo1
+}
+// CGA2_Point(x,y,z) representing point at (x,y,z) in Euclidean 3D
+CGA2_Point = {
+ _P(1)*e6 + _P(2)*e7 + _P(3)*e8 +
+ (1/2)*(_P(1)*_P(1) + _P(2)*_P(2) + _P(3)*_P(3))*ei2 + eo2
+}
+// special DCGA createPoint macro
+createPoint = { CGA1_Point(_P(1),_P(2),_P(3))^CGA2_Point(_P(1),_P(2),_P(3)) }
+// tangent point tester in the direction x (restart gaalop to try this)
+/*
+createPoint = {
+  acom(CGA1_Point(_P(1),_P(2),_P(3))^CGA2_Point(_P(1),_P(2),_P(3)),Dn(2,1,0))
+}
+*/
+
+DCGA_Point = { createPoint(_P(1),_P(2),_P(3)) }
+Normalize_CGA1_Point = { _P(1)/(-_P(1).ei1) }
+Normalize_CGA2_Point = { _P(1)/(-_P(1).ei2) }
+Normalize_DCGA_Point = { _P(1)/(-_P(1).ei()) }
+// Embed vector as CGA1 point (shorter name for CGA1_Point)
+EV1 = { CGA1_Point(_P(1),_P(2),_P(3)) }
+// Embed vector as CGA2 point (shorter name for CGA2_Point)
+EV2 = { CGA2_Point(_P(1),_P(2),_P(3)) }
+// Embed vector as DCGA point (shorter name for DCGA_Point)
+EV = { DCGA_Point(_P(1),_P(2),_P(3)) }
+// Project CGA1 point back to a vector in Euclidean 1 space
+PV1 = { -(Normalize_CGA1_Point(_P(1)).IE1()).IE1() }
+// Project CGA2 point back to a vector in Euclidean _2_ space
+PV2 = { -(Normalize_CGA2_Point(_P(1)).IE2()).IE2() }
+// Project DCGA point back to a vector in Euclidean 1 space
+PV = { PV1(_P(1).ei2) }
+
+// Rotor(x,y,z,a) with axis (x,y,z) and rotation angle a in _degrees_
+CGA1_Rotor = { t = Deg2Rad(_P(4));
+ cos(t/2) + sin(t/2)*E1D(Normalize(_P(1)*e1 + _P(2)*e2 + _P(3)*e3))
+}
+CGA2_Rotor = { t = Deg2Rad(_P(4));
+ cos(t/2) + sin(t/2)*E2D(Normalize(_P(1)*e6 + _P(2)*e7 + _P(3)*e8))
+}
+Rotor = {
+ CGA1_Rotor(_P(1),_P(2),_P(3),_P(4))^CGA2_Rotor(_P(1),_P(2),_P(3),_P(4))
+}
+// Dilator(d) with scalar dilation factor d
+CGA1_Dilator = { (1/2)*(1+_P(1)) + (1/2)*(1-_P(1))*(ei1^eo1) }
+CGA2_Dilator = { (1/2)*(1+_P(1)) + (1/2)*(1-_P(1))*(ei2^eo2) }
+Dilator = { CGA1_Dilator(_P(1))^CGA2_Dilator(_P(1)) }
+// Translator(x,y,z) for translation by displacement vector (x,y,z)
+CGA1_Translator = { 1 - (1/2)*(_P(1)*e1+_P(2)*e2+_P(3)*e3)*ei1 }
+CGA2_Translator = { 1 - (1/2)*(_P(1)*e6+_P(2)*e7+_P(3)*e8)*ei2 }
+Translator = {
+ CGA1_Translator(_P(1),_P(2),_P(3))^CGA2_Translator(_P(1),_P(2),_P(3))
+}
+
+// Ellipsoid(px,py,pz,rx,ry,rz) with center (px,py,pz), radii rx ry rz
+Ellipsoid = {
+ pxSq = _P(1)*_P(1); pySq = _P(2)*_P(2); pzSq = _P(3)*_P(3);
+ rxSq = _P(4)*_P(4); rySq = _P(5)*_P(5); rzSq = _P(6)*_P(6);
+ -2*_P(1)*Tx()/rxSq + -2*_P(2)*Ty()/rySq + -2*_P(3)*Tz()/rzSq +
+ Txx()/rxSq + Tyy()/rySq + Tzz()/rzSq +
+ (pxSq/rxSq + pySq/rySq + pzSq/rzSq - 1)*T1()
+}
+// Toroid(R,r) with major radius R and minor radius r
+// Generalizes the Sphere(0,0,0,r) ~ Toroid(0,r)
+Toroid = {
+ R = _P(1); r = _P(2); dSq = R*R - r*r;
+ Tt4() + 2*Tt2()*dSq + T1()*dSq*dSq - 4*R*R*(Txx()+Tyy())
+}
+// Sphere(x,y,z,r) with center point (x,y,z) and radius r
+CGA1_Sphere = { CGA1_Point(_P(1),_P(2),_P(3)) - (1/2)*_P(4)*_P(4)*ei1 }
+CGA2_Sphere = { CGA2_Point(_P(1),_P(2),_P(3)) - (1/2)*_P(4)*_P(4)*ei2 }
+Sphere = {
+ CGA1_Sphere(_P(1),_P(2),_P(3),_P(4))^CGA2_Sphere(_P(1),_P(2),_P(3),_P(4))
+}
+// Plane(nx,ny,nz,d) with normal (nx,ny,nz) at distance d from origin
+CGA1_Plane = { Normalize(_P(1)*e1 + _P(2)*e2 + _P(3)*e3) + _P(4)*ei1 }
+CGA2_Plane = { Normalize(_P(1)*e6 + _P(2)*e7 + _P(3)*e8) + _P(4)*ei2 }
+Plane = {
+ CGA1_Plane(_P(1),_P(2),_P(3),_P(4))^CGA2_Plane(_P(1),_P(2),_P(3),_P(4))
+}
+// Line(px,py,pz,dx,dy,dz) through (px,py,pz) in direction of (dx,dy,dz)
+CGA1_Line = {
+ d = Normalize(_P(4)*e1 + _P(5)*e2 + _P(6)*e3); D = E1D(d);
+ p = _P(1)*e1 + _P(2)*e2 + _P(3)*e3; D - (p.D)*ei1
+}
+CGA2_Line = {
+ d = Normalize(_P(4)*e6 + _P(5)*e7 + _P(6)*e8); D = E2D(d);
+ p = _P(1)*e6 + _P(2)*e7 + _P(3)*e8; D - (p.D)*ei2
+}
+Line = {
+ CGA1_Line(_P(1),_P(2),_P(3),_P(4),_P(5),_P(6))^
+ CGA2_Line(_P(1),_P(2),_P(3),_P(4),_P(5),_P(6))
+}
+
+// Cylinder(px,py,pz,rx,ry,rz) with center (px,py,pz) and radii rx ry rz
+CylinderX = {
+ px = _P(1); py = _P(2); pz = _P(3); rx = _P(4); ry = _P(5); rz = _P(6);
+ pxSq = _P(1)*_P(1); pySq = _P(2)*_P(2); pzSq = _P(3)*_P(3);
+ rxSq = _P(4)*_P(4); rySq = _P(5)*_P(5); rzSq = _P(6)*_P(6);
+ -2*py*Ty()/rySq + -2*pz*Tz()/rzSq + Tyy()/rySq + Tzz()/rzSq +
+ (pySq/rySq + pzSq/rzSq - 1)*T1()
+}
+CylinderY = {
+ px = _P(1); py = _P(2); pz = _P(3); rx = _P(4); ry = _P(5); rz = _P(6);
+ pxSq = _P(1)*_P(1); pySq = _P(2)*_P(2); pzSq = _P(3)*_P(3);
+ rxSq = _P(4)*_P(4); rySq = _P(5)*_P(5); rzSq = _P(6)*_P(6);
+ -2*px*Tx()/rxSq + -2*pz*Tz()/rzSq + Txx()/rxSq + Tzz()/rzSq +
+ (pxSq/rxSq + pzSq/rzSq - 1)*T1()
+}
+CylinderZ = {
+ px = _P(1); py = _P(2); pz = _P(3); rx = _P(4); ry = _P(5); rz = _P(6);
+ pxSq = _P(1)*_P(1); pySq = _P(2)*_P(2); pzSq = _P(3)*_P(3);
+ rxSq = _P(4)*_P(4); rySq = _P(5)*_P(5); rzSq = _P(6)*_P(6);
+ -2*px*Tx()/rxSq + -2*py*Ty()/rySq + Txx()/rxSq + Tyy()/rySq +
+ (pxSq/rxSq + pySq/rySq - 1)*T1()
+}
+
+// Cone(px,py,pz,rx,ry,rz) with center (px,py,pz) and radii rx ry rz
+ConeX = {
+ px = _P(1); py = _P(2); pz = _P(3); rx = _P(4); ry = _P(5); rz = _P(6);
+ pxSq = _P(1)*_P(1); pySq = _P(2)*_P(2); pzSq = _P(3)*_P(3);
+ rxSq = _P(4)*_P(4); rySq = _P(5)*_P(5); rzSq = _P(6)*_P(6);
+ 2*(px*Tx()/rxSq - py*Ty()/rySq - pz*Tz()/rzSq) -
+ Txx()/rxSq + Tyy()/rySq + Tzz()/rzSq + (pySq/rySq + pzSq/rzSq - pxSq/rxSq)*T1()
+}
+ConeY = {
+ px = _P(1); py = _P(2); pz = _P(3); rx = _P(4); ry = _P(5); rz = _P(6);
+ pxSq = _P(1)*_P(1); pySq = _P(2)*_P(2); pzSq = _P(3)*_P(3);
+ rxSq = _P(4)*_P(4); rySq = _P(5)*_P(5); rzSq = _P(6)*_P(6);
+ 2*(py*Ty()/rySq - pz*Tz()/rzSq - px*Tx()/rxSq) +
+ Txx()/rxSq - Tyy()/rySq + Tzz()/rzSq + (pxSq/rxSq - pySq/rySq + pzSq/rzSq)*T1()
+}
+ConeZ = {
+ px = _P(1); py = _P(2); pz = _P(3); rx = _P(4); ry = _P(5); rz = _P(6);
+ pxSq = _P(1)*_P(1); pySq = _P(2)*_P(2); pzSq = _P(3)*_P(3);
+ rxSq = _P(4)*_P(4); rySq = _P(5)*_P(5); rzSq = _P(6)*_P(6);
+ 2*(pz*Tz()/rzSq - py*Ty()/rySq - px*Tx()/rxSq) +
+ Txx()/rxSq + Tyy()/rySq - Tzz()/rzSq + (pxSq/rxSq + pySq/rySq - pzSq/rzSq)*T1()
+}
+
+// Paraboloid(px,py,pz,rx,ry,rz) with vertex (px,py,pz) and radii rx ry rz
+ParaboloidX = {
+ px = _P(1); py = _P(2); pz = _P(3); rx = _P(4); ry = _P(5); rz = _P(6);
+ pxSq = _P(1)*_P(1); pySq = _P(2)*_P(2); pzSq = _P(3)*_P(3);
+ rxSq = _P(4)*_P(4); rySq = _P(5)*_P(5); rzSq = _P(6)*_P(6);
+ -2*pz*Tz()/rzSq - 2*py*Ty()/rySq - Tx()/rx +
+ Tzz()/rzSq + Tyy()/rySq + (pzSq/rzSq + pySq/rySq + px/rx)*T1()
+}
+ParaboloidY = {
+ px = _P(1); py = _P(2); pz = _P(3); rx = _P(4); ry = _P(5); rz = _P(6);
+ pxSq = _P(1)*_P(1); pySq = _P(2)*_P(2); pzSq = _P(3)*_P(3);
+ rxSq = _P(4)*_P(4); rySq = _P(5)*_P(5); rzSq = _P(6)*_P(6);
+ -2*px*Tx()/rxSq - 2*pz*Tz()/rzSq - Ty()/ry +
+ Txx()/rxSq + Tzz()/rzSq + (pxSq/rxSq + pzSq/rzSq + py/ry)*T1()
+}
+ParaboloidZ = {
+ px = _P(1); py = _P(2); pz = _P(3); rx = _P(4); ry = _P(5); rz = _P(6);
+ pxSq = _P(1)*_P(1); pySq = _P(2)*_P(2); pzSq = _P(3)*_P(3);
+ rxSq = _P(4)*_P(4); rySq = _P(5)*_P(5); rzSq = _P(6)*_P(6);
+ -2*px*Tx()/rxSq - 2*py*Ty()/rySq - Tz()/rz +
+ Txx()/rxSq + Tyy()/rySq + (pxSq/rxSq + pySq/rySq + pz/rz)*T1()
+}
+
+// Hyperbolic paraboloid (px,py,pz,rx,ry,rz) z-axis aligned
+// with center point (px,py,pz) and radii rx ry rz
+HParaboloidZ = {
+ px = _P(1); py = _P(2); pz = _P(3); rx = _P(4); ry = _P(5); rz = _P(6);
+ pxSq = _P(1)*_P(1); pySq = _P(2)*_P(2); pzSq = _P(3)*_P(3);
+ rxSq = _P(4)*_P(4); rySq = _P(5)*_P(5); rzSq = _P(6)*_P(6);
+ -2*px*Tx()/rxSq + 2*py*Ty()/rySq - Tz()/rz +
+ Txx()/rxSq - Tyy()/rySq + (pxSq/rxSq - pySq/rySq + pz/rz)*T1()
+}
+
+// Hyperboloid of one sheet (px,py,pz,rx,ry,rz) z-axis aligned
+// with center point (px,py,pz) and radii rx ry rz
+Hyperboloid1 = {
+ px = _P(1); py = _P(2); pz = _P(3); rx = _P(4); ry = _P(5); rz = _P(6);
+ pxSq = _P(1)*_P(1); pySq = _P(2)*_P(2); pzSq = _P(3)*_P(3);
+ rxSq = _P(4)*_P(4); rySq = _P(5)*_P(5); rzSq = _P(6)*_P(6);
+ 2*pz*Tz()/rzSq - 2*px*Tx()/rxSq - 2*py*Ty()/rySq +
+ Txx()/rxSq + Tyy()/rySq - Tzz()/rzSq +
+ (pxSq/rxSq + pySq/rySq - pzSq/rzSq - 1)*T1()
+}
+// Hyperboloid of two sheets (px,py,pz,rx,ry,rz) z-axis aligned
+// with center point (px,py,pz) and radii rx ry rz
+Hyperboloid2 = {
+ px = _P(1); py = _P(2); pz = _P(3); rx = _P(4); ry = _P(5); rz = _P(6);
+ pxSq = _P(1)*_P(1); pySq = _P(2)*_P(2); pzSq = _P(3)*_P(3);
+ rxSq = _P(4)*_P(4); rySq = _P(5)*_P(5); rzSq = _P(6)*_P(6);
+ 2*px*Tx()/rxSq + 2*py*Ty()/rySq - 2*pz*Tz()/rzSq -
+ Txx()/rxSq - Tyy()/rySq + Tzz()/rzSq +
+ (pzSq/rzSq - pxSq/rxSq - pySq/rySq - 1)*T1()
+}
+
+// Parabolic cylinders (px,py,pz,rx,ry,rz)
+// with center point (px,py,pz) and radii rx ry rz
+PCylinderX = {
+ px = _P(1); py = _P(2); pz = _P(3); rx = _P(4); ry = _P(5); rz = _P(6);
+ pxSq = _P(1)*_P(1); pySq = _P(2)*_P(2); pzSq = _P(3)*_P(3);
+ rxSq = _P(4)*_P(4); rySq = _P(5)*_P(5); rzSq = _P(6)*_P(6);
+ -2*py*Ty()/rySq - Tz()/rz + Tyy()/rySq + (pySq/rySq + pz/rz)*T1()
+}
+PCylinderY = {
+ px = _P(1); py = _P(2); pz = _P(3); rx = _P(4); ry = _P(5); rz = _P(6);
+ pxSq = _P(1)*_P(1); pySq = _P(2)*_P(2); pzSq = _P(3)*_P(3);
+ rxSq = _P(4)*_P(4); rySq = _P(5)*_P(5); rzSq = _P(6)*_P(6);
+ -2*px*Tx()/rxSq - Tz()/rz + Txx()/rxSq + (pxSq/rxSq + pz/rz)*T1()
+}
+PCylinderZ = {
+ px = _P(1); py = _P(2); pz = _P(3); rx = _P(4); ry = _P(5); rz = _P(6);
+ pxSq = _P(1)*_P(1); pySq = _P(2)*_P(2); pzSq = _P(3)*_P(3);
+ rxSq = _P(4)*_P(4); rySq = _P(5)*_P(5); rzSq = _P(6)*_P(6);
+ -2*px*Tx()/rxSq - Ty()/ry + Txx()/rxSq + (pxSq/rxSq + py/ry)*T1()
+}
+
+// Hyperbolic cylinders (px,py,pz,rx,ry,rz)
+// with center point (px,py,pz) and radii rx ry rz
+HCylinderX = {
+ px = _P(1); py = _P(2); pz = _P(3); rx = _P(4); ry = _P(5); rz = _P(6);
+ pxSq = _P(1)*_P(1); pySq = _P(2)*_P(2); pzSq = _P(3)*_P(3);
+ rxSq = _P(4)*_P(4); rySq = _P(5)*_P(5); rzSq = _P(6)*_P(6);
+ -2*py*Ty()/rySq + 2*pz*Tz()/rzSq + Tyy()/rySq - Tzz()/rzSq +
+ (pySq/rySq - pzSq/rzSq - 1)*T1()
+}
+HCylinderY = {
+ px = _P(1); py = _P(2); pz = _P(3); rx = _P(4); ry = _P(5); rz = _P(6);
+ pxSq = _P(1)*_P(1); pySq = _P(2)*_P(2); pzSq = _P(3)*_P(3);
+ rxSq = _P(4)*_P(4); rySq = _P(5)*_P(5); rzSq = _P(6)*_P(6);
+ 2*px*Tx()/rxSq - 2*pz*Tz()/rzSq - Txx()/rxSq + Tzz()/rzSq +
+ (-pxSq/rxSq + pzSq/rzSq - 1)*T1()
+}
+HCylinderZ = {
+ px = _P(1); py = _P(2); pz = _P(3); rx = _P(4); ry = _P(5); rz = _P(6);
+ pxSq = _P(1)*_P(1); pySq = _P(2)*_P(2); pzSq = _P(3)*_P(3);
+ rxSq = _P(4)*_P(4); rySq = _P(5)*_P(5); rzSq = _P(6)*_P(6);
+ -2*px*Tx()/rxSq + 2*py*Ty()/rySq + Txx()/rxSq - Tyy()/rySq +
+ (pxSq/rxSq - pySq/rySq - 1)*T1()
+}
+
+// Parallel planes pair (p1,p2) with planes a=p1, a=p2 perpendicular to a-axis
+PPlanesX = { p1 = _P(1); p2 = _P(2); Txx() - (p1+p2)*Tx() + p1*p2*T1() }
+PPlanesY = { p1 = _P(1); p2 = _P(2); Tyy() - (p1+p2)*Ty() + p1*p2*T1() }
+PPlanesZ = { p1 = _P(1); p2 = _P(2); Tzz() - (p1+p2)*Tz() + p1*p2*T1() }
+// Non-parallel planes pairs (also types of cylinders)
+// XPlanesX(y,z,ry,rz) x-axis aligned, with vertex (y,z) and slope (+|-)rz/ry
+XPlanesX = {
+ py = _P(1); pz = _P(2); ry = _P(3); rz = _P(4);
+ pySq = _P(1)*_P(1); pzSq = _P(2)*_P(2); rySq = _P(3)*_P(3); rzSq = _P(4)*_P(4);
+ -2*py*Ty()/rySq + 2*pz*Tz()/rzSq + Tyy()/rySq - Tzz()/rzSq +
+ (pySq/rySq - pzSq/rzSq)*T1()
+}
+// XPlanesY(x,z,rx,rz) y-axis aligned, with vertex (x,z) and slope (+|-)rz/rx
+XPlanesY = {
+ px = _P(1); pz = _P(2); rx = _P(3); rz = _P(4);
+ pxSq = _P(1)*_P(1); pzSq = _P(2)*_P(2); rxSq = _P(3)*_P(3); rzSq = _P(4)*_P(4);
+ -2*pz*Tz()/rzSq + 2*px*Tx()/rxSq + Tzz()/rzSq - Txx()/rxSq +
+ (pzSq/rzSq - pxSq/rxSq)*T1()
+}
+// XPlanesZ(x,y,rx,ry) z-axis aligned, with vertex (x,y) and slope (+|-)ry/rx
+XPlanesZ = {
+ px = _P(1); py = _P(2); rx = _P(3); ry = _P(4);
+ pxSq = _P(1)*_P(1); pySq = _P(2)*_P(2); rxSq = _P(3)*_P(3); rySq = _P(4)*_P(4);
+ -2*px*Tx()/rxSq + 2*py*Ty()/rySq + Txx()/rxSq - Tyy()/rySq +
+ (pxSq/rxSq - pySq/rySq)*T1()
+}
+
+// DupinCyclide(R,r1,r2) with major radius R and minor radii r1 and r2
+// Generalizes the Toroid(R,r) ~ DupinCyclide(R,r,r)
+DupinCyclide = {
+ u = (1/2)*(_P(2) + _P(3)); c = (1/2)*(_P(2) - _P(3)); a = _P(1); bSq = a*a-c*c;
+ Tt4() + 2*Tt2()*(bSq-u*u) - 4*a*a*Txx() - 4*bSq*Tyy() +
+ 8*a*c*u*Tx() + ((bSq-u*u)*(bSq-u*u) - 4*c*c*u*u)*T1()
+}
+hornedDupinCyclide = {
+ u = (1/2)*(_P(2) + _P(3)); c = (1/2)*(_P(2) - _P(3)); a = _P(1); bSq = a*a-u*u;
+ Tt4() + 2*Tt2()*(bSq-c*c) - 4*a*a*Txx() - 4*bSq*Tyy() +
+ 8*a*c*u*Tx() + ((bSq-c*c)*(bSq-c*c) - 4*c*c*u*u)*T1()
+}
+
+// The non-null point, called a conic vertex
+vertex = {
+ px = _P(1); py = _P(2); pz = _P(3); px*Tx() + py*Ty() + pz*Tz() -
+ (1/2)*(px*px+py*py+pz*pz)*T1() - (1/2)*(Txx()+Tyy()+Tzz())
+}
+

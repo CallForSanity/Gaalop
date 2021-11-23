@@ -1,9 +1,11 @@
 2d;imaginary numbers
 3d;vectors in 3d
-cr4d;compass-ruler
-pr4d;projective
-st4d;space-time
-5d;conformal space
-6d;conic space
-8d;conformal conic
-9d;GA by Zamora
+2dpga;2D projective geometric algebra
+3dpga;3D projective geometric algebra
+cra;compass-ruler
+sta;space-time
+cga;conformal space
+gac;conformal conic
+qga;GA by Zamora
+dcga;double conformal GA
+ccga;cubic CGA

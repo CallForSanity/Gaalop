@@ -9,7 +9,7 @@ import java.util.LinkedList;
 
 /**
  * Computes the product of two blades
- * @author christian
+ * @author Christian Steinmetz
  */
 public class ProductComputer {
 

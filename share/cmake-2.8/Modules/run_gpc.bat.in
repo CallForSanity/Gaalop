@@ -1,4 +1,4 @@
 set PATH="%PATH%;${MAPLE_BIN_DIR_NATIVE}\..\bin"
 set MAPLE="${MAPLE_BIN_DIR_NATIVE}\.."
 cd /D "${GPC_JAR_DIR_NATIVE}"
-"${Java_JAVA_EXECUTABLE_NATIVE}" "-Djava.library.path=${MAPLE_BIN_DIR}" -jar "${GPC_JAR}" %*
+"${Java_JAVA_EXECUTABLE_NATIVE}" "-Djava.library.path=${MAPLE_BIN_DIR}" -jar "${GPC_JAR}" --gpc %*

@@ -5,7 +5,7 @@ package de.gaalop.productComputer;
 /**
  * Provides a bitset.
  * Internally the bits are stored in a variable with the type long
- * @author christian
+ * @author Christian Steinmetz
  */
 public class BitSet {
     

@@ -7,7 +7,7 @@ import java.util.LinkedList;
 
 /**
  * Represents a sum of weighted blades
- * @author christian
+ * @author Christian Steinmetz
  */
 public class SumOfBlades extends LinkedList<SignedBlade> {
 

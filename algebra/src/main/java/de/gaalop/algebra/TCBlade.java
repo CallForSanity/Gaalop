@@ -4,6 +4,7 @@ import de.gaalop.dfg.BaseVector;
 import de.gaalop.dfg.Expression;
 import de.gaalop.dfg.FloatConstant;
 import de.gaalop.dfg.OuterProduct;
+import java.util.Arrays;
 
 /**
  * Defines a blade
@@ -61,5 +62,13 @@ public class TCBlade {
         }
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof TCBlade) {
+            TCBlade comp = (TCBlade) obj;
+            return Arrays.equals(comp.base, this.base);
+        } else
+            return false;
+    }
 
 }

@@ -135,17 +135,6 @@ gaalopinitialize := proc()
 	blade[32] := e1 &amp;w e2 &amp;w e3 &amp;w einf &amp;w e0:
 end:
 
-
-innerproduct := proc(x,y)
-	local result;
-	result := LC(x,y);
-	if result = 0 then
-		return -LC(y,x)
-	else
-		return result
-	end if:
-end:
-
 simple:=proc(val)
   local temp;
   temp := val,[e4,e5];
@@ -242,7 +231,7 @@ cliffordperformant:=proc(y::evaln)
 end:
 
 
-save simple,gaalopinitialize,innerproduct,gaalop,cliffordperformant, &quot;gaalop.m&quot;;</Text-field>
+save simple,gaalopinitialize,gaalop,cliffordperformant, &quot;gaalop.m&quot;;</Text-field>
 </Input>
 <Output>
 <Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output">N2BwSSMmbUc2IkkrQnNpZ25hdHVyZUdGJEktQ0xJRkZPUkRfRU5WR0YkSSdLZmllbGRHRiRJI0xDR0YkSSRMQ1FHRiRJI1JDR0YkSSRSQ1FHRiRJKVJIbnVtYmVyR0YkSSphZGZtYXRyaXhHRiRJKWFsbF9zaWdzR0YkSStiZXRhX21pbnVzR0YkSSpiZXRhX3BsdXNHRiRJJ2J1aWxkbUdGJEkoYnlncmFkZUdGJEkpY19jb25qdWdHRiRJJ2NiYXNpc0dGJEkqY2RmbWF0cml4R0YkSSVjZXhwR0YkSSZjZXhwUUdGJEklY2ludkdGJEksY2xpYmlsaW5lYXJHRiRJK2NsaWNvbGxlY3RHRiRJKGNsaWRhdGFHRiRJKmNsaWxpbmVhckdGJEkrY2xpbWlucG9seUdGJEkpY2xpcGFyc2VHRiRJKmNsaXJlbW92ZUdGJEkpY2xpc29sdmVHRiRJKGNsaXNvcnRHRiRJKWNsaXRlcm1zR0YkSSVjbXVsR0YkSShjbXVsTlVNR0YkSSZjbXVsUUdGJEknY211bFJTR0YkSShjbXVsZ2VuR0YkSShjb2N5Y2xlR0YkSTJjb21tdXRpbmdlbGVtZW50c0dGJEksY29uanVnYXRpb25HRiRJKmRkZm1hdHJpeEdGJEksZGlhZ29uYWxpemVHRiRJKmRpc3BsYXlpZEdGJEkoZXh0cmFjdEdGJEkxZmFjdG9yaWRlbXBvdGVudEdGJEkpZmluZDFzdHJHRiRJKmZpbmRiYXNpc0dGJEkpZ3JhZGVpbnZHRiRJJWluaXRHRiRJL2lzVmFobGVubWF0cml4R0YkSSppc3Byb2R1Y3RHRiRJLG1ha2VhbGlhc2VzR0YkSS5tYWtlY2xpYmFzbW9uR0YkSSltYXRLcmVwckdGJEkpbWF4Z3JhZGVHRiRJKW1heGluZGV4R0YkSSptZGZtYXRyaXhHRiRJLW1pbmltYWxpZGVhbEdGJEkkb3JkR0YkSSlwZXJtc2lnbkdGJEkqcHNldWRvZGV0R0YkSSlxX2Nvbmp1Z0dGJEkpcWRpc3BsYXlHRiRJJXFpbnZHRiRJJXFtdWxHRiRJJnFub3JtR0YkSS1yZF9jbGliYXNtb25HRiRJKnJkX2NsaW1vbkdGJEkucmRfY2xpcG9seW5vbUdGJEkocmVvcmRlckdGJEkqcmV2ZXJzaW9uR0YkSSZybXVsbUdGJEkmcm90M2RHRiRJK3NjYWxhcnBhcnRHRiRJJXNleHBHRiRJMnNwZWNpZnlfY29uc3RhbnRzR0YkSS1zcGlub3JLYmFzaXNHRiRJLHNwaW5vcktyZXByR0YkSStzcXVhcmVtb2RmR0YkSTBzdWJzX2NsaXBvbHlub21HRiRJK3VzZXByb2R1Y3RHRiRJK3ZlY3RvcnBhcnRHRiRJKHZlcnNpb25HRiRJJndlZGdlR0YkSSV3ZXhwR0Yk</Equation></Text-field>

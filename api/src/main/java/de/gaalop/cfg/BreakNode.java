@@ -12,8 +12,8 @@ public class BreakNode extends SequentialNode {
 	}
 	
 	@Override
-	public BreakNode copyElements() {
-		return new BreakNode(getGraph());
+	public BreakNode copyElements(ControlFlowGraph graph) {
+		return new BreakNode(graph);
 	}
 	
 	@Override

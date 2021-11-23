@@ -93,7 +93,7 @@ public class ConstantPropagation extends EmptyControlFlowVisitor {
 
     @Override
     public void visit(ExpressionStatement node) {
-        node.setExpression(performConstantPropagationOnExpression(node.getExpression()));
+        //node.setExpression(performConstantPropagationOnExpression(node.getExpression()));
         super.visit(node);
     }
 
