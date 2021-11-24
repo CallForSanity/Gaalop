@@ -1,4 +1,4 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
+CMAKE_MINIMUM_REQUIRED(VERSION 2.9)
 CMAKE_POLICY(SET CMP0011 NEW)
 PROJECT(GaalopPrecompiler)
 
@@ -46,9 +46,9 @@ add_custom_target(mvn_clean ALL COMMENT "Maven Clean Gaalop.")
 add_custom_command(TARGET mvn_clean COMMAND ${MVN_BINARY} clean WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 add_dependencies(gaalop mvn_clean)
 # copy
-COPY_DIRECTORY(include-copy include include)
-COPY_DIRECTORY(gaalop-copy "target/gaalop*" "share/gpc/gaalop")
-COPY_DIRECTORY(dependencies-copy dependencies "share/gpc/gaalop/plugins")
+COPY_STATIC_DIRECTORY(include-copy include include)
+COPY_STATIC_DIRECTORY(gaalop-copy "target/gaalop-1.0.0-bin" "share/gpc/gaalop")
+COPY_STATIC_DIRECTORY(dependencies-copy dependencies "share/gpc/gaalop/plugins")
 IF(TARGET gaalop-copy)
 	ADD_DEPENDENCIES(gaalop-copy gaalop)
 	ADD_DEPENDENCIES(dependencies-copy gaalop-copy)

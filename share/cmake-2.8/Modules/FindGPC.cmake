@@ -1,4 +1,4 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
+CMAKE_MINIMUM_REQUIRED(VERSION 2.9)
 
 # options
 OPTION(GPC_WITH_MAPLE "whether to use the maple plugin or not." OFF)
