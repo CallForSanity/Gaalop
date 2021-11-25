@@ -5,12 +5,10 @@ import de.gaalop.OutputFile;
 import de.gaalop.cfg.ControlFlowGraph;
 import de.gaalop.codegen_verilog.VerilogIR.VerilogDFG;
 import de.gaalop.cpp.CppVisitor;
-import de.gaalop.optimizations.CSE.CSE_Collector;
 
 import de.gaalop.optimizations.CSE.CSE_Collector;
 import de.gaalop.optimizations.ConstantFolding;
 import de.gaalop.optimizations.ConstantKiller.ConstanKillCrawler;
-import de.gaalop.quadriererOptimierer.Quadopt;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -19,7 +17,6 @@ import java.util.Collections;
 import java.nio.charset.Charset;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.omg.PortableInterceptor.INACTIVE;
 
 /**
  * This class facilitates Verilog code generation.

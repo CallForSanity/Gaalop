@@ -3,6 +3,7 @@ package de.gaalop.gui.util;
 import de.gaalop.ConfigurationProperty;
 import de.gaalop.Plugin;
 import de.gaalop.Plugins;
+import de.gaalop.gui.PanelPluginSelection;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -80,24 +81,71 @@ public class PluginConfigurator {
      */
     public void configureAll(Observer o) {
         Set<? extends Plugin> plugins;
+        
+        plugins = Plugins.getGlobalSettingsStrategyPlugins();
+        for (Plugin plugin : plugins) {
+            configure(plugin);        }
 
         plugins = Plugins.getOptimizationStrategyPlugins();
         for (Plugin plugin : plugins) {
             configure(plugin);
-            register(plugin, o);
+        }
+
+        plugins = Plugins.getAlgebraStrategyPlugins();
+        for (Plugin plugin : plugins) {
+            configure(plugin);
         }
 
         plugins = Plugins.getCodeParserPlugins();
         for (Plugin plugin : plugins) {
             configure(plugin);
-            register(plugin, o);
         }
 
         plugins = Plugins.getCodeGeneratorPlugins();
         for (Plugin plugin : plugins) {
             configure(plugin);
+        }
+        
+        PanelPluginSelection.lastUsedAlgebra = (String) configuration.get("lastUsedAlgebra");  
+        PanelPluginSelection.lastUsedAlgebraRessource = Boolean.parseBoolean((String) configuration.get("lastUsedAlgebraRessource"));
+        PanelPluginSelection.lastUsedGenerator = (String) configuration.get("lastUsedGenerator");
+        PanelPluginSelection.lastUsedVisualCodeInserter = (String) configuration.get("lastUsedVisualCodeInserter");
+        PanelPluginSelection.lastUsedOptimization = (String) configuration.get("lastUsedOptimization");
+    }
+    
+    public void registerAll(Observer o) {
+        Set<? extends Plugin> plugins;
+        
+        plugins = Plugins.getGlobalSettingsStrategyPlugins();
+        for (Plugin plugin : plugins) {
             register(plugin, o);
         }
+
+        plugins = Plugins.getOptimizationStrategyPlugins();
+        for (Plugin plugin : plugins) {
+            register(plugin, o);
+        }
+
+        plugins = Plugins.getAlgebraStrategyPlugins();
+        for (Plugin plugin : plugins) {
+            register(plugin, o);
+        }
+
+        plugins = Plugins.getCodeParserPlugins();
+        for (Plugin plugin : plugins) {
+            register(plugin, o);
+        }
+
+        plugins = Plugins.getCodeGeneratorPlugins();
+        for (Plugin plugin : plugins) {
+            register(plugin, o);
+        }
+        
+        PanelPluginSelection.lastUsedAlgebra = (String) configuration.get("lastUsedAlgebra");  
+        PanelPluginSelection.lastUsedAlgebraRessource = Boolean.parseBoolean((String) configuration.get("lastUsedAlgebraRessource"));
+        PanelPluginSelection.lastUsedGenerator = (String) configuration.get("lastUsedGenerator");
+        PanelPluginSelection.lastUsedVisualCodeInserter = (String) configuration.get("lastUsedVisualCodeInserter");
+        PanelPluginSelection.lastUsedOptimization = (String) configuration.get("lastUsedOptimization");
     }
 
     private void register(Plugin plugin, Observer o) {
@@ -113,8 +161,18 @@ public class PluginConfigurator {
      */
     public void readConfiguration() {
         Set<? extends Plugin> plugins;
+        
+        plugins = Plugins.getGlobalSettingsStrategyPlugins();
+        for (Plugin plugin : plugins) {
+            readConfiguration(plugin);
+        }
 
         plugins = Plugins.getOptimizationStrategyPlugins();
+        for (Plugin plugin : plugins) {
+            readConfiguration(plugin);
+        }
+
+        plugins = Plugins.getAlgebraStrategyPlugins();
         for (Plugin plugin : plugins) {
             readConfiguration(plugin);
         }
@@ -128,6 +186,12 @@ public class PluginConfigurator {
         for (Plugin plugin : plugins) {
             readConfiguration(plugin);
         }
+        
+        configuration.put("lastUsedAlgebra", PanelPluginSelection.lastUsedAlgebra);  
+        configuration.put("lastUsedAlgebraRessource", Boolean.toString(PanelPluginSelection.lastUsedAlgebraRessource));
+        configuration.put("lastUsedGenerator", PanelPluginSelection.lastUsedGenerator);
+        configuration.put("lastUsedVisualCodeInserter", PanelPluginSelection.lastUsedVisualCodeInserter);
+        configuration.put("lastUsedOptimization", PanelPluginSelection.lastUsedOptimization);
     }
 
     private void readConfiguration(Plugin plugin) {

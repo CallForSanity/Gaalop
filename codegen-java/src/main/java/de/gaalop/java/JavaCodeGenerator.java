@@ -1,6 +1,6 @@
 package de.gaalop.java;
 
-import de.gaalop.CodeGenerator;
+import de.gaalop.DefaultCodeGenerator;
 import de.gaalop.OutputFile;
 import de.gaalop.cfg.ControlFlowGraph;
 import java.util.Set;
@@ -10,11 +10,12 @@ import java.util.HashSet;
 /**
  * This class facilitates Java code generation.
  */
-public class JavaCodeGenerator implements CodeGenerator {
+public class JavaCodeGenerator extends DefaultCodeGenerator {
 
     private final Plugin plugin;
 
     public JavaCodeGenerator(Plugin plugin) {
+        super("java");
         this.plugin = plugin;
     }
 
@@ -22,7 +23,7 @@ public class JavaCodeGenerator implements CodeGenerator {
     public Set<OutputFile> generate(ControlFlowGraph in) {
         Set<OutputFile> result = new HashSet<OutputFile>();
         String filename = generateFilename(in);
-        String code = generateCode(in, filename);
+        String code = generateCode(in);
 
         OutputFile sourceFile = new OutputFile(filename, code, Charset.forName("UTF-8"));
         result.add(sourceFile);
@@ -35,34 +36,10 @@ public class JavaCodeGenerator implements CodeGenerator {
         return result;
     }
 
-    /**
-     * Generates a filename for a control flow graph
-     * @param in the control flow graph
-     * @return The filename
-     */
-    private String generateFilename(ControlFlowGraph in) {
-        String filename = "gaalop.java";
-        if (in.getSource() != null) {
-            filename = in.getSource().getName();
-            int lastDotIndex = filename.lastIndexOf('.');
-            if (lastDotIndex != -1) {
-                filename = filename.substring(0, lastDotIndex);
-            }
-            filename += ".java";
-        }
-        return filename;
-    }
-
-    /**
-     * Generates source code for a control flow graph.
-     *
-     * @param in The control flow graph
-     * @param filename The filename
-     * @return The generated source
-     */
-    private String generateCode(ControlFlowGraph in, String filename) {
+    @Override
+    protected String generateCode(ControlFlowGraph in) {
         JavaVisitor visitor = new JavaVisitor();
-        visitor.filename = filename;
+        visitor.filename = generateFilename(in);
         try {
             in.accept(visitor);
         } catch (Throwable error) {

@@ -52,6 +52,8 @@ public class MvExpressionsBuilder extends EmptyControlFlowVisitor implements Exp
     private Variable curVariable;
     private AlgebraDefinitionFile alFile;
 
+    public boolean useSparseExpressions = false;
+
     public MvExpressionsBuilder(UseAlgebra usedAlgebra, boolean scalarFunctions, AlgebraDefinitionFile alFile) {
         this.scalarFunctions = scalarFunctions;
         this.alFile = alFile;
@@ -113,7 +115,11 @@ public class MvExpressionsBuilder extends EmptyControlFlowVisitor implements Exp
      */
     private MvExpressions createNewMvExpressions() {
         counterMv++;
-        return new MvExpressions(counterMv + "", bladeCount);
+        if(this.useSparseExpressions) {
+            return new SparseMvExpressions(counterMv + "", bladeCount);
+        } else {
+            return new DenseMvExpressions(counterMv + "", bladeCount);
+        }
     }
 
     /**
@@ -128,10 +134,10 @@ public class MvExpressionsBuilder extends EmptyControlFlowVisitor implements Exp
         Algebra algebra = usedAlgebra.getAlgebra();
         boolean set = false;
         for (int bladeL = 0; bladeL < bladeCount; bladeL++) {
-            if (left.bladeExpressions[bladeL] != null) {
+            if (left.getExpression(bladeL) != null) {
                 for (int bladeR = 0; bladeR < bladeCount; bladeR++) {
-                    if (right.bladeExpressions[bladeR] != null) {
-                        Expression prodExpr = new Multiplication(left.bladeExpressions[bladeL], right.bladeExpressions[bladeR]);
+                    if (right.getExpression(bladeR) != null) {
+                        Expression prodExpr = new Multiplication(left.getExpression(bladeL), right.getExpression(bladeR));
                         Multivector prodMv = usedAlgebra.getProduct(typeProduct, bladeL, bladeR);
 
                         byte[] prod = prodMv.getValueArr(algebra);
@@ -139,11 +145,11 @@ public class MvExpressionsBuilder extends EmptyControlFlowVisitor implements Exp
                         for (int bladeResult = 0; bladeResult < bladeCount; bladeResult++) {
                             if (Math.abs(prod[bladeResult]) > EPSILON) {
                                 Expression prodExpri = new Multiplication(prodExpr, new FloatConstant(prod[bladeResult]));
-                                if (result.bladeExpressions[bladeResult] == null) {
+                                if (result.getExpression(bladeResult) == null) {
                                     set = true; 
-                                   result.bladeExpressions[bladeResult] = prodExpri;
+                                   result.setExpression(bladeResult, prodExpri);
                                 } else {
-                                    result.bladeExpressions[bladeResult] = new Addition(result.bladeExpressions[bladeResult], prodExpri);
+                                    result.setExpression(bladeResult, new Addition(result.getExpression(bladeResult), prodExpri));
                                 }
                             }
                         }
@@ -152,7 +158,7 @@ public class MvExpressionsBuilder extends EmptyControlFlowVisitor implements Exp
             }
         }
         if (!set) 
-            result.bladeExpressions[0] = new FloatConstant(0); //Without this, e.g. ?r = sqrt(a.b); fails.
+            result.setExpression(0, new FloatConstant(0)); //Without this, e.g. ?r = sqrt(a.b); fails.
         return result;
     }
 
@@ -196,15 +202,15 @@ public class MvExpressionsBuilder extends EmptyControlFlowVisitor implements Exp
         MvExpressions result = createNewMvExpressions();
         for (int blade = 0; blade < bladeCount; blade++) {
 
-            if (left.bladeExpressions[blade] != null) {
-                if (right.bladeExpressions[blade] != null) {
-                    result.bladeExpressions[blade] = new Subtraction(left.bladeExpressions[blade], right.bladeExpressions[blade]);
+            if (left.getExpression(blade) != null) {
+                if (right.getExpression(blade) != null) {
+                    result.setExpression(blade, new Subtraction(left.getExpression(blade), right.getExpression(blade)));
                 } else {
-                    result.bladeExpressions[blade] = left.bladeExpressions[blade];
+                    result.setExpression(blade, left.getExpression(blade));
                 }
 
-            } else if (right.bladeExpressions[blade] != null) {
-                result.bladeExpressions[blade] = new Negation(right.bladeExpressions[blade]);
+            } else if (right.getExpression(blade) != null) {
+                result.setExpression(blade, new Negation(right.getExpression(blade)));
             }
 
         }
@@ -221,15 +227,15 @@ public class MvExpressionsBuilder extends EmptyControlFlowVisitor implements Exp
         MvExpressions result = createNewMvExpressions();
         for (int blade = 0; blade < bladeCount; blade++) {
 
-            if (left.bladeExpressions[blade] != null) {
-                if (right.bladeExpressions[blade] != null) {
-                    result.bladeExpressions[blade] = new Addition(left.bladeExpressions[blade], right.bladeExpressions[blade]);
+            if (left.getExpression(blade) != null) {
+                if (right.getExpression(blade) != null) {
+                    result.setExpression(blade, new Addition(left.getExpression(blade), right.getExpression(blade)));
                 } else {
-                    result.bladeExpressions[blade] = left.bladeExpressions[blade];
+                    result.setExpression(blade, left.getExpression(blade));
                 }
 
-            } else if (right.bladeExpressions[blade] != null) {
-                result.bladeExpressions[blade] = right.bladeExpressions[blade];
+            } else if (right.getExpression(blade) != null) {
+                result.setExpression(blade, right.getExpression(blade));
             }
 
         }
@@ -247,12 +253,12 @@ public class MvExpressionsBuilder extends EmptyControlFlowVisitor implements Exp
         MvExpressions result = createNewMvExpressions();
 
         for (int blade = 0; blade < bladeCount; blade++) {
-            if (mv.bladeExpressions[blade] != null) {
+            if (mv.getExpression(blade) != null) {
                 int k = usedAlgebra.getGrade(blade);
                 if (((k * (k - 1)) / 2) % 2 == 0) {
-                    result.bladeExpressions[blade] = mv.bladeExpressions[blade];
+                    result.setExpression(blade, mv.getExpression(blade));
                 } else {
-                    result.bladeExpressions[blade] = new Negation(mv.bladeExpressions[blade]);
+                    result.setExpression(blade, new Negation(mv.getExpression(blade)));
                 }
             }
         }
@@ -271,8 +277,8 @@ public class MvExpressionsBuilder extends EmptyControlFlowVisitor implements Exp
         MvExpressions result = createNewMvExpressions();
 
         for (int blade = 0; blade < bladeCount; blade++) {
-            if (mv.bladeExpressions[blade] != null) {
-                result.bladeExpressions[blade] = new Division(revR.bladeExpressions[blade].copy(), length.bladeExpressions[0]);
+            if (mv.getExpression(blade) != null) {
+                result.setExpression(blade, new Division(revR.getExpression(blade).copy(), length.getExpression(0)));
             }
         }
 
@@ -316,34 +322,53 @@ public class MvExpressionsBuilder extends EmptyControlFlowVisitor implements Exp
 
             switch (node.getFunction()) {
                 case ABS:
-                    //sqrt(abs(op*op))
-
                     MvExpressions op = expressions.get(node.getOperand());
+                    
+                    // if the operand is only a scalar, then there is a shorthand: result = abs(operand);
+                    if (op.getExpression(0) != null) {
+                        boolean allOthersAreNull = true;
+                        boolean firstElement = true;
+                        for (Expression expr: op.getAllExpressions()) {
+                            if (firstElement) {
+                                firstElement = false;
+                            } else 
+                                if (expr != null)
+                                    allOthersAreNull = false;
+                        }
+                        
+                        if (allOthersAreNull) {
+                            // scalar not null, all other are null
+                            result.setExpression(0, new MathFunctionCall(op.getExpression(0), MathFunction.ABS));
+                            break;
+                        }
+                    }
+                    
+                    //Use the ordinary method result = sqrt(abs(op.(~op)))
                     MvExpressions opR = getReverse(op);
                     MvExpressions prod = calculateUsingMultTable(Products.GEO, op, opR);
 
-                    Expression i0 = prod.bladeExpressions[0];
+                    Expression i0 = prod.getExpression(0);
 
                     if (i0 == null) {
                         i0 = new FloatConstant(0);
                     }
 
-                    result.bladeExpressions[0] = new MathFunctionCall(new MathFunctionCall(i0, MathFunction.ABS), MathFunction.SQRT);
+                    result.setExpression(0, new MathFunctionCall(new MathFunctionCall(i0, MathFunction.ABS), MathFunction.SQRT));
 
                     break;
                 case SQRT:
                     //sqrt(scalar)
-                    result.bladeExpressions[0] = new MathFunctionCall(expressions.get(node.getOperand()).bladeExpressions[0], MathFunction.SQRT);
+                    result.setExpression(0, new MathFunctionCall(expressions.get(node.getOperand()).getExpression(0), MathFunction.SQRT));
                     break;
                 default:
-                    result.bladeExpressions[0] = new MathFunctionCall(expressions.get(node.getOperand()).bladeExpressions[0], node.getFunction());
+                    result.setExpression(0, new MathFunctionCall(expressions.get(node.getOperand()).getExpression(0), node.getFunction()));
                     System.err.println("Warning: " + node.getFunction().toString() + " is only implemented for scalar inputs!");
                     break;
             }
 
         } else {
             for (int blade = 0; blade < bladeCount; blade++) {
-                result.bladeExpressions[blade] = new MultivectorComponent(curVariable.getName(), blade);
+                result.setExpression(blade, new MultivectorComponent(curVariable.getName(), blade));
             }
         }
 
@@ -359,15 +384,15 @@ public class MvExpressionsBuilder extends EmptyControlFlowVisitor implements Exp
             v = createNewMvExpressions();
 
             for (int i = 0; i < bladeCount; i++) {
-                if (variables.get(key).bladeExpressions[i] != null) {
-                    v.bladeExpressions[i] = new MultivectorComponent(node.getName(), i);
+                if (variables.get(key).getExpression(i) != null) {
+                    v.setExpression(i, new MultivectorComponent(node.getName(), i));
                 }
             }
 
         } else {
             //input variable!
             v = createNewMvExpressions();
-            v.bladeExpressions[0] = node;
+            v.setExpression(0, node);
         }
 
         expressions.put(node, v);
@@ -381,7 +406,7 @@ public class MvExpressionsBuilder extends EmptyControlFlowVisitor implements Exp
     @Override
     public void visit(FloatConstant node) {
         MvExpressions result = createNewMvExpressions();
-        result.bladeExpressions[0] = node;
+        result.setExpression(0, node);
         expressions.put(node, result);
     }
 
@@ -394,7 +419,7 @@ public class MvExpressionsBuilder extends EmptyControlFlowVisitor implements Exp
     @Override
     public void visit(BaseVector node) {
         MvExpressions result = createNewMvExpressions();
-        result.bladeExpressions[alFile.getIndex(node.toString())] = new FloatConstant(1);
+        result.setExpression(alFile.getIndex(node.toString()), new FloatConstant(1));
         expressions.put(node, result);
     }
 
@@ -406,8 +431,8 @@ public class MvExpressionsBuilder extends EmptyControlFlowVisitor implements Exp
         MvExpressions result = createNewMvExpressions();
 
         for (int blade = 0; blade < bladeCount; blade++) {
-            if (op.bladeExpressions[blade] != null) {
-                result.bladeExpressions[blade] = new Negation(op.bladeExpressions[blade]);
+            if (op.getExpression(blade) != null) {
+                result.setExpression(blade, new Negation(op.getExpression(blade)));
             }
         }
 
@@ -435,7 +460,7 @@ public class MvExpressionsBuilder extends EmptyControlFlowVisitor implements Exp
 
         MvExpressions result = createNewMvExpressions();
 
-        result.bladeExpressions[0] = new LogicalOr(l.bladeExpressions[0], r.bladeExpressions[0]);
+        result.setExpression(0, new LogicalOr(l.getExpression(0), r.getExpression(0)));
 
         expressions.put(node, result);
 
@@ -450,7 +475,7 @@ public class MvExpressionsBuilder extends EmptyControlFlowVisitor implements Exp
 
         MvExpressions result = createNewMvExpressions();
 
-        result.bladeExpressions[0] = new LogicalAnd(l.bladeExpressions[0], r.bladeExpressions[0]);
+        result.setExpression(0, new LogicalAnd(l.getExpression(0), r.getExpression(0)));
 
         expressions.put(node, result);
 
@@ -464,7 +489,7 @@ public class MvExpressionsBuilder extends EmptyControlFlowVisitor implements Exp
 
         MvExpressions result = createNewMvExpressions();
 
-        result.bladeExpressions[0] = new LogicalNegation(op.bladeExpressions[0]);
+        result.setExpression(0, new LogicalNegation(op.getExpression(0)));
 
         expressions.put(node, result);
 
@@ -479,7 +504,7 @@ public class MvExpressionsBuilder extends EmptyControlFlowVisitor implements Exp
 
         MvExpressions result = createNewMvExpressions();
 
-        result.bladeExpressions[0] = new Equality(l.bladeExpressions[0], r.bladeExpressions[0]);
+        result.setExpression(0, new Equality(l.getExpression(0), r.getExpression(0)));
 
         expressions.put(node, result);
 
@@ -494,7 +519,7 @@ public class MvExpressionsBuilder extends EmptyControlFlowVisitor implements Exp
 
         MvExpressions result = createNewMvExpressions();
 
-        result.bladeExpressions[0] = new Inequality(l.bladeExpressions[0], r.bladeExpressions[0]);
+        result.setExpression(0, new Inequality(l.getExpression(0), r.getExpression(0)));
 
         expressions.put(node, result);
 
@@ -508,12 +533,26 @@ public class MvExpressionsBuilder extends EmptyControlFlowVisitor implements Exp
         MvExpressions r = expressions.get(node.getRight());
 
         MvExpressions result = createNewMvExpressions();
+        
+        if (node.getType() == Relation.Type.COEFFICIENT) {
+            // Coefficient equals to the dot product of the two arrays l and r
+            Expression sum = null;
+            
+            for (int blade = 0; blade < bladeCount; blade++) 
+                if (l.getExpression(blade) != null && r.getExpression(blade) != null) {
+                    Expression summand = new Multiplication(l.getExpression(blade), r.getExpression(blade));
+                    sum = (sum == null) ? summand : new Addition(sum, summand);
+                }
+            
+            if (sum != null) 
+                result.setExpression(0, sum);
+            
+        } else {
+            result.setExpression(0, new Relation(l.getExpression(0), r.getExpression(0), node.getType()));
+            System.err.println("Warning: Relation is only implemented for scalars!");
+        }
 
-        result.bladeExpressions[0] = new Relation(l.bladeExpressions[0], r.bladeExpressions[0], node.getType());
-
-        expressions.put(node, result);
-
-        System.err.println("Warning: Relation is only implemented for scalars!");
+        expressions.put(node, result);   
     }
 
     @Override
@@ -524,7 +563,7 @@ public class MvExpressionsBuilder extends EmptyControlFlowVisitor implements Exp
 
         MvExpressions result = createNewMvExpressions();
 
-        result.bladeExpressions[0] = new Exponentiation(l.bladeExpressions[0], r.bladeExpressions[0]);
+        result.setExpression(0, new Exponentiation(l.getExpression(0), r.getExpression(0)));
 
         expressions.put(node, result);
 

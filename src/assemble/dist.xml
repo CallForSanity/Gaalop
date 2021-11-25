@@ -22,6 +22,7 @@
                 <include>de.gaalop:maple</include>
                 <include>de.gaalop:tba</include>
 		<include>de.gaalop:gapp</include>
+        <include>de.gaalop:cli</include>
                 <include>de.gaalop:gpc</include>
             </includes>
             <binaries>

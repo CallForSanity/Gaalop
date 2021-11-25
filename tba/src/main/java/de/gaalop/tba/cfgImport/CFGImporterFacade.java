@@ -1,7 +1,10 @@
 package de.gaalop.tba.cfgImport;
 
 import de.gaalop.OptimizationException;
+import de.gaalop.LoggingListener;
+import de.gaalop.LoggingListenerGroup;
 import de.gaalop.algebra.UpdateLocalVariableSet;
+import de.gaalop.api.cfg.RoundingCFGVisitor;
 import de.gaalop.cfg.ControlFlowGraph;
 import de.gaalop.dfg.Variable;
 import de.gaalop.tba.Plugin;
@@ -24,9 +27,17 @@ public class CFGImporterFacade {
     private LinkedList<OptimizationStrategyWithModifyFlag> optimizations;
     private Plugin plugin;
     private UseAlgebra usedAlgebra;
+    private LoggingListenerGroup listeners;
+
+    // Use HashMap Implementation
+    // by Adrian Kiesthardt
+    private boolean useSparseExpressions;
 
     public CFGImporterFacade(Plugin plugin) {
         this.plugin = plugin;
+        this.listeners = new LoggingListenerGroup();
+
+        this.useSparseExpressions = false;
 
         optimizations = new LinkedList<OptimizationStrategyWithModifyFlag>();
 
@@ -40,7 +51,16 @@ public class CFGImporterFacade {
             optimizations.add(new OptOneExpressionsRemoval());
         }
 
+        if(plugin.useSparseExpressions) {
+            this.useSparseExpressions = true;
+        }
+
     }
+    
+    public void setProgressListeners(LoggingListenerGroup progressListeners) {
+    	listeners = progressListeners;
+    }
+    
 
     /**
      * Transforms the graph and apply optionally optimizations.
@@ -80,36 +100,37 @@ public class CFGImporterFacade {
 
 
         CFGImporter builder = new CFGImporter(usedAlgebra, plugin.isScalarFunctions(), graph.getAlgebraDefinitionFile());
+        builder.useSparseExpressions = this.useSparseExpressions;
         graph.accept(builder);
 
-        int count = 0;
         boolean repeat;
         do {
             repeat = false;
             for (OptimizationStrategyWithModifyFlag curOpt : optimizations) {
-                repeat = repeat || curOpt.transform(graph, usedAlgebra);
+                repeat = repeat || curOpt.transform(graph, usedAlgebra, listeners);
             }
-            count++;
         } while (repeat);
 
         //Use Maxima only once
         if (graph.globalSettings.isOptMaxima()) {
             OptMaxima optMaxima = new OptMaxima(graph.globalSettings.getMaximaCommand(), plugin);
-            optMaxima.transform(graph, usedAlgebra);
+            optMaxima.transform(graph, usedAlgebra, listeners);
 
             //repeat other optimizations
-            count = 0;
             do {
                 repeat = false;
                 for (OptimizationStrategyWithModifyFlag curOpt : optimizations) {
-                    repeat = repeat || curOpt.transform(graph, usedAlgebra);
+                    repeat = repeat || curOpt.transform(graph, usedAlgebra, listeners);
                 }
-                count++;
             } while (repeat);
         }
 
         // update variable sets
         UpdateLocalVariableSet.updateVariableSets(graph);
+        
+        // round float constants, if this is desired by the user through configuration panel
+        if (plugin.isDoRoundingAfterOptimization()) 
+            graph.accept(new RoundingCFGVisitor(plugin.getNumberOfRoundingDigits()));
 
         return graph;
     }

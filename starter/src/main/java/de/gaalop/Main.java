@@ -14,7 +14,7 @@ public class Main {
 
     public static final String LIB_FOLDER = "plugins";
 
-    public static final String MAIN_CLASS = "de.gaalop.gpc.Main";
+    
 
     /**
      * Starts Gaalop.
@@ -26,34 +26,42 @@ public class Main {
         File libFolder = new File(LIB_FOLDER);
         URL[] urls = getJarList(libFolder);
         ClassLoader loader = new URLClassLoader(urls);
-
+        
+        String concatenatedArgs = String.join(" ", args);
+        
+        String mainClassName = "de.gaalop.gui.Main";
+        if (concatenatedArgs.contains("--cli"))
+            mainClassName = "de.gaalop.cli.Main";
+        if (concatenatedArgs.contains("--gpc"))
+            mainClassName = "de.gaalop.cli.Main"; //Must be CLI also for GPC!!
+        
         try {
-            Class<?> mainClass = Class.forName(MAIN_CLASS, false, loader);
+            Class<?> mainClass = Class.forName(mainClassName, false, loader);
 
             Method mainMethod = mainClass.getMethod("main", String[].class);
 
             if (!Modifier.isStatic(mainMethod.getModifiers())) {
-                System.err.println("Main method is not static in " + MAIN_CLASS);
+                System.err.println("Main method is not static in " + mainClassName);
             } else {
                 mainMethod.invoke(null, new Object[]{args});
             }
         } catch (ClassNotFoundException e) {
-            System.err.println("Unable to find " + MAIN_CLASS);
+            System.err.println("Unable to find " + mainClassName);
             e.printStackTrace();
         } catch (SecurityException e) {
-            System.err.println("Unable to access main method in " + MAIN_CLASS);
+            System.err.println("Unable to access main method in " + mainClassName);
             e.printStackTrace();
         } catch (NoSuchMethodException e) {
-            System.err.println("Unable to find main method in " + MAIN_CLASS);
+            System.err.println("Unable to find main method in " + mainClassName);
             e.printStackTrace();
         } catch (IllegalArgumentException e) {
-            System.err.println("Main method does not accept String[] argument in " + MAIN_CLASS);
+            System.err.println("Main method does not accept String[] argument in " + mainClassName);
             e.printStackTrace();
         } catch (IllegalAccessException e) {
-            System.err.println("Main method needs to be public in " + MAIN_CLASS);
+            System.err.println("Main method needs to be public in " + mainClassName);
             e.printStackTrace();
         } catch (InvocationTargetException e) {
-            System.err.println("Main method threw an exception in " + MAIN_CLASS);
+            System.err.println("Main method threw an exception in " + mainClassName);
             e.printStackTrace();
         } catch(Throwable e) {
         	while(e.getCause() != null)

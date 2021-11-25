@@ -14,6 +14,19 @@ import java.util.Observable;
  * @author Christian Steinmetz
  */
 public class Plugin extends Observable implements OptimizationStrategyPlugin {
+    
+    @ConfigurationProperty(type = Type.BOOLEAN)
+    public boolean useScalarFunctions = true;
+    
+
+    public boolean isUseScalarFunctions() {
+        return useScalarFunctions;
+    }
+
+
+    public void setUseScalarFunctions(boolean useScalarFunctions) {
+        this.useScalarFunctions = useScalarFunctions;
+    }
 
     @Override
     public OptimizationStrategy createOptimizationStrategy() {

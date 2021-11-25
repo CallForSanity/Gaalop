@@ -5,8 +5,14 @@ import de.gaalop.AlgebraStrategyPlugin;
 import de.gaalop.ConfigurationProperty;
 import de.gaalop.ConfigurationProperty.Type;
 import de.gaalop.Notifications;
+import de.gaalop.StringList;
 import java.awt.Image;
+import java.io.IOException;
+import java.util.LinkedList;
 import java.util.Observable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.apache.commons.io.IOUtils;
 
 /**
  * Sets the algebra on the Control Flow Graph
@@ -23,6 +29,10 @@ public class Plugin extends Observable implements AlgebraStrategyPlugin {
     @ConfigurationProperty(type = Type.FILEPATH)
     public String userMacroFilePath = "";
 
+    public String algebraDefinitionString = null;
+    public String macroDefinitionString = null;
+    
+    public boolean atLeastOneQuestionSignedRequired = true;
 
     @Override
     public AlgebraStrategy createAlgebraStrategy() {
@@ -73,6 +83,21 @@ public class Plugin extends Observable implements AlgebraStrategyPlugin {
         this.additionalBaseDirectory = additionalBaseDirectory;
     }
 
+    public static LinkedList<DefinedAlgebra> getDefinedAlgebras() {
+        try {
+            LinkedList<DefinedAlgebra> result = new LinkedList<>();
+            for (String line: IOUtils.toString(Plugin.class.getResourceAsStream("algebra/definedAlgebras.txt"), "UTF-8").split("\r\n")) {
+                String[] parts = line.split(";");
+                if (parts.length == 2) {
+                    result.add(new DefinedAlgebra(parts[0], parts[1]));
+                }
+            }
+            return result;
+        } catch (IOException ex) {
+            Logger.getLogger(Plugin.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+    }
     
     
 }

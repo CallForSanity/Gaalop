@@ -7,7 +7,7 @@ import java.util.Vector;
 
 /**
  * Provides methods for parsing blades, blades references and multivectors
- * @author christian
+ * @author Christian Steinmetz
  */
 public class Parser {
 

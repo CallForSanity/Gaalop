@@ -49,7 +49,7 @@ public final class StartNode extends SequentialNode {
     }
     
     @Override
-    public StartNode copyElements() {
+    public StartNode copyElements(ControlFlowGraph graph) {
     	throw new UnsupportedOperationException("The start node is not supposed to be copied.");
     }
     

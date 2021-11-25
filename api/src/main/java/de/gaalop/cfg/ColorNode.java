@@ -46,8 +46,8 @@ public class ColorNode extends SequentialNode {
 	}
 
 	@Override
-	public ColorNode copyElements() {
-		return new ColorNode(getGraph(), r.copy(), g.copy(), b.copy());
+	public ColorNode copyElements(ControlFlowGraph graph) {
+		return new ColorNode(graph, r.copy(), g.copy(), b.copy());
 	}
 
 	@Override

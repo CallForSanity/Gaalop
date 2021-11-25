@@ -2,7 +2,7 @@ package de.gaalop.productComputer;
 
 /**
  * Provides methods for iterating through a permutation
- * @author christian
+ * @author Christian Steinmetz
  */
 public class Permutation {
 

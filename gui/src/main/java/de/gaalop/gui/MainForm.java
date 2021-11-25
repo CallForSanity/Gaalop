@@ -1,9 +1,7 @@
 package de.gaalop.gui;
 
-import de.gaalop.CodeGeneratorPlugin;
-import de.gaalop.CodeParserPlugin;
-import de.gaalop.OptimizationStrategyPlugin;
-import de.gaalop.Plugins;
+import de.gaalop.*;
+import java.awt.event.ItemEvent;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -15,6 +13,7 @@ import javax.swing.event.HyperlinkListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemListener;
 import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -39,33 +38,33 @@ public class MainForm {
     private JButton saveFileButton;
     private JButton closeButton;
     private StatusBar statusBar;
+    
+    public PanelPluginSelection panelPluginSelection;
 
     private Log log = LogFactory.getLog(MainForm.class);
 
     public MainForm() {
         $$$setupUI$$$();
 
-        contentPane.setPreferredSize(new Dimension(640, 480));
+        //contentPane.setPreferredSize(new Dimension(900, 480));
 
         // The optimize button shows a menu with available output formats
         optimizeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent event) {
                 if (tabbedPane.getSelectedComponent() instanceof SourceFilePanel) {
-                    SourceFilePanel sourcePanel = (SourceFilePanel) tabbedPane.getSelectedComponent();
-
-                    JPopupMenu menu = new JPopupMenu();
-                    List<CodeGeneratorPlugin> plugins = new ArrayList<CodeGeneratorPlugin>();
-                    plugins.addAll(Plugins.getCodeGeneratorPlugins());
-                    Collections.sort(plugins, new PluginSorter());
-                    for (CodeGeneratorPlugin plugin : plugins) {
-                        menu.add(new CompileAction(sourcePanel, statusBar, plugin));
+                    if (panelPluginSelection.areConstraintsFulfilled()) {
+                        panelPluginSelection.updateLastUsedPlugins();
+                        SourceFilePanel sourcePanel = (SourceFilePanel) tabbedPane.getSelectedComponent();
+                        CompileAction action = new CompileAction(sourcePanel, statusBar, panelPluginSelection);
+                        action.actionPerformed(event);
+                    } else {
+                        ErrorDialog.show(new CompilationException(panelPluginSelection.getErrorMessage()));
                     }
-                    menu.show(optimizeButton, 0, optimizeButton.getBounds().height);
                 }
             }
         });
-        
+
         configureButton.addActionListener(new ActionListener() {
           
           @Override
@@ -78,14 +77,19 @@ public class MainForm {
         newFileButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JPopupMenu menu = new JPopupMenu("New File");
                 List<CodeParserPlugin> plugins = new ArrayList<CodeParserPlugin>();
                 plugins.addAll(Plugins.getCodeParserPlugins());
                 Collections.sort(plugins, new PluginSorter());
-                for (CodeParserPlugin plugin : plugins) {
-                    menu.add(new NewFileAction(plugin, tabbedPane));
+                if (plugins.size() == 1) {
+                    NewFileAction action = new NewFileAction(plugins.get(0), tabbedPane);
+                    action.actionPerformed(null);
+                } else {
+                    JPopupMenu menu = new JPopupMenu("New File");
+                    for (CodeParserPlugin plugin : plugins) {
+                        menu.add(new NewFileAction(plugin, tabbedPane));
+                    }
+                    menu.show(newFileButton, 0, newFileButton.getBounds().height);
                 }
-                menu.show(newFileButton, 0, newFileButton.getBounds().height);
             }
         });
 
@@ -97,6 +101,8 @@ public class MainForm {
                 if (component instanceof SourceFilePanel) {
                     SourceFilePanel sourceFile = (SourceFilePanel) component;
                     JFileChooser fileChooser = new JFileChooser();
+                    Main.lastDirectory = sourceFile.getFile().getParentFile();
+                    fileChooser.setCurrentDirectory(Main.lastDirectory);
                     fileChooser.setSelectedFile(sourceFile.getFile());
                     int result = fileChooser.showSaveDialog(contentPane);
                     if (result == JFileChooser.APPROVE_OPTION) {
@@ -131,14 +137,21 @@ public class MainForm {
         openFileButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JPopupMenu menu = new JPopupMenu("Open File");
+                
                 List<CodeParserPlugin> plugins = new ArrayList<CodeParserPlugin>();
                 plugins.addAll(Plugins.getCodeParserPlugins());
                 Collections.sort(plugins, new PluginSorter());
-                for (CodeParserPlugin plugin : plugins) {
-                    menu.add(new OpenFileAction(plugin, tabbedPane));
+                
+                if (plugins.size() == 1) {
+                    OpenFileAction action = new OpenFileAction(plugins.get(0), tabbedPane);
+                    action.actionPerformed(null);
+                } else {
+                    JPopupMenu menu = new JPopupMenu("Open File");
+                    for (CodeParserPlugin plugin : plugins) {
+                        menu.add(new OpenFileAction(plugin, tabbedPane));
+                    }
+                    menu.show(openFileButton, 0, openFileButton.getBounds().height);
                 }
-                menu.show(openFileButton, 0, openFileButton.getBounds().height);
             }
         });
 
@@ -186,15 +199,6 @@ public class MainForm {
 
         sourceFilePanel.setFile(toFile);
         sourceFilePanel.setSaved();
-    }
-
-    private ComboBoxModel createOptimizationStrategyModel() {
-        return new PluginModel<OptimizationStrategyPlugin>(OptimizationStrategyPlugin.class,
-                Plugins.getOptimizationStrategyPlugins());
-    }
-
-    private ComboBoxModel createCodeParserModel() {
-        return new PluginModel<CodeParserPlugin>(CodeParserPlugin.class, Plugins.getCodeParserPlugins());
     }
 
     public Container getContentPane() {
@@ -294,6 +298,8 @@ public class MainForm {
      * @noinspection ALL
      */
     private void $$$setupUI$$$() {
+        Font font = new Font("Arial", Font.PLAIN, FontSize.getGuiFontSize());
+        
         contentPane = new JPanel();
         contentPane.setLayout(new BorderLayout(0, 0));
         final JPanel panel1 = new JPanel();
@@ -314,16 +320,19 @@ public class MainForm {
         newFileButton.setIcon(new ImageIcon(getClass().getResource("/de/gaalop/gui/document-new.png")));
         newFileButton.setText("New File");
         newFileButton.setMnemonic('N');
+        newFileButton.setFont(font);
         newFileButton.setDisplayedMnemonicIndex(0);
         toolBar1.add(newFileButton);
         openFileButton = new JButton();
         openFileButton.setIcon(new ImageIcon(getClass().getResource("/de/gaalop/gui/document-open.png")));
         openFileButton.setText("Open File");
+        openFileButton.setFont(font);
         openFileButton.setMnemonic('O');
         openFileButton.setDisplayedMnemonicIndex(0);
         toolBar1.add(openFileButton);
         saveFileButton = new JButton();
         saveFileButton.setEnabled(false);
+        saveFileButton.setFont(font);
         saveFileButton.setIcon(new ImageIcon(getClass().getResource("/de/gaalop/gui/document-save.png")));
         saveFileButton.setText("Save File");
         saveFileButton.setMnemonic('S');
@@ -331,33 +340,41 @@ public class MainForm {
         toolBar1.add(saveFileButton);
         closeButton = new JButton();
         closeButton.setIcon(new ImageIcon(getClass().getResource("/de/gaalop/gui/emblem-unreadable.png")));
+        closeButton.setFont(font);
         closeButton.setText("Close File");
         toolBar1.add(closeButton);
         final JToolBar.Separator toolBar$Separator2 = new JToolBar.Separator();
         toolBar1.add(toolBar$Separator2);
         configureButton = new JButton();
+        configureButton.setFont(font);
         configureButton.setEnabled(true);
         configureButton.setIcon(new ImageIcon(getClass().getResource("/de/gaalop/gui/preferences-system.png")));
         configureButton.setText("Configure");
         configureButton.setMnemonic('C');
         configureButton.setDisplayedMnemonicIndex(3);
         toolBar1.add(configureButton);
+
         final JToolBar.Separator toolBar$Separator1 = new JToolBar.Separator();
         toolBar1.add(toolBar$Separator1);
         optimizeButton = new JButton();
         optimizeButton.setEnabled(false);
         optimizeButton.setIcon(new ImageIcon(getClass().getResource("/de/gaalop/gui/applications-system.png")));
         optimizeButton.setText("Optimize");
+        optimizeButton.setFont(font);
         optimizeButton.setMnemonic('I');
         optimizeButton.setDisplayedMnemonicIndex(3);
         toolBar1.add(optimizeButton);
         tabbedPane = new JTabbedPane();
+        tabbedPane.setFont(font);
         contentPane.add(tabbedPane, BorderLayout.CENTER);
+        panelPluginSelection = new PanelPluginSelection();
+        contentPane.add(panelPluginSelection, BorderLayout.EAST);
         final JPanel panel2 = new JPanel();
         panel2.setLayout(new BorderLayout(0, 0));
         tabbedPane.addTab("Welcome", panel2);
         welcomeToGaalopWelcomeEditorPane = new JEditorPane();
         welcomeToGaalopWelcomeEditorPane.setContentType("text/html");
+        welcomeToGaalopWelcomeEditorPane.setFont(font);
         welcomeToGaalopWelcomeEditorPane.setEditable(false);
         welcomeToGaalopWelcomeEditorPane.setText("<html>\r\n  <head>\r\n    \r\n  </head>\r\n  <body>\r\n  </body>\r\n</html>\r\n");
         panel2.add(welcomeToGaalopWelcomeEditorPane, BorderLayout.CENTER);

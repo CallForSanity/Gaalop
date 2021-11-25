@@ -1,6 +1,7 @@
 package de.gaalop.tba.cfgImport.optimization.maxima;
 
 import de.gaalop.OptimizationException;
+import de.gaalop.LoggingListenerGroup;
 
 /**
  * Declares an interface for optimizing with maxima
@@ -14,4 +15,6 @@ public interface MaximaConnection {
      * @return The output of Maxima
      */
     public MaximaOutput optimizeWithMaxima(MaximaInput input) throws OptimizationException;
+
+    public void setProgressListeners(LoggingListenerGroup progressLogger);
 }

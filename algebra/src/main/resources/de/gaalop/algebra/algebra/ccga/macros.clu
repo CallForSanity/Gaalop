@@ -1,0 +1,63 @@
+// Cubic CGA macros
+// This algebra is based on the paper
+// "Cubic curves and cubic surfaces from contact points in conformal geometric
+//  algebra" by Hitzer, and Hildenbrand
+
+// points
+// e_1 = e1
+// e_2 = e2
+// e_{o{k}} = eo{k}
+// e_{\infty {k}} = ei{k}
+ei = { 0.5*(ei1 + ei2) } // e_{\infty}
+eo = { eo1 + eo2 } // e_{o}
+
+// need to reference _P(3) as Gaalop's visualization assumes a 3D space at the
+// moment
+createPoint = {
+   _P(1)*e1 + _P(2)*e2 + 0.5*(_P(1)*_P(1)*ei1 + _P(2)*_P(2)*ei2)
+ + _P(1)*_P(2)*ei3 + _P(1)*_P(1)*_P(1)*ei4 + _P(1)*_P(1)*_P(2)*ei5
+ + _P(1)*_P(2)*_P(2)*ei6 + _P(2)*_P(2)*_P(2)*ei7 + eo()
+ + _P(3)*0
+}
+
+// bivectos (E_i, E)
+E1 = { ei1 ^ eo1 }
+E2 = { ei2 ^ eo2 }
+E3 = { ei3 ^ eo3 }
+E4 = { ei4 ^ eo4 }
+E5 = { ei5 ^ eo5 }
+E6 = { ei6 ^ eo6 }
+E7 = { ei7 ^ eo7 }
+E = { ei() ^ eo() }
+
+// pseudo-scalars
+Ieps = { e1 * e2 } // I_{\varepsilon}
+
+Ii12 = { ei1 * ei2 } // I_{\infty 12}
+Iic = { ei4 * ei5 * ei6 * ei7 } // I_{\infty c}
+Iib = { ei3 * Iic() } // I_{\infty b}
+Ii = { Ii12() * Iib() } // I_{\infty}
+
+Io12 = { eo1 * eo2 } // I_{o12}
+Ioc = { eo4 * eo5 * eo6 * eo7 } // I_{oc}
+Iob = { eo3 * Ioc() } // I_{ob}
+Io = { Io12() * Iob() } // I_{o}
+
+Iio = { Ii() ^ Io() } // I_{\infty o}
+
+eo12T = { eo1 - eo2 } // e_{o12}^{\vartriangleright}
+IoT = { eo12T() * Iob() } // I_{o}^{\vartriangleright}
+ei12T = { ei1 - ei2 } // e_{\infty{12}}^{\vartriangleright}
+IiT = { ei12T() * Iib() } // I_{\infty}^{\vartriangleright}
+
+I = { Ieps() * Iio() }
+
+// -----
+Dual = {
+   -(_P(1) * I()) // a^* = aI^{-1} = a(-I)
+}
+
+// cubic curves
+CubicFromPoints = {
+   _P(1) ^ _P(2) ^ _P(3) ^ _P(4) ^ _P(5) ^ _P(6) ^ _P(7) ^ _P(8) ^ _P(9)
+}

@@ -10,7 +10,7 @@ import java.io.IOException;
 /**
  * Implements a bit writes which produces no padding bits,
  * except at the end of the file.
- * @author christian
+ * @author Christian Steinmetz
  */
 public class MaxWriter extends AbsBitWriter {
 

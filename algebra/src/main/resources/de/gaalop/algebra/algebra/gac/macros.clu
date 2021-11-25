@@ -1,0 +1,131 @@
+// GAC macros.clu
+// The GAC algebra is based on the paper:
+// Hrdina,Navrat,Vasik - "Geometric Algebra for Conics"
+// (2018, AACA, https://doi.org/10.1007/s00006-018-0879-2)
+
+// Vis2d only works with cr4d (compass-ruler algebra = 2D CGA)
+// by interpreting the particular 2D CGA blades and rendering them
+// (not by implicit function graphing). So, GAC cannot use Viz2D/cr4d.
+// We can only use the general Visualizer in 3D. Therefore, GAC curves are
+// rendered as cylinders into the z-axis. We have to define createPoint
+// to take (x,y,z) points, but only really use (x,y). If we do not
+// at least make an assignment like "cz = _P(3);" then createPoint
+// will appear to be undefined to the 3D Visualizer that renders via
+// a general IPNS algorithm.
+
+createPoint = {e0p + _P(1)*e1 + _P(2)*e2 + 0.5*(_P(1)*_P(1) + _P(2)*_P(2))*einfp + 0.5*(_P(1)*_P(1) - _P(2)*_P(2))*einfm + _P(1)*_P(2)*einfc + _P(3)*0}
+
+// Define the dual operator * that dualizes A as (*A).
+Dual = {
+ _P(1)/(e0p^e0m^e0c^e1^e2^einfp^einfm^einfc)
+}
+
+// Zamora 2D QGA G(4,2) is a subalgebra of GAC G(5,3).
+// 2D (Compass-Ruler Algebra) CGA G(3,1) is a subalgebra of GAC G(5,3).
+// The paper explains how these subalgebras can be used within GAC.
+
+// DualIO, the duality operator from GAC IPNS 1-blade entities to
+// GAC OPNS 5-blade entities, the wedge of 5 points.
+// Only 5 points are required to define any quadratic plane curve.
+// The full GAC OPNS entities are 7-blades by the Dual *,
+// but they all have the factor e0m^e0c, which can be abridged (removed).
+// DualIO performs this dualization to abridged 5-blade form, that also serve
+// as primary OPNS entities. The DualIO pseudoscalar removes e0m^e0c,
+// and produces an OPNS 5-blade entity without these factors.
+// Iio = (e0p^e1^e2^einfp^einfm^einfc)
+DualIO = { _P(1).(e0p^e1^e2^einfp^einfm^einfc) }
+
+// DualOI is the pseudoinverse operation to the DualIO operation,
+// using the reciprocal 5-blade pseudoscalar.
+// Ioi = (e0p^e0m^e0c^e1^e2^einfp), and Iio.Ioi = 1.
+// So, DualOI takes a primary GAC OPNS entity, up to a 5-blade, and
+// produces the corresponding GAC IPNS entity.
+DualOI = { _P(1).(e0p^e0m^e0c^e1^e2^einfp) }
+
+// In Proposition 4.2 (page 8 of 21), the GAC OPNS 5-blade entities are:
+// * Wedge of 5 GAC points = GAC OPNS entity for general conic plane curve.
+// * Wedge of 4 GAC points and einfc = GAC OPNS entity for axes-aligned conic.
+// * Wedge of 3 GAC points and einfm^einfc = GAC OPNS circle of GAC points.
+//   Note: wedge of 3 CGA points (in CGA subalgebra) is circle of CGA points.
+// * Wedge of 2 GAC points and einfp^einfm^einfc = GAC OPNS line.
+// All of these 5-blades dualize, via DualOI, to GAC IPNS 1-blade entities.
+
+// Example 3.1 in the paper gives GAC IPNS 1-blade entities for ellipse,
+// hyperbola, and parabola. Propositions 3.2-3.5 give IPNS entities
+// in general positions.
+
+// (a semi-diameter, b semi-diameter), centered on origin
+// Example 3.1, Equation (6) gives the ellipse formula, but
+// one change from the first + to a - had to be made
+// to get the correct ellipse shape; possibly errata in the paper.
+Ellipse = {
+ (_P(1)*_P(1) + _P(2)*_P(2))*e0p -
+ (_P(1)*_P(1) - _P(2)*_P(2))*e0m -
+ (_P(1)*_P(1)*_P(2)*_P(2))*einfp
+}
+
+// (x center, y center, r radius)
+// The GAC IPNS circle has the same form as CGA IPNS circle.
+// Ellipse with a=b=r and Circle(0,0,r) are equal up to scale.
+
+Circle = {
+ PNT = _P(1)*e1 + _P(2)*e2 + (1/2)*(_P(1)*_P(1) + _P(2)*_P(2))*einfp + e0p;
+ PNT - (1/2)*_P(3)*_P(3)*einfp
+}
+
+
+// (x semi-diameter, y semi-diameter), centered on origin
+// Example 3.1, Equation (7) gives the hyperbola formula, but
+// some changes in the +/- operators had to be made to get
+// the correct hyperbola; maybe errata in the paper.
+Hyperbola = {
+ (_P(1)*_P(1) - _P(2)*_P(2))*e0p -
+ (_P(1)*_P(1) + _P(2)*_P(2))*e0m +
+ (_P(1)*_P(1)*_P(2)*_P(2))*einfp
+}
+
+// (p semi-latus rectum), half the diameter through focus parallel to directrix
+Parabola = { e0p + e0m + _P(1)*e2 }
+
+// Proposition 5.1 in paper:
+// GAC 6-versor rotor for rotation around the origin by angle d in degrees
+// An entity A is transformed as Rotor(d)*A*~Rotor(d).
+// Note, the paper gives a rotor for clockwise rotation, but here we reverse
+// the rotor, as given in the paper, into a counter-clockwise (ccw) rotor.
+Rotor = {
+ d = _P(1); t = (acos(-1)/180)*d;
+ Rp = cos(t/2) - sin(t/2)*(e1^e2);
+ R1 = cos(t) - sin(t)*(e0c^einfm);
+ R2 = cos(t) + sin(t)*(e0m^einfc);
+ (R2^R1)*Rp
+}
+
+// Proposition 5.2 in paper:
+// GAC 6-versor translator for translation by x*e1.
+// Translation of A is versor sandwich TranslatorX(x)*A*~TranslatorX(x).
+TranslatorX = {
+ x = _P(1);
+ Tp = 1 - (1/2)*x*(e1^einfp);
+ Tm = 1 - (1/2)*x*(e1^einfm) + (1/4)*x*x*(einfp^einfm);
+ Tc = 1 - (1/2)*x*(e2^einfc);
+ Tp*Tm*Tc
+}
+// GAC 6-versor translator for translation by y*e2.
+// Translation of A is versor sandwich TranslatorY(y)*A*~TranslatorY(y).
+TranslatorY = {
+ y = _P(1);
+ Tp = 1 - (1/2)*y*(e2^einfp);
+ Tm = 1 + (1/2)*y*(e2^einfm) - (1/4)*y*y*(einfp^einfm);
+ Tc = 1 - (1/2)*y*(e1^einfc);
+ Tp*Tm*Tc
+}
+
+// GAC uniform dilator (scaling operator "scalor") by factor a>0.
+// Scaling of A is versor sandwich Dilator(a)*A*~Dilator(a).
+Dilator = {
+ a = _P(1);
+ Sp = (a+1)/(2*sqrt(a)) + (a-1)/(2*sqrt(a))*(e0p^einfp);
+ Sm = (a+1)/(2*sqrt(a)) + (a-1)/(2*sqrt(a))*(e0m^einfm);
+ Sc = (a+1)/(2*sqrt(a)) + (a-1)/(2*sqrt(a))*(e0c^einfc);
+ Sp*Sm*Sc
+}

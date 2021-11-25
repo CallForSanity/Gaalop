@@ -1,4 +1,4 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
+CMAKE_MINIMUM_REQUIRED(VERSION 2.9)
 
 macro(copy_files TARGET_NAME GLOBPAT DESTINATION)
   file(GLOB COPY_FILES
@@ -35,3 +35,15 @@ macro(copy_directory TARGET_NAME SOURCE DESTINATION)
       COMMAND ${CMAKE_COMMAND} -E copy_directory ${SRC} ${DST})
   ENDIF(SRC_LIST_LEN GREATER 0)
 endmacro(copy_directory)
+
+macro(copy_static_directory TARGET_NAME SOURCE DESTINATION)
+	SET(SRC "${CMAKE_CURRENT_SOURCE_DIR}/${SOURCE}")
+    SET(DST "${CMAKE_CURRENT_BINARY_DIR}/${DESTINATION}")
+    add_custom_target(${TARGET_NAME} ALL 
+        COMMENT "Copying directory ${SOURCE} to ${DESTINATION}.")
+
+    add_custom_command(
+    	TARGET ${TARGET_NAME} 
+        COMMAND ${CMAKE_COMMAND} -E copy_directory ${SRC} ${DST}
+    )
+endmacro(copy_static_directory)

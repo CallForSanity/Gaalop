@@ -18,6 +18,7 @@ import de.gaalop.CodeParserPlugin;
 import de.gaalop.CompilerFacade;
 import de.gaalop.Notifications;
 import de.gaalop.OptimizationStrategyPlugin;
+import java.awt.Font;
 
 /**
  * This class models a model-view-control ready version of {@link JProgressBar}. This class can be registered as
@@ -39,9 +40,11 @@ public class StatusBar extends JPanel implements Observer {
 	private List<Notifications.Warning> warnings;
 
 	public StatusBar() {
+                Font font = new Font("Arial", Font.PLAIN, FontSize.getGuiFontSize());
 		setLayout(new BorderLayout(10, 0));
 		progressBar = new JProgressBar();
 		statusLabel = new JLabel();
+                statusLabel.setFont(font);
 		statusLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -59,8 +62,13 @@ public class StatusBar extends JPanel implements Observer {
 		add(new JLabel(spacer), BorderLayout.EAST);
 	}
 
-	private void setStatus(String status) {
+	public void setStatus(String status) {
 		statusLabel.setText(spacer + status);
+	}
+	
+	public void setProgressPercent(double percent) {
+		progressBar.setMaximum(100);
+		progressBar.setValue((int)(percent*100));
 	}
 
 	@Override

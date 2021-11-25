@@ -1,11 +1,11 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
+CMAKE_MINIMUM_REQUIRED(VERSION 2.9)
 
 # options
-OPTION(GPC_WITH_MAPLE "wether to use the maple plugin or not." OFF)
-OPTION(GPC_USE_GAPP "wether to use Geometric Algebra Parallelism Programs (GAPP) language or not." OFF)
-OPTION(GPC_USE_DOUBLE "wether to use double precision floating point format or not." OFF)
+OPTION(GPC_WITH_MAPLE "whether to use the maple plugin or not." OFF)
+OPTION(GPC_USE_GAPP "whether to use Geometric Algebra Parallelism Programs (GAPP) language or not." OFF)
+OPTION(GPC_USE_DOUBLE "whether to use double precision floating point format or not." OFF)
 
-SET(GPC_ALGEBRA_NAME "5d" CACHE STRING "algebra name")
+SET(GPC_ALGEBRA_NAME "cga" CACHE STRING "algebra name")
 SET(GPC_ALGEBRA_BASEDIRECTORY "" CACHE STRING "algebra base directory")
 
 # find java
@@ -20,7 +20,7 @@ IF(GPC_WITH_MAPLE)
 ELSE(GPC_WITH_MAPLE)
 	OPTION(GPC_WITH_MAXIMA "whether to use the maxima in tba plugin or not." OFF)
 	IF(GPC_WITH_MAXIMA)
-		FIND_PROGRAM(MAXIMA_BIN NAMES "maxima" "maxima.sh" "maxima.bat" HINTS "C:/Program Files/Maxima" CACHE PATH "Maxima binary path")
+		FIND_PROGRAM(MAXIMA_BIN NAMES "maxima" "maxima.sh" "maxima.bat" HINTS "/usr/bin/maxima" CACHE PATH "Maxima binary path")
 	ENDIF(GPC_WITH_MAXIMA)
 ENDIF(GPC_WITH_MAPLE)
 
@@ -34,19 +34,19 @@ INCLUDE_DIRECTORIES(${GPC_INCLUDE_DIR})
 SET(GPC_LIBRARIES ${GPC_BASE_LIBRARY})
 
 # define common args
-SET(GPC_COMMON_ARGS -algebraName "${GPC_ALGEBRA_NAME}")
+SET(GPC_COMMON_ARGS --algebraName "${GPC_ALGEBRA_NAME}")
 IF(NOT GPC_ALGEBRA_BASEDIRECTORY STREQUAL "")
-	SET(GPC_COMMON_ARGS ${GPC_COMMON_ARGS} -algebraBaseDir "${GPC_ALGEBRA_BASEDIRECTORY}")
+	SET(GPC_COMMON_ARGS ${GPC_COMMON_ARGS} --algebraBaseDir "${GPC_ALGEBRA_BASEDIRECTORY}")
 ENDIF(NOT GPC_ALGEBRA_BASEDIRECTORY STREQUAL "")
 
 IF(GPC_USE_DOUBLE)
-	SET(GPC_COMMON_ARGS ${GPC_COMMON_ARGS} -double)
+	SET(GPC_COMMON_ARGS ${GPC_COMMON_ARGS} --double)
 ENDIF(GPC_USE_DOUBLE)
 
 # define optimizer args
 IF(GPC_WITH_MAPLE)
 	SET(GPC_COMMON_ARGS ${GPC_COMMON_ARGS} -m "${MAPLE_BIN_DIR}")
-	SET(GPC_COMMON_ARGS ${GPC_COMMON_ARGS} -optimizer "de.gaalop.maple.Plugin")
+	SET(GPC_COMMON_ARGS ${GPC_COMMON_ARGS} --optimizationPlugin "de.gaalop.maple.Plugin")
 ELSE(GPC_WITH_MAPLE)
 	# Maxima works commonly
 	IF(GPC_WITH_MAXIMA)
@@ -55,22 +55,22 @@ ELSE(GPC_WITH_MAPLE)
 
 	# GAPP only works with OpenCL
 	IF(GPC_USE_GAPP)
-		SET(GPC_GAPP_ARGS ${GPC_COMMON_ARGS} -optimizer "de.gaalop.gapp.Plugin")
+		SET(GPC_GAPP_ARGS ${GPC_COMMON_ARGS} --optimizationPlugin "de.gaalop.gapp.Plugin")
 	ENDIF(GPC_USE_GAPP)
 
 	# TBA works commonly
-	SET(GPC_COMMON_ARGS ${GPC_COMMON_ARGS} -optimizer "de.gaalop.tba.Plugin")
+	SET(GPC_COMMON_ARGS ${GPC_COMMON_ARGS} --optimizationPlugin "de.gaalop.tba.Plugin")
 ENDIF(GPC_WITH_MAPLE)
 
 # define target specific args
-SET(GPC_CXX_ARGS ${GPC_COMMON_ARGS} -generator "de.gaalop.compressed.Plugin" -pragmas)
-SET(GPC_CUDA_ARGS ${GPC_COMMON_ARGS} -generator "de.gaalop.compressed.Plugin" -pragmas)
+SET(GPC_CXX_ARGS ${GPC_COMMON_ARGS} --codeGeneratorPlugin "de.gaalop.compressed.Plugin" --pragmas)
+SET(GPC_CUDA_ARGS ${GPC_COMMON_ARGS} --codeGeneratorPlugin "de.gaalop.compressed.Plugin" --pragmas)
 IF(GPC_USE_GAPP)
-	SET(GPC_OPENCL_ARGS ${GPC_GAPP_ARGS} -generator "de.gaalop.gappopencl.Plugin")
+	SET(GPC_OPENCL_ARGS ${GPC_GAPP_ARGS} --codeGeneratorPlugin "de.gaalop.gappopencl.Plugin")
 ELSE(GPC_USE_GAPP)
-	SET(GPC_OPENCL_ARGS ${GPC_COMMON_ARGS} -generator "de.gaalop.compressed.Plugin")
+	SET(GPC_OPENCL_ARGS ${GPC_COMMON_ARGS} --codeGeneratorPlugin "de.gaalop.compressed.Plugin")
 ENDIF(GPC_USE_GAPP)
-SET(GPC_JAVA_ARGS ${GPC_COMMON_ARGS} -generator "de.gaalop.compressed.Plugin")
+SET(GPC_JAVA_ARGS ${GPC_COMMON_ARGS} --codeGeneratorPlugin "de.gaalop.compressed.Plugin")
 
 # configure compile script
 get_filename_component(CMAKE_CURRENT_LIST_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
@@ -105,7 +105,7 @@ MACRO(GPC_WRAP_SRCS src_unmodified generated_link_files generated_unlink_files)
 
 			ADD_CUSTOM_COMMAND(OUTPUT ${generated_file}
 			                COMMAND ${GPC_COMPILE_SCRIPT}
-			                ARGS ${GPC_CXX_ARGS} -o "${generated_file}" -i "${source_file}"
+			                ARGS ${GPC_CXX_ARGS} --of "${generated_file}" -i "${source_file}"
 					        MAIN_DEPENDENCY ${source_file})
 			LIST(APPEND ${generated_link_files} ${generated_file}) # needed here, to exclude non-gpc files
 		ELSEIF(${source_file} MATCHES ".*\\.cug$" AND NOT is_header)
@@ -114,7 +114,7 @@ MACRO(GPC_WRAP_SRCS src_unmodified generated_link_files generated_unlink_files)
 
 			ADD_CUSTOM_COMMAND(OUTPUT ${generated_file}
 			                COMMAND ${GPC_COMPILE_SCRIPT}
-			                ARGS ${GPC_CUDA_ARGS} -o "${generated_file}" -i "${source_file}"
+			                ARGS ${GPC_CUDA_ARGS} --of "${generated_file}" -i "${source_file}"
 					        MAIN_DEPENDENCY ${source_file})
 			LIST(APPEND ${generated_link_files} ${generated_file})
 		ELSEIF(${source_file} MATCHES ".*\\.clg$" AND NOT is_header)
@@ -126,7 +126,7 @@ MACRO(GPC_WRAP_SRCS src_unmodified generated_link_files generated_unlink_files)
 
 			ADD_CUSTOM_COMMAND(OUTPUT ${generated_file}
 			                COMMAND ${GPC_COMPILE_SCRIPT}
-			                ARGS ${GPC_OPENCL_ARGS} -o "${generated_file}" -i "${source_file}"
+			                ARGS ${GPC_OPENCL_ARGS} --of "${generated_file}" -i "${source_file}"
 					        MAIN_DEPENDENCY ${source_file})
 			LIST(APPEND ${generated_unlink_files} ${generated_file})
 		ELSEIF(${source_file} MATCHES ".*\\.jgp$" AND NOT is_header)
@@ -138,7 +138,7 @@ MACRO(GPC_WRAP_SRCS src_unmodified generated_link_files generated_unlink_files)
 
 			ADD_CUSTOM_COMMAND(OUTPUT ${generated_file}
 			                COMMAND ${GPC_COMPILE_SCRIPT}
-			                ARGS ${GPC_JAVA_ARGS} -o "${generated_file}" -i "${source_file}"
+			                ARGS ${GPC_JAVA_ARGS} --of "${generated_file}" -i "${source_file}"
 					        MAIN_DEPENDENCY ${source_file})
 			LIST(APPEND ${generated_unlink_files} ${generated_file})
 		ELSE()
