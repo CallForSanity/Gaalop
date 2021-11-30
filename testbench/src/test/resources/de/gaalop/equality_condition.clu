@@ -1,7 +1,0 @@
-p1 = VecN3(a,b,c);
-p2 = VecN3(a,j,k);
-x = -1;
-if (p1 == p2) {
-  x = 1;
-}
-?x;

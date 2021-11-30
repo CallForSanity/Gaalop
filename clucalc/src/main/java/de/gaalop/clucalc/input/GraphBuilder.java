@@ -124,12 +124,8 @@ public final class GraphBuilder {
 
 	static {
 		illegalNames = new HashMap<String, String>();
-		illegalNames.put("B", "B is the metric matrix in Maple");
 //		illegalNames.put("condition_", "synthetic variable inserted by Gaalop");
-		illegalNames.put("norm", "protected in Maple");
-		illegalNames.put("normal", "protected in Maple");
-		illegalNames.put("length", "protected in Maple");
-		illegalNames.put("point", "protected in Maple");
+		illegalNames.put("length", "protected in Maxima");
 	}
         
 	final ControlFlowGraph graph;
@@ -241,11 +237,6 @@ public final class GraphBuilder {
 		if (reason != null) {
 			throw new IllegalArgumentException("Illegal variable name '" + name + "' (" + reason + ")."
 					+ " Please use another variable.");
-		}
-		if (variable.getName().startsWith("re")) {
-			throw new IllegalArgumentException("Variable '" + variable
-					+ "' cannot be used in Maple because of prefix 're' which is protected."
-					+ " Please choose another name.");
 		}
 	}
 

@@ -38,14 +38,12 @@
                 <include>de.gaalop:gui</include>
 
                 <include>de.gaalop:starter</include>
-                <include>de.gaalop:setup</include>
             </includes>
             <binaries>
                 <includeDependencies>true</includeDependencies>
                 <excludes>
                     <!-- These modules are handled specially below -->
                     <exclude>de.gaalop:starter</exclude>
-                    <exclude>de.gaalop:setup</exclude>
                 </excludes>
                 <outputDirectory>plugins</outputDirectory>
                 <unpack>false</unpack>
@@ -56,7 +54,6 @@
 
             <includes>
                 <include>de.gaalop:starter</include>
-                <include>de.gaalop:setup</include>
             </includes>
             <binaries>
                 <includeDependencies>false</includeDependencies>

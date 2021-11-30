@@ -1,7 +1,7 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.9)
 
 # options
-OPTION(GPC_WITH_MAPLE "whether to use the maple plugin or not." OFF)
+OPTION(GPC_WITH_MAXIMA "whether to use the maxima in tba plugin plugin or not." OFF)
 OPTION(GPC_USE_GAPP "whether to use Geometric Algebra Parallelism Programs (GAPP) language or not." OFF)
 OPTION(GPC_USE_DOUBLE "whether to use double precision floating point format or not." OFF)
 
@@ -15,14 +15,9 @@ IF(NOT Java_JAVA_EXECUTABLE)
 ENDIF(NOT Java_JAVA_EXECUTABLE)
 
 # find
-IF(GPC_WITH_MAPLE)
-	FIND_PATH(MAPLE_BIN_DIR HINTS "C:/Program Files (x86)/Maple 12/bin.win" "/opt/maple13/bin" CACHE PATH "Maple Binary Dir")
-ELSE(GPC_WITH_MAPLE)
-	OPTION(GPC_WITH_MAXIMA "whether to use the maxima in tba plugin or not." OFF)
-	IF(GPC_WITH_MAXIMA)
-		FIND_PROGRAM(MAXIMA_BIN NAMES "maxima" "maxima.sh" "maxima.bat" HINTS "/usr/bin/maxima" CACHE PATH "Maxima binary path")
-	ENDIF(GPC_WITH_MAXIMA)
-ENDIF(GPC_WITH_MAPLE)
+IF(GPC_WITH_MAXIMA)
+	FIND_PROGRAM(MAXIMA_BIN NAMES "maxima" "maxima.sh" "maxima.bat" HINTS "/usr/bin/maxima" CACHE PATH "Maxima binary path")
+ENDIF(GPC_WITH_MAXIMA)
 
 FIND_PATH(GPC_ROOT_DIR share PATH_SUFFIXES GaalopCompilerDriver 0.1.1
           DOC "Gaalop Precompiler root directory")
@@ -44,23 +39,18 @@ IF(GPC_USE_DOUBLE)
 ENDIF(GPC_USE_DOUBLE)
 
 # define optimizer args
-IF(GPC_WITH_MAPLE)
-	SET(GPC_COMMON_ARGS ${GPC_COMMON_ARGS} -m "${MAPLE_BIN_DIR}")
-	SET(GPC_COMMON_ARGS ${GPC_COMMON_ARGS} --optimizationPlugin "de.gaalop.maple.Plugin")
-ELSE(GPC_WITH_MAPLE)
-	# Maxima works commonly
-	IF(GPC_WITH_MAXIMA)
-		SET(GPC_COMMON_ARGS ${GPC_COMMON_ARGS} -m "${MAXIMA_BIN}")
-	ENDIF(GPC_WITH_MAXIMA)
 
-	# GAPP only works with OpenCL
-	IF(GPC_USE_GAPP)
-		SET(GPC_GAPP_ARGS ${GPC_COMMON_ARGS} --optimizationPlugin "de.gaalop.gapp.Plugin")
-	ENDIF(GPC_USE_GAPP)
+IF(GPC_WITH_MAXIMA)
+	SET(GPC_COMMON_ARGS ${GPC_COMMON_ARGS} -m "${MAXIMA_BIN}")
+ENDIF(GPC_WITH_MAXIMA)
 
-	# TBA works commonly
-	SET(GPC_COMMON_ARGS ${GPC_COMMON_ARGS} --optimizationPlugin "de.gaalop.tba.Plugin")
-ENDIF(GPC_WITH_MAPLE)
+# GAPP only works with OpenCL
+IF(GPC_USE_GAPP)
+	SET(GPC_GAPP_ARGS ${GPC_COMMON_ARGS} --optimizationPlugin "de.gaalop.gapp.Plugin")
+ENDIF(GPC_USE_GAPP)
+
+# TBA works commonly
+SET(GPC_COMMON_ARGS ${GPC_COMMON_ARGS} --optimizationPlugin "de.gaalop.tba.Plugin")
 
 # define target specific args
 SET(GPC_CXX_ARGS ${GPC_COMMON_ARGS} --codeGeneratorPlugin "de.gaalop.compressed.Plugin" --pragmas)
@@ -75,11 +65,6 @@ SET(GPC_JAVA_ARGS ${GPC_COMMON_ARGS} --codeGeneratorPlugin "de.gaalop.compressed
 # configure compile script
 get_filename_component(CMAKE_CURRENT_LIST_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
 IF(WIN32 AND NOT UNIX)
-    IF(MAPLE_BIN_DIR)
-        FILE(TO_NATIVE_PATH ${MAPLE_BIN_DIR} MAPLE_BIN_DIR_NATIVE)
-    ELSE(MAPLE_BIN_DIR)
-        SET(MAPLE_BIN_DIR_NATIVE .)
-    ENDIF(MAPLE_BIN_DIR)
     FILE(TO_NATIVE_PATH ${GPC_JAR_DIR} GPC_JAR_DIR_NATIVE)
     FILE(TO_NATIVE_PATH ${Java_JAVA_EXECUTABLE} Java_JAVA_EXECUTABLE_NATIVE)
     SET(GPC_COMPILE_SCRIPT "${CMAKE_CURRENT_BINARY_DIR}/run_gpc.bat")

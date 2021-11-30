@@ -12,19 +12,6 @@ SET(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/share/cmake-2.8/Modules")
 #INCLUDE(FindSubversion)
 #Subversion_WC_INFO(${PROJECT_SOURCE_DIR} SVN)
 
-
-# setup CPack
-#INCLUDE(InstallRequiredSystemLibraries)
-SET(CPACK_PACKAGE_CONTACT "Patrick Charrier <patrick.charrier@stud.tu-darmstadt.de>")
-SET(CPACK_PACKAGE_DESCRIPTION "Gaalop Precompiler (GPC) compiles source files containing Geometric Algebra expressions expressed in CLUCalc into C++-compatible object files.")
-SET(CPACK_DEBIAN_PACKAGE_DEPENDS "cmake, java-common")
-SET(CPACK_PACKAGE_VENDOR "The Gaalop Team")
-SET(CPACK_PACKAGE_VERSION_MAJOR 2)
-SET(CPACK_PACKAGE_VERSION_MINOR 0)
-#SET(CPACK_PACKAGE_VERSION_PATCH ${SVN_WC_REVISION})
-SET(CPACK_RESOURCE_FILE_LICENSE "${PROJECT_SOURCE_DIR}/LICENSE.txt")
-INCLUDE(CPack)
-
 # use packages
 FIND_PACKAGE(Maven REQUIRED)
 INCLUDE(share/cmake-2.8/Modules/CopyFiles.cmake)

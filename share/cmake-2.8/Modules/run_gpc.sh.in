@@ -1,6 +1,3 @@
 #!/bin/sh
-export PATH="$PATH:${MAPLE_BIN_DIR}/../bin"
-export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:${MAPLE_BIN_DIR}"
-export MAPLE="${MAPLE_BIN_DIR}/.."
 cd ${GPC_JAR_DIR}
-${Java_JAVA_EXECUTABLE} "-Djava.library.path=${MAPLE_BIN_DIR}/" -jar "${GPC_JAR}" --gpc $*
+${Java_JAVA_EXECUTABLE} -jar "${GPC_JAR}" --gpc $*

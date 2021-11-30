@@ -1,7 +1,0 @@
-DefVarsN3();
-
-P = VecN3(px,py,pz);
-M = VecN3(mx,my,mz);
-S = M-0.5*r*r*einf;
-K = P+(P.S)*einf;
-?C=S^K;
