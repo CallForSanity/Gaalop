@@ -1,6 +1,0 @@
-i = 0;
-loop {
-	if (i > 9) { break; }
-	x = x + 1;
-}
-?x;

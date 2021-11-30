@@ -36,7 +36,7 @@ options {
           }
         }
       }
-      throw new IllegalArgumentException("Function " + name + " is not supported by maple parser");
+      throw new IllegalArgumentException("Function " + name + " is not supported by maxima parser");
 	  }
 	}
 }

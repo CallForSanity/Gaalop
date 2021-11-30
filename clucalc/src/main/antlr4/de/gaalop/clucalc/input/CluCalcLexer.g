@@ -40,7 +40,7 @@ FLOATTYPESUFFIX
 	
 OPNS
   @after {
-    throw new IllegalArgumentException("OPNS is currently not supported by the Maple backend. Please use the IPNS.");
+    throw new IllegalArgumentException("OPNS is currently not supported. Please use the IPNS.");
   }
   :	'OPNS'
 	;

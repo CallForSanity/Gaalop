@@ -48,7 +48,6 @@
         
 	<!-- interface -->
         <module>starter</module>
-        <module>setup</module>
         <module>cli</module>
         <module>gui</module>
 
