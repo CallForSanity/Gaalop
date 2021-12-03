@@ -15,11 +15,12 @@
 
 	<!-- front end -->
         <module>clucalc</module>
-
+        
         <module>globalSettings</module>
 
         <module>visualCodeInserter</module>
         <module>visualCodeInserter2d</module>
+        <module>ganjaVisualCodeInserter</module>
 
         <!-- algebra -->
         <module>algebra</module>
@@ -44,7 +45,9 @@
         <module>gaalet</module>
         <module>codegen-vis2d</module>
         <module>gappDebugger</module>
+        <module>codegen-ganja</module>
         <module>codegen-matlab</module>
+        <module>codegen-python</module>
         
 	<!-- interface -->
         <module>starter</module>

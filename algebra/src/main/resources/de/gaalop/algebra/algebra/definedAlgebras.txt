@@ -1,7 +1,7 @@
 2d;imaginary numbers
 3d;vectors in 3d
-2dpga;2D projective geometric algebra
-3dpga;3D projective geometric algebra
+2dpga;2D plane-based geometric algebra
+3dpga;3D plane-based geometric algebra
 cra;compass-ruler
 sta;space-time
 cga;conformal space

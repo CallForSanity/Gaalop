@@ -26,6 +26,9 @@ public class Plugin extends Observable implements GlobalSettingsStrategyPlugin {
     
     @ConfigurationProperty(type=Type.NUMBER)
     public int guiFontSize = 12;
+    
+    @ConfigurationProperty(type = Type.BOOLEAN)
+    public boolean outputToNormalBase = false;
 
     @Override
     public GlobalSettingsStrategy createGlobalSettingsStrategy() {
@@ -83,7 +86,13 @@ public class Plugin extends Observable implements GlobalSettingsStrategyPlugin {
     public void setGuiFontSize(int guiFontSize) {
         this.guiFontSize = guiFontSize;
     }
-    
-    
-    
+
+    public boolean isOutputToNormalBase() {
+        return outputToNormalBase;
+    }
+
+    public void setOutputToNormalBase(boolean outputToNormalBase) {
+        this.outputToNormalBase = outputToNormalBase;
+    }
+
 }

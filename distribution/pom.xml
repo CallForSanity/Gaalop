@@ -36,6 +36,11 @@
         </dependency>
         <dependency>
             <groupId>de.gaalop</groupId>
+            <artifactId>ganjaVisualCodeInserter</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>de.gaalop</groupId>
             <artifactId>visualCodeInserter2d</artifactId>
             <version>1.0.0</version>
         </dependency>
@@ -147,6 +152,16 @@
         <dependency>
             <groupId>de.gaalop</groupId>
             <artifactId>starter</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>de.gaalop</groupId>
+            <artifactId>codegen-ganja</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>de.gaalop</groupId>
+            <artifactId>codegen-python</artifactId>
             <version>1.0.0</version>
         </dependency>
     </dependencies>

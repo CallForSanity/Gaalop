@@ -3,7 +3,6 @@ package de.gaalop.globalSettings;
 import de.gaalop.GlobalSettingsStrategy;
 import de.gaalop.OptimizationException;
 import de.gaalop.cfg.ControlFlowGraph;
-import de.gaalop.cfg.GlobalSettings;
 
 /**
  *
@@ -21,6 +20,7 @@ public class MyGlobalSettingsStrategy implements GlobalSettingsStrategy {
     public void transform(ControlFlowGraph graph) throws OptimizationException {
         graph.globalSettings.maximaCommand = plugin.maximaCommand;
         graph.globalSettings.optMaxima = plugin.optMaxima;
+        graph.globalSettings.outputToNormalBase = plugin.outputToNormalBase;
     }
 
 }

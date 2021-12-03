@@ -99,5 +99,4 @@ public class Plugin extends Observable implements AlgebraStrategyPlugin {
         }
     }
     
-    
 }

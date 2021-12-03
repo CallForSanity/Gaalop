@@ -375,12 +375,14 @@ public final class ControlFlowGraph {
 	}
         
         /**
-         * Returns the blade string representation of a given multivector component.
+         * Returns the blade string representation of a given multivector component, respecting the output base (natural or zero-inf).
          * @param multivectorComponent
          * @return 
          */
         public String getBladeString(MultivectorComponent multivectorComponent) {
-            return getAlgebraDefinitionFile().getBladeString(multivectorComponent.getBladeIndex());
+            return (globalSettings.outputToNormalBase) 
+                ? getAlgebraDefinitionFile().getBladeStringNormalBase(multivectorComponent.getBladeIndex())
+                : getAlgebraDefinitionFile().getBladeString(multivectorComponent.getBladeIndex());
         }
 
 	private static class Printer implements ControlFlowVisitor {
