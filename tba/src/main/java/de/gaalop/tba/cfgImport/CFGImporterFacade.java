@@ -7,6 +7,7 @@ import de.gaalop.algebra.UpdateLocalVariableSet;
 import de.gaalop.api.cfg.RoundingCFGVisitor;
 import de.gaalop.cfg.ControlFlowGraph;
 import de.gaalop.dfg.Variable;
+import de.gaalop.tba.baseChange.BaseChanger;
 import de.gaalop.tba.Plugin;
 import de.gaalop.tba.UseAlgebra;
 import de.gaalop.tba.cfgImport.optimization.OptConstantPropagation;
@@ -102,6 +103,10 @@ public class CFGImporterFacade {
         CFGImporter builder = new CFGImporter(usedAlgebra, plugin.isScalarFunctions(), graph.getAlgebraDefinitionFile());
         builder.useSparseExpressions = this.useSparseExpressions;
         graph.accept(builder);
+        
+        if (graph.globalSettings.outputToNormalBase) {
+            BaseChanger.changeToNormalBase(graph);
+        }
 
         boolean repeat;
         do {

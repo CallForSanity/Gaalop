@@ -34,6 +34,38 @@ import static org.junit.Assert.*;
 public class TestAllTBA {
     
     @Test
+    public void testNormalBase() {
+        
+        TBATestCase testCase = new NormalBaseTest();
+        
+        de.gaalop.globalSettings.Plugin g = new de.gaalop.globalSettings.Plugin();
+        g.outputToNormalBase = true;
+        
+        CodeParser parser                                       = new de.gaalop.clucalc.input.Plugin().createCodeParser();
+        GlobalSettingsStrategy globalSettingsStrategy           = g.createGlobalSettingsStrategy();
+        VisualCodeInserterStrategy visualCodeInserterStrategy   = new de.gaalop.visualCodeInserter.Plugin().createVisualCodeInserterStrategy();
+        AlgebraStrategy algebraStrategy                         = new de.gaalop.algebra.Plugin().createAlgebraStrategy();
+        OptimizationStrategy optimizationStrategy               = new de.gaalop.tba.Plugin().createOptimizationStrategy();
+        CodeGenerator codeGenerator                             = new TBATestCodeGeneratorPlugin(testCase.getInputValues()).createCodeGenerator();
+        
+        CompilerFacade facade = new CompilerFacade(
+                parser, 
+                globalSettingsStrategy, 
+                visualCodeInserterStrategy, 
+                algebraStrategy, 
+                optimizationStrategy, 
+                codeGenerator, 
+                testCase.getAlgebraName(), 
+                true, 
+                "");
+        
+        
+        assertTrue(
+            TestDummy.compileWithCompilerFacade(testCase, facade)
+                );
+    } 
+    
+    @Test
     public void testSparseMvExpressionsDummyTest() {
         assertTrue(
             TestDummySuite.compile(new SparseMvExpressionsTest())

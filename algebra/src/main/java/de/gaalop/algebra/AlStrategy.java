@@ -179,6 +179,11 @@ public class AlStrategy implements AlgebraStrategy {
         alFile.blades = new Expression[blades.length];
         for (int i = 0; i < blades.length; i++) 
             alFile.blades[i] = blades[i].toExpression();
+        
+        TCBlade[] blades2 = BladeArrayRoutines.createBlades(Arrays.copyOfRange(alFile.base2,1,alFile.base2.length));
+        alFile.blades2 = new Expression[blades2.length];
+        for (int i = 0; i < blades2.length; i++) 
+            alFile.blades2[i] = blades2[i].toExpression();
     }
 
     /**

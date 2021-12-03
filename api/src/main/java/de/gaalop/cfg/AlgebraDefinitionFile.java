@@ -58,6 +58,7 @@ public class AlgebraDefinitionFile {
 
     //generated attributes
     public Expression[] blades;
+    public Expression[] blades2;
 
     private boolean usePrecalculatedTable;
     private String productsFilePath;
@@ -75,6 +76,15 @@ public class AlgebraDefinitionFile {
      */
     public String getBladeString(int index) {
         return BladePrinter.print(blades[index]);
+    }
+    
+    /**
+     * Returns the string of blade with a given index for the normal base
+     * @param index The index
+     * @return The string representing the blade
+     */
+    public String getBladeStringNormalBase(int index) {
+        return blades2[index].toString();
     }
 
     /**

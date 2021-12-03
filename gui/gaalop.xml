@@ -2,31 +2,34 @@
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
 <comment>Gaalop Configuration File</comment>
-<entry key="lastUsedAlgebra">9d</entry>
+<entry key="lastUsedAlgebra">cga</entry>
 <entry key="de.gaalop.tba.Plugin.optOneExpressionRemoval">true</entry>
 <entry key="lastUsedOptimization">de.gaalop.tba.Plugin</entry>
 <entry key="de.gaalop.julia.Plugin.forGrassmann">false</entry>
-<entry key="lastUsedVisualCodeInserter">de.gaalop.visualCodeInserter.Plugin</entry>
+<entry key="lastUsedVisualCodeInserter">de.gaalop.ganjaVisualCodeInserter.Plugin</entry>
+<entry key="de.gaalop.python.Plugin.useDouble">false</entry>
 <entry key="de.gaalop.algebra.Plugin.userMacroFilePath"></entry>
 <entry key="de.gaalop.algebra.Plugin.usePrecalulatedTables">false</entry>
 <entry key="de.gaalop.gaalet.output.Plugin.useNameTable">false</entry>
-<entry key="de.gaalop.globalSettings.Plugin.maximaCommand">C:\Program Files (x86)\Maxima\bin\maxima.bat</entry>
+<entry key="de.gaalop.globalSettings.Plugin.maximaCommand">C:\maxima\bin\maxima.bat</entry>
 <entry key="de.gaalop.tba.Plugin.optConstantPropagation">true</entry>
-<entry key="lastUsedGenerator">de.gaalop.visualizer.Plugin</entry>
+<entry key="lastUsedGenerator">de.gaalop.ganja.Plugin</entry>
 <entry key="de.gaalop.globalSettings.Plugin.guiFontSize">12</entry>
 <entry key="de.gaalop.globalSettings.Plugin.editorFontSize">12</entry>
+<entry key="de.gaalop.matlab.Plugin.useDouble">false</entry>
 <entry key="de.gaalop.gappopencl.Plugin.standalone">true</entry>
 <entry key="de.gaalop.tba.Plugin.optInserting">true</entry>
-<entry key="de.gaalop.visualizer.Plugin.lwJglNativePath">nativeLibraries</entry>
+<entry key="de.gaalop.visualizer.Plugin.lwJglNativePath">native\windows</entry>
 <entry key="de.gaalop.tba.Plugin.numberOfRoundingDigits">6</entry>
 <entry key="de.gaalop.globalSettings.Plugin.optMaxima">true</entry>
 <entry key="de.gaalop.clucalc.output.Plugin.suffix">_opt</entry>
 <entry key="de.gaalop.cpp.Plugin.standalone">true</entry>
-<entry key="de.gaalop.compressed.Plugin.useDouble">false</entry>
+<entry key="de.gaalop.globalSettings.Plugin.outputToNormalBase">true</entry>
 <entry key="de.gaalop.cpp.Plugin.useDouble">false</entry>
+<entry key="de.gaalop.compressed.Plugin.useDouble">false</entry>
 <entry key="de.gaalop.gapp.Plugin.useScalarFunctions">true</entry>
 <entry key="de.gaalop.tba.Plugin.optUnusedAssignments">true</entry>
-<entry key="de.gaalop.algebra.Plugin.additionalBaseDirectory">C:\Gaalop HP\algebras</entry>
+<entry key="de.gaalop.algebra.Plugin.additionalBaseDirectory">algebras</entry>
 <entry key="de.gaalop.tba.Plugin.doRoundingAfterOptimization">false</entry>
 <entry key="de.gaalop.compressed.Plugin.standalone">false</entry>
 <entry key="lastUsedAlgebraRessource">true</entry>

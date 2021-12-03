@@ -9,6 +9,8 @@ public class GlobalSettings {
     public String maximaCommand;
     
     public boolean optMaxima;
+    
+    public boolean outputToNormalBase;
 
     public String getMaximaCommand() {
         return maximaCommand;
@@ -20,4 +22,7 @@ public class GlobalSettings {
     
     
 
+    public boolean isOutputToNormalBase() {
+        return outputToNormalBase;
+    }
 }

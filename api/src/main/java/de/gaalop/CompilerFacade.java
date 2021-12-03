@@ -55,8 +55,6 @@ public class CompilerFacade extends Observable {
     	return realCompile(input);
     }
     
-    
-    
     private Set<OutputFile> realCompile(InputFile input) throws CompilationException {
     	setChanged();
     	notifyObservers("Parsing...");
@@ -87,13 +85,21 @@ public class CompilerFacade extends Observable {
         optimizationStrategy.transform(graph);
         setChanged();
         
+        testGraph(graph);
+        
         notifyObservers("Generating Code...");
         Set<OutputFile> output = codeGenerator.generate(graph);  
         setChanged();
         notifyObservers("Finished");        
         return output;   	
     }
-    
-    
-    
+
+    /**
+     * Do some testing with the Control Flow Graph between Optimization stage and Codegenerator stage
+     * @param graph The Control Flow Graph
+     */
+    protected void testGraph(ControlFlowGraph graph) {
+        // This method is empty in the standard CompilerFacade.
+    }
+
 }
