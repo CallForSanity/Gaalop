@@ -3,6 +3,7 @@ package de.gaalop.clucalc.input;
 import de.gaalop.CodeParser;
 import de.gaalop.CodeParserException;
 import de.gaalop.InputFile;
+import de.gaalop.StringList;
 import de.gaalop.cfg.ControlFlowGraph;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -52,6 +53,8 @@ public enum CluCalcCodeParser implements CodeParser {
     private ControlFlowGraph parse(InputFile input) throws CodeParserException, IOException {
         LinkedList<String> onlyEvaluates = new LinkedList<String>();
         LinkedList<String> outputs = new LinkedList<String>();
+        
+        LinkedList<String[]> drawTriangles = new LinkedList<String[]>();
 
         String syntax = null;
 
@@ -85,7 +88,20 @@ public enum CluCalcCodeParser implements CodeParser {
                             onlyEvaluates.addAll(Arrays.asList(parts));
                         } else if (whichPragma.equals("in2out")) {
                             syntax = rest;
-                        } else
+                        } else if (whichPragma.equals("triangles")) {
+                            while (rest.contains("  ")) 
+                               rest = rest.replaceAll("\\W\\W", " ");
+                            
+                            for (String t: rest.split(",")) {
+                                String[] triangleMvs = t.trim().split("\\W");
+                                if (triangleMvs.length == 3) {
+                                    drawTriangles.add(triangleMvs);
+                                } else {
+                                    throw new CodeParserException(input, "pragma triangles must be in format: A1 B1 C1, A2 B2 C2, ... , An Bn Cn.");
+                                }
+                                
+                            }
+                        } else 
                             throw new CodeParserException(input, "pragma "+whichPragma+" is unknown.");
                     }
 
@@ -108,6 +124,7 @@ public enum CluCalcCodeParser implements CodeParser {
         visitor.visit(parser.script());
         
         ControlFlowGraph graph = visitor.graph;
+        graph.drawTriangles = drawTriangles;
         if (syntax != null) {
             //Parse syntax
             String[] syntaxParts = syntax.split("->");

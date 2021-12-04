@@ -142,6 +142,12 @@ public class CluVisitor extends CluCalcBaseVisitor<Object> {
     }
 
     @Override
+    public Object visitPRAGMARANGE(CluCalcParser.PRAGMARANGEContext ctx) {
+        graphBuilder.addPragmaMinMaxValues(ctx.var.getText(), ctx.min.getText(), ctx.max.getText());
+        return null;
+    }
+    
+    @Override
     public Object visitSingleArgument(CluCalcParser.SingleArgumentContext ctx) {
         LinkedList<Expression> result = new LinkedList<Expression>();
         result.add((Expression) visit(ctx.arg));
