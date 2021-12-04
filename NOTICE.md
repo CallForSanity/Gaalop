@@ -19,14 +19,17 @@ kweiner@fmsware.com.
 @version 1.03 November 2003
 
 # More used libraries
-- Antlr [BSD]
+- antlr [BSD]
 - antlr-runtime [BSD]
 - args4j [MIT]
 - commons-io [Apache]
 - commons-beanutils [Apache]
+- commons-logging [Apache]
 - jdom [Apache-style open source license]
 - jna [This library is licensed under the LGPL, version 2.1 or later, and (from version 4.0 onward) the Apache Software License, version 2.0. Commercial license arrangements are negotiable.]
+- junit [Eclipse Public]
+- log4j [Apache]
 - lwjgl [BSD]
 - lwjgl_util [BSD]
+- maven [Apache]
 - stringtemplate [BSD]
-- Maven [Apache]
