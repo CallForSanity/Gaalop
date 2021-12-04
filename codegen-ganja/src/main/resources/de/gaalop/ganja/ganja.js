@@ -598,7 +598,7 @@
       }
 
     // Dual, Involute, Reverse, Conjugate, Normalize and length, all direct call through. Conjugate handles matrices.
-      static Dual(a)      { if (typeof a=='boolean') return !a; return Element.toEl(a).Dual; };
+      static Dual(a)      { if (typeof a=='boolean' || typeof a=='number') return !a; return Element.toEl(a).Dual; };
       static Involute(a)  { return Element.toEl(a).Involute; };
       static Reverse(a)   { return Element.toEl(a).Reverse; };
       static Conjugate(a) { if (a.Conjugate) return a.Conjugate; if (a instanceof Array) return a[0].map((c,ci)=>a.map((r,ri)=>Element.Conjugate(a[ri][ci]))); return Element.toEl(a).Conjugate; }
@@ -660,15 +660,16 @@
         var ww=options.width, hh=options.height, cvs=options.canvas, tpcam=new Element([0,0,0,0,0,0,0,0,0,0,0,-5,0,0,1,0]),tpy=this.Coeff(4,1),tp=new Element(),
       // project 3D to 2D. This allows to render 3D and 2D PGA with the same code.
         project=(o)=>{ if (!o) return o; while (o.call) o=o(); 
+//          if (o instanceof Element && o.length == 32) o = new Element([o[0],o[1],o[2],o[3],o[4],o[6],o[7],o[8],o[10],o[11],o[13],o[16],o[17],o[19],o[22],o[26]]); 
           // Clip 3D lines so they don't go past infinity.
-          if (tot == 4 && o instanceof Element && o.length == 16 && o[8]**2+o[9]**2+o[10]**2>0.0001) {
-            o = [[2,1,0,0],[-2,1,0,0],[2,0,1,0],[-2,0,1,0],[2,0,0,1],[-2,0,0,1]].map(v=>{
+          if (o instanceof Element && o.length == 16 && o[8]**2+o[9]**2+o[10]**2>0.0001) {
+            o = [[options.clip||2,1,0,0],[-(options.clip||2),1,0,0],[options.clip||2,0,1,0],[-(options.clip||2),0,1,0],[options.clip||2,0,0,1],[-(options.clip||2),0,0,1]].map(v=>{
               var r = Element.Vector(...v).Wedge(o); return r[14]?r.Scale(1/r[14], r):undefined;
-            }).filter(x=>x && Math.abs(x[13])<=2.001 && Math.abs(x[12]) <= 2.001 && Math.abs(x[11]) <= 2.001);
+            }).filter(x=>x && Math.abs(x[13])<= (options.clip||2)+0.001 && Math.abs(x[12]) <= (options.clip||2)+0.001 && Math.abs(x[11]) <= (options.clip||2) + 0.001);
             return o.map(o=>(tpcam).Vee(options.camera.Mul(o).Mul(options.camera.Conjugate)).Wedge(tpy));
           } 
           // Convert 3D planes to polies.
-          if (tot == 4 && o instanceof Element && o.length == 16 && o.Grade(1).Length>0.01) {
+          if (o instanceof Element && o.length == 16 && o.Grade(1).Length>0.01) {
             var m = Element.Add(1, Element.Mul(o.Normalized, Element.Coeff(3,1))).Normalized, e0 = 0;
             o=Element.sw(m,[[-1,-1],[-1,1],[1,1],[-1,-1],[1,1],[1,-1]].map(([x,z])=>Element.Trivector(x*o.Length,e0,z*o.Length,1)));
             return o.map(o=>(tpcam).Vee(options.camera.Mul(o).Mul(options.camera.Conjugate)).Wedge(tpy));
@@ -680,7 +681,7 @@
       // if we get an array or function without parameters, we render c2d or p2d SVG points/lines/circles/etc
         if (!(f instanceof Function) || f.length===0) {
         // Our current cursor, color, animation state and 2D mapping.
-          var lx,ly,lr,color,res,anim=false,to2d=(tot==3)?[0,1,2,3,4,5,6,7]:[0,7,9,10,13,12,14,15];
+          var lx,ly,lr,color,res,anim=false,to2d=(tot==5)?[0, 8, 11, 13, 19, 17, 22, 26]:(tot==3)?[0,1,2,3,4,5,6,7]:[0,7,9,10,13,12,14,15];
         // Make sure we have an array of elements. (if its an object, convert to array with elements and names.)
           if (f instanceof Function) f=f(); if (!(f instanceof Array)) f=[].concat.apply([],Object.keys(f).map((k)=>typeof f[k]=='number'?[f[k]]:[f[k],k]));
         // The build function generates the actual SVG. It will be called everytime the user interacts or the anim flag is set.
@@ -889,7 +890,7 @@
       static graphGL2(f,options) {
       // Create canvas, get webGL2 context.
         var canvas=document.createElement('canvas'); canvas.style.width=options.width||''; canvas.style.height=options.height||''; canvas.style.backgroundColor='#EEE';
-        if (options.width && options.width.match && options.width.match(/px/i)) canvas.width = parseFloat(options.width)*(options.devicePixelRatio||1); if (options.height && options.height.match && options.height.match(/px/i)) canvas.height = parseFloat(options.height)*(options.devicePixelRatio||1);
+        if (options.width && options.width.match && options.width.match(/px/i)) canvas.width = parseFloat(options.width)*(options.devicePixelRatio||devicePixelRatio||1); if (options.height && options.height.match && options.height.match(/px/i)) canvas.height = parseFloat(options.height)*(options.devicePixelRatio||devicePixelRatio||1);
         var gl=canvas.getContext('webgl2',{alpha:options.alpha||false,preserveDrawingBuffer:true,antialias:true,powerPreference:'high-performance'});
         var gl2=!!gl; if (!gl) gl=canvas.getContext('webgl',{alpha:options.alpha||false,preserveDrawingBuffer:true,antialias:true,powerPreference:'high-performance'});
         gl.clearColor(240/255,240/255,240/255,1.0); gl.enable(gl.DEPTH_TEST); if (!gl2) { gl.getExtension("EXT_frag_depth"); gl.va = gl.getExtension('OES_vertex_array_object'); }
@@ -996,7 +997,7 @@
         var armed=0;
         canvas.update = (x)=>{
         // Start by updating canvas size if needed and viewport.
-          var s = getComputedStyle(canvas); if (s.width) { canvas.width = parseFloat(s.width)*(options.devicePixelRatio||1); canvas.height = parseFloat(s.height)*(options.devicePixelRatio||1); }
+          var s = getComputedStyle(canvas); if (s.width) { canvas.width = parseFloat(s.width)*(options.devicePixelRatio||devicePixelRatio||1); canvas.height = parseFloat(s.height)*(options.devicePixelRatio||devicePixelRatio||1); }
           gl.viewport(0,0, canvas.width|0,canvas.height|0); var r=canvas.width/canvas.height;
         // Defaults, resolve function input
           var a,p=[],l=[],t=[],c=[.5,.5,.5],alpha=0,lastpos=[-2,2,0.2]; gl.clear(gl.COLOR_BUFFER_BIT+gl.DEPTH_BUFFER_BIT); while (x.call) x=x();
@@ -1082,22 +1083,22 @@
               [va.b,va.b2,va.b4,va.b3].forEach(x=>{if(x) gl.deleteBuffer(x)}); if (va.r) gl.va.deleteVertexArrayOES(va.r);
             }
       // Default modelview matrix, convert camera to matrix (biquaternion->matrix)
-        var M=[1,0,0,0,0,1,0,0,0,0,1,0,0,0,5,1], mtx = x=>{ var t=options.spin?performance.now()*options.spin/1000:-options.h||0, t2=options.p||0;
+        var M=[1,0,0,0,0,1,0,0,0,0,1,0,0,0,5,1], mtx = (x,iscam=true)=>{ var t=options.spin?performance.now()*options.spin/1000:-options.h||0, t2=options.p||0;
           var ct = Math.cos(t), st= Math.sin(t), ct2 = Math.cos(t2), st2 = Math.sin(t2), xx=options.posx||0, y=options.posy||0, z=options.posz||0, zoom=options.z||5;
           if (tot==5) return [ct,st*-st2,st*ct2,0,0,ct2,st2,0,-st,ct*-st2,ct*ct2,0,xx*ct+z*-st,y*ct2+(xx*st+z*ct)*-st2,y*st2+xx*st+z*ct*ct2+zoom,1];
-          x=x.Normalized; var y=x.Mul(x.Dual),X=x.e23,Y=-x.e13,Z=-x.e12,W=x.s,m=Array(16);
+          x=x.Normalized; var y=x.Mul(x.Dual),X=x.e23,Y=-x.e13,Z=-x.e12,W=x.s;
           var xx = X*X, xy = X*Y, xz = X*Z, xw = X*W, yy = Y*Y, yz = Y*Z, yw = Y*W, zz = Z*Z, zw = Z*W;
-          var mtx = [ 1-2*(yy+zz), 2*(xy+zw), 2*(xz-yw), 0, 2*(xy-zw), 1-2*(xx+zz), 2*(yz+xw), 0, 2*(xz+yw), 2*(yz-xw), 1-2*(xx+yy), 0, -2*y.e23, -2*y.e13, 2*y.e12+5, 1];
+          var mtx = [ 1-2*(yy+zz), 2*(xy+zw), 2*(xz-yw), 0, 2*(xy-zw), 1-2*(xx+zz), 2*(yz+xw), 0, 2*(xz+yw), 2*(yz-xw), 1-2*(xx+yy), 0, -2*y.e23, -2*y.e13, 2*y.e12+(iscam?5:0), 1];
           return mtx;
         }
       // Render the given vertices. (autocreates/destroys vertex array if not supplied).
-        var draw=function(p, tp, vtx, color, color2, ratio, texc, va){
+        var draw=function(p, tp, vtx, color, color2, ratio, texc, va, cbuf){
           gl.useProgram(p); gl.uniformMatrix4fv(gl.getUniformLocation(p, "mv"),false,M);
           gl.uniformMatrix4fv(gl.getUniformLocation(p, "p"),false, [5,0,0,0,0,5*(ratio||2),0,0,0,0,1,2,0,0,-1,0])
           gl.uniform3fv(gl.getUniformLocation(p, "color"),new Float32Array(color));
           gl.uniform3fv(gl.getUniformLocation(p, "color2"),new Float32Array(color2));
-          if (texc) gl.uniform1i(gl.getUniformLocation(p, "texc"),0);
-          var v; if (!va) v = createVA(vtx, texc); else gl.va.bindVertexArrayOES(va.r);
+          //if (texc) gl.uniform1i(gl.getAttribLocation(p, "texc"),0);
+          var v; if (!va) v = createVA(vtx, texc, undefined, cbuf, p); else gl.va.bindVertexArrayOES(va.r);
           if (va && va.b4) {
             gl.drawElements(tp, va.tcount, gl.UNSIGNED_SHORT, 0);
           } else {
@@ -1115,10 +1116,43 @@
                  vec3 E = normalize(-Pos.xyz); vec3 R = normalize(reflect(ldir,normal));
                  gl_FragColor = vec4(max(0.0,l)*color+vec3(0.5*pow(max(dot(R,E),0.0),20.0))+color2, 1.0);  }`);
         var programPoint = compile(`attribute vec4 position; varying vec4 Pos; uniform mat4 mv; uniform mat4 p;
-                 void main() { gl_PointSize=${((options.pointRadius||1)*8.0).toFixed(2)}; Pos=mv*position; gl_Position = p*Pos; }`,
+                 void main() { gl_PointSize=${((options.pointRadius||1)*(options.devicePixelRatio||devicePixelRatio||1)*8.0).toFixed(2)}; Pos=mv*position; gl_Position = p*Pos; }`,
                 `precision highp float; uniform vec3 color; uniform vec3 color2; varying vec4 Pos;
                  void main() {  float distanceToCenter = length(gl_PointCoord - vec2(0.5)); if (distanceToCenter>0.5) discard; 
                  gl_FragColor = vec4(color+color2, (distanceToCenter<0.5?1.0:0.0));  }`);
+        var programline = compile(`
+                 attribute vec4 position;  // current point.
+                 attribute vec2 texc;      // x = +w or -w, alternating. y = opacity.
+                 attribute vec4 col;       // next point. (extrapolated for end point)
+                 uniform vec3 color;       // r=aspect g=thickness
+                 uniform mat4 mv,p;        // modelview and projection matrix
+                 varying vec2 tc;
+                 void main() { 
+                 // Convert to clipspace.
+                   vec4 cp = p*mv*vec4(position.xyz,1.0);
+                   vec2 cs = cp.xy / abs(cp.w);
+                   vec4 np = p*mv*vec4(col.xyz,1.0);
+                   vec2 ns = np.xy / abs(np.w);
+                 // compensate aspect
+                   cs.x *= color.r;
+                   ns.x *= color.r; 
+                 // clipspace line direction.
+                   vec2 dir = normalize(cs-ns);
+                 // Calculate screenspace normal.
+                   vec2 normal = vec2( -dir.y, dir.x); 
+                 // Line scaling and aspect fix.
+                   normal *= color.g * 5.0;
+                   normal.x /= color.r;
+                 // Pass through texture coordinates for edge softening  
+                   tc = vec2(texc.x / abs(texc.x), texc.y);
+                   gl_Position = cp + vec4(normal*texc.x,0.0,0.0);
+                 }`,
+                `precision highp float; 
+                 uniform vec3 color2; 
+                 varying vec2 tc; 
+                 void main() { 
+                   gl_FragColor = vec4(color2,(1.0-pow(abs(tc.x),2.0))*tc.y); 
+                 }`);
         var programcol = compile(`attribute vec4 position; attribute vec3 col; varying vec3 Col; varying vec4 Pos; uniform mat4 mv; uniform mat4 p;
                  void main() { gl_PointSize=6.0; Pos=mv*position; gl_Position = p*Pos; Col=col; }`,
                 `#extension GL_OES_standard_derivatives : enable
@@ -1147,6 +1181,9 @@
                  void main() { tex=texc; gl_PointSize=6.0; vec4 o=mv*vec4(color2,0.0); Pos=(-1.0/(o.z-mv[3][2]))*position+vec4(mv[3][0],mv[3][1],mv[3][2],0.0)+o; gl_Position = p*Pos; }`,
                 `precision highp float; uniform vec3 color; varying vec4 Pos; varying vec2 tex;
                  uniform sampler2D texm; void main() { vec4 c = texture2D(texm,tex); if (c.a<0.01) discard; gl_FragColor = vec4(color,c.a);}`);
+      // Helpers for line drawing. Convert line segments to triangles.
+        const line_to_tri  = ([ax,ay,az,bx,by,bz]) => [ax,ay,az,ax,ay,az,bx,by,bz,bx,by,bz,ax,ay,az,bx,by,bz];
+        const line_to_tri2 = ([ax,ay,az,bx,by,bz]) => [bx,by,bz,bx,by,bz,2*bx-ax,2*by-ay,2*bz-az,2*bx-ax,2*by-ay,2*bz-az,bx,by,bz,2*bx-ax,2*by-ay,2*bz-az];
       // Conformal space needs a bit extra magic to extract euclidean parametric representations.
         if (tot==5 && options.conformal) var ni = Element.Coeff(4,1).Add(Element.Coeff(5,1)), no = Element.Coeff(4,0.5).Sub(Element.Coeff(5,0.5));
         var interprete = (x)=>{
@@ -1208,7 +1245,7 @@
         // restore from still..
           if (options && !options.still && canvas.im && canvas.im.parentElement) { canvas.im.parentElement.insertBefore(canvas,canvas.im); canvas.im.parentElement.removeChild(canvas.im); }
         // Start by updating canvas size if needed and viewport.
-          var s = getComputedStyle(canvas); if (s.width) { canvas.width = parseFloat(s.width)*(options.devicePixelRatio||1); canvas.height = parseFloat(s.height)*(options.devicePixelRatio||1); }
+          var s = getComputedStyle(canvas); if (s.width) { canvas.width = parseFloat(s.width)*(options.devicePixelRatio||devicePixelRatio||1); canvas.height = parseFloat(s.height)*(options.devicePixelRatio||devicePixelRatio||1); }
           gl.viewport(0,0, canvas.width|0,canvas.height|0); var r=canvas.width/canvas.height;
         // Defaults, resolve function input
           var a,p=[],l=[],t=[],c=[.5,.5,.5],alpha=0,lastpos=[-2,2,0.2,1]; gl.clear(gl.COLOR_BUFFER_BIT+gl.DEPTH_BUFFER_BIT); while (x.call) x=x();
@@ -1217,13 +1254,19 @@
         // Grid.
           if (options.grid) {
             const gr = options.gridSize||1;
-            if (!options.gridLines) { options.gridLines=[[],[],[]]; for (var i=-gr; i<=gr; i+=gr/5) {
+            if (!options.gridLines) { options.gridLines=[[],[],[]]; for (var i=-gr; i<=gr; i+=gr/10) {
                 options.gridLines[0].push(i,-gr,gr, i,-gr,-gr, gr,-gr,i, -gr,-gr,i); 
                 options.gridLines[1].push(i,gr,gr, i,-gr,gr, gr,i,gr, -gr,i,gr); 
                 options.gridLines[2].push(-gr,i,gr, -gr,i,-gr, -gr,gr,i, -gr,-gr,i);
             }}
-            gl.depthMask(false); gl.enable(gl.BLEND); gl.blendFunc(gl.CONSTANT_ALPHA, gl.ONE_MINUS_CONSTANT_ALPHA); gl.blendColor(1,1,1,0.2); 
-              draw(program,gl.LINES,options.gridLines[0],[0,0,0],[.2,.4,.2],r); draw(program,gl.LINES,options.gridLines[1],[0,0,0],[.4,.2,.2],r); draw(program,gl.LINES,options.gridLines[2],[0,0,0],[.2,.2,.4],r);
+            var ltest = [], ltest2 = [], ttest = []; for (var j=0; j<3; ++j) for (var i=0; i<options.gridLines[j].length; i+=6) {
+              ltest.push(...line_to_tri(options.gridLines[j].slice(i,i+6)));
+              ltest2.push(...line_to_tri2(options.gridLines[j].slice(i,i+6)));
+              var w = ((i/12)|0)%10 == 0 ? 2 : ((i/12)|0)%5 == 0 ?1.5:.75;
+              ttest.push(w,.5,-w,.5,w,.5,w,.5,-w,.5,-w,.5);
+            }
+            gl.depthMask(false); gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA); gl.enable(gl.BLEND); 
+            draw(programline, gl.TRIANGLES, ltest, [canvas.width/canvas.height, .003, 0.0],  [0,0,0], canvas.width/canvas.height, ttest, undefined, ltest2);   
             gl.depthMask(true); gl.disable(gl.BLEND);
           }
         // Z-buffer override.
@@ -1279,7 +1322,18 @@
               // render triangles, lines, points.
                 if (alpha) { gl.enable(gl.BLEND); gl.blendFunc(gl.CONSTANT_ALPHA, gl.ONE_MINUS_CONSTANT_ALPHA); gl.blendColor(1,1,1,1-alpha); }
                 if (t.length) { draw(program,gl.TRIANGLES,t,c,[0,0,0],r); t.forEach((x,i)=>{ if (i%9==0) lastpos=[0,0,0]; lastpos[i%3]+=x/3; }); t=[];  }
-                if (l.length) { draw(program,gl.LINES,l,[0,0,0],c,r); var l2=l.length-1; lastpos=[(l[l2-2]+l[l2-5])/2,(l[l2-1]+l[l2-4])/2+0.1,(l[l2]+l[l2-3])/2]; l=[]; }
+                if (l.length) { 
+                  var ltest = [], ltest2 = [], ttest = []; for (var li=0; li<l.length; li+=6) {
+                    ltest.push(...line_to_tri(l.slice(li,li+6)));
+                    ltest2.push(...line_to_tri2(l.slice(li,li+6)));
+                    var w = (options.lineWidth||1);
+                    ttest.push(w,1-alpha,-w,1-alpha,w,1-alpha,w,1-alpha,-w,1-alpha,-w,1-alpha);
+                  }
+                  gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA); gl.enable(gl.BLEND);
+                  draw(programline, gl.TRIANGLES, ltest, [canvas.width/canvas.height,.003,0.0], c, canvas.width/canvas.height, ttest, undefined, ltest2);   
+                  var l2=l.length-1; lastpos=[(l[l2-2]+l[l2-5])/2,(l[l2-1]+l[l2-4])/2+0.1,(l[l2]+l[l2-3])/2]; l=[]; 
+                  gl.disable(gl.BLEND);
+                }
                 if (p.length) { gl.enable(gl.BLEND); gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA); draw(programPoint,gl.POINTS,p,[0,0,0],c,r); lastpos = p.slice(-3); lastpos[0]-=0.075; lastpos[1]+=0.075; p=[]; gl.disable(gl.BLEND); }
                 // Motor orbits
                   if ( e.call && e.length==2 && !e.va3) { var countx=e.dx||32,county=e.dy||32;
@@ -1431,18 +1485,34 @@
                 e.va = createVA(et,undefined,e.idx,e.color?new Float32Array(e.color):undefined); e.va.tcount = (e.idx && e.idx.length)?e.idx.length:e.data.length*3;
               }
               // render the vertex array.
-              if (e.transform) { M=mtx(options.camera.Mul(e.transform)); }
+              var M5 = Element.Scalar(1).Add(Element.Coeff(7,2.5));
+              if (e.transform) {
+                  var M1 = mtx(e.transform, false);
+                  var M2 = mtx(M5.Mul(options.camera), false);
+                  M = Array(16).fill(0);
+                  for (var ii=0; ii<4; ++ii) for (var jj=0; jj<4; ++jj) for (var kk=0; kk<4; ++kk) M[ii*4+kk] += M1[ii*4+jj] * M2[jj*4+kk];
+               }
               if (alpha) { gl.enable(gl.BLEND); gl.blendFunc(gl.CONSTANT_ALPHA, gl.ONE_MINUS_CONSTANT_ALPHA); gl.blendColor(1,1,1,1-alpha); }
               draw(e.color?programcol:program,gl.TRIANGLES,t,c,[0,0,0],r,undefined,e.va);
               if (alpha) gl.disable(gl.BLEND);
               if (e.transform) { M=mtx(options.camera); }
             }
-          // if we're a number (color), label or the last item, we output the collected items.
+            // if we're a number (color), label or the last item, we output the collected items.
             else if (typeof e=='number' || i==ll-1 || typeof e == 'string') {
             // render triangles, lines, points.
               if (alpha) { gl.enable(gl.BLEND); gl.blendFunc(gl.CONSTANT_ALPHA, gl.ONE_MINUS_CONSTANT_ALPHA); gl.blendColor(1,1,1,1-alpha); }
               if (t.length) { draw(program,gl.TRIANGLES,t,c,[0,0,0],r); t.forEach((x,i)=>{ if (i%9==0) lastpos=[0,0,0]; lastpos[i%3]+=x/3; }); t=[];  }
-              if (l.length) { draw(program,gl.LINES,l,[0,0,0],c,r); var l2=l.length-1; lastpos=[(l[l2-2]+l[l2-5])/2,(l[l2-1]+l[l2-4])/2+0.1,(l[l2]+l[l2-3])/2]; l=[]; }
+              if (l.length) { 
+                var ltest = [], ltest2 = [], ttest = [],  w = (options.lineWidth||1); for (var li=0; li<l.length; li+=6) {
+                  ltest.push(...line_to_tri(l.slice(li,li+6)));
+                  ltest2.push(...line_to_tri2(l.slice(li,li+6)));
+                  ttest.push(w,1-alpha,-w,1-alpha,w,1-alpha,w,1-alpha,-w,1-alpha,-w,1-alpha);
+                }
+                gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA); gl.enable(gl.BLEND);
+                draw(programline, gl.TRIANGLES, ltest, [canvas.width/canvas.height,.003,0.0], c, canvas.width/canvas.height, ttest, undefined, ltest2);   
+                var l2=l.length-1; lastpos=[(l[l2-2]+l[l2-5])/2,(l[l2-1]+l[l2-4])/2+0.1,(l[l2]+l[l2-3])/2]; l=[]; 
+                gl.disable(gl.BLEND);
+              }
               if (p.length) { gl.enable(gl.BLEND); gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA); draw(programPoint,gl.POINTS,p,[0,0,0],c,r); lastpos = p.slice(-3); lastpos[0]-=0.075; lastpos[1]+=0.075; p=[];gl.disable(gl.BLEND); }
               if (alpha) gl.disable(gl.BLEND);
             // setup a new color
@@ -1530,13 +1600,18 @@
       // Get the source input text.
         var txt = (intxt instanceof Function)?intxt.toString():`function(){return (${intxt})}`;
       // Our tokenizer reads the text token by token and stores it in the tok array (as type/token tuples).
-        var tok = [], resi=[], t, tokens = [/^[\s\uFFFF]|^[\u000A\u000D\u2028\u2029]|^\/\/[^\n]*\n|^\/\*[\s\S]*?\*\//g,                 // 0: whitespace/comments
+        var tok = [], resi=[], t, possibleRegex=false, c, tokens = [/^[\s\uFFFF]|^[\u000A\u000D\u2028\u2029]|^\/\/[^\n]*\n|^\/\*[\s\S]*?\*\//g,                 // 0: whitespace/comments
           /^\"\"|^\'\'|^\".*?[^\\]\"|^\'.*?[^\\]\'|^\`[\s\S]*?[^\\]\`/g,                                                                // 1: literal strings
           /^\d+[.]{0,1}\d*[ei][\+\-_]{0,1}\d*|^\.\d+[ei][\+\-_]{0,1}\d*|^e_\d*/g,                                                       // 2: literal numbers in scientific notation (with small hack for i and e_ asciimath)
-          /^\d+[.]{0,1}\d*[E][+-]{0,1}\d*|^\.\d+[E][+-]{0,1}\d*|^0x\d+|^\d+[.]{0,1}\d*|^\.\d+|^\(\/.*[^\\]\/\)/g,                       // 3: literal hex, nonsci numbers and regex (surround regex with extra brackets!)
-          /^(\.Normalized|\.Length|\.\.\.|>>>=|===|!==|>>>|<<=|>>=|=>|\|\||[<>\+\-\*%&|^\/!\=]=|\*\*|\+\+|\-\-|<<|>>|\&\&|\^\^|^[{}()\[\];.,<>\+\-\*%|&^!~?:=\/]{1})/g,   // 4: punctuator
-          /^[$_\p{L}][$_\p{L}\p{Mn}\p{Mc}\p{Nd}\p{Pc}\u200C\u200D]*/gu]                                                                 // 5: identifier
-        while (txt.length) for(t in tokens) if(resi=txt.match(tokens[t])){ tok.push([t|0,resi[0]]); txt=txt.slice(resi[0].length); break;} // tokenise
+          /^\d+[.]{0,1}\d*[E][+-]{0,1}\d*|^\.\d+[E][+-]{0,1}\d*|^0x\d+|^\d+[.]{0,1}\d*|^\.\d+/g,                                        // 3: literal hex, nonsci numbers
+          /^\/.*?[^\\]\/[gmisuy]?/g,                                                                                                    // 4: regex
+          /^(\.Normalized|\.Length|\.\.\.|>>>=|===|!==|>>>|<<=|>>=|=>|\|\||[<>\+\-\*%&|^\/!\=]=|\*\*|\+\+|\-\-|<<|>>|\&\&|\^\^|^[{}()\[\];.,<>\+\-\*%|&^!~?:=\/]{1})/g,   // 5: punctuator
+          /^[$_\p{L}][$_\p{L}\p{Mn}\p{Mc}\p{Nd}\p{Pc}\u200C\u200D]*/gu]                                                                 // 6: identifier
+        while (txt.length) for (t in tokens) {
+          if (t == 4 && !possibleRegex) continue;
+          if (resi = txt.match(tokens[t])) {
+            c = resi[0]; if (t!=0) {possibleRegex = c == '(' || c == '=' || c == '[' || c == ',' || c == ';';} tok.push([t | 0, c]); txt = txt.slice(c.length); break;
+          }} // tokenise
       // Translate algebraic literals. (scientific e-notation to "this.Coeff"
         tok=tok.map(t=>(t[0]==2)?[2,'Element.Coeff('+basis.indexOf((!options.Cayley?simplify:(x)=>x)('e'+t[1].split(/e_|e|i/)[1]||1).replace('-',''))+','+(simplify(t[1].split(/e_|e|i/)[1]||1).match('-')?"-1*":"")+parseFloat(t[1][0]=='e'?1:t[1].split(/e_|e|i/)[0])+')']:t);
       // String templates (limited support - needs fundamental changes.).
@@ -1545,43 +1620,43 @@
         var syntax = (intxt instanceof Function)?[[['.Normalized','Normalize',2],['.Length','Length',2]],[['~','Conjugate',1],['!','Dual',1]],[['**','Pow',0,1]],[['^','Wedge'],['&','Vee'],['<<','LDot']],[['*','Mul'],['/','Div']],[['|','Dot']],[['>>>','sw',0,1]],[['-','Sub'],['+','Add']],[['%','%']],[['==','eq'],['!=','neq'],['<','lt'],['>','gt'],['<=','lte'],['>=','gte']]]
                                                 :[[['pi','Math.PI'],['sin','Math.sin']],[['ddot','this.Reverse'],['tilde','this.Involute'],['hat','this.Conjugate'],['bar','this.Dual']],[['^','Pow',0,1]],[['^^','Wedge'],['*','LDot']],[['**','Mul'],['/','Div']],[['-','Sub'],['+','Add']],[['<','lt'],['>','gt'],['<=','lte'],['>=','gte']]];
       // For asciimath, some fixed translations apply (like pi->Math.PI) etc ..
-        tok=tok.map(t=>(t[0]!=5)?t:[].concat.apply([],syntax).filter(x=>x[0]==t[1]).length?[5,[].concat.apply([],syntax).filter(x=>x[0]==t[1])[0][1]]:t);
+        tok=tok.map(t=>(t[0]!=6)?t:[].concat.apply([],syntax).filter(x=>x[0]==t[1]).length?[6,[].concat.apply([],syntax).filter(x=>x[0]==t[1])[0][1]]:t);
       // Now the token-stream is translated recursively.
         function translate(tokens) {
-           // helpers : first token to the left of x that is not of a type in the skip list.
-           var left = (x=ti-1,skip=[0])=>{ while(x>=0&&~skip.indexOf(tokens[x][0])) x--; return x; },
-           // first token to the right of x that is not of a type in the skip list.
-               right= (x=ti+1,skip=[0])=>{ while(x<tokens.length&&~skip.indexOf(tokens[x][0])) x++; return x; },
-           // glue from x to y as new type, optionally replace the substring with sub.
-               glue = (x,y,tp=5,sub)=>{tokens.splice(x,y-x+1,[tp,...(sub||tokens.slice(x,y+1))])},
-           // match O-C pairs. returns the 'matching bracket' position
-               match = (O="(",C=")")=>{var o=1,x=ti+1; while(o){if(tokens[x][1]==O)o++;if(tokens[x][1]==C)o--; x++;}; return x-1;};
-           // grouping (resolving brackets).
-           for (var ti=0,t,si;t=tokens[ti];ti++) if (t[1]=="(") glue(ti,si=match(),6,[[4,"("],...translate(tokens.slice(ti+1,si)),[4,")"]]);
-           // [] dot call and new
-           for (var ti=0,t,si; t=tokens[ti];ti++) {
-             if (t[1]=="[") { glue(ti,si=match("[","]"),6,[[4,"["],...translate(tokens.slice(ti+1,si)),[4,"]"]]); if (ti)ti--;}    // matching []
-             else if (t[1]==".") { glue(left(),right()); ti--; }                                                                   // dot operator
-             else if (t[0]==6 && ti && left()>=0 && tokens[left()][0]>=5 && tokens[left()][1]!="return") { glue(left(),ti--) }     // collate ( and [
-             else if (t[1]=='new') { glue(ti,right()) };                                                                           // collate new keyword
-           }
-           // ++ and --
-           for (var ti=0,t; t=tokens[ti];ti++) if (t[1]=="++" || t[1]=="--") glue(left(),ti);
-           // unary - and + are handled seperately from syntax ..
-           for (var ti=0,t,si; t=tokens[ti];ti++)
-             if (t[1]=="-" && (left()<0 || (tokens[left()]||[4])[0]==4)) glue(ti,right(),5,["Element.Sub(",tokens[right()],")"]);   // unary minus works on all types.
-             else if (t[1]=="+" && (tokens[left()]||[0])[0]==4 && (tokens[left()]||[0])[1][0]!=".") glue(ti,ti+1);                   // unary plus is glued, only on scalars.
-           // now process all operators in the syntax list ..
-           for (var si=0,s; s=syntax[si]; si++) for (var ti=s[0][3]?tokens.length-1:0,t; t=tokens[ti];s[0][3]?ti--:ti++) for (var opi=0,op; op=s[opi]; opi++) if (t[1]==op[0]) {
-             // exception case .. ".Normalized" and ".Length" properties are re-routed (so they work on scalars etc ..)
-                    if (op[2]==2) { var arg=tokens[left()]; glue(ti-1,ti,5,["Element."+op[1],"(",arg,")"]); }
-             // unary operators (all are to the left)
-               else if (op[2])    { var arg=tokens[right()]; glue(ti, right(), 5, ["Element."+op[1],"(",arg,")"]); }
-             // binary operators
-                             else { var l=left(),r=right(),a1=tokens[l],a2=tokens[r]; if (op[0]==op[1]) glue(l,r,5,[a1,op[1],a2]); else glue(l,r,5,["Element."+op[1],"(",a1,",",a2,")"]); ti--; }
-           }
-           return tokens;
-        }
+          // helpers : first token to the left of x that is not of a type in the skip list.
+          var left = (x=ti-1,skip=[0])=>{ while(x>=0&&~skip.indexOf(tokens[x][0])) x--; return x; },
+          // first token to the right of x that is not of a type in the skip list.
+              right= (x=ti+1,skip=[0])=>{ while(x<tokens.length&&~skip.indexOf(tokens[x][0])) x++; return x; },
+          // glue from x to y as new type, optionally replace the substring with sub.
+              glue = (x,y,tp=6,sub)=>{tokens.splice(x,y-x+1,[tp,...(sub||tokens.slice(x,y+1))])},
+          // match O-C pairs. returns the 'matching bracket' position
+              match = (O="(",C=")")=>{var o=1,x=ti+1; while(o){if(tokens[x][1]==O)o++;if(tokens[x][1]==C)o--; x++;}; return x-1;};
+          // grouping (resolving brackets).
+          for (var ti=0,t,si;t=tokens[ti];ti++) if (t[1]=="(") glue(ti,si=match(),7,[[5,"("],...translate(tokens.slice(ti+1,si)),[5,")"]]);
+          // [] dot call and new
+          for (var ti=0,t,si; t=tokens[ti];ti++) {
+            if (t[1]=="[") { glue(ti,si=match("[","]"),7,[[5,"["],...translate(tokens.slice(ti+1,si)),[5,"]"]]); if (ti)ti--;}    // matching []
+            else if (t[1]==".") { glue(left(),right()); ti--; }                                                                   // dot operator
+            else if (t[0]==7 && ti && left()>=0 && tokens[left()][0]>=6 && tokens[left()][1]!="return") { glue(left(),ti--) }     // collate ( and [
+            else if (t[1]=='new') { glue(ti,right()) };                                                                           // collate new keyword
+          }
+          // ++ and --
+          for (var ti=0,t; t=tokens[ti];ti++) if (t[1]=="++" || t[1]=="--") glue(left(),ti);
+          // unary - and + are handled separately from syntax ..
+          for (var ti=0,t,si; t=tokens[ti];ti++)
+            if (t[1]=="-" && (left()<0 || (tokens[left()]||[5])[0]==5)) glue(ti,right(),6,["Element.Sub(",tokens[right()],")"]);   // unary minus works on all types.
+            else if (t[1]=="+" && (tokens[left()]||[0])[0]==5 && (tokens[left()]||[0])[1][0]!=".") glue(ti,ti+1);                   // unary plus is glued, only on scalars.
+          // now process all operators in the syntax list ..
+          for (var si=0,s; s=syntax[si]; si++) for (var ti=s[0][3]?tokens.length-1:0,t; t=tokens[ti];s[0][3]?ti--:ti++) for (var opi=0,op; op=s[opi]; opi++) if (t[1]==op[0]) {
+            // exception case .. ".Normalized" and ".Length" properties are re-routed (so they work on scalars etc ..)
+                  if (op[2]==2) { var arg=tokens[left()]; glue(ti-1,ti,6,["Element."+op[1],"(",arg,")"]); }
+            // unary operators (all are to the left)
+              else if (op[2])    { var arg=tokens[right()]; glue(ti, right(), 6, ["Element."+op[1],"(",arg,")"]); }
+            // binary operators
+                            else { var l=left(),r=right(),a1=tokens[l],a2=tokens[r]; if (op[0]==op[1]) glue(l,r,6,[a1,op[1],a2]); else glue(l,r,6,["Element."+op[1],"(",a1,",",a2,")"]); ti--; }
+          }
+          return tokens;
+      }
       // Glue all back together and return as bound function.
         return eval( ('('+(function f(t){return t.map(t=>t instanceof Array?f(t):typeof t == "string"?t:"").join('');})(translate(tok))+')') );
       }
