@@ -65,6 +65,9 @@ public final class ControlFlowGraph {
         public StringList syntaxInputs = new StringList();
         public StringList syntaxOutputs = new StringList();
         
+		public LinkedList<String[]> drawSegments;
+        public LinkedList<String[]> drawTriangles;
+        
         public boolean tbaOptimized = true;
         
 	public LinkedList<ExpressionStatement> visualizerExpressions = new LinkedList<ExpressionStatement>();

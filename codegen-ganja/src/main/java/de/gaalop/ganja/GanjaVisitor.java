@@ -212,6 +212,24 @@ public abstract class GanjaVisitor implements ControlFlowVisitor {
             renderList.add(mv);
             renderList.add("\"" + mv + "\"");
         }
+
+        // add segments
+        for (String[] segment: graph.drawSegments)
+            if (segment.length == 2) {
+                Color c = this.expressionStatements.get(segment[0]);
+                renderList.add("0x" + String.format("%02X%02X%02X", c.getRed(), c.getGreen(), c.getBlue()));
+                renderList.add("["+segment[0]+","+segment[1]+"]");
+                renderList.add("\"\"");
+            }
+        
+        // add triangles
+        for (String[] triangle: graph.drawTriangles)
+            if (triangle.length == 3) {
+                Color c = this.expressionStatements.get(triangle[0]);
+                renderList.add("0x" + String.format("%02X%02X%02X", c.getRed(), c.getGreen(), c.getBlue()));
+                renderList.add("["+triangle[0]+","+triangle[1]+","+triangle[2]+"]");
+                renderList.add("\"\"");
+            }
         
         code.setRenderList(renderList);
         appendI("return [" + renderList.join() + "];\n");
