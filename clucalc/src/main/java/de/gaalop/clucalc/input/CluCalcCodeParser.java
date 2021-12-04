@@ -54,6 +54,7 @@ public enum CluCalcCodeParser implements CodeParser {
         LinkedList<String> onlyEvaluates = new LinkedList<String>();
         LinkedList<String> outputs = new LinkedList<String>();
         
+        LinkedList<String[]> drawSegments = new LinkedList<String[]>();
         LinkedList<String[]> drawTriangles = new LinkedList<String[]>();
 
         String syntax = null;
@@ -88,9 +89,22 @@ public enum CluCalcCodeParser implements CodeParser {
                             onlyEvaluates.addAll(Arrays.asList(parts));
                         } else if (whichPragma.equals("in2out")) {
                             syntax = rest;
+                        } else if (whichPragma.equals("segments")) {
+                            while (rest.contains("  ")) 
+                                rest = rest.replaceAll("\\W\\W", " ");
+                            
+                            for (String t: rest.split(",")) {
+                                String[] segmentMvs = t.trim().split("\\W");
+                                if (segmentMvs.length == 2) {
+                                    drawSegments.add(segmentMvs);
+                                } else {
+                                    throw new CodeParserException(input, "pragma segments must be in format: A1 B1, A2 B2, ... , An Bn.");
+                                }
+                                
+                            }
                         } else if (whichPragma.equals("triangles")) {
                             while (rest.contains("  ")) 
-                               rest = rest.replaceAll("\\W\\W", " ");
+                                rest = rest.replaceAll("\\W\\W", " ");
                             
                             for (String t: rest.split(",")) {
                                 String[] triangleMvs = t.trim().split("\\W");
@@ -124,6 +138,7 @@ public enum CluCalcCodeParser implements CodeParser {
         visitor.visit(parser.script());
         
         ControlFlowGraph graph = visitor.graph;
+        graph.drawSegments = drawSegments;
         graph.drawTriangles = drawTriangles;
         if (syntax != null) {
             //Parse syntax
