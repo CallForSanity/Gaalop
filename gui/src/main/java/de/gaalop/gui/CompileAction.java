@@ -16,7 +16,6 @@ import java.net.URL;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.prefs.Preferences;
 import org.apache.commons.beanutils.BeanUtils;
 
 /**

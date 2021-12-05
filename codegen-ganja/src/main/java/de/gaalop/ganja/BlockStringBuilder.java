@@ -183,14 +183,6 @@ public class BlockStringBuilder {
         return result.toString();
     }
 
-    private void webeditBlockBegin(StringBuilder result, String blockName) {
-        result.append("==BLOCK-BEGIN:" + blockName + "==\n");
-    }
-
-    private void webeditBlockEnd(StringBuilder result, String blockName) {
-        result.append("==BLOCK-END:" + blockName + "==\n");
-    }
-
     public String getGraphOptions() {
         return graphOptions;
     }

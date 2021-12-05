@@ -25,7 +25,6 @@ import org.apache.commons.beanutils.BeanUtils;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
 
 /**
  * This class represents the configuration panel.

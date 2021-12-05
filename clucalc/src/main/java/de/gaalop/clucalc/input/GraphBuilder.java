@@ -1,17 +1,12 @@
 package de.gaalop.clucalc.input;
 
 import de.gaalop.CheckGAVisitor;
-import de.gaalop.Notifications;
 import de.gaalop.UsedVariablesVisitor;
 import de.gaalop.cfg.*;
 import de.gaalop.dfg.Expression;
 import de.gaalop.dfg.FloatConstant;
 import de.gaalop.dfg.MacroCall;
 import de.gaalop.dfg.Variable;
-import de.gaalop.dfg.MathFunction;
-import de.gaalop.dfg.MathFunctionCall;
-import java.awt.Dimension;
-
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -423,44 +418,6 @@ public final class GraphBuilder {
 	}
 
 	public Expression processFunction(String name, List<Expression> args) {
-	/*
-            for (AlgebraMode mode : ALGEBRA_MODES) {
-			if (mode.getDefinitionMethod().equals(name)) {
-				setMode(mode);
-				return null;
-			}
-		}
-		if (functionFactory.isDefined(name)) {
-			Expression[] argsArray = args.toArray(new Expression[args.size()]);
-			return functionFactory.createExpression(name, argsArray);
-		}
-
-		for (MathFunction mathFunction : MathFunction.values()) {
-			if (mathFunction.toString().toLowerCase().equals(name)) {
-				if (args.size() == 1) {
-					return new MathFunctionCall(args.get(0), mathFunction);
-				} else {
-					throw new IllegalArgumentException("Calling math function " + mathFunction + " with more than one"
-							+ " argument: " + args);
-				}
-			}
-		}
-
-		if (name.startsWith("::")) {
-			name = name.substring(2);
-		}
-		if (macros.contains(name)) {
-			if (name.equals(currentMacroDefinition)) {
-				throw new IllegalArgumentException("Recursive macro calls are not supported: " + name);
-			} else {
-				return new MacroCall(name, args);
-			}
-		}
-
-		throw new IllegalArgumentException("Call to undefined function " + name + "(" + args + ").\n"
-				+ "Maybe this function is not defined in " + mode + "\n"
-				+ "Also make sure that macros are defined before they are called.");
-	*/
             return new MacroCall(name, args);
          }
 

@@ -69,8 +69,6 @@ public class ConstantDivisionTransformer extends EmptyControlFlowVisitor {
                 replaceWith = new Multiplication(newLeft, node.getLeft());
             }
         }
-
-
     };
 
     @Override

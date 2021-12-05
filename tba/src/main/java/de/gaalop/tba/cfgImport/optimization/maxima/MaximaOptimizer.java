@@ -31,7 +31,8 @@ public class MaximaOptimizer {
     /**
      * Transforms a given ControlFlowGraph using the maxima optimization
      * @param graph The ControlFlowGraph to be transformed
-     * @throws RecognitionException
+     * @param progressLoggers
+     * @throws de.gaalop.OptimizationException
      */
     public void transformGraph(ControlFlowGraph graph, LoggingListenerGroup progressLoggers) throws OptimizationException {
         collector = new StoreResultNodesCollector();

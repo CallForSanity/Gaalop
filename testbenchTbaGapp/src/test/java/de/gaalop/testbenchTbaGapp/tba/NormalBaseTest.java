@@ -1,25 +1,10 @@
 package de.gaalop.testbenchTbaGapp.tba;
 
-import de.gaalop.AlgebraStrategy;
-import de.gaalop.CodeGenerator;
-import de.gaalop.CodeParser;
-import de.gaalop.CompilationException;
-import de.gaalop.CompilerFacade;
-import de.gaalop.GlobalSettingsStrategy;
-import de.gaalop.InputFile;
-import de.gaalop.OptimizationStrategy;
-import de.gaalop.OutputFile;
-import de.gaalop.VisualCodeInserterStrategy;
 import de.gaalop.dfg.MultivectorComponent;
 import de.gaalop.dfg.Variable;
 import de.gaalop.testbenchTbaGapp.tba.framework.TBATestCase;
-import de.gaalop.testbenchTbaGapp.tba.framework.TBATestCodeGeneratorPlugin;
-import de.gaalop.testbenchTbaGapp.tba.framework.TestDummy;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Set;
 import static org.junit.Assert.assertTrue;
-import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
@@ -30,7 +15,7 @@ public class NormalBaseTest implements TBATestCase {
 
     @Override
     public String getCLUScript() {
-        return "       P1y=0; P1z=1; \n"
+        return  "P1y=0; P1z=1; \n"
                 + "P2x=0; P2y=1; P2z=0;\n"
                 + "P3x=1; P3y=0; P3z=0;\n"
                 + "P4x=0; P4y=-1; P4z=0;\n"

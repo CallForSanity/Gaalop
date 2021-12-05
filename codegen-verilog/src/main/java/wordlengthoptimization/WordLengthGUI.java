@@ -1,9 +1,4 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/*
  * WordLengthGUI.java
  *
  * Created on Mar 23, 2010, 10:04:21 AM

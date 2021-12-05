@@ -1,9 +1,7 @@
 package de.gaalop.gui;
 
 import de.gaalop.CodeParserPlugin;
-import de.gaalop.GlobalSettingsStrategyPlugin;
 import de.gaalop.InputFile;
-import de.gaalop.Plugins;
 import de.gaalop.gui.util.PluginIconUtil;
 
 import javax.swing.*;
@@ -21,7 +19,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.text.AttributeSet;
-import javax.swing.text.PlainDocument;
 import javax.swing.text.StyleContext;
 import javax.swing.text.TabSet;
 import javax.swing.text.TabStop;

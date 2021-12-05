@@ -31,8 +31,8 @@ public class UseAlgebra {
                 ? (AlStrategy.class.getResource(alFile.getProductsFilePath()) != null)
                 : new File(alFile.getProductsFilePath()).exists();
         
-        if (alFile.isUsePrecalculatedTable() && !productTableExist)
-            System.err.println("Warning: Precomputed products.csv not found. Switching to direct computing of products!");
+        //if (alFile.isUsePrecalculatedTable() && !productTableExist)
+            //System.err.println("Warning: Precomputed products.csv not found. Switching to direct computing of products!");
         
         if (alFile.isUsePrecalculatedTable() && productTableExist) {
             algebra = new Algebra(alFile);

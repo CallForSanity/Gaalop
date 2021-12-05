@@ -2,7 +2,6 @@ package de.gaalop.gapp.instructionSet;
 
 import de.gaalop.gapp.PosSelectorset;
 import de.gaalop.gapp.Valueset;
-import de.gaalop.gapp.Variableset;
 import de.gaalop.gapp.variables.GAPPMultivector;
 import de.gaalop.gapp.visitor.GAPPVisitor;
 

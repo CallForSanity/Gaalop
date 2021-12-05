@@ -1,6 +1,5 @@
 package de.gaalop.dfg;
 
-import java.util.Set;
 
 /**
  * This class represents a single multivector component. A multivector component is identified
@@ -100,9 +99,9 @@ public final class MultivectorComponent extends Variable {
             MultivectorComponent newVar = (MultivectorComponent) newExpression;
 
             if (
-                oldVar.getName() == name &&
-                oldVar.getMinValue() == minValue &&
-                oldVar.getMaxValue() == maxValue &&
+                oldVar.getName().equals(name) &&
+                oldVar.getMinValue().equals(minValue) &&
+                oldVar.getMaxValue().equals(maxValue) &&
                 oldVar.getBladeIndex() == bladeIndex
                ) {
                     name = newVar.getName();
@@ -116,9 +115,9 @@ public final class MultivectorComponent extends Variable {
                 Variable newVar = (Variable) newExpression;
 
                 if (
-                    oldVar.getName() == name &&
-                    oldVar.getMinValue() == minValue &&
-                    oldVar.getMaxValue() == maxValue &&
+                    oldVar.getName().equals(name)  &&
+                    oldVar.getMinValue().equals(minValue) &&
+                    oldVar.getMaxValue().equals(maxValue) &&
                     oldVar.getBladeIndex() == bladeIndex
                    ) {
                         name = newVar.getName();

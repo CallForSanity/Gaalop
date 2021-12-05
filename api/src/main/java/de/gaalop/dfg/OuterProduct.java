@@ -26,6 +26,7 @@ public final class OuterProduct extends BinaryOperation {
      * @return The string "left ^ right" where both left and right have been converted to strings using their
      *         toString methods.
      */
+    @Override
     public String toString() {
         return bracketComposite(getLeft()) + " ^ " + bracketComposite(getRight());
     }

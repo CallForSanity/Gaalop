@@ -1,11 +1,5 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package wordlengthoptimization;
 
-import datapath.graph.operations.Operation;
 import java.util.HashMap;
 import java.util.Set;
 

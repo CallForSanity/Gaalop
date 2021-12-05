@@ -7,8 +7,6 @@ import de.gaalop.cfg.ControlFlowGraph;
 import de.gaalop.cfg.ExpressionStatement;
 import de.gaalop.cfg.StoreResultNode;
 import de.gaalop.dfg.Expression;
-import de.gaalop.dfg.InnerProduct;
-import de.gaalop.dfg.MacroCall;
 import de.gaalop.dfg.Variable;
 import java.util.HashMap;
 import java.util.LinkedList;

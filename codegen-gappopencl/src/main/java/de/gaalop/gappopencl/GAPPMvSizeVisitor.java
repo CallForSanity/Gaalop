@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package de.gaalop.gappopencl;
 
 import de.gaalop.gapp.instructionSet.GAPPAssignInputsVector;
@@ -12,7 +8,6 @@ import de.gaalop.gapp.instructionSet.GAPPDotVectors;
 import de.gaalop.gapp.instructionSet.GAPPResetMv;
 import de.gaalop.gapp.instructionSet.GAPPSetMv;
 import de.gaalop.gapp.instructionSet.GAPPSetVector;
-import de.gaalop.gapp.variables.GAPPMultivector;
 import java.util.HashMap;
 import java.util.Map;
 

@@ -67,11 +67,12 @@ public class Variable extends Expression {
 	 * 
 	 * @return A string containing the name of this variable.
 	 */
+        @Override
 	public String toString() {
 		return name;
 	}
 
-@Override
+        @Override
 	public Variable copy() {
 		Variable v = new Variable(this.name);
 		v.global = global;
@@ -104,7 +105,7 @@ public class Variable extends Expression {
 		if (old instanceof Variable && newExpression instanceof Variable) {
 			Variable oldVar = (Variable) old;
 			Variable newVar = (Variable) newExpression;
-			if (oldVar.getName() == name && oldVar.getMinValue() == minValue && oldVar.getMaxValue() == maxValue) {
+			if (oldVar.getName().equals(name) && oldVar.getMinValue().equals(minValue) && oldVar.getMaxValue().equals(maxValue)) {
 				name = newVar.getName();
 				minValue = newVar.getMinValue();
 				maxValue = newVar.getMaxValue();

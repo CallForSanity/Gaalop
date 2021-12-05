@@ -1,6 +1,5 @@
 package de.gaalop.testbenchTbaGapp.gapp;
 
-import de.gaalop.tba.UseAlgebra;
 import de.gaalop.gapp.executer.Executer;
 import de.gaalop.gapp.executer.MultivectorWithValues;
 import java.util.HashMap;
@@ -77,18 +76,18 @@ public class GPS implements GAPPTestable {
     @Override
     public HashMap<String, Double> getInputs() {
         HashMap<String, Double> inputValues = new HashMap<String, Double>();
-        inputValues.put("sat1x", new Double(sat1.x));
-        inputValues.put("sat1y", new Double(sat1.y));
-        inputValues.put("sat1z", new Double(sat1.z));
-        inputValues.put("sat2x", new Double(sat2.x));
-        inputValues.put("sat2y", new Double(sat2.y));
-        inputValues.put("sat2z", new Double(sat2.z));
-        inputValues.put("sat3x", new Double(sat3.x));
-        inputValues.put("sat3y", new Double(sat3.y));
-        inputValues.put("sat3z", new Double(sat3.z));
-        inputValues.put("d1", new Double(d1));
-        inputValues.put("d2", new Double(d2));
-        inputValues.put("d3", new Double(d3));
+        inputValues.put("sat1x", sat1.x);
+        inputValues.put("sat1y", sat1.y);
+        inputValues.put("sat1z", sat1.z);
+        inputValues.put("sat2x", sat2.x);
+        inputValues.put("sat2y", sat2.y);
+        inputValues.put("sat2z", sat2.z);
+        inputValues.put("sat3x", sat3.x);
+        inputValues.put("sat3y", sat3.y);
+        inputValues.put("sat3z", sat3.z);
+        inputValues.put("d1",    d1);
+        inputValues.put("d2",    d2);
+        inputValues.put("d3",    d3);
         return inputValues;
     }
 

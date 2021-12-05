@@ -6,8 +6,6 @@ import de.gaalop.tba.Plugin;
 import de.gaalop.tba.UseAlgebra;
 import de.gaalop.tba.cfgImport.optimization.maxima.MaximaOptimizer;
 import de.gaalop.tba.cfgImport.optimization.maxima.ProcessBuilderMaximaConnection;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import de.gaalop.LoggingListenerGroup;
 
 /**

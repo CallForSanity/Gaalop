@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package de.gaalop.tba.table.BitIO;
 
 import java.io.DataOutputStream;
@@ -23,7 +18,7 @@ public abstract class AbsBitWriter {
 
     /**
      * Writes a value in a number of bits to a file
-     * @param value The value to write
+     * @param data
      * @param bitCount The number of bits to write
      * @throws IOException
      */

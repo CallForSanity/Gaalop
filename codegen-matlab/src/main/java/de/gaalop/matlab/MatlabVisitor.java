@@ -3,7 +3,6 @@ package de.gaalop.matlab;
 import de.gaalop.DefaultCodeGeneratorVisitor;
 import de.gaalop.cfg.*;
 import de.gaalop.dfg.*;
-import java.util.*;
 
 /**
  * This visitor traverses the control and data flow graphs and generates C/C++

@@ -2,8 +2,6 @@ package de.gaalop.clucalc.input;
 
 import de.gaalop.CodeParser;
 import de.gaalop.CodeParserPlugin;
-import de.gaalop.ConfigurationProperty;
-import de.gaalop.ConfigurationProperty.Type;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

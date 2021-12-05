@@ -1,7 +1,6 @@
 package de.gaalop.tba.cfgImport;
 
 import de.gaalop.OptimizationException;
-import de.gaalop.LoggingListener;
 import de.gaalop.LoggingListenerGroup;
 import de.gaalop.algebra.UpdateLocalVariableSet;
 import de.gaalop.api.cfg.RoundingCFGVisitor;

@@ -43,9 +43,9 @@ public class FactorsGetter implements ExpressionVisitor {
      * @param expression The expression
      * @return The direct factors
      */
-    public static Product getFactors(Expression expresssion) {
+    public static Product getFactors(Expression expression) {
         FactorsGetter getter = new FactorsGetter();
-        expresssion.accept(getter);
+        expression.accept(getter);
         return getter.factors;
     }
 
