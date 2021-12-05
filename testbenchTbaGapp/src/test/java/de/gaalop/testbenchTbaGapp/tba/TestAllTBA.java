@@ -7,8 +7,6 @@ import de.gaalop.CompilerFacade;
 import de.gaalop.GlobalSettingsStrategy;
 import de.gaalop.OptimizationStrategy;
 import de.gaalop.VisualCodeInserterStrategy;
-import de.gaalop.testbenchTbaGapp.dfg.SparseMvExpressionsTest;
-import de.gaalop.testbenchTbaGapp.dfg.SparseTestDummy;
 import de.gaalop.testbenchTbaGapp.tba.common.LocalVarsTest;
 import de.gaalop.testbenchTbaGapp.tba.gps.Point3D;
 import de.gaalop.testbenchTbaGapp.tba.circle.CircleNoVarsTest;
@@ -64,18 +62,11 @@ public class TestAllTBA {
             TestDummy.compileWithCompilerFacade(testCase, facade)
                 );
     } 
-    
-    @Test
-    public void testSparseMvExpressionsDummyTest() {
-        assertTrue(
-            TestDummySuite.compile(new SparseMvExpressionsTest())
-        );
-    }
 
     @Test
     public void testCoefficientTest() {
         assertTrue(
-            TestDummySuite.compile(new CoefficientTest())
+            TestDummy.compile(new CoefficientTest())
         );
     }
 

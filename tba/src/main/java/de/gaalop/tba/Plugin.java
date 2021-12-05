@@ -31,10 +31,6 @@ public class Plugin extends Observable implements OptimizationStrategyPlugin {
     public boolean invertTransformation = true;
     public boolean scalarFunctions = true;
     public boolean maximaExpand = false;
-
-    // adding config parameter to test SparseMvExpressions
-    // by Adrian Kiesthardt
-    public boolean useSparseExpressions = false;
     
     @ConfigurationProperty(type = Type.BOOLEAN)
     public boolean doRoundingAfterOptimization = false;
