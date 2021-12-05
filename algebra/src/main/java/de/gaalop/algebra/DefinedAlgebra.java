@@ -1,7 +1,7 @@
 package de.gaalop.algebra;
 
 /**
- *
+ * Stores a defined algebra by ID and name
  * @author Christian Steinmetz
  */
 public class DefinedAlgebra {
