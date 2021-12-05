@@ -142,7 +142,7 @@ public interface ExpressionVisitor {
     /**
      * This method is called by {@link de.gaalop.dfg.Relation#accept(ExpressionVisitor)}.
      *
-     * @param node The object that called this method.
+     * @param relation The object that called this method.
      */
     void visit(Relation relation);
 

@@ -2,7 +2,6 @@ package de.gaalop.testbenchTbaGapp.gapp;
 
 import de.gaalop.gapp.executer.Executer;
 import de.gaalop.gapp.executer.MultivectorWithValues;
-import de.gaalop.tba.UseAlgebra;
 import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.util.HashMap;
@@ -40,12 +39,12 @@ public class Circle implements GAPPTestable {
     @Override
     public HashMap<String, Double> getInputs() {
         HashMap<String, Double> inputValues = new HashMap<String, Double>();
-        inputValues.put("x1", new Double(p1.x));
-        inputValues.put("y1", new Double(p1.y));
-        inputValues.put("x2", new Double(p2.x));
-        inputValues.put("y2", new Double(p2.y));
-        inputValues.put("x3", new Double(p3.x));
-        inputValues.put("y3", new Double(p3.y));
+        inputValues.put("x1", (double) (p1.x));
+        inputValues.put("y1", (double) (p1.y));
+        inputValues.put("x2", (double) (p2.x));
+        inputValues.put("y2", (double) (p2.y));
+        inputValues.put("x3", (double) (p3.x));
+        inputValues.put("y3", (double) (p3.y));
         return inputValues;
     }
 

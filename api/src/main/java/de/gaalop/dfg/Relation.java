@@ -84,6 +84,7 @@ public final class Relation extends BinaryOperation {
    * @return The string "<code>left relation right</code>", where left and right are the results of the toString methods of
    * the left and right operand and relation is the concrete relation, e.g. <.
    */
+  @Override
   public String toString() {
     return bracketComposite(getLeft()) + type + bracketComposite(getRight());
   }

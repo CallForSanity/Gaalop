@@ -29,8 +29,14 @@ public class CompilerFacade extends Observable {
      * Constructs a new compiler facade.
      *
      * @param codeParser The code parser used by this facade to construct a dataflow graph from an input file.
+     * @param globalSettingsStrategy
+     * @param visualizerStrategy
+     * @param algebraStrategy
      * @param optimizationStrategy The optimization strategy used to process the graph before generating code.
      * @param codeGenerator The code generator used to generate code from the previously optimized graph.
+     * @param algebraName
+     * @param asRessource
+     * @param algebraBaseDirectory
      */
     public CompilerFacade(CodeParser codeParser, GlobalSettingsStrategy globalSettingsStrategy, VisualCodeInserterStrategy visualizerStrategy, AlgebraStrategy algebraStrategy, OptimizationStrategy optimizationStrategy, CodeGenerator codeGenerator, String algebraName, boolean asRessource, String algebraBaseDirectory) {
         this.codeParser = codeParser;
@@ -68,10 +74,6 @@ public class CompilerFacade extends Observable {
         notifyObservers("Setting global settings...");
         globalSettingsStrategy.transform(graph);
         setChanged();
-        
-        //notifyObservers("Algebra inserting...");  
-        //algebraStrategy.transform(graph);
-        //setChanged();
 
         notifyObservers("Inserting code for visualization...");
         visualizerStrategy.transform(graph);

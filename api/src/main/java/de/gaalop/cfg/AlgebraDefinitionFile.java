@@ -39,7 +39,7 @@ public class AlgebraDefinitionFile {
         int r = 0;
         
         for (Byte b: baseSquares.values()) {
-            switch (b.byteValue()) {
+            switch (b) {
                 case 1:
                     p++;
                     break;
@@ -144,6 +144,7 @@ public class AlgebraDefinitionFile {
     /**
      * Loads a algebra definition from a Reader
      * @param reader The reader to be used
+     * @throws java.io.IOException
      */
     public void loadFromFile(Reader reader) throws IOException {
         BufferedReader d = new BufferedReader(reader);

@@ -63,12 +63,11 @@ public class Parser {
 
     /**
      * Parses a multivector from a string
-     * @param readed The string to parse
-     * @param algebra The current algebra
+     * @param str The string
      * @return The parsed blade
      */
-    public static Multivector parseMultivector(String parse) {
-        String trimmed = parse.trim();
+    public static Multivector parseMultivector(String str) {
+        String trimmed = str.trim();
         Multivector result = new Multivector();
 
         while (!trimmed.isEmpty()) {

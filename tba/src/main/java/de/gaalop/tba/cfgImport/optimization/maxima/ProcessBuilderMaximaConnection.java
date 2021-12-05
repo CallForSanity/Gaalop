@@ -10,8 +10,6 @@ import java.io.PrintWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import java.util.concurrent.TimeUnit;
-
 /**
  * Implements the Maxima connection using the ProcessBuilder
  * @author Christian Steinmetz
@@ -80,14 +78,7 @@ public class ProcessBuilderMaximaConnection implements MaximaConnection {
                     Logger.getLogger(ProcessBuilderMaximaConnection.class.getName()).log(Level.INFO, "Quotient is zero. Aborting.");
                     return null;
                 }
-            	// simulating long task
-            	/*
-            	try {
-                	TimeUnit.SECONDS.sleep(1);
-                } catch(Exception e) {
-                	System.out.println("exception: "+e.getMessage());
-                }
-                */
+
             	// maxima responds with the line sent and the optimized line
             	
             	// so now we must tell the status bar our progress
@@ -95,13 +86,6 @@ public class ProcessBuilderMaximaConnection implements MaximaConnection {
             	if(numSteps <= 0) {
             		numSteps = 1;
             	}
-            	
-            	/*
-            	System.out.println("received: "+line);
-            	System.out.println(""+progress);
-            	System.out.println(""+numSteps);
-            	System.out.println();
-            	*/
             	
             	// because input and output are separate steps
             	// numSteps = numSteps*2;

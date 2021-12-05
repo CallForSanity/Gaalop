@@ -16,11 +16,11 @@ import de.gaalop.LoggingListenerGroup;
 public interface OptimizationStrategyWithModifyFlag {
 
     /**
-     * Transforms a graph by applying optimization or analysis operations.
-     * Returns a flag, which signals a modification in the given graph.
+     * Transforms a graph by applying optimization or analysis operations.Returns a flag, which signals a modification in the given graph.
      *
      * @param graph The control flow graph to operate on.
      * @param usedAlgebra The underlying algebra
+     * @param listeners
      * @return <value>true</value> if the graph has been modified, <value>false</value> otherwise
      */
     boolean transform(ControlFlowGraph graph, UseAlgebra usedAlgebra, LoggingListenerGroup listeners) throws OptimizationException;

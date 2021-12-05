@@ -1,7 +1,6 @@
 package de.gaalop.ganja;
 
 import de.gaalop.StringList;
-import de.gaalop.cfg.AlgebraSignature;
 import de.gaalop.cfg.BlockEndNode;
 import de.gaalop.cfg.BreakNode;
 import de.gaalop.cfg.ColorNode;

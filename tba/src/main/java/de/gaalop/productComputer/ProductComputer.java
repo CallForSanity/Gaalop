@@ -1,8 +1,5 @@
 package de.gaalop.productComputer;
 
-import de.gaalop.productComputer.AlgebraPC;
-import de.gaalop.productComputer.BladeStr;
-import de.gaalop.productComputer.BubbleSort;
 import de.gaalop.tba.Multivector;
 import java.util.HashMap;
 import java.util.LinkedList;

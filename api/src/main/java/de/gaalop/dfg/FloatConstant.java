@@ -43,7 +43,7 @@ public final class FloatConstant extends Expression {
 	 * Constructs a new floating point constant node.
 	 * 
 	 * @param value The encapsulated floating point value.
-	 * @param the String representation of the value. Can be null
+	 * @param valueStr String representation of the value. Can be null
 	 */
 	public FloatConstant(double value, String valueStr) {
 		super();
@@ -93,6 +93,7 @@ public final class FloatConstant extends Expression {
 	 * 
 	 * @return The result of {@link Double#toString(double)} for the value returned by <code>getValue</code>.
 	 */
+        @Override
 	public String toString() {
 		return (valueString == null) ? Double.toString(value) : valueString;
 	}

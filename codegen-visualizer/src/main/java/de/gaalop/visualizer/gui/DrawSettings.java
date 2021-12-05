@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package de.gaalop.visualizer.gui;
 
 import de.gaalop.visualizer.zerofinding.ZeroFinder;

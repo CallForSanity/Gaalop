@@ -36,6 +36,7 @@ public final class EndNode extends Node {
      *
      * @param visitor The visitor object that the visit method will be called on.
      */
+    @Override
     public void accept(ControlFlowVisitor visitor) {
         visitor.visit(this);
     }

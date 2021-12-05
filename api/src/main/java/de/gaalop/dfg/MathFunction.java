@@ -81,6 +81,7 @@ public enum MathFunction {
      */
     INVERT;
     
+    @Override
     public String toString() { 
     	return super.toString().toLowerCase();
     }

@@ -12,7 +12,6 @@ import de.gaalop.cfg.ControlFlowGraph;
 import de.gaalop.gapp.importing.GAPPDecoratingMain;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

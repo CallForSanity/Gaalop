@@ -2,8 +2,6 @@ package de.gaalop.vis2d;
 
 import de.gaalop.CodeGenerator;
 import de.gaalop.CodeGeneratorPlugin;
-import de.gaalop.ConfigurationProperty;
-import de.gaalop.ConfigurationProperty.Type;
 import de.gaalop.Notifications;
 import java.awt.Image;
 import java.io.IOException;

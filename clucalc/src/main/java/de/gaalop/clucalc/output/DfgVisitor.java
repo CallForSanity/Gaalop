@@ -1,6 +1,5 @@
 package de.gaalop.clucalc.output;
 
-import de.gaalop.cfg.AlgebraDefinitionFile;
 import de.gaalop.dfg.*;
 
 /**

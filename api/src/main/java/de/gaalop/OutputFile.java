@@ -67,6 +67,7 @@ public final class OutputFile {
      * Gets the content of the generated file as a human readable string.
      * Calls {@link #getContent} internally.
      */
+    @Override
     public String toString() {
         return getContent();
     }

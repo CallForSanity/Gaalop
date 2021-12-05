@@ -52,24 +52,6 @@ public abstract class BinaryOperation extends Expression {
     		right.replaceExpression(old, newExpression);
     	}
     	
-    	
-//    	if (old == left && old == right) {
-//    		left = newExpression;
-//    		right = newExpression;
-//    	} else if (old == left) {
-//    		left = newExpression;
-//    		if (right.isComposite()) {
-//    			right.replaceExpression(old, newExpression);
-//    		} else {
-//    			right = newExpression;
-//    		}
-//    	} else if (old == right) {
-//    		left.replaceExpression(old, newExpression);
-//    		right = newExpression;
-//    	} else {
-//    		left.replaceExpression(old, newExpression);
-//    		right.replaceExpression(old, newExpression);
-//    	}
     }
 
     /**
@@ -115,9 +97,5 @@ public abstract class BinaryOperation extends Expression {
     public void setRight(Expression right) {
         this.right = right;
     }
-
-    
-
-
 
 }

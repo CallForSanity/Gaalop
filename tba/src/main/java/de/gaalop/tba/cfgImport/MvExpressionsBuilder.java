@@ -35,7 +35,6 @@ import de.gaalop.tba.Algebra;
 import de.gaalop.tba.Multivector;
 import de.gaalop.tba.Products;
 import de.gaalop.tba.UseAlgebra;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
@@ -50,7 +49,6 @@ public class MvExpressionsBuilder extends EmptyControlFlowVisitor implements Exp
     private int counterMv;
     public int bladeCount;
     private UseAlgebra usedAlgebra;
-    private final double EPSILON = 10E-07;
     private boolean scalarFunctions;
     private Variable curVariable;
     private AlgebraDefinitionFile alFile;

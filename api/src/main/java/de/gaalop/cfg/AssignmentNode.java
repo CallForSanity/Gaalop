@@ -72,6 +72,7 @@ public final class AssignmentNode extends SequentialNode {
      *
      * @param visitor The visitor that the method is called on.
      */
+    @Override
     public void accept(ControlFlowVisitor visitor) {
         visitor.visit(this);
     }

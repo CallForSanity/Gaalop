@@ -24,6 +24,7 @@ public final class StartNode extends SequentialNode {
      *
      * @param visitor The visitor object that the method will be called on.
      */
+    @Override
     public void accept(ControlFlowVisitor visitor) {
         visitor.visit(this);
     }

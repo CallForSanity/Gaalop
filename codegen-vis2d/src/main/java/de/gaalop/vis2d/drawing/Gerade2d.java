@@ -2,9 +2,7 @@ package de.gaalop.vis2d.drawing;
 
 import de.gaalop.vis2d.RecLineDouble;
 import java.awt.Color;
-import java.awt.Point;
 import java.awt.geom.Line2D;
-import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.Arrays;
 import java.util.Comparator;
