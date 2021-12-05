@@ -1,6 +1,7 @@
 package de.gaalop.tba;
 
-import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.TreeMap;
 import java.util.Vector;
 
 /**
@@ -24,17 +25,24 @@ public class Multivector {
     }
 
     /**
-     * Returns the values of all blades in this multivector
-     * @return The values of all blades
+     * Returns the values of all non-null blades in this multivector
+     * @return The values of all non-null blades
      */
-    public byte[] getValueArr(Algebra algebra) {
-        int size = algebra.getBladeCount();
-        byte[] result = new byte[size];
-        Arrays.fill(result, (byte) 0);
-
-        for (BladeRef cur : blades) {
-            result[cur.getIndex()] += cur.getPrefactor();
-        }
+    public TreeMap<Integer, Byte> getValueArr(Algebra algebra) {
+        TreeMap<Integer, Byte> result = new TreeMap<>();
+        blades.forEach(cur -> {
+            result.merge(cur.getIndex(), cur.getPrefactor(), (pL, pR) -> (byte) (pL+pR));
+        });
+        
+        // Remove 0 values
+        LinkedList<Integer> nullIndices = new LinkedList<>();
+        result.entrySet().forEach(entry -> {
+            if (entry.getValue() == 0) 
+                nullIndices.add(entry.getKey());
+        });
+        
+        for (Integer nullIndex: nullIndices)
+            result.remove(nullIndex);
 
         return result;
     }
