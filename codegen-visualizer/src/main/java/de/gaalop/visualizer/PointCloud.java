@@ -2,7 +2,6 @@ package de.gaalop.visualizer;
 
 import java.awt.Color;
 import java.util.LinkedList;
-import org.jdom2.Element;
 
 /**
  * Implements a point cloud and common operations on point clouds like loading and saving from/to XML Element
@@ -21,10 +20,10 @@ public class PointCloud {
     }
     
     /**
-     * Reads in a given XML Element
+     * Reads in a given CSV line
      * @param element The XML Element
-     */
-    public PointCloud(Element element) {
+     
+    public PointCloud(String line) {
         name = element.getAttributeValue("name");
         color = new Color(
                 Integer.parseInt(element.getAttributeValue("colorR")), 
@@ -41,12 +40,12 @@ public class PointCloud {
                     Double.parseDouble(child.getAttributeValue("z"))
                     ));
         }
-    }
+    }*/
     
     /**
      * Creates an XML Element from this instance and returns it
      * @return The created XML Element
-     */
+     
     public Element toElement() {
         Element result = new Element("PointCloud");
         result.setAttribute("name", name);
@@ -63,4 +62,5 @@ public class PointCloud {
         }
         return result;
     }
+    */
 }

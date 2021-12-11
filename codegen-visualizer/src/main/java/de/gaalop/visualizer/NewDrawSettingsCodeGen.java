@@ -94,6 +94,7 @@ public class NewDrawSettingsCodeGen extends DrawSettings implements CodeGenerato
             }
         };
         
+        /*
         jButton_LoadPointCloud.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -112,6 +113,7 @@ public class NewDrawSettingsCodeGen extends DrawSettings implements CodeGenerato
                 }
             }
         });
+        */
         
         jComboBox_ZerofindingMethod.addActionListener(new ActionListener() {
             @Override
