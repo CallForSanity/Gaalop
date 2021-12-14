@@ -5,6 +5,7 @@ import de.gaalop.CodeParserException;
 import de.gaalop.InputFile;
 import de.gaalop.OptimizationException;
 import de.gaalop.cfg.AlgebraDefinitionFile;
+import de.gaalop.cfg.AssignmentNode;
 import de.gaalop.cfg.ControlFlowGraph;
 import de.gaalop.cfg.Macro;
 import de.gaalop.dfg.Expression;
@@ -102,6 +103,10 @@ public class AlStrategy implements AlgebraStrategy {
             //Remove Macro definitions from graph
             for (Macro macro: macros.values()) 
                 graph.removeNode(macro);
+            
+            for (AssignmentNode node: graph.getOnlyEvaluateNodes()) {
+                graph.addPragmaOnlyEvaluateVariable(node.getVariable().getName()); 
+            }
             
             //replace Variables which are basevectors
             BaseVectorDefiner definer = new BaseVectorDefiner();
