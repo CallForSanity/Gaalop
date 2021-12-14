@@ -10,7 +10,7 @@
 
     <artifactId>distribution</artifactId>
     <packaging>pom</packaging>
-	<version>2.2.5</version>
+	<version>1.0.0</version> <!-- This must stay on version 1.0.0 for CMake process.-->
 
     <name>Gaalop Distribution</name>
 
@@ -26,27 +26,12 @@
         </dependency>
         <dependency>
             <groupId>de.gaalop</groupId>
-            <artifactId>algebra</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>de.gaalop</groupId>
-            <artifactId>visualCodeInserter</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>de.gaalop</groupId>
-            <artifactId>ganjaVisualCodeInserter</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>de.gaalop</groupId>
-            <artifactId>visualCodeInserter2d</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>de.gaalop</groupId>
             <artifactId>clucalc</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>de.gaalop</groupId>
+            <artifactId>algebra</artifactId>
             <version>1.0.0</version>
         </dependency>
         <dependency>
@@ -56,7 +41,27 @@
         </dependency>
         <dependency>
             <groupId>de.gaalop</groupId>
-            <artifactId>gappDebugger</artifactId>
+            <artifactId>visualCodeInserter</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>de.gaalop</groupId>
+            <artifactId>codegen-java</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>de.gaalop</groupId>
+            <artifactId>codegen-cpp</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>de.gaalop</groupId>
+            <artifactId>codegen-compressed</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>de.gaalop</groupId>
+            <artifactId>gaalet</artifactId>
             <version>1.0.0</version>
         </dependency>
         <dependency>
@@ -71,97 +76,17 @@
         </dependency>
         <dependency>
             <groupId>de.gaalop</groupId>
-            <artifactId>codegen-compressed</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>de.gaalop</groupId>
-            <artifactId>codegen-cpp</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>de.gaalop</groupId>
-            <artifactId>codegen-java</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>de.gaalop</groupId>
-            <artifactId>codegen-dot</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>de.gaalop</groupId>
-            <artifactId>codegen-latex</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>de.gaalop</groupId>
-            <artifactId>codegen-gapp</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>de.gaalop</groupId>
-            <artifactId>codegen-visualizer</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>de.gaalop</groupId>
-            <artifactId>codegen-vis2d</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>de.gaalop</groupId>
-            <artifactId>codegen-gappopencl</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-		<dependency>
-            <groupId>de.gaalop</groupId>
-            <artifactId>codegen-rust</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>de.gaalop</groupId>
-            <artifactId>codegen-mathematica</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-	<dependency>
-            <groupId>de.gaalop</groupId>
-            <artifactId>codegen-julia</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>de.gaalop</groupId>
-            <artifactId>codegen-matlab</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>de.gaalop</groupId>
-            <artifactId>gaalet</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>de.gaalop</groupId>
             <artifactId>cli</artifactId>
             <version>1.0.0</version>
         </dependency>
         <dependency>
             <groupId>de.gaalop</groupId>
-            <artifactId>gui</artifactId>
+            <artifactId>gpc</artifactId>
             <version>1.0.0</version>
         </dependency>
         <dependency>
             <groupId>de.gaalop</groupId>
             <artifactId>starter</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>de.gaalop</groupId>
-            <artifactId>codegen-ganja</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>de.gaalop</groupId>
-            <artifactId>codegen-python</artifactId>
             <version>1.0.0</version>
         </dependency>
     </dependencies>

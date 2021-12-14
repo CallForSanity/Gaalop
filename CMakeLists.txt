@@ -28,21 +28,19 @@ ADD_SUBDIRECTORY(share)
 
 # build
 add_custom_target(gaalop ALL COMMENT "Compiling Gaalop.")
-add_custom_command(TARGET gaalop COMMAND ${MVN_BINARY} -DupdateOnly=true -Dmaven.test.skip=true package assembly:directory WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+add_custom_command(TARGET gaalop COMMAND ${MVN_BINARY} -DupdateOnly=true -Dmaven.test.skip=true package WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 add_custom_target(mvn_clean ALL COMMENT "Maven Clean Gaalop.")
 add_custom_command(TARGET mvn_clean COMMAND ${MVN_BINARY} clean WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 add_dependencies(gaalop mvn_clean)
 # copy
 COPY_STATIC_DIRECTORY(include-copy include include)
-COPY_STATIC_DIRECTORY(gaalop-copy "target/gaalop-1.0.0-bin" "share/gpc/gaalop")
-COPY_STATIC_DIRECTORY(dependencies-copy dependencies "share/gpc/gaalop/plugins")
+COPY_STATIC_DIRECTORY(gaalop-copy "distribution/target/distribution-1.0.0-bin" "share/gpc/gaalop")
 IF(TARGET gaalop-copy)
 	ADD_DEPENDENCIES(gaalop-copy gaalop)
-	ADD_DEPENDENCIES(dependencies-copy gaalop-copy)
 ENDIF(TARGET gaalop-copy)
 
 # find paths
-FILE(GLOB GAALOP_BUILD_TARGET_DIR_LIST "${CMAKE_CURRENT_SOURCE_DIR}/target/gaalop*")
+FILE(GLOB GAALOP_BUILD_TARGET_DIR_LIST "${CMAKE_CURRENT_SOURCE_DIR}/distribution/target/distribution*")
 IF(GAALOP_BUILD_TARGET_DIR_LIST)
 	LIST(GET GAALOP_BUILD_TARGET_DIR_LIST 0 GAALOP_BUILD_TARGET_DIR)
 ENDIF(GAALOP_BUILD_TARGET_DIR_LIST)
@@ -51,7 +49,6 @@ ENDIF(GAALOP_BUILD_TARGET_DIR_LIST)
 IF(GAALOP_BUILD_TARGET_DIR)
 	INSTALL(DIRECTORY "${GAALOP_BUILD_TARGET_DIR}/." DESTINATION share/gpc/gaalop PATTERN ".svn" EXCLUDE)
 ENDIF(GAALOP_BUILD_TARGET_DIR)
-INSTALL(DIRECTORY "dependencies/." DESTINATION share/gpc/gaalop/plugins PATTERN ".svn" EXCLUDE)
 
 # set root dir
 SET(GPC_ROOT_DIR "${CMAKE_CURRENT_BINARY_DIR}" CACHE PATH "Gaalop Compiler Driver root directory" FORCE)
