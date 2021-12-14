@@ -176,15 +176,6 @@ public final class GraphBuilder {
             graph.addPragmaOutputVariable(variable);
 	}
 
-        /**
-	 * Adds a variable name to the control flow graph as Pragma onlyEvaluate marked.
-	 *
-	 * @param variable The variable
-	 */
-	public void addPragmaOnlyEvaluateVariable(String variable) {
-		graph.addPragmaOnlyEvaluateVariable(variable);
-	}
-
 	/**
 	 * Adds a pragma hint for a variable, which defines value range for it. The pragma must be set before the variable
 	 * is added to the input variables, i.e. the pragma must appear for the use of the variable
