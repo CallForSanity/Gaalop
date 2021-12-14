@@ -5,13 +5,13 @@ import de.gaalop.CodeParserException;
 import de.gaalop.InputFile;
 import de.gaalop.OptimizationException;
 import de.gaalop.cfg.AlgebraDefinitionFile;
+import de.gaalop.cfg.AssignmentNode;
 import de.gaalop.cfg.ControlFlowGraph;
 import de.gaalop.cfg.Macro;
 import de.gaalop.dfg.Expression;
 import de.gaalop.dfg.OuterProduct;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -36,84 +36,6 @@ public class AlStrategy implements AlgebraStrategy {
     public AlStrategy(Plugin plugin) {
         this.plugin = plugin;
     }
-    
-    public static boolean loadAlgebra(AlgebraDefinitionFile alFile, boolean usePrecalulatedTables, boolean asRessource, String algebraBaseDirectory, String algebraName, String algebraDefinitionString) {
-        alFile.setUsePrecalculatedTable(usePrecalulatedTables);
-        alFile.setUseAsRessource(asRessource);
-
-        String baseDir = (asRessource) ? "algebra" : algebraBaseDirectory;
-
-        if (!baseDir.endsWith("/")) baseDir += "/";
-
-        baseDir += algebraName+"/";
-
-        alFile.setProductsFilePath(baseDir+"products.csv");
-
-        Reader reader = null;
-        try {
-            if (algebraDefinitionString == null) {
-                alFile.setProductsFilePath(baseDir+"products.csv");
-                reader = (asRessource)
-                        ? new InputStreamReader(AlStrategy.class.getResourceAsStream(baseDir+"definition.csv"))
-                        : new FileReader(new File(baseDir+"definition.csv"));
-            } else 
-                reader = new StringReader(algebraDefinitionString);
-            
-            alFile.loadFromFile(reader);
-
-            createBlades(alFile);
-            return true;
-        } catch (IOException ex) {
-            Logger.getLogger(AlStrategy.class.getName()).log(Level.SEVERE, null, ex);
-            return false;
-        } finally {
-            try {
-                reader.close();
-            } catch (IOException ex) {
-                Logger.getLogger(AlStrategy.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-    }
-    
-    public void loadMacros(ControlFlowGraph graph) throws CodeParserException, FileNotFoundException, IOException {
-        String baseDir = (graph.asRessource) ? "algebra" : graph.algebraBaseDirectory;
-
-        if (!baseDir.endsWith("/")) baseDir += "/";
-
-        baseDir += graph.algebraName+"/";
-        
-        Reader reader = (graph.asRessource)
-                    ? new InputStreamReader(getClass().getResourceAsStream(baseDir+"macros.clu"))
-                    : new FileReader(new File(baseDir+"macros.clu"));
-
-        ControlFlowGraph macrosGraph = new de.gaalop.clucalc.input.Plugin().createCodeParser().parseFile(inputStreamToInputFile(reader, "macros", null));
-        reader.close();
-        HashMap<StringIntContainer, Macro> macros = MacrosVisitor.getAllMacros(macrosGraph);
-        MacrosVisitor.getAllMacros(graph, macros);
-        StringIntContainer dual = new StringIntContainer("Dual",1);
-        if (macros.containsKey(dual)) {
-            macros.put(new StringIntContainer("*",1), macros.get(dual));
-        }
-
-        //load user macros
-        if (!plugin.getUserMacroFilePath().trim().equals("")) {
-            File f = new File(plugin.userMacroFilePath);
-            if (f.exists()) {
-                 reader = new FileReader(f);
-                 ControlFlowGraph userMacrosGraph = new de.gaalop.clucalc.input.Plugin().createCodeParser().parseFile(inputStreamToInputFile(reader, "userMacros", f.getParentFile()));
-                 reader.close();
-                 MacrosVisitor.getAllMacros(userMacrosGraph, macros);
-            } else
-                System.err.println("Algebra Plugin: User Macro File Path does not exist!");
-        }
-
-        //inline all macros
-        Inliner.inline(graph, macros);
-
-        //Remove Macro definitions from graph
-        for (Macro macro: macros.values()) 
-            graph.removeNode(macro);
-    }
 
     @Override
     public void transform(ControlFlowGraph graph) throws OptimizationException {
@@ -122,46 +44,111 @@ public class AlStrategy implements AlgebraStrategy {
             throw new OptimizationException("There are no lines marked for optimization ('?')", graph);
         }
 
-        //load algebra
-        AlgebraDefinitionFile alFile = graph.getAlgebraDefinitionFile();
-        if (!loadAlgebra(alFile, plugin.usePrecalulatedTables, graph.asRessource, graph.algebraBaseDirectory, graph.algebraName, plugin.algebraDefinitionString)) 
-            throw new OptimizationException("Can't load algebra", graph);
-        
+        Reader reader = null;
         try {
-            //replace all functions / macros
-            loadMacros(graph);
-        } catch (Exception ex) {
-            throw new OptimizationException("Can't load macros file: "+ex.getMessage(), graph);
-        }
-                    
-        //replace Variables which are basevectors
-        BaseVectorDefiner definer = new BaseVectorDefiner();
-        definer.createFromAlBase(alFile.base);
-        BaseVectorReplaceVisitor replacerB = new BaseVectorReplaceVisitor(definer);
-        graph.accept(replacerB);
-        //Update variable set
-        UpdateLocalVariableSet.updateVariableSets(graph);
-        //RemoveDefVars.removeDefVars(graph);
+            //load algebra
+            AlgebraDefinitionFile alFile = graph.getAlgebraDefinitionFile();
+            alFile.setUsePrecalculatedTable(plugin.usePrecalulatedTables);
+            alFile.setUseAsRessource(graph.asRessource);
+            
+            String baseDir = (graph.asRessource) ? "algebra" : graph.algebraBaseDirectory;
+            
+            if (!baseDir.endsWith("/")) baseDir += "/";
+            
+            baseDir += graph.algebraName+"/";
+            
+            alFile.setProductsFilePath(baseDir+"products.csv");
 
-        //update output blades
-        HashMap<String, Integer> mapIndices = new HashMap<String, Integer>();
-        for (int index = 0;index<alFile.blades.length;index++) 
-            mapIndices.put(bladeToString(alFile.blades[index]), new Integer(index));
-
-        Set<String> set = graph.getPragmaOutputVariables();
-        HashSet<String> copySet = new HashSet<String>(set);
-        set.clear();
-        for (String str: copySet) {
-            if (str.contains(" ")) {
-                String[] parts = str.split(" ");
-                if (parts[1].equals("1")) parts[1] = "1.0";
-                if (!mapIndices.containsKey(parts[1]))
-                    throw new OptimizationException("The bladename "+parts[1]+" is not found in the default blade list.", graph);
-
-                set.add(parts[0]+"$"+mapIndices.get(parts[1]));
+            if (plugin.algebraDefinitionString == null) {
+                alFile.setProductsFilePath(baseDir+"products.csv");
+                reader = (graph.asRessource)
+                        ? new InputStreamReader(getClass().getResourceAsStream(baseDir+"definition.csv"))
+                        : new FileReader(new File(baseDir+"definition.csv"));
             } else 
-                set.add(str);
+                reader = new StringReader(plugin.algebraDefinitionString);
+            alFile.loadFromFile(reader);
+            
+            createBlades(alFile);
+
+            //replace all functions / macros
+
+            reader = (graph.asRessource)
+                    ? new InputStreamReader(getClass().getResourceAsStream(baseDir+"macros.clu"))
+                    : new FileReader(new File(baseDir+"macros.clu"));
+            
+            ControlFlowGraph macrosGraph = new de.gaalop.clucalc.input.Plugin().createCodeParser().parseFile(inputStreamToInputFile(reader, "macros", null));
+            reader.close();
+            HashMap<StringIntContainer, Macro> macros = MacrosVisitor.getAllMacros(macrosGraph);
+            MacrosVisitor.getAllMacros(graph, macros);
+            StringIntContainer dual = new StringIntContainer("Dual",1);
+            if (macros.containsKey(dual)) {
+                macros.put(new StringIntContainer("*",1), macros.get(dual));
+            }
+
+            //load user macros
+            if (!plugin.getUserMacroFilePath().trim().equals("")) {
+                File f = new File(plugin.userMacroFilePath);
+                if (f.exists()) {
+                     reader = new FileReader(f);
+                     ControlFlowGraph userMacrosGraph = new de.gaalop.clucalc.input.Plugin().createCodeParser().parseFile(inputStreamToInputFile(reader, "userMacros", f.getParentFile()));
+                     reader.close();
+                     MacrosVisitor.getAllMacros(userMacrosGraph, macros);
+                } else
+                    System.err.println("Algebra Plugin: User Macro File Path does not exist!");
+            }
+
+            //inline all macros
+            Inliner.inline(graph, macros);
+            
+            //Remove Macro definitions from graph
+            for (Macro macro: macros.values()) 
+                graph.removeNode(macro);
+            
+            for (AssignmentNode node: graph.getOnlyEvaluateNodes()) {
+                graph.addPragmaOnlyEvaluateVariable(node.getVariable().getName()); 
+            }
+            
+            //replace Variables which are basevectors
+            BaseVectorDefiner definer = new BaseVectorDefiner();
+            definer.createFromAlBase(alFile.base);
+            BaseVectorReplaceVisitor replacerB = new BaseVectorReplaceVisitor(definer);
+            graph.accept(replacerB);
+            //Update variable set
+            UpdateLocalVariableSet.updateVariableSets(graph);
+            //RemoveDefVars.removeDefVars(graph);
+
+            //update output blades
+            HashMap<String, Integer> mapIndices = new HashMap<String, Integer>();
+            for (int index = 0;index<alFile.blades.length;index++) 
+                mapIndices.put(bladeToString(alFile.blades[index]), new Integer(index));
+
+            Set<String> set = graph.getPragmaOutputVariables();
+            HashSet<String> copySet = new HashSet<String>(set);
+            set.clear();
+            for (String str: copySet) {
+                if (str.contains(" ")) {
+                    String[] parts = str.split(" ");
+                    if (parts[1].equals("1")) parts[1] = "1.0";
+                    if (!mapIndices.containsKey(parts[1]))
+                        throw new OptimizationException("The bladename "+parts[1]+" is not found in the default blade list.", graph);
+
+                    set.add(parts[0]+"$"+mapIndices.get(parts[1]));
+                } else 
+                    set.add(str);
+            }
+        } catch (CodeParserException ex) {
+            Logger.getLogger(AlStrategy.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(AlStrategy.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                reader.close();
+            } catch (IOException ex) {
+                Logger.getLogger(AlStrategy.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
+
+        
     }
 
     private String bladeToString(Expression blade) {

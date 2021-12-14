@@ -93,7 +93,7 @@ PRAGMA
     ;
 
 LINE_COMMENT
-    : '//'~'#'  ~('\n'|'\r')* '\r'? '\n' -> skip
+    : '//'[~'#']?  ~('\n'|'\r')* '\r'? '\n' -> skip
     ;
 
 EQUALS

@@ -15,6 +15,7 @@ import de.gaalop.StringList;
 import de.gaalop.dfg.Expression;
 import de.gaalop.dfg.MultivectorComponent;
 import de.gaalop.dfg.Variable;
+import java.util.Collection;
 
 /**
  * This class models a control dataflow graph.
@@ -56,7 +57,8 @@ public final class ControlFlowGraph {
 
 	/* store information about the pragmas */
 	private Set<String> pragmaOutputVariables = new HashSet<String>();
-	private Set<String> pragmaOnlyEvaluateVariables = new HashSet<String>();
+        private Set<String> pragmaOnlyEvaluateVariables = new HashSet<String>();
+        private LinkedList<AssignmentNode> onlyEvaluateNodes = new LinkedList<AssignmentNode>();
 
 	private HashMap<String, String> pragmaMinValue = new HashMap<String, String>();
 	private HashMap<String, String> pragmaMaxValue = new HashMap<String, String>();
@@ -101,17 +103,25 @@ public final class ControlFlowGraph {
 		return pragmaOutputVariables;
 	}
 
+        public LinkedList<AssignmentNode> getOnlyEvaluateNodes() {
+            return onlyEvaluateNodes;
+        }
+
         public Set<String> getPragmaOnlyEvaluateVariables() {
             return pragmaOnlyEvaluateVariables;
         }
-
+        
 	public void addPragmaOutputVariable(String name) {
 		pragmaOutputVariables.add(name);
 	}
-
-        public void addPragmaOnlyEvaluateVariable(String name) {
-		pragmaOnlyEvaluateVariables.add(name);
-	}
+        
+        public void addPragmaOnlyEvaluateNode(AssignmentNode node) {
+                onlyEvaluateNodes.add(node);
+        }
+        
+        public void addPragmaOnlyEvaluateVariable(String var) {
+            pragmaOnlyEvaluateVariables.add(var);
+        }
 
 	public void addScalarVariable(Variable tempVariable) {
 		scalarVariables.add(tempVariable);

@@ -54,7 +54,7 @@ public class Inliner extends EmptyControlFlowVisitor {
         //make all non-variable arguments to variables
         Expression c = node.getR();
         if (!((c instanceof Variable) || (c instanceof FloatConstant))) {
-            Variable newVariable = createNewVariable();
+            Variable newVariable = createNewVariable("color", "r");
             AssignmentNode assignmentNode = new AssignmentNode(graph, newVariable, c);
             curNode.insertBefore(assignmentNode); 
             StoreResultNode storeNode = new StoreResultNode(graph, newVariable);
@@ -64,7 +64,7 @@ public class Inliner extends EmptyControlFlowVisitor {
         
         c = node.getG();
         if (!((c instanceof Variable) || (c instanceof FloatConstant))) {
-            Variable newVariable = createNewVariable();
+            Variable newVariable = createNewVariable("color", "g");
             AssignmentNode assignmentNode = new AssignmentNode(graph, newVariable, c);
             curNode.insertBefore(assignmentNode); 
             StoreResultNode storeNode = new StoreResultNode(graph, newVariable);
@@ -74,7 +74,7 @@ public class Inliner extends EmptyControlFlowVisitor {
 
         c = node.getB();
         if (!((c instanceof Variable) || (c instanceof FloatConstant))) {
-            Variable newVariable = createNewVariable();
+            Variable newVariable = createNewVariable("color", "b");
             AssignmentNode assignmentNode = new AssignmentNode(graph, newVariable, c);
             curNode.insertBefore(assignmentNode); 
             StoreResultNode storeNode = new StoreResultNode(graph, newVariable);
@@ -84,7 +84,7 @@ public class Inliner extends EmptyControlFlowVisitor {
         
         c = node.getAlpha();
         if (!((c instanceof Variable) || (c instanceof FloatConstant))) {
-            Variable newVariable = createNewVariable();
+            Variable newVariable = createNewVariable("color", "a");
             AssignmentNode assignmentNode = new AssignmentNode(graph, newVariable, c);
             curNode.insertBefore(assignmentNode); 
             StoreResultNode storeNode = new StoreResultNode(graph, newVariable);
@@ -94,9 +94,6 @@ public class Inliner extends EmptyControlFlowVisitor {
         
         currentColorNode = node;
         super.visit(node);
-    }
-
-    private Inliner() {
     }
 
     private SequentialNode curNode;
@@ -170,7 +167,7 @@ public class Inliner extends EmptyControlFlowVisitor {
                 ArrayList<Expression> newArgs = new ArrayList<Expression>(node.getArguments().size());
                 for (Expression arg: node.getArguments()) {
                     if (!((arg instanceof Variable) || (arg instanceof FloatConstant))) {
-                        Variable newVariable = createNewVariable();
+                        Variable newVariable = createNewVariable(macroCallName, "arg");
                         AssignmentNode assignmentNode = new AssignmentNode(graph, newVariable, arg);
                         curNode.insertBefore(assignmentNode); 
                         StoreResultNode storeNode = new StoreResultNode(graph, newVariable);
@@ -198,8 +195,14 @@ public class Inliner extends EmptyControlFlowVisitor {
                     AssignmentNode assignmentNode = (AssignmentNode) sNode;
                     String name = assignmentNode.getVariable().getName();
 
-                    if (!replaceMap.containsKey(name)) 
-                        replaceMap.put(name, createNewVariable());
+                    if (!replaceMap.containsKey(name)) {
+                        Variable newVar = createNewVariable(macroCallName, name);
+                        replaceMap.put(name, newVar);
+                        if (graph.getOnlyEvaluateNodes().contains(assignmentNode)) {
+                            graph.addPragmaOnlyEvaluateVariable(newVar.getName()); 
+                            graph.getOnlyEvaluateNodes().remove(assignmentNode);
+                        }
+                    }
                 }
             }
 
@@ -215,24 +218,24 @@ public class Inliner extends EmptyControlFlowVisitor {
             Expression copiedReturnVal = macro.getReturnValue().copy();
             //replace variables in copiedReturnVal
             MacroVariablesDFGReplacer d = new MacroVariablesDFGReplacer(replaceMap);
-            copiedReturnVal.accept(d);
-            //
-            result = copiedReturnVal;
+            result = d.replace(copiedReturnVal);
         }
-
-
-
     };
 
-    private Variable createNewVariable() {
+    private Variable createNewVariable(String macroName, String originVarName) {
         VariableCollector collector = new VariableCollector();
         graph.accept(collector);
 
-        count++;
-        while (collector.getVariables().contains("macroUniqueName"+count))
-            count++;
+        String m = "macro_"+macroName+"_"+originVarName;
+        if (collector.getVariables().contains(m)) {
+            count = 1;
+            while (collector.getVariables().contains(m+count))
+                count++;
 
-        return new Variable("macroUniqueName"+count);
+            return new Variable(m+count);
+        } else {
+            return new Variable(m);
+        }
     }
 
 }

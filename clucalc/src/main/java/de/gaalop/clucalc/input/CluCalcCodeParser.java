@@ -3,7 +3,6 @@ package de.gaalop.clucalc.input;
 import de.gaalop.CodeParser;
 import de.gaalop.CodeParserException;
 import de.gaalop.InputFile;
-import de.gaalop.StringList;
 import de.gaalop.cfg.ControlFlowGraph;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -161,8 +160,8 @@ public enum CluCalcCodeParser implements CodeParser {
             graph.getPragmaOutputVariables().add(output);
 
         for (String onlyEval: onlyEvaluates)
-            graph.getPragmaOnlyEvaluateVariables().add(onlyEval);
-
+            graph.addPragmaOnlyEvaluateVariable(onlyEval);
+        
         return graph;
     }
 

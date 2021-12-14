@@ -43,8 +43,9 @@ public class CluVisitor extends CluCalcBaseVisitor<Object> {
 
     @Override
     public Object visitEvaluateAssignmentCase(CluCalcParser.EvaluateAssignmentCaseContext ctx) {
-        graph.getPragmaOnlyEvaluateVariables().add(((Variable) visit(ctx.val.var)).getName());
-        return visitAssignment(ctx.val);
+        AssignmentNode node = (AssignmentNode) visitAssignment(ctx.val);
+        graph.addPragmaOnlyEvaluateNode(node);
+        return node;
     }
 
     @Override
@@ -109,8 +110,9 @@ public class CluVisitor extends CluCalcBaseVisitor<Object> {
         Variable variable = (Variable) visit(ctx.var);
         Expression expression = (Expression) visit(ctx.expr);
         if (inMacro) {
-            macroNodes.add(new AssignmentNode(graph, variable, expression));
-            return null;
+            AssignmentNode node = new AssignmentNode(graph, variable, expression);
+            macroNodes.add(node);
+            return node;
         } else
             return graphBuilder.handleAssignment(variable, expression);
     }

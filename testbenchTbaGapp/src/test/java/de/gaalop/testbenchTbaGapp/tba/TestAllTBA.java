@@ -62,6 +62,41 @@ public class TestAllTBA {
             TestDummy.compileWithCompilerFacade(testCase, facade)
                 );
     } 
+    
+    @Test
+    public void testNoLineMacroTest() {
+        assertTrue(
+            TestDummy.compile(new NoLineMacroTest())
+        );
+    }
+    
+    @Test
+    public void testSingleLineMacroTest() {
+        assertTrue(
+            TestDummy.compile(new SingleLineMacroTest())
+        );
+    }
+    
+    @Test
+    public void testMultipleLineMacroTest() {
+        assertTrue(
+            TestDummy.compile(new MultipleLineMacroTest())
+        );
+    }
+    
+    @Test
+    public void testQuestionLineMacroTest() {
+        assertTrue(
+            TestDummy.compile(new QuestionLineMacroTest())
+        );
+    }
+    
+    @Test
+    public void testExklamationLineMacroTest() {
+        assertTrue(
+            TestDummy.compile(new ExklamationLineMacroTest())
+        );
+    }
 
     @Test
     public void testCoefficientTest() {
@@ -78,6 +113,12 @@ public class TestAllTBA {
                 );
     } 
     
+    @Test
+    public void testEmptyComments() {
+        assertTrue(
+            TestDummy.compile(new EmptyCommentTest())
+                );
+    } 
     
     @Test
     public void testNoLocalVars() {
