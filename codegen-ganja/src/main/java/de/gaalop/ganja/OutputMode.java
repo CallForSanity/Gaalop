@@ -2,7 +2,7 @@ package de.gaalop.ganja;
 
 /**
  *
- * @author chris
+ * @author CSteinmetz15
  */
 public enum OutputMode {
     COFFEESHOP,

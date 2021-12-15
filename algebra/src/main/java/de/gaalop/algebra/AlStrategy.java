@@ -97,6 +97,9 @@ public class AlStrategy implements AlgebraStrategy {
                     System.err.println("Algebra Plugin: User Macro File Path does not exist!");
             }
 
+            //Check on potential recursions
+            RecursionChecker.check(graph, macros);
+            
             //inline all macros
             Inliner.inline(graph, macros);
             

@@ -1,6 +1,7 @@
 package de.gaalop.algebra;
 
 import de.gaalop.cfg.AssignmentNode;
+import de.gaalop.cfg.ColorNode;
 import de.gaalop.cfg.ControlFlowGraph;
 import de.gaalop.cfg.EmptyControlFlowVisitor;
 import de.gaalop.cfg.ExpressionStatement;
@@ -48,5 +49,16 @@ public class MacroCallCounter extends EmptyControlFlowVisitor {
         node.getExpression().accept(dfgVisitor);
         super.visit(node);
     }
+
+    @Override
+    public void visit(ColorNode node) {
+        node.getR().accept(dfgVisitor);
+        node.getG().accept(dfgVisitor);
+        node.getB().accept(dfgVisitor);
+        node.getAlpha().accept(dfgVisitor);
+        super.visit(node);
+    }
+    
+    
 
 }

@@ -131,19 +131,15 @@ public class Inliner extends EmptyControlFlowVisitor {
     }
 
     private boolean delete;
-    
-//TODO chs (optional) macros are case sensitive, math functions not!
 
     private ReplaceVisitor replacer = new ReplaceVisitor() {
 
         @Override
-        public void visit(MacroCall node) {
-
-            String macroCallName = node.getName();
-            
+        public void visit(MacroCall macroExpr) {
+            String macroCallName = macroExpr.getName();
             //check if this macro call is a builtin function
             if ("coefficient".equals(macroCallName.toLowerCase())) {
-                result = new Relation(node.getArguments().get(0), node.getArguments().get(1), Relation.Type.COEFFICIENT);
+                result = new Relation(macroExpr.getArguments().get(0), macroExpr.getArguments().get(1), Relation.Type.COEFFICIENT);
                 return;
             }
 
@@ -151,21 +147,21 @@ public class Inliner extends EmptyControlFlowVisitor {
             for (MathFunction f: MathFunction.values()) {
                 if (f.name().toLowerCase().equals(macroCallName.toLowerCase())) { 
                     // it is a MathFunction
-                    result = new MathFunctionCall(node.getArguments().get(0), f);
+                    result = new MathFunctionCall(macroExpr.getArguments().get(0), f);
                     return;
                 }
             }
 
-            StringIntContainer container = new StringIntContainer(macroCallName, node.getArguments().size());
+            StringIntContainer container = new StringIntContainer(macroCallName, macroExpr.getArguments().size());
             if (!macros.containsKey(container)) {
-                System.err.println("Macro "+macroCallName+" is not defined!");
+                System.err.println("Macro "+macroCallName+"(with "+macroExpr.getArguments().size()+" parameters) is not defined!");
                 error = true; //escape endless loop!
                 result = null;
                 delete = true;
-                graph.unknownMacros.add(new UnknownMacroCall(node, currentColorNode));
+                graph.unknownMacros.add(new UnknownMacroCall(macroExpr, currentColorNode));
                 //make all non-variable arguments to variables
-                ArrayList<Expression> newArgs = new ArrayList<Expression>(node.getArguments().size());
-                for (Expression arg: node.getArguments()) {
+                ArrayList<Expression> newArgs = new ArrayList<Expression>(macroExpr.getArguments().size());
+                for (Expression arg: macroExpr.getArguments()) {
                     if (!((arg instanceof Variable) || (arg instanceof FloatConstant))) {
                         Variable newVariable = createNewVariable(macroCallName, "arg");
                         AssignmentNode assignmentNode = new AssignmentNode(graph, newVariable, arg);
@@ -176,7 +172,7 @@ public class Inliner extends EmptyControlFlowVisitor {
                     } else 
                         newArgs.add(arg);
                 }
-                node.setArgs(newArgs);
+                macroExpr.setArgs(newArgs);
                 return;
             }
             Macro macro = macros.get(container);
@@ -184,7 +180,7 @@ public class Inliner extends EmptyControlFlowVisitor {
             HashMap<String, Expression> replaceMap = new HashMap<String, Expression>();
             //fill replaceMap with macro call arguments
             int index = 1;
-            for (Expression e: node.getArguments()) {
+            for (Expression e: macroExpr.getArguments()) {
                 replaceMap.put("_P("+index+")", e);
                 index++;
             }

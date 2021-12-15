@@ -1,7 +1,10 @@
 package de.gaalop.algebra;
 
 /**
- * Stores a string and an int
+ * Stores a string and an int.
+ * This class is typically used for macro identification.
+ * A macro can be uniquely identified using its name combined with 
+ * the number of its arguments.
  * @author Christian Steinmetz
  */
 public class StringIntContainer {
