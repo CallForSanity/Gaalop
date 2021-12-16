@@ -241,7 +241,7 @@ public class BlockTransformer {
         Set<CodeGeneratorPlugin> plugins = Plugins.getCodeGeneratorPlugins();
         for (CodeGeneratorPlugin plugin : plugins) {
             if (plugin.getClass().getName().equals(Main.codeGeneratorPlugin)) {
-                if(plugin instanceof de.gaalop.compressed.CompressedCodeGenerator && Main.useDoubles) {
+                if(plugin instanceof de.gaalop.compressed.Plugin && Main.useDoubles) {
                     ((de.gaalop.compressed.Plugin) plugin).useDouble = true;
                 }
                 
