@@ -72,12 +72,15 @@ public class RecursionChecker {
         // Find macro calls and do a check on the macros calls using this recursive function (Yeah, right! We use a recursive method in order to detect recursions :-) ).
         Macro macro = macros.get(container);
         
-        MacroCallCollector collector = new MacroCallCollector();
-        for (SequentialNode node: macro.getBody()) 
-            node.accept(collector);
-        
-        for (StringIntContainer child: collector.macroCalls) 
-            checkContainer(child);
+        // E.g. math functions will produce empty macro bodies, as they are buitin functions. Prevent the investigation for them.
+        if (macro != null) {
+            MacroCallCollector collector = new MacroCallCollector();
+            for (SequentialNode node: macro.getBody()) 
+                node.accept(collector);
+
+            for (StringIntContainer child: collector.macroCalls) 
+                checkContainer(child);
+        }
         
         // No recursions found, remove this container to allow later (allowed) macro calls of this container.
         curContainers.remove(container);
