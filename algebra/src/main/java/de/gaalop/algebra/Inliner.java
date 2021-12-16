@@ -194,10 +194,8 @@ public class Inliner extends EmptyControlFlowVisitor {
                     if (!replaceMap.containsKey(name)) {
                         Variable newVar = createNewVariable(macroCallName, name);
                         replaceMap.put(name, newVar);
-                        if (graph.getOnlyEvaluateNodes().contains(assignmentNode)) {
+                        if (graph.getOnlyEvaluateNodes().contains(assignmentNode))
                             graph.addPragmaOnlyEvaluateVariable(newVar.getName()); 
-                            graph.getOnlyEvaluateNodes().remove(assignmentNode);
-                        }
                     }
                 }
             }
