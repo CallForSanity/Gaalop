@@ -8,6 +8,7 @@ import de.gaalop.cfg.AlgebraDefinitionFile;
 import de.gaalop.cfg.AssignmentNode;
 import de.gaalop.cfg.ControlFlowGraph;
 import de.gaalop.cfg.Macro;
+import de.gaalop.cfg.SequentialNode;
 import de.gaalop.dfg.Expression;
 import de.gaalop.dfg.OuterProduct;
 import java.io.BufferedReader;
@@ -21,6 +22,7 @@ import java.io.StringReader;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -76,7 +78,7 @@ public class AlStrategy implements AlgebraStrategy {
         }
     }
     
-    public void loadMacros(ControlFlowGraph graph) throws CodeParserException, FileNotFoundException, IOException {
+    public void loadMacros(ControlFlowGraph graph) throws CodeParserException, FileNotFoundException, IOException, OptimizationException {
         String baseDir = (graph.asRessource) ? "algebra" : graph.algebraBaseDirectory;
 
         if (!baseDir.endsWith("/")) baseDir += "/";
@@ -108,12 +110,24 @@ public class AlStrategy implements AlgebraStrategy {
                 System.err.println("Algebra Plugin: User Macro File Path does not exist!");
         }
 
+        //Check on potential recursions
+        RecursionChecker.check(graph, macros);
+
         //inline all macros
         Inliner.inline(graph, macros);
 
-        //Remove Macro definitions from graph
-        for (Macro macro: macros.values()) 
+        //Remove Macro definitions and embedded evaluateNodes from graph
+        LinkedList<AssignmentNode> toDelete = new LinkedList<AssignmentNode>();
+        for (Macro macro: macros.values()) {
             graph.removeNode(macro);
+            for (SequentialNode n: macro.getBody())
+                for (AssignmentNode evalNode: graph.getOnlyEvaluateNodes())
+                    if (n == evalNode)
+                        toDelete.add(evalNode);
+        }
+
+        graph.getOnlyEvaluateNodes().removeAll(toDelete);
+
         for (AssignmentNode node: graph.getOnlyEvaluateNodes()) {
             graph.addPragmaOnlyEvaluateVariable(node.getVariable().getName()); 
         }

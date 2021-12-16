@@ -4,7 +4,7 @@ import de.gaalop.cfg.AlgebraSignature;
 
 /**
  *
- * @author chris
+ * @author CSteinmetz15
  */
 public class AlgebraProperties {
 
