@@ -8,15 +8,16 @@ createPoint = {
     _P(1)*(e0^e3^e2)+_P(2)*(e0^e1^e3)+_P(3)*(e0^e2^e1)+(e1^e2^e3)
 }
 
-
+//Creates an ideal point (direction) in N3 of three coordinates x,y,z
+//args:
+//x
+//y
+//z
 createPointI = {
     _P(1)*(e0^e3^e2)+_P(2)*(e0^e1^e3)+_P(3)*(e0^e2^e1)
 }
 
 
-//Creates a point in N3 of three coordinates x,y,z
-//args:
-//x
 normalizeLineE = {
     _P(1)/
     sqrt(
@@ -27,9 +28,6 @@ normalizeLineE = {
 }
 
 
-//Creates a point in N3 of three coordinates x,y,z
-//args:
-//x
 normalizeLineI = {
     _P(1)/
     sqrt(
@@ -40,9 +38,7 @@ normalizeLineI = {
 }
 
 
-//Creates a point in N3 of three coordinates x,y,z
-//args:
-//x
+
 normalizel = {
 
            (coefficient(_P(1),(e0^e1)) *coefficient(_P(1),(e0^e1)))+
