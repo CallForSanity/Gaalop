@@ -10,42 +10,44 @@
 	        <useAllReactorProjects>true</useAllReactorProjects>
 
             <includes>
-                <include>de.gaalop:api</include>
+                <!-- General & Input -->
                 <include>de.gaalop:algebra</include>
+                <include>de.gaalop:api</include>
+                <include>de.gaalop:cli</include>
+                <include>de.gaalop:clucalc</include>
+                <include>de.gaalop:gaalet</include>
+                <include>de.gaalop:globalSettings</include>
+                <include>de.gaalop:gui</include>
+                <include>de.gaalop:starter</include>
                 <include>de.gaalop:visualCodeInserter</include>
                 <include>de.gaalop:visualCodeInserter2d</include>
-                <include>de.gaalop:clucalc</include>
-                <include>de.gaalop:globalSettings</include>
-				<include>de.gaalop:gappDebugger</include>
-                <include>de.gaalop:tba</include>
+
+                <!-- Optimization -->
                 <include>de.gaalop:gapp</include>
+                <include>de.gaalop:tba</include>
+
+                <!-- Code generator -->
                 <include>de.gaalop:codegen-compressed</include>
                 <include>de.gaalop:codegen-cpp</include>
-                <include>de.gaalop:codegen-java</include>
                 <include>de.gaalop:codegen-dot</include>
-                <include>de.gaalop:codegen-latex</include>
                 <include>de.gaalop:codegen-gapp</include>
-		<include>de.gaalop:codegen-visualizer</include>
-		<include>de.gaalop:codegen-vis2d</include>
                 <include>de.gaalop:codegen-gappopencl</include>
-		<include>de.gaalop:codegen-rust</include>
-		<include>de.gaalop:codegen-mathematica</include>
-		<include>de.gaalop:codegen-julia</include>
+                <include>de.gaalop:codegen-java</include>
+                <include>de.gaalop:codegen-julia</include>
+                <include>de.gaalop:codegen-latex</include>
+                <include>de.gaalop:codegen-mathematica</include>
                 <include>de.gaalop:codegen-matlab</include>
-                <include>de.gaalop:gaalet</include>
+                <include>de.gaalop:codegen-rust</include>
+                <include>de.gaalop:codegen-vis2d</include>
+                <include>de.gaalop:codegen-visualizer</include>
+                <include>de.gaalop:gappDebugger</include>
 
-                <include>de.gaalop:cli</include>
-                <include>de.gaalop:gui</include>
-
-                <include>de.gaalop:starter</include>
-                <include>de.gaalop:setup</include>
             </includes>
             <binaries>
                 <includeDependencies>true</includeDependencies>
                 <excludes>
                     <!-- These modules are handled specially below -->
                     <exclude>de.gaalop:starter</exclude>
-                    <exclude>de.gaalop:setup</exclude>
                 </excludes>
                 <outputDirectory>plugins</outputDirectory>
                 <unpack>false</unpack>
@@ -56,7 +58,6 @@
 
             <includes>
                 <include>de.gaalop:starter</include>
-                <include>de.gaalop:setup</include>
             </includes>
             <binaries>
                 <includeDependencies>false</includeDependencies>
@@ -87,6 +88,14 @@
     <fileSets>
         <fileSet>
             <directory>src/main/resources/startupscripts</directory>
+            <outputDirectory></outputDirectory>
+        </fileSet>
+        <fileSet>
+            <directory>src/main/resources/config</directory>
+            <outputDirectory></outputDirectory>
+        </fileSet>
+        <fileSet>
+            <directory>src/main/resources/legal</directory>
             <outputDirectory></outputDirectory>
         </fileSet>
     </fileSets>

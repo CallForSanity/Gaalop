@@ -39,8 +39,6 @@ public class GAPPDecoratingMain {
     /**
      * Decorates a given ControlFlowGraph with GAPP instructions
      * @param graph The ControlFlowGraph
-     * @param optMaxima Should Maxima be used?
-     * @param maximaCommand The maxima command
      * @return The same graph object (which is now decorated with GAPP instructions)
      * @throws OptimizationException
      */

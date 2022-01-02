@@ -1,7 +1,5 @@
 package de.gaalop.visualCodeInserter;
 
-import de.gaalop.ConfigurationProperty;
-import de.gaalop.ConfigurationProperty.Type;
 import de.gaalop.Notifications;
 import de.gaalop.VisualCodeInserterStrategy;
 import de.gaalop.VisualCodeInserterStrategyPlugin;

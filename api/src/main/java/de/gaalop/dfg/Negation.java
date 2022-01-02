@@ -33,6 +33,7 @@ public final class Negation extends UnaryOperation {
      * @return The string "<code>-(operand)</code>" where operand has been converted to a string using its toString
      * method.
      */
+    @Override
     public String toString() {
         return "-(" + getOperand() + ")";
     }

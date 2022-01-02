@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package de.gaalop.visualizer.gui;
 
 import de.gaalop.visualizer.zerofinding.ZeroFinder;
@@ -41,8 +37,6 @@ public class DrawSettings extends javax.swing.JFrame {
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jPanel_Visible = new javax.swing.JPanel();
-        jButton_LoadPointCloud = new javax.swing.JButton();
-        jButton_SavePointCloud = new javax.swing.JButton();
         jComboBox_ZerofindingMethod = new javax.swing.JComboBox();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
@@ -135,18 +129,8 @@ public class DrawSettings extends javax.swing.JFrame {
         getContentPane().add(jPanel3);
         jPanel3.setBounds(240, 360, 240, 180);
 
-        jButton_LoadPointCloud.setText("Load Pointcloud");
-        jButton_LoadPointCloud.setMaximumSize(new java.awt.Dimension(109, 23));
-        jButton_LoadPointCloud.setMinimumSize(new java.awt.Dimension(1079, 23));
-        getContentPane().add(jButton_LoadPointCloud);
-        jButton_LoadPointCloud.setBounds(30, 610, 120, 23);
-
-        jButton_SavePointCloud.setText("Save Pointcloud");
-        getContentPane().add(jButton_SavePointCloud);
-        jButton_SavePointCloud.setBounds(180, 610, 120, 23);
-
         getContentPane().add(jComboBox_ZerofindingMethod);
-        jComboBox_ZerofindingMethod.setBounds(140, 550, 200, 20);
+        jComboBox_ZerofindingMethod.setBounds(140, 550, 200, 22);
 
         jLabel1.setText("Zerofinding method:");
         getContentPane().add(jLabel1);
@@ -218,9 +202,7 @@ public class DrawSettings extends javax.swing.JFrame {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public javax.swing.JButton jButton_DisplayEquations;
-    public javax.swing.JButton jButton_LoadPointCloud;
     protected javax.swing.JButton jButton_Repaint;
-    public javax.swing.JButton jButton_SavePointCloud;
     protected javax.swing.JComboBox jComboBox_ZerofindingMethod;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

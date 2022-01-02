@@ -48,6 +48,7 @@ public final class MathFunctionCall extends UnaryOperation {
 	 * @return The string "<code>function(operand)</code>" where function and operand are both converted to strings using their
 	 * toString methods.
 	 */
+        @Override
 	public String toString() {
 		return function.toString().toLowerCase() + "(" + getOperand() + ")";
 	}

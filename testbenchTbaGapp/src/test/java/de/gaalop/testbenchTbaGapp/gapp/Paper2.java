@@ -2,7 +2,6 @@ package de.gaalop.testbenchTbaGapp.gapp;
 
 import de.gaalop.gapp.executer.Executer;
 import de.gaalop.gapp.executer.MultivectorWithValues;
-import de.gaalop.tba.UseAlgebra;
 import java.util.HashMap;
 import static org.junit.Assert.*;
 

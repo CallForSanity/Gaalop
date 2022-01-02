@@ -29,6 +29,7 @@ public class TBAOptStrategy implements OptimizationStrategy {
         graph.tbaOptimized = true;
     }
     
+    @Override
     public void addProgressListener(LoggingListener progressListener) {
     	listeners.add(progressListener);
     }

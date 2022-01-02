@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 import de.gaalop.tba.table.BitIO.AbsBitReader;
 import de.gaalop.tba.table.BitIO.AbsBitWriter;
 import de.gaalop.tba.table.BitIO.MaxReader;

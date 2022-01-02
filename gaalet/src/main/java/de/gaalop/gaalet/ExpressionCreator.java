@@ -10,7 +10,7 @@ import de.gaalop.dfg.FloatConstant;
 import de.gaalop.dfg.Multiplication;
 
 /**
- * So we have a Multivector definition and we want Maple to know about it. 
+ * So we have a Multivector definition and we want tools to know about it. 
  * What we simply do is, we write it out like:  a = (3*e1 + (2*e2));
  * 
  * @author thomaskanold

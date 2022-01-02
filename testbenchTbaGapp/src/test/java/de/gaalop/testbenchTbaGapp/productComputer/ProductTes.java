@@ -19,7 +19,7 @@ public class ProductTes {
     protected Algebra algebra;
 
     private void compare(String message, Multivector product1, Multivector product2) {
-        assertArrayEquals(message, product2.getValueArr(algebra), product1.getValueArr(algebra));
+        assertEquals(message, product2.getValueArr(algebra), product1.getValueArr(algebra));
     }
 
     protected void dummy(IMultTable table1, IMultTable table2, int gr1, int gr2) {

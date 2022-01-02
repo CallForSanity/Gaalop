@@ -4,7 +4,6 @@ import de.gaalop.cfg.AssignmentNode;
 import de.gaalop.cfg.ColorNode;
 import de.gaalop.cfg.EmptyControlFlowVisitor;
 import de.gaalop.cfg.ExpressionStatement;
-import de.gaalop.dfg.Expression;
 import de.gaalop.dfg.Variable;
 
 /**

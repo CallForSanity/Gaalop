@@ -22,51 +22,8 @@ The code of both projects is licensed under the LGPL 3.0.
 
 # Contributions
 Contributions are welcome.
-Please fork or ask for direct commit access to the repo.
+Please fork and create a pull request.
 
-# Used Sources and Licences
-
-### package de.gaalop.productComputer. BubbleSort
-Source: http://de.wikipedia.org/wiki/Bubblesort#Formaler%20Algorithmus
-
-### package de.gaalop.productComputer.GAMethods
-public static float canonicalReorderingSign(Blade a_p, Blade b, int bitCount)
-    “This method is taken from the dissertation of Daniel Fontijne - Efficient Implementation of Geometric Algebra”
-
-### package de.gaalop.visualizer.engines.lwjgl.recording.AnimatedGifEncoder
-No copyright asserted on the source code of this class. May be used for any
-purpose, however, refer to the Unisys LZW patent for restrictions on use of
-the associated LZWEncoder class. Please forward any corrections to
-kweiner@fmsware.com.
-@author Kevin Weiner, FM Software
-@version 1.03 November 2003
-
-### de.gaalop.visualizer.ia_math.*
-IAMath.java 
-  -- classes implementing interval arithmetic versions
-     of the arithmetic and elementary functions,
-     as part of the "ia_math library" version 0.1beta1, 10/97
-
-Copyright (C) 2000 Timothy J. Hickey
-
-License: <a href="http://interval.sourceforge.net/java/ia_math/licence.txt">zlib/png</a>
-
-the class IAMath contains methods for performing basic
-arithmetic operations on intervals. Currently the
-elementary functions rely on the underlying implementation
-which uses the netlib fdlibm library. The resulting code
-is therefore probably unsound for the transcendental functions.
-
-
-# More used libraries
-- Antlr [BSD]
-- antlr-runtime [BSD]
-- args4j [MIT]
-- commons-io [Apache]
-- commons-beanutils [Apache]
-- jdom [Apache-style open source license]
-- jna [This library is licensed under the LGPL, version 2.1 or later, and (from version 4.0 onward) the Apache Software License, version 2.0. Commercial license arrangements are negotiable.]
-- lwjgl [BSD]
-- lwjgl_util [BSD]
-- stringtemplate [BSD]
-- Maven [Apache]
+# How to compile?
+Please visit the [wiki](https://github.com/CallForSanity/Gaalop/wiki) on this repository. 
+You will find manuals for compiling GAALOP and GAALOP Precompiler.

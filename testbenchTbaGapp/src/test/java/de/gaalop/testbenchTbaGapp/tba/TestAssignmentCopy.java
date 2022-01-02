@@ -7,7 +7,6 @@ import de.gaalop.testbenchTbaGapp.graphstorage.GraphStoragePlugin;
 import de.gaalop.testbenchTbaGapp.tba.framework.TBATestCase;
 import de.gaalop.testbenchTbaGapp.tba.framework.TestDummy;
 import de.gaalop.visualizer.zerofinding.RayMethod;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import org.junit.Test;

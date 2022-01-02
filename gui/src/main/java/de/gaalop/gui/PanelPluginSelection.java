@@ -1,7 +1,6 @@
 package de.gaalop.gui;
 
 import de.gaalop.*;
-import de.gaalop.algebra.AlStrategy;
 import de.gaalop.algebra.DefinedAlgebra;
 import java.awt.*;
 import java.awt.event.ItemEvent;
@@ -14,7 +13,6 @@ import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
-import javax.swing.colorchooser.AbstractColorChooserPanel;
 import org.apache.commons.beanutils.BeanUtils;
 
 /**

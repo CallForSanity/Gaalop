@@ -2,7 +2,6 @@ package de.gaalop.testbenchTbaGapp.gapp;
 
 import de.gaalop.gapp.executer.Executer;
 import de.gaalop.gapp.executer.MultivectorWithValues;
-import de.gaalop.tba.UseAlgebra;
 import java.util.HashMap;
 import static org.junit.Assert.*;
 
@@ -32,12 +31,12 @@ public class Paper3d implements GAPPTestable {
     @Override
     public HashMap<String, Double> getInputs() {
         HashMap<String, Double> inputValues = new HashMap<String, Double>();
-        inputValues.put("a1", new Double(a1));
-        inputValues.put("a2", new Double(a2));
-        inputValues.put("a3", new Double(a3));
-        inputValues.put("b1", new Double(b1));
-        inputValues.put("b2", new Double(b2));
-        inputValues.put("b3", new Double(b3));
+        inputValues.put("a1", a1);
+        inputValues.put("a2", a2);
+        inputValues.put("a3", a3);
+        inputValues.put("b1", b1);
+        inputValues.put("b2", b2);
+        inputValues.put("b3", b3);
         return inputValues;
     }
 

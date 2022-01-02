@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package de.gaalop.tba.cfgImport.optimization.maxima;
 
 import de.gaalop.dfg.Exponentiation;
@@ -64,7 +60,6 @@ public class MaximaRoutines {
      * Returns an expression from a maxima output string.
      * @param maximaOut The maxima output string
      * @return The according expression
-     * @throws RecognitionException
      */
     public static Expression getExpressionFromMaximaOutput(String maximaOut) {
         

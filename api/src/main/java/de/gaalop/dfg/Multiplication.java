@@ -24,6 +24,7 @@ public final class Multiplication extends BinaryOperation {
      * @return The string "<code>left * right</code>" where left and right have both been converted to
      *         strings using their toString methods.
      */
+    @Override
     public String toString() {
         return bracketComposite(getLeft()) + " * " + bracketComposite(getRight());
     }

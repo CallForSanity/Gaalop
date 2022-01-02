@@ -10,7 +10,7 @@
 
     <artifactId>distribution</artifactId>
     <packaging>pom</packaging>
-	<version>2.2.3.3</version>
+	<version>2.2.5</version>
 
     <name>Gaalop Distribution</name>
 
@@ -32,6 +32,11 @@
         <dependency>
             <groupId>de.gaalop</groupId>
             <artifactId>visualCodeInserter</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>de.gaalop</groupId>
+            <artifactId>ganjaVisualCodeInserter</artifactId>
             <version>1.0.0</version>
         </dependency>
         <dependency>
@@ -151,7 +156,12 @@
         </dependency>
         <dependency>
             <groupId>de.gaalop</groupId>
-            <artifactId>setup</artifactId>
+            <artifactId>codegen-ganja</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>de.gaalop</groupId>
+            <artifactId>codegen-python</artifactId>
             <version>1.0.0</version>
         </dependency>
     </dependencies>
@@ -175,6 +185,23 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+              <groupId>org.owasp</groupId>
+              <artifactId>dependency-check-maven</artifactId>
+              <version>6.5.0</version>
+              <configuration>
+                <suppressionFiles>
+                    <suppressionFile>owasp-dependency-check-suppressions.xml</suppressionFile>
+                </suppressionFiles>
+              </configuration>
+              <executions>
+                  <execution>
+                      <goals>
+                          <goal>check</goal>
+                      </goals>
+                  </execution>
+              </executions>
             </plugin>
         </plugins>
     </build>

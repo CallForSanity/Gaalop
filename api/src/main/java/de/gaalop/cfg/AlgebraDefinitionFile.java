@@ -3,8 +3,6 @@ package de.gaalop.cfg;
 import de.gaalop.dfg.Expression;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.HashMap;
 
@@ -34,10 +32,32 @@ public class AlgebraDefinitionFile {
      * The line contating the map to transform from the zeroinf base to the plusminus base
      */
     public String lineMapZeroInfToPlusMinus;
-
+    
+    public AlgebraSignature getSignature() {
+        int p = 0;
+        int q = 0;
+        int r = 0;
+        
+        for (Byte b: baseSquares.values()) {
+            switch (b) {
+                case 1:
+                    p++;
+                    break;
+                case -1:
+                    q++;
+                    break;
+                case 0:
+                    r++;
+                    break;
+            }
+        }
+        
+        return new AlgebraSignature(p, q, r);
+    }
 
     //generated attributes
     public Expression[] blades;
+    public Expression[] blades2;
 
     private boolean usePrecalculatedTable;
     private String productsFilePath;
@@ -55,6 +75,15 @@ public class AlgebraDefinitionFile {
      */
     public String getBladeString(int index) {
         return blades[index].toString();
+    }
+    
+    /**
+     * Returns the string of blade with a given index for the normal base
+     * @param index The index
+     * @return The string representing the blade
+     */
+    public String getBladeStringNormalBase(int index) {
+        return blades2[index].toString();
     }
 
     /**
@@ -115,6 +144,7 @@ public class AlgebraDefinitionFile {
     /**
      * Loads a algebra definition from a Reader
      * @param reader The reader to be used
+     * @throws java.io.IOException
      */
     public void loadFromFile(Reader reader) throws IOException {
         BufferedReader d = new BufferedReader(reader);

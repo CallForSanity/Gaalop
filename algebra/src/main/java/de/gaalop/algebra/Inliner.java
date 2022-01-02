@@ -54,7 +54,7 @@ public class Inliner extends EmptyControlFlowVisitor {
         //make all non-variable arguments to variables
         Expression c = node.getR();
         if (!((c instanceof Variable) || (c instanceof FloatConstant))) {
-            Variable newVariable = createNewVariable();
+            Variable newVariable = createNewVariable("color", "r");
             AssignmentNode assignmentNode = new AssignmentNode(graph, newVariable, c);
             curNode.insertBefore(assignmentNode); 
             StoreResultNode storeNode = new StoreResultNode(graph, newVariable);
@@ -64,7 +64,7 @@ public class Inliner extends EmptyControlFlowVisitor {
         
         c = node.getG();
         if (!((c instanceof Variable) || (c instanceof FloatConstant))) {
-            Variable newVariable = createNewVariable();
+            Variable newVariable = createNewVariable("color", "g");
             AssignmentNode assignmentNode = new AssignmentNode(graph, newVariable, c);
             curNode.insertBefore(assignmentNode); 
             StoreResultNode storeNode = new StoreResultNode(graph, newVariable);
@@ -74,7 +74,7 @@ public class Inliner extends EmptyControlFlowVisitor {
 
         c = node.getB();
         if (!((c instanceof Variable) || (c instanceof FloatConstant))) {
-            Variable newVariable = createNewVariable();
+            Variable newVariable = createNewVariable("color", "b");
             AssignmentNode assignmentNode = new AssignmentNode(graph, newVariable, c);
             curNode.insertBefore(assignmentNode); 
             StoreResultNode storeNode = new StoreResultNode(graph, newVariable);
@@ -84,7 +84,7 @@ public class Inliner extends EmptyControlFlowVisitor {
         
         c = node.getAlpha();
         if (!((c instanceof Variable) || (c instanceof FloatConstant))) {
-            Variable newVariable = createNewVariable();
+            Variable newVariable = createNewVariable("color", "a");
             AssignmentNode assignmentNode = new AssignmentNode(graph, newVariable, c);
             curNode.insertBefore(assignmentNode); 
             StoreResultNode storeNode = new StoreResultNode(graph, newVariable);
@@ -94,9 +94,6 @@ public class Inliner extends EmptyControlFlowVisitor {
         
         currentColorNode = node;
         super.visit(node);
-    }
-
-    private Inliner() {
     }
 
     private SequentialNode curNode;
@@ -134,19 +131,15 @@ public class Inliner extends EmptyControlFlowVisitor {
     }
 
     private boolean delete;
-    
-//TODO chs (optional) macros are case sensitive, math functions not!
 
     private ReplaceVisitor replacer = new ReplaceVisitor() {
 
         @Override
-        public void visit(MacroCall node) {
-
-            String macroCallName = node.getName();
-            
+        public void visit(MacroCall macroExpr) {
+            String macroCallName = macroExpr.getName();
             //check if this macro call is a builtin function
             if ("coefficient".equals(macroCallName.toLowerCase())) {
-                result = new Relation(node.getArguments().get(0), node.getArguments().get(1), Relation.Type.COEFFICIENT);
+                result = new Relation(macroExpr.getArguments().get(0), macroExpr.getArguments().get(1), Relation.Type.COEFFICIENT);
                 return;
             }
 
@@ -154,23 +147,23 @@ public class Inliner extends EmptyControlFlowVisitor {
             for (MathFunction f: MathFunction.values()) {
                 if (f.name().toLowerCase().equals(macroCallName.toLowerCase())) { 
                     // it is a MathFunction
-                    result = new MathFunctionCall(node.getArguments().get(0), f);
+                    result = new MathFunctionCall(macroExpr.getArguments().get(0), f);
                     return;
                 }
             }
 
-            StringIntContainer container = new StringIntContainer(macroCallName, node.getArguments().size());
+            StringIntContainer container = new StringIntContainer(macroCallName, macroExpr.getArguments().size());
             if (!macros.containsKey(container)) {
-                System.err.println("Macro "+macroCallName+" is not defined!");
+                System.err.println("Macro "+macroCallName+"(with "+macroExpr.getArguments().size()+" parameters) is not defined!");
                 error = true; //escape endless loop!
                 result = null;
                 delete = true;
-                graph.unknownMacros.add(new UnknownMacroCall(node, currentColorNode));
+                graph.unknownMacros.add(new UnknownMacroCall(macroExpr, currentColorNode));
                 //make all non-variable arguments to variables
-                ArrayList<Expression> newArgs = new ArrayList<Expression>(node.getArguments().size());
-                for (Expression arg: node.getArguments()) {
+                ArrayList<Expression> newArgs = new ArrayList<Expression>(macroExpr.getArguments().size());
+                for (Expression arg: macroExpr.getArguments()) {
                     if (!((arg instanceof Variable) || (arg instanceof FloatConstant))) {
-                        Variable newVariable = createNewVariable();
+                        Variable newVariable = createNewVariable(macroCallName, "arg");
                         AssignmentNode assignmentNode = new AssignmentNode(graph, newVariable, arg);
                         curNode.insertBefore(assignmentNode); 
                         StoreResultNode storeNode = new StoreResultNode(graph, newVariable);
@@ -179,7 +172,7 @@ public class Inliner extends EmptyControlFlowVisitor {
                     } else 
                         newArgs.add(arg);
                 }
-                node.setArgs(newArgs);
+                macroExpr.setArgs(newArgs);
                 return;
             }
             Macro macro = macros.get(container);
@@ -187,7 +180,7 @@ public class Inliner extends EmptyControlFlowVisitor {
             HashMap<String, Expression> replaceMap = new HashMap<String, Expression>();
             //fill replaceMap with macro call arguments
             int index = 1;
-            for (Expression e: node.getArguments()) {
+            for (Expression e: macroExpr.getArguments()) {
                 replaceMap.put("_P("+index+")", e);
                 index++;
             }
@@ -198,8 +191,12 @@ public class Inliner extends EmptyControlFlowVisitor {
                     AssignmentNode assignmentNode = (AssignmentNode) sNode;
                     String name = assignmentNode.getVariable().getName();
 
-                    if (!replaceMap.containsKey(name)) 
-                        replaceMap.put(name, createNewVariable());
+                    if (!replaceMap.containsKey(name)) {
+                        Variable newVar = createNewVariable(macroCallName, name);
+                        replaceMap.put(name, newVar);
+                        if (graph.getOnlyEvaluateNodes().contains(assignmentNode))
+                            graph.addPragmaOnlyEvaluateVariable(newVar.getName()); 
+                    }
                 }
             }
 
@@ -215,24 +212,24 @@ public class Inliner extends EmptyControlFlowVisitor {
             Expression copiedReturnVal = macro.getReturnValue().copy();
             //replace variables in copiedReturnVal
             MacroVariablesDFGReplacer d = new MacroVariablesDFGReplacer(replaceMap);
-            copiedReturnVal.accept(d);
-            //
-            result = copiedReturnVal;
+            result = d.replace(copiedReturnVal);
         }
-
-
-
     };
 
-    private Variable createNewVariable() {
+    private Variable createNewVariable(String macroName, String originVarName) {
         VariableCollector collector = new VariableCollector();
         graph.accept(collector);
 
-        count++;
-        while (collector.getVariables().contains("macroUniqueName"+count))
-            count++;
+        String m = "macro_"+macroName+"_"+originVarName;
+        if (collector.getVariables().contains(m)) {
+            count = 1;
+            while (collector.getVariables().contains(m+count))
+                count++;
 
-        return new Variable("macroUniqueName"+count);
+            return new Variable(m+count);
+        } else {
+            return new Variable(m);
+        }
     }
 
 }

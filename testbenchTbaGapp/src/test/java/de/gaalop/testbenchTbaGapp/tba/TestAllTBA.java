@@ -7,8 +7,6 @@ import de.gaalop.CompilerFacade;
 import de.gaalop.GlobalSettingsStrategy;
 import de.gaalop.OptimizationStrategy;
 import de.gaalop.VisualCodeInserterStrategy;
-import de.gaalop.testbenchTbaGapp.dfg.SparseMvExpressionsTest;
-import de.gaalop.testbenchTbaGapp.dfg.SparseTestDummy;
 import de.gaalop.testbenchTbaGapp.tba.common.LocalVarsTest;
 import de.gaalop.testbenchTbaGapp.tba.gps.Point3D;
 import de.gaalop.testbenchTbaGapp.tba.circle.CircleNoVarsTest;
@@ -34,16 +32,76 @@ import static org.junit.Assert.*;
 public class TestAllTBA {
     
     @Test
-    public void testSparseMvExpressionsDummyTest() {
+    public void testNormalBase() {
+        
+        TBATestCase testCase = new NormalBaseTest();
+        
+        de.gaalop.globalSettings.Plugin g = new de.gaalop.globalSettings.Plugin();
+        g.outputToNormalBase = true;
+        
+        CodeParser parser                                       = new de.gaalop.clucalc.input.Plugin().createCodeParser();
+        GlobalSettingsStrategy globalSettingsStrategy           = g.createGlobalSettingsStrategy();
+        VisualCodeInserterStrategy visualCodeInserterStrategy   = new de.gaalop.visualCodeInserter.Plugin().createVisualCodeInserterStrategy();
+        AlgebraStrategy algebraStrategy                         = new de.gaalop.algebra.Plugin().createAlgebraStrategy();
+        OptimizationStrategy optimizationStrategy               = new de.gaalop.tba.Plugin().createOptimizationStrategy();
+        CodeGenerator codeGenerator                             = new TBATestCodeGeneratorPlugin(testCase.getInputValues()).createCodeGenerator();
+        
+        CompilerFacade facade = new CompilerFacade(
+                parser, 
+                globalSettingsStrategy, 
+                visualCodeInserterStrategy, 
+                algebraStrategy, 
+                optimizationStrategy, 
+                codeGenerator, 
+                testCase.getAlgebraName(), 
+                true, 
+                "");
+        
+        
         assertTrue(
-            TestDummySuite.compile(new SparseMvExpressionsTest())
+            TestDummy.compileWithCompilerFacade(testCase, facade)
+                );
+    } 
+    
+    @Test
+    public void testNoLineMacroTest() {
+        assertTrue(
+            TestDummy.compile(new NoLineMacroTest())
+        );
+    }
+    
+    @Test
+    public void testSingleLineMacroTest() {
+        assertTrue(
+            TestDummy.compile(new SingleLineMacroTest())
+        );
+    }
+    
+    @Test
+    public void testMultipleLineMacroTest() {
+        assertTrue(
+            TestDummy.compile(new MultipleLineMacroTest())
+        );
+    }
+    
+    @Test
+    public void testQuestionLineMacroTest() {
+        assertTrue(
+            TestDummy.compile(new QuestionLineMacroTest())
+        );
+    }
+    
+    @Test
+    public void testExklamationLineMacroTest() {
+        assertTrue(
+            TestDummy.compile(new ExklamationLineMacroTest())
         );
     }
 
     @Test
     public void testCoefficientTest() {
         assertTrue(
-            TestDummySuite.compile(new CoefficientTest())
+            TestDummy.compile(new CoefficientTest())
         );
     }
 
@@ -55,6 +113,12 @@ public class TestAllTBA {
                 );
     } 
     
+    @Test
+    public void testEmptyComments() {
+        assertTrue(
+            TestDummy.compile(new EmptyCommentTest())
+                );
+    } 
     
     @Test
     public void testNoLocalVars() {

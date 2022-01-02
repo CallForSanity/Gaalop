@@ -48,7 +48,7 @@ normalizel = {
            (coefficient(_P(1),(e0^e1)) *coefficient(_P(1),(e0^e1)))+
            (coefficient(_P(1),(e0^e2)) *coefficient(_P(1),(e0^e2)))+
            (coefficient(_P(1),(e0^e3))*coefficient(_P(1),(e0^e3)))
-
+           
 }
 
 

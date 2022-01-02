@@ -14,7 +14,7 @@ public class GAMethods {
      * @param a_p The first blade
      * @param b The second blade
      * @param bitCount The maximum number of bits
-     * @returns The sign which is yielded while reordering
+     * @return The sign which is yielded while reordering
      */
     public static float canonicalReorderingSign(Blade a_p, Blade b, int bitCount)
     {

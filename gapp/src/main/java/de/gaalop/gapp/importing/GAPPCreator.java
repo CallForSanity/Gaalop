@@ -10,7 +10,6 @@ import de.gaalop.gapp.Selector;
 import de.gaalop.gapp.Selectorset;
 import de.gaalop.gapp.SetVectorArgument;
 import de.gaalop.gapp.Valueset;
-import de.gaalop.gapp.Variableset;
 import de.gaalop.gapp.importing.parallelObjects.Constant;
 import de.gaalop.gapp.importing.parallelObjects.DotProduct;
 import de.gaalop.gapp.importing.parallelObjects.ExtCalculation;
@@ -80,7 +79,6 @@ public class GAPPCreator implements ParallelObjectVisitor {
 
     /**
      * Creates a new temporary GAPPMultivector and inserts a resetMv command in GAPP
-     * @param The number of entries in the new multivector
      * @return The new GAPPMultivector
      */
     public GAPPMultivector createMv() {

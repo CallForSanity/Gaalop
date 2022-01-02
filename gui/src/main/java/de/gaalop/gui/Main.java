@@ -3,7 +3,6 @@ package de.gaalop.gui;
 import de.gaalop.gui.util.PluginConfigurator;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.log4j.*;
 
 import com.sun.jna.Platform;
 import javax.swing.plaf.nimbus.NimbusLookAndFeel;
@@ -44,11 +43,7 @@ public class Main {
     }
 
     private static void startLog() throws IOException {
-        PatternLayout layout = new PatternLayout(LOG_PATTERN);
-        FileAppender appender = new FileAppender(layout, DEBUG_LOG, false);
-        BasicConfigurator.configure(appender);
-        Logger rootLogger = Logger.getRootLogger();
-        rootLogger.setLevel(Level.ALL);
+
     }
 
     public void run() {

@@ -15,6 +15,7 @@ import de.gaalop.StringList;
 import de.gaalop.dfg.Expression;
 import de.gaalop.dfg.MultivectorComponent;
 import de.gaalop.dfg.Variable;
+import java.util.Collection;
 
 /**
  * This class models a control dataflow graph.
@@ -56,7 +57,8 @@ public final class ControlFlowGraph {
 
 	/* store information about the pragmas */
 	private Set<String> pragmaOutputVariables = new HashSet<String>();
-	private Set<String> pragmaOnlyEvaluateVariables = new HashSet<String>();
+        private Set<String> pragmaOnlyEvaluateVariables = new HashSet<String>();
+        private LinkedList<AssignmentNode> onlyEvaluateNodes = new LinkedList<AssignmentNode>();
 
 	private HashMap<String, String> pragmaMinValue = new HashMap<String, String>();
 	private HashMap<String, String> pragmaMaxValue = new HashMap<String, String>();
@@ -64,6 +66,9 @@ public final class ControlFlowGraph {
         public boolean syntaxSpecified = false;
         public StringList syntaxInputs = new StringList();
         public StringList syntaxOutputs = new StringList();
+        
+		public LinkedList<String[]> drawSegments;
+        public LinkedList<String[]> drawTriangles;
         
         public boolean tbaOptimized = true;
         
@@ -98,17 +103,25 @@ public final class ControlFlowGraph {
 		return pragmaOutputVariables;
 	}
 
+        public LinkedList<AssignmentNode> getOnlyEvaluateNodes() {
+            return onlyEvaluateNodes;
+        }
+
         public Set<String> getPragmaOnlyEvaluateVariables() {
             return pragmaOnlyEvaluateVariables;
         }
-
+        
 	public void addPragmaOutputVariable(String name) {
 		pragmaOutputVariables.add(name);
 	}
-
-        public void addPragmaOnlyEvaluateVariable(String name) {
-		pragmaOnlyEvaluateVariables.add(name);
-	}
+        
+        public void addPragmaOnlyEvaluateNode(AssignmentNode node) {
+                onlyEvaluateNodes.add(node);
+        }
+        
+        public void addPragmaOnlyEvaluateVariable(String var) {
+            pragmaOnlyEvaluateVariables.add(var);
+        }
 
 	public void addScalarVariable(Variable tempVariable) {
 		scalarVariables.add(tempVariable);
@@ -307,11 +320,6 @@ public final class ControlFlowGraph {
 					+ " cannot be a local variable and an input variable at the same time.");
 		}
 
-//		if (name.contains("e")) {
-//			throw new IllegalArgumentException("Input variable " + variable
-//					+ " contains 'e' which is not supported by Maple.");
-//		}
-
 		inputVariables.add(variable);
 	}
 
@@ -380,12 +388,14 @@ public final class ControlFlowGraph {
 	}
         
         /**
-         * Returns the blade string representation of a given multivector component.
+         * Returns the blade string representation of a given multivector component, respecting the output base (natural or zero-inf).
          * @param multivectorComponent
          * @return 
          */
         public String getBladeString(MultivectorComponent multivectorComponent) {
-            return getAlgebraDefinitionFile().getBladeString(multivectorComponent.getBladeIndex());
+            return (globalSettings.outputToNormalBase) 
+                ? getAlgebraDefinitionFile().getBladeStringNormalBase(multivectorComponent.getBladeIndex())
+                : getAlgebraDefinitionFile().getBladeString(multivectorComponent.getBladeIndex());
         }
 
 	private static class Printer implements ControlFlowVisitor {

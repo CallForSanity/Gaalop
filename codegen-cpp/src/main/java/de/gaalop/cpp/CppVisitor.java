@@ -214,8 +214,6 @@ public class CppVisitor extends DefaultCodeGeneratorVisitor {
     @Override
     public void visit(FloatConstant floatConstant) {
         code.append(Double.toString(floatConstant.getValue()));
-        if (variableType.equals("double"))
-            code.append('d');
     }
 
     @Override

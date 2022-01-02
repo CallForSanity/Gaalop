@@ -23,6 +23,7 @@ public final class Addition extends BinaryOperation {
      * @return The string "<code>left</code> + <code>right</code>", where left and right are the results of the toString
      * methods of the left and right operand.
      */
+    @Override
     public String toString() {
         return bracketComposite(getLeft()) + " + " + bracketComposite(getRight());
     }

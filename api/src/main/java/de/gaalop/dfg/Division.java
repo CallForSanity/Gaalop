@@ -23,6 +23,7 @@ public final class Division extends BinaryOperation {
      * @return The string "left / right" where left and right are the string returned by the toString method of the
      *         left and right operands.
      */
+    @Override
     public String toString() {
         return bracketComposite(getLeft()) + " / " + bracketComposite(getRight());
     }

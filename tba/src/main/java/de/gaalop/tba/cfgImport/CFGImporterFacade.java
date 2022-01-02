@@ -1,12 +1,12 @@
 package de.gaalop.tba.cfgImport;
 
 import de.gaalop.OptimizationException;
-import de.gaalop.LoggingListener;
 import de.gaalop.LoggingListenerGroup;
 import de.gaalop.algebra.UpdateLocalVariableSet;
 import de.gaalop.api.cfg.RoundingCFGVisitor;
 import de.gaalop.cfg.ControlFlowGraph;
 import de.gaalop.dfg.Variable;
+import de.gaalop.tba.baseChange.BaseChanger;
 import de.gaalop.tba.Plugin;
 import de.gaalop.tba.UseAlgebra;
 import de.gaalop.tba.cfgImport.optimization.OptConstantPropagation;
@@ -29,15 +29,9 @@ public class CFGImporterFacade {
     private UseAlgebra usedAlgebra;
     private LoggingListenerGroup listeners;
 
-    // Use HashMap Implementation
-    // by Adrian Kiesthardt
-    private boolean useSparseExpressions;
-
     public CFGImporterFacade(Plugin plugin) {
         this.plugin = plugin;
         this.listeners = new LoggingListenerGroup();
-
-        this.useSparseExpressions = false;
 
         optimizations = new LinkedList<OptimizationStrategyWithModifyFlag>();
 
@@ -50,11 +44,6 @@ public class CFGImporterFacade {
         if (plugin.isOptOneExpressionRemoval()) {
             optimizations.add(new OptOneExpressionsRemoval());
         }
-
-        if(plugin.useSparseExpressions) {
-            this.useSparseExpressions = true;
-        }
-
     }
     
     public void setProgressListeners(LoggingListenerGroup progressListeners) {
@@ -100,8 +89,11 @@ public class CFGImporterFacade {
 
 
         CFGImporter builder = new CFGImporter(usedAlgebra, plugin.isScalarFunctions(), graph.getAlgebraDefinitionFile());
-        builder.useSparseExpressions = this.useSparseExpressions;
         graph.accept(builder);
+        
+        if (graph.globalSettings.outputToNormalBase) {
+            BaseChanger.changeToNormalBase(graph);
+        }
 
         boolean repeat;
         do {

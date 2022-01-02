@@ -1,7 +1,5 @@
 package de.gaalop.productComputer;
 
-import java.util.HashMap;
-
 /**
  * Defines an interface for calculating a product of two blades
  * @author Christian Steinmetz

@@ -15,11 +15,12 @@
 
 	<!-- front end -->
         <module>clucalc</module>
-
+        
         <module>globalSettings</module>
 
         <module>visualCodeInserter</module>
         <module>visualCodeInserter2d</module>
+        <module>ganjaVisualCodeInserter</module>
 
         <!-- algebra -->
         <module>algebra</module>
@@ -44,11 +45,12 @@
         <module>gaalet</module>
         <module>codegen-vis2d</module>
         <module>gappDebugger</module>
+        <module>codegen-ganja</module>
         <module>codegen-matlab</module>
+        <module>codegen-python</module>
         
 	<!-- interface -->
         <module>starter</module>
-        <module>setup</module>
         <module>cli</module>
         <module>gui</module>
 
@@ -70,8 +72,8 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
                     <configuration>
-                        <source>1.7</source>
-                        <target>1.7</target>
+                        <source>1.8</source>
+                        <target>1.8</target>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -107,29 +109,7 @@
             <artifactId>commons-logging</artifactId>
             <version>1.2</version>
         </dependency>
-        <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>1.2.17</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.sun.jdmk</groupId>
-                    <artifactId>jmxtools</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.sun.jmx</groupId>
-                    <artifactId>jmxri</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>javax.jms</groupId>
-                    <artifactId>jms</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>javax.mail</groupId>
-                    <artifactId>mail</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
+        
     </dependencies>
 
 

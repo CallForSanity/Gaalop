@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package de.gaalop.clucalc.input;
 
 import de.gaalop.cfg.ControlFlowGraph;
@@ -11,7 +6,6 @@ import java.util.Collections;
 import java.util.ArrayList;
 import de.gaalop.cfg.*;
 import de.gaalop.dfg.*;
-import static de.gaalop.dfg.ExpressionFactory.*;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -49,8 +43,9 @@ public class CluVisitor extends CluCalcBaseVisitor<Object> {
 
     @Override
     public Object visitEvaluateAssignmentCase(CluCalcParser.EvaluateAssignmentCaseContext ctx) {
-        graph.getPragmaOnlyEvaluateVariables().add(((Variable) visit(ctx.val.var)).getName());
-        return visitAssignment(ctx.val);
+        AssignmentNode node = (AssignmentNode) visitAssignment(ctx.val);
+        graph.addPragmaOnlyEvaluateNode(node);
+        return node;
     }
 
     @Override
@@ -115,8 +110,9 @@ public class CluVisitor extends CluCalcBaseVisitor<Object> {
         Variable variable = (Variable) visit(ctx.var);
         Expression expression = (Expression) visit(ctx.expr);
         if (inMacro) {
-            macroNodes.add(new AssignmentNode(graph, variable, expression));
-            return null;
+            AssignmentNode node = new AssignmentNode(graph, variable, expression);
+            macroNodes.add(node);
+            return node;
         } else
             return graphBuilder.handleAssignment(variable, expression);
     }
@@ -141,6 +137,12 @@ public class CluVisitor extends CluCalcBaseVisitor<Object> {
         return graphBuilder.processFunction("*", Collections.singletonList((Expression) visit(ctx.operand)));
     }
 
+    @Override
+    public Object visitPRAGMARANGE(CluCalcParser.PRAGMARANGEContext ctx) {
+        graphBuilder.addPragmaMinMaxValues(ctx.var.getText(), ctx.min.getText(), ctx.max.getText());
+        return null;
+    }
+    
     @Override
     public Object visitSingleArgument(CluCalcParser.SingleArgumentContext ctx) {
         LinkedList<Expression> result = new LinkedList<Expression>();
@@ -273,185 +275,4 @@ public class CluVisitor extends CluCalcBaseVisitor<Object> {
         LinkedList<Expression> args = (ctx.args != null) ? (LinkedList<Expression>) visit(ctx.args) : new LinkedList<Expression>();
         return new Negation(graphBuilder.processFunction(ctx.name.getText(), args));
     }
-    
-
 }
-
-
-/*
-
-
-statement returns [ArrayList<SequentialNode> nodes]
-	@init { $nodes = new ArrayList<SequentialNode>(); }
-	// Print something to the console
-	
-	
-	| IPNS { graphBuilder.handleNullSpace(NullSpace.IPNS); }
-	
-	| OPNS { graphBuilder.handleNullSpace(NullSpace.OPNS); }
-	
-	// Displayed assignment (ignore the display part)
-	| ^(COLON assignment) { $nodes.add(graphBuilder.handleAssignment($assignment.variable, $assignment.value));
-		ExpressionStatement ex = graphBuilder.processExpressionStatement($assignment.variable);
-		$nodes.add(ex);
-		graphBuilder.addVisualizerExpression(ex);
-	}
-	
-	| ^(COLON id=variableOrConstant) { 
-                ExpressionStatement ex = graphBuilder.processExpressionStatement($id.result);
-		$nodes.add(ex);
-		graphBuilder.addVisualizerExpression(ex);            
-        }
-	
-	// Stand-alone assignment
-	| assignment { $nodes.add(graphBuilder.handleAssignment($assignment.variable, $assignment.value)); }
-	
-  | macro
-
-  | pragma
-  
-  | slider
-  
-  | ^(COLOR arguments) {
-      $nodes.add(graphBuilder.handleColor($arguments.args));
-    }
-    
-  | ^(COLOR name=(BLACK | BLUE | CYAN | GREEN | MAGENTA | ORANGE | RED | WHITE | YELLOW)) {
-      $nodes.add(graphBuilder.handleColor($name.text));  
-  }
-    
-  | ^(BGCOLOR arguments) {
-      graphBuilder.handleBGColor($arguments.args);
-    }
- 
-	// Some single-line expression (without assignment), e.g. macro call 
-	| expression {
-	  Expression e = $expression.result;
-	  if (e != null) { // null e.g. for procedure calls like DefVarsN3()
-	    $nodes.add(graphBuilder.processExpressionStatement(e)); 
-	  } 	  
-	}
-	;
-	
-macro
-  @init { 
-    if (inMacro) {
-      throw new ParserError("A macro may only be defined in global scope.");
-    }
-    graphBuilder.beginNewScope(); 
-    inMacro = true;
-  }
-  @after { 
-    graphBuilder.endNewScope();
-    inMacro = false;
-  }
-  : ^(MACRO id=IDENTIFIER { graphBuilder.addMacroName($id.text); } lst=statement_list e=return_value?) {
-    graphBuilder.handleMacroDefinition($id.text, $lst.args, $e.result);
-  }
-  ;
-  
-return_value returns [Expression result]
-  : ^(RETURN exp=expression) { $result = $exp.result; }
-  ;
-
-pragma
-  :  PRAGMA RANGE_LITERAL min=float_literal LESS_OR_EQUAL varname=IDENTIFIER LESS_OR_EQUAL max=float_literal
-     {  graphBuilder.addPragmaMinMaxValues($varname.text, min, max);}
-  ;
-
-assignment returns [Variable variable, Expression value]
-	: ^(EQUALS l=variable r=expression) {
-			$variable = $l.result;
-			$value = $r.result;
-	}
-	;
-
-
-variable returns [Variable result]
-	: variableOrConstant {
-		if ( !($variableOrConstant.result instanceof Variable) ) {
-			throw new RecognitionException(input);
-		}
-		$result = (Variable)$variableOrConstant.result;
-	}
-	;
-	
-if_statement returns [IfThenElseNode node]
-  @init { inIfBlock++; }
-  @after { inIfBlock--; }
-  : ^(IF condition=expression then_part=statement else_part=else_statement?) {
-    $node = graphBuilder.handleIfStatement($condition.result, $then_part.nodes, $else_part.nodes);
-  }
-  ;
-  
-else_statement returns [ArrayList<SequentialNode> nodes]
-  @init { 
-    graphBuilder.beginNewScope();
-    $nodes = new ArrayList<SequentialNode>(); 
-  }
-  @after { graphBuilder.endNewScope(); }
-  : ^(ELSE block) { $nodes = $block.nodes; }
-  | ^(ELSEIF if_statement) { 
-    $if_statement.node.setElseIf(true);
-    $nodes.add($if_statement.node); 
-  }
-  ;
-  
-loop returns [LoopNode node]
-  : ^(LOOP stmt=statement number=DECIMAL_LITERAL?) {
-      $node = graphBuilder.handleLoop($stmt.nodes, $number.text); 
-   }
-  ;
-  
-block returns [ArrayList<SequentialNode> nodes]
-  @init { 
-    graphBuilder.beginNewScope();
-    $nodes = new ArrayList<SequentialNode>(); 
-  }
-  @after { graphBuilder.endNewScope(); }
-  : ^(BLOCK stmts=statement_list) {
-     $nodes.addAll($stmts.args);
-  }
-  ;
-  
-statement_list returns [ArrayList<SequentialNode> args] 
-  @init { $args = new ArrayList<SequentialNode>(); }
-  : (arg=statement { $args.addAll($arg.nodes); })*
-  ;
-  
-slider
-  : ^(SLIDER var=variable args=slider_args) {
-      graphBuilder.handleSlider($var.result, $args.label, $args.min, $args.max, $args.step, $args.init);
-  }
-  ;
-  
-fragment slider_args returns [String label, double min, double max, double step, double init]
-  : id=STRING_LITERAL COMMA mi=constant COMMA ma=constant COMMA st=constant COMMA in=constant {
-      $label = $id.text.replaceAll("\"", "");
-      $min = $mi.value;
-      $max = $ma.value;
-      $step = $st.value;
-      $init = $in.value;
-  }
-  ;
-  
-fragment constant returns [double value]
-  : decimal_literal { $value = Double.parseDouble($decimal_literal.result); }
-  | float_literal { $value = Double.parseDouble($float_literal.result); }
-  ;
-  
-
-arguments returns [ArrayList<Expression> args] 
-	@init { $args = new ArrayList<Expression>(); }
-	: (arg=expression { $args.add($arg.result); })*
-	;
-
-float_literal returns [String result]
-  : sign=MINUS? val=FLOATING_POINT_LITERAL  {$result = new String((sign!=null?$sign.text:"") + $val.text);}
-  ;
-
-decimal_literal returns [String result]
-  : sign=MINUS? val=DECIMAL_LITERAL  {$result = new String((sign!=null?$sign.text:"") + $val.text);}
-  ;
-
-*/

@@ -5,7 +5,6 @@ import de.gaalop.ConfigurationProperty.Type;
 import de.gaalop.Notifications;
 import de.gaalop.OptimizationStrategy;
 import de.gaalop.OptimizationStrategyPlugin;
-import de.gaalop.tba.cfgImport.optimization.maxima.ProcessBuilderMaximaConnection;
 import java.awt.Image;
 import java.util.Observable;
 

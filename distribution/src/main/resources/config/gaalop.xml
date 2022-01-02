@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<comment>Gaalop Configuration File</comment>
+<entry key="de.gaalop.algebra.Plugin.usePrecalulatedTables">true</entry>
+<entry key="de.gaalop.algebra.Plugin.userMacroFilePath"/>
+<entry key="de.gaalop.algebra.Plugin.additionalBaseDirectory"/>
+<entry key="de.gaalop.tba.Plugin.optUnusedAssignments">true</entry>
+<entry key="de.gaalop.tba.Plugin.optConstantPropagation">true</entry>
+<entry key="de.gaalop.tba.Plugin.optOneExpressionRemoval">true</entry>
+<entry key="de.gaalop.tba.Plugin.optInserting">true</entry>
+<entry key="de.gaalop.clucalc.output.Plugin.suffix">_opt</entry>
+<entry key="de.gaalop.cpp.Plugin.standalone">true</entry>
+<entry key="de.gaalop.julia.Plugin.forGrassmann">true</entry>
+<entry key="de.gaalop.gaalet.output.Plugin.useNameTable">false</entry>
+<entry key="de.gaalop.visualizer.Plugin.lwJglNativePath">nativeLibraries</entry>
+<entry key="de.gaalop.visualizer.Plugin.zeroFindingMethod">Ray method</entry>
+<entry key="lastUsedAlgebra">cga</entry>
+<entry key="lastUsedAlgebraRessource">true</entry>
+<entry key="lastUsedVisualCodeInserter">de.gaalop.visualCodeInserter.Plugin</entry>
+<entry key="lastUsedOptimization">de.gaalop.tba.Plugin</entry>
+<entry key="lastUsedGenerator">de.gaalop.cpp.Plugin</entry>
+</properties>

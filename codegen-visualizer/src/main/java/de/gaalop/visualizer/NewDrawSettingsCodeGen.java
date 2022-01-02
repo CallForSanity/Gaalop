@@ -24,24 +24,18 @@ import de.gaalop.visualizer.gui.SettingsPanel;
 import de.gaalop.visualizer.gui.VisiblePanel;
 import de.gaalop.visualizer.zerofinding.DiscreteCubeMethod;
 import de.gaalop.visualizer.zerofinding.GradientMethod;
-import de.gaalop.visualizer.zerofinding.PrepareZerofinder;
 import de.gaalop.visualizer.zerofinding.RayMethod;
 import de.gaalop.visualizer.zerofinding.ZeroFinder;
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.MenuItem;
-import java.awt.PopupMenu;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.Collections;
 import java.util.HashMap;
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
@@ -100,6 +94,7 @@ public class NewDrawSettingsCodeGen extends DrawSettings implements CodeGenerato
             }
         };
         
+        /*
         jButton_LoadPointCloud.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -118,6 +113,7 @@ public class NewDrawSettingsCodeGen extends DrawSettings implements CodeGenerato
                 }
             }
         });
+        */
         
         jComboBox_ZerofindingMethod.addActionListener(new ActionListener() {
             @Override
