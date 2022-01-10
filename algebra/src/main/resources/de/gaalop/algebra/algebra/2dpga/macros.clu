@@ -15,10 +15,10 @@ createPoint = {
 Dual = {
     coefficient(_P(1),1)*(e0^e1^e2)
     + coefficient(_P(1),e0)*(e1^e2)
-    + coefficient(_P(1),e1)*(e0^e2)
+    + coefficient(_P(1),e1)*(e2^e0)
     + coefficient(_P(1),e2)*(e0^e1)
     + coefficient(_P(1),e0^e1)*(e2)
-    + coefficient(_P(1),e0^e2)*(e1)
+    + coefficient(_P(1),e2^e0)*(e1)
     + coefficient(_P(1),e1^e2)*(e0)
     + coefficient(_P(1),e0^e1^e2)*(1)
 }
