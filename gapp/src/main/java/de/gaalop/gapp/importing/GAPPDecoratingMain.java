@@ -62,7 +62,7 @@ public class GAPPDecoratingMain {
         plugin.setInvertTransformation(true);
         plugin.setScalarFunctions(scalarFunctions);
         plugin.setOptInserting(graph.globalSettings.isOptMaxima());
-        plugin.setMaximaExpand(graph.globalSettings.isOptMaxima());
+        plugin.setMaximaExpand(this.plugin.isMaximaExpand());
         
         CFGImporterFacade facade = new CFGImporterFacade(plugin);
         facade.importGraph(graph);

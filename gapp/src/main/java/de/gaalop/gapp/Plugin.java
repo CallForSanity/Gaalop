@@ -17,6 +17,16 @@ public class Plugin extends Observable implements OptimizationStrategyPlugin {
     @ConfigurationProperty(type = Type.BOOLEAN)
     public boolean useScalarFunctions = true;
     
+    @ConfigurationProperty(type = Type.BOOLEAN)
+    public boolean maximaExpand = false;
+
+    public boolean isMaximaExpand() {
+        return maximaExpand;
+    }
+
+    public void setMaximaExpand(boolean maximaExpand) {
+        this.maximaExpand = maximaExpand;
+    }
 
     public boolean isUseScalarFunctions() {
         return useScalarFunctions;
