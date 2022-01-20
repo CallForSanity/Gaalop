@@ -25,6 +25,7 @@ public class LatexVisitor extends DefaultCodeGeneratorVisitor {
 
     @Override
     public void visit(StartNode node) {
+        graph = node.getGraph();
 
         code.append("\\begin{align*}\n");
 
@@ -36,6 +37,12 @@ public class LatexVisitor extends DefaultCodeGeneratorVisitor {
         node.getVariable().accept(this);
         code.append("&= ");
         node.getValue().accept(this);
+        
+        if (node.getVariable() instanceof MultivectorComponent) {
+            code.append(" // ");
+            code.append(graph.getBladeString((MultivectorComponent) (node.getVariable())).replaceAll("\\^", "\\\\wedge"));
+        }
+        
         code.append("\\\\\n");
 
         node.getSuccessor().accept(this);
@@ -50,9 +57,11 @@ public class LatexVisitor extends DefaultCodeGeneratorVisitor {
 
     @Override
     public void visit(StoreResultNode node) {
+        /*
         code.append('?');
         code.append(node.getValue());
         code.append("\\\\\n");
+        */
 
         node.getSuccessor().accept(this);
     }
