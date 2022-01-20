@@ -41,6 +41,7 @@ public class LatexVisitor extends DefaultCodeGeneratorVisitor {
         if (node.getVariable() instanceof MultivectorComponent) {
             code.append(" // ");
             code.append(graph.getBladeString((MultivectorComponent) (node.getVariable())).replaceAll("\\^", "\\\\wedge"));
+            code.append(" ");
         }
         
         code.append("\\\\\n");
