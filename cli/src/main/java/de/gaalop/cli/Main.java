@@ -83,6 +83,9 @@ public class Main {
   @Option(name = "--specific",  aliases = { "--spec" }, required = false, usage = "Sets specific configuration properties for plugins by a comma separated list. Syntax {Plugin1-Classname}:{Plugin1-Optionname}={Plugin1-Value},{Plugin2-Classname}:{Plugin2-Optionname}={Plugin2-Value}, ... . Defaults to ''.")
   private String specificOptions = "";
   
+  @Option(name = "--gcse", required = false, usage = "Enables GCSE (Global Common Subexpression Elimination). Defaults to false.")
+  private boolean useGCSE = false;
+  
   private LinkedList<SpecificOption> specificOptionsList;
   
   /**
@@ -177,6 +180,9 @@ public class Main {
 
   private CompilerFacade createCompiler() {
     specificOptionsList = SpecificOption.parseSpecificOptions(specificOptions);
+    
+    if (useGCSE)
+        specificOptionsList.add(new SpecificOption("de.gaalop.tba.Plugin", "optGCSE", "true"));
       
     if (!maximaPath.trim().isEmpty()) { 
         specificOptionsList.add(new SpecificOption("de.gaalop.globalSettings.Plugin", "optMaxima", "true"));

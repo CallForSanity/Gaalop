@@ -4,6 +4,7 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.9)
 OPTION(GPC_WITH_MAXIMA "whether to use the maxima in tba plugin plugin or not." OFF)
 OPTION(GPC_USE_GAPP "whether to use Geometric Algebra Parallelism Programs (GAPP) language or not." OFF)
 OPTION(GPC_USE_DOUBLE "whether to use double precision floating point format or not." OFF)
+OPTION(GPC_USE_GCSE "whether to use global common subexpression elimination or not." OFF)
 
 SET(GPC_ALGEBRA_NAME "cga" CACHE STRING "algebra name")
 SET(GPC_ALGEBRA_BASEDIRECTORY "" CACHE STRING "algebra base directory")
@@ -39,6 +40,9 @@ IF(GPC_USE_DOUBLE)
 ENDIF(GPC_USE_DOUBLE)
 
 # define optimizer args
+IF(GPC_USE_GCSE)
+	SET(GPC_COMMON_ARGS ${GPC_COMMON_ARGS} --gcse)
+ENDIF(GPC_USE_GCSE)
 
 IF(GPC_WITH_MAXIMA)
 	SET(GPC_COMMON_ARGS ${GPC_COMMON_ARGS} -m "${MAXIMA_BIN}")
