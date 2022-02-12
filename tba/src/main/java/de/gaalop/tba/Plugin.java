@@ -28,9 +28,13 @@ public class Plugin extends Observable implements OptimizationStrategyPlugin {
     public boolean optUnusedAssignments = true;
     @ConfigurationProperty(type = Type.BOOLEAN)
     public boolean optInserting = true;
+    @ConfigurationProperty(type = Type.BOOLEAN)
+    public boolean optGCSE = false;
     public boolean invertTransformation = true;
     public boolean scalarFunctions = true;
     public boolean maximaExpand = false;
+    
+    public boolean createVariablesInGCSE = true;
     
     @ConfigurationProperty(type = Type.BOOLEAN)
     public boolean doRoundingAfterOptimization = false;
@@ -64,6 +68,14 @@ public class Plugin extends Observable implements OptimizationStrategyPlugin {
 
     public boolean isMaximaExpand() {
         return maximaExpand;
+    }
+
+    public boolean isOptGCSE() {
+        return optGCSE;
+    }
+
+    public void setOptGCSE(boolean optGCSE) {
+        this.optGCSE = optGCSE;
     }
 
     public void setOptConstantPropagation(boolean optConstantPropagation) {

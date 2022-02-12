@@ -1,5 +1,6 @@
 package de.gaalop.tba.cfgImport;
 
+import de.gaalop.tba.cfgImport.optimization.OptGCSE;
 import de.gaalop.OptimizationException;
 import de.gaalop.LoggingListenerGroup;
 import de.gaalop.algebra.UpdateLocalVariableSet;
@@ -115,6 +116,10 @@ public class CFGImporterFacade {
                     repeat = repeat || curOpt.transform(graph, usedAlgebra, listeners);
                 }
             } while (repeat);
+        }
+        
+        if (plugin.isOptGCSE()) {
+            new OptGCSE(graph.globalSettings.isOptMaxima(), graph.globalSettings.getMaximaCommand(), plugin.createVariablesInGCSE).transform(graph, usedAlgebra, listeners);
         }
 
         // update variable sets

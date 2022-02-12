@@ -126,6 +126,10 @@ public final class ControlFlowGraph {
 	public void addScalarVariable(Variable tempVariable) {
 		scalarVariables.add(tempVariable);
 	}
+
+	public void removeScalarVariable(Variable var) {
+		scalarVariables.remove(var);
+	}
 	
 	public void removeScalarVariable(String name) {
 		scalarVariables.remove(new Variable(name));
