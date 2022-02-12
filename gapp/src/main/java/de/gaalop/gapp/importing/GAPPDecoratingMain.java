@@ -63,6 +63,8 @@ public class GAPPDecoratingMain {
         plugin.setScalarFunctions(scalarFunctions);
         plugin.setOptInserting(graph.globalSettings.isOptMaxima());
         plugin.setMaximaExpand(this.plugin.isMaximaExpand());
+        plugin.setOptGCSE(graph.globalSettings.isOptMaxima());
+        plugin.createVariablesInGCSE = false;
         
         CFGImporterFacade facade = new CFGImporterFacade(plugin);
         facade.importGraph(graph);

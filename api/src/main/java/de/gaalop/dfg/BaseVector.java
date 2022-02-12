@@ -95,10 +95,7 @@ public final class BaseVector extends Expression {
 
 		BaseVector that = (BaseVector) o;
 
-		if (index != that.index)
-			return false;
-
-		return true;
+		return index.equals(that.index);
 	}
 
 	@Override

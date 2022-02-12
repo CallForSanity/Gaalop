@@ -241,5 +241,17 @@ public class TestAllTBA {
                 );
     }
     
+    @Test
+    public void testGCSETest() {
+        assertTrue(
+            TestDummy.compileGCSE(new GCSETest(), true)
+        );
+    }
     
+    @Test
+    public void testNonGCSETest() {
+        assertTrue(
+            TestDummy.compileGCSE(new GCSETest(), false)
+        );
+    }
 }
