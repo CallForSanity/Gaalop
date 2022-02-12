@@ -29,7 +29,7 @@ public class Plugin extends Observable implements OptimizationStrategyPlugin {
     @ConfigurationProperty(type = Type.BOOLEAN)
     public boolean optInserting = true;
     @ConfigurationProperty(type = Type.BOOLEAN)
-    public boolean optGCSE = true;
+    public boolean optGCSE = false;
     public boolean invertTransformation = true;
     public boolean scalarFunctions = true;
     public boolean maximaExpand = false;
