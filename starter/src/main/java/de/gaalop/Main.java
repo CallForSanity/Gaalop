@@ -1,14 +1,13 @@
 package de.gaalop;
 
-import java.io.File;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
+import java.io.IOException;
+import java.lang.reflect.*;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.ArrayList;
-import java.util.List;
+import java.nio.file.*;
+import java.util.stream.Stream;
 
 public class Main {
 
@@ -17,14 +16,12 @@ public class Main {
     /**
      * Starts Gaalop.
      *
-     * @param args
+     * @param args Main arguments
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException, URISyntaxException {
         // Create root class loader.
-        File libFolder = new File(LIB_FOLDER);
-        URL[] urls = getJarList(libFolder);
-        ClassLoader loader = new URLClassLoader(urls);
-        
+        ClassLoader pluginLoader = getPluginLoader();
+
         String concatenatedArgs = String.join(" ", args);
         
         String mainClassName = "de.gaalop.gui.Main";
@@ -32,7 +29,7 @@ public class Main {
             mainClassName = "de.gaalop.cli.Main";
         
         try {
-            Class<?> mainClass = Class.forName(mainClassName, false, loader);
+            Class<?> mainClass = Class.forName(mainClassName, false, pluginLoader);
 
             Method mainMethod = mainClass.getMethod("main", String[].class);
 
@@ -62,50 +59,61 @@ public class Main {
         }
     }
 
-    /**
-     * Compile a list of URLs for all the JAR files in the given folder.
-     *
-     * @param libFolder
-     * @return
-     */
-    private static URL[] getJarList(File libFolder) {
-        List<URL> urls = new ArrayList<URL>();
+    private static ClassLoader getPluginLoader() throws URISyntaxException, IOException {
+        Path starterDir = arg0().getParent();
+        URL[] urls = Stream.concat(
+                getJarFiles(starterDir.resolve(LIB_FOLDER)),
+                getJarFiles(Paths.get(LIB_FOLDER)))
+            .peek(u ->
+                System.out.println("Loading plugin: " + u))
+            .toArray(URL[]::new);
+        return new URLClassLoader(urls);
+    }
 
-        if (!libFolder.isDirectory()) {
-            throw new RuntimeException(libFolder.getAbsolutePath() + " is not a directory.");
-        }
-
-        for (File file : libFolder.listFiles()) {
-            if (isJar(file)) {
-                URL url = getFileUrl(file);
-                urls.add(url);
-            }
-        }
-
-        // Convert to array
-        URL[] result = new URL[urls.size()];
-        return urls.toArray(result);
+    private static Path arg0() throws URISyntaxException {
+        return Paths.get(
+            Main.class
+            .getProtectionDomain()
+            .getCodeSource()
+            . getLocation()
+            .toURI());
     }
 
     /**
-     * Get the URL for a given file.
+     * Compile a list of URLs for all the JAR files in the given folder.
      *
-     * @param file
-     * @return
+     * @param libFolder Folder to search jars in
+     * @return Stream of jar files
      */
-    private static URL getFileUrl(File file) {
+    private static Stream<URL> getJarFiles(Path libFolder) throws IOException {
+        if (!Files.isDirectory(libFolder)) {
+            return Stream.of();
+        }
+
+        return Files.list(libFolder)
+            .filter(Main::isJar)
+            .map(Main::getFileUrl);
+    }
+
+    /**
+     * Get the URL for a given {@link Path}.
+     *
+     * @param path Path to convert
+     * @return URL for the given path
+     */
+    private static URL getFileUrl(Path path) {
         try {
-            return file.toURI().toURL();
+            return path.toUri().toURL();
         } catch (MalformedURLException e) {
-            throw new RuntimeException("Filename cannot be converted to URL: " + file.getAbsolutePath(), e);
+            throw new RuntimeException("Filename cannot be converted to URL: " + path, e);
         }
     }
 
     /**
      * Returns true if the given File is a JAR file.
      */
-    private static boolean isJar(File file) {
-        return file.getName().toLowerCase().endsWith(".jar");
+    private static boolean isJar(Path file) {
+        return file.toString().toLowerCase().endsWith(".jar");
     }
 
 }
