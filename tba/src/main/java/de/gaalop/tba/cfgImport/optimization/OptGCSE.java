@@ -131,6 +131,14 @@ public class OptGCSE implements OptimizationStrategyWithModifyFlag {
                 for (HashExpression occurence: hashExpressions) {
                     Expression replacement = (occurence.isNegated) ? new Negation(gcseTempVar.copy()) : gcseTempVar.copy();
                     OccurenceReplacer.replaceOccurences(occurence.expression, replacement, occurence.node);
+                    
+                    // if node equals to value, remove the node!
+                    if (occurence.node instanceof AssignmentNode) {
+                        AssignmentNode occNode = (AssignmentNode) (occurence.node);
+                        if (occNode.getVariable().equals(occNode.getValue())) {
+                            graph.removeNode(occNode);
+                        }
+                    }
                 }
             }
         } catch (IOException ex) {
