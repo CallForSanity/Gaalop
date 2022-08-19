@@ -7,6 +7,7 @@ import de.gaalop.CompilerFacade;
 import de.gaalop.GlobalSettingsStrategy;
 import de.gaalop.OptimizationStrategy;
 import de.gaalop.VisualCodeInserterStrategy;
+import de.gaalop.cfg.ControlFlowGraph;
 import de.gaalop.testbenchTbaGapp.tba.common.LocalVarsTest;
 import de.gaalop.testbenchTbaGapp.tba.gps.Point3D;
 import de.gaalop.testbenchTbaGapp.tba.circle.CircleNoVarsTest;
@@ -245,6 +246,13 @@ public class TestAllTBA {
     public void testGCSETest() {
         assertTrue(
             TestDummy.compileGCSE(new GCSETest(), true)
+        );
+    }
+    
+    @Test
+    public void testGCSESelfAssignmentTest() {
+        assertTrue(
+            TestDummy.compileToGCSEGraphTestable(new GCSESelfAssignmentTest(), true, new GCSESelfAssignmentTest())
         );
     }
     
