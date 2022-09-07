@@ -136,7 +136,7 @@ public abstract class GanjaVisitor implements ControlFlowVisitor {
             //inputParametersStrList.add(var);
             //argsList.add("\"" + var + "= \"");
 
-			if(!(var.equals(varTimeName) || !var.equals(timeStartName) || !var.equals(currentTimeName)))
+			if(!(var.equals(varTimeName) || var.equals(timeStartName) || var.equals(currentTimeName)))
 			{
 				inputParametersStrList.add(var);
 				argsList.add("\"" + var + "= \"");
