@@ -43,6 +43,10 @@ public abstract class GanjaVisitor implements ControlFlowVisitor {
 
     protected int indentation = 0;
 
+	protected String varTimeName = "TIME"; //variable for the user to use in gaalop
+	protected String timeStartName = "__sysTimeStart"; //internal name, should never be used in a gaalopscript
+	protected String currentTimeName = "__currSysTime"; //internal name, should never be used in a gaalopscript
+
     protected BlockStringBuilder code = new BlockStringBuilder();
 
     public GanjaVisitor(AlgebraProperties algebraProperties) {
@@ -100,6 +104,8 @@ public abstract class GanjaVisitor implements ControlFlowVisitor {
         StringList inputParametersStrList = addFunctionToSliders();
         
         code.entryBlock("Define calculate");
+		appendI("let "+ varTimeName +"= 0;\n");
+		appendI("let "+ timeStartName +" = performance.now();\n");
         appendI("function calculate(" + inputParametersStrList.join() + ") {\n");
 
         indentation++;
@@ -127,8 +133,14 @@ public abstract class GanjaVisitor implements ControlFlowVisitor {
         StringList stepList = new StringList();
         StringList cenList = new StringList();
         for (String var : graph.getInputs()) {
-            inputParametersStrList.add(var);
-            argsList.add("\"" + var + "= \"");
+            //inputParametersStrList.add(var);
+            //argsList.add("\"" + var + "= \"");
+
+			if(!(var.equals(varTimeName) || var.equals(timeStartName) || var.equals(currentTimeName)))
+			{
+				inputParametersStrList.add(var);
+				argsList.add("\"" + var + "= \"");
+			}
 
             String min = graph.getPragmaMinValue().getOrDefault(var, "0");
             String max = graph.getPragmaMaxValue().getOrDefault(var, "1");
@@ -258,10 +270,13 @@ public abstract class GanjaVisitor implements ControlFlowVisitor {
         }
         code.setGraphOptions("{ "+options.join()+" }");
 
-        appendI(
-		  "var canvas = this.graph(()=>[\n"
+		appendI(
+		"var canvas = this.graph(()=> { \n"
+		+ "let " + currentTimeName + " = performance.now();\n"
+		+ varTimeName + " = ("+ currentTimeName + " - "+ timeStartName + ") / 1000;\n" 
+		+ "return [\n"
 		+ "   ...calculate(...sliderValues)\n"
-		+ "], "+code.getGraphOptions()+");\n");
+		+ "]}, "+code.getGraphOptions()+");\n");
 
         code.entryBlock("Set canvas options");
         
