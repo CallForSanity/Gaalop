@@ -86,14 +86,8 @@ COMMENT
     :   '/*' .*? '*/' -> skip
     ;
 
-// rely on the fact that they are recognized in the order in this file
-// (LINE_COMMENT also matches PRAGMA)
-PRAGMA
-    :   '//#pragma'
-    ;
-
 LINE_COMMENT
-    : '//'[~'#']?  ~('\n'|'\r')* '\r'? '\n' -> skip
+    : '//' ~('\n'|'\r')* '\r'? '\n' -> skip
     ;
 
 EQUALS
@@ -232,11 +226,6 @@ statement
   | bgcolor
   | macro_definition
   | draw_mode
-  | pragma 
-  ;
-
-pragma
-  : PRAGMA RANGE_LITERAL min=float_or_dec LESS_OR_EQUAL var=IDENTIFIER LESS_OR_EQUAL max=float_or_dec   #PRAGMARANGE
   ;
 
 statement_list

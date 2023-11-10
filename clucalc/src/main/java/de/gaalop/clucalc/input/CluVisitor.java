@@ -136,12 +136,6 @@ public class CluVisitor extends CluCalcBaseVisitor<Object> {
     public Object visitDual(CluCalcParser.DualContext ctx) {
         return graphBuilder.processFunction("*", Collections.singletonList((Expression) visit(ctx.operand)));
     }
-
-    @Override
-    public Object visitPRAGMARANGE(CluCalcParser.PRAGMARANGEContext ctx) {
-        graphBuilder.addPragmaMinMaxValues(ctx.var.getText(), ctx.min.getText(), ctx.max.getText());
-        return null;
-    }
     
     @Override
     public Object visitSingleArgument(CluCalcParser.SingleArgumentContext ctx) {

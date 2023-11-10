@@ -57,6 +57,7 @@ public enum CluCalcCodeParser implements CodeParser {
         LinkedList<String[]> drawTriangles = new LinkedList<String[]>();
 
         String syntax = null;
+        LinkedList<String> ranges = new LinkedList<String>();
 
         String content = input.getContent();
         BufferedReader reader = new BufferedReader(new StringReader(content));
@@ -69,26 +70,29 @@ public enum CluCalcCodeParser implements CodeParser {
                     line2 = line2.replaceAll("  "," ");
 
                 String whichPragma = line2.substring(10,line2.indexOf(" ",10));
-                if (whichPragma.equals("range") || whichPragma.equals("unroll") || whichPragma.equals("count")) {
+                if (whichPragma.equals("unroll") || whichPragma.equals("count")) {
                     builder.append(line);
                     builder.append("\n");
                 } else {
                     //process here
                     String rest = line2.substring(line2.indexOf(" ",10)+1);
-                    if (whichPragma.equals("output")) {
-                        //IDENTIFIER blade+
-                        String[] parts = rest.split(" ");
-                        for (int i=1;i<parts.length;i++)
-                            outputs.add(parts[0]+" "+parts[i]);
-                        
-                    } else {
-                        if (whichPragma.equals("onlyEvaluate")) {
+                    
+                    switch (whichPragma) {
+                        case "output":
+                            //IDENTIFIER blade+
+                            String[] partsOutput = rest.split(" ");
+                            for (int i=1;i<partsOutput.length;i++)
+                                outputs.add(partsOutput[0]+" "+partsOutput[i]);
+                            break;
+                        case "onlyEvaluate":
                             //IDENTIFIER+
-                            String[] parts = rest.split(" ");
-                            onlyEvaluates.addAll(Arrays.asList(parts));
-                        } else if (whichPragma.equals("in2out")) {
+                            String[] partsOnlyEvaluate = rest.split(" ");
+                            onlyEvaluates.addAll(Arrays.asList(partsOnlyEvaluate));
+                            break;
+                        case "in2out":
                             syntax = rest;
-                        } else if (whichPragma.equals("segments")) {
+                            break;
+                        case "segments":
                             while (rest.contains("  ")) 
                                 rest = rest.replaceAll("\\W\\W", " ");
                             
@@ -99,9 +103,9 @@ public enum CluCalcCodeParser implements CodeParser {
                                 } else {
                                     throw new CodeParserException(input, "pragma segments must be in format: A1 B1, A2 B2, ... , An Bn.");
                                 }
-                                
                             }
-                        } else if (whichPragma.equals("triangles")) {
+                            break;
+                        case "triangles":
                             while (rest.contains("  ")) 
                                 rest = rest.replaceAll("\\W\\W", " ");
                             
@@ -112,13 +116,14 @@ public enum CluCalcCodeParser implements CodeParser {
                                 } else {
                                     throw new CodeParserException(input, "pragma triangles must be in format: A1 B1 C1, A2 B2 C2, ... , An Bn Cn.");
                                 }
-                                
                             }
-                        } else 
+                            break;
+                        case "range":
+                            ranges.add(rest);
+                            break;
+                        default:
                             throw new CodeParserException(input, "pragma "+whichPragma+" is unknown.");
                     }
-
-
                 }
 
             } else {
@@ -161,6 +166,14 @@ public enum CluCalcCodeParser implements CodeParser {
 
         for (String onlyEval: onlyEvaluates)
             graph.addPragmaOnlyEvaluateVariable(onlyEval);
+        
+        for (String range: ranges) {
+            String[] rangeParts = range.split("<=");
+            if (rangeParts.length == 3)
+                graph.addPragmaMinMaxValues(rangeParts[1].trim(), rangeParts[0].trim(), rangeParts[2].trim());
+            else 
+                throw new CodeParserException(input, "#pragma range must be of the form: {minValue} <= {variable_name} <= {maxValue} but is "+range);
+        }
         
         return graph;
     }
