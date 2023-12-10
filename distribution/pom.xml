@@ -194,6 +194,8 @@
                 <suppressionFiles>
                     <suppressionFile>owasp-dependency-check-suppressions.xml</suppressionFile>
                 </suppressionFiles>
+				<!-- Disable the .NET AssemblyAnalyzer -->
+                <assemblyAnalyzerEnabled>false</assemblyAnalyzerEnabled>
               </configuration>
               <executions>
                   <execution>
