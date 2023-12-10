@@ -2,9 +2,11 @@
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
 <comment>Gaalop Configuration File</comment>
+<entry key="de.gaalop.csharp.Plugin.useDouble">false</entry>
 <entry key="de.gaalop.tba.Plugin.optGCSE">false</entry>
 <entry key="lastUsedAlgebra">cga</entry>
 <entry key="de.gaalop.tba.Plugin.optOneExpressionRemoval">true</entry>
+<entry key="de.gaalop.csharp.Plugin.standalone">true</entry>
 <entry key="lastUsedOptimization">de.gaalop.tba.Plugin</entry>
 <entry key="de.gaalop.ganja.Plugin.outputMode">standalone_page</entry>
 <entry key="de.gaalop.julia.Plugin.forGrassmann">false</entry>
@@ -25,15 +27,15 @@
 <entry key="de.gaalop.gapp.Plugin.maximaExpand">false</entry>
 <entry key="de.gaalop.tba.Plugin.numberOfRoundingDigits">6</entry>
 <entry key="de.gaalop.globalSettings.Plugin.optMaxima">true</entry>
-<entry key="de.gaalop.clucalc.output.Plugin.suffix">_opt</entry>
 <entry key="de.gaalop.cpp.Plugin.standalone">true</entry>
-<entry key="de.gaalop.globalSettings.Plugin.outputToNormalBase">true</entry>
-<entry key="de.gaalop.compressed.Plugin.useDouble">false</entry>
+<entry key="de.gaalop.clucalc.output.Plugin.suffix">_opt</entry>
+<entry key="de.gaalop.globalSettings.Plugin.outputToNormalBase">false</entry>
 <entry key="de.gaalop.cpp.Plugin.useDouble">false</entry>
+<entry key="de.gaalop.compressed.Plugin.useDouble">false</entry>
 <entry key="de.gaalop.gapp.Plugin.useScalarFunctions">true</entry>
 <entry key="de.gaalop.tba.Plugin.optUnusedAssignments">true</entry>
-<entry key="de.gaalop.algebra.Plugin.additionalBaseDirectory">algebras</entry>
+<entry key="de.gaalop.algebra.Plugin.additionalBaseDirectory"></entry>
 <entry key="de.gaalop.tba.Plugin.doRoundingAfterOptimization">false</entry>
 <entry key="de.gaalop.compressed.Plugin.standalone">false</entry>
-<entry key="lastUsedAlgebraRessource">true</entry>
+<entry key="lastUsedAlgebraRessource">false</entry>
 </properties>

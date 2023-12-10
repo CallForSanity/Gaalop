@@ -47,13 +47,16 @@ public final class Plugins {
      */
     private static <T> Set<T> loadServices(Class<T> clazz) {
         Set<T> services = new HashSet<T>();
+        
+        log.debug("------------ Loading services of type " + clazz);
 
-        log.debug("Loading services of type " + clazz);
-
+        List<String> names = new ArrayList<>();
+        
         ServiceLoader<T> loader = ServiceLoader.load(clazz, Plugins.class.getClassLoader());
         for (T service : loader) {
-            log.debug("Loaded service: " + service.getClass());
             services.add(service);
+            System.out.println("Loaded service : " + service.getClass());
+//            names.add(service.log.name);
         }
 
         return services;
