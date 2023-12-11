@@ -19,6 +19,9 @@ public class CsharpVisitor extends DefaultCodeGeneratorVisitor {
     protected Set<String> assigned = new HashSet<>();
 
     protected String variableType = "float";
+    protected String mathLibrary = "MathF";
+    protected Boolean useDouble = false;
+
     
     protected Set<String> libraries = new HashSet<>();
 
@@ -28,8 +31,11 @@ public class CsharpVisitor extends DefaultCodeGeneratorVisitor {
 
     public CsharpVisitor(boolean standalone, boolean useDouble) {
         this.standalone = standalone;
+        this.useDouble = useDouble;
+        
         if (useDouble) {
             variableType = "double";
+            mathLibrary = "Math";
         }
     }
 
@@ -50,8 +56,12 @@ public class CsharpVisitor extends DefaultCodeGeneratorVisitor {
         StringList outputs = graph.getOutputs();
         
         if (standalone) {
+            String filename = graph.getSource().getName().split("\\.")[0];
             appendIndentation();
-            code.append("void " + graph.getSource().getName().split("\\.")[0] + "(");
+            code.append("public static class " + filename + "\n{\n");
+            indentation++;
+            appendIndentation();
+            code.append("public static void Execute(");
             
             // Print parameters
             StringList parameters = new StringList();
@@ -61,21 +71,23 @@ public class CsharpVisitor extends DefaultCodeGeneratorVisitor {
             }
             
             for (String var : outputs) {
-                parameters.add(variableType+" "+var+"["+bladeCount+"]");
+                parameters.add(variableType + "[] " + var );
             }
             
             code.append(parameters.join());
 
-            code.append(") {\n");
+            code.append(")\n");
+            appendIndentation();
+            code.append("{\n");
+            
             indentation++;
         } 
 
         for (String var : graph.getLocals()) 
             if (!outputs.contains(var)) {
                 appendIndentation();
-                code.append(variableType).append(" ");
-                code.append(var);
-                code.append("[" + bladeCount + "] = { 0.0 };\n");
+                code.append(variableType).append("[] ").append(var);
+                code.append(" = new ").append(variableType).append("[").append(bladeCount).append("];\n");
             }
 
         if (graph.getScalarVariables().size() > 0) {
@@ -141,6 +153,8 @@ public class CsharpVisitor extends DefaultCodeGeneratorVisitor {
             indentation--;
             appendIndentation();
             code.append("}\n");
+            indentation--;
+            code.append("}\n");
         }
         
         if (!libraries.isEmpty()) {
@@ -153,7 +167,7 @@ public class CsharpVisitor extends DefaultCodeGeneratorVisitor {
             });
             
             for (String lib: libs) {
-                code.insert(0, "#"+lib+"\n");
+                code.insert(0, lib+"\n");
             }
         }
     }
@@ -165,14 +179,23 @@ public class CsharpVisitor extends DefaultCodeGeneratorVisitor {
 
     @Override
     public void visit(MathFunctionCall mathFunctionCall) {
-        libraries.add("include <math.h>");
+        libraries.add("using System;\n");
         String funcName;
         switch (mathFunctionCall.getFunction()) {
             case ABS:
-                funcName = "fabs";
+                funcName = mathLibrary + ".Abs";
                 break;
             case SQRT:
-                funcName = "sqrtf";
+                funcName = mathLibrary + ".Sqrt";
+                break;
+            case COS:
+                funcName = mathLibrary + ".Cos";
+                break;
+            case SIN:
+                funcName = mathLibrary + ".Sin";
+                break;
+            case EXP:
+                funcName = mathLibrary + ".Exp";
                 break;
             default:
                 funcName = mathFunctionCall.getFunction().toString().toLowerCase();
@@ -202,8 +225,8 @@ public class CsharpVisitor extends DefaultCodeGeneratorVisitor {
             Multiplication m = new Multiplication(exponentiation.getLeft(), exponentiation.getLeft());
             m.accept(this);
         } else {
-            libraries.add("include <math.h>");
-            code.append("pow(");
+            libraries.add("using System;");
+            code.append(mathLibrary + ".Pow(");
             exponentiation.getLeft().accept(this);
             code.append(',');
             exponentiation.getRight().accept(this);
@@ -213,7 +236,12 @@ public class CsharpVisitor extends DefaultCodeGeneratorVisitor {
 
     @Override
     public void visit(FloatConstant floatConstant) {
-        code.append(Double.toString(floatConstant.getValue()));
+        double value = floatConstant.getValue();
+        code.append(Double.toString(value));
+        if (!useDouble)
+        {
+            code.append("f");
+        }
     }
 
     @Override
