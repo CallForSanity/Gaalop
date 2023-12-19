@@ -55,7 +55,10 @@ public class CsharpVisitor extends DefaultCodeGeneratorVisitor {
         
         StringList outputs = graph.getOutputs();
         
+        usedVariableNames.clear();
+        
         if (standalone) {
+            // Add class and method name
             String filename = graph.getSource().getName().split("\\.")[0];
             appendIndentation();
             code.append("public static class " + filename + "\n{\n");
@@ -100,31 +103,60 @@ public class CsharpVisitor extends DefaultCodeGeneratorVisitor {
         node.getSuccessor().accept(this);
     }
 
+    HashSet<String> usedVariableNames = new HashSet<>();
+                
     @Override
     public void visit(AssignmentNode node) {
-        String variable = node.getVariable().getName();
-        if (assigned.contains(variable)) {
-            String message = "Variable " + variable + " has been reset for reuse.";
+        Variable variable = node.getVariable();
+        String variableName = variable.getName();
+        
+        // What does this?
+        if (assigned.contains(variableName)) {
+            String message = "Variable " + variableName + " has been reset for reuse.";
             log.warn(message);
             Notifications.addWarning(message);
+            
             appendIndentation();
             code.append("memset(");
-            code.append(variable);
+            code.append(variableName);
             code.append(", 0, sizeof(");
-            code.append(variable);
+            code.append(variableName);
             code.append(")); // Reset variable for reuse.\n");
-            assigned.remove(variable);
+            assigned.remove(variableName);
         }
 
+        if (usedVariableNames.add(variableName)) {
+
+//            usedVariableNames.add(variableName);
+        }
+        
         appendIndentation();
-        node.getVariable().accept(this);
+        code.append("float ");
+        
+//        variable.accept(this);
+
+        if (node.getVariable() instanceof MultivectorComponent) {
+            MultivectorComponent component = (MultivectorComponent) node.getVariable();
+            String blade = graph.getBladeString(component).replaceAll(" ", "");
+            print("blade1 = " + blade);
+            blade = blade.replaceAll("^", "");  
+            print("blade2 = " + blade);
+            code.append(variableName + blade);
+        }
+        else
+        {
+            code.append(variableName);
+        }
+        
+//        code.append(variableName);
         code.append(" = ");
         node.getValue().accept(this);
         code.append(";");
 
         if (node.getVariable() instanceof MultivectorComponent) {
+            MultivectorComponent component = (MultivectorComponent) node.getVariable();
             code.append(" // ");
-            code.append(graph.getBladeString((MultivectorComponent) node.getVariable()));
+            code.append(graph.getBladeString(component));
         }
 
         code.append("\n");
@@ -213,11 +245,15 @@ public class CsharpVisitor extends DefaultCodeGeneratorVisitor {
 
     @Override
     public void visit(MultivectorComponent component) {
-        code.append(component.getName());
-        code.append('[');
-        code.append(component.getBladeIndex());
-        code.append(']');
-    }
+        String name = component.getName();
+        int bladeIndex = component.getBladeIndex();
+        code.append(name + bladeIndex);
+//        code.append(name);
+//        code.append('[');
+//        code.append(bladeIndex);
+//        code.append(']');
+        System.out.println(name + "\n");
+ }
 
     @Override
     public void visit(Exponentiation exponentiation) {
@@ -252,4 +288,8 @@ public class CsharpVisitor extends DefaultCodeGeneratorVisitor {
         code.append(')');
     }
 
+    private void print(Object message)
+    {
+        System.out.println(message.toString());
+    }
 }
