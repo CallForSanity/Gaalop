@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  * The bean that represents the main form of the Gaalop GUI.
@@ -38,7 +39,9 @@ public class MainForm {
     private JButton saveFileButton;
     private JButton closeButton;
     private StatusBar statusBar;
-    
+   
+    private final String ScriptFileExtension = "clu";
+
     public PanelPluginSelection panelPluginSelection;
 
     private Log log = LogFactory.getLog(MainForm.class);
@@ -99,14 +102,27 @@ public class MainForm {
             public void actionPerformed(ActionEvent e) {
                 Component component = tabbedPane.getSelectedComponent();
                 if (component instanceof SourceFilePanel) {
-                    SourceFilePanel sourceFile = (SourceFilePanel) component;
+                    SourceFilePanel filePanel = (SourceFilePanel) component;
+                    File file = filePanel.getFile();
+                    Main.lastDirectory = file.getParentFile();
+                    
                     JFileChooser fileChooser = new JFileChooser();
-                    Main.lastDirectory = sourceFile.getFile().getParentFile();
                     fileChooser.setCurrentDirectory(Main.lastDirectory);
-                    fileChooser.setSelectedFile(sourceFile.getFile());
+                    fileChooser.setSelectedFile(file);
+                    // Create a file filter to specify the extension
+                    fileChooser.setFileFilter(new FileNameExtensionFilter("GLU Files", ScriptFileExtension));
+        
                     int result = fileChooser.showSaveDialog(contentPane);
                     if (result == JFileChooser.APPROVE_OPTION) {
-                        saveToFile(fileChooser.getSelectedFile(), sourceFile);
+                        File selectedFile = fileChooser.getSelectedFile();
+                        String filePath = selectedFile.getAbsolutePath();
+
+                        // Check if the selected file already has the .glu extension or append it
+                        if (!filePath.toLowerCase().endsWith("." + ScriptFileExtension)) {
+                            selectedFile = new File(filePath + "." + ScriptFileExtension);
+                        }
+
+                        saveToFile(selectedFile, filePanel);
                     }
                 }
             }
