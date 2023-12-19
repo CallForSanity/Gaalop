@@ -1,7 +1,7 @@
 package de.gaalop.csharp;
 
 import de.gaalop.CodeGenerator;
-import de.gaalop.CodeGeneratorPlugin;
+import de.gaalop.SaveNearSourceCodeGeneratorPlugin;
 import de.gaalop.ConfigurationProperty;
 import de.gaalop.ConfigurationProperty.Type;
 import de.gaalop.Notifications;
@@ -18,7 +18,7 @@ import java.util.Observable;
 /**
  * This class implements the Plugin interface for Gaalop.
  */
-public class Plugin extends Observable implements CodeGeneratorPlugin {
+public class Plugin extends Observable implements SaveNearSourceCodeGeneratorPlugin {
 
     private Log log = LogFactory.getLog(Plugin.class);
 
@@ -29,6 +29,12 @@ public class Plugin extends Observable implements CodeGeneratorPlugin {
 
     @ConfigurationProperty(type = Type.BOOLEAN)
     public boolean useDouble = false;
+    
+    @ConfigurationProperty(type = Type.BOOLEAN)
+    public boolean saveFileImmediatly = false;
+
+    @ConfigurationProperty(type = Type.DIRPATH)
+    public String saveFileDirectory = "";
 
     public Plugin() {
         URL url = getClass().getResource("icon.png");
@@ -58,7 +64,27 @@ public class Plugin extends Observable implements CodeGeneratorPlugin {
     public boolean getUseDouble() {
         return useDouble;
     }
+    
+    public void setsaveFileImmediatly(boolean saveCsharpFileNearSource) {
+        this.saveFileImmediatly = saveCsharpFileNearSource;
+    }
 
+    public boolean getsaveFileImmediatly() {
+        return saveFileImmediatly;
+    }
+        
+    public String getSaveFileDirectory() {
+        return saveFileDirectory;
+    }
+    
+    public void setSaveFileDirectory(String saveFileDirectory) {
+        this.saveFileDirectory = saveFileDirectory;
+    }
+     
+    public String getFileExtension() {
+        return "cs";
+    }
+       
     @Override
     public CodeGenerator createCodeGenerator() {
         return new CsharpCodeGenerator(this);
