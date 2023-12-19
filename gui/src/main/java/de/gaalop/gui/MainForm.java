@@ -48,23 +48,14 @@ public class MainForm {
 
     public MainForm() {
         $$$setupUI$$$();
-
+        
         //contentPane.setPreferredSize(new Dimension(900, 480));
 
         // The optimize button shows a menu with available output formats
         optimizeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent event) {
-                if (tabbedPane.getSelectedComponent() instanceof SourceFilePanel) {
-                    if (panelPluginSelection.areConstraintsFulfilled()) {
-                        panelPluginSelection.updateLastUsedPlugins();
-                        SourceFilePanel sourcePanel = (SourceFilePanel) tabbedPane.getSelectedComponent();
-                        CompileAction action = new CompileAction(sourcePanel, statusBar, panelPluginSelection);
-                        action.actionPerformed(event);
-                    } else {
-                        ErrorDialog.show(new CompilationException(panelPluginSelection.getErrorMessage()));
-                    }
-                }
+                Optimize();
             }
         });
 
@@ -100,31 +91,7 @@ public class MainForm {
         saveFileButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Component component = tabbedPane.getSelectedComponent();
-                if (component instanceof SourceFilePanel) {
-                    SourceFilePanel filePanel = (SourceFilePanel) component;
-                    File file = filePanel.getFile();
-                    Main.lastDirectory = file.getParentFile();
-                    
-                    JFileChooser fileChooser = new JFileChooser();
-                    fileChooser.setCurrentDirectory(Main.lastDirectory);
-                    fileChooser.setSelectedFile(file);
-                    // Create a file filter to specify the extension
-                    fileChooser.setFileFilter(new FileNameExtensionFilter("GLU Files", ScriptFileExtension));
-        
-                    int result = fileChooser.showSaveDialog(contentPane);
-                    if (result == JFileChooser.APPROVE_OPTION) {
-                        File selectedFile = fileChooser.getSelectedFile();
-                        String filePath = selectedFile.getAbsolutePath();
-
-                        // Check if the selected file already has the .glu extension or append it
-                        if (!filePath.toLowerCase().endsWith("." + ScriptFileExtension)) {
-                            selectedFile = new File(filePath + "." + ScriptFileExtension);
-                        }
-
-                        saveToFile(selectedFile, filePanel);
-                    }
-                }
+               Save(false);
             }
         });
 
@@ -197,7 +164,62 @@ public class MainForm {
             log.error("Unable to read welcome document.");
         }
     }
+    
+    private void Save(Boolean allowQuickSave)
+    {
+        Component component = tabbedPane.getSelectedComponent();
+        if (component instanceof SourceFilePanel) {
+            SourceFilePanel filePanel = (SourceFilePanel) component;
+            File file = filePanel.getFile();
 
+            // Check if file ends with correct extension => file was already saved manually
+            String path = file.getAbsolutePath();
+            if (allowQuickSave && path.endsWith(ScriptFileExtension)){
+                statusBar.setStatus("Saved source: " + path);
+                saveToFile(file, filePanel);
+                return;
+            }
+
+            Main.lastDirectory = file.getParentFile();
+
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setCurrentDirectory(Main.lastDirectory);
+            fileChooser.setSelectedFile(file);
+            // Create a file filter to specify the extension
+            fileChooser.setFileFilter(new FileNameExtensionFilter("CLUcalc files", ScriptFileExtension));
+
+            int result = fileChooser.showSaveDialog(contentPane);
+            if (result == JFileChooser.APPROVE_OPTION) {
+                File selectedFile = fileChooser.getSelectedFile();
+                String filePath = selectedFile.getAbsolutePath();
+
+                // Check if the selected file already has the .glu extension or append it
+                if (!filePath.toLowerCase().endsWith("." + ScriptFileExtension)) {
+                    selectedFile = new File(filePath + "." + ScriptFileExtension);
+                }
+
+                saveToFile(selectedFile, filePanel);
+            }
+        }    
+    }
+    
+    /*
+    Is called after the Optimize button was clicked.
+    */
+    private void Optimize()
+    {
+        if (tabbedPane.getSelectedComponent() instanceof SourceFilePanel) {
+            if (panelPluginSelection.areConstraintsFulfilled()) {
+                panelPluginSelection.updateLastUsedPlugins();
+                SourceFilePanel sourcePanel = (SourceFilePanel) tabbedPane.getSelectedComponent();
+                CompileAction action = new CompileAction(sourcePanel, statusBar, panelPluginSelection);
+                action.actionPerformed(null);
+            } else {
+                ErrorDialog.show(new CompilationException(panelPluginSelection.getErrorMessage()));
+            }
+        }
+    }
+    
     private void saveToFile(File toFile, SourceFilePanel sourceFilePanel) {
         try {
             PrintWriter printWriter = new PrintWriter(toFile);
@@ -315,7 +337,7 @@ public class MainForm {
      */
     private void $$$setupUI$$$() {
         Font font = new Font("Arial", Font.PLAIN, FontSize.getGuiFontSize());
-        
+
         contentPane = new JPanel();
         contentPane.setLayout(new BorderLayout(0, 0));
         final JPanel panel1 = new JPanel();
@@ -396,6 +418,19 @@ public class MainForm {
 //        panel2.add(welcomeToGaalopWelcomeEditorPane, BorderLayout.CENTER);
         statusBar = new StatusBar();
         contentPane.add(statusBar, BorderLayout.SOUTH);
+        
+                
+        // Bind Ctrl+S to the save action
+         Action actionOnCtrlS = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Save(true);
+                Optimize();
+            }
+        };
+        contentPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+            KeyStroke.getKeyStroke("control S"), "saveAction");
+        contentPane.getActionMap().put("saveAction", actionOnCtrlS);
     }
 
     /**
