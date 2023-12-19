@@ -369,15 +369,15 @@ public class MainForm {
         contentPane.add(tabbedPane, BorderLayout.CENTER);
         panelPluginSelection = new PanelPluginSelection();
         contentPane.add(panelPluginSelection, BorderLayout.EAST);
-        final JPanel panel2 = new JPanel();
-        panel2.setLayout(new BorderLayout(0, 0));
-        tabbedPane.addTab("Welcome", panel2);
+//        final JPanel panel2 = new JPanel();
+//        panel2.setLayout(new BorderLayout(0, 0));
+//        tabbedPane.addTab("Welcome", panel2);
         welcomeToGaalopWelcomeEditorPane = new JEditorPane();
         welcomeToGaalopWelcomeEditorPane.setContentType("text/html");
         welcomeToGaalopWelcomeEditorPane.setFont(font);
         welcomeToGaalopWelcomeEditorPane.setEditable(false);
         welcomeToGaalopWelcomeEditorPane.setText("<html>\r\n  <head>\r\n    \r\n  </head>\r\n  <body>\r\n  </body>\r\n</html>\r\n");
-        panel2.add(welcomeToGaalopWelcomeEditorPane, BorderLayout.CENTER);
+//        panel2.add(welcomeToGaalopWelcomeEditorPane, BorderLayout.CENTER);
         statusBar = new StatusBar();
         contentPane.add(statusBar, BorderLayout.SOUTH);
     }
