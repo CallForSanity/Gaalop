@@ -52,19 +52,23 @@ public class Variable extends Expression {
 	}
 
     public String getNewName(ControlFlowGraph graph, Boolean useArrays) {
-        if (!useArrays && this instanceof MultivectorComponent) {
+        if (this instanceof MultivectorComponent) {
             MultivectorComponent component = (MultivectorComponent) this;
-            //                return this.getName() + "_" + graph.getBladeString(component).replaceAll(" ", "").replaceAll("\\^", "");
 
-            // Multivector variables should be called e.g. scriptname_e12
-            String bladeString = graph.getBladeString(component);
-            bladeString = bladeString.replace(".0", "");
-            bladeString = removeExtraEs(bladeString);
-            String name = getName() + "_" + removeExtraEs(bladeString).replaceAll(" ", "").replaceAll("\\(", "").replaceAll("\\)", "").replaceAll("\\^", "");
+            if (useArrays) {
+                // Multivector variables should be called e.g. var[6]
+                return getName() + "[" + component.getBladeIndex() + "]";
+            } else {
+                // Multivector variables should be called e.g. var_e12
+                String bladeString = graph.getBladeString(component);
+                bladeString = bladeString.replace(".0", ""); // Write var_1 instead of var_1.0
+                bladeString = removeExtraEs(bladeString); // Write var_e12 instead of var_e1e2
+                String name = getName() + "_" + removeExtraEs(bladeString).replaceAll(" ", "").replaceAll("\\(", "").replaceAll("\\)", "").replaceAll("\\^", "");
 
-            System.out.println(getName() + " => " + name);
+                System.out.println(getName() + " => " + name);
 
-            return name;
+                return name;
+            }
         } else {
             return getName();
         }

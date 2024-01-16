@@ -1,5 +1,6 @@
 package de.gaalop.csharp;
 
+import static java.lang.System.out;
 import de.gaalop.DefaultCodeGeneratorVisitor;
 import de.gaalop.Notifications;
 import de.gaalop.StringList;
@@ -7,7 +8,6 @@ import de.gaalop.cfg.*;
 import de.gaalop.dfg.*;
 import java.util.stream.Collectors;
 import java.util.*;
-
 /**
  * This visitor traverses the control and data flow graphs and generates C/C++
  * code.
@@ -132,8 +132,9 @@ public class CsharpVisitor extends DefaultCodeGeneratorVisitor {
 
     @Override
     public void visit(AssignmentNode node) {
+        // Get variable and its name from node
         Variable variable = node.getVariable();
-        if (getNewName(variable) == "M_1.0") {
+        if (getNewName(variable) == "M") {
             addCode("");
         }
         String variableName = getNewName(variable);
@@ -161,7 +162,7 @@ public class CsharpVisitor extends DefaultCodeGeneratorVisitor {
             node.getValue().accept(this);
             addCode(";");
         } else {
-            // Prefix type ("float ") if the the variable was not declared yet
+            // Prefix type if the the variable was not declared yet: "float "
             if (declaredVariableNames.add(variableName)) {
                 addCode(variableType + " ");
             }
@@ -303,11 +304,8 @@ public class CsharpVisitor extends DefaultCodeGeneratorVisitor {
         }
         String name = component.getNewName(graph, useArrays);
         addCode(name);
-//        addCode(name);
-//        addCode('[');
-//        addCode(bladeIndex);
-//        addCode(']');
-        System.out.println(name + "\n");
+
+        out.println(name + "\n");
  }
 
     @Override
@@ -361,9 +359,13 @@ public class CsharpVisitor extends DefaultCodeGeneratorVisitor {
         }
 
     private StringBuilder addCode(String text) {
+
         if (text.contains("M_1.0")) {
             addCode("");
         }
+
+        out.println(text);
+
         code.append(text);
         return code;
     }
