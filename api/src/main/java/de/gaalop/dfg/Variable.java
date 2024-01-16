@@ -58,6 +58,7 @@ public class Variable extends Expression {
 
             // Multivector variables should be called e.g. scriptname_e12
             String bladeString = graph.getBladeString(component);
+            bladeString = bladeString.replace(".0", "");
             bladeString = removeExtraEs(bladeString);
             String name = getName() + "_" + removeExtraEs(bladeString).replaceAll(" ", "").replaceAll("\\(", "").replaceAll("\\)", "").replaceAll("\\^", "");
 

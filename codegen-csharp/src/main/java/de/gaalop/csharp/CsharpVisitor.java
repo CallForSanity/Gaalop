@@ -11,6 +11,9 @@ import java.util.*;
 /**
  * This visitor traverses the control and data flow graphs and generates C/C++
  * code.
+ *
+ * To do: Checken ob Skalare auch für andere Programmiersprachen abstrahiert
+ * werden können.
  */
 public class CsharpVisitor extends DefaultCodeGeneratorVisitor {
 
@@ -23,6 +26,7 @@ public class CsharpVisitor extends DefaultCodeGeneratorVisitor {
 
     protected Boolean useDouble = true;
     protected Boolean useArrays = true;
+    protected Boolean normalizeOutputs = true;
 
     protected Set<String> libraries = new HashSet<>();
 
@@ -70,10 +74,10 @@ public class CsharpVisitor extends DefaultCodeGeneratorVisitor {
             // Add class and method name
             String filename = graph.getSource().getName().split("\\.")[0];
             appendIndentation();
-            code.append("public static class " + filename + "\n{\n");
+            addCode("public static class " + filename + "\n{\n");
             indentation++;
             appendIndentation();
-            code.append(MethodModifiers + " " + MethodName + "(");
+            addCode(MethodModifiers + " " + MethodName + "(");
 
             // Print parameters
             StringList parameters = new StringList();
@@ -90,11 +94,11 @@ public class CsharpVisitor extends DefaultCodeGeneratorVisitor {
             }
 
 
-            code.append(parameters.join(", "));
+            addCode(parameters.join(", "));
 
-            code.append(")\n");
+            addCode(")\n");
             appendIndentation();
-            code.append("{\n");
+            addCode("{\n");
 
             indentation++;
         }
@@ -104,17 +108,17 @@ public class CsharpVisitor extends DefaultCodeGeneratorVisitor {
             for (String localVariable : graph.getLocals()) {
                 if (!outputs.contains(localVariable)) {
                     appendIndentation();
-                    code.append(variableType).append("[] ").append(localVariable);
-                    code.append(" = new ").append(variableType).append("[").append(bladeCount).append("];\n");
+                    addCode(variableType).append("[] ").append(localVariable);
+                    addCode(" = new ").append(variableType).append("[").append(bladeCount).append("];\n");
                 }
             }
         }
 
         if (graph.getScalarVariables().size() > 0) {
             appendIndentation();
-            code.append(variableType).append(" ");
-            code.append(graph.getScalars().join());
-            code.append(";\n");
+            addCode(variableType).append(" ");
+            addCode(graph.getScalars().join());
+            addCode(";\n");
         }
 
         node.getSuccessor().accept(this);
@@ -129,6 +133,9 @@ public class CsharpVisitor extends DefaultCodeGeneratorVisitor {
     @Override
     public void visit(AssignmentNode node) {
         Variable variable = node.getVariable();
+        if (getNewName(variable) == "M_1.0") {
+            addCode("");
+        }
         String variableName = getNewName(variable);
 
         // What does this?
@@ -138,28 +145,36 @@ public class CsharpVisitor extends DefaultCodeGeneratorVisitor {
             Notifications.addWarning(message);
 
             appendIndentation();
-            code.append("memset(");
-            code.append(variableName);
-            code.append(", 0, sizeof(");
-            code.append(variableName);
-            code.append(")); // Reset variable for reuse.\n");
+            addCode("memset(");
+            addCode(variableName);
+            addCode(", 0, sizeof(");
+            addCode(variableName);
+            addCode(")); // Reset variable for reuse.\n");
             assigned.remove(variableName);
         }
 
         appendIndentation();
 
-        // Prefix type ("float ") if the the variable was not declared yet
-        if (declaredVariableNames.add(variableName)) {
-            code.append(variableType + " ");
+        if (useArrays) {
+            node.getVariable().accept(this);
+            addCode(" = ");
+            node.getValue().accept(this);
+            addCode(";");
+        } else {
+            // Prefix type ("float ") if the the variable was not declared yet
+            if (declaredVariableNames.add(variableName)) {
+                addCode(variableType + " ");
+            }
+
+            addCode(variableName);
+            addCode(" = ");
+            Expression expression = node.getValue();
+            expression.accept(this);
+            addCode(";");
+
         }
 
-        code.append(variableName);
-        code.append(" = ");
-        Expression expression = node.getValue();
-        expression.accept(this);
-        code.append(";");
-
-        code.append("\n");
+        addCode("\n");
 
         node.getSuccessor().accept(this);
     }
@@ -168,14 +183,14 @@ public class CsharpVisitor extends DefaultCodeGeneratorVisitor {
     public void visit(ExpressionStatement node) {
         appendIndentation();
         node.getExpression().accept(this);
-        code.append(";\n");
+        addCode(";\n");
 
         node.getSuccessor().accept(this);
     }
 
     @Override
     public void visit(StoreResultNode node) {
-        assigned.add(node.getValue().getNewName(graph, !useArrays));
+        assigned.add(node.getValue().getNewName(graph, useArrays));
         node.getSuccessor().accept(this);
     }
 
@@ -200,20 +215,20 @@ public class CsharpVisitor extends DefaultCodeGeneratorVisitor {
             }
 
             // Add blank file
-            code.append("\n");
+            addCode("\n");
             appendIndentation();
 
             // Add return statement
             if (componentNames.size() == 1) {
                 String name = componentNames.get(0);
-                code.append("return " + name + ";\n");
+                addCode("return " + name + ";\n");
                 replaceInCode(" void ", " float ");
             } else if (componentNames.size() > 1) {
                 String tupleType = "(" + componentNames.stream().map(it -> variableType + " " + it).collect(Collectors.joining(", ")) + ")";
                 replaceInCode(" void ", " " + tupleType + " ");
 
                 String line = "return (" + String.join(", ", componentNames) + ");\n";
-                code.append(line);
+                addCode(line);
             }
         }
 
@@ -221,9 +236,9 @@ public class CsharpVisitor extends DefaultCodeGeneratorVisitor {
         if (standalone) {
             indentation--;
             appendIndentation();
-            code.append("}\n");
+            addCode("}\n");
             indentation--;
-            code.append("}\n");
+            addCode("}\n");
         }
 
         if (!libraries.isEmpty()) {
@@ -270,25 +285,28 @@ public class CsharpVisitor extends DefaultCodeGeneratorVisitor {
             default:
                 funcName = mathFunctionCall.getFunction().toString().toLowerCase();
         }
-        code.append(funcName);
-        code.append('(');
+        addCode(funcName);
+        addCode('(');
         mathFunctionCall.getOperand().accept(this);
-        code.append(')');
+        addCode(')');
     }
 
     @Override
     public void visit(Variable variable) {
-        code.append(getNewName(variable));
+        addCode(getNewName(variable));
     }
 
     @Override
     public void visit(MultivectorComponent component) {
-        String name = component.getNewName(graph, !useArrays);
-        code.append(name);
-//        code.append(name);
-//        code.append('[');
-//        code.append(bladeIndex);
-//        code.append(']');
+        if (component.toString().equals("s1[1]")) {
+            addCode("");
+        }
+        String name = component.getNewName(graph, useArrays);
+        addCode(name);
+//        addCode(name);
+//        addCode('[');
+//        addCode(bladeIndex);
+//        addCode(']');
         System.out.println(name + "\n");
  }
 
@@ -299,30 +317,30 @@ public class CsharpVisitor extends DefaultCodeGeneratorVisitor {
             m.accept(this);
         } else {
             libraries.add("using System;");
-            code.append(mathLibrary + ".Pow(");
+            addCode(mathLibrary + ".Pow(");
             exponentiation.getLeft().accept(this);
-            code.append(',');
+            addCode(',');
             exponentiation.getRight().accept(this);
-            code.append(')');
+            addCode(')');
         }
     }
 
     @Override
     public void visit(FloatConstant floatConstant) {
         double value = floatConstant.getValue();
-        code.append(Double.toString(value));
+        addCode(Double.toString(value));
         if (!useDouble)
         {
-            code.append("f");
+            addCode("f");
         }
     }
 
     @Override
     public void visit(Negation negation) {
-        code.append('(');
-        code.append('-');
+        addCode('(');
+        addCode('-');
         addChild(negation, negation.getOperand());
-        code.append(')');
+        addCode(')');
     }
 
     private void print(Object message)
@@ -337,5 +355,16 @@ public class CsharpVisitor extends DefaultCodeGeneratorVisitor {
             code.replace(index, index + target.length(), replacement);
             index = code.indexOf(target, index + replacement.length());
         }
+    }
+    private StringBuilder addCode(char text) {
+        return addCode(String.valueOf(text));
+        }
+
+    private StringBuilder addCode(String text) {
+        if (text.contains("M_1.0")) {
+            addCode("");
+        }
+        code.append(text);
+        return code;
     }
 }
