@@ -5,7 +5,7 @@ import de.gaalop.Notifications;
 import de.gaalop.StringList;
 import de.gaalop.cfg.*;
 import de.gaalop.dfg.*;
-
+import java.util.stream.Collectors;
 import java.util.*;
 
 /**
@@ -20,19 +20,23 @@ public class CsharpVisitor extends DefaultCodeGeneratorVisitor {
 
     protected String variableType = "float";
     protected String mathLibrary = "MathF";
-    protected Boolean useDouble = false;
 
-    
+    protected Boolean useDouble = true;
+    protected Boolean useArrays = true;
+
     protected Set<String> libraries = new HashSet<>();
+
+    private final String newline = "\n";
 
     public CsharpVisitor(boolean standalone) {
         this.standalone = standalone;
     }
 
-    public CsharpVisitor(boolean standalone, boolean useDouble) {
+    public CsharpVisitor(boolean standalone, boolean useDouble, boolean useArrays) {
         this.standalone = standalone;
         this.useDouble = useDouble;
-        
+        this.useArrays = useArrays;
+
         if (useDouble) {
             variableType = "double";
             mathLibrary = "Math";
@@ -48,15 +52,20 @@ public class CsharpVisitor extends DefaultCodeGeneratorVisitor {
         this.standalone = standalone;
     }
 
+    private static String MethodModifiers = "public static void";
+    private static String MethodName = "Execute";
+
+    // The first node
     @Override
     public void visit(StartNode node) {
         graph = node.getGraph();
         int bladeCount = graph.getAlgebraDefinitionFile().getBladeCount();
-        
+
         StringList outputs = graph.getOutputs();
-        
-        usedVariableNames.clear();
-        
+
+        // At each start, this set need to be cleared
+        declaredVariableNames.clear();
+
         if (standalone) {
             // Add class and method name
             String filename = graph.getSource().getName().split("\\.")[0];
@@ -64,34 +73,42 @@ public class CsharpVisitor extends DefaultCodeGeneratorVisitor {
             code.append("public static class " + filename + "\n{\n");
             indentation++;
             appendIndentation();
-            code.append("public static void Execute(");
-            
+            code.append(MethodModifiers + " " + MethodName + "(");
+
             // Print parameters
             StringList parameters = new StringList();
-            
-            for (String var : graph.getInputs()) {
-                parameters.add(variableType+" "+var); // The assumption here is that they all are normal scalars
+
+            for (String inputVariable : graph.getInputs()) {
+                parameters.add(variableType + " " + inputVariable); // The assumption here is that they all are normal scalars
             }
-            
-            for (String var : outputs) {
-                parameters.add(variableType + "[] " + var );
+
+            // Add outputs to parameters if arrays are used
+            if (useArrays) {
+                for (String outputVariable : outputs) {
+                    parameters.add(variableType + "[] " + outputVariable);
+                }
             }
-            
-            code.append(parameters.join());
+
+
+            code.append(parameters.join(", "));
 
             code.append(")\n");
             appendIndentation();
             code.append("{\n");
-            
-            indentation++;
-        } 
 
-        for (String var : graph.getLocals()) 
-            if (!outputs.contains(var)) {
-                appendIndentation();
-                code.append(variableType).append("[] ").append(var);
-                code.append(" = new ").append(variableType).append("[").append(bladeCount).append("];\n");
+            indentation++;
+        }
+
+        // When using arrays, they need to be defined at the start
+        if (useArrays) {
+            for (String localVariable : graph.getLocals()) {
+                if (!outputs.contains(localVariable)) {
+                    appendIndentation();
+                    code.append(variableType).append("[] ").append(localVariable);
+                    code.append(" = new ").append(variableType).append("[").append(bladeCount).append("];\n");
+                }
             }
+        }
 
         if (graph.getScalarVariables().size() > 0) {
             appendIndentation();
@@ -103,19 +120,23 @@ public class CsharpVisitor extends DefaultCodeGeneratorVisitor {
         node.getSuccessor().accept(this);
     }
 
-    HashSet<String> usedVariableNames = new HashSet<>();
-                
+    private HashSet<String> declaredVariableNames = new HashSet<>();
+
+    private String getNewName(Variable variable) {
+        return variable.getNewName(graph, useArrays);
+    }
+
     @Override
     public void visit(AssignmentNode node) {
         Variable variable = node.getVariable();
-        String variableName = variable.getName();
-        
+        String variableName = getNewName(variable);
+
         // What does this?
         if (assigned.contains(variableName)) {
             String message = "Variable " + variableName + " has been reset for reuse.";
             log.warn(message);
             Notifications.addWarning(message);
-            
+
             appendIndentation();
             code.append("memset(");
             code.append(variableName);
@@ -125,39 +146,18 @@ public class CsharpVisitor extends DefaultCodeGeneratorVisitor {
             assigned.remove(variableName);
         }
 
-        if (usedVariableNames.add(variableName)) {
-
-//            usedVariableNames.add(variableName);
-        }
-        
         appendIndentation();
-        code.append("float ");
-        
-//        variable.accept(this);
 
-        if (node.getVariable() instanceof MultivectorComponent) {
-            MultivectorComponent component = (MultivectorComponent) node.getVariable();
-            String blade = graph.getBladeString(component).replaceAll(" ", "");
-            print("blade1 = " + blade);
-            blade = blade.replaceAll("^", "");  
-            print("blade2 = " + blade);
-            code.append(variableName + blade);
+        // Prefix type ("float ") if the the variable was not declared yet
+        if (declaredVariableNames.add(variableName)) {
+            code.append(variableType + " ");
         }
-        else
-        {
-            code.append(variableName);
-        }
-        
-//        code.append(variableName);
+
+        code.append(variableName);
         code.append(" = ");
-        node.getValue().accept(this);
+        Expression expression = node.getValue();
+        expression.accept(this);
         code.append(";");
-
-        if (node.getVariable() instanceof MultivectorComponent) {
-            MultivectorComponent component = (MultivectorComponent) node.getVariable();
-            code.append(" // ");
-            code.append(graph.getBladeString(component));
-        }
 
         code.append("\n");
 
@@ -175,12 +175,49 @@ public class CsharpVisitor extends DefaultCodeGeneratorVisitor {
 
     @Override
     public void visit(StoreResultNode node) {
-        assigned.add(node.getValue().getName());
+        assigned.add(node.getValue().getNewName(graph, !useArrays));
         node.getSuccessor().accept(this);
     }
 
+    // The last node
     @Override
     public void visit(EndNode node) {
+
+        // We need to fill the array when the new name was used
+        if (!useArrays) {
+            StringList outputVariables = graph.getOutputs();
+            ArrayList<String> componentNames = new ArrayList<String>();
+
+            for (String outputName : outputVariables) {
+                // Iterate the current output variable marked by question mark (?)
+                for (String componentName : declaredVariableNames) {
+                    int index = componentName.lastIndexOf("_");
+                    String outputNameFromComponent = componentName.substring(0, index);
+                    if (outputNameFromComponent.equals(outputName)) {
+                        componentNames.add(componentName);
+                    }
+                }
+            }
+
+            // Add blank file
+            code.append("\n");
+            appendIndentation();
+
+            // Add return statement
+            if (componentNames.size() == 1) {
+                String name = componentNames.get(0);
+                code.append("return " + name + ";\n");
+                replaceInCode(" void ", " float ");
+            } else if (componentNames.size() > 1) {
+                String tupleType = "(" + componentNames.stream().map(it -> variableType + " " + it).collect(Collectors.joining(", ")) + ")";
+                replaceInCode(" void ", " " + tupleType + " ");
+
+                String line = "return (" + String.join(", ", componentNames) + ");\n";
+                code.append(line);
+            }
+        }
+
+        // Add closing brackets
         if (standalone) {
             indentation--;
             appendIndentation();
@@ -188,7 +225,7 @@ public class CsharpVisitor extends DefaultCodeGeneratorVisitor {
             indentation--;
             code.append("}\n");
         }
-        
+
         if (!libraries.isEmpty()) {
             LinkedList<String> libs = new LinkedList<>(libraries);
             libs.sort(new Comparator<String>() {
@@ -197,7 +234,8 @@ public class CsharpVisitor extends DefaultCodeGeneratorVisitor {
                     return o2.compareTo(o1);
                 }
             });
-            
+
+            // Add libraries at start
             for (String lib: libs) {
                 code.insert(0, lib+"\n");
             }
@@ -240,14 +278,13 @@ public class CsharpVisitor extends DefaultCodeGeneratorVisitor {
 
     @Override
     public void visit(Variable variable) {
-        code.append(variable.getName());
+        code.append(getNewName(variable));
     }
 
     @Override
     public void visit(MultivectorComponent component) {
-        String name = component.getName();
-        int bladeIndex = component.getBladeIndex();
-        code.append(name + bladeIndex);
+        String name = component.getNewName(graph, !useArrays);
+        code.append(name);
 //        code.append(name);
 //        code.append('[');
 //        code.append(bladeIndex);
@@ -291,5 +328,14 @@ public class CsharpVisitor extends DefaultCodeGeneratorVisitor {
     private void print(Object message)
     {
         System.out.println(message.toString());
+    }
+
+    // Method to replace all occurrences of a substring in a StringBuilder
+    public void replaceInCode(String target, String replacement) {
+        int index = code.indexOf(target);
+        while (index != -1) {
+            code.replace(index, index + target.length(), replacement);
+            index = code.indexOf(target, index + replacement.length());
+        }
     }
 }

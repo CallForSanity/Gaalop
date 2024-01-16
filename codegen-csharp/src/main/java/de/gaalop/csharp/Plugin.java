@@ -29,7 +29,10 @@ public class Plugin extends Observable implements SaveNearSourceCodeGeneratorPlu
 
     @ConfigurationProperty(type = Type.BOOLEAN)
     public boolean useDouble = false;
-    
+
+    @ConfigurationProperty(type = Type.BOOLEAN)
+    public boolean useArrays = false;
+
     @ConfigurationProperty(type = Type.BOOLEAN)
     public boolean saveFileImmediatly = false;
 
@@ -64,7 +67,15 @@ public class Plugin extends Observable implements SaveNearSourceCodeGeneratorPlu
     public boolean getUseDouble() {
         return useDouble;
     }
-    
+
+    public void setUseArrays(boolean useArrays) {
+        this.useArrays = useArrays;
+    }
+
+    public boolean getUseArrays() {
+        return useArrays;
+    }
+
     public void setsaveFileImmediatly(boolean saveCsharpFileNearSource) {
         this.saveFileImmediatly = saveCsharpFileNearSource;
     }
@@ -72,19 +83,19 @@ public class Plugin extends Observable implements SaveNearSourceCodeGeneratorPlu
     public boolean getsaveFileImmediatly() {
         return saveFileImmediatly;
     }
-        
+
     public String getSaveFileDirectory() {
         return saveFileDirectory;
     }
-    
+
     public void setSaveFileDirectory(String saveFileDirectory) {
         this.saveFileDirectory = saveFileDirectory;
     }
-     
+
     public String getFileExtension() {
         return "cs";
     }
-       
+
     @Override
     public CodeGenerator createCodeGenerator() {
         return new CsharpCodeGenerator(this);

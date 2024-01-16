@@ -17,7 +17,7 @@ public class CsharpCodeGenerator extends DefaultCodeGenerator {
 
     @Override
     protected String generateCode(ControlFlowGraph graph) {
-        CsharpVisitor visitor = new CsharpVisitor(plugin.getStandalone(), plugin.getUseDouble());
+        CsharpVisitor visitor = new CsharpVisitor(plugin.getStandalone(), plugin.getUseDouble(), plugin.getUseArrays());
         try {
             graph.accept(visitor);
         } catch (Throwable error) {
