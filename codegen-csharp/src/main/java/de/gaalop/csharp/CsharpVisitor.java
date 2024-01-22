@@ -9,7 +9,7 @@ import de.gaalop.dfg.*;
 import java.util.stream.Collectors;
 import java.util.*;
 /**
- * This visitor traverses the control and data flow graphs and generates C/C++
+ * This visitor traverses the control and data flow graphs and generates C#
  * code.
  *
  * To do: Checken ob Skalare auch für andere Programmiersprachen abstrahiert
@@ -195,41 +195,84 @@ public class CsharpVisitor extends DefaultCodeGeneratorVisitor {
         node.getSuccessor().accept(this);
     }
 
+    /*
+      A normal variable is for instance p5 (like defined in Gaalop script) and
+      one of its component variables is p5_e01.
+     */
+    private String GetVariableFromComponentVariable(String componentVariable) {
+        int index = componentVariable.lastIndexOf("_");
+        return componentVariable.substring(0, index);
+    }
+
+    private String JoinString(ArrayList<String> componentVariables, String separator) {
+        return componentVariables.stream().collect(Collectors.joining(separator));
+    }
+
     // The last node
     @Override
     public void visit(EndNode node) {
 
-        // We need to fill the array when the new name was used
+        // If no arrays are used, we need to return variables
         if (!useArrays) {
-            StringList outputVariables = graph.getOutputs();
-            ArrayList<String> componentNames = new ArrayList<String>();
+            StringList gaalopOutputVariables = graph.getOutputs();
+            ArrayList<String> allComponentVariables = new ArrayList<String>();
 
-            for (String outputName : outputVariables) {
+            for (String variable : gaalopOutputVariables) {
                 // Iterate the current output variable marked by question mark (?)
-                for (String componentName : declaredVariableNames) {
-                    int index = componentName.lastIndexOf("_");
-                    String outputNameFromComponent = componentName.substring(0, index);
-                    if (outputNameFromComponent.equals(outputName)) {
-                        componentNames.add(componentName);
+                for (String componentVariable : declaredVariableNames) {
+                    String variableFromComponent = GetVariableFromComponentVariable(componentVariable);
+                    if (variableFromComponent.equals(variable)) {
+                        allComponentVariables.add(componentVariable);
                     }
                 }
             }
 
             // Add blank file
-            addCode("\n");
-            appendIndentation();
+            addLine();
+
+            if (normalizeOutputs) {
+                addLine("// Normalizing outputs:");
+                for (String variable : gaalopOutputVariables) {
+
+                    // Collect all component variables for the current Gaalop variable
+                    ArrayList<String> componentVariables = new ArrayList<String>();
+
+                    for (String componentVariable : allComponentVariables) {
+                        String variableFromComponent = GetVariableFromComponentVariable(componentVariable);
+                        if (variableFromComponent.equals(variable)) {
+                            componentVariables.add(componentVariable);
+                        }
+                    }
+
+                    String magnitudeVariable = variable + "_magnitude";
+                    addLine();
+                    addLine(variableType + " " + magnitudeVariable + " = " + mathLibrary + ".Sqrt("
+                            + componentVariables.stream().map(it -> it + " * " + it).collect(Collectors.joining(" + ")) + ");");
+
+                    for (String componentVariable : componentVariables) {
+                        addLine(componentVariable + " = " + componentVariable + " / " + magnitudeVariable + ";");
+                    }
+//                    addCode(variable + " = " +);
+                }
+            }
+
+            addLine();
 
             // Add return statement
-            if (componentNames.size() == 1) {
-                String name = componentNames.get(0);
-                addCode("return " + name + ";\n");
+            if (allComponentVariables.size() == 1) {
+                // Return one float/double
+                String name = allComponentVariables.get(0);
+                addLine("return " + name + ";\n");
+                // Set return value to float/double (which is currently void)
                 replaceInCode(" void ", " float ");
-            } else if (componentNames.size() > 1) {
-                String tupleType = "(" + componentNames.stream().map(it -> variableType + " " + it).collect(Collectors.joining(", ")) + ")";
+            } else if (allComponentVariables.size() > 1) {
+                // Return float/double tuple
+                // Create tuple type, e.g. (float p5_e01, float p5_e12)
+                String tupleType = "(" + allComponentVariables.stream().map(it -> variableType + " " + it).collect(Collectors.joining(", ")) + ")";
                 replaceInCode(" void ", " " + tupleType + " ");
 
-                String line = "return (" + String.join(", ", componentNames) + ");\n";
-                addCode(line);
+                String line = "return (" + String.join(", ", allComponentVariables) + ");";
+                addLine(line);
             }
         }
 
@@ -356,7 +399,19 @@ public class CsharpVisitor extends DefaultCodeGeneratorVisitor {
     }
     private StringBuilder addCode(char text) {
         return addCode(String.valueOf(text));
-        }
+    }
+
+    private StringBuilder addLine() {
+        return addLine("");
+    }
+
+    /*
+    Adds text with a previous indentation.
+     */
+    private StringBuilder addLine(String text) {
+        appendIndentation();
+        return addCode(text + newline);
+    }
 
     private StringBuilder addCode(String text) {
 
