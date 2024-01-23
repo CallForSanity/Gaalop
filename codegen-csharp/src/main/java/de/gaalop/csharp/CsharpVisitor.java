@@ -256,8 +256,8 @@ public class CsharpVisitor extends DefaultCodeGeneratorVisitor {
 
             Set<ReturnDefinition> definitions = graph.getPragmaReturns();
 
-            LinkedList<String> returnTypes = new LinkedList<String>();
-            LinkedList<String> returnValues = new LinkedList<String>();
+            List<String> returnTypes = new LinkedList<String>();
+            List<List<String>> returnValuesBundles = new LinkedList<List<String>>();
 
             for (String variable : gaalopOutputVariables) {
 
@@ -273,19 +273,19 @@ public class CsharpVisitor extends DefaultCodeGeneratorVisitor {
                         .orElse(null);
 
                 /* Apply return definitions defined by pragmas. Consider following Gaalop script:
-
                      //#pragma return line Line(e1, e2)
                      ?line = e1 + e2
-
                    The pragma return statement will alter the generated return statement in C#:
-
                      return (line_e2, line_e1);         // without pragma
                      return new Line(line_e1, line_e2)  // with pragma
                  */
                 if (matchingDefinition != null) {
+                    // Set return type and values based on return definition
                     returnTypes.add(matchingDefinition.className);
-                    returnValues.add("new " + matchingDefinition.className + "("
-                            + Arrays.stream(matchingDefinition.variables).map(var -> variable + "_" + var).collect(Collectors.joining(", ")) + ")");
+                    returnValuesBundles.add(new LinkedList<>(Collections.singletonList("new " + matchingDefinition.className + "("
+                            + Arrays.stream(matchingDefinition.variables)
+                                    .map(var -> variable + "_" + var)
+                                    .collect(Collectors.joining(", ")) + ")")));
                 } else {
                     if (allComponentVariables.size() == 1) {
                         // When using one return value, the type is sufficient
@@ -295,7 +295,7 @@ public class CsharpVisitor extends DefaultCodeGeneratorVisitor {
                         returnTypes.addAll(componentVariables.stream().map(var -> variableType + " " + var).collect(Collectors.toList()));
 
                     }
-                    returnValues.addAll(componentVariables);
+                    returnValuesBundles.add(componentVariables);
                 }
             }
 
@@ -307,8 +307,21 @@ public class CsharpVisitor extends DefaultCodeGeneratorVisitor {
             replaceInCode(" void ", " " + openingBracket + String.join(", ", returnTypes) + closingBracket + " ");
 
             // Add return statement
-            String line = "return " + openingBracket + String.join(", ", returnValues) + closingBracket + ";";
-            addLine(line);
+            int size = returnValuesBundles.size();
+            if (size == 1) {
+                // Return single Gaalop variables in one line
+                addLine("return " + openingBracket + String.join(", ", returnValuesBundles.getFirst()) + closingBracket + ";");
+            } else {
+                // Return multiple Gaalop variables in multiple lines
+                addLine("return " + openingBracket);
+                indentation++;
+                int i = 0;
+                for (List<String> returnValues : returnValuesBundles) {
+                    addLine(String.join(", ", returnValues) + (++i < size ? ", " : ""));
+                }
+                indentation--;
+                addLine(closingBracket + ";");
+            }
         }
 
         // Add closing brackets
