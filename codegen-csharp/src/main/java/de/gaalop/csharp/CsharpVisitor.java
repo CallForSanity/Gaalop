@@ -17,11 +17,14 @@ import java.util.*;
  */
 public class CsharpVisitor extends DefaultCodeGeneratorVisitor {
 
+    /*
+      When true, the generated code will be embedded inside class and method.
+     */
     protected boolean standalone = true;
 
     protected Set<String> assigned = new HashSet<>();
 
-    protected String variableType = "float";
+    protected String numberType = "float";
     protected String mathLibrary = "MathF";
 
     protected Boolean useDouble = true;
@@ -42,14 +45,14 @@ public class CsharpVisitor extends DefaultCodeGeneratorVisitor {
         this.useArrays = useArrays;
 
         if (useDouble) {
-            variableType = "double";
+            numberType = "double";
             mathLibrary = "Math";
         }
     }
 
     public CsharpVisitor(String variableType) {
         this.standalone = false;
-        this.variableType = variableType;
+        this.numberType = variableType;
     }
 
     public void setStandalone(boolean standalone) {
@@ -83,13 +86,13 @@ public class CsharpVisitor extends DefaultCodeGeneratorVisitor {
             StringList parameters = new StringList();
 
             for (String inputVariable : graph.getInputs()) {
-                parameters.add(variableType + " " + inputVariable); // The assumption here is that they all are normal scalars
+                parameters.add(numberType + " " + inputVariable); // The assumption here is that they all are normal scalars
             }
 
             // Add outputs to parameters if arrays are used
             if (useArrays) {
                 for (String outputVariable : outputs) {
-                    parameters.add(variableType + "[] " + outputVariable);
+                    parameters.add(numberType + "[] " + outputVariable);
                 }
             }
 
@@ -108,15 +111,15 @@ public class CsharpVisitor extends DefaultCodeGeneratorVisitor {
             for (String localVariable : graph.getLocals()) {
                 if (!outputs.contains(localVariable)) {
                     appendIndentation();
-                    addCode(variableType).append("[] ").append(localVariable);
-                    addCode(" = new ").append(variableType).append("[").append(bladeCount).append("];\n");
+                    addCode(numberType).append("[] ").append(localVariable);
+                    addCode(" = new ").append(numberType).append("[").append(bladeCount).append("];\n");
                 }
             }
         }
 
         if (graph.getScalarVariables().size() > 0) {
             appendIndentation();
-            addCode(variableType).append(" ");
+            addCode(numberType).append(" ");
             addCode(graph.getScalars().join());
             addCode(";\n");
         }
@@ -134,9 +137,7 @@ public class CsharpVisitor extends DefaultCodeGeneratorVisitor {
     public void visit(AssignmentNode node) {
         // Get variable and its name from node
         Variable variable = node.getVariable();
-        if (getNewName(variable) == "M") {
-            addCode("");
-        }
+
         String variableName = getNewName(variable);
 
         // What does this?
@@ -158,24 +159,18 @@ public class CsharpVisitor extends DefaultCodeGeneratorVisitor {
 
         if (useArrays) {
             node.getVariable().accept(this);
-            addCode(" = ");
-            node.getValue().accept(this);
-            addCode(";");
         } else {
             // Prefix type if the the variable was not declared yet: "float "
             if (declaredVariableNames.add(variableName)) {
-                addCode(variableType + " ");
+                addCode(numberType + " ");
             }
 
             addCode(variableName);
-            addCode(" = ");
-            Expression expression = node.getValue();
-            expression.accept(this);
-            addCode(";");
-
         }
 
-        addCode("\n");
+        addCode(" = ");
+        node.getValue().accept(this);
+        addCode(";" + newline);
 
         node.getSuccessor().accept(this);
     }
@@ -242,7 +237,7 @@ public class CsharpVisitor extends DefaultCodeGeneratorVisitor {
 
                     // Add code to calculate magnitude
                     addLine();
-                    addLine(variableType + " " + magnitudeVariable + " = " + getMathLibrary() + ".Sqrt("
+                    addLine(numberType + " " + magnitudeVariable + " = " + getMathLibrary() + ".Sqrt("
                             + componentVariables.stream().map(it -> it + " * " + it).collect(Collectors.joining(" + ")) + ");");
 
                     // Add code to divide my magnitude
@@ -254,7 +249,7 @@ public class CsharpVisitor extends DefaultCodeGeneratorVisitor {
 
             addLine();
 
-            Set<ReturnDefinition> definitions = graph.getPragmaReturns();
+            Set<ReturnDefinition> definitions = graph.getReturnDefinitions();
 
             List<String> returnTypes = new LinkedList<String>();
             List<List<String>> returnValuesBundles = new LinkedList<List<String>>();
@@ -289,10 +284,10 @@ public class CsharpVisitor extends DefaultCodeGeneratorVisitor {
                 } else {
                     if (allComponentVariables.size() == 1) {
                         // When using one return value, the type is sufficient
-                        returnTypes.add(variableType);
+                        returnTypes.add(numberType);
                     } else {
                         // When having tuples (multiple returns), we wanna use NAMED tuples. So we add the name after each type.
-                        returnTypes.addAll(componentVariables.stream().map(var -> variableType + " " + var).collect(Collectors.toList()));
+                        returnTypes.addAll(componentVariables.stream().map(var -> numberType + " " + var).collect(Collectors.toList()));
 
                     }
                     returnValuesBundles.add(componentVariables);

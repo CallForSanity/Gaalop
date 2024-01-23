@@ -93,7 +93,7 @@ public final class ControlFlowGraph {
             this.renderingExpressions = renderingExpressions;
     }
 
-    public Set<ReturnDefinition> getPragmaReturns() {
+    public Set<ReturnDefinition> getReturnDefinitions() {
         return pragmaReturns;
     }
 

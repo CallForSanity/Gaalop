@@ -14,15 +14,17 @@ import java.util.*;
 public class PythonVisitor extends DefaultCodeGeneratorVisitor {
 
     protected String variableType = "float";
-    
+
+    protected Boolean useArrays = true;
+
     protected String filename;
-    
+
     private HashMap<String, Color> expressionStatements = new HashMap<>();
-    
+
     private HashMap<String, LinkedList<Integer>> mvComponents = new HashMap<>();
-    
+
     private HashSet<String> mvs = new HashSet<String>();
-    
+
     protected Set<String> libraries = new HashSet<>();
 
     public PythonVisitor(boolean useDouble, String filename) {
@@ -35,21 +37,21 @@ public class PythonVisitor extends DefaultCodeGeneratorVisitor {
     public PythonVisitor(String variableType) {
         this.variableType = variableType;
     }
-    
+
     @Override
     public void visit(StartNode node) {
         graph = node.getGraph();
         libraries.add("import numpy as np");
-        
+
         appendIndentation();
-        code.append("def "+filename.toLowerCase()+"("); 
-        
+        code.append("def "+filename.toLowerCase()+"(");
+
         // Print parameters
         code.append(graph.getInputs().join());
 
         code.append("):\n");
         indentation++;
- 
+
         node.getSuccessor().accept(this);
     }
 
@@ -61,7 +63,7 @@ public class PythonVisitor extends DefaultCodeGeneratorVisitor {
             code.append(varName+" = np.zeros("+node.getGraph().getAlgebraDefinitionFile().blades2.length+")\n");
             mvs.add(varName);
         }
-        
+
         appendIndentation();
         node.getVariable().accept(this);
         code.append(" = ");
@@ -70,12 +72,12 @@ public class PythonVisitor extends DefaultCodeGeneratorVisitor {
         if (node.getVariable() instanceof MultivectorComponent) {
             code.append(" # ");
             MultivectorComponent component = (MultivectorComponent) node.getVariable();
-            
+
             code.append(graph.getBladeString(component));
-            
-            if (!mvComponents.containsKey(component.getName())) 
+
+            if (!mvComponents.containsKey(component.getName()))
                 mvComponents.put(component.getName(), new LinkedList<Integer>());
-            
+
             mvComponents.get(component.getName()).add(component.getBladeIndex());
         }
 
@@ -96,11 +98,11 @@ public class PythonVisitor extends DefaultCodeGeneratorVisitor {
 
     @Override
     public void visit(EndNode node) {
-        
+
         appendIndentation();
         code.append("return ");
         code.append(graph.getOutputs().join());
- 
+
         if (!libraries.isEmpty()) {
             LinkedList<String> libs = new LinkedList<>(libraries);
             libs.sort(new Comparator<String>() {
@@ -109,7 +111,7 @@ public class PythonVisitor extends DefaultCodeGeneratorVisitor {
                     return o2.compareTo(o1);
                 }
             });
-            
+
             for (String lib: libs) {
                 code.insert(0, lib+"\n");
             }
@@ -121,7 +123,7 @@ public class PythonVisitor extends DefaultCodeGeneratorVisitor {
         node.getSuccessor().accept(this);
     }
 
-    
+
     @Override
     public void visit(MathFunctionCall mathFunctionCall) {
         libraries.add("import math");
@@ -151,7 +153,7 @@ public class PythonVisitor extends DefaultCodeGeneratorVisitor {
     @Override
     public void visit(MultivectorComponent component) {
         code.append(component.getName());
-        code.append("["+component.getBladeIndex()+"]");  
+        code.append("["+component.getBladeIndex()+"]");
     }
 
     @Override
