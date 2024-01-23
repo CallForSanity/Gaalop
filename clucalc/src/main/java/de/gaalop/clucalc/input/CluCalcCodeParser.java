@@ -3,6 +3,7 @@ package de.gaalop.clucalc.input;
 import de.gaalop.CodeParser;
 import de.gaalop.CodeParserException;
 import de.gaalop.InputFile;
+import de.gaalop.cfg.ReturnDefinition;
 import de.gaalop.cfg.ControlFlowGraph;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -24,9 +25,9 @@ public enum CluCalcCodeParser implements CodeParser {
 
     // static in order not to get an "illegal reference to static field from initializer" error
     private static final Log log = LogFactory.getLog(CluCalcCodeParser.class);
-    
+
     private Plugin plugin;
-    
+
     public void setPluginReference(Plugin plugin) {
     	if (this.plugin == null) {
     		this.plugin = plugin;
@@ -52,12 +53,14 @@ public enum CluCalcCodeParser implements CodeParser {
     private ControlFlowGraph parse(InputFile input) throws CodeParserException, IOException {
         LinkedList<String> onlyEvaluates = new LinkedList<String>();
         LinkedList<String> outputs = new LinkedList<String>();
-        
+
         LinkedList<String[]> drawSegments = new LinkedList<String[]>();
         LinkedList<String[]> drawTriangles = new LinkedList<String[]>();
 
         String syntax = null;
         LinkedList<String> ranges = new LinkedList<String>();
+
+        LinkedList<ReturnDefinition> returnDefinitions = new LinkedList<ReturnDefinition>();
 
         String content = input.getContent();
         BufferedReader reader = new BufferedReader(new StringReader(content));
@@ -76,7 +79,7 @@ public enum CluCalcCodeParser implements CodeParser {
                 } else {
                     //process here
                     String rest = line2.substring(line2.indexOf(" ",10)+1);
-                    
+
                     switch (whichPragma) {
                         case "output":
                             //IDENTIFIER blade+
@@ -93,9 +96,9 @@ public enum CluCalcCodeParser implements CodeParser {
                             syntax = rest;
                             break;
                         case "segments":
-                            while (rest.contains("  ")) 
+                            while (rest.contains("  "))
                                 rest = rest.replaceAll("\\W\\W", " ");
-                            
+
                             for (String t: rest.split(",")) {
                                 String[] segmentMvs = t.trim().split("\\W");
                                 if (segmentMvs.length == 2) {
@@ -106,9 +109,9 @@ public enum CluCalcCodeParser implements CodeParser {
                             }
                             break;
                         case "triangles":
-                            while (rest.contains("  ")) 
+                            while (rest.contains("  "))
                                 rest = rest.replaceAll("\\W\\W", " ");
-                            
+
                             for (String t: rest.split(",")) {
                                 String[] triangleMvs = t.trim().split("\\W");
                                 if (triangleMvs.length == 3) {
@@ -120,6 +123,22 @@ public enum CluCalcCodeParser implements CodeParser {
                             break;
                         case "range":
                             ranges.add(rest);
+                            break;
+                        case "return":
+                            String[] splits = rest.split(" ", 2);
+                            if (splits.length == 2) {
+                                String variableName = splits[0];
+                                String definition = splits[1].replaceAll(" ", "");
+                                int startingBracketIndex = definition.indexOf("(");
+                                int endingBracketIndex = definition.indexOf(")");
+                                String className = definition.substring(0, startingBracketIndex); // Range [13, 6) out of bounds for length 20
+                                String parametersString = definition.substring(startingBracketIndex + 1, endingBracketIndex);
+                                String[] variables = parametersString.split(",");
+                                ReturnDefinition returnDefintion = new ReturnDefinition(variableName, className, variables);
+                                returnDefinitions.add(returnDefintion);
+//                            returns.add(rest);
+                            }
+
                             break;
                         default:
                             throw new CodeParserException(input, "pragma "+whichPragma+" is unknown.");
@@ -137,10 +156,10 @@ public enum CluCalcCodeParser implements CodeParser {
         CluCalcLexer lexer = new CluCalcLexer(inputStream);
         CommonTokenStream tokenStream = new CommonTokenStream(lexer);
         CluCalcParser parser = new CluCalcParser(tokenStream);
-        
+
         CluVisitor visitor = new CluVisitor();
         visitor.visit(parser.script());
-        
+
         ControlFlowGraph graph = visitor.graph;
         graph.drawSegments = drawSegments;
         graph.drawTriangles = drawTriangles;
@@ -149,16 +168,16 @@ public enum CluCalcCodeParser implements CodeParser {
             String[] syntaxParts = syntax.split("->");
             if (syntaxParts.length == 2) {
                 // Parse inputs
-                for (String var: syntaxParts[0].split(",")) 
+                for (String var: syntaxParts[0].split(","))
                     graph.syntaxInputs.add(var.trim());
                 // Parse outputs
-                for (String var: syntaxParts[1].split(",")) 
+                for (String var: syntaxParts[1].split(","))
                     graph.syntaxOutputs.add(var.trim());
             } else {
                 throw new CodeParserException(input, "#pragma in2out must contain one arrow ->");
             }
             graph.syntaxSpecified = true;
-        } else 
+        } else
             graph.syntaxSpecified = false;
 
         for (String output: outputs)
@@ -166,15 +185,19 @@ public enum CluCalcCodeParser implements CodeParser {
 
         for (String onlyEval: onlyEvaluates)
             graph.addPragmaOnlyEvaluateVariable(onlyEval);
-        
+
         for (String range: ranges) {
             String[] rangeParts = range.split("<=");
             if (rangeParts.length == 3)
                 graph.addPragmaMinMaxValues(rangeParts[1].trim(), rangeParts[0].trim(), rangeParts[2].trim());
-            else 
+            else
                 throw new CodeParserException(input, "#pragma range must be of the form: {minValue} <= {variable_name} <= {maxValue} but is "+range);
         }
-        
+
+        for (ReturnDefinition definition : returnDefinitions) {
+            graph.addReturnDefinition(definition);
+        }
+
         return graph;
     }
 

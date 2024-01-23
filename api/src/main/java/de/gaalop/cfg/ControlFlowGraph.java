@@ -25,7 +25,7 @@ import java.util.Collection;
  * <p/>
  * A ControlFlowGraph instance only holds references to the first and last node of the graph, which are modeled by the
  * classes StartNode and EndNode.
- * 
+ *
  * @author Sebastian Hartte
  * @author Christian Schwinn
  * @see de.gaalop.CodeGenerator
@@ -61,35 +61,41 @@ public final class ControlFlowGraph {
         private LinkedList<AssignmentNode> onlyEvaluateNodes = new LinkedList<AssignmentNode>();
 
 	private HashMap<String, String> pragmaMinValue = new HashMap<String, String>();
-	private HashMap<String, String> pragmaMaxValue = new HashMap<String, String>();
-        
+    private HashMap<String, String> pragmaMaxValue = new HashMap<String, String>();
+
+    private Set<ReturnDefinition> pragmaReturns = new HashSet<ReturnDefinition>();
+
         public boolean syntaxSpecified = false;
         public StringList syntaxInputs = new StringList();
         public StringList syntaxOutputs = new StringList();
-        
+
 		public LinkedList<String[]> drawSegments;
         public LinkedList<String[]> drawTriangles;
-        
+
         public boolean tbaOptimized = true;
-        
+
 	public LinkedList<ExpressionStatement> visualizerExpressions = new LinkedList<ExpressionStatement>();
         private HashMap<String, Expression> renderingExpressions = new HashMap<String, Expression>();
 
         public GlobalSettings globalSettings = new GlobalSettings();
-        
+
         public LinkedList<UnknownMacroCall> unknownMacros = new LinkedList<UnknownMacroCall>();
-        
+
         public String algebraName;
         public boolean asRessource;
         public String algebraBaseDirectory;
-        
+
         public HashMap<String, Expression> getRenderingExpressions() {
             return renderingExpressions;
         }
-    
+
         public void setRenderingExpressions(HashMap<String, Expression> renderingExpressions) {
             this.renderingExpressions = renderingExpressions;
-        }
+    }
+
+    public Set<ReturnDefinition> getPragmaReturns() {
+        return pragmaReturns;
+    }
 
 	public HashMap<String, String> getPragmaMaxValue() {
 		return pragmaMaxValue;
@@ -110,15 +116,15 @@ public final class ControlFlowGraph {
         public Set<String> getPragmaOnlyEvaluateVariables() {
             return pragmaOnlyEvaluateVariables;
         }
-        
+
 	public void addPragmaOutputVariable(String name) {
 		pragmaOutputVariables.add(name);
 	}
-        
+
         public void addPragmaOnlyEvaluateNode(AssignmentNode node) {
                 onlyEvaluateNodes.add(node);
         }
-        
+
         public void addPragmaOnlyEvaluateVariable(String var) {
             pragmaOnlyEvaluateVariables.add(var);
         }
@@ -130,7 +136,7 @@ public final class ControlFlowGraph {
 	public void removeScalarVariable(Variable var) {
 		scalarVariables.remove(var);
 	}
-	
+
 	public void removeScalarVariable(String name) {
 		scalarVariables.remove(new Variable(name));
 	}
@@ -146,11 +152,15 @@ public final class ControlFlowGraph {
 	public void addPragmaMinMaxValues(String variable, String min, String max) {
 		pragmaMaxValue.put(variable, max);
 		pragmaMinValue.put(variable, min);
-	}
+    }
+
+    public void addReturnDefinition(ReturnDefinition definition) {
+        pragmaReturns.add(definition);
+    }
 
 	/**
 	 * Adds a new macro definition.
-	 * 
+	 *
 	 * @param macro new macro definition
 	 */
 	public void addMacro(Macro macro) {
@@ -160,7 +170,7 @@ public final class ControlFlowGraph {
 	public void addSlider(Slider slider) {
 		sliders .add(slider);
 	}
-	
+
 	public Set<Slider> getSliders() {
 		return sliders;
 	}
@@ -168,14 +178,14 @@ public final class ControlFlowGraph {
 	public void setBGColor(ColorNode color) {
 		bgColor = color;
 	}
-	
+
 	public ColorNode getBGColor() {
 		return bgColor;
 	}
 
 	/**
 	 * Returns the macro definition of a macro with given name, if available.
-	 * 
+	 *
 	 * @param name name of macro to be returned
 	 * @return macro definition according to name or null, if not found
 	 */
@@ -185,7 +195,7 @@ public final class ControlFlowGraph {
 
 	/**
 	 * Returns a list of macro definitions that are contained in this graph.
-	 * 
+	 *
 	 * @return list of macro definitions
 	 */
 	public Set<Macro> getMacros() {
@@ -206,7 +216,7 @@ public final class ControlFlowGraph {
 
 	/**
 	 * Gets the last node in this control flow graph.
-	 * 
+	 *
 	 * @return The last node in the graph.
 	 */
 	public EndNode getEndNode() {
@@ -215,7 +225,7 @@ public final class ControlFlowGraph {
 
 	/**
 	 * Gets the start node in this control flow graph.
-	 * 
+	 *
 	 * @return The first node of the control flow graph.
 	 */
 	public StartNode getStartNode() {
@@ -224,7 +234,7 @@ public final class ControlFlowGraph {
 
 	/**
 	 * Gets the input file this graph was created from.
-	 * 
+	 *
 	 * @return The input file this graph was created from or null if it is unknown.
 	 */
 	public InputFile getSource() {
@@ -233,7 +243,7 @@ public final class ControlFlowGraph {
 
 	/**
 	 * Sets the input file this graph was parsed from.
-	 * 
+	 *
 	 * @param source The input file this graph resulted from.
 	 */
 	public void setSource(InputFile source) {
@@ -242,21 +252,21 @@ public final class ControlFlowGraph {
 
 	/**
 	 * Gets the locally declared variables.
-	 * 
+	 *
 	 * @return An unmodifiable set containing the locally declared variables in this cfg.
 	 * @see #getInputVariables()
 	 */
 	public Set<Variable> getLocalVariables() {
 		return Collections.unmodifiableSet(localVariables);
 	}
-        
+
         public Set<Variable> getLocalVariablesModifiable() {
 		return localVariables;
 	}
 
 	/**
 	 * Gets the set of variables that are expected as input parameters for the algorithm modeled by this graph.
-	 * 
+	 *
 	 * @return An unmodifiable set containing the input variables for this graph.
 	 */
 	public Set<Variable> getInputVariables() {
@@ -265,7 +275,7 @@ public final class ControlFlowGraph {
 
 	/**
 	 * Adds a new local variable.
-	 * 
+	 *
 	 * @param variable The new local variable.
 	 * @throws IllegalArgumentException If <code>variable</code> is an input variable in this graph.
 	 */
@@ -283,7 +293,7 @@ public final class ControlFlowGraph {
 	 * Removes a local variable from this graph.
 	 * <p/>
 	 * If <code>variable</code> is also an output variable, it is removed from that set as well.
-	 * 
+	 *
 	 * @param variable The variable that should be removed.
 	 */
 	public void removeLocalVariable(Variable variable) {
@@ -292,7 +302,7 @@ public final class ControlFlowGraph {
 
 	/**
 	 * Determines whether there is a local variable with given name defined in this graph.
-	 * 
+	 *
 	 * @param name name of variable
 	 * @return true, if a local variable with given name exists, false otherwise
 	 */
@@ -307,7 +317,7 @@ public final class ControlFlowGraph {
 
 	/**
 	 * Adds an input parameter.
-	 * 
+	 *
 	 * @param variable The new input parameter.
 	 * @throws IllegalArgumentException If <code>variable</code> is a local variable in this graph.
 	 */
@@ -317,7 +327,7 @@ public final class ControlFlowGraph {
 			// ignore these keywords
 			return;
 		}
-		
+
 		// Check that the given variable is not part of the localVariables set
 		if (localVariables.contains(variable)) {
 			throw new IllegalArgumentException("The Variable " + name
@@ -329,7 +339,7 @@ public final class ControlFlowGraph {
 
 	/**
 	 * Removes an input variable.
-	 * 
+	 *
 	 * @param variable The variable that should be removed.
 	 */
 	public void removeInputVariable(Variable variable) {
@@ -341,7 +351,7 @@ public final class ControlFlowGraph {
 	 * <p/>
 	 * Since the first node of the graph will always be a StartNode object, this method forwards the call to
 	 * {@link StartNode#accept(ControlFlowVisitor)}.
-	 * 
+	 *
 	 * @param visitor The visitor that provides the callback methods.
 	 */
 	public void accept(ControlFlowVisitor visitor) {
@@ -352,7 +362,7 @@ public final class ControlFlowGraph {
 	 * Removes the given node from the control flow graph. The graph will be traversed in order to find the node to be
 	 * removed. Once the desired node is found, its predecessors are rewired to have the old node's successor as direct
 	 * successors.
-	 * 
+	 *
 	 * @param node node to be removed
 	 */
 	public void removeNode(SequentialNode node) {
@@ -390,14 +400,14 @@ public final class ControlFlowGraph {
 		accept(printer);
 		return printer.getCode();
 	}
-        
+
         /**
          * Returns the blade string representation of a given multivector component, respecting the output base (natural or zero-inf).
          * @param multivectorComponent
-         * @return 
+         * @return
          */
         public String getBladeString(MultivectorComponent multivectorComponent) {
-            return (globalSettings.outputToNormalBase) 
+            return (globalSettings.outputToNormalBase)
                 ? getAlgebraDefinitionFile().getBladeStringNormalBase(multivectorComponent.getBladeIndex())
                 : getAlgebraDefinitionFile().getBladeString(multivectorComponent.getBladeIndex());
         }
@@ -545,7 +555,7 @@ public final class ControlFlowGraph {
             HashSet<Variable> inputVars = new HashSet<>(getInputVariables());
             for (String syntaxInput: syntaxInputs) {
                 Variable syntaxInputVar = new Variable(syntaxInput);
-                
+
                 if (inputVars.contains(syntaxInputVar)) {
                     //add to list, if in inputVars
                     list.add(syntaxInput);
@@ -559,37 +569,37 @@ public final class ControlFlowGraph {
                 throw new IllegalStateException("Input variables "+inputVars+", must be in in2outPragma!");
             }
         } else {
-            for (Variable var : getInputVariables()) 
+            for (Variable var : getInputVariables())
                 list.add(var.getName());
             list.sortIgnoringCase();
         }
-        return list;            
+        return list;
     }
-    
+
     /**
      * Computes the order of the local variables.
      * @return The order of the locals as list of variable names.
      */
     public StringList getLocals() {
         StringList list = new StringList();
-        for (Variable var : getLocalVariables()) 
+        for (Variable var : getLocalVariables())
             list.add(var.getName());
         list.sortIgnoringCase();
-        return list;            
+        return list;
     }
-    
+
     /**
      * Computes the order of the scalar variables.
      * @return The order of the scalars as list of variable names.
      */
     public StringList getScalars() {
         StringList list = new StringList();
-        for (Variable var : getScalarVariables()) 
+        for (Variable var : getScalarVariables())
             list.add(var.getName());
         list.sortIgnoringCase();
-        return list;            
+        return list;
     }
-    
+
     /**
      * Computes the order of the outputs.
      * If a syntax pragma is specified, then the order given by syntax is used, otherwise, a lexiographical ordering ignoring case is used.
@@ -597,7 +607,7 @@ public final class ControlFlowGraph {
      */
     public StringList getOutputs() {
         HashSet<String> outputs = OutputsCollector.getOutputsFromGraph(this);
-        
+
         StringList list;
         if (syntaxSpecified) {
             list = new StringList();
@@ -614,5 +624,4 @@ public final class ControlFlowGraph {
         }
         return list;
     }
-
 }

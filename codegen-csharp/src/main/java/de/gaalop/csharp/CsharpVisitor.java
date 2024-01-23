@@ -233,47 +233,79 @@ public class CsharpVisitor extends DefaultCodeGeneratorVisitor {
             if (normalizeOutputs) {
                 addLine("// Normalizing outputs:");
                 for (String variable : gaalopOutputVariables) {
+                    String magnitudeVariable = variable + "_magnitude";
 
                     // Collect all component variables for the current Gaalop variable
-                    ArrayList<String> componentVariables = new ArrayList<String>();
+                    List<String> componentVariables = allComponentVariables.stream()
+                            .filter(componentVariable -> GetVariableFromComponentVariable(componentVariable).equals(variable))
+                            .collect(Collectors.toList());
 
-                    for (String componentVariable : allComponentVariables) {
-                        String variableFromComponent = GetVariableFromComponentVariable(componentVariable);
-                        if (variableFromComponent.equals(variable)) {
-                            componentVariables.add(componentVariable);
-                        }
-                    }
-
-                    String magnitudeVariable = variable + "_magnitude";
+                    // Add code to calculate magnitude
                     addLine();
                     addLine(variableType + " " + magnitudeVariable + " = " + mathLibrary + ".Sqrt("
                             + componentVariables.stream().map(it -> it + " * " + it).collect(Collectors.joining(" + ")) + ");");
-
+                    // Add code to divide my magnitude
                     for (String componentVariable : componentVariables) {
                         addLine(componentVariable + " = " + componentVariable + " / " + magnitudeVariable + ";");
                     }
-//                    addCode(variable + " = " +);
                 }
             }
 
             addLine();
 
-            // Add return statement
-            if (allComponentVariables.size() == 1) {
-                // Return one float/double
-                String name = allComponentVariables.get(0);
-                addLine("return " + name + ";\n");
-                // Set return value to float/double (which is currently void)
-                replaceInCode(" void ", " float ");
-            } else if (allComponentVariables.size() > 1) {
-                // Return float/double tuple
-                // Create tuple type, e.g. (float p5_e01, float p5_e12)
-                String tupleType = "(" + allComponentVariables.stream().map(it -> variableType + " " + it).collect(Collectors.joining(", ")) + ")";
-                replaceInCode(" void ", " " + tupleType + " ");
+            Set<ReturnDefinition> definitions = graph.getPragmaReturns();
 
-                String line = "return (" + String.join(", ", allComponentVariables) + ");";
-                addLine(line);
+            LinkedList<String> returnTypes = new LinkedList<String>();
+            LinkedList<String> returnValues = new LinkedList<String>();
+
+            for (String variable : gaalopOutputVariables) {
+
+                // Collect all component variables for the current Gaalop variable
+                List<String> componentVariables = allComponentVariables.stream()
+                        .filter(componentVariable -> GetVariableFromComponentVariable(componentVariable).equals(variable))
+                        .collect(Collectors.toList());
+
+                // Check if any ReturnDefinition has the variableName equal to 'name'
+                ReturnDefinition matchingDefinition = definitions.stream()
+                        .filter(definition -> definition.variableName.equals(variable))
+                        .findFirst()
+                        .orElse(null);
+
+                /* Apply return definitions defined by pragmas. Consider following Gaalop script:
+
+                     //#pragma return line Line(e1, e2)
+                     ?line = e1 + e2
+
+                   The pragma return statement will alter the generated return statement in C#:
+
+                     return (line_e2, line_e1);         // without pragma
+                     return new Line(line_e1, line_e2)  // with pragma
+                 */
+                if (matchingDefinition != null) {
+                    returnTypes.add(matchingDefinition.className);
+                    returnValues.add("new " + matchingDefinition.className + "("
+                            + Arrays.stream(matchingDefinition.variables).map(var -> variable + "_" + var).collect(Collectors.joining(", ")) + ")");
+                } else {
+                    if (allComponentVariables.size() == 1) {
+                        returnTypes.add(variableType);
+                    } else {
+                        returnTypes.addAll(componentVariables.stream().map(var -> variableType + " " + var).collect(Collectors.toList()));
+
+                    }
+                    returnValues.addAll(componentVariables);
+                }
             }
+
+            // Add brackets if tuples are used
+            String openingBracket = returnTypes.size() > 1 ? "(" : "";
+            String closingBracket = returnTypes.size() > 1 ? ")" : "";
+
+            // Replace void by new return type
+            replaceInCode(" void ", " " + openingBracket + String.join(", ", returnTypes) + closingBracket + " ");
+
+            // Add return statement
+            String line = "return " + openingBracket + String.join(", ", returnValues) + closingBracket + ";";
+            addLine(line);
         }
 
         // Add closing brackets
