@@ -242,8 +242,9 @@ public class CsharpVisitor extends DefaultCodeGeneratorVisitor {
 
                     // Add code to calculate magnitude
                     addLine();
-                    addLine(variableType + " " + magnitudeVariable + " = " + mathLibrary + ".Sqrt("
+                    addLine(variableType + " " + magnitudeVariable + " = " + getMathLibrary() + ".Sqrt("
                             + componentVariables.stream().map(it -> it + " * " + it).collect(Collectors.joining(" + ")) + ");");
+
                     // Add code to divide my magnitude
                     for (String componentVariable : componentVariables) {
                         addLine(componentVariable + " = " + componentVariable + " / " + magnitudeVariable + ";");
@@ -287,8 +288,10 @@ public class CsharpVisitor extends DefaultCodeGeneratorVisitor {
                             + Arrays.stream(matchingDefinition.variables).map(var -> variable + "_" + var).collect(Collectors.joining(", ")) + ")");
                 } else {
                     if (allComponentVariables.size() == 1) {
+                        // When using one return value, the type is sufficient
                         returnTypes.add(variableType);
                     } else {
+                        // When having tuples (multiple returns), we wanna use NAMED tuples. So we add the name after each type.
                         returnTypes.addAll(componentVariables.stream().map(var -> variableType + " " + var).collect(Collectors.toList()));
 
                     }
@@ -340,23 +343,22 @@ public class CsharpVisitor extends DefaultCodeGeneratorVisitor {
 
     @Override
     public void visit(MathFunctionCall mathFunctionCall) {
-        libraries.add("using System;\n");
         String funcName;
         switch (mathFunctionCall.getFunction()) {
             case ABS:
-                funcName = mathLibrary + ".Abs";
+                funcName = getMathLibrary() + ".Abs";
                 break;
             case SQRT:
-                funcName = mathLibrary + ".Sqrt";
+                funcName = getMathLibrary() + ".Sqrt";
                 break;
             case COS:
-                funcName = mathLibrary + ".Cos";
+                funcName = getMathLibrary() + ".Cos";
                 break;
             case SIN:
-                funcName = mathLibrary + ".Sin";
+                funcName = getMathLibrary() + ".Sin";
                 break;
             case EXP:
-                funcName = mathLibrary + ".Exp";
+                funcName = getMathLibrary() + ".Exp";
                 break;
             default:
                 funcName = mathFunctionCall.getFunction().toString().toLowerCase();
@@ -365,6 +367,14 @@ public class CsharpVisitor extends DefaultCodeGeneratorVisitor {
         addCode('(');
         mathFunctionCall.getOperand().accept(this);
         addCode(')');
+    }
+
+    /*
+      Gets the math library and adds neccessary imports.
+     */
+    private String getMathLibrary() {
+        libraries.add("using System;\n");
+        return mathLibrary;
     }
 
     @Override
