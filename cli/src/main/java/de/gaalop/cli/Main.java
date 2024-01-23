@@ -134,21 +134,17 @@ public class Main {
     System.out.println("----------------------------------------------------------");
     System.out.println(output.getContent());
     System.out.println("----------------------------------------------------------");
-  }
+    }
 
   private CompilerFacade createCompiler() {
-    specificOptionsList = SpecificOption.parseSpecificOptions(specificOptions);
-      
-    if (!maximaPath.trim().isEmpty()) { 
-        specificOptionsList.add(new SpecificOption("de.gaalop.globalSettings.Plugin", "optMaxima", "true"));
-        specificOptionsList.add(new SpecificOption("de.gaalop.globalSettings.Plugin", "maximaCommand", maximaPath.trim()));
-    } else {
-        specificOptionsList.add(new SpecificOption("de.gaalop.globalSettings.Plugin", "optMaxima", "false"));
-        specificOptionsList.add(new SpecificOption("de.gaalop.globalSettings.Plugin", "maximaCommand", ""));
-    }
-      
+      specificOptionsList = SpecificOption.parseSpecificOptions(specificOptions);
+
+
+      specificOptionsList.add(new SpecificOption("de.gaalop.globalSettings.Plugin", "maximaCommand", path));
+      specificOptionsList.add(new SpecificOption("de.gaalop.globalSettings.Plugin", "optMaxima", path.isEmpty() ? "false" : "true"));
+
     CodeParser codeParser = createCodeParser();
-    
+
     GlobalSettingsStrategy globalSettingsStrategy = createGlobalSettingsStrategy();
 
     AlgebraStrategy algebraStrategy = createAlgebraStrategy();
