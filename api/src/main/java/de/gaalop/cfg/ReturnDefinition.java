@@ -17,16 +17,30 @@ import de.gaalop.dfg.MultivectorComponent;
 import de.gaalop.dfg.Variable;
 import java.util.Collection;
 
+/*
+  This class stores data that defines a #pragma return statement.
+
+
+    Consider following Gaalop script:
+
+         //#pragma return line typed Vector2 as new Vector2(e1, e2)
+         ?line = e1 + e2
+
+       The pragma return statement will alter the generated return statement in C#:
+
+         return (line_e1, line_e2);            // without pragma
+         return new Vector2(line_e1, line_e2)  // with pragma
+
+ */
 public final class ReturnDefinition {
 
-    public String variableName;
-    public String className;
-    public String[] variables;
+    public String[] variableNames;
+    public String returnType;
+    public String returnText;
 
-    // Constructor with string parameters
-    public ReturnDefinition(String variableName, String className, String[] variables) {
-        this.variableName = variableName;
-        this.className = className;
-        this.variables = variables;
+    public ReturnDefinition(String[] variableNames, String returnType, String returnText) {
+        this.variableNames = variableNames;
+        this.returnType = returnType;
+        this.returnText = returnText;
     }
 }

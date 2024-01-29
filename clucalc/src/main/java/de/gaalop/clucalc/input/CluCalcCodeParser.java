@@ -136,18 +136,15 @@ public enum CluCalcCodeParser implements CodeParser {
                             ranges.add(rest);
                             break;
                         case "return":
-                            String[] splits = rest.split(" ", 2);
-                            if (splits.length == 2) {
-                                String variableName = splits[0];
-                                String definition = splits[1].replaceAll(" ", "");
-                                int startingBracketIndex = definition.indexOf("(");
-                                int endingBracketIndex = definition.indexOf(")");
-                                String className = definition.substring(0, startingBracketIndex); // Range [13, 6) out of bounds for length 20
-                                String parametersString = definition.substring(startingBracketIndex + 1, endingBracketIndex);
-                                String[] variables = parametersString.split(",");
-                                ReturnDefinition returnDefintion = new ReturnDefinition(variableName, className, variables);
+                            String[] parts = rest.split("\\s+typed\\s+|\\s+as\\s+");
+
+                            if (parts.length == 3) {
+                                String variablesText = parts[0];
+                                String returnType = parts[1];
+                                String returnText = parts[2];
+                                String[] variables = Arrays.stream(variablesText.split(",")).map(String::trim).toArray(String[]::new);
+                                ReturnDefinition returnDefintion = new ReturnDefinition(variables, returnType, returnText);
                                 returnDefinitions.add(returnDefintion);
-//                            returns.add(rest);
                             }
 
                             break;
