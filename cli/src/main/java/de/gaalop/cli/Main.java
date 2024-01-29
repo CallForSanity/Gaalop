@@ -139,7 +139,7 @@ public class Main {
   private CompilerFacade createCompiler() {
       specificOptionsList = SpecificOption.parseSpecificOptions(specificOptions);
 
-
+      String path = maximaPath.trim();
       specificOptionsList.add(new SpecificOption("de.gaalop.globalSettings.Plugin", "maximaCommand", path));
       specificOptionsList.add(new SpecificOption("de.gaalop.globalSettings.Plugin", "optMaxima", path.isEmpty() ? "false" : "true"));
 
