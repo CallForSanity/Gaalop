@@ -23,6 +23,9 @@ public enum CluCalcCodeParser implements CodeParser {
 
     INSTANCE;
 
+    final String DEFAULT_PRAGMA_START = "//#pragma ";
+    final String SHORT_PRAGMA_START = "#pragma ";
+
     // static in order not to get an "illegal reference to static field from initializer" error
     private static final Log log = LogFactory.getLog(CluCalcCodeParser.class);
 
@@ -67,18 +70,26 @@ public enum CluCalcCodeParser implements CodeParser {
         String line = null;
         StringBuilder builder = new StringBuilder();
         while ((line = reader.readLine()) != null) {
-            if (line.trim().startsWith("//#pragma")) {
+            String trimmedLine = line.trim();
+            // Allow using #pragma instead of //#pragma
+            Boolean usingPragma = trimmedLine.startsWith(DEFAULT_PRAGMA_START);
+            Boolean usingNewPragma = trimmedLine.startsWith(SHORT_PRAGMA_START);
+            if (usingPragma || usingNewPragma) {
+                int lengthOfPragmaStart = usingNewPragma ? SHORT_PRAGMA_START.length() : DEFAULT_PRAGMA_START.length();
+
                 String line2 = line.replaceAll("\t", " ");
                 while (line2.contains("  "))
                     line2 = line2.replaceAll("  "," ");
 
-                String whichPragma = line2.substring(10,line2.indexOf(" ",10));
+                int indexOfSpace = line2.indexOf(" ", 10);
+
+                String whichPragma = line2.substring(lengthOfPragmaStart, indexOfSpace);
                 if (whichPragma.equals("unroll") || whichPragma.equals("count")) {
                     builder.append(line);
                     builder.append("\n");
                 } else {
                     //process here
-                    String rest = line2.substring(line2.indexOf(" ",10)+1);
+                    String rest = line2.substring(indexOfSpace + 1);
 
                     switch (whichPragma) {
                         case "output":
