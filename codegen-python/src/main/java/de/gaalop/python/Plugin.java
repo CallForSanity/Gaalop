@@ -1,10 +1,10 @@
 package de.gaalop.python;
 
 import de.gaalop.CodeGenerator;
-import de.gaalop.CodeGeneratorPlugin;
 import de.gaalop.ConfigurationProperty;
 import de.gaalop.ConfigurationProperty.Type;
 import de.gaalop.Notifications;
+import de.gaalop.OptimizeOnSaveCodeGeneratorPlugin;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -18,15 +18,26 @@ import java.util.Observable;
 /**
  * This class implements the Plugin interface for Gaalop.
  */
-public class Plugin extends Observable implements CodeGeneratorPlugin {
+public class Plugin extends Observable implements OptimizeOnSaveCodeGeneratorPlugin {
 
     private Log log = LogFactory.getLog(Plugin.class);
 
     private Image icon;
 
     @ConfigurationProperty(type = Type.BOOLEAN)
+    public boolean standalone = true;
+
+    @ConfigurationProperty(type = Type.BOOLEAN)
     public boolean useDouble = false;
-    
+
+    @ConfigurationProperty(type = Type.BOOLEAN)
+    public boolean useArrays = false;
+
+    @ConfigurationProperty(type = Type.BOOLEAN)
+    public boolean optimizeOnSave = false;
+
+    @ConfigurationProperty(type = Type.DIRPATH)
+    public String saveFileDirectory = "";
 
     public Plugin() {
         URL url = getClass().getResource("icon.png");
@@ -41,12 +52,48 @@ public class Plugin extends Observable implements CodeGeneratorPlugin {
         }
     }
 
+    public void setStandalone(boolean standalone) {
+        this.standalone = standalone;
+    }
+
+    public boolean getStandalone() {
+        return standalone;
+    }
+
     public void setUseDouble(boolean useDouble) {
         this.useDouble = useDouble;
     }
 
     public boolean getUseDouble() {
         return useDouble;
+    }
+
+    public void setUseArrays(boolean useArrays) {
+        this.useArrays = useArrays;
+    }
+
+    public boolean getUseArrays() {
+        return useArrays;
+    }
+
+    public void setOptimizeOnSave(boolean optimizeOnSave) {
+        this.optimizeOnSave = optimizeOnSave;
+    }
+
+    public boolean getOptimizeOnSave() {
+        return optimizeOnSave;
+    }
+
+    public String getSaveFileDirectory() {
+        return saveFileDirectory;
+    }
+
+    public void setSaveFileDirectory(String saveFileDirectory) {
+        this.saveFileDirectory = saveFileDirectory;
+    }
+
+    public String getFileExtension() {
+        return "py";
     }
 
     @Override
@@ -68,7 +115,7 @@ public class Plugin extends Observable implements CodeGeneratorPlugin {
     public Image getIcon() {
         return icon;
     }
-    
+
     void notifyError(Throwable error) {
     	setChanged();
     	notifyObservers(new Notifications.Error(error));

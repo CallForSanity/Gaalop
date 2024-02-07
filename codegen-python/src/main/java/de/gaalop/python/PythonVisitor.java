@@ -27,7 +27,7 @@ public class PythonVisitor extends DefaultCodeGeneratorVisitor {
 
     protected Set<String> libraries = new HashSet<>();
 
-    public PythonVisitor(boolean useDouble, String filename) {
+    public PythonVisitor(boolean useDouble, String filename, boolean useArrays) {
         this.filename = filename;
         if (useDouble) {
             variableType = "double";
@@ -57,7 +57,7 @@ public class PythonVisitor extends DefaultCodeGeneratorVisitor {
 
     @Override
     public void visit(AssignmentNode node) {
-        String varName = node.getVariable().getName();
+        String varName = getNewName(node.getVariable());
         if (!mvs.contains(varName)) {
             appendIndentation();
             code.append(varName+" = np.zeros("+node.getGraph().getAlgebraDefinitionFile().blades2.length+")\n");
@@ -82,7 +82,6 @@ public class PythonVisitor extends DefaultCodeGeneratorVisitor {
         }
 
         code.append('\n');
-
         node.getSuccessor().accept(this);
     }
 
@@ -147,7 +146,7 @@ public class PythonVisitor extends DefaultCodeGeneratorVisitor {
     @Override
     public void visit(Variable variable) {
         // usually there are no variables
-        code.append(variable.getName());
+        code.append(getNewName(variable));
     }
 
     @Override
@@ -181,5 +180,11 @@ public class PythonVisitor extends DefaultCodeGeneratorVisitor {
         code.append('-');
         addChild(negation, negation.getOperand());
         code.append(')');
+    }
+
+    @Override
+    protected String getNewName(Variable variable) {
+        return variable.getName();
+        //        return variable.getNewName(graph, useArrays);
     }
 }
