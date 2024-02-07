@@ -44,12 +44,12 @@ public class PythonVisitor extends DefaultCodeGeneratorVisitor {
         libraries.add("import numpy as np");
 
         appendIndentation();
-        code.append("def "+filename.toLowerCase()+"(");
+        addCode("def " + filename.toLowerCase() + "(");
 
         // Print parameters
-        code.append(graph.getInputs().join());
+        addCode(graph.getInputs().join());
 
-        code.append("):\n");
+        addCode("):\n");
         indentation++;
 
         node.getSuccessor().accept(this);
@@ -59,21 +59,20 @@ public class PythonVisitor extends DefaultCodeGeneratorVisitor {
     public void visit(AssignmentNode node) {
         String varName = getNewName(node.getVariable());
         if (!mvs.contains(varName)) {
-            appendIndentation();
-            code.append(varName+" = np.zeros("+node.getGraph().getAlgebraDefinitionFile().blades2.length+")\n");
+            addLine(varName + " = np.zeros(" + node.getGraph().getAlgebraDefinitionFile().blades2.length + ")");
             mvs.add(varName);
         }
 
         appendIndentation();
         node.getVariable().accept(this);
-        code.append(" = ");
+        addCode(" = ");
         node.getValue().accept(this);
 
         if (node.getVariable() instanceof MultivectorComponent) {
-            code.append(" # ");
+            addCode(" # ");
             MultivectorComponent component = (MultivectorComponent) node.getVariable();
 
-            code.append(graph.getBladeString(component));
+            addCode(graph.getBladeString(component));
 
             if (!mvComponents.containsKey(component.getName()))
                 mvComponents.put(component.getName(), new LinkedList<Integer>());
@@ -81,7 +80,7 @@ public class PythonVisitor extends DefaultCodeGeneratorVisitor {
             mvComponents.get(component.getName()).add(component.getBladeIndex());
         }
 
-        code.append('\n');
+        addCode('\n');
         node.getSuccessor().accept(this);
     }
 
@@ -99,9 +98,10 @@ public class PythonVisitor extends DefaultCodeGeneratorVisitor {
     public void visit(EndNode node) {
 
         appendIndentation();
-        code.append("return ");
-        code.append(graph.getOutputs().join());
+        addCode("return ");
+        addCode(graph.getOutputs().join());
 
+        // Insert libraries at script start
         if (!libraries.isEmpty()) {
             LinkedList<String> libs = new LinkedList<>(libraries);
             libs.sort(new Comparator<String>() {
@@ -113,6 +113,11 @@ public class PythonVisitor extends DefaultCodeGeneratorVisitor {
 
             for (String lib: libs) {
                 code.insert(0, lib+"\n");
+            }
+
+            String text = code.toString();
+            if (text.contains("sin(") || text.contains("cos(")) {
+                code.insert(0, "from math import sin, cos\n");
             }
         }
     }
@@ -137,22 +142,22 @@ public class PythonVisitor extends DefaultCodeGeneratorVisitor {
             default:
                 funcName = mathFunctionCall.getFunction().toString().toLowerCase();
         }
-        code.append(funcName);
-        code.append('(');
+        addCode(funcName);
+        addCode('(');
         mathFunctionCall.getOperand().accept(this);
-        code.append(')');
+        addCode(')');
     }
 
     @Override
     public void visit(Variable variable) {
         // usually there are no variables
-        code.append(getNewName(variable));
+        addCode(getNewName(variable));
     }
 
     @Override
     public void visit(MultivectorComponent component) {
-        code.append(component.getName());
-        code.append("["+component.getBladeIndex()+"]");
+        addCode(component.getName());
+        addCode("[" + component.getBladeIndex() + "]");
     }
 
     @Override
@@ -161,25 +166,25 @@ public class PythonVisitor extends DefaultCodeGeneratorVisitor {
             Multiplication m = new Multiplication(exponentiation.getLeft(), exponentiation.getLeft());
             m.accept(this);
         } else {
-            code.append("pow(");
+            addCode("pow(");
             exponentiation.getLeft().accept(this);
-            code.append(',');
+            addCode(',');
             exponentiation.getRight().accept(this);
-            code.append(')');
+            addCode(')');
         }
     }
 
     @Override
     public void visit(FloatConstant floatConstant) {
-        code.append(Double.toString(floatConstant.getValue()));
+        addCode(Double.toString(floatConstant.getValue()));
     }
 
     @Override
     public void visit(Negation negation) {
-        code.append('(');
-        code.append('-');
+        addCode('(');
+        addCode('-');
         addChild(negation, negation.getOperand());
-        code.append(')');
+        addCode(')');
     }
 
     @Override
