@@ -157,9 +157,9 @@ public class CompileAction extends AbstractAction {
 
     private void displayOutputOrSaveNearSource(Set<OutputFile> outputFiles)
     {
-        if (plugin instanceof SaveNearSourceCodeGeneratorPlugin) {
-            SaveNearSourceCodeGeneratorPlugin savePlugin = (SaveNearSourceCodeGeneratorPlugin)plugin;
-            if (savePlugin.getsaveFileImmediatly()){
+        if (plugin instanceof OptimizeOnSaveCodeGeneratorPlugin) {
+            OptimizeOnSaveCodeGeneratorPlugin savePlugin = (OptimizeOnSaveCodeGeneratorPlugin)plugin;
+            if (savePlugin.getOptimizeOnSave()){
                 OutputFile outputFile = outputFiles.iterator().next();
                 String gaalopFileName = outputFile.getName();
                 

@@ -10,7 +10,7 @@
 <entry key="lastUsedOptimization">de.gaalop.tba.Plugin</entry>
 <entry key="de.gaalop.ganja.Plugin.outputMode">standalone_page</entry>
 <entry key="de.gaalop.julia.Plugin.forGrassmann">false</entry>
-<entry key="lastUsedVisualCodeInserter">de.gaalop.ganjaVisualCodeInserter.Plugin</entry>
+<entry key="lastUsedVisualCodeInserter">de.gaalop.visualCodeInserter2d.Plugin</entry>
 <entry key="de.gaalop.python.Plugin.useDouble">true</entry>
 <entry key="de.gaalop.algebra.Plugin.userMacroFilePath"></entry>
 <entry key="de.gaalop.algebra.Plugin.usePrecalulatedTables">false</entry>
@@ -18,7 +18,7 @@
 <entry key="de.gaalop.globalSettings.Plugin.maximaCommand">C:\maxima\bin\maxima.bat</entry>
 <entry key="de.gaalop.tba.Plugin.optConstantPropagation">true</entry>
 <entry key="de.gaalop.csharp.Plugin.saveFileDirectory">C:\Users\dark-\Desktop\GeometricAlgebra\GeometricAlgebraGodot</entry>
-<entry key="lastUsedGenerator">de.gaalop.csharp.Plugin</entry>
+<entry key="lastUsedGenerator">de.gaalop.vis2d.Plugin</entry>
 <entry key="de.gaalop.csharp.Plugin.useArrays">true</entry>
 <entry key="de.gaalop.globalSettings.Plugin.guiFontSize">12</entry>
 <entry key="de.gaalop.globalSettings.Plugin.editorFontSize">12</entry>
@@ -28,6 +28,7 @@
 <entry key="de.gaalop.visualizer.Plugin.lwJglNativePath">native\windows</entry>
 <entry key="de.gaalop.gapp.Plugin.maximaExpand">false</entry>
 <entry key="de.gaalop.tba.Plugin.numberOfRoundingDigits">6</entry>
+<entry key="de.gaalop.csharp.Plugin.optimizeOnSave">true</entry>
 <entry key="de.gaalop.globalSettings.Plugin.optMaxima">false</entry>
 <entry key="de.gaalop.clucalc.output.Plugin.suffix">_opt</entry>
 <entry key="de.gaalop.cpp.Plugin.standalone">true</entry>
@@ -40,5 +41,4 @@
 <entry key="de.gaalop.tba.Plugin.doRoundingAfterOptimization">false</entry>
 <entry key="de.gaalop.compressed.Plugin.standalone">false</entry>
 <entry key="lastUsedAlgebraRessource">true</entry>
-<entry key="de.gaalop.csharp.Plugin.saveFileImmediatly">true</entry>
 </properties>

@@ -5,18 +5,21 @@
 package de.gaalop;
 
 /**
+ * Plugins that implement this can optimize their code when the Gaalop script is
+ * saved.
  *
  * @author Dustin Grünwald
  */
-public interface SaveNearSourceCodeGeneratorPlugin extends CodeGeneratorPlugin {
-    default boolean getsaveFileImmediatly() {
-        return false; // Default value for the property
+public interface OptimizeOnSaveCodeGeneratorPlugin extends CodeGeneratorPlugin {
+
+    default boolean getOptimizeOnSave() {
+        return false;
     }
-    
+
     default String getFileExtension() {
         return "";
     }
-    
+
      default String getSaveFileDirectory() {
         return "";
     }

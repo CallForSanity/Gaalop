@@ -1,7 +1,6 @@
 package de.gaalop.csharp;
 
 import de.gaalop.CodeGenerator;
-import de.gaalop.SaveNearSourceCodeGeneratorPlugin;
 import de.gaalop.ConfigurationProperty;
 import de.gaalop.ConfigurationProperty.Type;
 import de.gaalop.Notifications;
@@ -14,11 +13,12 @@ import java.awt.*;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Observable;
+import de.gaalop.OptimizeOnSaveCodeGeneratorPlugin;
 
 /**
  * This class implements the Plugin interface for Gaalop.
  */
-public class Plugin extends Observable implements SaveNearSourceCodeGeneratorPlugin {
+public class Plugin extends Observable implements OptimizeOnSaveCodeGeneratorPlugin {
 
     private Log log = LogFactory.getLog(Plugin.class);
 
@@ -34,7 +34,7 @@ public class Plugin extends Observable implements SaveNearSourceCodeGeneratorPlu
     public boolean useArrays = false;
 
     @ConfigurationProperty(type = Type.BOOLEAN)
-    public boolean saveFileImmediatly = false;
+    public boolean optimizeOnSave = false;
 
     @ConfigurationProperty(type = Type.DIRPATH)
     public String saveFileDirectory = "";
@@ -76,12 +76,12 @@ public class Plugin extends Observable implements SaveNearSourceCodeGeneratorPlu
         return useArrays;
     }
 
-    public void setsaveFileImmediatly(boolean saveCsharpFileNearSource) {
-        this.saveFileImmediatly = saveCsharpFileNearSource;
+    public void setOptimizeOnSave(boolean optimizeOnSave) {
+        this.optimizeOnSave = optimizeOnSave;
     }
 
-    public boolean getsaveFileImmediatly() {
-        return saveFileImmediatly;
+    public boolean getOptimizeOnSave() {
+        return optimizeOnSave;
     }
 
     public String getSaveFileDirectory() {

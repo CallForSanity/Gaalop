@@ -17,6 +17,9 @@ import java.util.*;
  */
 public class CsharpVisitor extends DefaultCodeGeneratorVisitor {
 
+    private static String MethodModifiers = "public static void";
+    private static String MethodName = "Execute";
+
     /*
       When true, the generated code will be embedded inside class and method.
      */
@@ -29,14 +32,23 @@ public class CsharpVisitor extends DefaultCodeGeneratorVisitor {
 
     protected Boolean useDouble = true;
     protected Boolean useArrays = true;
+
     protected Boolean normalizeOutputs = true;
+
 
     protected Set<String> libraries = new HashSet<>();
 
     private final String newline = "\n";
 
+    private HashSet<String> declaredVariableNames = new HashSet<>();
+
     public CsharpVisitor(boolean standalone) {
         this.standalone = standalone;
+    }
+
+    public CsharpVisitor(String variableType) {
+        this.standalone = false;
+        this.numberType = variableType;
     }
 
     public CsharpVisitor(boolean standalone, boolean useDouble, boolean useArrays) {
@@ -50,19 +62,6 @@ public class CsharpVisitor extends DefaultCodeGeneratorVisitor {
         }
     }
 
-    public CsharpVisitor(String variableType) {
-        this.standalone = false;
-        this.numberType = variableType;
-    }
-
-    public void setStandalone(boolean standalone) {
-        this.standalone = standalone;
-    }
-
-    private static String MethodModifiers = "public static void";
-    private static String MethodName = "Execute";
-
-    // The first node
     @Override
     public void visit(StartNode node) {
         graph = node.getGraph();
@@ -86,7 +85,8 @@ public class CsharpVisitor extends DefaultCodeGeneratorVisitor {
             StringList parameters = new StringList();
 
             for (String inputVariable : graph.getInputs()) {
-                parameters.add(numberType + " " + inputVariable); // The assumption here is that they all are normal scalars
+                // The assumption here is that they all are normal scalars
+                parameters.add(numberType + " " + inputVariable);
             }
 
             // Add outputs to parameters if arrays are used
@@ -95,7 +95,6 @@ public class CsharpVisitor extends DefaultCodeGeneratorVisitor {
                     parameters.add(numberType + "[] " + outputVariable);
                 }
             }
-
 
             addCode(parameters.join(", "));
 
@@ -125,12 +124,6 @@ public class CsharpVisitor extends DefaultCodeGeneratorVisitor {
         }
 
         node.getSuccessor().accept(this);
-    }
-
-    private HashSet<String> declaredVariableNames = new HashSet<>();
-
-    private String getNewName(Variable variable) {
-        return variable.getNewName(graph, useArrays);
     }
 
     @Override
@@ -190,30 +183,6 @@ public class CsharpVisitor extends DefaultCodeGeneratorVisitor {
         node.getSuccessor().accept(this);
     }
 
-    /*
-      Takes in p5_e01 and returns p5 (the variables defined in Gaalop script).
-     */
-    private String GetVariableNameFromBladeVariable(String componentVariable) {
-        int index = componentVariable.lastIndexOf("_");
-        return componentVariable.substring(0, index);
-    }
-
-    /*
-      Takes in p5_e01 and returns e01 (the component string).
-     */
-    private String GetBladeNameFromBladeVariable(String componentVariable) {
-        int index = componentVariable.lastIndexOf("_") + 1;
-        return componentVariable.substring(index);
-    }
-
-    /*
-    Joings the list to a string using the given separator.
-     */
-    private String JoinString(ArrayList<String> componentVariables, String separator) {
-        return componentVariables.stream().collect(Collectors.joining(separator));
-    }
-
-    // The last node
     @Override
     public void visit(EndNode node) {
 
@@ -236,7 +205,7 @@ public class CsharpVisitor extends DefaultCodeGeneratorVisitor {
             addLine();
 
             // Normalize outputs afterwards?
-            if (false) {// normalizeOutputs) {
+            if (true) {// normalizeOutputs) {
                 addLine("// Normalizing outputs:");
                 for (String variable : gaalopOutputVariables) {
                     String magnitudeVariable = variable + "_magnitude";
@@ -389,14 +358,6 @@ public class CsharpVisitor extends DefaultCodeGeneratorVisitor {
         addCode(')');
     }
 
-    /*
-      Gets the math library and adds neccessary imports.
-     */
-    private String getMathLibrary() {
-        libraries.add("using System;\n");
-        return mathLibrary;
-    }
-
     @Override
     public void visit(Variable variable) {
         addCode(getNewName(variable));
@@ -446,6 +407,14 @@ public class CsharpVisitor extends DefaultCodeGeneratorVisitor {
         addCode(')');
     }
 
+    private String getNewName(Variable variable) {
+        return variable.getNewName(graph, useArrays);
+    }
+
+    public void setStandalone(boolean standalone) {
+        this.standalone = standalone;
+    }
+
     private void print(Object message)
     {
         System.out.println(message.toString());
@@ -485,5 +454,35 @@ public class CsharpVisitor extends DefaultCodeGeneratorVisitor {
 
         code.append(text);
         return code;
+    }
+
+    /*
+      Gets the math library and adds neccessary imports.
+     */
+    private String getMathLibrary() {
+        libraries.add("using System;\n");
+        return mathLibrary;
+    }
+    /*
+      Takes in p5_e01 and returns p5 (the variables defined in Gaalop script).
+     */
+    private String GetVariableNameFromBladeVariable(String componentVariable) {
+        int index = componentVariable.lastIndexOf("_");
+        return componentVariable.substring(0, index);
+    }
+
+    /*
+      Takes in p5_e01 and returns e01 (the component string).
+     */
+    private String GetBladeNameFromBladeVariable(String componentVariable) {
+        int index = componentVariable.lastIndexOf("_") + 1;
+        return componentVariable.substring(index);
+    }
+
+    /*
+    Joings the list to a string using the given separator.
+     */
+    private String JoinString(ArrayList<String> componentVariables, String separator) {
+        return componentVariables.stream().collect(Collectors.joining(separator));
     }
 }
