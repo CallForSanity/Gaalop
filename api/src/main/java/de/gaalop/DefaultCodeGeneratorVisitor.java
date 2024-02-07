@@ -28,6 +28,10 @@ import de.gaalop.dfg.OuterProduct;
 import de.gaalop.dfg.Relation;
 import de.gaalop.dfg.Reverse;
 import de.gaalop.dfg.Subtraction;
+import de.gaalop.dfg.Variable;
+import static java.lang.System.out;
+import java.util.ArrayList;
+import java.util.stream.Collectors;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -39,15 +43,15 @@ import org.apache.commons.logging.LogFactory;
 public abstract class DefaultCodeGeneratorVisitor implements ControlFlowVisitor, ExpressionVisitor {
 
     protected Log log = LogFactory.getLog(DefaultCodeGeneratorVisitor.class);
-    
+
     protected StringBuilder code = new StringBuilder();
 
     protected ControlFlowGraph graph = null;
-    
+
     protected OperatorPriority operatorPriority;
 
     protected int indentation = 0;
-    
+
     public DefaultCodeGeneratorVisitor() {
         this(new OperatorPriority());
     }
@@ -59,7 +63,7 @@ public abstract class DefaultCodeGeneratorVisitor implements ControlFlowVisitor,
     public String getCode() {
         return code.toString();
     }
-    
+
     protected void appendIndentation() {
         for (int i = 0; i < indentation; ++i) {
             code.append('\t');
@@ -75,18 +79,18 @@ public abstract class DefaultCodeGeneratorVisitor implements ControlFlowVisitor,
             child.accept(this);
         }
     }
-    
+
     protected void addBinaryInfix(BinaryOperation op, String operator) {
         addChild(op, op.getLeft());
         code.append(operator);
         addChild(op, op.getRight());
     }
-    
+
     @Override
     public void visit(Addition addition) {
         addBinaryInfix(addition, " + ");
     }
-    
+
     @Override
     public void visit(Subtraction subtraction) {
         addBinaryInfix(subtraction, " - ");
@@ -96,7 +100,7 @@ public abstract class DefaultCodeGeneratorVisitor implements ControlFlowVisitor,
     public void visit(Multiplication multiplication) {
         addBinaryInfix(multiplication, " * ");
     }
-        
+
     @Override
     public void visit(Division division) {
         addBinaryInfix(division, " / ");
@@ -131,12 +135,12 @@ public abstract class DefaultCodeGeneratorVisitor implements ControlFlowVisitor,
     public void visit(BlockEndNode node) {
         throw new IllegalStateException("IfThenElseNodes are not supported anymore.");
     }
-    
+
     @Override
     public void visit(InnerProduct innerProduct) {
         throw new UnsupportedOperationException("This backend does not support the inner product.");
     }
-    
+
     @Override
     public void visit(OuterProduct outerProduct) {
         throw new UnsupportedOperationException("This backend does not support the outer product.");
@@ -195,5 +199,71 @@ public abstract class DefaultCodeGeneratorVisitor implements ControlFlowVisitor,
     @Override
     public void visit(MacroCall node) {
         throw new IllegalStateException("Macro "+node.getName()+" should have been inlined and no macro calls should be in the graph.");
+    }
+
+    protected String getNewName(Variable variable) {
+        return variable.getName();
+//        getNewName(graph, useArrays);
+    }
+
+    protected void print(Object message) {
+        System.out.println(message.toString());
+    }
+
+    // Method to replace all occurrences of a substring in a StringBuilder
+    public void replaceInCode(String target, String replacement) {
+        int index = code.indexOf(target);
+        while (index != -1) {
+            code.replace(index, index + target.length(), replacement);
+            index = code.indexOf(target, index + replacement.length());
+        }
+    }
+
+    protected StringBuilder addCode(char text) {
+        return addCode(String.valueOf(text));
+    }
+
+    protected StringBuilder addLine() {
+        return addLine("");
+    }
+
+    protected final String newline = "\n";
+
+    /*
+    Adds text with a previous indentation.
+     */
+    protected StringBuilder addLine(String text) {
+        appendIndentation();
+        return addCode(text + newline);
+    }
+
+    protected StringBuilder addCode(String text) {
+        print(text);
+
+        code.append(text);
+        return code;
+    }
+
+    /*
+      Takes in p5_e01 and returns p5 (the variables defined in Gaalop script).
+     */
+    protected String GetVariableNameFromBladeVariable(String componentVariable) {
+        int index = componentVariable.lastIndexOf("_");
+        return componentVariable.substring(0, index);
+    }
+
+    /*
+      Takes in p5_e01 and returns e01 (the component string).
+     */
+    protected String GetBladeNameFromBladeVariable(String componentVariable) {
+        int index = componentVariable.lastIndexOf("_") + 1;
+        return componentVariable.substring(index);
+    }
+
+    /*
+    Joings the list to a string using the given separator.
+     */
+    protected String JoinString(ArrayList<String> componentVariables, String separator) {
+        return componentVariables.stream().collect(Collectors.joining(separator));
     }
 }

@@ -38,8 +38,6 @@ public class CsharpVisitor extends DefaultCodeGeneratorVisitor {
 
     protected Set<String> libraries = new HashSet<>();
 
-    private final String newline = "\n";
-
     private HashSet<String> declaredVariableNames = new HashSet<>();
 
     public CsharpVisitor(boolean standalone) {
@@ -407,53 +405,13 @@ public class CsharpVisitor extends DefaultCodeGeneratorVisitor {
         addCode(')');
     }
 
-    private String getNewName(Variable variable) {
-        return variable.getNewName(graph, useArrays);
-    }
-
     public void setStandalone(boolean standalone) {
         this.standalone = standalone;
     }
 
-    private void print(Object message)
-    {
-        System.out.println(message.toString());
-    }
-
-    // Method to replace all occurrences of a substring in a StringBuilder
-    public void replaceInCode(String target, String replacement) {
-        int index = code.indexOf(target);
-        while (index != -1) {
-            code.replace(index, index + target.length(), replacement);
-            index = code.indexOf(target, index + replacement.length());
-        }
-    }
-    private StringBuilder addCode(char text) {
-        return addCode(String.valueOf(text));
-    }
-
-    private StringBuilder addLine() {
-        return addLine("");
-    }
-
-    /*
-    Adds text with a previous indentation.
-     */
-    private StringBuilder addLine(String text) {
-        appendIndentation();
-        return addCode(text + newline);
-    }
-
-    private StringBuilder addCode(String text) {
-
-        if (text.contains("M_1.0")) {
-            addCode("");
-        }
-
-        out.println(text);
-
-        code.append(text);
-        return code;
+    @Override
+    protected String getNewName(Variable variable) {
+        return variable.getNewName(graph, useArrays);
     }
 
     /*
@@ -462,27 +420,5 @@ public class CsharpVisitor extends DefaultCodeGeneratorVisitor {
     private String getMathLibrary() {
         libraries.add("using System;\n");
         return mathLibrary;
-    }
-    /*
-      Takes in p5_e01 and returns p5 (the variables defined in Gaalop script).
-     */
-    private String GetVariableNameFromBladeVariable(String componentVariable) {
-        int index = componentVariable.lastIndexOf("_");
-        return componentVariable.substring(0, index);
-    }
-
-    /*
-      Takes in p5_e01 and returns e01 (the component string).
-     */
-    private String GetBladeNameFromBladeVariable(String componentVariable) {
-        int index = componentVariable.lastIndexOf("_") + 1;
-        return componentVariable.substring(index);
-    }
-
-    /*
-    Joings the list to a string using the given separator.
-     */
-    private String JoinString(ArrayList<String> componentVariables, String separator) {
-        return componentVariables.stream().collect(Collectors.joining(separator));
     }
 }
