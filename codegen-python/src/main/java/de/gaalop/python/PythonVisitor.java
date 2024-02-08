@@ -1,37 +1,32 @@
 package de.gaalop.python;
 
-import de.gaalop.DefaultCodeGeneratorVisitor;
+import de.gaalop.NonarrayCodeGeneratorVisitor;
+import de.gaalop.StringList;
 import de.gaalop.cfg.*;
 import de.gaalop.dfg.*;
 import java.awt.Color;
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 /**
  * This visitor traverses the control and data flow graphs and generates C/C++
  * code.
  */
-public class PythonVisitor extends DefaultCodeGeneratorVisitor {
+public class PythonVisitor extends NonarrayCodeGeneratorVisitor {
 
     protected String variableType = "float";
 
-    protected Boolean useArrays = true;
-
     protected String filename;
 
-    private HashMap<String, Color> expressionStatements = new HashMap<>();
-
     private HashMap<String, LinkedList<Integer>> mvComponents = new HashMap<>();
-
-    private HashSet<String> mvs = new HashSet<String>();
-
-    protected Set<String> libraries = new HashSet<>();
 
     public PythonVisitor(boolean useDouble, String filename, boolean useArrays) {
         this.filename = filename;
         if (useDouble) {
             variableType = "double";
         }
+        this.useArrays = useArrays;
     }
 
     public PythonVisitor(String variableType) {
@@ -40,14 +35,20 @@ public class PythonVisitor extends DefaultCodeGeneratorVisitor {
 
     @Override
     public void visit(StartNode node) {
+        // At each start, this set need to be cleared
+        declaredVariableNames.clear();
+
         graph = node.getGraph();
         libraries.add("import numpy as np");
+
+        addLine();
 
         appendIndentation();
         addCode("def " + filename.toLowerCase() + "(");
 
         // Print parameters
-        addCode(graph.getInputs().join());
+        StringList inputs = graph.getInputs();
+        addCode(inputs.join());
 
         addCode("):\n");
         indentation++;
@@ -57,10 +58,11 @@ public class PythonVisitor extends DefaultCodeGeneratorVisitor {
 
     @Override
     public void visit(AssignmentNode node) {
+
         String varName = getNewName(node.getVariable());
-        if (!mvs.contains(varName)) {
+
+        if (!declaredVariableNames.add(varName) && useArrays) {
             addLine(varName + " = np.zeros(" + node.getGraph().getAlgebraDefinitionFile().blades2.length + ")");
-            mvs.add(varName);
         }
 
         appendIndentation();
@@ -68,7 +70,8 @@ public class PythonVisitor extends DefaultCodeGeneratorVisitor {
         addCode(" = ");
         node.getValue().accept(this);
 
-        if (node.getVariable() instanceof MultivectorComponent) {
+        // Add blades in comment
+        if (useArrays && node.getVariable() instanceof MultivectorComponent) {
             addCode(" # ");
             MultivectorComponent component = (MultivectorComponent) node.getVariable();
 
@@ -96,10 +99,12 @@ public class PythonVisitor extends DefaultCodeGeneratorVisitor {
 
     @Override
     public void visit(EndNode node) {
+        super.visit(node);
 
-        appendIndentation();
-        addCode("return ");
-        addCode(graph.getOutputs().join());
+        if (useArrays) {
+            appendIndentation();
+            addCode("return " + graph.getOutputs().join());
+        }
 
         // Insert libraries at script start
         if (!libraries.isEmpty()) {
@@ -156,8 +161,10 @@ public class PythonVisitor extends DefaultCodeGeneratorVisitor {
 
     @Override
     public void visit(MultivectorComponent component) {
-        addCode(component.getName());
-        addCode("[" + component.getBladeIndex() + "]");
+//        addCode(component.getName());
+//        addCode("[" + component.getBladeIndex() + "]");
+        String name = component.getNewName(graph, useArrays);
+        addCode(name);
     }
 
     @Override
@@ -189,7 +196,22 @@ public class PythonVisitor extends DefaultCodeGeneratorVisitor {
 
     @Override
     protected String getNewName(Variable variable) {
-        return variable.getName();
-        //        return variable.getNewName(graph, useArrays);
+        String name = variable.getNewName(graph, useArrays);
+        return name;
+    }
+
+    @Override
+    protected String getMethodName() {
+        return filename.toLowerCase();
+    }
+
+    @Override
+    protected void addReturnType(List<String> returnTypes) {
+        String methodName = getMethodName();
+
+        // Add brackets if tuples are used
+        String openingBracket = returnTypes.size() > 1 ? "(" : "";
+        String closingBracket = returnTypes.size() > 1 ? ")" : "";
+        replaceInCode("):", ") -> " + openingBracket + String.join(", ", returnTypes) + closingBracket + ":");
     }
 }
