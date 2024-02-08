@@ -1,7 +1,7 @@
 package de.gaalop.csharp;
 
 import static java.lang.System.out;
-import de.gaalop.DefaultCodeGeneratorVisitor;
+import de.gaalop.NonarrayCodeGeneratorVisitor;
 import de.gaalop.Notifications;
 import de.gaalop.StringList;
 import de.gaalop.cfg.*;
@@ -15,7 +15,7 @@ import java.util.*;
  * To do: Checken ob Skalare auch für andere Programmiersprachen abstrahiert
  * werden können. // sqrt(A.~A)
  */
-public class CsharpVisitor extends DefaultCodeGeneratorVisitor {
+public class CsharpVisitor extends NonarrayCodeGeneratorVisitor {
 
     private static String MethodModifiers = "public static void";
     private static String MethodName = "Execute";
@@ -27,18 +27,11 @@ public class CsharpVisitor extends DefaultCodeGeneratorVisitor {
 
     protected Set<String> assigned = new HashSet<>();
 
-    protected String numberType = "float";
     protected String mathLibrary = "MathF";
 
     protected Boolean useDouble = true;
-    protected Boolean useArrays = true;
 
     protected Boolean normalizeOutputs = true;
-
-
-    protected Set<String> libraries = new HashSet<>();
-
-    private HashSet<String> declaredVariableNames = new HashSet<>();
 
     public CsharpVisitor(boolean standalone) {
         this.standalone = standalone;
@@ -183,120 +176,7 @@ public class CsharpVisitor extends DefaultCodeGeneratorVisitor {
 
     @Override
     public void visit(EndNode node) {
-
-        // If no arrays are used, we need to return variables
-        if (!useArrays) {
-            StringList gaalopOutputVariables = graph.getOutputs();
-            ArrayList<String> allBladeVariables = new ArrayList<String>();
-
-            for (String variable : gaalopOutputVariables) {
-                // Iterate the current output variable marked by question mark (?)
-                for (String componentVariable : declaredVariableNames) {
-                    String variableFromComponent = GetVariableNameFromBladeVariable(componentVariable);
-                    if (variableFromComponent.equals(variable)) {
-                        allBladeVariables.add(componentVariable);
-                    }
-                }
-            }
-
-            // Add blank file
-            addLine();
-
-            // Normalize outputs afterwards?
-            if (true) {// normalizeOutputs) {
-                addLine("// Normalizing outputs:");
-                for (String variable : gaalopOutputVariables) {
-                    String magnitudeVariable = variable + "_magnitude";
-
-                    // Collect all component variables for the current Gaalop variable
-                    List<String> componentVariables = allBladeVariables.stream()
-                            .filter(componentVariable -> GetVariableNameFromBladeVariable(componentVariable).equals(variable))
-                            .collect(Collectors.toList());
-
-                    // Add code to calculate magnitude
-                    addLine();
-                    addLine(numberType + " " + magnitudeVariable + " = " + getMathLibrary() + ".Sqrt("
-                            + componentVariables.stream().map(it -> it + " * " + it).collect(Collectors.joining(" + ")) + ");");
-
-                    // Add code to divide my magnitude
-                    for (String componentVariable : componentVariables) {
-                        addLine(componentVariable + " = " + componentVariable + " / " + magnitudeVariable + ";");
-                    }
-                }
-            }
-
-            addLine();
-
-            Set<ReturnDefinition> definitions = graph.getReturnDefinitions();
-
-            // The types that the function returns (as tuples)
-            List<String> returnTypes = new LinkedList<String>();
-
-            // Each list of string will be printed in an own line for grouping purposes
-            List<String> returnValues = new ArrayList<String>();
-
-            for (String variable : gaalopOutputVariables) {
-
-                // Collect all component variables for the current Gaalop variable, e.g. p5_e01
-                List<String> bladeVariables = allBladeVariables.stream()
-                        .filter(var -> GetVariableNameFromBladeVariable(var).equals(variable))
-                        .collect(Collectors.toList());
-
-                // Check if any ReturnDefinition has the variableName equal to 'name'
-                ReturnDefinition matchingDefinition = definitions.stream()
-                        .filter(definition -> Arrays.stream(definition.variableNames).anyMatch(it -> it.equals(variable)))
-                        .findFirst()
-                        .orElse(null);
-
-                // Apply return definitions defined by return pragma.
-                if (matchingDefinition != null) {
-                    // Set return type and values based on return definition
-                    returnTypes.add(matchingDefinition.returnType);
-
-                    // Create return text with each bladename exchanged by variable_bladename
-                    String returnText = matchingDefinition.returnText;
-                    for (String bladeVariable : bladeVariables) {
-                        String bladeName = GetBladeNameFromBladeVariable(bladeVariable);
-                        returnText = returnText.replace("<" + bladeName + ">", bladeVariable);
-                    }
-
-                    returnValues.add(returnText);
-                } else {
-                    if (allBladeVariables.size() == 1) {
-                        // When using one return value, the type is sufficient
-                        returnTypes.add(numberType);
-                    } else {
-                        // When having tuples (multiple returns), we wanna use NAMED tuples. So we add the name after each type.
-                        returnTypes.addAll(bladeVariables.stream().map(var -> numberType + " " + var).collect(Collectors.toList()));
-                    }
-                    returnValues.add(bladeVariables.stream().collect(Collectors.joining(", ")));
-                }
-            }
-
-            // Add brackets if tuples are used
-            String openingBracket = returnTypes.size() > 1 ? "(" : "";
-            String closingBracket = returnTypes.size() > 1 ? ")" : "";
-
-            // Replace void by new return type
-            replaceInCode(" void ", " " + openingBracket + String.join(", ", returnTypes) + closingBracket + " ");
-
-            // Add return statement
-            int size = returnValues.size();
-            if (size == 1) {
-                // Return single Gaalop variables in one line
-                addLine("return " + openingBracket + String.join(", ", returnValues.getFirst()) + closingBracket + ";");
-            } else {
-                // Return multiple Gaalop variables in multiple lines
-                addLine("return " + openingBracket);
-                indentation++;
-                int i = 0;
-                for (String returnValue : returnValues) {
-                    addLine(returnValue + (++i < size ? ", " : ""));
-                }
-                indentation--;
-                addLine(closingBracket + ";");
-            }
-        }
+        super.visit(node);
 
         // Add closing brackets
         if (standalone) {
@@ -420,5 +300,18 @@ public class CsharpVisitor extends DefaultCodeGeneratorVisitor {
     private String getMathLibrary() {
         libraries.add("using System;\n");
         return mathLibrary;
+    }
+
+    @Override
+    protected String getMethodName() {
+        return MethodName;
+    }
+
+    @Override
+    protected void addReturnType(List<String> returnTypes) {
+        // Add brackets if tuples are used
+        String openingBracket = returnTypes.size() > 1 ? "(" : "";
+        String closingBracket = returnTypes.size() > 1 ? ")" : "";
+        replaceInCode(" void ", " " + openingBracket + String.join(", ", returnTypes) + closingBracket + " ");
     }
 }
