@@ -205,7 +205,7 @@ public abstract class DefaultCodeGeneratorVisitor implements ControlFlowVisitor,
     @Override
     public void visit(EndNode node) {
         for (String text : graph.getInsertionTexts()) {
-            code.insert(0, text);
+            code.insert(0, text + newline);
         }
     }
 

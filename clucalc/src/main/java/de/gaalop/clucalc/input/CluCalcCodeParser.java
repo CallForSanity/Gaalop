@@ -175,8 +175,8 @@ public enum CluCalcCodeParser implements CodeParser {
         CluCalcParser parser = new CluCalcParser(tokenStream);
 
         CluVisitor visitor = new CluVisitor();
-        ControlFlowGraph graph = visitor.graph;
         visitor.visit(parser.script());
+        ControlFlowGraph graph = visitor.graph;
 
         for (ReturnDefinition definition : returnDefinitions) {
             graph.addReturnDefinition(definition);

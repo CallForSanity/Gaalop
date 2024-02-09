@@ -34,6 +34,7 @@ public abstract class NonarrayCodeGeneratorVisitor extends DefaultCodeGeneratorV
      */
     @Override
     public void visit(EndNode node) {
+        super.visit(node);
 
         // If no arrays are used, we need to return variables
         if (!useArrays) {
