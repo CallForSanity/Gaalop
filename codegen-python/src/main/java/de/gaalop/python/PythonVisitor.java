@@ -61,7 +61,8 @@ public class PythonVisitor extends NonarrayCodeGeneratorVisitor {
 
         String varName = getNewName(node.getVariable());
 
-        if (!declaredVariableNames.add(varName) && useArrays) {
+        if (declaredVariableNames.add(varName) && useArrays) {
+            varName = node.getVariable().getName();
             addLine(varName + " = np.zeros(" + node.getGraph().getAlgebraDefinitionFile().blades2.length + ")");
         }
 
