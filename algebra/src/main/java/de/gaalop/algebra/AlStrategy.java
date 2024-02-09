@@ -142,17 +142,26 @@ public class AlStrategy implements AlgebraStrategy {
                 indexByBlades.put(blades.toArray(new String[0]), index);
             }
 
-            Set<String> set = graph.getPragmaOutputVariables();
-            HashSet<String> copySet = new HashSet<String>(set);
-            set.clear();
-            for (String str: copySet) {
-                if (str.contains(" ")) {
-                    String[] parts = str.split(" ");
+            // Get output variables and create copy
+            Set<String> outputVariables = graph.getPragmaOutputVariables();
+            HashSet<String> outputVariablesCopy = new HashSet<String>(outputVariables);
+
+            // Clear output variables so we can set new
+            outputVariables.clear();
+
+            for (String outputVariable : outputVariablesCopy) {
+                // Variable name and blades are separated by a whitespace
+                if (outputVariable.contains(" ")) {
+                    String[] parts = outputVariable.split(" ");
                     if (parts[1].equals("1")) {
                         parts[1] = "1.0";
                     }
 
+                    // Collect variables as there can be multiple, for instance:
+                    // #pragma output {AI,BI,CI} e0^e1^e2 e0^e1^e3 e0^e2^e3
                     String variableText = parts[0];
+                    String[] variables = getVariables(variableText);
+
                     String bladeText = parts[1];
                     String[] currentBlades = bladeText.split("\\^");
 
@@ -162,9 +171,11 @@ public class AlStrategy implements AlgebraStrategy {
                     for (String[] blades : indexByBlades.keySet()) {
 
                         if (areArraysEqual(currentBlades, blades)) {
-
+                            // Set index for each variables
                             int index = indexByBlades.get(blades);
-                            set.add(variableText + "$" + index);
+                            for (String variable : variables) {
+                                outputVariables.add(variable + "$" + index);
+                            }
 
                             bladeFound = true;
                             break;
@@ -176,7 +187,7 @@ public class AlStrategy implements AlgebraStrategy {
                     }
 
                 } else
-                    set.add(str);
+                    outputVariables.add(outputVariable);
             }
         } catch (CodeParserException ex) {
             Logger.getLogger(AlStrategy.class.getName()).log(Level.SEVERE, null, ex);
@@ -188,6 +199,22 @@ public class AlStrategy implements AlgebraStrategy {
             } catch (IOException ex) {
                 Logger.getLogger(AlStrategy.class.getName()).log(Level.SEVERE, null, ex);
             }
+        }
+    }
+
+    public static String[] getVariables(String variableText) {
+        if (variableText.startsWith("{") && variableText.endsWith("}")) {
+            // Remove the leading and trailing curly braces
+            String innerText = variableText.substring(1, variableText.length() - 1);
+            // Split the remaining text by comma and trim each element
+            String[] variables = innerText.split(",");
+            for (int i = 0; i < variables.length; i++) {
+                variables[i] = variables[i].trim();
+            }
+            return variables;
+        } else {
+            // If variableText does not have curly braces, return it as is
+            return new String[]{variableText};
         }
     }
 
