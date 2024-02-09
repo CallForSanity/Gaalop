@@ -31,7 +31,7 @@ public class CsharpVisitor extends NonarrayCodeGeneratorVisitor {
 
     protected Boolean useDouble = true;
 
-    protected Boolean normalizeOutputs = true;
+//    protected Boolean normalizeOutputs = true;
 
     public CsharpVisitor(boolean standalone) {
         this.standalone = standalone;
@@ -142,7 +142,7 @@ public class CsharpVisitor extends NonarrayCodeGeneratorVisitor {
         appendIndentation();
 
         if (useArrays) {
-            node.getVariable().accept(this);
+            variable.accept(this);
         } else {
             // Prefix type if the the variable was not declared yet: "float "
             if (declaredVariableNames.add(variableName)) {
@@ -154,6 +154,13 @@ public class CsharpVisitor extends NonarrayCodeGeneratorVisitor {
 
         addCode(" = ");
         node.getValue().accept(this);
+        // Add blades in comment
+
+        if (useArrays && variable instanceof MultivectorComponent) {
+            MultivectorComponent component = (MultivectorComponent) variable;
+            addCode(" // " + graph.getBladeString(component));
+        }
+
         addCode(";" + newline);
 
         node.getSuccessor().accept(this);
