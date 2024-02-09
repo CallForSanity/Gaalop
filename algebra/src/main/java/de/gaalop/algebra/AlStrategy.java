@@ -18,10 +18,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -130,10 +133,13 @@ public class AlStrategy implements AlgebraStrategy {
             UpdateLocalVariableSet.updateVariableSets(graph);
             //RemoveDefVars.removeDefVars(graph);
 
-            //update output blades
-            HashMap<String, Integer> mapIndices = new HashMap<String, Integer>();
+            // Update output blades
+            // Create map of blades to index
+            HashMap<String[], Integer> indexByBlades = new HashMap<String[], Integer>();
             for (int index = 0; index < alFile.blades.length; index++) {
-                mapIndices.put(bladeToString(alFile.blades[index]), index);
+                Expression expression = alFile.blades[index];
+                List<String> blades = decomposeBlades(expression);
+                indexByBlades.put(blades.toArray(new String[0]), index);
             }
 
             Set<String> set = graph.getPragmaOutputVariables();
@@ -142,18 +148,33 @@ public class AlStrategy implements AlgebraStrategy {
             for (String str: copySet) {
                 if (str.contains(" ")) {
                     String[] parts = str.split(" ");
-                    String firstPart = parts[0];
-                    String secondPart = parts[1];
-                    if (secondPart.equals("1")) {
+                    if (parts[1].equals("1")) {
                         parts[1] = "1.0";
-                        secondPart = parts[1];
-                    }
-                    if (!mapIndices.containsKey(secondPart)) {
-                        throw new OptimizationException("The bladename " + secondPart + " is not found in the default blade list.", graph);
                     }
 
-                    int second = mapIndices.get(secondPart);
-                    set.add(firstPart + "$" + second);
+                    String variableText = parts[0];
+                    String bladeText = parts[1];
+                    String[] currentBlades = bladeText.split("\\^");
+
+                    boolean bladeFound = false;
+
+                    // Get the index for the currentBlades by comparing them with blades in map
+                    for (String[] blades : indexByBlades.keySet()) {
+
+                        if (areArraysEqual(currentBlades, blades)) {
+
+                            int index = indexByBlades.get(blades);
+                            set.add(variableText + "$" + index);
+
+                            bladeFound = true;
+                            break;
+                        }
+                    }
+
+                    if (!bladeFound) {
+                        throw new OptimizationException("The bladename " + bladeText + " is not found in the default blade list.", graph);
+                    }
+
                 } else
                     set.add(str);
             }
@@ -168,14 +189,35 @@ public class AlStrategy implements AlgebraStrategy {
                 Logger.getLogger(AlStrategy.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-
-
     }
 
-    private String bladeToString(Expression blade) {
-        if (!blade.isComposite()) return blade.toString();
+    /*
+        Check if two arrays have equal content.
+     */
+    public static boolean areArraysEqual(String[] array1, String[] array2) {
+        if (array1.length != array2.length) {
+            return false;
+        }
+
+        Set<String> set1 = new HashSet<>(Arrays.asList(array1));
+        Set<String> set2 = new HashSet<>(Arrays.asList(array2));
+
+        return set1.equals(set2);
+    }
+
+    /*
+      Get all single blades as list.
+     */
+    private List<String> decomposeBlades(Expression blade) {
+        if (!blade.isComposite()) {
+            return Collections.singletonList(blade.toString());
+        }
+
         OuterProduct outerProduct = (OuterProduct) blade;
-        return bladeToString(outerProduct.getLeft())+"^"+bladeToString(outerProduct.getRight());
+        ArrayList<String> list = new ArrayList<String>();
+        list.addAll(decomposeBlades(outerProduct.getLeft()));
+        list.addAll(decomposeBlades(outerProduct.getRight()));
+        return list;
     }
 
     /**
