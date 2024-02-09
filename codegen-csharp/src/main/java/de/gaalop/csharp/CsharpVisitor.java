@@ -154,14 +154,15 @@ public class CsharpVisitor extends NonarrayCodeGeneratorVisitor {
 
         addCode(" = ");
         node.getValue().accept(this);
-        // Add blades in comment
 
+        // Add blade names in comment
         if (useArrays && variable instanceof MultivectorComponent) {
             MultivectorComponent component = (MultivectorComponent) variable;
-            addCode(" // " + graph.getBladeString(component));
+            addCode("; // " + graph.getBladeString(component) + newline);
         }
-
-        addCode(";" + newline);
+        else {
+            addCode(";" + newline);
+        }
 
         node.getSuccessor().accept(this);
     }
