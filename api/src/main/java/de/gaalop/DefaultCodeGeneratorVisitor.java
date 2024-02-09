@@ -53,6 +53,8 @@ public abstract class DefaultCodeGeneratorVisitor implements ControlFlowVisitor,
 
     protected int indentation = 0;
 
+    protected Boolean printAddedCode = false;
+
     public DefaultCodeGeneratorVisitor() {
         this(new OperatorPriority());
     }
@@ -241,26 +243,24 @@ public abstract class DefaultCodeGeneratorVisitor implements ControlFlowVisitor,
     }
 
     protected StringBuilder addCode(String text) {
-        print(text);
+        if (printAddedCode) {
+
+            // Get the stack trace
+            StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+
+            String toPrint = text;
+
+            // The first element is the getStackTrace method, the second is this method, and the third is the calling method
+            if (stackTrace.length >= 3) {
+                String methodName = stackTrace[2].toString();
+                toPrint = toPrint + "                     (" + methodName + ")";
+            }
+
+            print(toPrint);
+        }
 
         code.append(text);
         return code;
-    }
-
-    /*
-      Takes in p5_e01 and returns p5 (the variables defined in Gaalop script).
-     */
-    protected String GetVariableNameFromBladeVariable(String componentVariable) {
-        int index = componentVariable.lastIndexOf("_");
-        return componentVariable.substring(0, index);
-    }
-
-    /*
-      Takes in p5_e01 and returns e01 (the component string).
-     */
-    protected String GetBladeNameFromBladeVariable(String componentVariable) {
-        int index = componentVariable.lastIndexOf("_") + 1;
-        return componentVariable.substring(index);
     }
 
     /*
