@@ -4,6 +4,7 @@ import de.gaalop.cfg.BlockEndNode;
 import de.gaalop.cfg.BreakNode;
 import de.gaalop.cfg.ControlFlowGraph;
 import de.gaalop.cfg.ControlFlowVisitor;
+import de.gaalop.cfg.EndNode;
 import de.gaalop.cfg.IfThenElseNode;
 import de.gaalop.cfg.LoopNode;
 import de.gaalop.cfg.Macro;
@@ -201,9 +202,11 @@ public abstract class DefaultCodeGeneratorVisitor implements ControlFlowVisitor,
         throw new IllegalStateException("Macro "+node.getName()+" should have been inlined and no macro calls should be in the graph.");
     }
 
-    protected String getNewName(Variable variable) {
-        return variable.getName();
-//        getNewName(graph, useArrays);
+    @Override
+    public void visit(EndNode node) {
+        for (String text : graph.getInsertionTexts()) {
+            code.insert(0, text);
+        }
     }
 
     protected void print(Object message) {

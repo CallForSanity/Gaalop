@@ -64,6 +64,7 @@ public enum CluCalcCodeParser implements CodeParser {
         LinkedList<String> ranges = new LinkedList<String>();
 
         LinkedList<ReturnDefinition> returnDefinitions = new LinkedList<ReturnDefinition>();
+        LinkedList<String> insertionTexts = new LinkedList<String>();
 
         String content = input.getContent();
         BufferedReader reader = new BufferedReader(new StringReader(content));
@@ -135,7 +136,15 @@ public enum CluCalcCodeParser implements CodeParser {
                         case "range":
                             ranges.add(rest);
                             break;
+
+                        case "insert":
+                            insertionTexts.add(rest);
+                            break;
+
                         case "return":
+                            // Returns the values as object of given type
+                            // Example: #pragma return p5,p6 typed Vector2 as Vector2(-<e02> / <e12>, <e01> / <e12>)
+
                             String[] parts = rest.split("\\s+typed\\s+|\\s+as\\s+");
 
                             if (parts.length == 3) {
@@ -145,7 +154,7 @@ public enum CluCalcCodeParser implements CodeParser {
                                 String[] variables = Arrays.stream(variablesText.split(",")).map(String::trim).toArray(String[]::new);
                                 ReturnDefinition returnDefintion = new ReturnDefinition(variables, returnType, returnText);
                                 returnDefinitions.add(returnDefintion);
-                            }
+ }
 
                             break;
                         default:
@@ -166,9 +175,17 @@ public enum CluCalcCodeParser implements CodeParser {
         CluCalcParser parser = new CluCalcParser(tokenStream);
 
         CluVisitor visitor = new CluVisitor();
+        ControlFlowGraph graph = visitor.graph;
         visitor.visit(parser.script());
 
-        ControlFlowGraph graph = visitor.graph;
+        for (ReturnDefinition definition : returnDefinitions) {
+            graph.addReturnDefinition(definition);
+        }
+
+        for (String text : insertionTexts) {
+            graph.addInsertionText(text);
+        }
+
         graph.drawSegments = drawSegments;
         graph.drawTriangles = drawTriangles;
         if (syntax != null) {
@@ -200,10 +217,6 @@ public enum CluCalcCodeParser implements CodeParser {
                 graph.addPragmaMinMaxValues(rangeParts[1].trim(), rangeParts[0].trim(), rangeParts[2].trim());
             else
                 throw new CodeParserException(input, "#pragma range must be of the form: {minValue} <= {variable_name} <= {maxValue} but is "+range);
-        }
-
-        for (ReturnDefinition definition : returnDefinitions) {
-            graph.addReturnDefinition(definition);
         }
 
         return graph;

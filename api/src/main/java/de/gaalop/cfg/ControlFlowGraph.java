@@ -64,6 +64,7 @@ public final class ControlFlowGraph {
     private HashMap<String, String> pragmaMaxValue = new HashMap<String, String>();
 
     private Set<ReturnDefinition> pragmaReturns = new HashSet<ReturnDefinition>();
+    private Set<String> insertionTexts = new HashSet<String>();
 
         public boolean syntaxSpecified = false;
         public StringList syntaxInputs = new StringList();
@@ -108,6 +109,10 @@ public final class ControlFlowGraph {
 	public Set<String> getPragmaOutputVariables() {
 		return pragmaOutputVariables;
 	}
+
+    public Set<String> getInsertionTexts() {
+        return insertionTexts;
+    }
 
         public LinkedList<AssignmentNode> getOnlyEvaluateNodes() {
             return onlyEvaluateNodes;
@@ -156,6 +161,10 @@ public final class ControlFlowGraph {
 
     public void addReturnDefinition(ReturnDefinition definition) {
         pragmaReturns.add(definition);
+    }
+
+    public void addInsertionText(String text) {
+        insertionTexts.add(text);
     }
 
 	/**
