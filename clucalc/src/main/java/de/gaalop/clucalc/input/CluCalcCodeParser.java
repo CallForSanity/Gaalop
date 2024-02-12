@@ -10,6 +10,8 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.apache.commons.logging.Log;
@@ -66,6 +68,8 @@ public enum CluCalcCodeParser implements CodeParser {
         LinkedList<ReturnDefinition> returnDefinitions = new LinkedList<ReturnDefinition>();
         LinkedList<String> insertionTexts = new LinkedList<String>();
 
+        Boolean usingNormalizePragma = false;
+
         String content = input.getContent();
         BufferedReader reader = new BufferedReader(new StringReader(content));
         String line = null;
@@ -83,14 +87,17 @@ public enum CluCalcCodeParser implements CodeParser {
                     line2 = line2.replaceAll("  "," ");
 
                 int indexOfSpace = line2.indexOf(" ", 10);
+                Boolean restIsMissing = indexOfSpace == -1;
+                String whichPragma = restIsMissing
+                        ? line2.substring(lengthOfPragmaStart)
+                        : line2.substring(lengthOfPragmaStart, indexOfSpace);
 
-                String whichPragma = line2.substring(lengthOfPragmaStart, indexOfSpace);
                 if (whichPragma.equals("unroll") || whichPragma.equals("count")) {
                     builder.append(line);
                     builder.append("\n");
                 } else {
                     //process here
-                    String rest = line2.substring(indexOfSpace + 1);
+                    String rest = restIsMissing ? "" : line2.substring(indexOfSpace + 1);
 
                     switch (whichPragma) {
                         case "output":
@@ -157,12 +164,41 @@ public enum CluCalcCodeParser implements CodeParser {
  }
 
                             break;
+
+                        case "normalize":
+                            usingNormalizePragma = true;
+                            break;
+
                         default:
                             throw new CodeParserException(input, "pragma "+whichPragma+" is unknown.");
                     }
                 }
 
             } else {
+
+                // Normalize output variables (marked with ?) when normalize pragma is used
+                if (usingNormalizePragma && !line.startsWith("//")) {
+                    // Check if line has this format: ?VARIABLE = EXPRESSION
+                    Pattern pattern = Pattern.compile("\\?(\\w+)\\s*=\\s*(.+)");
+                    Matcher matcher = pattern.matcher(line);
+                    if (matcher.find()) {
+                        // Retrieve the variable name and the expression
+                        String variable = matcher.group(1);
+                        String expression = matcher.group(2);
+                        String variableUnnormalized = variable + "_unnormalized";
+
+                        // Append the two lines where the second is doing the normalization
+                        builder.append(variableUnnormalized + " = " + expression);
+                        builder.append("\n");
+                        builder.append("?" + variable + " = " + variableUnnormalized + " / abs(" + variableUnnormalized + ")");
+                        builder.append("\n");
+
+                        System.out.println("The line matches the specified format. Variable name: " + variable);
+                        continue;
+                    }
+                }
+
+                // Just add the line
                 builder.append(line);
                 builder.append("\n");
             }
