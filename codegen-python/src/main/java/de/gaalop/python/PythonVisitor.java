@@ -34,6 +34,11 @@ public class PythonVisitor extends NonarrayCodeGeneratorVisitor {
     }
 
     @Override
+    protected Boolean useNamedTuples() {
+        return false;
+    }
+
+    @Override
     public void visit(StartNode node) {
         // At each start, this set need to be cleared
         declaredVariableNames.clear();
@@ -162,8 +167,6 @@ public class PythonVisitor extends NonarrayCodeGeneratorVisitor {
 
     @Override
     public void visit(MultivectorComponent component) {
-//        addCode(component.getName());
-//        addCode("[" + component.getBladeIndex() + "]");
         String name = component.getNewName(graph, useArrays);
         addCode(name);
     }
@@ -196,23 +199,16 @@ public class PythonVisitor extends NonarrayCodeGeneratorVisitor {
     }
 
     @Override
-    protected String getNewName(Variable variable) {
-        String name = variable.getNewName(graph, useArrays);
-        return name;
-    }
-
-    @Override
     protected String getMethodName() {
         return filename.toLowerCase();
     }
 
     @Override
     protected void addReturnType(List<String> returnTypes) {
-        String methodName = getMethodName();
+        libraries.add("from typing import Tuple");
 
         // Add brackets if tuples are used
-        String openingBracket = returnTypes.size() > 1 ? "(" : "";
-        String closingBracket = returnTypes.size() > 1 ? ")" : "";
-        replaceInCode("):", ") -> " + openingBracket + String.join(", ", returnTypes) + closingBracket + ":");
+        String typeString = String.join(", ", returnTypes);
+        replaceInCode("):", ") -> Tuple[" + typeString + "]:");
     }
 }

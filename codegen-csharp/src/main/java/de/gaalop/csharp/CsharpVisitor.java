@@ -204,9 +204,9 @@ public class CsharpVisitor extends NonarrayCodeGeneratorVisitor {
                 }
             });
 
-            // Add libraries at start
-            for (String lib: libs) {
-                code.insert(0, lib+"\n");
+            // Add libraries at start (e.g. "using System")
+            for (String library : libraries) {
+                code.insert(0, library + "\n");
             }
         }
     }
@@ -297,11 +297,6 @@ public class CsharpVisitor extends NonarrayCodeGeneratorVisitor {
         this.standalone = standalone;
     }
 
-    @Override
-    protected String getNewName(Variable variable) {
-        return variable.getNewName(graph, useArrays);
-    }
-
     /*
       Gets the math library and adds neccessary imports.
      */
@@ -320,6 +315,8 @@ public class CsharpVisitor extends NonarrayCodeGeneratorVisitor {
         // Add brackets if tuples are used
         String openingBracket = returnTypes.size() > 1 ? "(" : "";
         String closingBracket = returnTypes.size() > 1 ? ")" : "";
-        replaceInCode(" void ", " " + openingBracket + String.join(", ", returnTypes) + closingBracket + " ");
+        String typeString = String.join(", ", returnTypes);
+        String newline2 = typeString.length() > 50 ? (standalone ? "\n\t\t" : "\n") : "";
+        replaceInCode(" void ", " " + openingBracket + typeString + closingBracket + " " + newline2);
     }
 }

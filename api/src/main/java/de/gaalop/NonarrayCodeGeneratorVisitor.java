@@ -19,7 +19,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public abstract class NonarrayCodeGeneratorVisitor extends DefaultCodeGeneratorVisitor {
-
     protected abstract String getMethodName();
 
     protected Boolean useArrays = true;
@@ -28,6 +27,10 @@ public abstract class NonarrayCodeGeneratorVisitor extends DefaultCodeGeneratorV
     protected HashSet<String> declaredVariableNames = new HashSet<>();
 
     protected Set<String> libraries = new HashSet<>();
+
+    protected Boolean useNamedTuples() {
+        return true;
+    }
 
     /*
     Add the return statement when no arrays are used.
@@ -84,6 +87,9 @@ public abstract class NonarrayCodeGeneratorVisitor extends DefaultCodeGeneratorV
         }
     }
 
+    /*
+      Here, you can add the method return type, e.g. by replacing code in the method header.
+     */
     protected abstract void addReturnType(List<String> returnTypes);
 
     private String getReturnValue(ArrayList<String> allBladeVariables, String variable, Set<ReturnDefinition> definitions, List<String> returnTypes) {
@@ -117,8 +123,12 @@ public abstract class NonarrayCodeGeneratorVisitor extends DefaultCodeGeneratorV
                 // When using one return value, the type is sufficient
                 returnTypes.add(numberType);
             } else {
-                // When having tuples (multiple returns), we wanna use NAMED tuples. So we add the name after each type.
-                returnTypes.addAll(bladeVariables.stream().map(var -> numberType + " " + var).collect(Collectors.toList()));
+                if (useNamedTuples()) {
+                    // When having tuples (multiple returns), we wanna use NAMED tuples. So we add the name after each type.
+                    returnTypes.addAll(bladeVariables.stream().map(var -> numberType + " " + var).collect(Collectors.toList()));
+                } else {
+                    returnTypes.addAll(bladeVariables.stream().map(var -> numberType).collect(Collectors.toList()));
+                }
             }
             returnValue = bladeVariables.stream().collect(Collectors.joining(", "));
 
@@ -141,10 +151,12 @@ public abstract class NonarrayCodeGeneratorVisitor extends DefaultCodeGeneratorV
         return allBladeVariables;
     }
 
+    /*
+      Gets the name of the variable which incorporates "useArrays"
+     */
     protected String getNewName(Variable variable) {
-        return variable.getName();
+        return variable.getNewName(graph, useArrays);
     }
-
     /*
       Takes in p5_e01 and returns p5 (the variables defined in Gaalop script).
      */
