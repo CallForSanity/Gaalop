@@ -29,7 +29,7 @@ import javax.swing.text.TabStop;
 public class SourceFilePanel extends JPanel {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -662488304785792145L;
 
@@ -57,17 +57,17 @@ public class SourceFilePanel extends JPanel {
 		KEYWORDS.put("RotorE3", keyword);
 		KEYWORDS.put("RotorN3", keyword);
 		KEYWORDS.put("TranslatorN3", keyword);
-		
+
 		KEYWORDS.put("if", keyword);
 		KEYWORDS.put("else", keyword);
 		KEYWORDS.put("loop", keyword);
 		KEYWORDS.put("break", keyword);
-		
+
 		KEYWORDS.put("true", keyword);
 		KEYWORDS.put("false", keyword);
-				
+
 		KEYWORDS.put("#pragma unroll", keyword);
-		
+
 		KEYWORDS.put("Slider", keyword);
 		KEYWORDS.put("Color", keyword);
 		KEYWORDS.put("_BGColor", keyword);
@@ -80,13 +80,13 @@ public class SourceFilePanel extends JPanel {
 		KEYWORDS.put("Red", keyword);
 		KEYWORDS.put("White", keyword);
 		KEYWORDS.put("Yellow", keyword);
-		
+
 		KEYWORDS.put("norm ", forbidden);
 		KEYWORDS.put("normal ", forbidden);
 		KEYWORDS.put("length ", forbidden);
 		KEYWORDS.put("point ", forbidden);
  */
-		
+
 		String regex = "";
 		Iterator<String> it = KEYWORDS.keySet().iterator();
 		while (it.hasNext()) {
@@ -112,13 +112,23 @@ public class SourceFilePanel extends JPanel {
 
 	public SourceFilePanel(CodeParserPlugin plugin) {
 		this(plugin, new File(Main.lastDirectory, "New File"), "");
-                
+
 		fileState = FileState.UNSAVED;
 	}
 
+    public void setContent(String content) {
+        this.savedContent = content;
+        textPane.setText(content);
+        formatCode(content);
+        updateTabLabel();
+
+//        System.out.println("Content: " + textPane.getText());
+
+    }
+
 	public SourceFilePanel(CodeParserPlugin plugin, File file, String content) {
 		super(new BorderLayout(), true);
-                
+
 
 		this.parserPlugin = plugin;
 		this.file = file;
@@ -127,12 +137,12 @@ public class SourceFilePanel extends JPanel {
 
 		// The text editor for our source code
 		textPane = new JTextPane();
-                
+
                 int fontSize = FontSize.getEditorFontSize();
                 int guiFontSize = FontSize.getGuiFontSize();
-                
+
                 textPane.setFont(new Font(Font.MONOSPACED, Font.PLAIN, fontSize));
-                
+
 		textPane.setText(content);
 		formatCode(content);
 		textPane.addKeyListener(new SetChangedStateListener());
@@ -155,7 +165,7 @@ public class SourceFilePanel extends JPanel {
 	void formatCode(String content) {
 		try {
 			StyledDocument doc = textPane.getStyledDocument();
-                        
+
                         // Tab size to 2
                         Font f = textPane.getFont();
                         FontMetrics fm = textPane.getFontMetrics(f);
@@ -171,7 +181,7 @@ public class SourceFilePanel extends JPanel {
                         StyleContext cont = StyleContext.getDefaultStyleContext();
                         AttributeSet a = cont.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.TabSet, tabset);
                         textPane.setParagraphAttributes(a, false);
-                        
+
                         // Highligthing keywords
 			Matcher matcher = PATTERN.matcher(content);
 			while (matcher.find()) {
@@ -188,7 +198,7 @@ public class SourceFilePanel extends JPanel {
 
 	/**
 	 * Creates an input file that represents this tabs current content.
-	 * 
+	 *
 	 * @return A new input file that represents this tabs content.
 	 */
 	public InputFile getInputFile() {
@@ -205,7 +215,7 @@ public class SourceFilePanel extends JPanel {
 	}
 
 	void updateTabLabel() {
-            
+
 		if (fileState != FileState.SAVED) {
 			tabLabel.setText(file.getName() + "*");
 		} else {
@@ -234,10 +244,10 @@ public class SourceFilePanel extends JPanel {
 	}
 
 	private class SetChangedStateListener extends KeyAdapter {
-		
+
 		public SetChangedStateListener() {
 		}
-		
+
 		@Override
 		public void keyReleased(KeyEvent e) {
 			if (fileState != FileState.UNSAVED) {
