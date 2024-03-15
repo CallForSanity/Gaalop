@@ -256,9 +256,7 @@ public class CsharpVisitor extends NonarrayCodeGeneratorVisitor {
         }
         String name = component.getNewName(graph, useArrays);
         addCode(name);
-
-        out.println(name + "\n");
- }
+    }
 
     @Override
     public void visit(Exponentiation exponentiation) {
@@ -303,11 +301,6 @@ public class CsharpVisitor extends NonarrayCodeGeneratorVisitor {
     private String getMathLibrary() {
         libraries.add("using System;\n");
         return mathLibrary;
-    }
-
-    @Override
-    protected String getMethodName() {
-        return MethodName;
     }
 
     @Override

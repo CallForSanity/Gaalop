@@ -204,8 +204,12 @@ public abstract class DefaultCodeGeneratorVisitor implements ControlFlowVisitor,
         throw new IllegalStateException("Macro "+node.getName()+" should have been inlined and no macro calls should be in the graph.");
     }
 
+    /*
+      Insert text at start that can be stated by #pragma insert.
+     */
     @Override
     public void visit(EndNode node) {
+//        Set<String> insertionTexts = graph.getInsertionTexts();
         for (String text : graph.getInsertionTexts()) {
             code.insert(0, text + newline);
         }

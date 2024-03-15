@@ -199,11 +199,6 @@ public class PythonVisitor extends NonarrayCodeGeneratorVisitor {
     }
 
     @Override
-    protected String getMethodName() {
-        return filename.toLowerCase();
-    }
-
-    @Override
     protected void addReturnType(List<String> returnTypes) {
         libraries.add("from typing import Tuple");
 

@@ -193,7 +193,7 @@ public enum CluCalcCodeParser implements CodeParser {
                         builder.append("?" + variable + " = " + variableUnnormalized + " / abs(" + variableUnnormalized + ")");
                         builder.append("\n");
 
-                        System.out.println("The line matches the specified format. Variable name: " + variable);
+//                        System.out.println("The line matches the specified format. Variable name: " + variable);
                         continue;
                     }
                 }

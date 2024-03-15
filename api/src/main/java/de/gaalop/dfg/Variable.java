@@ -59,7 +59,7 @@ public class Variable extends Expression {
                 // When using array, variables should be called e.g. var[6]
                 String name = getName() + "[" + component.getBladeIndex() + "]";
                 String bladeString = graph.getBladeString(component);
-                System.out.println("Name = " + name + " # " + bladeString);
+//                System.out.println("Name = " + name + " # " + bladeString);
                 return name;
             } else {
                 // Multivector variables should be called e.g. var_e12
@@ -74,7 +74,7 @@ public class Variable extends Expression {
             }
         } else {
             String name = getName();
-            System.out.println("name = " + name);
+//            System.out.println("name = " + name);
             return getName();
         }
     }

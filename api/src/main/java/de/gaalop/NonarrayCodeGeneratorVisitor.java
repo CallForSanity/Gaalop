@@ -19,8 +19,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public abstract class NonarrayCodeGeneratorVisitor extends DefaultCodeGeneratorVisitor {
-    protected abstract String getMethodName();
-
     protected Boolean useArrays = true;
     protected String numberType = "float";
 
@@ -92,6 +90,9 @@ public abstract class NonarrayCodeGeneratorVisitor extends DefaultCodeGeneratorV
      */
     protected abstract void addReturnType(List<String> returnTypes);
 
+    /*
+    Computes the text of the return value at the end of the method.
+     */
     private String getReturnValue(ArrayList<String> allBladeVariables, String variable, Set<ReturnDefinition> definitions, List<String> returnTypes) {
         String returnValue;
 
@@ -136,6 +137,9 @@ public abstract class NonarrayCodeGeneratorVisitor extends DefaultCodeGeneratorV
         return returnValue;
     }
 
+    /*
+    Create a list of all blade variables (e.g. leftPoint_e12) from the gaalop output variables (e.g. leftPoint)
+     */
     private ArrayList<String> getAllBladeVariables(StringList gaalopOutputVariables) {
         ArrayList<String> allBladeVariables = new ArrayList<String>();
 
@@ -172,5 +176,4 @@ public abstract class NonarrayCodeGeneratorVisitor extends DefaultCodeGeneratorV
         int index = componentVariable.lastIndexOf("_") + 1;
         return componentVariable.substring(index);
     }
-
 }
