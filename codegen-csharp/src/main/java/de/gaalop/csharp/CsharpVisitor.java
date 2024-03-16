@@ -62,17 +62,18 @@ public class CsharpVisitor extends NonarrayCodeGeneratorVisitor {
 
         // At each start, this set need to be cleared
         declaredVariableNames.clear();
-
         if (standalone) {
             // Add class and method name
             String filename = graph.getSource().getName().split("\\.")[0];
             appendIndentation();
+
+            // Add method declaration
             addCode("public static class " + filename + "\n{\n");
             indentation++;
             appendIndentation();
             addCode(MethodModifiers + " " + MethodName + "(");
 
-            // Print parameters
+            // Add parameters
             StringList parameters = new StringList();
 
             for (String inputVariable : graph.getInputs()) {
@@ -105,13 +106,6 @@ public class CsharpVisitor extends NonarrayCodeGeneratorVisitor {
                     addCode(" = new ").append(numberType).append("[").append(bladeCount).append("];\n");
                 }
             }
-        }
-
-        if (graph.getScalarVariables().size() > 0) {
-            appendIndentation();
-            addCode(numberType).append(" ");
-            addCode(graph.getScalars().join());
-            addCode(";\n");
         }
 
         node.getSuccessor().accept(this);
