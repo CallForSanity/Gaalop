@@ -3,7 +3,7 @@
 <properties>
 <comment>Gaalop Configuration File</comment>
 <entry key="de.gaalop.csharp.Plugin.useDouble">false</entry>
-<entry key="de.gaalop.tba.Plugin.optGCSE">false</entry>
+<entry key="de.gaalop.tba.Plugin.optGCSE">true</entry>
 <entry key="lastUsedAlgebra">2dpga</entry>
 <entry key="de.gaalop.tba.Plugin.optOneExpressionRemoval">true</entry>
 <entry key="de.gaalop.csharp.Plugin.standalone">true</entry>
@@ -18,15 +18,15 @@
 <entry key="de.gaalop.python.Plugin.standalone">true</entry>
 <entry key="de.gaalop.globalSettings.Plugin.maximaCommand">C:\maxima\bin\maxima.bat</entry>
 <entry key="de.gaalop.tba.Plugin.optConstantPropagation">true</entry>
-<entry key="de.gaalop.csharp.Plugin.saveFileDirectory">C:\Users\dark-\Desktop\Geometric Algebra\GeometricAlgebraGodot</entry>
-<entry key="de.gaalop.python.Plugin.saveFileDirectory">C:\Users\dark-\Desktop\Geometric Algebra\GeometricAlgebraPython</entry>
+<entry key="de.gaalop.csharp.Plugin.saveFileDirectory"></entry>
+<entry key="de.gaalop.python.Plugin.saveFileDirectory"></entry>
 <entry key="de.gaalop.python.Plugin.optimizeOnSave">true</entry>
 <entry key="lastUsedGenerator">de.gaalop.csharp.Plugin</entry>
-<entry key="de.gaalop.csharp.Plugin.useArrays">true</entry>
+<entry key="de.gaalop.csharp.Plugin.useArrays">false</entry>
 <entry key="de.gaalop.globalSettings.Plugin.guiFontSize">12</entry>
 <entry key="de.gaalop.globalSettings.Plugin.editorFontSize">12</entry>
-<entry key="de.gaalop.matlab.Plugin.useDouble">true</entry>
 <entry key="de.gaalop.gappopencl.Plugin.standalone">true</entry>
+<entry key="de.gaalop.matlab.Plugin.useDouble">true</entry>
 <entry key="de.gaalop.tba.Plugin.optInserting">true</entry>
 <entry key="de.gaalop.python.Plugin.useArrays">false</entry>
 <entry key="de.gaalop.visualizer.Plugin.lwJglNativePath">native\windows</entry>
@@ -34,11 +34,11 @@
 <entry key="de.gaalop.tba.Plugin.numberOfRoundingDigits">6</entry>
 <entry key="de.gaalop.csharp.Plugin.optimizeOnSave">true</entry>
 <entry key="de.gaalop.globalSettings.Plugin.optMaxima">false</entry>
-<entry key="de.gaalop.cpp.Plugin.standalone">true</entry>
 <entry key="de.gaalop.clucalc.output.Plugin.suffix">_opt</entry>
+<entry key="de.gaalop.cpp.Plugin.standalone">true</entry>
 <entry key="de.gaalop.globalSettings.Plugin.outputToNormalBase">false</entry>
-<entry key="de.gaalop.compressed.Plugin.useDouble">false</entry>
 <entry key="de.gaalop.cpp.Plugin.useDouble">false</entry>
+<entry key="de.gaalop.compressed.Plugin.useDouble">false</entry>
 <entry key="de.gaalop.gapp.Plugin.useScalarFunctions">true</entry>
 <entry key="de.gaalop.tba.Plugin.optUnusedAssignments">true</entry>
 <entry key="de.gaalop.algebra.Plugin.additionalBaseDirectory"></entry>
