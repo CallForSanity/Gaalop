@@ -9,7 +9,10 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
@@ -17,6 +20,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.io.FilenameUtils;
 
 /**
  * This command object performs a compilation run.
@@ -32,12 +36,16 @@ public class CompileAction extends AbstractAction {
 	private final StatusBar statusBar;
         
         private PanelPluginSelection panelPluginSelection;
-
+        
+        private CodeGeneratorPlugin plugin;
+        
     public CompileAction(SourceFilePanel sourcePanel, StatusBar statusBar, PanelPluginSelection panelPluginSelection) {
         super("To " + panelPluginSelection.getCodeGeneratorPlugin().getName(), PluginIconUtil.getSmallIcon(panelPluginSelection.getCodeGeneratorPlugin()));
         this.panelPluginSelection = panelPluginSelection;
         this.sourcePanel = sourcePanel;
         this.statusBar = statusBar;
+        
+        plugin = panelPluginSelection.getCodeGeneratorPlugin();
     }
 
     @Override
@@ -132,8 +140,9 @@ public class CompileAction extends AbstractAction {
 				try {
 					Set<OutputFile> output;
 					output = facade.compile(sourcePanel.getInputFile());
-                                        if (!output.isEmpty())
-                                            displayOutput(output);
+                                        if (!output.isEmpty()) {
+                                            displayOutputOrSaveNearSource(output);
+                                        }
 				} catch (CompilationException ex) {
 					log.error("Compilation exception", ex);
 					statusBar.displayError(ex);
@@ -146,6 +155,61 @@ public class CompileAction extends AbstractAction {
 		compiler.start();
     }
 
+    private void displayOutputOrSaveNearSource(Set<OutputFile> outputFiles)
+    {
+        if (plugin instanceof OptimizeOnSaveCodeGeneratorPlugin) {
+            OptimizeOnSaveCodeGeneratorPlugin savePlugin = (OptimizeOnSaveCodeGeneratorPlugin)plugin;
+            if (savePlugin.getOptimizeOnSave()){
+                OutputFile outputFile = outputFiles.iterator().next();
+                String gaalopFileName = outputFile.getName();
+                
+                // Check if save directory exists
+                File directory = new File(savePlugin.getSaveFileDirectory());
+                if (directory.exists()) {
+                    // May append extension
+                    String extension = savePlugin.getFileExtension();
+                    if (!gaalopFileName.endsWith(extension)) {
+                        gaalopFileName += "." + extension;
+                    }
+                    
+                    // Save file
+                    File generatedFile = new File(directory, gaalopFileName);
+                    saveToFile(generatedFile, outputFile.getContent());       
+                }
+                else
+                {
+                    print("Save directory not existing: " + directory);
+                }
+            }
+        }
+        else
+        {
+            displayOutput(outputFiles);
+        }
+    }
+    
+    // To do: make this work
+    private void saveToFile(File file, String text) {
+        try {
+            PrintWriter printWriter = new PrintWriter(file);
+            try {
+                printWriter.print(text);
+                print("Code saved to: " + file.toPath());
+            } finally {
+                printWriter.close();
+            }
+        }
+        catch (FileNotFoundException e) {
+        }
+    }
+    
+    private void print(Object message)
+    {
+        String text = message.toString();
+        System.out.println(text + "\n");
+        statusBar.setStatus(text);
+    }
+        
     private void displayOutput(Set<OutputFile> output) {
         ResultForm resultForm = new ResultForm(output);
 

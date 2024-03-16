@@ -31,6 +31,8 @@
 
 	<!-- back end -->
         <module>codegen-cpp</module>
+	<module>codegen-csharp</module>
+	
         <module>codegen-java</module>
         <module>codegen-dot</module>
         <module>codegen-gapp</module>
@@ -59,7 +61,6 @@
 
         <!-- distribution -->
         <module>distribution</module>
-
     </modules>
 
     <!--

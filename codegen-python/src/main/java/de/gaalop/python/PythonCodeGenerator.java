@@ -17,7 +17,7 @@ public class PythonCodeGenerator extends DefaultCodeGenerator {
 
     @Override
     protected String generateCode(ControlFlowGraph in) {
-        PythonVisitor visitor = new PythonVisitor(plugin.getUseDouble(), generateFilename(in).split("\\.")[0]);
+        PythonVisitor visitor = new PythonVisitor(plugin.getUseDouble(), generateFilename(in).split("\\.")[0], plugin.getUseArrays());
         try {
             in.accept(visitor);
         } catch (Throwable error) {

@@ -4,6 +4,10 @@ import de.gaalop.*;
 import java.awt.event.ItemEvent;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import java.io.IOException;
+import java.nio.file.*;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -22,6 +26,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  * The bean that represents the main form of the Gaalop GUI.
@@ -38,10 +43,14 @@ public class MainForm {
     private JButton saveFileButton;
     private JButton closeButton;
     private StatusBar statusBar;
-    
+
+    private final String ScriptFileExtension = "clu";
+
     public PanelPluginSelection panelPluginSelection;
 
     private Log log = LogFactory.getLog(MainForm.class);
+
+    private Boolean optimizeOnFileChanged = true;
 
     public MainForm() {
         $$$setupUI$$$();
@@ -52,21 +61,12 @@ public class MainForm {
         optimizeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent event) {
-                if (tabbedPane.getSelectedComponent() instanceof SourceFilePanel) {
-                    if (panelPluginSelection.areConstraintsFulfilled()) {
-                        panelPluginSelection.updateLastUsedPlugins();
-                        SourceFilePanel sourcePanel = (SourceFilePanel) tabbedPane.getSelectedComponent();
-                        CompileAction action = new CompileAction(sourcePanel, statusBar, panelPluginSelection);
-                        action.actionPerformed(event);
-                    } else {
-                        ErrorDialog.show(new CompilationException(panelPluginSelection.getErrorMessage()));
-                    }
-                }
+                Optimize();
             }
         });
 
         configureButton.addActionListener(new ActionListener() {
-          
+
           @Override
           public void actionPerformed(ActionEvent e) {
             new ConfigurationPanel(tabbedPane);
@@ -97,18 +97,7 @@ public class MainForm {
         saveFileButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Component component = tabbedPane.getSelectedComponent();
-                if (component instanceof SourceFilePanel) {
-                    SourceFilePanel sourceFile = (SourceFilePanel) component;
-                    JFileChooser fileChooser = new JFileChooser();
-                    Main.lastDirectory = sourceFile.getFile().getParentFile();
-                    fileChooser.setCurrentDirectory(Main.lastDirectory);
-                    fileChooser.setSelectedFile(sourceFile.getFile());
-                    int result = fileChooser.showSaveDialog(contentPane);
-                    if (result == JFileChooser.APPROVE_OPTION) {
-                        saveToFile(fileChooser.getSelectedFile(), sourceFile);
-                    }
-                }
+               Save(false);
             }
         });
 
@@ -137,11 +126,11 @@ public class MainForm {
         openFileButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                
+
                 List<CodeParserPlugin> plugins = new ArrayList<CodeParserPlugin>();
                 plugins.addAll(Plugins.getCodeParserPlugins());
                 Collections.sort(plugins, new PluginSorter());
-                
+
                 if (plugins.size() == 1) {
                     OpenFileAction action = new OpenFileAction(plugins.get(0), tabbedPane);
                     action.actionPerformed(null);
@@ -182,7 +171,114 @@ public class MainForm {
         }
     }
 
+    private String GetFilePath() {
+        Component component = tabbedPane.getSelectedComponent();
+        if (component instanceof SourceFilePanel) {
+            SourceFilePanel filePanel = (SourceFilePanel) component;
+            File file = filePanel.getFile();
+
+            String path = file.getAbsolutePath();
+            return path;
+        }
+
+        return "";
+    }
+
+    public static String readFile(String filePath) throws IOException {
+        byte[] encodedBytes = Files.readAllBytes(Paths.get(filePath));
+        return new String(encodedBytes);
+    }
+
+    /*
+      Saves the source file.
+     */
+    private void Save(Boolean allowQuickSave)
+    {
+        optimizeOnFileChanged = false;
+        System.out.println("optimizeOnFileChanged = " + optimizeOnFileChanged);
+
+        Component component = tabbedPane.getSelectedComponent();
+        if (component instanceof SourceFilePanel) {
+            SourceFilePanel filePanel = (SourceFilePanel) component;
+            File file = filePanel.getFile();
+
+            String path = file.getAbsolutePath();
+
+            // Create file watcher for each source file
+            // So file changes can be detected and optimization can be executed
+            if (!watchedFilePaths.contains(path)) {
+                watchedFilePaths.add(path);
+
+                createActionOnFileChange(path, filePanel);
+//, () -> {
+//                    System.out.println("Optimizing because file has been changed: " + path);
+//                    try {
+//                        String content = readFile(path);
+//                        if (content.isEmpty()) {
+//                            System.out.println("Content of file is empty: " + path);
+//                            return;
+//                        }
+//                        filePanel.setContent(content);
+//                        Optimize();
+//                    } catch (IOException e) {
+//                        System.out.println("Could not execute optimize.");
+//                    }
+//                });
+            }
+
+            // Check if file ends with correct extension => file was already saved manually
+            if (allowQuickSave && path.endsWith(ScriptFileExtension)){
+                statusBar.setStatus("Saved source: " + path);
+                saveToFile(file, filePanel);
+            } else {
+                Main.lastDirectory = file.getParentFile();
+
+                JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setCurrentDirectory(Main.lastDirectory);
+                fileChooser.setSelectedFile(file);
+                // Create a file filter to specify the extension
+                fileChooser.setFileFilter(new FileNameExtensionFilter("CLUcalc files", ScriptFileExtension));
+
+                int result = fileChooser.showSaveDialog(contentPane);
+                if (result == JFileChooser.APPROVE_OPTION) {
+                    File selectedFile = fileChooser.getSelectedFile();
+                    String filePath = selectedFile.getAbsolutePath();
+
+                    // Check if the selected file already has the .glu extension or append it
+                    if (!filePath.toLowerCase().endsWith("." + ScriptFileExtension)) {
+                        selectedFile = new File(filePath + "." + ScriptFileExtension);
+                    }
+
+                    saveToFile(selectedFile, filePanel);
+                }
+            }
+        }
+
+        optimizeOnFileChanged = true;
+        System.out.println("optimizeOnFileChanged = " + optimizeOnFileChanged);
+    }
+
+    /*
+    Is called after the Optimize button was clicked.
+    */
+    private void Optimize()
+    {
+        if (tabbedPane.getSelectedComponent() instanceof SourceFilePanel) {
+            if (panelPluginSelection.areConstraintsFulfilled()) {
+                panelPluginSelection.updateLastUsedPlugins();
+                SourceFilePanel sourcePanel = (SourceFilePanel) tabbedPane.getSelectedComponent();
+                CompileAction action = new CompileAction(sourcePanel, statusBar, panelPluginSelection);
+                action.actionPerformed(null);
+
+                lastOptimizationTimeMillis = System.currentTimeMillis();
+            } else {
+                ErrorDialog.show(new CompilationException(panelPluginSelection.getErrorMessage()));
+            }
+        }
+    }
+
     private void saveToFile(File toFile, SourceFilePanel sourceFilePanel) {
+        // While saving from Gaalop, we dont wanna additionally optimize
         try {
             PrintWriter printWriter = new PrintWriter(toFile);
             try {
@@ -190,21 +286,20 @@ public class MainForm {
             } finally {
                 printWriter.close();
             }
+
+            sourceFilePanel.setFile(toFile);
+            sourceFilePanel.setSaved();
         } catch (FileNotFoundException e) {
             log.warn(e);
             JOptionPane.showMessageDialog(contentPane, "Unable to save to " +
                     toFile.getAbsolutePath() + "\n" + e, "Error", JOptionPane.ERROR_MESSAGE);
-            return;
         }
-
-        sourceFilePanel.setFile(toFile);
-        sourceFilePanel.setSaved();
     }
 
     public Container getContentPane() {
         return contentPane;
     }
-    
+
     public StatusBar getStatusBar() {
 		return statusBar;
 	}
@@ -299,7 +394,7 @@ public class MainForm {
      */
     private void $$$setupUI$$$() {
         Font font = new Font("Arial", Font.PLAIN, FontSize.getGuiFontSize());
-        
+
         contentPane = new JPanel();
         contentPane.setLayout(new BorderLayout(0, 0));
         final JPanel panel1 = new JPanel();
@@ -369,17 +464,124 @@ public class MainForm {
         contentPane.add(tabbedPane, BorderLayout.CENTER);
         panelPluginSelection = new PanelPluginSelection();
         contentPane.add(panelPluginSelection, BorderLayout.EAST);
-        final JPanel panel2 = new JPanel();
-        panel2.setLayout(new BorderLayout(0, 0));
-        tabbedPane.addTab("Welcome", panel2);
+//        final JPanel panel2 = new JPanel();
+//        panel2.setLayout(new BorderLayout(0, 0));
+//        tabbedPane.addTab("Welcome", panel2);
         welcomeToGaalopWelcomeEditorPane = new JEditorPane();
         welcomeToGaalopWelcomeEditorPane.setContentType("text/html");
         welcomeToGaalopWelcomeEditorPane.setFont(font);
         welcomeToGaalopWelcomeEditorPane.setEditable(false);
         welcomeToGaalopWelcomeEditorPane.setText("<html>\r\n  <head>\r\n    \r\n  </head>\r\n  <body>\r\n  </body>\r\n</html>\r\n");
-        panel2.add(welcomeToGaalopWelcomeEditorPane, BorderLayout.CENTER);
+//        panel2.add(welcomeToGaalopWelcomeEditorPane, BorderLayout.CENTER);
         statusBar = new StatusBar();
         contentPane.add(statusBar, BorderLayout.SOUTH);
+
+
+        // Bind Ctrl+S to the save action
+         Action actionOnCtrlS = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Save(true);
+                Optimize();
+            }
+        };
+        contentPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+            KeyStroke.getKeyStroke("control S"), "saveAction");
+        contentPane.getActionMap().put("saveAction", actionOnCtrlS);
+//
+//        String path = GetFilePath();
+//        createActionOnFileChange(path, () -> {
+//            System.out.println("File has been changed.");
+//        });
+    }
+
+    public void SaveAndOptimize() {
+        Save(true);
+    }
+
+    Set<String> watchedFilePaths = new HashSet<String>();
+
+    long lastOptimizationTimeMillis = System.currentTimeMillis();
+
+    public void createActionOnFileChange(String filePath, SourceFilePanel filePanel) {//, Runnable actionToExecuteOnFileChange) {
+        System.out.println("Created file change listener: " + filePath);
+
+        Thread thread = new Thread(() -> {
+            try {
+                WatchService watchService = FileSystems.getDefault().newWatchService();
+                Path path = Paths.get(filePath).getParent();
+                path.register(watchService, StandardWatchEventKinds.ENTRY_MODIFY);
+
+                while (true) {
+                    WatchKey key;
+                    try { // Wait for file change
+                        key = watchService.take();
+                    } catch (InterruptedException ex) {
+                        return;
+                    }
+
+//                    System.out.println("Reacting to file change: " + filePath);
+                    for (WatchEvent<?> event : key.pollEvents()) {
+                        WatchEvent.Kind<?> kind = event.kind();
+//                        System.out.println("event: " + event);
+
+                        if (kind == StandardWatchEventKinds.OVERFLOW) {
+                            continue;
+                        }
+
+                        @SuppressWarnings("unchecked")
+                        WatchEvent<Path> ev = (WatchEvent<Path>) event;
+                        Path filename = ev.context();
+
+                        long passedMillis = System.currentTimeMillis() - lastOptimizationTimeMillis;
+                        Boolean enoughTimePassed = passedMillis > 500;
+                        if (optimizeOnFileChanged && enoughTimePassed) {
+
+                            // Check if filename is correct
+                            if (filename.toString().equals(Paths.get(filePath).getFileName().toString())) {
+//                            actionToExecuteOnFileChange.run();
+                                System.out.println("Optimizing because file has been changed: " + filePath);
+                                try {
+                                    String content = readFile(filePath);
+
+                                    // When content is empty, try reading a second time
+                                    if (content.isEmpty()) {
+                                        try {
+                                            Thread.sleep(50);
+                                            content = readFile(filePath);
+
+                                        } catch (Exception e) {
+                                            System.out.println("Sleeping or reading failed.");
+                                        }
+
+                                        if (content.isEmpty()) {
+                                            System.out.println("Content of file is empty: " + filePath);
+                                            break;
+                                        }
+
+                                    }
+                                    filePanel.setContent(content);
+                                    Optimize();
+                                } catch (IOException e) {
+                                    System.out.println("Could not execute optimize.");
+                                }
+                            }
+                        } else {
+                            System.out.println("SKIPPING. optimizeOnFileChanged = " + optimizeOnFileChanged + ", enoughTimePassed = " + enoughTimePassed + "(" + passedMillis + ")");
+                        }
+                    }
+
+                    boolean valid = key.reset();
+                    if (!valid) {
+                        break;
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        thread.setDaemon(true);
+        thread.start();
     }
 
     /**

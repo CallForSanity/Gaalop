@@ -16,6 +16,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
@@ -56,7 +57,7 @@ public class ResultForm {
                     fileChooser.setSelectedFile(new File(outputFile.getFile().getName()));
                     int result = fileChooser.showSaveDialog(contentPane);
                     if (result == JFileChooser.APPROVE_OPTION) {
-                        saveToFile(fileChooser.getSelectedFile(), outputFile);
+                        saveToFile(fileChooser.getSelectedFile(), outputFile.getFile().getContent());
                     }
                 }
 			}
@@ -109,11 +110,11 @@ public class ResultForm {
         return contentPane;
     }
     
-    private void saveToFile(File toFile, OutputFilePane outputFilePanel) {
+    private void saveToFile(File toFile, String text) {
         try {
             PrintWriter printWriter = new PrintWriter(toFile);
             try {
-                printWriter.print(outputFilePanel.getFile().getContent());
+                printWriter.print(text);
             } finally {
                 printWriter.close();
             }
@@ -121,9 +122,7 @@ public class ResultForm {
             log.warn(e);
             JOptionPane.showMessageDialog(contentPane, "Unable to save to " +
                     toFile.getAbsolutePath() + "\n" + e, "Error", JOptionPane.ERROR_MESSAGE);
-            return;
         }
 //        outputFilePanel.setSaved();
     }
-
 }

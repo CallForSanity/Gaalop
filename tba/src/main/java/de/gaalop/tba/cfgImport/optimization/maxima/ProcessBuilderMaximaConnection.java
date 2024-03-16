@@ -7,6 +7,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -23,9 +26,13 @@ public class ProcessBuilderMaximaConnection implements MaximaConnection {
 
     public ProcessBuilderMaximaConnection(String commandMaxima) {
         this.commandMaxima = commandMaxima;
+        if (this.commandMaxima.isEmpty()) {
+            this.commandMaxima = findMaximaPath("C://");
+        }
+
         //this.loggingListeners = new LoggingListenerGroup();
     }
-    
+
     @Override
     public void setProgressListeners(LoggingListenerGroup progressListeners) {
     	listeners = progressListeners;
@@ -115,4 +122,31 @@ public class ProcessBuilderMaximaConnection implements MaximaConnection {
 
 
     }
+
+    /*
+      Looks for this pattern: directoryPath\maxima*\bin\maxima.bat"
+     */
+    private static String findMaximaPath(String directoryPath) {
+        File directory = new File(directoryPath);
+
+        // Check if the specified path is a directory
+        if (directory.isDirectory()) {
+            File[] directories = directory.listFiles(File::isDirectory);
+
+            if (directories != null) {
+                for (File dir : directories) {
+                    // Check if the directory name contains "maxima"
+                    if (dir.getName().startsWith("maxima")) {
+                        Path maximaPath = Paths.get(dir.getAbsolutePath(), "bin", "maxima.bat");
+                        if (Files.exists(maximaPath)) {
+                            return maximaPath.toString();
+                        }
+                    }
+                }
+            }
+        }
+
+        return "";
+    }
+
 }
