@@ -204,6 +204,7 @@ public class PythonVisitor extends NonarrayCodeGeneratorVisitor {
 
         // Add brackets if tuples are used
         String typeString = String.join(", ", returnTypes);
-        replaceInCode("):", ") -> Tuple[" + typeString + "]:");
+        String totalReturnType = returnTypes.size() == 1 ? typeString : "Tuple[" + typeString + "]";
+        replaceInCode("):", ") -> " + totalReturnType + ":");
     }
 }
