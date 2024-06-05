@@ -68,7 +68,7 @@ public abstract class NonarrayCodeGeneratorVisitor extends DefaultCodeGeneratorV
             int size = returnValues.size();
             if (size == 1) {
                 // Return single Gaalop variables in one line
-                addLine("return " + openingBracket + String.join(", ", returnValues.getFirst()) + closingBracket + ";");
+                addLine("return " + openingBracket + String.join(", ", returnValues.get(0)) + closingBracket + ";");
             } else {
                 // Return multiple Gaalop variables in multiple lines
                 addLine("return " + openingBracket);
