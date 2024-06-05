@@ -1,86 +1,95 @@
 package de.gaalop.python;
 
-import de.gaalop.DefaultCodeGeneratorVisitor;
+import de.gaalop.NonarrayCodeGeneratorVisitor;
+import de.gaalop.StringList;
 import de.gaalop.cfg.*;
 import de.gaalop.dfg.*;
 import java.awt.Color;
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 /**
  * This visitor traverses the control and data flow graphs and generates C/C++
  * code.
  */
-public class PythonVisitor extends DefaultCodeGeneratorVisitor {
+public class PythonVisitor extends NonarrayCodeGeneratorVisitor {
 
     protected String variableType = "float";
-    
-    protected String filename;
-    
-    private HashMap<String, Color> expressionStatements = new HashMap<>();
-    
-    private HashMap<String, LinkedList<Integer>> mvComponents = new HashMap<>();
-    
-    private HashSet<String> mvs = new HashSet<String>();
-    
-    protected Set<String> libraries = new HashSet<>();
 
-    public PythonVisitor(boolean useDouble, String filename) {
+    protected String filename;
+
+    private HashMap<String, LinkedList<Integer>> mvComponents = new HashMap<>();
+
+    public PythonVisitor(boolean useDouble, String filename, boolean useArrays) {
         this.filename = filename;
         if (useDouble) {
             variableType = "double";
         }
+        this.useArrays = useArrays;
     }
 
     public PythonVisitor(String variableType) {
         this.variableType = variableType;
     }
-    
+
+    @Override
+    protected Boolean useNamedTuples() {
+        return false;
+    }
+
     @Override
     public void visit(StartNode node) {
+        // At each start, this set need to be cleared
+        declaredVariableNames.clear();
+
         graph = node.getGraph();
         libraries.add("import numpy as np");
-        
-        appendIndentation();
-        code.append("def "+filename.toLowerCase()+"("); 
-        
-        // Print parameters
-        code.append(graph.getInputs().join());
 
-        code.append("):\n");
+        addLine();
+
+        appendIndentation();
+        addCode("def " + filename.toLowerCase() + "(");
+
+        // Print parameters
+        StringList inputs = graph.getInputs();
+        addCode(inputs.join());
+
+        addCode("):\n");
         indentation++;
- 
+
         node.getSuccessor().accept(this);
     }
 
     @Override
     public void visit(AssignmentNode node) {
-        String varName = node.getVariable().getName();
-        if (!mvs.contains(varName)) {
-            appendIndentation();
-            code.append(varName+" = np.zeros("+node.getGraph().getAlgebraDefinitionFile().blades2.length+")\n");
-            mvs.add(varName);
+
+        String varName = getNewName(node.getVariable());
+
+        if (declaredVariableNames.add(varName) && useArrays) {
+            varName = node.getVariable().getName();
+            addLine(varName + " = np.zeros(" + node.getGraph().getAlgebraDefinitionFile().blades2.length + ")");
         }
-        
+
         appendIndentation();
         node.getVariable().accept(this);
-        code.append(" = ");
+        addCode(" = ");
         node.getValue().accept(this);
 
-        if (node.getVariable() instanceof MultivectorComponent) {
-            code.append(" # ");
+        // Add blades in comment
+        if (useArrays && node.getVariable() instanceof MultivectorComponent) {
+            addCode(" # ");
             MultivectorComponent component = (MultivectorComponent) node.getVariable();
-            
-            code.append(graph.getBladeString(component));
-            
-            if (!mvComponents.containsKey(component.getName())) 
+
+            addCode(graph.getBladeString(component));
+
+            if (!mvComponents.containsKey(component.getName()))
                 mvComponents.put(component.getName(), new LinkedList<Integer>());
-            
+
             mvComponents.get(component.getName()).add(component.getBladeIndex());
         }
 
-        code.append('\n');
-
+        addCode('\n');
         node.getSuccessor().accept(this);
     }
 
@@ -96,11 +105,14 @@ public class PythonVisitor extends DefaultCodeGeneratorVisitor {
 
     @Override
     public void visit(EndNode node) {
-        
-        appendIndentation();
-        code.append("return ");
-        code.append(graph.getOutputs().join());
- 
+        super.visit(node);
+
+        if (useArrays) {
+            appendIndentation();
+            addCode("return " + graph.getOutputs().join());
+        }
+
+        // Insert libraries at script start
         if (!libraries.isEmpty()) {
             LinkedList<String> libs = new LinkedList<>(libraries);
             libs.sort(new Comparator<String>() {
@@ -109,9 +121,14 @@ public class PythonVisitor extends DefaultCodeGeneratorVisitor {
                     return o2.compareTo(o1);
                 }
             });
-            
+
             for (String lib: libs) {
                 code.insert(0, lib+"\n");
+            }
+
+            String text = code.toString();
+            if (text.contains("sin(") || text.contains("cos(")) {
+                code.insert(0, "from math import sin, cos\n");
             }
         }
     }
@@ -121,7 +138,7 @@ public class PythonVisitor extends DefaultCodeGeneratorVisitor {
         node.getSuccessor().accept(this);
     }
 
-    
+
     @Override
     public void visit(MathFunctionCall mathFunctionCall) {
         libraries.add("import math");
@@ -136,22 +153,22 @@ public class PythonVisitor extends DefaultCodeGeneratorVisitor {
             default:
                 funcName = mathFunctionCall.getFunction().toString().toLowerCase();
         }
-        code.append(funcName);
-        code.append('(');
+        addCode(funcName);
+        addCode('(');
         mathFunctionCall.getOperand().accept(this);
-        code.append(')');
+        addCode(')');
     }
 
     @Override
     public void visit(Variable variable) {
         // usually there are no variables
-        code.append(variable.getName());
+        addCode(getNewName(variable));
     }
 
     @Override
     public void visit(MultivectorComponent component) {
-        code.append(component.getName());
-        code.append("["+component.getBladeIndex()+"]");  
+        String name = component.getNewName(graph, useArrays);
+        addCode(name);
     }
 
     @Override
@@ -160,24 +177,34 @@ public class PythonVisitor extends DefaultCodeGeneratorVisitor {
             Multiplication m = new Multiplication(exponentiation.getLeft(), exponentiation.getLeft());
             m.accept(this);
         } else {
-            code.append("pow(");
+            addCode("pow(");
             exponentiation.getLeft().accept(this);
-            code.append(',');
+            addCode(',');
             exponentiation.getRight().accept(this);
-            code.append(')');
+            addCode(')');
         }
     }
 
     @Override
     public void visit(FloatConstant floatConstant) {
-        code.append(Double.toString(floatConstant.getValue()));
+        addCode(Double.toString(floatConstant.getValue()));
     }
 
     @Override
     public void visit(Negation negation) {
-        code.append('(');
-        code.append('-');
+        addCode('(');
+        addCode('-');
         addChild(negation, negation.getOperand());
-        code.append(')');
+        addCode(')');
+    }
+
+    @Override
+    protected void addReturnType(List<String> returnTypes) {
+        libraries.add("from typing import Tuple");
+
+        // Add brackets if tuples are used
+        String typeString = String.join(", ", returnTypes);
+        String totalReturnType = returnTypes.size() == 1 ? typeString : "Tuple[" + typeString + "]";
+        replaceInCode("):", ") -> " + totalReturnType + ":");
     }
 }

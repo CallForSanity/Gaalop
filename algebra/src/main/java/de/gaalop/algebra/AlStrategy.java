@@ -18,10 +18,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -52,13 +55,13 @@ public class AlStrategy implements AlgebraStrategy {
             AlgebraDefinitionFile alFile = graph.getAlgebraDefinitionFile();
             alFile.setUsePrecalculatedTable(plugin.usePrecalulatedTables);
             alFile.setUseAsRessource(graph.asRessource);
-            
+
             String baseDir = (graph.asRessource) ? "algebra" : graph.algebraBaseDirectory;
-            
+
             if (!baseDir.endsWith("/")) baseDir += "/";
-            
+
             baseDir += graph.algebraName+"/";
-            
+
             alFile.setProductsFilePath(baseDir+"products.csv");
 
             if (plugin.algebraDefinitionString == null) {
@@ -66,10 +69,10 @@ public class AlStrategy implements AlgebraStrategy {
                 reader = (graph.asRessource)
                         ? new InputStreamReader(getClass().getResourceAsStream(baseDir+"definition.csv"))
                         : new FileReader(new File(baseDir+"definition.csv"));
-            } else 
+            } else
                 reader = new StringReader(plugin.algebraDefinitionString);
             alFile.loadFromFile(reader);
-            
+
             createBlades(alFile);
 
             //replace all functions / macros
@@ -77,7 +80,7 @@ public class AlStrategy implements AlgebraStrategy {
             reader = (graph.asRessource)
                     ? new InputStreamReader(getClass().getResourceAsStream(baseDir+"macros.clu"))
                     : new FileReader(new File(baseDir+"macros.clu"));
-            
+
             ControlFlowGraph macrosGraph = new de.gaalop.clucalc.input.Plugin().createCodeParser().parseFile(inputStreamToInputFile(reader, "macros", null));
             reader.close();
             HashMap<StringIntContainer, Macro> macros = MacrosVisitor.getAllMacros(macrosGraph);
@@ -101,10 +104,10 @@ public class AlStrategy implements AlgebraStrategy {
 
             //Check on potential recursions
             RecursionChecker.check(graph, macros);
-            
+
             //inline all macros
             Inliner.inline(graph, macros);
-            
+
             //Remove Macro definitions and embedded evaluateNodes from graph
             LinkedList<AssignmentNode> toDelete = new LinkedList<AssignmentNode>();
             for (Macro macro: macros.values()) {
@@ -114,13 +117,13 @@ public class AlStrategy implements AlgebraStrategy {
                         if (n == evalNode)
                             toDelete.add(evalNode);
             }
-            
+
             graph.getOnlyEvaluateNodes().removeAll(toDelete);
-            
+
             for (AssignmentNode node: graph.getOnlyEvaluateNodes()) {
-                graph.addPragmaOnlyEvaluateVariable(node.getVariable().getName()); 
+                graph.addPragmaOnlyEvaluateVariable(node.getVariable().getName());
             }
-            
+
             //replace Variables which are basevectors
             BaseVectorDefiner definer = new BaseVectorDefiner();
             definer.createFromAlBase(alFile.base);
@@ -130,24 +133,61 @@ public class AlStrategy implements AlgebraStrategy {
             UpdateLocalVariableSet.updateVariableSets(graph);
             //RemoveDefVars.removeDefVars(graph);
 
-            //update output blades
-            HashMap<String, Integer> mapIndices = new HashMap<String, Integer>();
-            for (int index = 0;index<alFile.blades.length;index++) 
-                mapIndices.put(bladeToString(alFile.blades[index]), new Integer(index));
+            // Update output blades
+            // Create map of blades to index
+            HashMap<String[], Integer> indexByBlades = new HashMap<String[], Integer>();
+            for (int index = 0; index < alFile.blades.length; index++) {
+                Expression expression = alFile.blades[index];
+                List<String> blades = decomposeBlades(expression);
+                indexByBlades.put(blades.toArray(new String[0]), index);
+            }
 
-            Set<String> set = graph.getPragmaOutputVariables();
-            HashSet<String> copySet = new HashSet<String>(set);
-            set.clear();
-            for (String str: copySet) {
-                if (str.contains(" ")) {
-                    String[] parts = str.split(" ");
-                    if (parts[1].equals("1")) parts[1] = "1.0";
-                    if (!mapIndices.containsKey(parts[1]))
-                        throw new OptimizationException("The bladename "+parts[1]+" is not found in the default blade list.", graph);
+            // Get output variables and create copy
+            Set<String> outputVariables = graph.getPragmaOutputVariables();
+            HashSet<String> outputVariablesCopy = new HashSet<String>(outputVariables);
 
-                    set.add(parts[0]+"$"+mapIndices.get(parts[1]));
-                } else 
-                    set.add(str);
+            // Clear output variables so we can set new
+            outputVariables.clear();
+
+            for (String outputVariable : outputVariablesCopy) {
+                // Variable name and blades are separated by a whitespace
+                if (outputVariable.contains(" ")) {
+                    String[] parts = outputVariable.split(" ");
+                    if (parts[1].equals("1")) {
+                        parts[1] = "1.0";
+                    }
+
+                    // Collect variables as there can be multiple, for instance:
+                    // #pragma output {AI,BI,CI} e0^e1^e2 e0^e1^e3 e0^e2^e3
+                    String variableText = parts[0];
+                    String[] variables = getVariables(variableText);
+
+                    String bladeText = parts[1];
+                    String[] currentBlades = bladeText.split("\\^");
+
+                    boolean bladeFound = false;
+
+                    // Get the index for the currentBlades by comparing them with blades in map
+                    for (String[] blades : indexByBlades.keySet()) {
+
+                        if (areArraysEqual(currentBlades, blades)) {
+                            // Set index for each variables
+                            int index = indexByBlades.get(blades);
+                            for (String variable : variables) {
+                                outputVariables.add(variable + "$" + index);
+                            }
+
+                            bladeFound = true;
+                            break;
+                        }
+                    }
+
+                    if (!bladeFound) {
+                        throw new OptimizationException("The bladename " + bladeText + " is not found in the default blade list.", graph);
+                    }
+
+                } else
+                    outputVariables.add(outputVariable);
             }
         } catch (CodeParserException ex) {
             Logger.getLogger(AlStrategy.class.getName()).log(Level.SEVERE, null, ex);
@@ -160,14 +200,51 @@ public class AlStrategy implements AlgebraStrategy {
                 Logger.getLogger(AlStrategy.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-
-        
     }
 
-    private String bladeToString(Expression blade) {
-        if (!blade.isComposite()) return blade.toString();
+    public static String[] getVariables(String variableText) {
+        if (variableText.startsWith("{") && variableText.endsWith("}")) {
+            // Remove the leading and trailing curly braces
+            String innerText = variableText.substring(1, variableText.length() - 1);
+            // Split the remaining text by comma and trim each element
+            String[] variables = innerText.split(",");
+            for (int i = 0; i < variables.length; i++) {
+                variables[i] = variables[i].trim();
+            }
+            return variables;
+        } else {
+            // If variableText does not have curly braces, return it as is
+            return new String[]{variableText};
+        }
+    }
+
+    /*
+        Check if two arrays have equal content.
+     */
+    public static boolean areArraysEqual(String[] array1, String[] array2) {
+        if (array1.length != array2.length) {
+            return false;
+        }
+
+        Set<String> set1 = new HashSet<>(Arrays.asList(array1));
+        Set<String> set2 = new HashSet<>(Arrays.asList(array2));
+
+        return set1.equals(set2);
+    }
+
+    /*
+      Get all single blades as list.
+     */
+    private List<String> decomposeBlades(Expression blade) {
+        if (!blade.isComposite()) {
+            return Collections.singletonList(blade.toString());
+        }
+
         OuterProduct outerProduct = (OuterProduct) blade;
-        return bladeToString(outerProduct.getLeft())+"^"+bladeToString(outerProduct.getRight());
+        ArrayList<String> list = new ArrayList<String>();
+        list.addAll(decomposeBlades(outerProduct.getLeft()));
+        list.addAll(decomposeBlades(outerProduct.getRight()));
+        return list;
     }
 
     /**
@@ -177,12 +254,12 @@ public class AlStrategy implements AlgebraStrategy {
     public static void createBlades(AlgebraDefinitionFile alFile) {
         TCBlade[] blades = BladeArrayRoutines.createBlades(Arrays.copyOfRange(alFile.base,1,alFile.base.length));
         alFile.blades = new Expression[blades.length];
-        for (int i = 0; i < blades.length; i++) 
+        for (int i = 0; i < blades.length; i++)
             alFile.blades[i] = blades[i].toExpression();
-        
+
         TCBlade[] blades2 = BladeArrayRoutines.createBlades(Arrays.copyOfRange(alFile.base2,1,alFile.base2.length));
         alFile.blades2 = new Expression[blades2.length];
-        for (int i = 0; i < blades2.length; i++) 
+        for (int i = 0; i < blades2.length; i++)
             alFile.blades2[i] = blades2[i].toExpression();
     }
 
@@ -199,7 +276,7 @@ public class AlStrategy implements AlgebraStrategy {
         sb.append("\n");
         return new InputFile(cluName, sb.toString());
     }
-    
+
     /**
      * Reads a reader in a stringbuilder object
      * @param reader The reader
@@ -218,7 +295,7 @@ public class AlStrategy implements AlgebraStrategy {
                     FileReader rea = new FileReader(newParent);
                     readIn(rea, sb, newParent);
                     rea.close();
-                } else 
+                } else
                     sb.append(line);
                 sb.append("\n");
             }

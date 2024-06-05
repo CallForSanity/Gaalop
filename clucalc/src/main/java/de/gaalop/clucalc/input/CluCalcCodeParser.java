@@ -3,12 +3,15 @@ package de.gaalop.clucalc.input;
 import de.gaalop.CodeParser;
 import de.gaalop.CodeParserException;
 import de.gaalop.InputFile;
+import de.gaalop.cfg.ReturnDefinition;
 import de.gaalop.cfg.ControlFlowGraph;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.apache.commons.logging.Log;
@@ -22,11 +25,14 @@ public enum CluCalcCodeParser implements CodeParser {
 
     INSTANCE;
 
+    final String DEFAULT_PRAGMA_START = "//#pragma ";
+    final String SHORT_PRAGMA_START = "#pragma ";
+
     // static in order not to get an "illegal reference to static field from initializer" error
     private static final Log log = LogFactory.getLog(CluCalcCodeParser.class);
-    
+
     private Plugin plugin;
-    
+
     public void setPluginReference(Plugin plugin) {
     	if (this.plugin == null) {
     		this.plugin = plugin;
@@ -52,31 +58,47 @@ public enum CluCalcCodeParser implements CodeParser {
     private ControlFlowGraph parse(InputFile input) throws CodeParserException, IOException {
         LinkedList<String> onlyEvaluates = new LinkedList<String>();
         LinkedList<String> outputs = new LinkedList<String>();
-        
+
         LinkedList<String[]> drawSegments = new LinkedList<String[]>();
         LinkedList<String[]> drawTriangles = new LinkedList<String[]>();
 
         String syntax = null;
         LinkedList<String> ranges = new LinkedList<String>();
 
+        LinkedList<ReturnDefinition> returnDefinitions = new LinkedList<ReturnDefinition>();
+        LinkedList<String> insertionTexts = new LinkedList<String>();
+
+        Boolean usingNormalizePragma = false;
+
         String content = input.getContent();
         BufferedReader reader = new BufferedReader(new StringReader(content));
         String line = null;
         StringBuilder builder = new StringBuilder();
         while ((line = reader.readLine()) != null) {
-            if (line.trim().startsWith("//#pragma")) {
+            String trimmedLine = line.trim();
+            // Allow using #pragma instead of //#pragma
+            Boolean usingPragma = trimmedLine.startsWith(DEFAULT_PRAGMA_START);
+            Boolean usingNewPragma = trimmedLine.startsWith(SHORT_PRAGMA_START);
+            if (usingPragma || usingNewPragma) {
+                int lengthOfPragmaStart = usingNewPragma ? SHORT_PRAGMA_START.length() : DEFAULT_PRAGMA_START.length();
+
                 String line2 = line.replaceAll("\t", " ");
                 while (line2.contains("  "))
                     line2 = line2.replaceAll("  "," ");
 
-                String whichPragma = line2.substring(10,line2.indexOf(" ",10));
+                int indexOfSpace = line2.indexOf(" ", 10);
+                Boolean restIsMissing = indexOfSpace == -1;
+                String whichPragma = restIsMissing
+                        ? line2.substring(lengthOfPragmaStart)
+                        : line2.substring(lengthOfPragmaStart, indexOfSpace);
+
                 if (whichPragma.equals("unroll") || whichPragma.equals("count")) {
                     builder.append(line);
                     builder.append("\n");
                 } else {
                     //process here
-                    String rest = line2.substring(line2.indexOf(" ",10)+1);
-                    
+                    String rest = restIsMissing ? "" : line2.substring(indexOfSpace + 1);
+
                     switch (whichPragma) {
                         case "output":
                             //IDENTIFIER blade+
@@ -93,9 +115,9 @@ public enum CluCalcCodeParser implements CodeParser {
                             syntax = rest;
                             break;
                         case "segments":
-                            while (rest.contains("  ")) 
+                            while (rest.contains("  "))
                                 rest = rest.replaceAll("\\W\\W", " ");
-                            
+
                             for (String t: rest.split(",")) {
                                 String[] segmentMvs = t.trim().split("\\W");
                                 if (segmentMvs.length == 2) {
@@ -106,9 +128,9 @@ public enum CluCalcCodeParser implements CodeParser {
                             }
                             break;
                         case "triangles":
-                            while (rest.contains("  ")) 
+                            while (rest.contains("  "))
                                 rest = rest.replaceAll("\\W\\W", " ");
-                            
+
                             for (String t: rest.split(",")) {
                                 String[] triangleMvs = t.trim().split("\\W");
                                 if (triangleMvs.length == 3) {
@@ -121,12 +143,62 @@ public enum CluCalcCodeParser implements CodeParser {
                         case "range":
                             ranges.add(rest);
                             break;
+
+                        case "insert":
+                            insertionTexts.add(rest);
+                            break;
+
+                        case "return":
+                            // Returns the values as object of given type
+                            // Example: #pragma return p5,p6 typed Vector2 as Vector2(-<e02> / <e12>, <e01> / <e12>)
+
+                            String[] parts = rest.split("\\s+typed\\s+|\\s+as\\s+");
+
+                            if (parts.length == 3) {
+                                String variablesText = parts[0];
+                                String returnType = parts[1];
+                                String returnText = parts[2];
+                                String[] variables = Arrays.stream(variablesText.split(",")).map(String::trim).toArray(String[]::new);
+                                ReturnDefinition returnDefintion = new ReturnDefinition(variables, returnType, returnText);
+                                returnDefinitions.add(returnDefintion);
+ }
+
+                            break;
+
+                        case "normalize":
+                            usingNormalizePragma = true;
+                            break;
+
                         default:
                             throw new CodeParserException(input, "pragma "+whichPragma+" is unknown.");
                     }
                 }
 
             } else {
+
+                // Normalize output variables (marked with ?) when normalize pragma is used
+                if (usingNormalizePragma && !line.startsWith("//")) {
+                    // Check if line has this format: ?VARIABLE = EXPRESSION
+                    Pattern pattern = Pattern.compile("\\?(\\w+)\\s*=\\s*(.+)");
+                    Matcher matcher = pattern.matcher(line);
+                    if (matcher.find()) {
+                        // Retrieve the variable name and the expression
+                        String variable = matcher.group(1);
+                        String expression = matcher.group(2);
+                        String variableUnnormalized = variable + "_unnormalized";
+
+                        // Append the two lines where the second is doing the normalization
+                        builder.append(variableUnnormalized + " = " + expression);
+                        builder.append("\n");
+                        builder.append("?" + variable + " = " + variableUnnormalized + " / abs(" + variableUnnormalized + ")");
+                        builder.append("\n");
+
+//                        System.out.println("The line matches the specified format. Variable name: " + variable);
+                        continue;
+                    }
+                }
+
+                // Just add the line
                 builder.append(line);
                 builder.append("\n");
             }
@@ -137,11 +209,19 @@ public enum CluCalcCodeParser implements CodeParser {
         CluCalcLexer lexer = new CluCalcLexer(inputStream);
         CommonTokenStream tokenStream = new CommonTokenStream(lexer);
         CluCalcParser parser = new CluCalcParser(tokenStream);
-        
+
         CluVisitor visitor = new CluVisitor();
         visitor.visit(parser.script());
-        
         ControlFlowGraph graph = visitor.graph;
+
+        for (ReturnDefinition definition : returnDefinitions) {
+            graph.addReturnDefinition(definition);
+        }
+
+        for (String text : insertionTexts) {
+            graph.addInsertionText(text);
+        }
+
         graph.drawSegments = drawSegments;
         graph.drawTriangles = drawTriangles;
         if (syntax != null) {
@@ -149,16 +229,16 @@ public enum CluCalcCodeParser implements CodeParser {
             String[] syntaxParts = syntax.split("->");
             if (syntaxParts.length == 2) {
                 // Parse inputs
-                for (String var: syntaxParts[0].split(",")) 
+                for (String var: syntaxParts[0].split(","))
                     graph.syntaxInputs.add(var.trim());
                 // Parse outputs
-                for (String var: syntaxParts[1].split(",")) 
+                for (String var: syntaxParts[1].split(","))
                     graph.syntaxOutputs.add(var.trim());
             } else {
                 throw new CodeParserException(input, "#pragma in2out must contain one arrow ->");
             }
             graph.syntaxSpecified = true;
-        } else 
+        } else
             graph.syntaxSpecified = false;
 
         for (String output: outputs)
@@ -166,15 +246,15 @@ public enum CluCalcCodeParser implements CodeParser {
 
         for (String onlyEval: onlyEvaluates)
             graph.addPragmaOnlyEvaluateVariable(onlyEval);
-        
+
         for (String range: ranges) {
             String[] rangeParts = range.split("<=");
             if (rangeParts.length == 3)
                 graph.addPragmaMinMaxValues(rangeParts[1].trim(), rangeParts[0].trim(), rangeParts[2].trim());
-            else 
+            else
                 throw new CodeParserException(input, "#pragma range must be of the form: {minValue} <= {variable_name} <= {maxValue} but is "+range);
         }
-        
+
         return graph;
     }
 

@@ -1,10 +1,9 @@
-package de.gaalop.python;
+package de.gaalop.csharp;
 
 import de.gaalop.CodeGenerator;
 import de.gaalop.ConfigurationProperty;
 import de.gaalop.ConfigurationProperty.Type;
 import de.gaalop.Notifications;
-import de.gaalop.OptimizeOnSaveCodeGeneratorPlugin;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -14,6 +13,7 @@ import java.awt.*;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Observable;
+import de.gaalop.OptimizeOnSaveCodeGeneratorPlugin;
 
 /**
  * This class implements the Plugin interface for Gaalop.
@@ -93,22 +93,22 @@ public class Plugin extends Observable implements OptimizeOnSaveCodeGeneratorPlu
     }
 
     public String getFileExtension() {
-        return "py";
+        return "cs";
     }
 
     @Override
     public CodeGenerator createCodeGenerator() {
-        return new PythonCodeGenerator(this);
+        return new CsharpCodeGenerator(this);
     }
 
     @Override
     public String getName() {
-        return "Python";
+        return "C#";
     }
 
     @Override
     public String getDescription() {
-        return "This plugin generates Python code.";
+        return "This plugin generates C# code.";
     }
 
     @Override
@@ -117,7 +117,7 @@ public class Plugin extends Observable implements OptimizeOnSaveCodeGeneratorPlu
     }
 
     void notifyError(Throwable error) {
-    	setChanged();
-    	notifyObservers(new Notifications.Error(error));
+        setChanged();
+        notifyObservers(new Notifications.Error(error));
     }
 }

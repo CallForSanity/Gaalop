@@ -1,5 +1,7 @@
 package de.gaalop.dfg;
 
+import de.gaalop.cfg.ControlFlowGraph;
+
 /**
  * This class represents a dataflow graph node that models a variable.
  */
@@ -37,7 +39,7 @@ public class Variable extends Expression {
 
 	/**
 	 * Constructs a new node modeling a named variable.
-	 * 
+	 *
 	 * @param name The name of the variable.
 	 */
 	public Variable(String name) {
@@ -48,14 +50,42 @@ public class Variable extends Expression {
 			this.name = name;
 		}
 	}
-	
+
+    public String getNewName(ControlFlowGraph graph, Boolean useArrays) {
+        if (this instanceof MultivectorComponent) {
+            MultivectorComponent component = (MultivectorComponent) this;
+
+            if (useArrays) {
+                // When using array, variables should be called e.g. var[6]
+                String name = getName() + "[" + component.getBladeIndex() + "]";
+                String bladeString = graph.getBladeString(component);
+//                System.out.println("Name = " + name + " # " + bladeString);
+                return name;
+            } else {
+                // Multivector variables should be called e.g. var_e12
+                String bladeString = graph.getBladeString(component);
+                bladeString = bladeString.replace(".0", ""); // Write var_1 instead of var_1.0
+//                bladeString = removeExtraEs(bladeString); // Write var_e12 instead of var_e1e2
+                String name = getName() + "_" + bladeString.replaceAll(" ", "").replaceAll("\\(", "").replaceAll("\\)", "").replaceAll("\\^", "");
+
+                System.out.println(getName() + " => " + name);
+
+                return name;
+            }
+        } else {
+            String name = getName();
+//            System.out.println("name = " + name);
+            return getName();
+        }
+    }
+
 	public boolean globalAccess() {
 		return global;
 	}
 
 	/**
 	 * Gets the name of the variable.
-	 * 
+	 *
 	 * @return The string containing this variables name.
 	 */
 	public String getName() {
@@ -64,7 +94,7 @@ public class Variable extends Expression {
 
 	/**
 	 * Converts this variable node into a human readable string.
-	 * 
+	 *
 	 * @return A string containing the name of this variable.
 	 */
         @Override
@@ -91,7 +121,7 @@ public class Variable extends Expression {
 
 	/**
 	 * Calls {@link de.gaalop.dfg.ExpressionVisitor#visit(Variable)} on a visitor.
-	 * 
+	 *
 	 * @param visitor The object that the visit method should be called on.
 	 */
 	@Override
@@ -115,9 +145,9 @@ public class Variable extends Expression {
 
 	/**
 	 * Compares two variables for equality.
-	 * 
+	 *
 	 * Two variables are equal if and only if the two variables have the same class and their name is equal.
-	 * 
+	 *
 	 * @param o The other object.
 	 * @return True if and only if this object is equal to the other object.
 	 */
@@ -139,5 +169,26 @@ public class Variable extends Expression {
 	@Override
 	public int hashCode() {
 		return name.hashCode();
-	}
+    }
+
+    /*
+        Removes all e characters after the first occurence.
+     */
+    public static String removeExtraEs(String input) {
+        boolean noEsYet = true;
+        StringBuilder output = new StringBuilder();
+
+        for (char c : input.toCharArray()) {
+            if (c == 'e') {
+                if (noEsYet) {
+                    output.append(c);
+                    noEsYet = false;
+                }
+            } else {
+                output.append(c);
+            }
+        }
+
+        return output.toString();
+    }
 }
